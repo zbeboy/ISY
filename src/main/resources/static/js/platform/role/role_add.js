@@ -6,8 +6,7 @@ requirejs.config({
     paths: {
         "csrf": web_path + "/js/util/csrf",
         "nav": web_path + "/js/util/nav",
-        "constants":web_path + "/js/util/constants",
-        "isy-bootstrap-treeview":web_path + "/plugin/bootstrap-treeview/bootstrap-treeview"
+        "constants":web_path + "/js/util/constants"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -150,7 +149,9 @@ require(["jquery", "handlebars", "csrf", "messenger", "bootstrap-treeview","nav"
      * 初始化界面
      */
     function init(){
-        initSchoolData();
+        if(init_page_param.currentUserRoleName === constants.global_role_name.system_role){
+            initSchoolData();
+        }
         initTreeView();
     }
 

@@ -65,9 +65,8 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
 
     @Override
     public Result<RoleApplicationRecord> findByRoleId(int roleId) {
-        Result<RoleApplicationRecord> roleApplicationRecords = create.selectFrom(ROLE_APPLICATION)
+        return create.selectFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.eq(roleId))
                 .fetch();
-        return roleApplicationRecords;
     }
 }

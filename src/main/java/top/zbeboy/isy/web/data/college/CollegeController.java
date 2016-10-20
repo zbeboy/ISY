@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.College;
+import top.zbeboy.isy.domain.tables.pojos.CollegeApplication;
+import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
+import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeRecord;
+import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
+import top.zbeboy.isy.service.CollegeApplicationService;
 import top.zbeboy.isy.service.CollegeService;
 import top.zbeboy.isy.web.bean.data.college.CollegeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -38,6 +43,9 @@ public class CollegeController {
 
     @Resource
     private CollegeService collegeService;
+
+    @Resource
+    private CollegeApplicationService collegeApplicationService;
 
     /**
      * 通过学校id获取全部院
@@ -230,5 +238,54 @@ public class CollegeController {
             return new AjaxUtils().success().msg("更改院状态成功");
         }
         return new AjaxUtils().fail().msg("更改院状态失败");
+    }
+
+    /**
+     * 应用挂载
+     *
+     * @return 应用挂载页面
+     */
+    @RequestMapping(value = "/web/data/college/mount",method = RequestMethod.GET)
+    public String collegeMount(@RequestParam("id") int collegeId,ModelMap modelMap) {
+        modelMap.addAttribute("collegeId",collegeId);
+        return "web/data/college/college_mount";
+    }
+
+    /**
+     * 院与应用数据
+     * @param collegeId 院id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/data/college/application/data",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<CollegeApplication> collegeApplicationData(@RequestParam("collegeId") int collegeId){
+        Result<CollegeApplicationRecord> collegeApplicationRecords = collegeApplicationService.findByCollegeId(collegeId);
+        List<CollegeApplication> collegeApplications = new ArrayList<>();
+        if(collegeApplicationRecords.isNotEmpty()){
+            collegeApplications = collegeApplicationRecords.into(CollegeApplication.class);
+        }
+        return new AjaxUtils<CollegeApplication>().success().listData(collegeApplications);
+    }
+
+    /**
+     * 更新应用挂载
+     * @param collegeId 院id
+     * @param applicationIds 应用ids
+     * @return true 更新成功
+     */
+    @RequestMapping(value = "/web/data/college/update/mount",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils updateMount(@RequestParam("collegeId") int collegeId,String applicationIds){
+        if(collegeId>0){
+            collegeApplicationService.deleteByCollegeId(collegeId);
+            if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
+                List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
+                ids.forEach(id -> {
+                    CollegeApplication collegeApplication = new CollegeApplication(id,collegeId);
+                    collegeApplicationService.save(collegeApplication);
+                });
+            }
+        }
+        return new AjaxUtils().success().msg("更新成功");
     }
 }

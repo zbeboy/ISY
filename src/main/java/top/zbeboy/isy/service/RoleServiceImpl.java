@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.RoleDao;
 import top.zbeboy.isy.domain.tables.pojos.Role;
+import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 import top.zbeboy.isy.domain.tables.records.RoleRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -20,6 +21,7 @@ import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.platform.role.RoleBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,12 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
     private final DSLContext create;
 
     private RoleDao roleDao;
+
+    @Resource
+    private UsersService usersService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
 
     @Autowired
     public RoleServiceImpl(DSLContext dslContext, Configuration configuration) {
@@ -131,43 +139,96 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
         List<String> defaultRoles = getDefaultRoles();
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(ROLE)
-                    .leftJoin(COLLEGE_ROLE)
-                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                    .leftJoin(COLLEGE)
-                    .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .leftJoin(SCHOOL)
-                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles));
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
+            // 分权限显示用户数据
+            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+                SelectConditionStep<Record> selectConditionStep = create.select()
+                        .from(ROLE)
+                        .leftJoin(COLLEGE_ROLE)
+                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                        .leftJoin(COLLEGE)
+                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                        .leftJoin(SCHOOL)
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles));
+                sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                records = selectConditionStep.fetch();
+            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+                Users users = usersService.getUserFromSession();
+                Optional<Record> record = usersService.findUserSchoolInfo(users);
+                int collegeId = authoritiesService.getRoleCollegeId(record);
+                SelectConditionStep<Record> selectConditionStep = create.select()
+                        .from(ROLE)
+                        .leftJoin(COLLEGE_ROLE)
+                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                        .leftJoin(COLLEGE)
+                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                        .leftJoin(SCHOOL)
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                        .where(COLLEGE.COLLEGE_ID.eq(collegeId));
+                sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                records = selectConditionStep.fetch();
+            }
         } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(ROLE)
-                    .leftJoin(COLLEGE_ROLE)
-                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                    .leftJoin(COLLEGE)
-                    .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .leftJoin(SCHOOL)
-                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a));
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
+            // 分权限显示用户数据
+            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+                SelectConditionStep<Record> selectConditionStep = create.select()
+                        .from(ROLE)
+                        .leftJoin(COLLEGE_ROLE)
+                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                        .leftJoin(COLLEGE)
+                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                        .leftJoin(SCHOOL)
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a));
+                sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                records = selectConditionStep.fetch();
+            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+                Users users = usersService.getUserFromSession();
+                Optional<Record> record = usersService.findUserSchoolInfo(users);
+                int collegeId = authoritiesService.getRoleCollegeId(record);
+                SelectConditionStep<Record> selectConditionStep = create.select()
+                        .from(ROLE)
+                        .leftJoin(COLLEGE_ROLE)
+                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                        .leftJoin(COLLEGE)
+                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                        .leftJoin(SCHOOL)
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a));
+                sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+                records = selectConditionStep.fetch();
+            }
         }
         return records;
     }
 
     @Override
     public int countAll() {
-        List<String> defaultRoles = getDefaultRoles();
-        Record1<Integer> count = create.selectCount()
-                .from(ROLE)
-                .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles))
-                .fetchOne();
-        return count.value1();
+        // 分权限显示用户数据
+        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            List<String> defaultRoles = getDefaultRoles();
+            Record1<Integer> count = create.selectCount()
+                    .from(ROLE)
+                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles))
+                    .fetchOne();
+            return count.value1();
+        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            int collegeId = authoritiesService.getRoleCollegeId(record);
+            Record1<Integer> count = create.selectCount()
+                    .from(ROLE)
+                    .leftJoin(COLLEGE_ROLE)
+                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                    .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId))
+                    .fetchOne();
+            return count.value1();
+        }
+      return 0;
     }
 
     @Override
@@ -176,23 +237,56 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
         Condition a = searchCondition(dataTablesUtils);
         List<String> defaultRoles = getDefaultRoles();
         if (ObjectUtils.isEmpty(a)) {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(ROLE)
-                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles));
-            count = selectConditionStep.fetchOne();
+            // 分权限显示用户数据
+            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+                SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                        .from(ROLE)
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles));
+                count = selectConditionStep.fetchOne();
+            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+                Users users = usersService.getUserFromSession();
+                Optional<Record> record = usersService.findUserSchoolInfo(users);
+                int collegeId = authoritiesService.getRoleCollegeId(record);
+                SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                        .from(ROLE)
+                        .leftJoin(COLLEGE_ROLE)
+                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                        .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId));
+                count = selectConditionStep.fetchOne();
+            }
         } else {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(ROLE)
-                    .leftJoin(COLLEGE_ROLE)
-                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                    .leftJoin(COLLEGE)
-                    .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .leftJoin(SCHOOL)
-                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a));
-            count = selectConditionStep.fetchOne();
+            // 分权限显示用户数据
+            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+                SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                        .from(ROLE)
+                        .leftJoin(COLLEGE_ROLE)
+                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                        .leftJoin(COLLEGE)
+                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                        .leftJoin(SCHOOL)
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a));
+                count = selectConditionStep.fetchOne();
+            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+                Users users = usersService.getUserFromSession();
+                Optional<Record> record = usersService.findUserSchoolInfo(users);
+                int collegeId = authoritiesService.getRoleCollegeId(record);
+                SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                        .from(ROLE)
+                        .leftJoin(COLLEGE_ROLE)
+                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                        .leftJoin(COLLEGE)
+                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                        .leftJoin(SCHOOL)
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a));
+                count = selectConditionStep.fetchOne();
+            }
         }
-        return count.value1();
+        if(!ObjectUtils.isEmpty(count)){
+            return count.value1();
+        }
+        return 0;
     }
 
     @Override

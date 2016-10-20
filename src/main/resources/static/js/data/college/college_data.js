@@ -51,7 +51,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 colleges: '/web/data/college/data',
                 updateDel: '/web/data/college/update/del',
                 add:'/web/data/college/add',
-                edit:'/web/data/college/edit'
+                edit:'/web/data/college/edit',
+                mount:'/web/data/college/mount'
             };
         }
 
@@ -232,7 +233,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 });
 
                 $(document).on("click", ".mount", function () {
-
+                    college_mount($(this).attr('data-id'));
                 });
             }
         });
@@ -380,7 +381,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          编辑页面
          */
         function edit(collegeId) {
-            window.location.href = web_path + getAjaxUrl.edit + '?id=' + collegeId;
+            window.location.href = web_path + getAjaxUrl().edit + '?id=' + collegeId;
         }
 
         /*
@@ -433,6 +434,14 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                     }
                 }
             });
+        }
+
+        /**
+         * 院挂载应用
+         * @param collegeId 院id
+         */
+        function college_mount(collegeId){
+            window.location.href = web_path + getAjaxUrl().mount + '?id=' + collegeId;
         }
 
         function del(collegeId) {

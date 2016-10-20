@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.RoleRecord;
@@ -42,6 +43,9 @@ public class RoleController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private UsersService usersService;
 
     @Resource
     private AuthoritiesService authoritiesService;
@@ -107,7 +111,12 @@ public class RoleController {
      * @return 添加页面
      */
     @RequestMapping(value = "/web/platform/role/add", method = RequestMethod.GET)
-    public String roleAdd() {
+    public String roleAdd(ModelMap modelMap) {
+        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
+        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
+        }
         return "web/platform/role/role_add";
     }
 
@@ -131,6 +140,11 @@ public class RoleController {
             roleBean.setSchoolName(temp.getValue(SCHOOL.SCHOOL_NAME));
         }
         modelMap.addAttribute("role",roleBean);
+        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
+        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
+        }
         return "web/platform/role/role_edit";
     }
 
@@ -145,6 +159,11 @@ public class RoleController {
     public AjaxUtils saveValid(@RequestParam("roleName") String name,@RequestParam(value = "collegeId",defaultValue = "0") int collegeId) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
+            if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+                Users users = usersService.getUserFromSession();
+                Optional<Record> record = usersService.findUserSchoolInfo(users);
+                collegeId =  authoritiesService.getRoleCollegeId(record);
+            }
             if(collegeId>0){
                 Result<Record> records = roleService.findByRoleNameAndCollegeId(roleName,collegeId);
                 if (records.isEmpty()) {
@@ -177,6 +196,11 @@ public class RoleController {
                                  @RequestParam("roleId") int roleId){
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
+            if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+                Users users = usersService.getUserFromSession();
+                Optional<Record> record = usersService.findUserSchoolInfo(users);
+                collegeId =  authoritiesService.getRoleCollegeId(record);
+            }
             if(collegeId>0){
                 Result<Record> records = roleService.findByRoleNameAndCollegeIdNeRoleId(roleName,collegeId,roleId);
                 if (records.isEmpty()) {
@@ -199,7 +223,6 @@ public class RoleController {
     /**
      * 保存角色
      *
-     * @param schoolId       学校id
      * @param collegeId      院id
      * @param roleName       角色名
      * @param applicationIds 应用ids
@@ -207,25 +230,13 @@ public class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleSave(@RequestParam(value = "schoolId", defaultValue = "0") int schoolId,
-                              @RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName,
-                              @RequestParam("applicationIds") String applicationIds) {
+    public AjaxUtils roleSave(@RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = new Role();
         role.setRoleName(roleName);
         role.setRoleEnName("ROLE_" + RandomUtils.generateRoleEnName().toUpperCase());
         int roleId = roleService.saveAndReturnId(role);
         if (roleId > 0) {
-            if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-                List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
-                ids.forEach(id -> {
-                    RoleApplication roleApplication = new RoleApplication(roleId, id);
-                    roleApplicationService.save(roleApplication);
-                });
-                if (schoolId > 0 && collegeId > 0) {
-                    CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
-                    collegeRoleService.save(collegeRole);
-                }
-            }
+            saveOrUpdate(collegeId,applicationIds,roleId);
             return new AjaxUtils().success().msg("保存成功");
         }
         return new AjaxUtils().fail().msg("保存失败");
@@ -233,7 +244,6 @@ public class RoleController {
 
     /**
      * 更新角色
-     * @param schoolId 学校id
      * @param roleId 角色id
      * @param collegeId 院id
      * @param roleName 角色名
@@ -242,29 +252,42 @@ public class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/update", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleUpdate(@RequestParam(value = "schoolId", defaultValue = "0") int schoolId,@RequestParam("roleId") int roleId,
-                              @RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName,
-                              @RequestParam("applicationIds") String applicationIds) {
+    public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
         role.setRoleName(roleName);
         roleService.update(role);
         if (roleId > 0) {
-            if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-                List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
-                roleApplicationService.deleteByRoleId(roleId);
-                ids.forEach(id -> {
-                    RoleApplication roleApplication = new RoleApplication(roleId, id);
-                    roleApplicationService.save(roleApplication);
-                });
-                collegeRoleService.deleteByRoleId(roleId);
-                if (schoolId > 0 && collegeId > 0) {
-                    CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
-                    collegeRoleService.save(collegeRole);
-                }
-            }
+            roleApplicationService.deleteByRoleId(roleId);
+            collegeRoleService.deleteByRoleId(roleId);
+            saveOrUpdate(collegeId,applicationIds,roleId);
             return new AjaxUtils().success().msg("更新成功");
         }
         return new AjaxUtils().fail().msg("更新失败");
+    }
+
+    /**
+     * 保存或更新与角色相关的表
+     * @param collegeId 院id
+     * @param applicationIds 应用ids
+     * @param roleId 角色id
+     */
+    private void saveOrUpdate(int collegeId,String applicationIds,int roleId){
+        if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            collegeId =  authoritiesService.getRoleCollegeId(record);
+        }
+        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
+            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
+            ids.forEach(id -> {
+                RoleApplication roleApplication = new RoleApplication(roleId, id);
+                roleApplicationService.save(roleApplication);
+            });
+        }
+        if (collegeId > 0) {
+            CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
+            collegeRoleService.save(collegeRole);
+        }
     }
 
     /**

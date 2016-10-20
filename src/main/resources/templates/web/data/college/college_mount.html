@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -381,8 +381,8 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">平台角色 -
-                    <small>编辑</small>
+                <h1 class="page-header">院数据 -
+                    <small>挂载</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -394,26 +394,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <form role="form" id="add_form">
-                    <div class="form-group" id="valid_school" sec:authorize="hasRole('ROLE_SYSTEM')">
-                        <select class="form-control" name="schoolId" id="select_school">
-                            <option value="0">请选择学校</option>
-                        </select>
-                        <p class="text-danger hidden" id="school_error_msg"></p>
-                        <input type="hidden" id="schoolId" th:value="${role.schoolId}"/>
-                    </div>
-                    <div class="form-group" id="valid_college" sec:authorize="hasRole('ROLE_SYSTEM')">
-                        <select class="form-control" name="collegeId" id="select_college">
-                            <option value="0">请选择院</option>
-                        </select>
-                        <p class="text-danger hidden" id="college_error_msg"></p>
-                        <input type="hidden" id="collegeId" th:value="${role.collegeId}"/>
-                    </div>
-                    <div class="form-group" id="valid_role_name">
-                        <label>角色</label>
-                        <input class="form-control" name="roleName" id="roleName" th:value="${role.roleName}" placeholder="角色"/>
-                        <p class="text-danger hidden" id="role_name_error_msg"></p>
-                        <input type="hidden" id="roleId" name="roleId" th:value="${role.roleId}"/>
-                    </div>
+                    <input type="hidden" th:value="${collegeId}" id="collegeId" />
                     <div class="row">
                         <hr/>
                         <h2>应用挂载</h2>
@@ -452,16 +433,12 @@
 
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
-        data-main="/role_edit"></script>
+        data-main="/college_mount"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
-    /*页面参数*/
-    var init_page_param = {
-        'currentUserRoleName':/*[[${currentUserRoleName}]]*/ ''
-    };
     require.config({
-        baseUrl: web_path + "/js/platform/role",
+        baseUrl: web_path + "/js/data/college",
         waitSeconds: 0
     });
     /*]]>*/
