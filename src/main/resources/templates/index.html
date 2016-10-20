@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="keywords" name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta http-equiv="description" name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
+
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title th:text="#{web.title}">ISY</title>
+
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+    <!-- Custom Google Web Font -->
+    <link rel="stylesheet" href="webjars/font-awesome/css/font-awesome.min.css"
+          th:href="@{/webjars/font-awesome/css/font-awesome.min.css}"/>
+
+    <!-- Custom CSS-->
+    <link rel="stylesheet" href="css/general.css" th:href="@{/css/custom/general.css}"/>
+
+    <!-- Owl-Carousel -->
+    <link rel="stylesheet" href="css/fui.css" th:href="@{/css/custom/fui.css}"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- Preloader -->
+<div id="preloader">
+    <div id="status"></div>
+</div>
+
+<!-- FullScreen -->
+<div class="intro-header">
+    <div class="col-xs-12 text-center abcen1">
+        <h1 class="h1_home">ISY</h1>
+        <!--<h3 class="h3_home">最近记录：<button type="button" class="btn btn-lg btn-link">昆明理工大学-城市学院</button></h3>-->
+        <ul class="list-inline intro-social-buttons">
+            <!--<li><a href="https://twitter.com/galantiandrea" class="btn  btn-lg mybutton_cyano"><span>去学校</span></a>
+            </li>-->
+            <li><a href="login.html" th:href="@{/login}" class="btn  btn-lg mybutton_standard"><span>马上登录！</span></a>
+            </li>
+        </ul>
+        <div th:include="footer::footer" style="margin-top:200px;">
+            <p class="text-muted">&copy; Company 2016</p>
+        </div>
+    </div>
+    <!-- /.container -->
+</div>
+
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/index"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/index",
+        waitSeconds: 0
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

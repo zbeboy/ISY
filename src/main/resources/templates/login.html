@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="keywords" name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta http-equiv="description" name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+
+    <title th:text="#{web.title}">ISY</title>
+
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+    <!-- MetisMenu CSS -->
+    <link href="css/metisMenu.min.css" rel="stylesheet" th:href="@{/webjars/metisMenu/metisMenu.min.css}"/>
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin-2.css" rel="stylesheet"
+          th:href="@{/webjars/startbootstrap-sb-admin-2/css/sb-admin-2.css}"/>
+
+    <!-- Loading CSS -->
+    <link href="plugin/loading/css/showLoading.css" rel="stylesheet"
+          th:href="@{/plugin/loading/css/showLoading.css}"/>
+
+    <!-- sticky-footer CSS -->
+    <link href="css/sticky-footer.css" rel="stylesheet" th:href="@{/css/custom/sticky-footer.css}"/>
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+          th:href="@{/webjars/font-awesome/css/font-awesome.min.css}"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">登录 ISY</h3>
+                </div>
+                <div class="panel-body" id="loading_region">
+                    <div class="text-center text-danger">
+                        <h4 class="hidden" id="error_msg">用户名或密码错误！</h4>
+                    </div>
+                    <form role="form" th:action="@{/login}" action="/login" method="post" id="login_form">
+                        <fieldset>
+                            <div class="form-group" id="valid_email">
+                                <input class="form-control" placeholder="邮箱" id="email" name="username"
+                                       th:value="${username}" type="email" autofocus="autofocus"/>
+                                <p class="text-danger hidden" id="email_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_password">
+                                <input class="form-control" placeholder="密码" id="password" name="password"
+                                       th:value="${password}" type="password"/>
+                                <p class="text-danger hidden" id="password_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_captcha">
+                                <div class="row">
+                                    <div class="col-md-5"><img alt="验证码" id="jcaptcha"
+                                                               th:src="@{/user/login/jcaptcha}"/></div>
+                                    <div class="col-md-7"><input class="form-control" placeholder="验证码"
+                                                                 name="j_captcha_response" id="j_captcha_response"
+                                                                 type="text"/></div>
+                                </div>
+                                <p class="text-danger hidden" id="captcha_error_msg">验证码错误</p>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="remember-me" th:value="true"/>记住我
+                                </label>
+                            </div>
+                            <!-- Change this to a button or input when using this as a form -->
+                            <button type="button" id="login" class="btn btn-lg btn-success btn-block">登 录</button>
+                        </fieldset>
+                    </form>
+                    <div class="text-center">
+                        <small>还没有账号吗？ <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm">注册</a> <a
+                                class="pull-right" href="javascript:;" id="forget_password">忘记密码</a></small>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer" th:include="footer::footer">
+        <p class="text-muted">&copy; Company 2016</p>
+    </footer>
+    <!-- /.footer -->
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">您是：</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" id="student_register">学生</button>
+                    <br/>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" style="margin-top:10px;"
+                            id="staff_register">教职工
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/login"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/login",
+        waitSeconds: 0
+    });
+    /*]]>*/
+</script>
+
+</body>
+
+</html>

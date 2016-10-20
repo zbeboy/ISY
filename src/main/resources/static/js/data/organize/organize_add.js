@@ -1,0 +1,674 @@
+/**
+ * Created by lenovo on 2016-09-25.
+ */
+requirejs.config({
+    // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
+    paths: {
+        "csrf": web_path + "/js/util/csrf",
+        "nav": web_path + "/js/util/nav",
+        "constants":web_path + "/js/util/constants"
+    },
+    // shimオプションの設定。モジュール間の依存関係を定義します。
+    shim: {
+        "messenger": {
+            deps: ["jquery"]
+        }
+    }
+});
+
+// require(["module/name", ...], function(params){ ... });
+require(["jquery", "handlebars", "csrf", "messenger", "nav","constants"], function ($, Handlebars, csrf, messenger, nav,constants) {
+
+    /*
+     初始化消息机制
+     */
+    Messenger.options = {
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+        theme: 'flat'
+    };
+
+    /*
+     ajax url.
+     */
+    var ajax_url = {
+        school_data_url: '/user/schools',
+        college_data_url: '/user/colleges',
+        department_data_url: '/user/departments',
+        science_data_url: '/user/sciences',
+        save: '/web/data/organize/save',
+        valid: '/web/data/organize/save/valid',
+        back:'/web/menu/data/organize'
+    };
+
+    /*
+     参数id
+     */
+    var paramId = {
+        schoolId: '#select_school',
+        collegeId: '#select_college',
+        departmentId: '#select_department',
+        scienceId: '#select_science',
+        grade: '#select_grade',
+        organizeName: '#organizeName'
+    };
+
+    /*
+     参数
+     */
+    var param = {
+        schoolId: $(paramId.schoolId).val(),
+        collegeId: $(paramId.collegeId).val(),
+        departmentId: $(paramId.departmentId).val(),
+        scienceId: $(paramId.scienceId).val(),
+        grade: $(paramId.grade).val(),
+        organizeName: $(paramId.organizeName).val()
+    };
+
+    /*
+     检验id
+     */
+    var validId = {
+        schoolId: '#valid_school',
+        collegeId: '#valid_college',
+        departmentId: '#valid_department',
+        scienceId: '#valid_science',
+        grade: '#valid_grade',
+        organizeName: '#valid_organize_name'
+    };
+
+    /*
+     错误消息id
+     */
+    var errorMsgId = {
+        schoolId: '#school_error_msg',
+        collegeId: '#college_error_msg',
+        departmentId: '#department_error_msg',
+        scienceId: '#science_error_msg',
+        grade: '#grade_error_msg',
+        organizeName: '#organize_name_error_msg'
+    };
+
+    /**
+     * 检验成功
+     * @param validId
+     * @param errorMsgId
+     */
+    function validSuccessDom(validId, errorMsgId) {
+        $(validId).addClass('has-success').removeClass('has-error');
+        $(errorMsgId).addClass('hidden').text('');
+    }
+
+    /**
+     * 检验失败
+     * @param validId
+     * @param errorMsgId
+     * @param msg
+     */
+    function validErrorDom(validId, errorMsgId, msg) {
+        $(validId).addClass('has-error').removeClass('has-success');
+        $(errorMsgId).removeClass('hidden').text(msg);
+    }
+
+    /*
+     清除验证
+     */
+    function validCleanDom(inputId, errorId) {
+        $(inputId).removeClass('has-error').removeClass('has-success');
+        $(errorId).addClass('hidden').text('');
+    }
+
+    /**
+     * 初始化参数
+     */
+    function initParam() {
+        param.schoolId = $(paramId.schoolId).val();
+        param.collegeId = $(paramId.collegeId).val();
+        param.departmentId = $(paramId.departmentId).val();
+        param.scienceId = $(paramId.scienceId).val();
+        param.grade = $(paramId.grade).val();
+        param.organizeName = $(paramId.organizeName).val();
+    }
+
+    /*
+    初始化页面
+     */
+    init();
+
+    /**
+     * 学校数据展现
+     * @param data json数据
+     */
+    function schoolData(data) {
+        var source = $("#school-template").html();
+        var template = Handlebars.compile(source);
+
+        Handlebars.registerHelper('school_value', function () {
+            var value = Handlebars.escapeExpression(this.schoolId);
+            return new Handlebars.SafeString(value);
+        });
+
+        Handlebars.registerHelper('school_name', function () {
+            var name = Handlebars.escapeExpression(this.schoolName);
+            return new Handlebars.SafeString(name);
+        });
+
+        var html = template(data);
+        $(paramId.schoolId).html(html);
+    }
+
+    /**
+     * 初始化数据
+     */
+    function init(){
+        if(init_page_param.currentUserRoleName === constants.global_role_name.system_role){
+            $.get(web_path + ajax_url.school_data_url, function (data) {
+                schoolData(data);
+            });
+        } else if(init_page_param.currentUserRoleName === constants.global_role_name.admin_role){
+            changeDepartment(init_page_param.collegeId);
+        }
+    }
+
+    /*
+     初始化年级
+     */
+    changeGrade();
+
+    // 当改变学校时，变换学院数据.
+    $(paramId.schoolId).change(function () {
+        initParam();
+        var school = param.schoolId;
+        changeCollege(school);// 根据学校重新加载院数据
+        changeDepartment(0);// 清空系数据
+        changeScience(0);// 清空专业数据
+
+        // 改变选项时，检验
+        if (Number(school) > 0) {
+            validSuccessDom(validId.schoolId, errorMsgId.schoolId);
+        } else {
+            validErrorDom(validId.schoolId, errorMsgId.schoolId, '请选择学校');
+        }
+
+        validCleanDom(validId.collegeId, errorMsgId.collegeId);
+
+        validCleanDom(validId.departmentId, errorMsgId.departmentId);
+
+        validCleanDom(validId.scienceId, errorMsgId.scienceId);
+    });
+
+    // 当改变学院时，变换系数据.
+    $(paramId.collegeId).change(function () {
+        initParam();
+        var college = param.collegeId;
+        changeDepartment(college);// 根据院重新加载系数据
+        changeScience(0);// 清空专业数据
+
+        if (Number(college) > 0) {
+            validSuccessDom(validId.collegeId, errorMsgId.collegeId);
+        } else {
+            validErrorDom(validId.collegeId, errorMsgId.collegeId, '请选择院');
+        }
+
+        validCleanDom(validId.departmentId, errorMsgId.departmentId);
+
+        validCleanDom(validId.scienceId, errorMsgId.scienceId);
+    });
+
+    // 当改变系时，变换专业数据.
+    $(paramId.departmentId).change(function () {
+        initParam();
+        var department = param.departmentId;
+        changeScience(department);// 根据系重新加载专业数据
+
+        if (Number(department) > 0) {
+            validSuccessDom(validId.departmentId, errorMsgId.departmentId);
+        } else {
+            validErrorDom(validId.departmentId, errorMsgId.departmentId, '请选择系');
+        }
+        validCleanDom(validId.scienceId, errorMsgId.scienceId);
+    });
+
+    // 改变专业时
+    $(paramId.scienceId).change(function () {
+        initParam();
+        var science = param.scienceId;
+
+        if (Number(science) > 0) {
+            validSuccessDom(validId.scienceId, errorMsgId.scienceId);
+        } else {
+            validErrorDom(validId.scienceId, errorMsgId.scienceId, '请选择专业');
+        }
+    });
+
+    // 改变年级时
+    $(paramId.grade).change(function () {
+        initParam();
+        var grade = param.grade;
+
+        if (Number(grade) > 0) {
+            validSuccessDom(validId.grade, errorMsgId.grade);
+        } else {
+            validErrorDom(validId.grade, errorMsgId.grade, '请选择年级');
+        }
+    });
+
+    /**
+     * 改变学院选项
+     * @param school_id 学校id
+     */
+    function changeCollege(school_id) {
+        if (Number(school_id) == 0) {
+            var source = $("#college-template").html();
+            var template = Handlebars.compile(source);
+
+            var context = {
+                listResult: [
+                    {name: "请选择院", value: ""}
+                ]
+            };
+
+            Handlebars.registerHelper('college_value', function () {
+                var value = Handlebars.escapeExpression(this.value);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('college_name', function () {
+                var name = Handlebars.escapeExpression(this.name);
+                return new Handlebars.SafeString(name);
+            });
+
+            var html = template(context);
+            $(paramId.collegeId).html(html);
+        } else {
+            // 根据学校id查询院数据
+            $.post(web_path + ajax_url.college_data_url, {schoolId: school_id}, function (data) {
+                var source = $("#college-template").html();
+                var template = Handlebars.compile(source);
+
+                Handlebars.registerHelper('college_value', function () {
+                    var value = Handlebars.escapeExpression(this.collegeId);
+                    return new Handlebars.SafeString(value);
+                });
+
+                Handlebars.registerHelper('college_name', function () {
+                    var name = Handlebars.escapeExpression(this.collegeName);
+                    return new Handlebars.SafeString(name);
+                });
+
+                var html = template(data);
+                $(paramId.collegeId).html(html);
+            });
+        }
+    }
+
+    /**
+     * 改变系选项
+     * @param college_id 院id
+     */
+    function changeDepartment(college_id) {
+
+        if (Number(college_id) == 0) {
+            var source = $("#department-template").html();
+            var template = Handlebars.compile(source);
+
+            var context = {
+                listResult: [
+                    {name: "请选择系", value: ""}
+                ]
+            };
+
+            Handlebars.registerHelper('department_value', function () {
+                var value = Handlebars.escapeExpression(this.value);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('department_name', function () {
+                var name = Handlebars.escapeExpression(this.name);
+                return new Handlebars.SafeString(name);
+            });
+
+            var html = template(context);
+            $(paramId.departmentId).html(html);
+        } else {
+            // 根据院id查询全部系
+            $.post(web_path + ajax_url.department_data_url, {collegeId: college_id}, function (data) {
+                var source = $("#department-template").html();
+                var template = Handlebars.compile(source);
+
+                Handlebars.registerHelper('department_value', function () {
+                    var value = Handlebars.escapeExpression(this.departmentId);
+                    return new Handlebars.SafeString(value);
+                });
+
+                Handlebars.registerHelper('department_name', function () {
+                    var name = Handlebars.escapeExpression(this.departmentName);
+                    return new Handlebars.SafeString(name);
+                });
+
+                var html = template(data);
+                $(paramId.departmentId).html(html);
+            });
+        }
+    }
+
+    /**
+     * 改变专业选项
+     * @param department_id 系id
+     */
+    function changeScience(department_id) {
+
+        if (Number(department_id) == 0) {
+            var source = $("#science-template").html();
+            var template = Handlebars.compile(source);
+
+            var context = {
+                listResult: [
+                    {name: "请选择专业", value: ""}
+                ]
+            };
+
+            Handlebars.registerHelper('science_value', function () {
+                var value = Handlebars.escapeExpression(this.value);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('science_name', function () {
+                var name = Handlebars.escapeExpression(this.name);
+                return new Handlebars.SafeString(name);
+            });
+
+            var html = template(context);
+            $(paramId.scienceId).html(html);
+        } else {
+            // 根据系id查询全部专业
+            $.post(web_path + ajax_url.science_data_url, {departmentId: department_id}, function (data) {
+                var source = $("#science-template").html();
+                var template = Handlebars.compile(source);
+
+                Handlebars.registerHelper('science_value', function () {
+                    var value = Handlebars.escapeExpression(this.scienceId);
+                    return new Handlebars.SafeString(value);
+                });
+
+                Handlebars.registerHelper('science_name', function () {
+                    var name = Handlebars.escapeExpression(this.scienceName);
+                    return new Handlebars.SafeString(name);
+                });
+
+                var html = template(data);
+                $(paramId.scienceId).html(html);
+            });
+        }
+    }
+
+    /**
+     * 年级对象
+     * @param name
+     * @param value
+     */
+    function gradeObj(name, value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    /**
+     * 改变年级选项
+     * @param science_id 专业id
+     */
+    function changeGrade() {
+        var source = $("#grade-template").html();
+        var template = Handlebars.compile(source);
+
+        var date = new Date();
+        var year = date.getFullYear();
+        var beforeYear = year - 5;
+        var afterYear = year + 3;
+
+        var yearArr = [new gradeObj('请选择年级', '')];
+        for (var i = beforeYear; i <= year; i++) {
+            yearArr.push(new gradeObj(i + '级', i));
+        }
+
+        for (var j = year + 1; j <= afterYear; j++) {
+            yearArr.push(new gradeObj(j + '级', j));
+        }
+
+        var context = {
+            listResult: yearArr
+        };
+
+        Handlebars.registerHelper('grade_value', function () {
+            var value = Handlebars.escapeExpression(this.value);
+            return new Handlebars.SafeString(value);
+        });
+
+        Handlebars.registerHelper('grade_name', function () {
+            var name = Handlebars.escapeExpression(this.name);
+            return new Handlebars.SafeString(name);
+        });
+
+        var html = template(context);
+        $(paramId.grade).html(html);
+
+    }
+
+    /*
+     即时检验系名
+     */
+    $(paramId.organizeName).blur(function () {
+        initParam();
+        var organizeName = param.organizeName;
+        if (organizeName.length <= 0 || organizeName.length > 200) {
+            validErrorDom(validId.organizeName, errorMsgId.organizeName, '班级名200个字符以内');
+        } else {
+            // 班级名是否重复
+            Messenger().run({
+                errorMessage: '请求失败'
+            }, {
+                url: web_path + ajax_url.valid,
+                type: 'post',
+                data: param,
+                success: function (data) {
+                    if (data.state) {
+                        validSuccessDom(validId.organizeName, errorMsgId.organizeName);
+                    } else {
+                        validErrorDom(validId.organizeName, errorMsgId.organizeName, data.msg);
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
+        }
+    });
+
+    /*
+     返回
+     */
+    $('#page_back').click(function () {
+        window.location.href = web_path + ajax_url.back;
+    });
+
+    /*
+     保存数据
+     */
+    $('#save').click(function () {
+        add();
+    });
+
+    /*
+     添加询问
+     */
+    function add() {
+        initParam();
+        var organizeName = param.organizeName;
+        var msg;
+        msg = Messenger().post({
+            message: "确定添加班级 '" + organizeName + "'  吗?",
+            actions: {
+                retry: {
+                    label: '确定',
+                    phrase: 'Retrying TIME',
+                    action: function () {
+                        msg.cancel();
+                        if(init_page_param.currentUserRoleName === constants.global_role_name.system_role){
+                            validSchoolId();
+                        } else if(init_page_param.currentUserRoleName === constants.global_role_name.admin_role){
+                            validDepartmentId();
+                        }
+
+                    }
+                },
+                cancel: {
+                    label: '取消',
+                    action: function () {
+                        return msg.cancel();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 检验学校id
+     * @param msg
+     */
+    function validSchoolId() {
+        initParam();
+        var schoolId = param.schoolId;
+        if (Number(schoolId) <= 0) {
+            Messenger().post({
+                message: '请选择学校',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validCollegeId();
+        }
+    }
+
+    /**
+     * 检验院id
+     */
+    function validCollegeId() {
+        var collegeId = param.collegeId;
+        if (Number(collegeId) <= 0) {
+            Messenger().post({
+                message: '请选择院',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validDepartmentId();
+        }
+    }
+
+    /**
+     * 检验系id
+     */
+    function validDepartmentId() {
+        var departmentId = param.departmentId;
+        if (Number(departmentId) <= 0) {
+            Messenger().post({
+                message: '请选择系',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validScienceId();
+        }
+    }
+
+    /**
+     * 检验专业id
+     */
+    function validScienceId() {
+        var scienceId = param.scienceId;
+        if (Number(scienceId) <= 0) {
+            Messenger().post({
+                message: '请选择专业',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validOrganizeName();
+        }
+    }
+
+    /**
+     * 添加时检验并提交数据
+     */
+    function validOrganizeName() {
+        initParam();
+        var organizeName = param.organizeName;
+        if (organizeName.length <= 0 || organizeName.length > 200) {
+            Messenger().post({
+                message: '班级名1~200个字符',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            // 班级名是否重复
+            Messenger().run({
+                errorMessage: '请求失败'
+            }, {
+                url: web_path + ajax_url.valid,
+                type: 'post',
+                data: param,
+                success: function (data) {
+                    if (data.state) {
+                        sendAjax();
+                    } else {
+                        Messenger().post({
+                            message: data.msg,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
+    /**
+     * 发送数据到后台
+     */
+    function sendAjax() {
+        Messenger().run({
+            successMessage: '保存数据成功',
+            errorMessage: '保存数据失败',
+            progressMessage: '正在保存数据....'
+        }, {
+            url: web_path + ajax_url.save,
+            type: 'post',
+            data: $('#add_form').serialize(),
+            success: function (data) {
+                if (data.state) {
+                    window.location.href = web_path + ajax_url.back;
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            },
+            error: function (xhr) {
+                if ((xhr != null ? xhr.status : void 0) === 404) {
+                    return "请求失败";
+                }
+                return true;
+            }
+        });
+    }
+
+});

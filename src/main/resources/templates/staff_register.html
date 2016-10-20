@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="keywords" name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta http-equiv="description" name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+
+    <title th:text="#{web.title}">ISY</title>
+
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+    <!-- MetisMenu CSS -->
+    <link href="css/metisMenu.min.css" rel="stylesheet" th:href="@{/webjars/metisMenu/metisMenu.min.css}"/>
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin-2.css" rel="stylesheet"
+          th:href="@{/webjars/startbootstrap-sb-admin-2/css/sb-admin-2.css}"/>
+
+    <!-- Loading CSS -->
+    <link href="plugin/loading/css/showLoading.css" rel="stylesheet"
+          th:href="@{/plugin/loading/css/showLoading.css}"/>
+
+    <!-- sticky-footer CSS -->
+    <link href="css/sticky-footer.css" rel="stylesheet" th:href="@{/css/custom/sticky-footer.css}"/>
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+          th:href="@{/webjars/font-awesome/css/font-awesome.min.css}"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">注册账号</h3>
+                </div>
+                <div class="panel-body" id="loading_region">
+                    <form role="form" id="staff_register_form">
+                        <fieldset>
+                            <div class="form-group" id="valid_school">
+                                <select class="form-control" name="school" id="select_school">
+                                    <option>请选择学校</option>
+                                </select>
+                                <p class="text-danger hidden" id="school_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_college">
+                                <select class="form-control" name="college" id="select_college">
+                                    <option>请选择院</option>
+                                </select>
+                                <p class="text-danger hidden" id="college_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_department">
+                                <select class="form-control" name="department" id="select_department">
+                                    <option>请选择系</option>
+                                </select>
+                                <p class="text-danger hidden" id="department_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_staff_number">
+                                <input class="form-control" placeholder="工号" name="staffNumber" id="staffNumber"
+                                       type="text"/>
+                                <p class="text-danger hidden" id="staff_number_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_email">
+                                <input class="form-control" placeholder="邮箱" name="email" id="email" type="email"/>
+                                <p class="text-danger hidden" id="email_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_mobile">
+                                <input class="form-control" placeholder="手机号" name="mobile" id="mobile" type="text"/>
+                                <p class="text-danger hidden" id="mobile_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_phone_verify_code">
+                                <div class="input-group">
+                                    <input class="form-control" placeholder="手机验证码" name="phoneVerifyCode"
+                                           id="phoneVerifyCode" type="text"/>
+										<span class="input-group-btn">
+
+                                            <input type="button" class="btn btn-default" id="get_verification_code"
+                                                   value="获取验证码"/>
+										</span>
+                                </div><!-- /input-group -->
+                                <p class="text-danger hidden" id="phone_verify_code_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_password">
+                                <input class="form-control" placeholder="密码" name="password" id="password"
+                                       type="password"/>
+                                <p class="text-danger hidden" id="password_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_confirm_password">
+                                <input class="form-control" placeholder="确认密码" name="confirmPassword"
+                                       id="confirmPassword" type="password"/>
+                                <p class="text-danger hidden" id="confirm_password_error_msg"></p>
+                            </div>
+                            <p class="text-danger hidden" id="error_msg"></p>
+                            <!-- Change this to a button or input when using this as a form -->
+                            <div class="text-center">
+                                <button type="button" id="register" class="btn btn-lg btn-success">注册</button>
+                                <a href="login.html" th:href="@{/login}" class="btn btn-lg btn-primary">返回登录</a>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer" th:include="footer::footer">
+        <p class="text-muted">&copy; Company 2016</p>
+    </footer>
+    <!-- /.footer -->
+</div>
+
+<script id="school-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <option value="{{school_value}}">{{school_name}}</option>
+    {{/each}}
+</script>
+
+<script id="college-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <option value="{{college_value}}">{{college_name}}</option>
+    {{/each}}
+</script>
+
+<script id="department-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <option value="{{department_value}}">{{department_name}}</option>
+    {{/each}}
+</script>
+
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/staff"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/register",
+        waitSeconds: 0
+    });
+    /*]]>*/
+</script>
+
+</body>
+
+</html>

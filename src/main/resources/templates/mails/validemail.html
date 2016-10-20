@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.valid.title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="#{email.valid.greeting(${user.username})}">
+
+</p>
+<p th:text="#{email.valid.text1}">
+
+</p>
+<p>
+    <a href="#" th:href="${validLink}">验证链接</a>
+</p>
+<em>
+    链接有效期为:<span th:text="${user.mailboxVerifyValid}"></span>
+</em>
+<p>
+    <span th:text="#{email.valid.text2}"> </span>
+    <br/>
+    <em th:text="#{email.signature}"></em>
+</p>
+</body>
+</html>
