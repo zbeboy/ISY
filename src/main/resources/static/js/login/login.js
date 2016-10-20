@@ -27,7 +27,6 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading","csrf"
         ajax url
          */
         var ajax_url = {
-            valid_email:'/user/login/valid/email',
             change_jcaptcha:'/user/login/jcaptcha?d=',
             student_register:'/register?type=student',
             staff_register:'/register?type=staff',
