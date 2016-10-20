@@ -45,9 +45,7 @@ public class InitConfiguration implements CommandLineRunner {
         logger.info("\n\n" + "=========================================================\n"
                 + "Using cache manager: " + this.cacheManager.getClass().getName() + "\n"
                 + "=========================================================\n\n");
-        if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
-            initUrlMapping();
-        }
+        initUrlMapping();
     }
 
     /**
