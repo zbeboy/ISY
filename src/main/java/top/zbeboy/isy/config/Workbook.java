@@ -66,14 +66,14 @@ public final class Workbook {
     public static final String ADMIN_AUTHORITIES = "ROLE_ADMIN";
 
     /*
-    系统resource目录
+    系统setting目录
      */
-    public static final String RESOURCES_PATH = "./src/main/resources/";
+    public static final String SETTINGS_PATH = "./settings/";
 
     /*
     url mapping
      */
-    public static final String URL_MAPPING_FILE_PATH = RESOURCES_PATH + "url-mapping.txt";
+    public static final String URL_MAPPING_FILE_PATH = SETTINGS_PATH + "url-mapping.txt";
 
     private Workbook() {
     }
