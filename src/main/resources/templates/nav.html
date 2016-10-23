@@ -219,7 +219,12 @@
                 <li><a href="#"><i class="fa fa-gear fa-fw"></i> 设置</a>
                 </li>
                 <li class="divider"></li>
-                <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> 退出</a>
+                <li><a href="javascript:$('#logout').submit();"><i class="fa fa-sign-out fa-fw"></i> 退出</a>
+                </li>
+                <li class="hidden">
+                    <form th:action="@{/logout}" method="POST" id="logout" >
+                        <input type="submit" />
+                    </form>
                 </li>
             </ul>
             <!-- /.dropdown-user -->
