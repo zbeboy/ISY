@@ -119,11 +119,4 @@ public class ApplicationDao extends DAOImpl<ApplicationRecord, top.zbeboy.isy.do
 	public List<top.zbeboy.isy.domain.tables.pojos.Application> fetchByApplicationDataUrlStartWith(String... values) {
 		return fetch(Application.APPLICATION.APPLICATION_DATA_URL_START_WITH, values);
 	}
-
-	/**
-	 * Fetch records that have <code>application_type_id IN (values)</code>
-	 */
-	public List<top.zbeboy.isy.domain.tables.pojos.Application> fetchByApplicationTypeId(Integer... values) {
-		return fetch(Application.APPLICATION.APPLICATION_TYPE_ID, values);
-	}
 }

@@ -12,7 +12,6 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
 
 import top.zbeboy.isy.domain.tables.Application;
-import top.zbeboy.isy.domain.tables.ApplicationType;
 import top.zbeboy.isy.domain.tables.Authorities;
 import top.zbeboy.isy.domain.tables.College;
 import top.zbeboy.isy.domain.tables.CollegeApplication;
@@ -48,7 +47,6 @@ import top.zbeboy.isy.domain.tables.SystemSms;
 import top.zbeboy.isy.domain.tables.Users;
 import top.zbeboy.isy.domain.tables.UsersType;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
-import top.zbeboy.isy.domain.tables.records.ApplicationTypeRecord;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeRecord;
@@ -104,7 +102,6 @@ public class Keys {
 	// -------------------------------------------------------------------------
 
 	public static final Identity<ApplicationRecord, Integer> IDENTITY_APPLICATION = Identities0.IDENTITY_APPLICATION;
-	public static final Identity<ApplicationTypeRecord, Integer> IDENTITY_APPLICATION_TYPE = Identities0.IDENTITY_APPLICATION_TYPE;
 	public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
 	public static final Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Identities0.IDENTITY_DEPARTMENT;
 	public static final Identity<InternshipCompanyHistoryRecord, Integer> IDENTITY_INTERNSHIP_COMPANY_HISTORY = Identities0.IDENTITY_INTERNSHIP_COMPANY_HISTORY;
@@ -124,7 +121,6 @@ public class Keys {
 	// -------------------------------------------------------------------------
 
 	public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = UniqueKeys0.KEY_APPLICATION_PRIMARY;
-	public static final UniqueKey<ApplicationTypeRecord> KEY_APPLICATION_TYPE_PRIMARY = UniqueKeys0.KEY_APPLICATION_TYPE_PRIMARY;
 	public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = UniqueKeys0.KEY_COLLEGE_PRIMARY;
 	public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
 	public static final UniqueKey<GraduationPracticeCollegeRecord> KEY_GRADUATION_PRACTICE_COLLEGE_PRIMARY = UniqueKeys0.KEY_GRADUATION_PRACTICE_COLLEGE_PRIMARY;
@@ -160,7 +156,6 @@ public class Keys {
 	// FOREIGN KEY definitions
 	// -------------------------------------------------------------------------
 
-	public static final ForeignKey<ApplicationRecord, ApplicationTypeRecord> APPLICATION_IBFK_1 = ForeignKeys0.APPLICATION_IBFK_1;
 	public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = ForeignKeys0.AUTHORITIES_IBFK_1;
 	public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = ForeignKeys0.COLLEGE_IBFK_1;
 	public static final ForeignKey<CollegeApplicationRecord, ApplicationRecord> COLLEGE_APPLICATION_IBFK_1 = ForeignKeys0.COLLEGE_APPLICATION_IBFK_1;
@@ -212,7 +207,6 @@ public class Keys {
 
 	private static class Identities0 extends AbstractKeys {
 		public static Identity<ApplicationRecord, Integer> IDENTITY_APPLICATION = createIdentity(Application.APPLICATION, Application.APPLICATION.APPLICATION_ID);
-		public static Identity<ApplicationTypeRecord, Integer> IDENTITY_APPLICATION_TYPE = createIdentity(ApplicationType.APPLICATION_TYPE, ApplicationType.APPLICATION_TYPE.APPLICATION_TYPE_ID);
 		public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
 		public static Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = createIdentity(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
 		public static Identity<InternshipCompanyHistoryRecord, Integer> IDENTITY_INTERNSHIP_COMPANY_HISTORY = createIdentity(InternshipCompanyHistory.INTERNSHIP_COMPANY_HISTORY, InternshipCompanyHistory.INTERNSHIP_COMPANY_HISTORY.INTERNSHIP_COMPANY_HISTORY_ID);
@@ -230,7 +224,6 @@ public class Keys {
 
 	private static class UniqueKeys0 extends AbstractKeys {
 		public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = createUniqueKey(Application.APPLICATION, Application.APPLICATION.APPLICATION_ID);
-		public static final UniqueKey<ApplicationTypeRecord> KEY_APPLICATION_TYPE_PRIMARY = createUniqueKey(ApplicationType.APPLICATION_TYPE, ApplicationType.APPLICATION_TYPE.APPLICATION_TYPE_ID);
 		public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = createUniqueKey(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
 		public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = createUniqueKey(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
 		public static final UniqueKey<GraduationPracticeCollegeRecord> KEY_GRADUATION_PRACTICE_COLLEGE_PRIMARY = createUniqueKey(GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE, GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_ID);
@@ -264,7 +257,6 @@ public class Keys {
 	}
 
 	private static class ForeignKeys0 extends AbstractKeys {
-		public static final ForeignKey<ApplicationRecord, ApplicationTypeRecord> APPLICATION_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_APPLICATION_TYPE_PRIMARY, Application.APPLICATION, Application.APPLICATION.APPLICATION_TYPE_ID);
 		public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, Authorities.AUTHORITIES, Authorities.AUTHORITIES.USERNAME);
 		public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_SCHOOL_PRIMARY, College.COLLEGE, College.COLLEGE.SCHOOL_ID);
 		public static final ForeignKey<CollegeApplicationRecord, ApplicationRecord> COLLEGE_APPLICATION_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_APPLICATION_PRIMARY, CollegeApplication.COLLEGE_APPLICATION, CollegeApplication.COLLEGE_APPLICATION.APPLICATION_ID);

@@ -76,7 +76,7 @@ public class RoleController {
     @ResponseBody
     public DataTablesUtils<RoleBean> roleDatas(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
+        ArrayList<String> headers = new ArrayList<>();
         headers.add("select");
         headers.add("role_name");
         headers.add("school_name");

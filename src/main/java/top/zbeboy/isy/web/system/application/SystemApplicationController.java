@@ -45,9 +45,6 @@ public class SystemApplicationController {
     private ApplicationService applicationService;
 
     @Resource
-    private ApplicationTypeService applicationTypeService;
-
-    @Resource
     private RoleService roleService;
 
     @Resource
@@ -82,7 +79,6 @@ public class SystemApplicationController {
         headers.add("application_en_name");
         headers.add("application_pid");
         headers.add("application_url");
-        headers.add("application_type_name");
         headers.add("icon");
         headers.add("application_sort");
         headers.add("application_code");
@@ -154,14 +150,8 @@ public class SystemApplicationController {
             applicationPids.addAll(secondLevelIds);
         }
 
-        // 应用类型
-        ApplicationType applicationType = new ApplicationType(0,"请选择应用类型");
-        List<ApplicationType> applicationTypes = new ArrayList<>();
-        applicationTypes.add(applicationType);
-        applicationTypes.addAll(applicationTypeService.findAll());;
         Map<String,Object> data = new HashMap<>();
         data.put("applicationPids",applicationPids);
-        data.put("applicationTypes",applicationTypes);
         return new AjaxUtils().success().mapData(data);
     }
 
@@ -341,7 +331,6 @@ public class SystemApplicationController {
             application.setApplicationEnName(applicationVo.getApplicationEnName());
             application.setIcon(applicationVo.getIcon());
             application.setApplicationDataUrlStartWith(applicationVo.getApplicationDataUrlStartWith());
-            application.setApplicationTypeId(applicationVo.getApplicationTypeId());
             int applicationId = applicationService.saveAndReturnId(application);
             Role role = roleService.findByRoleName(Workbook.SYSTEM_ROLE_NAME);
             RoleApplication roleApplication =  new RoleApplication(role.getRoleId(),applicationId);
@@ -371,7 +360,6 @@ public class SystemApplicationController {
             application.setApplicationEnName(applicationVo.getApplicationEnName());
             application.setIcon(applicationVo.getIcon());
             application.setApplicationDataUrlStartWith(applicationVo.getApplicationDataUrlStartWith());
-            application.setApplicationTypeId(applicationVo.getApplicationTypeId());
             applicationService.update(application);
             return new AjaxUtils().success().msg("更新成功");
         }

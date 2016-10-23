@@ -27,8 +27,6 @@ public class ApplicationVo {
     private String icon;
     @Size(max = 300)
     private String applicationDataUrlStartWith;
-    @NotNull
-    private Integer applicationTypeId;
 
     public Integer getApplicationId() {
         return applicationId;
@@ -100,13 +98,5 @@ public class ApplicationVo {
 
     public void setApplicationDataUrlStartWith(String applicationDataUrlStartWith) {
         this.applicationDataUrlStartWith = applicationDataUrlStartWith;
-    }
-
-    public Integer getApplicationTypeId() {
-        return applicationTypeId;
-    }
-
-    public void setApplicationTypeId(Integer applicationTypeId) {
-        this.applicationTypeId = applicationTypeId;
     }
 }

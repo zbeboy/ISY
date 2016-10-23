@@ -48,7 +48,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         applicationPid: '#select_application_pid',
         applicationName: '#applicationName',
         applicationEnName:'#applicationEnName',
-        applicationTypeId:'#select_application_type_id',
         applicationUrl:'#applicationUrl',
         applicationDataUrlStartWith:'#applicationDataUrlStartWith',
         applicationCode:'#applicationCode',
@@ -64,7 +63,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         applicationPid: $(paramId.applicationPid).val().trim(),
         applicationName: $(paramId.applicationName).val().trim(),
         applicationEnName: $(paramId.applicationEnName).val().trim(),
-        applicationTypeId: $(paramId.applicationTypeId).val().trim(),
         applicationUrl: $(paramId.applicationUrl).val().trim(),
         applicationDataUrlStartWith: $(paramId.applicationDataUrlStartWith).val().trim(),
         applicationCode: $(paramId.applicationCode).val().trim(),
@@ -79,7 +77,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         applicationPid: '#valid_application_pid',
         applicationName: '#valid_application_name',
         applicationEnName: '#valid_application_en_name',
-        applicationTypeId: '#valid_application_type_id',
         applicationUrl: '#valid_application_url',
         applicationDataUrlStartWith: '#valid_application_data_url_start_with',
         applicationCode: '#valid_application_code',
@@ -94,7 +91,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         applicationPid: '#application_pid_error_msg',
         applicationName: '#application_name_error_msg',
         applicationEnName: '#application_en_name_error_msg',
-        applicationTypeId: '#application_type_id_error_msg',
         applicationUrl: '#application_url_error_msg',
         applicationDataUrlStartWith: '#application_data_url_start_with_error_msg',
         applicationCode: '#application_code_error_msg',
@@ -131,7 +127,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         param.applicationPid = $(paramId.applicationPid).val().trim();
         param.applicationName = $(paramId.applicationName).val().trim();
         param.applicationEnName = $(paramId.applicationEnName).val().trim();
-        param.applicationTypeId = $(paramId.applicationTypeId).val().trim();
         param.applicationUrl = $(paramId.applicationUrl).val().trim();
         param.applicationDataUrlStartWith = $(paramId.applicationDataUrlStartWith).val().trim();
         param.applicationCode = $(paramId.applicationCode).val().trim();
@@ -140,7 +135,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     }
 
     var selectedApplicationPid = true;
-    var selectedApplicationType = true;
 
     /**
      * 数据初始化
@@ -148,7 +142,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
      */
     function initData(data) {
         initApplicationPids(data.mapResult);
-        initApplicationType(data.mapResult);
     }
 
     /**
@@ -188,47 +181,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         for (var i = 0; i < pidChildrens.length; i++) {
             if ($(pidChildrens[i]).val() === realPid) {
                 $(pidChildrens[i]).prop('selected', true);
-                break;
-            }
-        }
-    }
-
-    /**
-     * 初始化应用类型
-     * @param data
-     */
-    function initApplicationType(data){
-        var source = $("#application-type-template").html();
-        var template = Handlebars.compile(source);
-
-        Handlebars.registerHelper('application_type_value', function () {
-            var value = Handlebars.escapeExpression(this.applicationTypeId);
-            return new Handlebars.SafeString(value);
-        });
-
-        Handlebars.registerHelper('application_type_name', function () {
-            var name = Handlebars.escapeExpression(this.applicationTypeName);
-            return new Handlebars.SafeString(name);
-        });
-
-        var html = template(data);
-        $(paramId.applicationTypeId).html(html);
-
-        if(selectedApplicationType){
-            selectedType();
-            selectedApplicationType = false;
-        }
-    }
-
-    /**
-     * 选中类型
-     */
-    function selectedType(){
-        var realType = $('#applicationTypeId').val().trim();
-        var typeChildrens = $('#select_application_type_id').children();
-        for (var i = 0; i < typeChildrens.length; i++) {
-            if ($(typeChildrens[i]).val() === realType) {
-                $(typeChildrens[i]).prop('selected', true);
                 break;
             }
         }
@@ -309,17 +261,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
                     return true;
                 }
             });
-        }
-    });
-
-    // 即时检验应用类型
-    $(paramId.applicationTypeId).change(function(){
-        initParam();
-        var applicationTypeId = param.applicationTypeId;
-        if(Number(applicationTypeId)<=0){
-            validErrorDom(validId.applicationTypeId,errorMsgId.applicationTypeId,'请选择应用类型');
-        } else {
-            validSuccessDom(validId.applicationTypeId,errorMsgId.applicationTypeId);
         }
     });
 
@@ -477,7 +418,7 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
                 data: param,
                 success: function (data) {
                     if (data.state) {
-                        validApplicationTypeId();
+                        validApplicationUrl();
                     } else {
                         Messenger().post({
                             message: data.msg,
@@ -493,23 +434,6 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
                     return true;
                 }
             });
-        }
-    }
-
-    /**
-     * 检验应用类型
-     */
-    function validApplicationTypeId(){
-        initParam();
-        var applicationTypeId = param.applicationTypeId;
-        if(Number(applicationTypeId)<=0){
-            Messenger().post({
-                message: '请选择应用类型',
-                type: 'error',
-                showCloseButton: true
-            });
-        } else {
-            validApplicationUrl();
         }
     }
 

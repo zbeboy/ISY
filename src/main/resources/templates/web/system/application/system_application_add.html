@@ -406,12 +406,6 @@
                         <input class="form-control" name="applicationEnName" id="applicationEnName" placeholder="应用英文名"/>
                         <p class="text-danger hidden" id="application_en_name_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_application_type_id">
-                        <select class="form-control" name="applicationTypeId" id="select_application_type_id">
-                            <option>请选择应用类型</option>
-                        </select>
-                        <p class="text-danger hidden" id="application_type_id_error_msg"></p>
-                    </div>
                     <div class="form-group" id="valid_application_url">
                         <label>应用链接</label>
                         <input class="form-control" name="applicationUrl" id="applicationUrl" placeholder="应用链接"/>
@@ -457,12 +451,6 @@
 <script id="application-parent-template" type="text/x-handlebars-template">
     {{#each applicationPids}}
     <option value="{{application_parent_value}}">{{application_parent_name}}</option>
-    {{/each}}
-</script>
-
-<script id="application-type-template" type="text/x-handlebars-template">
-    {{#each applicationTypes}}
-    <option value="{{application_type_value}}">{{application_type_name}}</option>
     {{/each}}
 </script>
 

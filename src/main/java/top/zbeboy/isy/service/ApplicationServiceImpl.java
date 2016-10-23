@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static top.zbeboy.isy.domain.Tables.APPLICATION;
-import static top.zbeboy.isy.domain.Tables.APPLICATION_TYPE;
 
 /**
  * Created by lenovo on 2016-09-28.
@@ -93,7 +92,6 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 .set(APPLICATION.APPLICATION_EN_NAME,application.getApplicationEnName())
                 .set(APPLICATION.ICON,application.getIcon())
                 .set(APPLICATION.APPLICATION_DATA_URL_START_WITH,application.getApplicationDataUrlStartWith())
-                .set(APPLICATION.APPLICATION_TYPE_ID,application.getApplicationTypeId())
                 .returning(APPLICATION.APPLICATION_ID)
                 .fetchOne();
 
@@ -233,27 +231,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<ApplicationBean> dataTablesUtils) {
-        Result<Record> records = null;
-        Condition a = searchCondition(dataTablesUtils);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record> selectJoinStep = create.select()
-                    .from(APPLICATION)
-                    .join(APPLICATION_TYPE)
-                    .on(APPLICATION.APPLICATION_TYPE_ID.eq(APPLICATION_TYPE.APPLICATION_TYPE_ID));
-            sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
-            pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
-            records = selectJoinStep.fetch();
-        } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(APPLICATION)
-                    .join(APPLICATION_TYPE)
-                    .on(APPLICATION.APPLICATION_TYPE_ID.eq(APPLICATION_TYPE.APPLICATION_TYPE_ID))
-                    .where(a);
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
-        }
-        return records;
+        return dataPagingQueryAll(dataTablesUtils,create,APPLICATION);
     }
 
     @Override
@@ -263,21 +241,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public int countByCondition(DataTablesUtils<ApplicationBean> dataTablesUtils) {
-        Record1<Integer> count = null;
-        Condition a = searchCondition(dataTablesUtils);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
-                    .from(APPLICATION);
-            count = selectJoinStep.fetchOne();
-        } else {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(APPLICATION)
-                    .join(APPLICATION_TYPE)
-                    .on(APPLICATION.APPLICATION_TYPE_ID.eq(APPLICATION_TYPE.APPLICATION_TYPE_ID))
-                    .where(a);
-            count = selectConditionStep.fetchOne();
-        }
-        return count.value1();
+        return statisticsWithCondition(dataTablesUtils,create,APPLICATION);
     }
 
     @Override
@@ -439,14 +403,6 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                     b = APPLICATION.APPLICATION_URL.asc();
                 } else {
                     b = APPLICATION.APPLICATION_URL.desc();
-                }
-            }
-
-            if (orderColumnName.equalsIgnoreCase("application_type_name")) {
-                if (isAsc) {
-                    b = APPLICATION_TYPE.APPLICATION_TYPE_NAME.asc();
-                } else {
-                    b = APPLICATION_TYPE.APPLICATION_TYPE_NAME.desc();
                 }
             }
 

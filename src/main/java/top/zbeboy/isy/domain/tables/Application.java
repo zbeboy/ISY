@@ -10,7 +10,6 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.jooq.Field;
-import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -35,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Application extends TableImpl<ApplicationRecord> {
 
-	private static final long serialVersionUID = 555149536;
+	private static final long serialVersionUID = -2036947823;
 
 	/**
 	 * The reference instance of <code>isy.application</code>
@@ -96,11 +95,6 @@ public class Application extends TableImpl<ApplicationRecord> {
 	public final TableField<ApplicationRecord, String> APPLICATION_DATA_URL_START_WITH = createField("application_data_url_start_with", org.jooq.impl.SQLDataType.VARCHAR.length(300), this, "");
 
 	/**
-	 * The column <code>isy.application.application_type_id</code>.
-	 */
-	public final TableField<ApplicationRecord, Integer> APPLICATION_TYPE_ID = createField("application_type_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-	/**
 	 * Create a <code>isy.application</code> table reference
 	 */
 	public Application() {
@@ -144,14 +138,6 @@ public class Application extends TableImpl<ApplicationRecord> {
 	@Override
 	public List<UniqueKey<ApplicationRecord>> getKeys() {
 		return Arrays.<UniqueKey<ApplicationRecord>>asList(Keys.KEY_APPLICATION_PRIMARY);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<ForeignKey<ApplicationRecord, ?>> getReferences() {
-		return Arrays.<ForeignKey<ApplicationRecord, ?>>asList(Keys.APPLICATION_IBFK_1);
 	}
 
 	/**

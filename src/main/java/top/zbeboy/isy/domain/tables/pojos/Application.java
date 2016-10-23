@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Application implements Serializable {
 
-	private static final long serialVersionUID = 1618599482;
+	private static final long serialVersionUID = 1538259837;
 
 	private Integer applicationId;
 	private String  applicationName;
@@ -35,7 +35,6 @@ public class Application implements Serializable {
 	private String  applicationEnName;
 	private String  icon;
 	private String  applicationDataUrlStartWith;
-	private Integer applicationTypeId;
 
 	public Application() {}
 
@@ -49,7 +48,6 @@ public class Application implements Serializable {
 		this.applicationEnName = value.applicationEnName;
 		this.icon = value.icon;
 		this.applicationDataUrlStartWith = value.applicationDataUrlStartWith;
-		this.applicationTypeId = value.applicationTypeId;
 	}
 
 	public Application(
@@ -61,8 +59,7 @@ public class Application implements Serializable {
 		String  applicationCode,
 		String  applicationEnName,
 		String  icon,
-		String  applicationDataUrlStartWith,
-		Integer applicationTypeId
+		String  applicationDataUrlStartWith
 	) {
 		this.applicationId = applicationId;
 		this.applicationName = applicationName;
@@ -73,7 +70,6 @@ public class Application implements Serializable {
 		this.applicationEnName = applicationEnName;
 		this.icon = icon;
 		this.applicationDataUrlStartWith = applicationDataUrlStartWith;
-		this.applicationTypeId = applicationTypeId;
 	}
 
 	@NotNull
@@ -160,15 +156,6 @@ public class Application implements Serializable {
 		this.applicationDataUrlStartWith = applicationDataUrlStartWith;
 	}
 
-	@NotNull
-	public Integer getApplicationTypeId() {
-		return this.applicationTypeId;
-	}
-
-	public void setApplicationTypeId(Integer applicationTypeId) {
-		this.applicationTypeId = applicationTypeId;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Application (");
@@ -182,7 +169,6 @@ public class Application implements Serializable {
 		sb.append(", ").append(applicationEnName);
 		sb.append(", ").append(icon);
 		sb.append(", ").append(applicationDataUrlStartWith);
-		sb.append(", ").append(applicationTypeId);
 
 		sb.append(")");
 		return sb.toString();

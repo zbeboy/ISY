@@ -101,7 +101,6 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 {"data": "applicationEnName"},
                 {"data": "applicationPidName"},
                 {"data": "applicationUrl"},
-                {"data": "applicationTypeName"},
                 {"data": "icon"},
                 {"data": "applicationSort"},
                 {"data": "applicationCode"},
@@ -117,7 +116,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                     }
                 },
                 {
-                    targets: 10,
+                    targets: 9,
                     orderable: false,
                     render: function (a, b, c, d) {
 

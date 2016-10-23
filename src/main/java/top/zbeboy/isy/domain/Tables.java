@@ -7,7 +7,6 @@ package top.zbeboy.isy.domain;
 import javax.annotation.Generated;
 
 import top.zbeboy.isy.domain.tables.Application;
-import top.zbeboy.isy.domain.tables.ApplicationType;
 import top.zbeboy.isy.domain.tables.Authorities;
 import top.zbeboy.isy.domain.tables.College;
 import top.zbeboy.isy.domain.tables.CollegeApplication;
@@ -61,11 +60,6 @@ public class Tables {
 	 * The table isy.application
 	 */
 	public static final Application APPLICATION = top.zbeboy.isy.domain.tables.Application.APPLICATION;
-
-	/**
-	 * The table isy.application_type
-	 */
-	public static final ApplicationType APPLICATION_TYPE = top.zbeboy.isy.domain.tables.ApplicationType.APPLICATION_TYPE;
 
 	/**
 	 * The table isy.authorities

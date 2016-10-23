@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service;
 
+import io.swagger.models.auth.In;
 import org.jooq.Result;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
