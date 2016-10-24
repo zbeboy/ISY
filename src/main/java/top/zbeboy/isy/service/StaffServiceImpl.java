@@ -71,6 +71,12 @@ public class StaffServiceImpl implements StaffService {
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(NATION)
+                .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
+                .leftJoin(POLITICAL_LANDSCAPE)
+                .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                 .where(STAFF.USERNAME.eq(username))
                 .fetchOptional();
     }

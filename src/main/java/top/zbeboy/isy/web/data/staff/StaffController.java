@@ -25,6 +25,7 @@ import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.service.UsersTypeService;
 import top.zbeboy.isy.service.util.BCryptUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -61,6 +62,9 @@ public class StaffController {
 
     @Autowired
     private ISYProperties isyProperties;
+
+    @Autowired
+    private RequestUtils requestUtils;
 
     /**
      * 判断工号是否已被注册
@@ -157,7 +161,7 @@ public class StaffController {
 
                                                     //发送验证邮件
                                                     if (isyProperties.getMail().isOpen()) {
-                                                        mailService.sendValidEmailMail(saveUsers, mailService.getBaseUrl(request));
+                                                        mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
                                                         return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
                                                     } else {
                                                         return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");

@@ -49,15 +49,11 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private ISYProperties isyProperties;
 
+    @Autowired
     private Environment env;
 
     @Resource
     private SystemMailboxService systemMailboxService;
-
-    @Inject
-    public MailServiceImpl(Environment env){
-        this.env = env;
-    }
 
     @Async
     @Override
@@ -203,13 +199,4 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-    @Override
-    public String getBaseUrl(HttpServletRequest request) {
-        if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
-            return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        } else {
-            // 因nginx代理只能在此进行转换下
-            return request.getScheme() + "://" + isyProperties.getConstants().getServerName() + request.getContextPath();
-        }
-    }
 }

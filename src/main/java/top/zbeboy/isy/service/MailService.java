@@ -61,12 +61,4 @@ public interface MailService {
      * @param content
      */
     void sendAliDMMail(String userMail, String subject, String content);
-
-    /**
-     * 获取baseUrl
-     *
-     * @param request
-     * @return baseUrl
-     */
-    String getBaseUrl(HttpServletRequest request);
 }

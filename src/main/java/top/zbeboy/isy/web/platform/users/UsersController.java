@@ -27,6 +27,9 @@ import top.zbeboy.isy.domain.tables.records.UsersTypeRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.BCryptUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
+import top.zbeboy.isy.web.bean.data.staff.StaffBean;
+import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.jcaptcha.CaptchaServiceSingleton;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -107,6 +110,9 @@ public class UsersController {
 
     @Autowired
     private ISYProperties isyProperties;
+
+    @Autowired
+    private RequestUtils requestUtils;
 
     /**
      * 检验注册表单
@@ -337,7 +343,7 @@ public class UsersController {
                 users.setPasswordResetKeyValid(new Timestamp(dateTime.toDate().getTime()));
                 usersService.update(users);
                 if (isyProperties.getMail().isOpen()) {
-                    mailService.sendPasswordResetMail(users, mailService.getBaseUrl(request));
+                    mailService.sendPasswordResetMail(users, new RequestUtils().getBaseUrl(request));
                     return new AjaxUtils().success().msg("密码重置邮件已发送至您的邮箱");
                 } else {
                     msg = "邮件推送已被管理员关闭";
@@ -605,16 +611,20 @@ public class UsersController {
                 } else {
                     Users users = usersService.findByUsername(id);
                     UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
-                    if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) { // 学生
-                        studentService.deleteByUsername(id);
-                        usersService.deleteById(id);
-                        ajaxUtils.success().msg("删除用户成功");
-                    } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) { // 教职工
-                        staffService.deleteByUsername(id);
-                        usersService.deleteById(id);
-                        ajaxUtils.success().msg("删除用户成功");
-                    } else {
-                        ajaxUtils.fail().msg("未获取到用户类型");
+                    switch (usersType.getUsersTypeName()) {
+                        case Workbook.STUDENT_USERS_TYPE:  // 学生
+                            studentService.deleteByUsername(id);
+                            usersService.deleteById(id);
+                            ajaxUtils.success().msg("删除用户成功");
+                            break;
+                        case Workbook.STAFF_USERS_TYPE:  // 教职工
+                            staffService.deleteByUsername(id);
+                            usersService.deleteById(id);
+                            ajaxUtils.success().msg("删除用户成功");
+                            break;
+                        default:
+                            ajaxUtils.fail().msg("未获取到用户类型");
+                            break;
                     }
 
                 }
@@ -623,5 +633,43 @@ public class UsersController {
             ajaxUtils.fail().msg("用户账号为空");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 用户资料页面
+     * @return 资料页面
+     */
+    @RequestMapping("/anyone/users/profile")
+    public String usersProfile(ModelMap modelMap,HttpServletRequest request){
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        String page;
+        switch (usersType.getUsersTypeName()) {
+            case Workbook.STUDENT_USERS_TYPE:  // 学生
+                page = "web/platform/users/users_profile_student";
+                Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
+                if(student.isPresent()){
+                    StudentBean studentBean = student.get().into(StudentBean.class);
+                    studentBean.setAvatar(requestUtils.getBaseUrl(request)+studentBean.getAvatar());
+                    modelMap.addAttribute("user",studentBean);
+                }
+                break;
+            case Workbook.STAFF_USERS_TYPE:  // 教职工
+                page = "web/platform/users/users_profile_staff";
+                Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
+                if(staff.isPresent()){
+                    StaffBean staffBean = staff.get().into(StaffBean.class);
+                    modelMap.addAttribute("user",staffBean);
+                }
+                break;
+            case Workbook.SYSTEM_USERS_TYPE:  // 系统
+                page = "web/platform/users/users_profile_system";
+                modelMap.addAttribute("user",users);
+                break;
+            default:
+                page = "login";
+                break;
+        }
+        return page;
     }
 }

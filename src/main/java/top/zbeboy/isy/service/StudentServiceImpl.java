@@ -75,6 +75,12 @@ public class StudentServiceImpl implements StudentService {
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(NATION)
+                .on(STUDENT.NATION_ID.eq(NATION.NATION_ID))
+                .leftJoin(POLITICAL_LANDSCAPE)
+                .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                 .where(STUDENT.USERNAME.eq(username))
                 .fetchOptional();
     }
