@@ -19,6 +19,7 @@ public interface UsersTypeService {
 
     /**
      * 根据用户id查询类型
+     *
      * @param usersTypeId
      * @return
      */
@@ -26,6 +27,7 @@ public interface UsersTypeService {
 
     /**
      * 查询全部
+     *
      * @return
      */
     Result<UsersTypeRecord> findAll();

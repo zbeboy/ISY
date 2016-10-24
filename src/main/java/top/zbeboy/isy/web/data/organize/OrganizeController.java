@@ -92,7 +92,7 @@ public class OrganizeController {
      *
      * @return 班级数据页面
      */
-    @RequestMapping(value = "/web/menu/data/organize",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/menu/data/organize", method = RequestMethod.GET)
     public String organizeData() {
         return "web/data/organize/organize_data";
     }
@@ -136,7 +136,7 @@ public class OrganizeController {
      *
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/data/organize/add",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/organize/add", method = RequestMethod.GET)
     public String organizeAdd(ModelMap modelMap) {
         pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/organize/organize_add";
@@ -149,7 +149,7 @@ public class OrganizeController {
      * @param modelMap
      * @return 编辑页面
      */
-    @RequestMapping(value = "/web/data/organize/edit",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/organize/edit", method = RequestMethod.GET)
     public String organizeEdit(@RequestParam("id") int id, ModelMap modelMap) {
         Optional<Record> record = organizeService.findByIdRelation(id);
         OrganizeBean organizeBean;

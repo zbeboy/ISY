@@ -13,8 +13,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.config.ISYProperties;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.SystemMailbox;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.util.UUIDUtils;
@@ -78,14 +78,14 @@ public class MailServiceImpl implements MailService {
                 log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
             }
         } else {
-            if(isyProperties.getMail().isOpen()){
+            if (isyProperties.getMail().isOpen()) {
                 sendAliDMMail(to, subject, content);
             } else {
                 log.debug(" 管理员已关闭邮件发送 ");
             }
         }
 
-        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(),new Timestamp(System.currentTimeMillis()),to);
+        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(System.currentTimeMillis()), to);
         systemMailboxService.save(systemMailbox);
 
     }

@@ -1,17 +1,12 @@
 package top.zbeboy.isy.config;
 
 
-import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.server.handlers.proxy.mod_cluster.MCMPConfig;
 import io.undertow.servlet.api.SecurityConstraint;
 import io.undertow.servlet.api.SecurityInfo;
 import io.undertow.servlet.api.TransportGuaranteeType;
 import io.undertow.servlet.api.WebResourceCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.undertow.UndertowBuilderCustomizer;
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,11 +32,12 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     /**
      * undertow http 重定向 https
+     *
      * @return
      */
     @Bean
     public EmbeddedServletContainerFactory undertow() {
-        UndertowEmbeddedServletContainerFactory undertow = new   UndertowEmbeddedServletContainerFactory();
+        UndertowEmbeddedServletContainerFactory undertow = new UndertowEmbeddedServletContainerFactory();
         undertow.addBuilderCustomizers(builder -> builder.addHttpListener(isyProperties.getConstants().getServerHttpPort(), "0.0.0.0"));
         undertow.addDeploymentInfoCustomizers(deploymentInfo -> {
             deploymentInfo.addSecurityConstraint(new SecurityConstraint()

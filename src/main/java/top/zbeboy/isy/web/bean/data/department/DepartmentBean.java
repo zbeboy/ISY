@@ -3,9 +3,9 @@ package top.zbeboy.isy.web.bean.data.department;
 import top.zbeboy.isy.domain.tables.pojos.Department;
 
 /**
- * Created by 杨逸云 on 2016/9/23.
+ * Created by lenovo on 2016/9/23.
  */
-public class DepartmentBean extends Department{
+public class DepartmentBean extends Department {
     private String schoolName;
     private String collegeName;
     private int schoolId;

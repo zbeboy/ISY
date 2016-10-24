@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service;
 
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -9,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.isy.domain.tables.daos.ApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.CollegeApplication;
 import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 
-import javax.annotation.Resource;
 import static top.zbeboy.isy.domain.Tables.COLLEGE_APPLICATION;
 
 /**
@@ -50,8 +47,8 @@ public class CollegeApplicationServiceImpl implements CollegeApplicationService 
     @Override
     public void save(CollegeApplication collegeApplication) {
         create.insertInto(COLLEGE_APPLICATION)
-                .set(COLLEGE_APPLICATION.COLLEGE_ID,collegeApplication.getCollegeId())
-                .set(COLLEGE_APPLICATION.APPLICATION_ID,collegeApplication.getApplicationId())
+                .set(COLLEGE_APPLICATION.COLLEGE_ID, collegeApplication.getCollegeId())
+                .set(COLLEGE_APPLICATION.APPLICATION_ID, collegeApplication.getApplicationId())
                 .execute();
     }
 

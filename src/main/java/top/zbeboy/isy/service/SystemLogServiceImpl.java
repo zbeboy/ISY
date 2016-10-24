@@ -26,7 +26,7 @@ import static top.zbeboy.isy.domain.Tables.SYSTEM_LOG;
  */
 @Service("systemLogService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class SystemLogServiceImpl  extends DataTablesPlugin<SystemLogBean> implements SystemLogService {
+public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implements SystemLogService {
 
     private final Logger log = LoggerFactory.getLogger(SystemLogServiceImpl.class);
 
@@ -48,17 +48,17 @@ public class SystemLogServiceImpl  extends DataTablesPlugin<SystemLogBean> imple
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<SystemLogBean> dataTablesUtils) {
-        return dataPagingQueryAll(dataTablesUtils,create,SYSTEM_LOG);
+        return dataPagingQueryAll(dataTablesUtils, create, SYSTEM_LOG);
     }
 
     @Override
     public int countAll() {
-        return statisticsAll(create,SYSTEM_LOG);
+        return statisticsAll(create, SYSTEM_LOG);
     }
 
     @Override
     public int countByCondition(DataTablesUtils<SystemLogBean> dataTablesUtils) {
-        return statisticsWithCondition(dataTablesUtils,create,SYSTEM_LOG);
+        return statisticsWithCondition(dataTablesUtils, create, SYSTEM_LOG);
     }
 
     /**
@@ -164,7 +164,7 @@ public class SystemLogServiceImpl  extends DataTablesPlugin<SystemLogBean> imple
                 selectJoinStep.orderBy(a);
             }
 
-        } else if(!ObjectUtils.isEmpty(b)){
+        } else if (!ObjectUtils.isEmpty(b)) {
             if (type == CONDITION_TYPE) {
                 selectConditionStep.orderBy(b);
             }

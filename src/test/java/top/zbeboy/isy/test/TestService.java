@@ -25,10 +25,10 @@ public class TestService {
     ApplicationService applicationService;
 
     @Test
-    public void testApplicationToJsonMethod(){
+    public void testApplicationToJsonMethod() {
         List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
         System.out.println(treeBeens);
-        String json= JSON.toJSONString(treeBeens, true);
+        String json = JSON.toJSONString(treeBeens, true);
         System.out.println(json);
     }
 }

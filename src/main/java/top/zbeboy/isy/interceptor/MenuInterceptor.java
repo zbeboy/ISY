@@ -4,12 +4,8 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +13,6 @@ import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.ApplicationService;
 import top.zbeboy.isy.service.UsersService;
-import top.zbeboy.isy.service.UsersServiceImpl;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +33,7 @@ public class MenuInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if(!ObjectUtils.isEmpty(modelAndView)){
+        if (!ObjectUtils.isEmpty(modelAndView)) {
             String web_path = request.getContextPath();
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
@@ -48,12 +43,12 @@ public class MenuInterceptor implements HandlerInterceptor {
             ApplicationService applicationService = (ApplicationService) ctx
                     .getBean("applicationService");
             Users users = usersService.getUserFromSession();
-            if(!ObjectUtils.isEmpty(users)){
+            if (!ObjectUtils.isEmpty(users)) {
                 Result<Record> roles = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
-                if(roles.isNotEmpty()){
+                if (roles.isNotEmpty()) {
                     List<Role> roleList = roles.into(Role.class);
-                    String menuHtml = applicationService.menuHtml(roleList,web_path,users.getUsername());
-                    request.setAttribute("menu",menuHtml);
+                    String menuHtml = applicationService.menuHtml(roleList, web_path, users.getUsername());
+                    request.setAttribute("menu", menuHtml);
                 }
             }
         }

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.config.*;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.OrganizeDao;
 import top.zbeboy.isy.domain.tables.pojos.Organize;
 import top.zbeboy.isy.domain.tables.pojos.Users;
@@ -24,11 +24,11 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.tables.College.COLLEGE;
-import static top.zbeboy.isy.domain.tables.Department.DEPARTMENT;
-import static top.zbeboy.isy.domain.tables.Organize.ORGANIZE;
-import static top.zbeboy.isy.domain.tables.School.SCHOOL;
-import static top.zbeboy.isy.domain.tables.Science.SCIENCE;
+import static top.zbeboy.isy.domain.Tables.COLLEGE;
+import static top.zbeboy.isy.domain.Tables.DEPARTMENT;
+import static top.zbeboy.isy.domain.Tables.ORGANIZE;
+import static top.zbeboy.isy.domain.Tables.SCHOOL;
+import static top.zbeboy.isy.domain.Tables.SCIENCE;
 
 /**
  * Created by lenovo on 2016-08-21.

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -83,7 +84,7 @@
                         <a href="#">
                             <div>
                                 <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
+                                <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
                             </div>
@@ -95,7 +96,7 @@
                         <a href="#">
                             <div>
                                 <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
+                                <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
                             </div>
@@ -107,7 +108,7 @@
                         <a href="#">
                             <div>
                                 <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
+                                <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
                             </div>
@@ -401,18 +402,22 @@
                         <div class="well">
                             <div class="row" sec:authorize="hasRole('ROLE_SYSTEM')">
                                 <div class="col-md-6">
-                                    <input type="text" id="pass_search_school" class="form-control input-sm" placeholder="学校"/>
+                                    <input type="text" id="pass_search_school" class="form-control input-sm"
+                                           placeholder="学校"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" id="pass_search_college" class="form-control input-sm" placeholder="院"/>
+                                    <input type="text" id="pass_search_college" class="form-control input-sm"
+                                           placeholder="院"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:2px;">
                                 <div class="col-md-6">
-                                    <input type="text" id="pass_search_department" class="form-control input-sm" placeholder="系"/>
+                                    <input type="text" id="pass_search_department" class="form-control input-sm"
+                                           placeholder="系"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" id="pass_search_post" class="form-control input-sm" placeholder="职务"/>
+                                    <input type="text" id="pass_search_post" class="form-control input-sm"
+                                           placeholder="职务"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:2px;">
@@ -518,18 +523,22 @@
                         <div class="well">
                             <div class="row" sec:authorize="hasRole('ROLE_SYSTEM')">
                                 <div class="col-md-6">
-                                    <input type="text" id="wait_search_school" class="form-control input-sm" placeholder="学校"/>
+                                    <input type="text" id="wait_search_school" class="form-control input-sm"
+                                           placeholder="学校"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" id="wait_search_college" class="form-control input-sm" placeholder="院"/>
+                                    <input type="text" id="wait_search_college" class="form-control input-sm"
+                                           placeholder="院"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:2px;">
                                 <div class="col-md-6">
-                                    <input type="text" id="wait_search_department" class="form-control input-sm" placeholder="系"/>
+                                    <input type="text" id="wait_search_department" class="form-control input-sm"
+                                           placeholder="系"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" id="wait_search_mobile" class="form-control input-sm" placeholder="手机号"/>
+                                    <input type="text" id="wait_search_mobile" class="form-control input-sm"
+                                           placeholder="手机号"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:2px;">
@@ -629,7 +638,8 @@
 <!--定义操作列按钮模板-->
 <script id="operator_button" type="text/x-handlebars-template">
     {{#each func}}
-    <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}" data-role="{{this.role}}">{{this.name}}
+    <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+            data-role="{{this.role}}">{{this.name}}
     </button>
     {{/each}}
 </script>
@@ -639,7 +649,7 @@
     {{#each listResult}}
     <div class="checkbox">
         <label>
-            <input type="checkbox" value="{{value}}" name="role" /><span class="role_set">{{name}}</span>
+            <input type="checkbox" value="{{value}}" name="role"/><span class="role_set">{{name}}</span>
         </label>
     </div>
     {{/each}}

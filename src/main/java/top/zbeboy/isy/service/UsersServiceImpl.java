@@ -20,9 +20,9 @@ import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.security.MyUserImpl;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
+import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
@@ -311,7 +311,7 @@ public class UsersServiceImpl implements UsersService {
      * @return select
      */
     public Select<AuthoritiesRecord> existsAuthoritiesSelect() {
-        if(authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)){
+        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             return create.selectFrom(AUTHORITIES)
                     .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME).and(AUTHORITIES.AUTHORITY.ne(Workbook.SYSTEM_AUTHORITIES)));
         } else {

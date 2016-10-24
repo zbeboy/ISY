@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -455,7 +456,7 @@
     var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
     /*页面参数*/
     var init_page_param = {
-        'currentUserRoleName':/*[[${currentUserRoleName}]]*/ ''
+        'currentUserRoleName': /*[[${currentUserRoleName}]]*/ ''
     };
     require.config({
         baseUrl: web_path + "/js/platform/role",

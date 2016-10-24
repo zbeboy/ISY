@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.config.ISYProperties;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
@@ -444,20 +444,20 @@ public class UsersController {
     @ResponseBody
     public AjaxUtils<Role> roleData(@RequestParam("username") String username) {
         List<Role> roles = new ArrayList<>();
-        if(authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)){
+        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             Role role = roleService.findByRoleName(Workbook.ADMIN_ROLE_NAME);
             roles.add(role);
         }
         // 根据此用户账号查询院下所有角色
         Users users = usersService.findByUsername(username);
         Optional<Record> record = usersService.findUserSchoolInfo(users);
-        if(record.isPresent()){
+        if (record.isPresent()) {
             College college = record.get().into(College.class);
             List<CollegeRoleRecord> collegeRoleRecords = collegeRoleService.findByCollegeId(college.getCollegeId());
-            if(!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()){
+            if (!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()) {
                 List<Role> tempRole = new ArrayList<>();
                 List<Integer> roleIds = new ArrayList<>();
-                collegeRoleRecords.forEach(role->roleIds.add(role.getRoleId()));
+                collegeRoleRecords.forEach(role -> roleIds.add(role.getRoleId()));
                 Result<RoleRecord> roleRecords = roleService.findInRoleId(roleIds);
                 tempRole = roleRecords.into(Role.class);
                 roles.addAll(tempRole);
@@ -468,18 +468,19 @@ public class UsersController {
 
     /**
      * 保存用户角色
+     *
      * @param username 用户账号
-     * @param roles 角色
+     * @param roles    角色
      * @return true 成功 false 角色为空
      */
-    @RequestMapping(value = "/special/channel/users/role/save",method = RequestMethod.POST)
+    @RequestMapping(value = "/special/channel/users/role/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleSave(@RequestParam("username") String username,@RequestParam("roles") String roles){
+    public AjaxUtils roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles) {
         if (StringUtils.hasLength(roles)) {
             List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
             authoritiesService.deleteByUsername(username);
-            roleList.forEach(role->{
-                Authorities authorities = new Authorities(username,role);
+            roleList.forEach(role -> {
+                Authorities authorities = new Authorities(username, role);
                 authoritiesService.save(authorities);
             });
             return new AjaxUtils().success().msg("更改用户角色成功");
@@ -597,18 +598,18 @@ public class UsersController {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (StringUtils.hasLength(userIds)) {
             List<String> ids = SmallPropsUtils.StringIdsToStringList(userIds);
-            ids.forEach(id ->{
+            ids.forEach(id -> {
                 List<AuthoritiesRecord> authoritiesRecords = authoritiesService.findByUsername(id);
                 if (!ObjectUtils.isEmpty(authoritiesRecords) && !authoritiesRecords.isEmpty()) {
                     ajaxUtils.fail().msg("用户存在角色关联，无法删除");
                 } else {
                     Users users = usersService.findByUsername(id);
                     UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
-                    if(usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)){ // 学生
+                    if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) { // 学生
                         studentService.deleteByUsername(id);
                         usersService.deleteById(id);
                         ajaxUtils.success().msg("删除用户成功");
-                    } else if(usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) { // 教职工
+                    } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) { // 教职工
                         staffService.deleteByUsername(id);
                         usersService.deleteById(id);
                         ajaxUtils.success().msg("删除用户成功");

@@ -83,7 +83,7 @@
                         <a href="#">
                             <div>
                                 <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
+                                <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
                             </div>
@@ -95,7 +95,7 @@
                         <a href="#">
                             <div>
                                 <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
+                                <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
                             </div>
@@ -107,7 +107,7 @@
                         <a href="#">
                             <div>
                                 <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
+                                <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
                             </div>
@@ -558,7 +558,8 @@
 <!--定义操作列按钮模板-->
 <script id="operator_button" type="text/x-handlebars-template">
     {{#each func}}
-    <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}" data-role="{{this.role}}">{{this.name}}
+    <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+            data-role="{{this.role}}">{{this.name}}
     </button>
     {{/each}}
 </script>
@@ -575,7 +576,7 @@
     {{#each listResult}}
     <div class="checkbox">
         <label>
-            <input type="checkbox" value="{{value}}" name="role" /><span class="role_set">{{name}}</span>
+            <input type="checkbox" value="{{value}}" name="role"/><span class="role_set">{{name}}</span>
         </label>
     </div>
     {{/each}}

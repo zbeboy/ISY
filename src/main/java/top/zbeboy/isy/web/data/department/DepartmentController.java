@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.pojos.Department;
+import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.DepartmentRecord;
-import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.service.AuthoritiesService;
+import top.zbeboy.isy.service.DepartmentService;
+import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -268,10 +271,11 @@ public class DepartmentController {
 
     /**
      * 保存或更新时获取院id
+     *
      * @param departmentVo
      * @return 院id
      */
-    private int getSaveOrUpdateCollegeId(DepartmentVo departmentVo){
+    private int getSaveOrUpdateCollegeId(DepartmentVo departmentVo) {
         int collegeId = 0;
         if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             collegeId = departmentVo.getCollegeId();

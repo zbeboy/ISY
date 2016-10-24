@@ -11,12 +11,14 @@ public interface CollegeApplicationService {
 
     /**
      * 通过应用id删除
+     *
      * @param applicationId 应用id
      */
     void deleteByApplicationId(int applicationId);
 
     /**
      * 通过院id查询
+     *
      * @param collegeId 院id
      * @return 数据
      */
@@ -24,12 +26,14 @@ public interface CollegeApplicationService {
 
     /**
      * 保存
+     *
      * @param collegeApplication 表数据
      */
     void save(CollegeApplication collegeApplication);
 
     /**
      * 通过院id删除
+     *
      * @param collegeId 院id
      */
     void deleteByCollegeId(int collegeId);

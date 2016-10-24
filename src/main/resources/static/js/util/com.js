@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-09-14.
  */
 define(function () {
-   /*
+    /*
      去除空格方法(防止IE浏览器不支持)
      */
     String.prototype.trim = function () {

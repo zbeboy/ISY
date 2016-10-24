@@ -6,7 +6,7 @@ requirejs.config({
     paths: {
         "csrf": web_path + "/js/util/csrf",
         "nav": web_path + "/js/util/nav",
-        "constants":web_path + "/js/util/constants"
+        "constants": web_path + "/js/util/constants"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -17,7 +17,7 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "handlebars", "csrf", "messenger", "nav","constants"], function ($, Handlebars, csrf, com, messenger, nav,constants) {
+require(["jquery", "handlebars", "csrf", "messenger", "nav", "constants"], function ($, Handlebars, csrf, com, messenger, nav, constants) {
 
     /*
      初始化消息机制
@@ -36,7 +36,7 @@ require(["jquery", "handlebars", "csrf", "messenger", "nav","constants"], functi
         department_data_url: '/user/departments',
         update: '/web/data/science/update',
         valid: '/web/data/science/update/valid',
-        back:'/web/menu/data/science'
+        back: '/web/menu/data/science'
     };
 
     /*
@@ -129,7 +129,7 @@ require(["jquery", "handlebars", "csrf", "messenger", "nav","constants"], functi
     }
 
     /*
-    初始化页面
+     初始化页面
      */
     init();
 
@@ -163,12 +163,12 @@ require(["jquery", "handlebars", "csrf", "messenger", "nav","constants"], functi
     /**
      * 初始化数据
      */
-    function init(){
-        if(init_page_param.currentUserRoleName === constants.global_role_name.system_role){
+    function init() {
+        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
             $.get(web_path + ajax_url.school_data_url, function (data) {
                 schoolData(data);
             });
-        } else if(init_page_param.currentUserRoleName === constants.global_role_name.admin_role){
+        } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
             changeDepartment(init_page_param.collegeId);
         }
     }
@@ -434,9 +434,9 @@ require(["jquery", "handlebars", "csrf", "messenger", "nav","constants"], functi
                     phrase: 'Retrying TIME',
                     action: function () {
                         msg.cancel();
-                        if(init_page_param.currentUserRoleName === constants.global_role_name.system_role){
+                        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
                             validSchoolId();
-                        } else if(init_page_param.currentUserRoleName === constants.global_role_name.admin_role){
+                        } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                             validDepartmentId();
                         }
                     }

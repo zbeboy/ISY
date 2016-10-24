@@ -10,7 +10,7 @@ requirejs.config({
         "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
-        "nav":web_path + "/js/util/nav"
+        "nav": web_path + "/js/util/nav"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -25,15 +25,15 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "jquery.showLoading", "datatables.responsive", "csrf", "com","nav"], function ($, domready, loading, dt, csrf, com,nav) {
+require(["jquery", "requirejs-domready", "jquery.showLoading", "datatables.responsive", "csrf", "com", "nav"], function ($, domready, loading, dt, csrf, com, nav) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
         //DOM nodes in this function.
 
-        function getAjaxUrl(){
+        function getAjaxUrl() {
             return {
-                logs:'/web/system/log/data'
+                logs: '/web/system/log/data'
             }
         }
 
@@ -61,7 +61,7 @@ require(["jquery", "requirejs-domready", "jquery.showLoading", "datatables.respo
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[2,'desc']],// 排序
+            "aaSorting": [[2, 'desc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().logs,
                 "dataSrc": "data",

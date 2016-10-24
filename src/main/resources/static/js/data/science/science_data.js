@@ -28,7 +28,7 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf,checkall, nav) {
+require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf, checkall, nav) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -49,8 +49,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             return {
                 sciences: '/web/data/science/data',
                 updateDel: '/web/data/science/update/del',
-                add:'/web/data/science/add',
-                edit:'/web/data/science/edit'
+                add: '/web/data/science/add',
+                edit: '/web/data/science/edit'
             };
         }
 
@@ -375,7 +375,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          编辑页面
          */
         function edit(scienceId) {
-            window.location.href = web_path + getAjaxUrl().edit+ '?id=' + scienceId;
+            window.location.href = web_path + getAjaxUrl().edit + '?id=' + scienceId;
         }
 
         /*

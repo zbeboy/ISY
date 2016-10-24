@@ -75,7 +75,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll().invalidateHttpSession(true)
                 .and().rememberMe().tokenValiditySeconds(2419200).rememberMeParameter("remember-me").tokenRepository(jdbcTokenRepository())
                 .and().authorizeRequests().antMatchers("/web/**").access("@webSecurity.check(authentication,request)")
-                .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM","ADMIN") // 特别通道 跨controller调用共同方法使用
+                .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM", "ADMIN") // 特别通道 跨controller调用共同方法使用
                 .and().authorizeRequests().antMatchers("/anyone/**").authenticated()
                 .and().authorizeRequests().antMatchers("/user/**", "/index").permitAll()
                 .antMatchers("/metrics/**").hasRole("SYSTEM")

@@ -23,7 +23,7 @@ import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.tables.Authorities.AUTHORITIES;
+import static top.zbeboy.isy.domain.Tables.AUTHORITIES;
 
 /**
  * Created by lenovo on 2016-02-21.
@@ -50,8 +50,8 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
     @Override
     public void save(Authorities authorities) {
         create.insertInto(AUTHORITIES)
-                .set(AUTHORITIES.USERNAME,authorities.getUsername())
-                .set(AUTHORITIES.AUTHORITY,authorities.getAuthority())
+                .set(AUTHORITIES.USERNAME, authorities.getUsername())
+                .set(AUTHORITIES.AUTHORITY, authorities.getAuthority())
                 .execute();
     }
 
@@ -85,10 +85,10 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
     @Override
     public int getRoleCollegeId(Optional<Record> record) {
         int collegeId = 0;
-        if(isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            if(record.isPresent()){
+        if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            if (record.isPresent()) {
                 College college = record.get().into(College.class);
-                if(!ObjectUtils.isEmpty(college)){
+                if (!ObjectUtils.isEmpty(college)) {
                     collegeId = college.getCollegeId();
                 }
             }

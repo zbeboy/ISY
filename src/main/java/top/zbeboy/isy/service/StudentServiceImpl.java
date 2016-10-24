@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
-import static top.zbeboy.isy.domain.Tables.USERS;
 
 /**
  * Created by lenovo on 2016-08-22.
@@ -467,7 +466,7 @@ public class StudentServiceImpl implements StudentService {
                 count = selectConditionStep.fetchOne();
             }
         }
-        if(!ObjectUtils.isEmpty(count)){
+        if (!ObjectUtils.isEmpty(count)) {
             return count.value1();
         }
         return 0;
@@ -556,7 +555,7 @@ public class StudentServiceImpl implements StudentService {
                 count = selectConditionStep.fetchOne();
             }
         }
-        if(!ObjectUtils.isEmpty(count)){
+        if (!ObjectUtils.isEmpty(count)) {
             return count.value1();
         }
         return 0;

@@ -5,8 +5,8 @@ requirejs.config({
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
-        "csrf":web_path + "/js/util/csrf",
-        "com":web_path + "/js/util/com"
+        "csrf": web_path + "/js/util/csrf",
+        "com": web_path + "/js/util/com"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -18,7 +18,7 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "sb-admin", "handlebars", "jquery.showLoading","csrf","com"], function ($, sa, Handlebars, loading,csrf,com) {
+require(["jquery", "sb-admin", "handlebars", "jquery.showLoading", "csrf", "com"], function ($, sa, Handlebars, loading, csrf, com) {
 
     /*
      ajax url
@@ -35,7 +35,7 @@ require(["jquery", "sb-admin", "handlebars", "jquery.showLoading","csrf","com"],
         valid_mobile_url: '/user/register/valid/mobile',
         mobile_code_url: '/user/register/mobile/code',
         register_staff_url: '/user/register/staff',
-        finish:'/register/finish'
+        finish: '/register/finish'
     };
 
     /*

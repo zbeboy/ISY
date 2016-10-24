@@ -24,9 +24,9 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.tables.College.COLLEGE;
-import static top.zbeboy.isy.domain.tables.Department.DEPARTMENT;
-import static top.zbeboy.isy.domain.tables.School.SCHOOL;
+import static top.zbeboy.isy.domain.Tables.COLLEGE;
+import static top.zbeboy.isy.domain.Tables.DEPARTMENT;
+import static top.zbeboy.isy.domain.Tables.SCHOOL;
 
 /**
  * Created by lenovo on 2016-08-21.

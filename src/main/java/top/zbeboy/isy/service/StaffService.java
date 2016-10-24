@@ -4,7 +4,6 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
-import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.List;
@@ -32,6 +31,7 @@ public interface StaffService {
 
     /**
      * 通过用户账号关联查询 注：信息包括学校等 建议用于验证，效率不高
+     *
      * @param username 用户账号
      * @return 关联信息
      */
@@ -39,6 +39,7 @@ public interface StaffService {
 
     /**
      * 通过账号删除
+     *
      * @param username 用户账号
      */
     void deleteByUsername(String username);

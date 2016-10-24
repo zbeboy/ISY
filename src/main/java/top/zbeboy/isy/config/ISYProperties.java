@@ -28,7 +28,11 @@ public class ISYProperties {
         return mail;
     }
 
-    public Constants getConstants(){return constants;};
+    public Constants getConstants() {
+        return constants;
+    }
+
+    ;
 
     public static class Async {
 

@@ -38,9 +38,9 @@ public class SecurityLoginFilter implements Filter {
             String password = StringUtils.trimWhitespace(request.getParameter("password"));
             String j_captcha_response = StringUtils.trimWhitespace(request.getParameter("j_captcha_response"));
 
-            if(StringUtils.hasLength(email)){// 邮箱不为空
-                if(StringUtils.hasLength(password)){// 密码不为空
-                    if(StringUtils.hasLength(j_captcha_response)){// 验证码不为空
+            if (StringUtils.hasLength(email)) {// 邮箱不为空
+                if (StringUtils.hasLength(password)) {// 密码不为空
+                    if (StringUtils.hasLength(j_captcha_response)) {// 验证码不为空
                         if (CaptchaUtils.validCaptcha(j_captcha_response, request)) {// 检验验证码
                             ServletContext context = request.getSession().getServletContext();
                             ApplicationContext ctx = WebApplicationContextUtils
@@ -52,7 +52,7 @@ public class SecurityLoginFilter implements Filter {
                                 if (!ObjectUtils.isEmpty(users.getEnabled()) && users.getEnabled() == 1) {// 用户是否已被注销
                                     if (!ObjectUtils.isEmpty(users.getVerifyMailbox()) && users.getVerifyMailbox() == 1) {// 用户邮箱是否已被验证
                                         boolean isDel = usersService.validSCDSOIsDel(users);
-                                        if(!isDel){// 用户所在院校是否已被注销
+                                        if (!isDel) {// 用户所在院校是否已被注销
                                             filterChain.doFilter(servletRequest, servletResponse);
                                         } else {
                                             response.getWriter().print(AjaxAuthenticationCode.SCHOOL_IS_DEL_CODE);
@@ -63,7 +63,7 @@ public class SecurityLoginFilter implements Filter {
                                 } else {
                                     response.getWriter().print(AjaxAuthenticationCode.USERNAME_IS_ENABLES);
                                 }
-                            }else {
+                            } else {
                                 response.getWriter().print(AjaxAuthenticationCode.USERNAME_IS_NOT_EXIST_CODE);
                             }
                         } else {

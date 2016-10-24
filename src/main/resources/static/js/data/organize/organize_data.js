@@ -28,7 +28,7 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf","check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf,checkall, nav) {
+require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf, checkall, nav) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -49,8 +49,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             return {
                 organizes: '/web/data/organize/data',
                 updateDel: '/web/data/organize/update/del',
-                add:'/web/data/organize/add',
-                edit:'/web/data/organize/edit'
+                add: '/web/data/organize/add',
+                edit: '/web/data/organize/edit'
             };
         }
 

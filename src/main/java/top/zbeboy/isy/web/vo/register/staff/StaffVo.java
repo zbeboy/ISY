@@ -3,7 +3,6 @@ package top.zbeboy.isy.web.vo.register.staff;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 /**
  * Created by lenovo on 2016-08-28.

@@ -50,8 +50,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             return {
                 departments: '/web/data/department/data',
                 updateDel: '/web/data/department/update/del',
-                add:'/web/data/department/add',
-                edit:'/web/data/department/edit'
+                add: '/web/data/department/add',
+                edit: '/web/data/department/edit'
             };
         }
 
@@ -366,7 +366,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          编辑页面
          */
         function edit(departmentId) {
-            window.location.href = web_path + getAjaxUrl().edit+'?id=' + departmentId;
+            window.location.href = web_path + getAjaxUrl().edit + '?id=' + departmentId;
         }
 
         /*

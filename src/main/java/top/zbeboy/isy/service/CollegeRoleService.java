@@ -12,6 +12,7 @@ public interface CollegeRoleService {
 
     /**
      * 通过学院Id查询
+     *
      * @param collegeId 学院id
      * @return 数据
      */
@@ -19,12 +20,14 @@ public interface CollegeRoleService {
 
     /**
      * 保存
+     *
      * @param collegeRole
      */
     void save(CollegeRole collegeRole);
 
     /**
      * 通过角色id删除
+     *
      * @param roleId 角色id
      */
     void deleteByRoleId(int roleId);

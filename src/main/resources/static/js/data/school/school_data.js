@@ -49,8 +49,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             return {
                 schools: '/web/data/school/data',
                 updateDel: '/web/data/school/update/del',
-                add:'/web/data/school/add',
-                edit:'/web/data/school/edit'
+                add: '/web/data/school/add',
+                edit: '/web/data/school/edit'
             };
         }
 

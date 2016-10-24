@@ -28,7 +28,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "com", "check.all", "nav"], function ($, domready, messenger, Handlebars, loading, dt, csrf, com, checkall, nav) {
+require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "com", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf, com, checkall, nav) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -49,8 +49,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             return {
                 applications: '/web/system/application/data',
                 updateDel: '/web/system/application/update/del',
-                add:'/web/system/application/add',
-                edit:'/web/system/application/edit'
+                add: '/web/system/application/add',
+                edit: '/web/system/application/edit'
             };
         }
 
@@ -121,24 +121,24 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                     render: function (a, b, c, d) {
 
                         var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.applicationId,
-                                        "application": c.applicationName
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.applicationId,
-                                        "application": c.applicationName
-                                    }
-                                ]
-                            };
+                        {
+                            func: [
+                                {
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.applicationId,
+                                    "application": c.applicationName
+                                },
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.applicationId,
+                                    "application": c.applicationName
+                                }
+                            ]
+                        };
                         var html = template(context);
                         return html;
                     }
@@ -200,8 +200,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         function getParamId() {
             return {
                 applicationName: '#search_application',
-                applicationEnName:'#search_en_application',
-                applicationCode:'#search_application_code'
+                applicationEnName: '#search_en_application',
+                applicationCode: '#search_application_code'
             };
         }
 
@@ -211,8 +211,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         function initParam() {
             return {
                 applicationName: $(getParamId().applicationName).val(),
-                applicationEnName:$(getParamId().applicationEnName).val(),
-                applicationCode:$(getParamId().applicationCode).val()
+                applicationEnName: $(getParamId().applicationEnName).val(),
+                applicationCode: $(getParamId().applicationCode).val()
             };
         }
 

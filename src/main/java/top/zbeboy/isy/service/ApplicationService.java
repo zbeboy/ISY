@@ -6,13 +6,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
-import top.zbeboy.isy.domain.tables.pojos.School;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 import top.zbeboy.isy.web.bean.system.application.ApplicationBean;
 import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -23,20 +21,23 @@ public interface ApplicationService {
 
     /**
      * 通过角色id查询出应用id并生成菜单html
+     *
      * @param roles 角色
      * @return 菜单html
      */
-    @Cacheable(cacheNames="menuHtml",key="#username")
+    @Cacheable(cacheNames = "menuHtml", key = "#username")
     String menuHtml(List<Role> roles, String web_path, String username);
 
     /**
      * 保存
+     *
      * @param application
      */
     void save(Application application);
 
     /**
      * 保存并返回id
+     *
      * @param application
      * @return id
      */
@@ -44,18 +45,21 @@ public interface ApplicationService {
 
     /**
      * 更新
+     *
      * @param application
      */
     void update(Application application);
 
     /**
      * 批量删除
+     *
      * @param ids
      */
     void deletes(List<Integer> ids);
 
     /**
      * 通过id查询
+     *
      * @param id
      * @return 应用
      */
@@ -63,6 +67,7 @@ public interface ApplicationService {
 
     /**
      * 通过pid查询
+     *
      * @param pid 父id
      * @return 应用
      */
@@ -70,15 +75,17 @@ public interface ApplicationService {
 
     /**
      * 通过ids查询
+     *
      * @param ids
      * @param username 用户账号 缓存
      * @return 应用
      */
-    @Cacheable(cacheNames="findInIdsWithUsername",key="#username")
+    @Cacheable(cacheNames = "findInIdsWithUsername", key = "#username")
     Result<ApplicationRecord> findInIdsWithUsername(List<Integer> ids, String username);
 
     /**
      * 通过pids查询
+     *
      * @param pids 父ids
      * @return 应用
      */
@@ -86,6 +93,7 @@ public interface ApplicationService {
 
     /**
      * 通过ids和父id查询
+     *
      * @param ids
      * @param pid 父id
      * @return 应用
@@ -94,10 +102,11 @@ public interface ApplicationService {
 
     /**
      * 获取该菜单下的data url
+     *
      * @param applicationRecord 菜单
      * @return data url
      */
-    @Cacheable(cacheNames="urlMapping",key="#applicationRecord.getApplicationId()")
+    @Cacheable(cacheNames = "urlMapping", key = "#applicationRecord.getApplicationId()")
     List<String> urlMapping(ApplicationRecord applicationRecord);
 
     /**
@@ -124,6 +133,7 @@ public interface ApplicationService {
 
     /**
      * 通过应用名查询
+     *
      * @param applicationName 应用名
      * @return 应用
      */
@@ -131,14 +141,16 @@ public interface ApplicationService {
 
     /**
      * 通过应用名与应用id查询
+     *
      * @param applicationName 应用名
-     * @param applicationId 应用id
+     * @param applicationId   应用id
      * @return 应用
      */
     Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName, int applicationId);
 
     /**
      * 通过应用英文名查询
+     *
      * @param applicationEnName 应用英文名
      * @return 应用
      */
@@ -146,14 +158,16 @@ public interface ApplicationService {
 
     /**
      * 通过应用英文名与应用id查询
+     *
      * @param applicationEnName 应用英文名
-     * @param applicationId 应用id
+     * @param applicationId     应用id
      * @return 应用
      */
     Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName, int applicationId);
 
     /**
      * 通过应用链接查询
+     *
      * @param applicationUrl 应用链接
      * @return 应用
      */
@@ -161,14 +175,16 @@ public interface ApplicationService {
 
     /**
      * 通过应用链接与应用id查询
+     *
      * @param applicationUrl 应用链接
-     * @param applicationId 应用id
+     * @param applicationId  应用id
      * @return 应用
      */
     Result<ApplicationRecord> findByApplicationUrlNeApplicationId(String applicationUrl, int applicationId);
 
     /**
      * 通过应用识别码查询
+     *
      * @param applicationCode 应用识别码
      * @return 应用
      */
@@ -176,14 +192,16 @@ public interface ApplicationService {
 
     /**
      * 通过应用识别码与应用id查询
+     *
      * @param applicationCode 应用识别码
-     * @param applicationId 应用id
+     * @param applicationId   应用id
      * @return 应用
      */
     Result<ApplicationRecord> findByApplicationCodeNeApplicationId(String applicationCode, int applicationId);
 
     /**
      * 通过父id获取所有子类组成的List
+     *
      * @param pid 父id
      * @return list json
      */

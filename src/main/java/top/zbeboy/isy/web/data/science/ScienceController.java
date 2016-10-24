@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.domain.tables.records.ScienceRecord;
-import top.zbeboy.isy.service.AuthoritiesService;
 import top.zbeboy.isy.service.PageParamService;
 import top.zbeboy.isy.service.ScienceService;
-import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.web.bean.data.science.ScienceBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -72,7 +70,7 @@ public class ScienceController {
      *
      * @return 专业数据页面
      */
-    @RequestMapping(value = "/web/menu/data/science",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/menu/data/science", method = RequestMethod.GET)
     public String scienceData() {
         return "web/data/science/science_data";
     }
@@ -114,7 +112,7 @@ public class ScienceController {
      *
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/data/science/add",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/science/add", method = RequestMethod.GET)
     public String scienceAdd(ModelMap modelMap) {
         pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/science/science_add";
@@ -127,7 +125,7 @@ public class ScienceController {
      * @param modelMap
      * @return 编辑页面
      */
-    @RequestMapping(value = "/web/data/science/edit",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/science/edit", method = RequestMethod.GET)
     public String scienceEdit(@RequestParam("id") int id, ModelMap modelMap) {
         Optional<Record> record = scienceService.findByIdRelation(id);
         ScienceBean scienceBean;

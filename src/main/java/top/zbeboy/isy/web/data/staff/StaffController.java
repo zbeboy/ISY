@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.config.ISYProperties;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.service.MailService;
+import top.zbeboy.isy.service.StaffService;
+import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.UsersTypeService;
 import top.zbeboy.isy.service.util.BCryptUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
@@ -77,6 +80,7 @@ public class StaffController {
 
     /**
      * 教职工注册
+     *
      * @param staffVo
      * @param bindingResult
      * @param session
@@ -152,7 +156,7 @@ public class StaffController {
                                                     session.removeAttribute("mobileCode");
 
                                                     //发送验证邮件
-                                                    if(isyProperties.getMail().isOpen()){
+                                                    if (isyProperties.getMail().isOpen()) {
                                                         mailService.sendValidEmailMail(saveUsers, mailService.getBaseUrl(request));
                                                         return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
                                                     } else {

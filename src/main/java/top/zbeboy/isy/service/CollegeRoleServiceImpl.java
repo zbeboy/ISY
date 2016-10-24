@@ -13,7 +13,6 @@ import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.COLLEGE_ROLE;
-import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
 
 /**
  * Created by lenovo on 2016-10-12.
@@ -42,8 +41,8 @@ public class CollegeRoleServiceImpl implements CollegeRoleService {
     @Override
     public void save(CollegeRole collegeRole) {
         create.insertInto(COLLEGE_ROLE)
-                .set(COLLEGE_ROLE.ROLE_ID,collegeRole.getRoleId())
-                .set(COLLEGE_ROLE.COLLEGE_ID,collegeRole.getCollegeId())
+                .set(COLLEGE_ROLE.ROLE_ID, collegeRole.getRoleId())
+                .set(COLLEGE_ROLE.COLLEGE_ID, collegeRole.getCollegeId())
                 .execute();
     }
 

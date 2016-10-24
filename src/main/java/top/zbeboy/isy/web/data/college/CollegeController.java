@@ -15,15 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.College;
 import top.zbeboy.isy.domain.tables.pojos.CollegeApplication;
-import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeRecord;
-import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
-import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.service.CollegeApplicationService;
-import top.zbeboy.isy.service.CollegeRoleService;
 import top.zbeboy.isy.service.CollegeService;
-import top.zbeboy.isy.service.RoleApplicationService;
 import top.zbeboy.isy.web.bean.data.college.CollegeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -76,7 +71,7 @@ public class CollegeController {
      *
      * @return 院数据页面
      */
-    @RequestMapping(value = "/web/menu/data/college",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/menu/data/college", method = RequestMethod.GET)
     public String collegeData() {
         return "web/data/college/college_data";
     }
@@ -115,7 +110,7 @@ public class CollegeController {
      *
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/data/college/add",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/college/add", method = RequestMethod.GET)
     public String collegeAdd() {
         return "web/data/college/college_add";
     }
@@ -127,7 +122,7 @@ public class CollegeController {
      * @param modelMap
      * @return 编辑页面
      */
-    @RequestMapping(value = "/web/data/college/edit",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/college/edit", method = RequestMethod.GET)
     public String collegeEdit(@RequestParam("id") int id, ModelMap modelMap) {
         College college = collegeService.findById(id);
         modelMap.addAttribute("college", college);
@@ -248,23 +243,24 @@ public class CollegeController {
      *
      * @return 应用挂载页面
      */
-    @RequestMapping(value = "/web/data/college/mount",method = RequestMethod.GET)
-    public String collegeMount(@RequestParam("id") int collegeId,ModelMap modelMap) {
-        modelMap.addAttribute("collegeId",collegeId);
+    @RequestMapping(value = "/web/data/college/mount", method = RequestMethod.GET)
+    public String collegeMount(@RequestParam("id") int collegeId, ModelMap modelMap) {
+        modelMap.addAttribute("collegeId", collegeId);
         return "web/data/college/college_mount";
     }
 
     /**
      * 院与应用数据
+     *
      * @param collegeId 院id
      * @return 数据
      */
-    @RequestMapping(value = "/web/data/college/application/data",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/data/college/application/data", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<CollegeApplication> collegeApplicationData(@RequestParam("collegeId") int collegeId){
+    public AjaxUtils<CollegeApplication> collegeApplicationData(@RequestParam("collegeId") int collegeId) {
         Result<CollegeApplicationRecord> collegeApplicationRecords = collegeApplicationService.findByCollegeId(collegeId);
         List<CollegeApplication> collegeApplications = new ArrayList<>();
-        if(collegeApplicationRecords.isNotEmpty()){
+        if (collegeApplicationRecords.isNotEmpty()) {
             collegeApplications = collegeApplicationRecords.into(CollegeApplication.class);
         }
         return new AjaxUtils<CollegeApplication>().success().listData(collegeApplications);
@@ -272,19 +268,20 @@ public class CollegeController {
 
     /**
      * 更新应用挂载
-     * @param collegeId 院id
+     *
+     * @param collegeId      院id
      * @param applicationIds 应用ids
      * @return true 更新成功
      */
-    @RequestMapping(value = "/web/data/college/update/mount",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/data/college/update/mount", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateMount(@RequestParam("collegeId") int collegeId,String applicationIds){
-        if(collegeId>0){
+    public AjaxUtils updateMount(@RequestParam("collegeId") int collegeId, String applicationIds) {
+        if (collegeId > 0) {
             collegeApplicationService.deleteByCollegeId(collegeId);
             if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
                 List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
                 ids.forEach(id -> {
-                    CollegeApplication collegeApplication = new CollegeApplication(id,collegeId);
+                    CollegeApplication collegeApplication = new CollegeApplication(id, collegeId);
                     collegeApplicationService.save(collegeApplication);
                 });
             }

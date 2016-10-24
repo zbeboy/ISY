@@ -2,7 +2,6 @@ package top.zbeboy.isy.config;
 
 import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,7 +13,6 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import top.zbeboy.isy.web.MainController;
 
@@ -140,7 +138,7 @@ public class SpringfoxConfiguration {
                         "passages, and more recently with desktop publishing software like Aldus PageMaker including " +
                         "versions of Lorem Ipsum.")
                 .termsOfServiceUrl("http://springfox.io")
-                .contact(new Contact("zbeboy","/","863052317@qq.com"))
+                .contact(new Contact("zbeboy", "/", "863052317@qq.com"))
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://github.com/springfox/springfox/blob/master/LICENSE")
                 .version("2.0")
@@ -158,7 +156,7 @@ public class SpringfoxConfiguration {
 
     List<GrantType> grantTypes() {
         GrantType grantType = new ImplicitGrantBuilder()
-                .loginEndpoint(new LoginEndpoint("https://"+isyProperties.getConstants().getServerName()+"/login"))
+                .loginEndpoint(new LoginEndpoint("https://" + isyProperties.getConstants().getServerName() + "/login"))
                 .build();
         return newArrayList(grantType);
     }

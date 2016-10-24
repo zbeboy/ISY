@@ -11,8 +11,8 @@ public class ScienceVo {
     private Integer scienceId;
     @NotNull
     @Size(max = 200)
-    private String  scienceName;
-    private Byte    scienceIsDel;
+    private String scienceName;
+    private Byte scienceIsDel;
     @NotNull
     @Min(1)
     private Integer departmentId;

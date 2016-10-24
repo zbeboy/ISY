@@ -34,10 +34,10 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         init_data_url: '/web/system/application/init',
         save: '/web/system/application/save',
         applicationNameValid: '/web/system/application/save/valid/name',
-        applicationEnNameValid:'/web/system/application/save/valid/en_name',
-        applicationUrlValid:'/web/system/application/save/valid/url',
-        applicationCodeValid:'/web/system/application/save/valid/code',
-        back:'/web/menu/system/application'
+        applicationEnNameValid: '/web/system/application/save/valid/en_name',
+        applicationUrlValid: '/web/system/application/save/valid/url',
+        applicationCodeValid: '/web/system/application/save/valid/code',
+        back: '/web/menu/system/application'
     };
 
     /*
@@ -46,12 +46,12 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     var paramId = {
         applicationPid: '#select_application_pid',
         applicationName: '#applicationName',
-        applicationEnName:'#applicationEnName',
-        applicationUrl:'#applicationUrl',
-        applicationDataUrlStartWith:'#applicationDataUrlStartWith',
-        applicationCode:'#applicationCode',
-        icon:'#icon',
-        applicationSort:'#applicationSort'
+        applicationEnName: '#applicationEnName',
+        applicationUrl: '#applicationUrl',
+        applicationDataUrlStartWith: '#applicationDataUrlStartWith',
+        applicationCode: '#applicationCode',
+        icon: '#icon',
+        applicationSort: '#applicationSort'
     };
 
     /*
@@ -143,7 +143,7 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
      * 初始化父级菜单
      * @param data
      */
-    function initApplicationPids(data){
+    function initApplicationPids(data) {
         var source = $("#application-parent-template").html();
         var template = Handlebars.compile(source);
 
@@ -180,11 +180,11 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     });
 
     // 即时检验应用名
-    $(paramId.applicationName).blur(function(){
+    $(paramId.applicationName).blur(function () {
         initParam();
         var applicationName = param.applicationName;
-        if(applicationName.length<=0 || applicationName.length>30){
-            validErrorDom(validId.applicationName,errorMsgId.applicationName,'应用中文名为1~30个字符');
+        if (applicationName.length <= 0 || applicationName.length > 30) {
+            validErrorDom(validId.applicationName, errorMsgId.applicationName, '应用中文名为1~30个字符');
         } else {
             Messenger().run({
                 errorMessage: '请求失败'
@@ -194,9 +194,9 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
                 data: param,
                 success: function (data) {
                     if (data.state) {
-                        validSuccessDom(validId.applicationName,errorMsgId.applicationName);
+                        validSuccessDom(validId.applicationName, errorMsgId.applicationName);
                     } else {
-                        validErrorDom(validId.applicationName,errorMsgId.applicationName,data.msg);
+                        validErrorDom(validId.applicationName, errorMsgId.applicationName, data.msg);
                     }
                 },
                 error: function (xhr) {
@@ -210,11 +210,11 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     });
 
     // 即时检验应用英文名
-    $(paramId.applicationEnName).blur(function(){
+    $(paramId.applicationEnName).blur(function () {
         initParam();
         var applicationEnName = param.applicationEnName;
-        if(applicationEnName.length<=0 || applicationEnName.length>100){
-            validErrorDom(validId.applicationEnName,errorMsgId.applicationEnName,'应用英文名为1~100个字符');
+        if (applicationEnName.length <= 0 || applicationEnName.length > 100) {
+            validErrorDom(validId.applicationEnName, errorMsgId.applicationEnName, '应用英文名为1~100个字符');
         } else {
             Messenger().run({
                 errorMessage: '请求失败'
@@ -224,9 +224,9 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
                 data: param,
                 success: function (data) {
                     if (data.state) {
-                        validSuccessDom(validId.applicationEnName,errorMsgId.applicationEnName);
+                        validSuccessDom(validId.applicationEnName, errorMsgId.applicationEnName);
                     } else {
-                        validErrorDom(validId.applicationEnName,errorMsgId.applicationEnName,data.msg);
+                        validErrorDom(validId.applicationEnName, errorMsgId.applicationEnName, data.msg);
                     }
                 },
                 error: function (xhr) {
@@ -240,14 +240,14 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     });
 
     // 即时检验应用链接
-    $(paramId.applicationUrl).blur(function(){
+    $(paramId.applicationUrl).blur(function () {
         initParam();
         var applicationUrl = param.applicationUrl;
-        if(applicationUrl.length<=0||applicationUrl.length>300){
-            validErrorDom(validId.applicationUrl,errorMsgId.applicationUrl,'应用链接url为1~300个字符');
+        if (applicationUrl.length <= 0 || applicationUrl.length > 300) {
+            validErrorDom(validId.applicationUrl, errorMsgId.applicationUrl, '应用链接url为1~300个字符');
         } else {
-            if(applicationUrl === '#'){
-                validSuccessDom(validId.applicationUrl,errorMsgId.applicationUrl);
+            if (applicationUrl === '#') {
+                validSuccessDom(validId.applicationUrl, errorMsgId.applicationUrl);
             } else {
                 Messenger().run({
                     errorMessage: '请求失败'
@@ -257,9 +257,9 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
                     data: param,
                     success: function (data) {
                         if (data.state) {
-                            validSuccessDom(validId.applicationUrl,errorMsgId.applicationUrl);
+                            validSuccessDom(validId.applicationUrl, errorMsgId.applicationUrl);
                         } else {
-                            validErrorDom(validId.applicationUrl,errorMsgId.applicationUrl,data.msg);
+                            validErrorDom(validId.applicationUrl, errorMsgId.applicationUrl, data.msg);
                         }
                     },
                     error: function (xhr) {
@@ -274,11 +274,11 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     });
 
     // 即时检验应用识别码
-    $(paramId.applicationCode).blur(function(){
+    $(paramId.applicationCode).blur(function () {
         initParam();
         var applicationCode = param.applicationCode;
-        if(applicationCode.length<=0||applicationCode.length>100){
-            validErrorDom(validId.applicationCode,errorMsgId.applicationCode,'应用识别码为1~100个字符');
+        if (applicationCode.length <= 0 || applicationCode.length > 100) {
+            validErrorDom(validId.applicationCode, errorMsgId.applicationCode, '应用识别码为1~100个字符');
         } else {
             Messenger().run({
                 errorMessage: '请求失败'
@@ -288,9 +288,9 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
                 data: param,
                 success: function (data) {
                     if (data.state) {
-                        validSuccessDom(validId.applicationCode,errorMsgId.applicationCode);
+                        validSuccessDom(validId.applicationCode, errorMsgId.applicationCode);
                     } else {
-                        validErrorDom(validId.applicationCode,errorMsgId.applicationCode,data.msg);
+                        validErrorDom(validId.applicationCode, errorMsgId.applicationCode, data.msg);
                     }
                 },
                 error: function (xhr) {
@@ -334,11 +334,11 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
      * 检验应用名
      * @param msg
      */
-    function validApplicationName(msg){
+    function validApplicationName(msg) {
         msg.cancel();
         initParam();
         var applicationName = param.applicationName;
-        if(applicationName.length<=0 || applicationName.length>30){
+        if (applicationName.length <= 0 || applicationName.length > 30) {
             Messenger().post({
                 message: '应用中文名为1~30个字符',
                 type: 'error',
@@ -375,10 +375,10 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     /**
      * 检验应用英文名
      */
-    function validApplicationEnName(){
+    function validApplicationEnName() {
         initParam();
         var applicationEnName = param.applicationEnName;
-        if(applicationEnName.length<=0 || applicationEnName.length>100){
+        if (applicationEnName.length <= 0 || applicationEnName.length > 100) {
             Messenger().post({
                 message: '应用英文名为1~100个字符',
                 type: 'error',
@@ -415,17 +415,17 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     /**
      * 检验应用链接
      */
-    function validApplicationUrl(){
+    function validApplicationUrl() {
         initParam();
         var applicationUrl = param.applicationUrl;
-        if(applicationUrl.length<=0||applicationUrl.length>300){
+        if (applicationUrl.length <= 0 || applicationUrl.length > 300) {
             Messenger().post({
                 message: '应用链接url为1~300个字符',
                 type: 'error',
                 showCloseButton: true
             });
         } else {
-            if(applicationUrl !== '#'){
+            if (applicationUrl !== '#') {
                 Messenger().run({
                     errorMessage: '请求失败'
                 }, {
@@ -459,10 +459,10 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     /**
      * 检验应用识别码
      */
-    function validApplicationCode(){
+    function validApplicationCode() {
         initParam();
         var applicationCode = param.applicationCode;
-        if(applicationCode.length<=0||applicationCode.length>100){
+        if (applicationCode.length <= 0 || applicationCode.length > 100) {
             Messenger().post({
                 message: '应用识别码为1~100个字符',
                 type: 'error',

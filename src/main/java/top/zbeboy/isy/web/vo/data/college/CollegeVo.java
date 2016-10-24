@@ -11,8 +11,8 @@ public class CollegeVo {
     private Integer collegeId;
     @NotNull
     @Size(max = 200)
-    private String  collegeName;
-    private Byte    collegeIsDel;
+    private String collegeName;
+    private Byte collegeIsDel;
     @NotNull
     @Min(1)
     private Integer schoolId;

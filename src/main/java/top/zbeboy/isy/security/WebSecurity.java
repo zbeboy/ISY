@@ -68,7 +68,7 @@ public class WebSecurity {
             List<Integer> roleIds = new ArrayList<>();
             roleIds.addAll(roleList.stream().map(Role::getRoleId).collect(Collectors.toList()));
 
-            Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findInRoleIdsWithUsername(roleIds,users.getUsername());// 已缓存
+            Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存
             if (roleApplicationRecords.isNotEmpty()) {
                 List<Integer> applicationIds = new ArrayList<>();
                 // 防止重复菜单加载
@@ -76,13 +76,13 @@ public class WebSecurity {
                     applicationIds.add(roleApplicationRecord.getApplicationId());
                 });
 
-                Result<ApplicationRecord> applicationRecords = applicationService.findInIdsWithUsername(applicationIds,users.getUsername());// 已缓存
+                Result<ApplicationRecord> applicationRecords = applicationService.findInIdsWithUsername(applicationIds, users.getUsername());// 已缓存
                 for (ApplicationRecord applicationRecord : applicationRecords) {
                     if (uri.equals(applicationRecord.getApplicationUrl())) {
                         hasRole = true;
                         break;
                     }
-                    if(StringUtils.hasLength(applicationRecord.getApplicationDataUrlStartWith())){
+                    if (StringUtils.hasLength(applicationRecord.getApplicationDataUrlStartWith())) {
                         List<String> urlMapping = applicationService.urlMapping(applicationRecord);// 已缓存
                         if (!ObjectUtils.isEmpty(urlMapping) && urlMapping.contains(uri)) {
                             hasRole = true;

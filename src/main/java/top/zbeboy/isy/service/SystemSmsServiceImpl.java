@@ -48,17 +48,17 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        return dataPagingQueryAll(dataTablesUtils,create,SYSTEM_SMS);
+        return dataPagingQueryAll(dataTablesUtils, create, SYSTEM_SMS);
     }
 
     @Override
     public int countAll() {
-        return statisticsAll(create,SYSTEM_SMS);
+        return statisticsAll(create, SYSTEM_SMS);
     }
 
     @Override
     public int countByCondition(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        return statisticsWithCondition(dataTablesUtils,create,SYSTEM_SMS);
+        return statisticsWithCondition(dataTablesUtils, create, SYSTEM_SMS);
     }
 
     /**

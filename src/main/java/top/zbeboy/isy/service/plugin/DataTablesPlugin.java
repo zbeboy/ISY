@@ -16,12 +16,13 @@ public class DataTablesPlugin<T> {
 
     /**
      * 查询全部数据
+     *
      * @param dataTablesUtils
      * @param create
      * @param table
      * @return 全部数据
      */
-    public Result<Record> dataPagingQueryAll(DataTablesUtils<T> dataTablesUtils,final DSLContext create,TableLike<?> table) {
+    public Result<Record> dataPagingQueryAll(DataTablesUtils<T> dataTablesUtils, final DSLContext create, TableLike<?> table) {
         Result<Record> records = null;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
@@ -43,11 +44,12 @@ public class DataTablesPlugin<T> {
 
     /**
      * 统计全部
+     *
      * @param create
      * @param table
      * @return 统计
      */
-    public int statisticsAll(final DSLContext create,TableLike<?> table){
+    public int statisticsAll(final DSLContext create, TableLike<?> table) {
         Record1<Integer> count = create.selectCount()
                 .from(table)
                 .fetchOne();
@@ -56,12 +58,13 @@ public class DataTablesPlugin<T> {
 
     /**
      * 根据条件统计
+     *
      * @param dataTablesUtils
      * @param create
      * @param table
      * @return 统计
      */
-    public int statisticsWithCondition(DataTablesUtils<T> dataTablesUtils,final DSLContext create,TableLike<?> table){
+    public int statisticsWithCondition(DataTablesUtils<T> dataTablesUtils, final DSLContext create, TableLike<?> table) {
         Record1<Integer> count = null;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
@@ -79,6 +82,7 @@ public class DataTablesPlugin<T> {
 
     /**
      * 查询条件，需要自行覆盖
+     *
      * @param dataTablesUtils
      * @return
      */
@@ -88,6 +92,7 @@ public class DataTablesPlugin<T> {
 
     /**
      * 排序方式，需要自行覆盖
+     *
      * @param dataTablesUtils
      * @param selectConditionStep
      * @param selectJoinStep
@@ -99,6 +104,7 @@ public class DataTablesPlugin<T> {
 
     /**
      * 分页方式
+     *
      * @param dataTablesUtils
      * @param selectConditionStep
      * @param selectJoinStep

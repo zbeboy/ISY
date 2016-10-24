@@ -5,14 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.CacheManager;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import javax.inject.Inject;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 /**
@@ -31,9 +31,6 @@ public class InitConfiguration implements CommandLineRunner {
 
     @Autowired
     private RequestMappingHandlerMapping handlerMapping;
-
-    @Inject
-    private Environment env;
 
     @Autowired
     public InitConfiguration(CacheManager cacheManager) {
@@ -56,8 +53,8 @@ public class InitConfiguration implements CommandLineRunner {
             String filePath = Workbook.URL_MAPPING_FILE_PATH;
             String resourcesPath = Workbook.SETTINGS_PATH;
             File file = new File(resourcesPath);
-            if(!file.exists()){
-                if(file.mkdirs()){
+            if (!file.exists()) {
+                if (file.mkdirs()) {
                     PrintWriter printWriter = new PrintWriter(filePath);
                     final String[] url = {""};
                     Map<RequestMappingInfo, HandlerMethod> map = this.handlerMapping.getHandlerMethods();
@@ -70,12 +67,12 @@ public class InitConfiguration implements CommandLineRunner {
                         printWriter.println(url[0]);
                     });
                     printWriter.close();
-                    logger.info("Init url mapping to {} finish!",filePath);
+                    logger.info("Init url mapping to {} finish!", filePath);
                 }
             }
 
         } catch (IOException e) {
-            logger.error("Init url mapping error : {}",e);
+            logger.error("Init url mapping error : {}", e);
         }
     }
 }

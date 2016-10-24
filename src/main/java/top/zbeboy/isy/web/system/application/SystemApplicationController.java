@@ -14,9 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.pojos.Application;
+import top.zbeboy.isy.domain.tables.pojos.Role;
+import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
-import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.service.ApplicationService;
+import top.zbeboy.isy.service.CollegeApplicationService;
+import top.zbeboy.isy.service.RoleApplicationService;
+import top.zbeboy.isy.service.RoleService;
 import top.zbeboy.isy.web.bean.system.application.ApplicationBean;
 import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -58,7 +63,7 @@ public class SystemApplicationController {
      *
      * @return 系统应用页面
      */
-    @RequestMapping(value = "/web/menu/system/application",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/menu/system/application", method = RequestMethod.GET)
     public String systemLog() {
         return "web/system/application/system_application";
     }
@@ -89,8 +94,8 @@ public class SystemApplicationController {
         List<ApplicationBean> applicationBeen = new ArrayList<>();
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             applicationBeen = records.into(ApplicationBean.class);
-            applicationBeen.forEach(a->{
-                if(a.getApplicationPid() == 0){
+            applicationBeen.forEach(a -> {
+                if (a.getApplicationPid() == 0) {
                     a.setApplicationPidName("无");
                 } else {
                     Application application = applicationService.findById(a.getApplicationPid());
@@ -109,7 +114,7 @@ public class SystemApplicationController {
      *
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/system/application/add",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/system/application/add", method = RequestMethod.GET)
     public String applicationAdd() {
         return "web/system/application/system_application_add";
     }
@@ -119,20 +124,21 @@ public class SystemApplicationController {
      *
      * @return 更新页面
      */
-    @RequestMapping(value = "/web/system/application/edit",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/system/application/edit", method = RequestMethod.GET)
     public String applicationEdit(@RequestParam("id") int id, ModelMap modelMap) {
         Application application = applicationService.findById(id);
-        modelMap.addAttribute("sys_application",application);
+        modelMap.addAttribute("sys_application", application);
         return "web/system/application/system_application_edit";
     }
 
     /**
      * 初始化添加页面数据
+     *
      * @return 页面数据
      */
-    @RequestMapping(value = "/web/system/application/init",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/system/application/init", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils init(){
+    public AjaxUtils init() {
         // 一级与二级菜单
         List<Application> applicationPids = new ArrayList<>();
         Application application = new Application();
@@ -141,31 +147,32 @@ public class SystemApplicationController {
         applicationPids.add(application);
         applicationPids.addAll(applicationService.findByPid(0));
         List<Integer> pids = new ArrayList<>();
-        applicationPids.forEach(p->{
+        applicationPids.forEach(p -> {
             pids.add(p.getApplicationId());
         });
         Result<ApplicationRecord> applicationRecords = applicationService.findInPids(pids);
-        if(applicationRecords.isNotEmpty()){
+        if (applicationRecords.isNotEmpty()) {
             List<Application> secondLevelIds = applicationRecords.into(Application.class);
             applicationPids.addAll(secondLevelIds);
         }
 
-        Map<String,Object> data = new HashMap<>();
-        data.put("applicationPids",applicationPids);
+        Map<String, Object> data = new HashMap<>();
+        data.put("applicationPids", applicationPids);
         return new AjaxUtils().success().mapData(data);
     }
 
     /**
      * 检验保存时应用名是否重复
+     *
      * @param applicationName 应用名
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/name",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/save/valid/name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils saveValidName(@RequestParam("applicationName") String applicationName){
-        if(StringUtils.hasLength(applicationName)){
+    public AjaxUtils saveValidName(@RequestParam("applicationName") String applicationName) {
+        if (StringUtils.hasLength(applicationName)) {
             List<Application> applications = applicationService.findByApplicationName(applicationName);
-            if(ObjectUtils.isEmpty(applications) && applications.isEmpty()){
+            if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用名不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用名已存在");
@@ -176,16 +183,17 @@ public class SystemApplicationController {
 
     /**
      * 检验更新时应用名是否重复
+     *
      * @param applicationName 应用名
-     * @param applicationId 应用id
+     * @param applicationId   应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/name",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/update/valid/name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidName(@RequestParam("applicationName") String applicationName,@RequestParam("applicationId") int applicationId){
-        if(StringUtils.hasLength(applicationName)){
-            Result<ApplicationRecord> applications = applicationService.findByApplicationNameNeApplicationId(applicationName,applicationId);
-            if(applications.isEmpty()){
+    public AjaxUtils updateValidName(@RequestParam("applicationName") String applicationName, @RequestParam("applicationId") int applicationId) {
+        if (StringUtils.hasLength(applicationName)) {
+            Result<ApplicationRecord> applications = applicationService.findByApplicationNameNeApplicationId(applicationName, applicationId);
+            if (applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用名不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用名已存在");
@@ -196,15 +204,16 @@ public class SystemApplicationController {
 
     /**
      * 检验保存时应用英文名是否重复
+     *
      * @param applicationEnName 应用英文名
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/en_name",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/save/valid/en_name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils saveValidEnName(@RequestParam("applicationEnName") String applicationEnName){
-        if(StringUtils.hasLength(applicationEnName)){
+    public AjaxUtils saveValidEnName(@RequestParam("applicationEnName") String applicationEnName) {
+        if (StringUtils.hasLength(applicationEnName)) {
             List<Application> applications = applicationService.findByApplicationEnName(applicationEnName);
-            if(ObjectUtils.isEmpty(applications) && applications.isEmpty()){
+            if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用英文名不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用英文名已存在");
@@ -215,16 +224,17 @@ public class SystemApplicationController {
 
     /**
      * 检验更新时应用英文名是否重复
+     *
      * @param applicationEnName 应用英文名
-     * @param applicationId 应用id
+     * @param applicationId     应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/en_name",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/update/valid/en_name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidEnName(@RequestParam("applicationEnName") String applicationEnName,@RequestParam("applicationId") int applicationId){
-        if(StringUtils.hasLength(applicationEnName)){
-            Result<ApplicationRecord> applications = applicationService.findByApplicationEnNameNeApplicationId(applicationEnName,applicationId);
-            if(applications.isEmpty()){
+    public AjaxUtils updateValidEnName(@RequestParam("applicationEnName") String applicationEnName, @RequestParam("applicationId") int applicationId) {
+        if (StringUtils.hasLength(applicationEnName)) {
+            Result<ApplicationRecord> applications = applicationService.findByApplicationEnNameNeApplicationId(applicationEnName, applicationId);
+            if (applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用英文名不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用英文名已存在");
@@ -235,15 +245,16 @@ public class SystemApplicationController {
 
     /**
      * 检验保存时应用链接是否重复
+     *
      * @param applicationUrl 应用链接
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/url",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/save/valid/url", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils saveValidUrl(@RequestParam("applicationUrl") String applicationUrl){
-        if(StringUtils.hasLength(applicationUrl)){
+    public AjaxUtils saveValidUrl(@RequestParam("applicationUrl") String applicationUrl) {
+        if (StringUtils.hasLength(applicationUrl)) {
             List<Application> applications = applicationService.findByApplicationUrl(applicationUrl);
-            if(ObjectUtils.isEmpty(applications) && applications.isEmpty()){
+            if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用链接不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用链接已存在");
@@ -254,16 +265,17 @@ public class SystemApplicationController {
 
     /**
      * 检验更新时应用链接是否重复
+     *
      * @param applicationUrl 应用链接
-     * @param applicationId 应用id
+     * @param applicationId  应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/url",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/update/valid/url", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidUrl(@RequestParam("applicationUrl") String applicationUrl,@RequestParam("applicationId") int applicationId){
-        if(StringUtils.hasLength(applicationUrl)){
-            Result<ApplicationRecord> applications = applicationService.findByApplicationUrlNeApplicationId(applicationUrl,applicationId);
-            if(applications.isEmpty()){
+    public AjaxUtils updateValidUrl(@RequestParam("applicationUrl") String applicationUrl, @RequestParam("applicationId") int applicationId) {
+        if (StringUtils.hasLength(applicationUrl)) {
+            Result<ApplicationRecord> applications = applicationService.findByApplicationUrlNeApplicationId(applicationUrl, applicationId);
+            if (applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用链接不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用链接已存在");
@@ -274,15 +286,16 @@ public class SystemApplicationController {
 
     /**
      * 检验保存时应用识别码是否重复
+     *
      * @param applicationCode 应用识别码
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/code",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/save/valid/code", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils saveValidCode(@RequestParam("applicationCode") String applicationCode){
-        if(StringUtils.hasLength(applicationCode)){
+    public AjaxUtils saveValidCode(@RequestParam("applicationCode") String applicationCode) {
+        if (StringUtils.hasLength(applicationCode)) {
             List<Application> applications = applicationService.findByApplicationCode(applicationCode);
-            if(ObjectUtils.isEmpty(applications) && applications.isEmpty()){
+            if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用识别码不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用识别码已存在");
@@ -293,16 +306,17 @@ public class SystemApplicationController {
 
     /**
      * 检验更新时应用识别码是否重复
+     *
      * @param applicationCode 应用识别码
-     * @param applicationId 应用id
+     * @param applicationId   应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/code",method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/application/update/valid/code", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidCode(@RequestParam("applicationCode") String applicationCode,@RequestParam("applicationId") int applicationId){
-        if(StringUtils.hasLength(applicationCode)){
-            Result<ApplicationRecord> applications = applicationService.findByApplicationCodeNeApplicationId(applicationCode,applicationId);
-            if(applications.isEmpty()){
+    public AjaxUtils updateValidCode(@RequestParam("applicationCode") String applicationCode, @RequestParam("applicationId") int applicationId) {
+        if (StringUtils.hasLength(applicationCode)) {
+            Result<ApplicationRecord> applications = applicationService.findByApplicationCodeNeApplicationId(applicationCode, applicationId);
+            if (applications.isEmpty()) {
                 return new AjaxUtils().success().msg("应用识别码不存在");
             } else {
                 return new AjaxUtils().fail().msg("应用识别码已存在");
@@ -333,7 +347,7 @@ public class SystemApplicationController {
             application.setApplicationDataUrlStartWith(applicationVo.getApplicationDataUrlStartWith());
             int applicationId = applicationService.saveAndReturnId(application);
             Role role = roleService.findByRoleName(Workbook.SYSTEM_ROLE_NAME);
-            RoleApplication roleApplication =  new RoleApplication(role.getRoleId(),applicationId);
+            RoleApplication roleApplication = new RoleApplication(role.getRoleId(), applicationId);
             roleApplicationService.save(roleApplication);
             return new AjaxUtils().success().msg("保存成功");
         }
@@ -377,7 +391,7 @@ public class SystemApplicationController {
     public AjaxUtils applicationUpdateDel(String applicationIds) {
         if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
             List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
-            ids.forEach(id->{
+            ids.forEach(id -> {
                 roleApplicationService.deleteByApplicationId(id);
                 collegeApplicationService.deleteByApplicationId(id);
             });
@@ -392,7 +406,7 @@ public class SystemApplicationController {
      *
      * @return json
      */
-    @RequestMapping(value = "/special/channel/system/application/json",method = RequestMethod.GET)
+    @RequestMapping(value = "/special/channel/system/application/json", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson() {
         List<TreeBean> treeBeens = applicationService.getApplicationJson(0);

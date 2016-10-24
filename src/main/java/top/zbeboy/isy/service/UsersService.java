@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -39,6 +38,7 @@ public interface UsersService {
 
     /**
      * 获取用户学校相关信息 注：用户必须是学生或教职工
+     *
      * @return 用户学校相关信息
      */
     Optional<Record> findUserSchoolInfo(Users users);
@@ -107,6 +107,7 @@ public interface UsersService {
 
     /**
      * 根据当前用户权限查询低于当前用户权限的用户的 select
+     *
      * @return
      */
     Select<AuthoritiesRecord> existsAuthoritiesSelect();

@@ -29,7 +29,7 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "com", "check.all", "nav"], function ($, domready, messenger, Handlebars, loading, dt, csrf, com, checkall, nav) {
+require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "com", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf, com, checkall, nav) {
     domready(function () {
         /*
          初始化消息机制
@@ -100,10 +100,10 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 passData: '/web/platform/users/pass/data',
                 waitData: '/web/platform/users/wait/data',
                 usersTypeData: '/web/platform/users/type/data',
-                roleData:'/special/channel/users/role/data',
-                saveRole:'/special/channel/users/role/save',
-                updateEnabled:'/special/channel/users/update/enabled',
-                deleteUsers:'/special/channel/users/deletes'
+                roleData: '/special/channel/users/role/data',
+                saveRole: '/special/channel/users/role/save',
+                updateEnabled: '/special/channel/users/update/enabled',
+                deleteUsers: '/special/channel/users/deletes'
             };
         }
 
@@ -138,9 +138,9 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             $(getPassParamId().username).val('');
             $(getPassParamId().mobile).val('');
             var childrens = $(getPassParamId().usersType).children();
-            for(var i = 0;i<childrens.length;i++){
-                if(Number($(childrens[i]).val()) == 0){
-                    $(childrens[i]).prop('selected',true);
+            for (var i = 0; i < childrens.length; i++) {
+                if (Number($(childrens[i]).val()) == 0) {
+                    $(childrens[i]).prop('selected', true);
                     break;
                 }
             }
@@ -351,7 +351,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                     });
 
                     $(document).on("click", ".role", function () {
-                        role($(this).attr('data-id'),$(this).attr('data-role'));
+                        role($(this).attr('data-id'), $(this).attr('data-role'));
                     });
                 }
             });
@@ -369,16 +369,16 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          * @param username
          * @param role
          */
-        function role(username,role){
-            $.post(web_path + getAjaxUrl().roleData,{username:username}, function (data) {
+        function role(username, role) {
+            $.post(web_path + getAjaxUrl().roleData, {username: username}, function (data) {
                 var html = roleData(data);
                 $('#roles').html(html);
                 var roleNames = role.split(' ');
                 var roles = $('.role_set');
-                for(var i = 0;i<roles.length;i++){
-                    for(var j = 0;j<roleNames.length;j++){
-                        if($(roles[i]).text() === roleNames[j]){
-                            $(roles[i]).prev().prop('checked',true);
+                for (var i = 0; i < roles.length; i++) {
+                    for (var j = 0; j < roleNames.length; j++) {
+                        if ($(roles[i]).text() === roleNames[j]) {
+                            $(roles[i]).prev().prop('checked', true);
                         }
                     }
                 }
@@ -388,34 +388,34 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         }
 
         /*
-        关闭角色设置modal
+         关闭角色设置modal
          */
-        $('#roleModalMiss').click(function(){
+        $('#roleModalMiss').click(function () {
             $('#role_error_msg').addClass('hidden').removeClass('text-danger').text('');
             $('#roleModal').modal('hide');
         });
 
         // 保存角色
-        $("#saveRole").click(function(){
+        $("#saveRole").click(function () {
             var roles = $('input[name="role"]:checked');
-            if(roles.length<=0){
+            if (roles.length <= 0) {
                 $('#role_error_msg').removeClass('hidden').addClass('text-danger').text('请至少选择一个角色');
             } else {
                 $('#role_error_msg').addClass('hidden').removeClass('text-danger').text('');
                 var r = [];
-                for(var i = 0;i<roles.length;i++){
+                for (var i = 0; i < roles.length; i++) {
                     r.push($(roles[i]).val());
                 }
-                $.post(web_path+getAjaxUrl().saveRole,{
-                    username:$('#roleUsername').val(),
-                    roles:r.join(",")
-                },function(data){
-                    if(data.state){
+                $.post(web_path + getAjaxUrl().saveRole, {
+                    username: $('#roleUsername').val(),
+                    roles: r.join(",")
+                }, function (data) {
+                    if (data.state) {
                         $('#roleModal').modal('toggle');
-                        if(passTable != null){
+                        if (passTable != null) {
                             passTable.ajax.reload();
                         }
-                        if(waitTable !=  null){
+                        if (waitTable != null) {
                             waitTable.ajax.reload();
                         }
                     } else {
@@ -429,7 +429,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          * 注销
          * @param username
          */
-        function cancel(username){
+        function cancel(username) {
             var msg;
             msg = Messenger().post({
                 message: "确定注销 '" + username + "' 吗?",
@@ -456,7 +456,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          * 恢复
          * @param username
          */
-        function recovery(username){
+        function recovery(username) {
             var msg;
             msg = Messenger().post({
                 message: "确定恢复 '" + username + "' 吗?",
@@ -482,7 +482,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         /*
          批量注销
          */
-        function cancels(){
+        function cancels() {
             var userIds = [];
             var ids = $('input[name="pass_check"]:checked');
             for (var i = 0; i < ids.length; i++) {
@@ -518,7 +518,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         /*
          批量恢复
          */
-        function recoveries(){
+        function recoveries() {
             var userIds = [];
             var ids = $('input[name="pass_check"]:checked');
             for (var i = 0; i < ids.length; i++) {
@@ -551,19 +551,19 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             }
         }
 
-        function toCancel(username){
+        function toCancel(username) {
             sendUpdateEnabledAjax(username, '注销', 0);
         }
 
-        function toRecovery(username){
+        function toRecovery(username) {
             sendUpdateEnabledAjax(username, '恢复', 1);
         }
 
-        function toCancels(ids){
+        function toCancels(ids) {
             sendUpdateEnabledAjax(ids.join(","), '批量注销', 0);
         }
 
-        function toRecoveries(ids){
+        function toRecoveries(ids) {
             sendUpdateEnabledAjax(ids.join(","), '批量恢复', 1);
         }
 
@@ -573,7 +573,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          * @param message
          * @param enabled
          */
-        function sendUpdateEnabledAjax(username,message,enabled){
+        function sendUpdateEnabledAjax(username, message, enabled) {
             Messenger().run({
                 successMessage: message + '用户成功',
                 errorMessage: message + '用户失败',
@@ -581,7 +581,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             }, {
                 url: web_path + getAjaxUrl().updateEnabled,
                 type: 'post',
-                data: {userIds: username,enabled:enabled},
+                data: {userIds: username, enabled: enabled},
                 success: function (data) {
                     if (data.state) {
                         passTable.ajax.reload();
@@ -601,13 +601,13 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             e.preventDefault();
             var t = $(this).text();
             if (t === '已审核') {
-                if(passTable == null){
+                if (passTable == null) {
                     pass();
                 } else {
                     passTable.ajax.reload();
                 }
             } else if (t === '未审核') {
-                if(waitTable == null){
+                if (waitTable == null) {
                     wait();
                 } else {
                     waitTable.ajax.reload();
@@ -635,9 +635,9 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             $(getWaitParamId().username).val('');
             $(getWaitParamId().mobile).val('');
             var childrens = $(getWaitParamId().usersType).children();
-            for(var i = 0;i<childrens.length;i++){
-                if(Number($(childrens[i]).val()) == 0){
-                    $(childrens[i]).prop('selected',true);
+            for (var i = 0; i < childrens.length; i++) {
+                if (Number($(childrens[i]).val()) == 0) {
+                    $(childrens[i]).prop('selected', true);
                     break;
                 }
             }
@@ -670,7 +670,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             waitTable.ajax.reload();
         });
 
-        function wait(){
+        function wait() {
             var operator_button = $("#operator_button").html();
             // 预编译模板
             var template = Handlebars.compile(operator_button);
@@ -738,24 +738,24 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                         orderable: false,
                         render: function (a, b, c, d) {
                             var context =
-                                {
-                                    func: [
-                                        {
-                                            "name": "删除",
-                                            "css": "delete",
-                                            "type": "danger",
-                                            "id": c.username,
-                                            "role": ''
-                                        },
-                                        {
-                                            "name": "设置角色",
-                                            "css": "role",
-                                            "type": "info",
-                                            "id": c.username,
-                                            "role": ''
-                                        }
-                                    ]
-                                };
+                            {
+                                func: [
+                                    {
+                                        "name": "删除",
+                                        "css": "delete",
+                                        "type": "danger",
+                                        "id": c.username,
+                                        "role": ''
+                                    },
+                                    {
+                                        "name": "设置角色",
+                                        "css": "role",
+                                        "type": "info",
+                                        "id": c.username,
+                                        "role": ''
+                                    }
+                                ]
+                            };
 
 
                             var html = template(context);
@@ -805,7 +805,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             $('#wait_global_button').append(wait_global_button);
         }
 
-        function usersDelete(username){
+        function usersDelete(username) {
             var msg;
             msg = Messenger().post({
                 message: "确定删除 '" + username + "' 吗?",
@@ -831,7 +831,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         /*
          批量删除
          */
-        function usersDeletes(){
+        function usersDeletes() {
             var userIds = [];
             var ids = $('input[name="wait_check"]:checked');
             for (var i = 0; i < ids.length; i++) {
@@ -864,15 +864,15 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             }
         }
 
-        function toDelete(username){
+        function toDelete(username) {
             sendDeleteAjax(username, '删除');
         }
 
-        function toDeletes(ids){
+        function toDeletes(ids) {
             sendDeleteAjax(ids.join(","), '批量删除');
         }
 
-        function sendDeleteAjax(username,message){
+        function sendDeleteAjax(username, message) {
             Messenger().run({
                 successMessage: message + '用户成功',
                 errorMessage: message + '用户失败',

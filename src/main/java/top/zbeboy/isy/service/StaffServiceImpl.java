@@ -338,7 +338,7 @@ public class StaffServiceImpl implements StaffService {
                     .fetchOne();
             return count.value1();
         }
-       return 0;
+        return 0;
     }
 
     @Override
@@ -412,7 +412,7 @@ public class StaffServiceImpl implements StaffService {
             }
 
         }
-        if(!ObjectUtils.isEmpty(count)){
+        if (!ObjectUtils.isEmpty(count)) {
             return count.value1();
         }
         return 0;
@@ -489,7 +489,7 @@ public class StaffServiceImpl implements StaffService {
                 count = selectConditionStep.fetchOne();
             }
         }
-        if(!ObjectUtils.isEmpty(count)){
+        if (!ObjectUtils.isEmpty(count)) {
             return count.value1();
         }
         return 0;

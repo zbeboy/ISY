@@ -33,7 +33,7 @@ require(["jquery", "csrf", "com", "messenger", "nav"], function ($, csrf, com, m
     var ajax_url = {
         update: '/web/data/school/update',
         valid: '/web/data/school/update/valid',
-        back:'/web/menu/data/school'
+        back: '/web/menu/data/school'
     };
 
     /*

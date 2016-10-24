@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * Created by Administrator on 2016/3/29.
+ * 随机数生成工具类
  */
 public class RandomUtils {
 

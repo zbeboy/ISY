@@ -11,14 +11,14 @@ public class OrganizeVo {
     private Integer organizeId;
     @NotNull
     @Size(max = 200)
-    private String  organizeName;
-    private Byte    organizeIsDel;
+    private String organizeName;
+    private Byte organizeIsDel;
     @NotNull
     @Min(1)
     private Integer scienceId;
     @NotNull
     @Size(max = 5)
-    private String  grade;
+    private String grade;
 
     public Integer getOrganizeId() {
         return organizeId;

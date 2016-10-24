@@ -63,7 +63,7 @@ public class SchoolController {
      *
      * @return 学校数据页面
      */
-    @RequestMapping(value = "/web/menu/data/school",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/menu/data/school", method = RequestMethod.GET)
     public String schoolData() {
         return "web/data/school/school_data";
     }
@@ -101,7 +101,7 @@ public class SchoolController {
      *
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/data/school/add",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/school/add", method = RequestMethod.GET)
     public String schoolAdd() {
         return "web/data/school/school_add";
     }
@@ -113,7 +113,7 @@ public class SchoolController {
      * @param modelMap
      * @return 编辑页面
      */
-    @RequestMapping(value = "/web/data/school/edit",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/data/school/edit", method = RequestMethod.GET)
     public String schoolEdit(@RequestParam("id") int id, ModelMap modelMap) {
         School school = schoolService.findById(id);
         modelMap.addAttribute("school", school);

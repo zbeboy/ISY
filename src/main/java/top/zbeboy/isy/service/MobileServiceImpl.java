@@ -66,7 +66,7 @@ public class MobileServiceImpl implements MobileService {
             e.printStackTrace();
         }
         log.debug(" mobile result : {}", result);
-        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(),new Timestamp(System.currentTimeMillis()),mobile);
+        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(System.currentTimeMillis()), mobile);
         systemSmsService.save(systemSms);
     }
 

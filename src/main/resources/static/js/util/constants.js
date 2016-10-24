@@ -3,6 +3,6 @@
  */
 define(function () {
     return {
-        global_role_name:{system_role:'系统',admin_role:'管理员'}
+        global_role_name: {system_role: '系统', admin_role: '管理员'}
     };
 });

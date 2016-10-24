@@ -26,16 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.*;
-import static top.zbeboy.isy.domain.tables.College.COLLEGE;
-import static top.zbeboy.isy.domain.tables.School.SCHOOL;
+import static top.zbeboy.isy.domain.Tables.COLLEGE_ROLE;
+import static top.zbeboy.isy.domain.Tables.ROLE;
+import static top.zbeboy.isy.domain.Tables.COLLEGE;
+import static top.zbeboy.isy.domain.Tables.SCHOOL;
 
 /**
  * Created by lenovo on 2016-10-04.
  */
 @Service("roleService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements RoleService {
+public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleService {
 
     private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
@@ -57,7 +58,7 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
 
     @Override
     public Role findByRoleName(String roleName) {
-        return roleDao.fetchOne(ROLE.ROLE_NAME,roleName);
+        return roleDao.fetchOne(ROLE.ROLE_NAME, roleName);
     }
 
     @Override
@@ -109,8 +110,8 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
     @Override
     public int saveAndReturnId(Role role) {
         RoleRecord roleRecord = create.insertInto(ROLE)
-                .set(ROLE.ROLE_NAME,role.getRoleName())
-                .set(ROLE.ROLE_EN_NAME,role.getRoleEnName())
+                .set(ROLE.ROLE_NAME, role.getRoleName())
+                .set(ROLE.ROLE_EN_NAME, role.getRoleEnName())
                 .returning(ROLE.ROLE_ID)
                 .fetchOne();
         return roleRecord.getRoleId();
@@ -228,7 +229,7 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
                     .fetchOne();
             return count.value1();
         }
-      return 0;
+        return 0;
     }
 
     @Override
@@ -283,7 +284,7 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
                 count = selectConditionStep.fetchOne();
             }
         }
-        if(!ObjectUtils.isEmpty(count)){
+        if (!ObjectUtils.isEmpty(count)) {
             return count.value1();
         }
         return 0;
@@ -307,9 +308,10 @@ public class RoleServiceImpl  extends DataTablesPlugin<RoleBean> implements Role
 
     /**
      * 获取系统默认角色
+     *
      * @return
      */
-    private List<String> getDefaultRoles(){
+    private List<String> getDefaultRoles() {
         List<String> defaultRoles = new ArrayList<>();
         defaultRoles.add(Workbook.SYSTEM_AUTHORITIES);
         return defaultRoles;

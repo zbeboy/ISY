@@ -27,7 +27,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf","check.all", "nav"], function ($, domready, messenger, Handlebars,dt, csrf, checkall, nav) {
+require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf, checkall, nav) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -48,8 +48,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             return {
                 roles: '/web/platform/role/data',
                 delete: '/web/platform/role/delete',
-                add:'/web/platform/role/add',
-                edit:'/web/platform/role/edit'
+                add: '/web/platform/role/add',
+                edit: '/web/platform/role/edit'
             };
         }
 
@@ -116,24 +116,24 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                     render: function (a, b, c, d) {
 
                         var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.roleId,
-                                        "school": c.roleName
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.roleId,
-                                        "school": c.roleName
-                                    }
-                                ]
-                            };
+                        {
+                            func: [
+                                {
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.roleId,
+                                    "school": c.roleName
+                                },
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.roleId,
+                                    "school": c.roleName
+                                }
+                            ]
+                        };
 
 
                         var html = template(context);
@@ -189,8 +189,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         function getParamId() {
             return {
                 schoolName: '#search_school',
-                collegeName:'#search_college',
-                roleName:'#search_role'
+                collegeName: '#search_college',
+                roleName: '#search_role'
             };
         }
 
@@ -200,8 +200,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         function initParam() {
             return {
                 schoolName: $(getParamId().schoolName).val(),
-                collegeName:$(getParamId().collegeName).val(),
-                roleName:$(getParamId().roleName).val()
+                collegeName: $(getParamId().collegeName).val(),
+                roleName: $(getParamId().roleName).val()
             };
         }
 

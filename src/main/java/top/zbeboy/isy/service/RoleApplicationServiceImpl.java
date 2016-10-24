@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service;
 
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.isy.domain.tables.daos.SchoolDao;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 
@@ -34,7 +32,7 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
     }
 
     @Override
-    public Result<RoleApplicationRecord> findInRoleIdsWithUsername(List<Integer> roleIds,String username) {
+    public Result<RoleApplicationRecord> findInRoleIdsWithUsername(List<Integer> roleIds, String username) {
         return create.selectFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.in(roleIds))
                 .fetch();
@@ -44,8 +42,8 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
     @Override
     public void save(RoleApplication roleApplication) {
         create.insertInto(ROLE_APPLICATION)
-                .set(ROLE_APPLICATION.ROLE_ID,roleApplication.getRoleId())
-                .set(ROLE_APPLICATION.APPLICATION_ID,roleApplication.getApplicationId())
+                .set(ROLE_APPLICATION.ROLE_ID, roleApplication.getRoleId())
+                .set(ROLE_APPLICATION.APPLICATION_ID, roleApplication.getApplicationId())
                 .execute();
     }
 

@@ -16,7 +16,8 @@ import java.util.Optional;
 public interface RoleService {
 
     /**
-     *通过角色名查询
+     * 通过角色名查询
+     *
      * @param roleName 角色名
      * @return 角色
      */
@@ -24,6 +25,7 @@ public interface RoleService {
 
     /**
      * 通过主键查询
+     *
      * @param id 主键
      * @return 角色
      */
@@ -31,6 +33,7 @@ public interface RoleService {
 
     /**
      * 根据角色id关联查询
+     *
      * @param roleId 角色id
      * @return 关联查询结果
      */
@@ -38,7 +41,8 @@ public interface RoleService {
 
     /**
      * 通过角色名和院id查询
-     * @param roleName 角色名
+     *
+     * @param roleName  角色名
      * @param collegeId 院id
      * @return 结果集
      */
@@ -46,21 +50,24 @@ public interface RoleService {
 
     /**
      * 通过角色名和院id查询 注不等于角色id
-     * @param roleName 角色名
+     *
+     * @param roleName  角色名
      * @param collegeId 院id
-     * @param roleId 角色id
+     * @param roleId    角色id
      * @return 结果集
      */
     Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, int roleId);
 
     /**
      * 保存
+     *
      * @param role
      */
     void save(Role role);
 
     /**
      * 保存并返回id
+     *
      * @param role 角色
      * @return id
      */
@@ -68,18 +75,21 @@ public interface RoleService {
 
     /**
      * 更新
+     *
      * @param role 角色
      */
     void update(Role role);
 
     /**
      * 通过主键删除
+     *
      * @param id 主键
      */
     void deleteById(int id);
 
     /**
      * 批量查询
+     *
      * @param ids
      * @return roles
      */
@@ -109,6 +119,7 @@ public interface RoleService {
 
     /**
      * 查询不在院与角色关联表中的角色
+     *
      * @param roleName 角色名
      * @return 数据
      */
@@ -116,8 +127,9 @@ public interface RoleService {
 
     /**
      * 查询不在院与角色关联表中的角色 注：不等于角色id
+     *
      * @param roleName 角色名
-     * @param roleId 角色id
+     * @param roleId   角色id
      * @return 结果集
      */
     Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, int roleId);

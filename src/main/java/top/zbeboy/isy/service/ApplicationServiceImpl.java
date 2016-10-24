@@ -89,9 +89,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 .set(APPLICATION.APPLICATION_PID, application.getApplicationPid())
                 .set(APPLICATION.APPLICATION_URL, application.getApplicationUrl())
                 .set(APPLICATION.APPLICATION_CODE, application.getApplicationCode())
-                .set(APPLICATION.APPLICATION_EN_NAME,application.getApplicationEnName())
-                .set(APPLICATION.ICON,application.getIcon())
-                .set(APPLICATION.APPLICATION_DATA_URL_START_WITH,application.getApplicationDataUrlStartWith())
+                .set(APPLICATION.APPLICATION_EN_NAME, application.getApplicationEnName())
+                .set(APPLICATION.ICON, application.getIcon())
+                .set(APPLICATION.APPLICATION_DATA_URL_START_WITH, application.getApplicationDataUrlStartWith())
                 .returning(APPLICATION.APPLICATION_ID)
                 .fetchOne();
 
@@ -105,7 +105,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public void deletes(List<Integer> ids) {
-        ids.forEach(id->{
+        ids.forEach(id -> {
             applicationDao.deleteById(id);
         });
     }
@@ -231,7 +231,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<ApplicationBean> dataTablesUtils) {
-        return dataPagingQueryAll(dataTablesUtils,create,APPLICATION);
+        return dataPagingQueryAll(dataTablesUtils, create, APPLICATION);
     }
 
     @Override
@@ -241,7 +241,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public int countByCondition(DataTablesUtils<ApplicationBean> dataTablesUtils) {
-        return statisticsWithCondition(dataTablesUtils,create,APPLICATION);
+        return statisticsWithCondition(dataTablesUtils, create, APPLICATION);
     }
 
     @Override
@@ -299,13 +299,14 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     /**
      * 绑定数据到treeBean
+     *
      * @param id 父id
      * @return list treeBean
      */
-    private List<TreeBean> bindingDataToJson(int id){
+    private List<TreeBean> bindingDataToJson(int id) {
         List<Application> applications = findByPid(id);
         List<TreeBean> treeBeens = new ArrayList<>();
-        if(ObjectUtils.isEmpty(applications)&&applications.isEmpty()){
+        if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
             treeBeens = null;
         } else {
             for (Application application : applications) { // pid = 0
@@ -477,6 +478,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     /**
      * 从文本文件中获取所有url
+     *
      * @return urls
      * @throws FileNotFoundException
      */

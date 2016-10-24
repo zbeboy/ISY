@@ -24,10 +24,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.tables.College.COLLEGE;
-import static top.zbeboy.isy.domain.tables.Department.DEPARTMENT;
-import static top.zbeboy.isy.domain.tables.School.SCHOOL;
-import static top.zbeboy.isy.domain.tables.Science.SCIENCE;
+import static top.zbeboy.isy.domain.Tables.COLLEGE;
+import static top.zbeboy.isy.domain.Tables.DEPARTMENT;
+import static top.zbeboy.isy.domain.Tables.SCHOOL;
+import static top.zbeboy.isy.domain.Tables.SCIENCE;
 
 /**
  * Created by lenovo on 2016-08-21.
@@ -174,7 +174,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     public int countAll() {
         // 分权限显示用户数据
         if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
-            return statisticsAll(create,SCIENCE);
+            return statisticsAll(create, SCIENCE);
         } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);

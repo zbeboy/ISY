@@ -22,18 +22,21 @@ public interface AuthoritiesService {
 
     /**
      * 保存
+     *
      * @param authorities
      */
     void save(Authorities authorities);
 
     /**
      * 通过用户账号删除
+     *
      * @param username 用户账号
      */
     void deleteByUsername(String username);
 
     /**
      * 通过权限删除
+     *
      * @param authorities 权限
      */
     void deleteByAuthorities(String authorities);
@@ -48,6 +51,7 @@ public interface AuthoritiesService {
 
     /**
      * 获取角色院id
+     *
      * @param record 数据库信息
      * @return id
      */

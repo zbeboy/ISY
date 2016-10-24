@@ -48,17 +48,17 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
-        return dataPagingQueryAll(dataTablesUtils,create,SYSTEM_MAILBOX);
+        return dataPagingQueryAll(dataTablesUtils, create, SYSTEM_MAILBOX);
     }
 
     @Override
     public int countAll() {
-        return statisticsAll(create,SYSTEM_MAILBOX);
+        return statisticsAll(create, SYSTEM_MAILBOX);
     }
 
     @Override
     public int countByCondition(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
-        return statisticsWithCondition(dataTablesUtils,create,SYSTEM_MAILBOX);
+        return statisticsWithCondition(dataTablesUtils, create, SYSTEM_MAILBOX);
     }
 
     /**

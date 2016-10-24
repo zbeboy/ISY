@@ -34,7 +34,7 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
         school_data_url: '/user/schools',
         update: '/web/data/college/update',
         valid: '/web/data/college/update/valid',
-        back:'/web/menu/data/college'
+        back: '/web/menu/data/college'
     };
 
     /*

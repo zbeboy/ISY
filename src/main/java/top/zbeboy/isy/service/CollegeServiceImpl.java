@@ -20,8 +20,8 @@ import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.List;
 
-import static top.zbeboy.isy.domain.tables.College.COLLEGE;
-import static top.zbeboy.isy.domain.tables.School.SCHOOL;
+import static top.zbeboy.isy.domain.Tables.COLLEGE;
+import static top.zbeboy.isy.domain.Tables.SCHOOL;
 
 /**
  * Created by lenovo on 2016-08-21.

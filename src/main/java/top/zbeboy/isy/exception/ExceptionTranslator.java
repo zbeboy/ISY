@@ -39,9 +39,9 @@ import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
  * @author Adam Zell
  * @author Lukas Eder
  * @see <a
- *      href="http://www.petrikainulainen.net/programming/jooq/using-jooq-with-spring-configuration/">http://www.petrikainulainen.net/programming/jooq/using-jooq-with-spring-configuration/</a>
+ * href="http://www.petrikainulainen.net/programming/jooq/using-jooq-with-spring-configuration/">http://www.petrikainulainen.net/programming/jooq/using-jooq-with-spring-configuration/</a>
  * @see <a
- *      href="https://gist.github.com/azell/5655888">https://gist.github.com/azell/5655888</a>
+ * href="https://gist.github.com/azell/5655888">https://gist.github.com/azell/5655888</a>
  */
 public class ExceptionTranslator extends DefaultExecuteListener {
 

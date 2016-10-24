@@ -1,6 +1,5 @@
 package top.zbeboy.isy.web.vo.data.department;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,8 +10,8 @@ public class DepartmentVo {
     private Integer departmentId;
     @NotNull
     @Size(max = 200)
-    private String  departmentName;
-    private Byte    departmentIsDel;
+    private String departmentName;
+    private Byte departmentIsDel;
     private Integer collegeId;
 
     public Integer getDepartmentId() {

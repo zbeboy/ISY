@@ -25,12 +25,14 @@ public interface ScienceService {
 
     /**
      * 保存
+     *
      * @param science
      */
     void save(Science science);
 
     /**
      * 更新
+     *
      * @param science
      */
     void update(Science science);
@@ -45,6 +47,7 @@ public interface ScienceService {
 
     /**
      * 通过id查询
+     *
      * @param id 专业id
      * @return 专业
      */
@@ -52,6 +55,7 @@ public interface ScienceService {
 
     /**
      * 通过id关联查询
+     *
      * @param id 专业id
      * @return 专业
      */
@@ -81,7 +85,8 @@ public interface ScienceService {
 
     /**
      * 系下 专业名查询 注：等于专业名
-     * @param scienceName 专业名
+     *
+     * @param scienceName  专业名
      * @param departmentId 系id
      * @return 数据
      */
@@ -89,8 +94,9 @@ public interface ScienceService {
 
     /**
      * 查找系下不等于该专业id的专业名
-     * @param scienceName 专业名
-     * @param scienceId 专业id
+     *
+     * @param scienceName  专业名
+     * @param scienceId    专业id
      * @param departmentId 系id
      * @return 数据
      */
