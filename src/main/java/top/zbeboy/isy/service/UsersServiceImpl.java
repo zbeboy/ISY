@@ -111,9 +111,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public void updateEnabled(List<String> ids, Byte enabled) {
-        ids.forEach(id -> {
-            create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute();
-        });
+        ids.forEach(id ->
+                create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute()
+        );
     }
 
     @Override
@@ -130,32 +130,60 @@ public class UsersServiceImpl implements UsersService {
         if (!ObjectUtils.isEmpty(usersType)) {
             switch (usersType.getUsersTypeName()) {
                 case Workbook.STUDENT_USERS_TYPE: // 学生
-                    Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-                    if (studentRecord.isPresent()) {
-                        StudentBean studentBean = studentRecord.get().into(StudentBean.class);
-                        if (Objects.equals(studentBean.getOrganizeIsDel(), isNotDel) &&
-                                Objects.equals(studentBean.getScienceIsDel(), isNotDel) &&
-                                Objects.equals(studentBean.getDepartmentIsDel(), isNotDel) &&
-                                Objects.equals(studentBean.getCollegeIsDel(), isNotDel) &&
-                                Objects.equals(studentBean.getSchoolIsDel(), isNotDel)) {
-                            isDel = false;
-                        }
-                    }
+                    isDel = validSCDSOForStudentIsDel(users);
                     break;
                 case Workbook.STAFF_USERS_TYPE: // 教职工
-                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                        if (Objects.equals(staffBean.getDepartmentIsDel(), isNotDel) &&
-                                Objects.equals(staffBean.getCollegeIsDel(), isNotDel) &&
-                                Objects.equals(staffBean.getSchoolIsDel(), isNotDel)) {
-                            isDel = false;
-                        }
-                    }
+                    isDel = validSCDSOForStaffIsDel(users);
                     break;
                 case Workbook.SYSTEM_USERS_TYPE: // 系统
                     isDel = false;
                     break;
+                default:
+                    isDel = false;
+            }
+        }
+        return isDel;
+    }
+
+    /**
+     * 检验学生学校状态
+     *
+     * @param users 用户对象
+     * @return true or false
+     */
+    private boolean validSCDSOForStudentIsDel(Users users) {
+        Byte isNotDel = 0;
+        boolean isDel = true;
+        Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+        if (studentRecord.isPresent()) {
+            StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+            if (Objects.equals(studentBean.getOrganizeIsDel(), isNotDel) &&
+                    Objects.equals(studentBean.getScienceIsDel(), isNotDel) &&
+                    Objects.equals(studentBean.getDepartmentIsDel(), isNotDel) &&
+                    Objects.equals(studentBean.getCollegeIsDel(), isNotDel) &&
+                    Objects.equals(studentBean.getSchoolIsDel(), isNotDel)) {
+                isDel = false;
+            }
+        }
+        return isDel;
+    }
+
+    /**
+     * 检验教职工学校状态
+     *
+     * @param users 用户对象
+     * @return true or false
+     */
+    private boolean validSCDSOForStaffIsDel(Users users) {
+        Byte isNotDel = 0;
+        boolean isDel = true;
+        Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
+        if (staffRecord.isPresent()) {
+            StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+            if (Objects.equals(staffBean.getDepartmentIsDel(), isNotDel) &&
+                    Objects.equals(staffBean.getCollegeIsDel(), isNotDel) &&
+                    Objects.equals(staffBean.getSchoolIsDel(), isNotDel)) {
+                isDel = false;
             }
         }
         return isDel;
@@ -188,7 +216,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
         Select<AuthoritiesRecord> select = existsAuthoritiesSelect();
-        Result<Record> records = null;
+        Result<Record> records ;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record> selectConditionStep = create.select()
@@ -216,7 +244,7 @@ public class UsersServiceImpl implements UsersService {
     public Result<Record> findAllByPageNotExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
         Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
-        Result<Record> records = null;
+        Result<Record> records;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record> selectConditionStep = create.select()
@@ -264,7 +292,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public int countByConditionExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
         Select<AuthoritiesRecord> select = existsAuthoritiesSelect();
-        Record1<Integer> count = null;
+        Record1<Integer> count;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
@@ -286,7 +314,7 @@ public class UsersServiceImpl implements UsersService {
     public int countByConditionNotExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
         Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
-        Record1<Integer> count = null;
+        Record1<Integer> count;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
@@ -369,13 +397,13 @@ public class UsersServiceImpl implements UsersService {
     public void sortCondition(DataTablesUtils<UsersBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         SortField<java.sql.Date> d = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("username")) {
+            if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.USERNAME.asc();
                 } else {
@@ -383,7 +411,7 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("mobile")) {
+            if ("mobile".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.MOBILE.asc();
                 } else {
@@ -391,7 +419,7 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("real_name")) {
+            if ("real_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.REAL_NAME.asc();
                 } else {
@@ -399,7 +427,7 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("role_name")) {
+            if ("role_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = ROLE.ROLE_NAME.asc();
                 } else {
@@ -407,7 +435,7 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("users_type_name")) {
+            if ("users_type_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS_TYPE.USERS_TYPE_NAME.asc();
                 } else {
@@ -415,7 +443,7 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("enabled")) {
+            if ("enabled".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     c = USERS.ENABLED.asc();
                 } else {
@@ -423,7 +451,7 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("lang_key")) {
+            if ("lang_key".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.LANG_KEY.asc();
                 } else {
@@ -431,7 +459,7 @@ public class UsersServiceImpl implements UsersService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("join_date")) {
+            if ("join_date".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     d = USERS.JOIN_DATE.asc();
                 } else {

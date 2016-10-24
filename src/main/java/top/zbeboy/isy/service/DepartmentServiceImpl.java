@@ -298,12 +298,12 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     public void sortCondition(DataTablesUtils<DepartmentBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("department_id")) {
+            if ("department_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = DEPARTMENT.DEPARTMENT_ID.asc();
                 } else {
@@ -311,7 +311,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_name")) {
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCHOOL.SCHOOL_NAME.asc();
                 } else {
@@ -319,7 +319,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("college_name")) {
+            if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = COLLEGE.COLLEGE_NAME.asc();
                 } else {
@@ -327,7 +327,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("department_name")) {
+            if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
@@ -335,7 +335,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("department_is_del")) {
+            if ("department_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     c = DEPARTMENT.DEPARTMENT_IS_DEL.asc();
                 } else {

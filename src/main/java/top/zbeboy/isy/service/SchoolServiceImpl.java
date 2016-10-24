@@ -128,12 +128,12 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
     public void sortCondition(DataTablesUtils<School> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("school_id")) {
+            if ("school_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SCHOOL.SCHOOL_ID.asc();
                 } else {
@@ -141,7 +141,7 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_name")) {
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCHOOL.SCHOOL_NAME.asc();
                 } else {
@@ -149,7 +149,7 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_is_del")) {
+            if ("school_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     c = SCHOOL.SCHOOL_IS_DEL.asc();
                 } else {

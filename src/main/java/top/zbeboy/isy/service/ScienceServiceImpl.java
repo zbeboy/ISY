@@ -324,12 +324,12 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     public void sortCondition(DataTablesUtils<ScienceBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("science_id")) {
+            if ("science_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SCIENCE.SCIENCE_ID.asc();
                 } else {
@@ -337,7 +337,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_name")) {
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCHOOL.SCHOOL_NAME.asc();
                 } else {
@@ -345,7 +345,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("college_name")) {
+            if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = COLLEGE.COLLEGE_NAME.asc();
                 } else {
@@ -353,7 +353,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("department_name")) {
+            if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
@@ -361,7 +361,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("science_name")) {
+            if ("science_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCIENCE.SCIENCE_NAME.asc();
                 } else {
@@ -369,7 +369,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("science_is_del")) {
+            if ("science_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     c = SCIENCE.SCIENCE_IS_DEL.asc();
                 } else {

@@ -109,11 +109,11 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
     public void sortCondition(DataTablesUtils<SystemLogBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<String> a = null;
         SortField<Timestamp> b = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("system_log_id")) {
+            if ("system_log_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
                 } else {
@@ -121,7 +121,7 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("username")) {
+            if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_LOG.USERNAME.asc();
                 } else {
@@ -129,7 +129,7 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("behavior")) {
+            if ("behavior".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_LOG.BEHAVIOR.asc();
                 } else {
@@ -137,7 +137,7 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("operating_time")) {
+            if ("operating_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SYSTEM_LOG.OPERATING_TIME.asc();
                 } else {
@@ -145,7 +145,7 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("ip_address")) {
+            if ("ip_address".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_LOG.IP_ADDRESS.asc();
                 } else {

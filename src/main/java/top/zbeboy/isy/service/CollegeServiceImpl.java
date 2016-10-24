@@ -52,7 +52,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<CollegeBean> dataTablesUtils) {
-        Result<Record> records = null;
+        Result<Record> records;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectJoinStep<Record> selectJoinStep = create.select()
@@ -82,7 +82,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
 
     @Override
     public int countByCondition(DataTablesUtils<CollegeBean> dataTablesUtils) {
-        Record1<Integer> count = null;
+        Record1<Integer> count ;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
@@ -176,12 +176,12 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     public void sortCondition(DataTablesUtils<CollegeBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("college_id")) {
+            if ("college_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = COLLEGE.COLLEGE_ID.asc();
                 } else {
@@ -189,7 +189,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_name")) {
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCHOOL.SCHOOL_NAME.asc();
                 } else {
@@ -197,7 +197,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("college_name")) {
+            if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = COLLEGE.COLLEGE_NAME.asc();
                 } else {
@@ -205,7 +205,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("college_is_del")) {
+            if ("college_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     c = COLLEGE.COLLEGE_IS_DEL.asc();
                 } else {

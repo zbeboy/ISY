@@ -365,12 +365,12 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     public void sortCondition(DataTablesUtils<RoleBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("role_name")) {
+            if ("role_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = ROLE.ROLE_NAME.asc();
                 } else {
@@ -378,7 +378,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_name")) {
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCHOOL.SCHOOL_NAME.asc();
                 } else {
@@ -386,7 +386,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("college_name")) {
+            if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = COLLEGE.COLLEGE_NAME.asc();
                 } else {
@@ -394,7 +394,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("role_en_name")) {
+            if ("role_en_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = ROLE.ROLE_EN_NAME.asc();
                 } else {

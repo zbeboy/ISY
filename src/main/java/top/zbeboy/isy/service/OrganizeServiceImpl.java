@@ -372,12 +372,12 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     public void sortCondition(DataTablesUtils<OrganizeBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("organize_id")) {
+            if ("organize_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = ORGANIZE.ORGANIZE_ID.asc();
                 } else {
@@ -385,7 +385,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_name")) {
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCHOOL.SCHOOL_NAME.asc();
                 } else {
@@ -393,7 +393,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("college_name")) {
+            if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = COLLEGE.COLLEGE_NAME.asc();
                 } else {
@@ -401,7 +401,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("department_name")) {
+            if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
@@ -409,7 +409,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("science_name")) {
+            if ("science_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCIENCE.SCIENCE_NAME.asc();
                 } else {
@@ -417,7 +417,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("grade")) {
+            if ("grade".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = ORGANIZE.GRADE.asc();
                 } else {
@@ -425,7 +425,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("organize_name")) {
+            if ("organize_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = ORGANIZE.ORGANIZE_NAME.asc();
                 } else {
@@ -433,7 +433,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("organize_is_del")) {
+            if ("organize_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     c = ORGANIZE.ORGANIZE_IS_DEL.asc();
                 } else {

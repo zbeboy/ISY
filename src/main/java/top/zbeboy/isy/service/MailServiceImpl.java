@@ -49,11 +49,15 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private ISYProperties isyProperties;
 
-    @Inject
     private Environment env;
 
     @Resource
     private SystemMailboxService systemMailboxService;
+
+    @Inject
+    public MailServiceImpl(Environment env){
+        this.env = env;
+    }
 
     @Async
     @Override
@@ -75,7 +79,7 @@ public class MailServiceImpl implements MailService {
                 javaMailSender.send(mimeMessage);
                 log.debug("Sent e-mail to User '{}'", to);
             } catch (Exception e) {
-                log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
+                log.info("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
             }
         } else {
             if (isyProperties.getMail().isOpen()) {
@@ -195,7 +199,7 @@ public class MailServiceImpl implements MailService {
             // 发送邮件
             Transport.send(message);
         } catch (MessagingException e) {
-            log.warn("E-mail could not be sent to user '{}', exception is: {}", userMail, e.getMessage());
+            log.info("E-mail could not be sent to user '{}', exception is: {}", userMail, e.getMessage());
         }
     }
 

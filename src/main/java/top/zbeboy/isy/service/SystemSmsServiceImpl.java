@@ -91,11 +91,11 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
     public void sortCondition(DataTablesUtils<SystemSmsBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<String> a = null;
         SortField<Timestamp> b = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("system_sms_id")) {
+            if ("system_sms_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_SMS.SYSTEM_SMS_ID.asc();
                 } else {
@@ -103,7 +103,7 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("send_time")) {
+            if ("send_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SYSTEM_SMS.SEND_TIME.asc();
                 } else {
@@ -111,7 +111,7 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("accept_phone")) {
+            if ("accept_phone".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_SMS.ACCEPT_PHONE.asc();
                 } else {

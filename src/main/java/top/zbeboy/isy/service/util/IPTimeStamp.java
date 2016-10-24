@@ -33,11 +33,11 @@ public class IPTimeStamp {
     }
 
     public String getIPTimeRand() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (this.ip != null) {
             String s[] = this.ip.split("\\.");
-            for (int i = 0; i < s.length; i++) {
-                buf.append(this.addZero(s[i], 3));
+            for (String value : s) {
+                buf.append(this.addZero(value, 3));
             }
         }
         buf.append(this.getTimeStamp());
@@ -49,7 +49,7 @@ public class IPTimeStamp {
     }
 
     private String addZero(String str, int len) {
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         s.append(str);
         while (s.length() < len) {
             s.insert(0, "0");
@@ -62,7 +62,7 @@ public class IPTimeStamp {
         return this.sdf.format(new Date());
     }
 
-    public String getTimeStamp() {
+    private String getTimeStamp() {
         this.sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         return this.sdf.format(new Date());
     }

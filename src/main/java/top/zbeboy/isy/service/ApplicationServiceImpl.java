@@ -105,9 +105,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public void deletes(List<Integer> ids) {
-        ids.forEach(id -> {
-            applicationDao.deleteById(id);
-        });
+        ids.forEach(id->
+            applicationDao.deleteById(id)
+        );
     }
 
     // 一级菜单
@@ -145,7 +145,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             } else {
                 li += "<a href=\"" + url + "\">" + applicationRecord.getApplicationName() + "</a>";
                 // 生成下级菜单
-                li += thirdLevelHtml(thirdLevelRecord, applicationIds, web_path);
+                li += thirdLevelHtml(thirdLevelRecord, web_path);
             }
             li += "</li>";
             ul += li;
@@ -155,7 +155,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     // 三级菜单
-    private String thirdLevelHtml(Result<ApplicationRecord> applicationRecords, List<Integer> applicationIds, String web_path) {
+    private String thirdLevelHtml(Result<ApplicationRecord> applicationRecords, String web_path) {
         String ul = "<ul class=\"nav nav-third-level\">";
         for (ApplicationRecord applicationRecord : applicationRecords) { // pid = 2级菜单id
             String url = getWebPath(applicationRecord.getApplicationUrl(), web_path);
@@ -177,7 +177,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      */
     private String getWebPath(String applicationUrl, String web_path) {
         String url = applicationUrl.trim();
-        if (!url.equals("#")) {
+        if (!"#".equals(url)) {
             url = web_path + url;
         }
         return url;
@@ -224,7 +224,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 urlMappingFromText.stream().filter(url -> url.startsWith(applicationRecord.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("url-mapping.txt file not found.The exception is {}",e.getMessage());
         }
         return urlMapping;
     }
@@ -370,12 +370,12 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     public void sortCondition(DataTablesUtils<ApplicationBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("application_name")) {
+            if ("application_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = APPLICATION.APPLICATION_NAME.asc();
                 } else {
@@ -383,7 +383,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("application_en_name")) {
+            if ("application_en_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = APPLICATION.APPLICATION_EN_NAME.asc();
                 } else {
@@ -391,7 +391,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("application_pid")) {
+            if ("application_pid".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = APPLICATION.APPLICATION_PID.asc();
                 } else {
@@ -399,7 +399,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("application_url")) {
+            if ("application_url".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = APPLICATION.APPLICATION_URL.asc();
                 } else {
@@ -407,7 +407,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("icon")) {
+            if ("icon".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = APPLICATION.ICON.asc();
                 } else {
@@ -415,7 +415,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("application_sort")) {
+            if ("application_sort".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = APPLICATION.APPLICATION_SORT.asc();
                 } else {
@@ -423,7 +423,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("application_code")) {
+            if ("application_code".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = APPLICATION.APPLICATION_CODE.asc();
                 } else {
@@ -431,7 +431,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("application_data_url_start_with")) {
+            if ("application_data_url_start_with".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = APPLICATION.APPLICATION_DATA_URL_START_WITH.asc();
                 } else {
@@ -485,9 +485,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     public List<String> getUrlMappingFromTxt() throws FileNotFoundException {
         List<String> urlMapping = new ArrayList<>();
         File file = new File(Workbook.URL_MAPPING_FILE_PATH);
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
             String tempString = null;
             // 一次读入一行，直到读入null为文件结束
             while ((tempString = reader.readLine()) != null) {
@@ -495,15 +493,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             }
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+            log.error("Read url-mapping.txt error.The exception is {}.",e.getMessage());
         }
         return urlMapping;
     }

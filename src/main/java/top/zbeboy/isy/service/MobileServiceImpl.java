@@ -40,11 +40,11 @@ public class MobileServiceImpl implements MobileService {
         String result = null;
         try {
             String httpUrl = "http://apis.baidu.com/kingtto_media/106sms/106sms";
-            content = URLEncoder.encode(content, CharEncoding.UTF_8);
-            log.debug(" mobile content : {}", content);
-            String httpArg = "mobile=" + mobile + "&content=" + content;
-            BufferedReader reader = null;
-            StringBuffer sbf = new StringBuffer();
+            String sendContent = URLEncoder.encode(content, CharEncoding.UTF_8);
+            log.debug(" mobile sendContent : {}", sendContent);
+            String httpArg = "mobile=" + mobile + "&content=" + sendContent;
+            BufferedReader reader ;
+            StringBuilder sbf = new StringBuilder();
             httpUrl = httpUrl + "?" + httpArg;
             URL url = new URL(httpUrl);
             HttpURLConnection connection = (HttpURLConnection) url
@@ -55,7 +55,7 @@ public class MobileServiceImpl implements MobileService {
             connection.connect();
             InputStream is = connection.getInputStream();
             reader = new BufferedReader(new InputStreamReader(is, CharEncoding.UTF_8));
-            String strRead = null;
+            String strRead ;
             while ((strRead = reader.readLine()) != null) {
                 sbf.append(strRead);
                 sbf.append("\r\n");
@@ -63,7 +63,7 @@ public class MobileServiceImpl implements MobileService {
             reader.close();
             result = sbf.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("Send sms to mobile {} is exception : {}",mobile,e.getMessage());
         }
         log.debug(" mobile result : {}", result);
         SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(System.currentTimeMillis()), mobile);

@@ -91,11 +91,11 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
     public void sortCondition(DataTablesUtils<SystemMailboxBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<String> a = null;
         SortField<Timestamp> b = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("system_mailbox_id")) {
+            if ("system_mailbox_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
                 } else {
@@ -103,7 +103,7 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("send_time")) {
+            if ("send_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SYSTEM_MAILBOX.SEND_TIME.asc();
                 } else {
@@ -111,7 +111,7 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("accept_mail")) {
+            if ("accept_mail".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     a = SYSTEM_MAILBOX.ACCEPT_MAIL.asc();
                 } else {

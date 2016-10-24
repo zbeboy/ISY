@@ -604,13 +604,13 @@ public class StaffServiceImpl implements StaffService {
     public void sortCondition(DataTablesUtils<StaffBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = orderDir.equalsIgnoreCase("asc");
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField<Integer> a = null;
         SortField<String> b = null;
         SortField<Byte> c = null;
         SortField<java.sql.Date> d = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if (orderColumnName.equalsIgnoreCase("staff_number")) {
+            if ("staff_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = STAFF.STAFF_NUMBER.asc();
                 } else {
@@ -618,7 +618,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("real_name")) {
+            if ("real_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.REAL_NAME.asc();
                 } else {
@@ -626,7 +626,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("username")) {
+            if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.USERNAME.asc();
                 } else {
@@ -634,7 +634,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("mobile")) {
+            if ("mobile".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.MOBILE.asc();
                 } else {
@@ -642,7 +642,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("id_card")) {
+            if ("id_card".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = STAFF.ID_CARD.asc();
                 } else {
@@ -650,7 +650,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("school_name")) {
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = SCHOOL.SCHOOL_NAME.asc();
                 } else {
@@ -658,7 +658,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("college_name")) {
+            if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = COLLEGE.COLLEGE_NAME.asc();
                 } else {
@@ -666,7 +666,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("department_name")) {
+            if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
@@ -674,7 +674,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("post")) {
+            if ("post".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = STAFF.POST.asc();
                 } else {
@@ -682,7 +682,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("sex")) {
+            if ("sex".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = STAFF.SEX.asc();
                 } else {
@@ -690,7 +690,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("birthday")) {
+            if ("birthday".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     d = STAFF.BIRTHDAY.asc();
                 } else {
@@ -698,7 +698,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("nation_name")) {
+            if ("nation_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = NATION.NATION_NAME.asc();
                 } else {
@@ -706,7 +706,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("politicalLandscape_name")) {
+            if ("politicalLandscape_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
                 } else {
@@ -715,7 +715,7 @@ public class StaffServiceImpl implements StaffService {
             }
 
 
-            if (orderColumnName.equalsIgnoreCase("family_residence")) {
+            if ("family_residence".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = STAFF.FAMILY_RESIDENCE.asc();
                 } else {
@@ -723,7 +723,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("enabled")) {
+            if ("enabled".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     c = USERS.ENABLED.asc();
                 } else {
@@ -731,7 +731,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("lang_key")) {
+            if ("lang_key".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     b = USERS.LANG_KEY.asc();
                 } else {
@@ -739,7 +739,7 @@ public class StaffServiceImpl implements StaffService {
                 }
             }
 
-            if (orderColumnName.equalsIgnoreCase("join_date")) {
+            if ("join_date".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
                     d = USERS.JOIN_DATE.asc();
                 } else {
