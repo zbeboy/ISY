@@ -403,7 +403,7 @@
                         </div>
                     </div>
                     <div class="panel-footer text-right">
-                        <button class="btn btn-default">修改</button>
+                        <button class="btn btn-default" type="button"  data-toggle="modal" data-target="#schoolModal">修改</button>
                     </div>
                 </div>
             </div>
@@ -463,7 +463,7 @@
                         </div>
                     </div>
                     <div class="panel-footer text-right">
-                        <button class="btn btn-default">修改</button>
+                        <button class="btn btn-default" type="button" data-toggle="modal" data-target="#userModal">修改</button>
                     </div>
                 </div>
             </div>
@@ -477,6 +477,141 @@
 
 </div>
 <!-- /#wrapper -->
+
+<!-- 修改学校信息Modal -->
+<div class="modal fade" id="schoolModal" tabindex="-1" role="dialog" aria-labelledby="schoolModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="schoolModalLabel">学校信息修改</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" id="school_form">
+                    <fieldset>
+                        <div class="form-group" id="valid_department">
+                            <select class="form-control" name="department" id="select_department">
+                                <option>请选择系</option>
+                            </select>
+                            <p class="text-danger hidden" id="department_error_msg"></p>
+                        </div>
+                        <div class="form-group" id="valid_science">
+                            <select class="form-control" name="science" id="select_science">
+                                <option>请选择专业</option>
+                            </select>
+                            <p class="text-danger hidden" id="science_error_msg"></p>
+                        </div>
+                        <div class="form-group" id="valid_grade">
+                            <select class="form-control" name="grade" id="select_grade">
+                                <option>请选择年级</option>
+                            </select>
+                            <p class="text-danger hidden" id="grade_error_msg"></p>
+                        </div>
+                        <div class="form-group" id="valid_organize">
+                            <select class="form-control" name="organize" id="select_organize">
+                                <option>请选择班级</option>
+                            </select>
+                            <p class="text-danger hidden" id="organize_error_msg"></p>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 用户信息Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="userModalLabel">用户基本资料修改</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" id="user_form">
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span>姓名：</span><span th:text="${user.realName}"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>学号：</span><span th:text="${user.studentNumber}"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>性别：</span><span th:text="${user.sex}"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>民族：</span><span th:text="${user.nationName}"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>政治面貌：</span><span th:text="${user.politicalLandscapeName}"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>生日：</span><span th:text="${user.birthday}"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>宿舍号：</span><span th:text="${user.dormitoryNumber}"></span>
+                            </div>
+                            <div class="col-md-8">
+                                <span>身份证号：</span><span th:text="${user.idCard}"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <span>家庭居住地：</span><span th:text="${user.familyResidence}"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span>家长姓名：</span><span th:text="${user.parentName}"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <span>家长联系电话：</span><span th:text="${user.parentContactPhone}"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <span>生源地：</span><span th:text="${user.placeOrigin}"></span>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="department-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <option value="{{department_value}}">{{department_name}}</option>
+    {{/each}}
+</script>
+
+<script id="science-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <option value="{{science_value}}">{{science_name}}</option>
+    {{/each}}
+</script>
+
+<script id="grade-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <option value="{{grade_value}}">{{grade_name}}</option>
+    {{/each}}
+</script>
+
+<script id="organize-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <option value="{{organize_value}}">{{organize_name}}</option>
+    {{/each}}
+</script>
 
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
