@@ -41,10 +41,11 @@ define(["jquery", "sb-admin"], function ($) {
                 var filter = $(this).val();
                 if (filter) {
                     $matches = $(list).find("a:Contains(" + filter + ")").parent();
-                    $("li", list).not($matches).slideUp();
-                    $matches.slideDown();
+                    $("li", list).not($matches).css('display','none');
+                    $matches.parents("li").css('display','block');
+                    $matches.css('display','block');
                 } else {
-                    $(list).find("li").slideDown();
+                    $(list).find("li").css('display','block');
                 }
                 return false;
             }).keyup(function () {
@@ -52,6 +53,6 @@ define(["jquery", "sb-admin"], function ($) {
             });
         }
 
-        filterList($("#form"), $("#side-menu"));
+        filterList($("#form"), "#side-menu");
     }
 );
