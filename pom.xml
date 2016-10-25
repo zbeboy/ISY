@@ -17,6 +17,7 @@
         <fastJson.version>1.2.8</fastJson.version>
         <jsoup.version>1.9.2</jsoup.version>
         <springfox-swagger2.version>2.6.0</springfox-swagger2.version>
+        <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
 
         <!-- webjars properties -->
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
@@ -141,6 +142,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox-swagger2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>org.springframework.js</artifactId>
+            <version>${org.springframework.webflow.version}</version>
         </dependency>
 
         <dependency>
