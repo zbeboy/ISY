@@ -14,6 +14,9 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.thymeleaf.spring4.view.AjaxThymeleafView;
+import org.thymeleaf.spring4.view.ThymeleafView;
+import org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec;
 import top.zbeboy.isy.interceptor.MenuInterceptor;
 
 /**
@@ -28,6 +31,17 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public LocaleResolver localeResolver() {
         return new SessionLocaleResolver();
+    }
+
+    /**
+     * ajax 返回页面
+     * @return 页面节点
+     */
+    @Bean
+    public AjaxThymeleafView ajaxThymeleafView(){
+        AjaxThymeleafView ajaxThymeleafView = new AjaxThymeleafView();
+        ajaxThymeleafView.setFragmentSpec(new StandardDOMSelectorFragmentSpec("#page-wrapper"));
+        return ajaxThymeleafView;
     }
 
     /**
