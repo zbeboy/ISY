@@ -115,6 +115,8 @@
     <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-metadata:1.2.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.mapstruct:mapstruct:1.0.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.springfox:springfox-swagger-ui:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.webflow:org.springframework.js:2.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.39" level="project" />
     <orderEntry type="library" name="Maven: org.jooq:jooq:3.7.4" level="project" />
     <orderEntry type="library" name="Maven: org.jooq:jooq-codegen:3.7.4" level="project" />
@@ -124,7 +126,6 @@
     <orderEntry type="library" name="Maven: com.octo.captcha:jcaptcha:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.octo.captcha:jcaptcha-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.jhlabs:imaging:01012005" level="project" />
-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.3" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.8" level="project" />
