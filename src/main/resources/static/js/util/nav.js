@@ -21,6 +21,9 @@ define(["jquery", "sb-admin"], function ($) {
         // end
 
         // 菜单搜索
+        /**
+         * @return {boolean}
+         */
         $.expr[":"].Contains = function (a, i, m) {
             return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
         };
@@ -41,11 +44,11 @@ define(["jquery", "sb-admin"], function ($) {
                 var filter = $(this).val();
                 if (filter) {
                     $matches = $(list).find("a:Contains(" + filter + ")").parent();
-                    $("li", list).not($matches).css('display','none');
-                    $matches.parents("li").css('display','block');
-                    $matches.css('display','block');
+                    $("li", list).not($matches).css('display', 'none');
+                    $matches.parents("li").css('display', 'block');
+                    $matches.css('display', 'block');
                 } else {
-                    $(list).find("li").css('display','block');
+                    $(list).find("li").css('display', 'block');
                 }
                 return false;
             }).keyup(function () {

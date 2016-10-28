@@ -26,7 +26,7 @@ public interface ApplicationService {
      * @return 菜单html
      */
     @Cacheable(cacheNames = "menuHtml", key = "#username")
-    String menuHtml(List<Role> roles, String web_path, String username);
+    String menuHtml(List<Role> roles, String username);
 
     /**
      * 保存

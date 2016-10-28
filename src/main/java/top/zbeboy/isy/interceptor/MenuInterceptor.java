@@ -34,7 +34,6 @@ public class MenuInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if (!ObjectUtils.isEmpty(modelAndView)) {
-            String web_path = request.getContextPath();
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
@@ -47,7 +46,7 @@ public class MenuInterceptor implements HandlerInterceptor {
                 Result<Record> roles = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
                 if (roles.isNotEmpty()) {
                     List<Role> roleList = roles.into(Role.class);
-                    String menuHtml = applicationService.menuHtml(roleList, web_path, users.getUsername());
+                    String menuHtml = applicationService.menuHtml(roleList, users.getUsername());
                     request.setAttribute("menu", menuHtml);
                 }
             }
