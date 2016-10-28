@@ -121,9 +121,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             Result<ApplicationRecord> secondLevelRecord = findInIdsAndPid(applicationIds, applicationRecord.getApplicationId());// 查询二级菜单
             String url = getWebPath(applicationRecord.getApplicationUrl());
             if (secondLevelRecord.isEmpty()) { // 无下级菜单
-                li += "<a href=\"#\" data-href=\"" + url + "\" class=\"dy_menu\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
+                li += "<a href=\""+url+"\" class=\"dy_href\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
             } else {
-                li += "<a href=\"#\" data-href=\"" + url + "\" class=\"dy_menu\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
+                li += "<a href=\""+url+"\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
                 // 生成下级菜单
                 li += secondLevelHtml(secondLevelRecord, applicationIds);
             }
@@ -141,9 +141,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             Result<ApplicationRecord> thirdLevelRecord = findInIdsAndPid(applicationIds, applicationRecord.getApplicationId());// 查询三级菜单
             String url = getWebPath(applicationRecord.getApplicationUrl());
             if (thirdLevelRecord.isEmpty()) { // 无下级菜单
-                li += "<a href=\"#\" data-href=\"" + url + "\" class=\"dy_menu\">" + applicationRecord.getApplicationName() + "</a>";
+                li += "<a href=\""+url+"\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
             } else {
-                li += "<a href=\"#\" data-href=\"" + url + "\" class=\"dy_menu\">" + applicationRecord.getApplicationName() + "</a>";
+                li += "<a href=\""+url+"\">" + applicationRecord.getApplicationName() + "</a>";
                 // 生成下级菜单
                 li += thirdLevelHtml(thirdLevelRecord);
             }
@@ -160,7 +160,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         for (ApplicationRecord applicationRecord : applicationRecords) { // pid = 2级菜单id
             String url = getWebPath(applicationRecord.getApplicationUrl());
             String li = "<li>";
-            li += "<a href=\"#\" data-href=\"" + url + "\" class=\"dy_menu\">" + applicationRecord.getApplicationName() + "</a>";
+            li += "<a href=\""+url+"\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
             li += "</li>";
             ul += li;
         }
@@ -178,6 +178,8 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         String url = applicationUrl.trim();
         if ("#".equals(url)) {
             url = "javascript:;";
+        } else {
+            url = "#"+url;
         }
         return url;
     }
