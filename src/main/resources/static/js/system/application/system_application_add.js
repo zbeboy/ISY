@@ -1,31 +1,7 @@
 /**
  * Created by lenovo on 2016-10-03.
  */
-requirejs.config({
-    // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
-    paths: {
-        "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
-        "nav": web_path + "/js/util/nav"
-    },
-    // shimオプションの設定。モジュール間の依存関係を定義します。
-    shim: {
-        "messenger": {
-            deps: ["jquery"]
-        }
-    }
-});
-
-// require(["module/name", ...], function(params){ ... });
-require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($, Handlebars, csrf, com, messenger, nav) {
-
-    /*
-     初始化消息机制
-     */
-    Messenger.options = {
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
-        theme: 'flat'
-    };
+require(["jquery", "handlebars", "messenger","jquery.address"], function ($, Handlebars, messenger,jqueryAddress) {
 
     /*
      ajax url.
@@ -168,14 +144,14 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
     /*
      返回
      */
-    $('#page_back').click(function () {
-        window.location.href = web_path + ajax_url.back;
+    $('#page_back').click(function(){
+        $.address.value(ajax_url.back);
     });
 
     /*
      保存数据
      */
-    $('#save').click(function () {
+    $('#save').click(function(){
         add();
     });
 
@@ -510,7 +486,7 @@ require(["jquery", "handlebars", "csrf", "com", "messenger", "nav"], function ($
             data: $('#add_form').serialize(),
             success: function (data) {
                 if (data.state) {
-                    window.location.href = web_path + ajax_url.back;
+                    $.address.value(ajax_url.back);
                 } else {
                     Messenger().post({
                         message: data.msg,

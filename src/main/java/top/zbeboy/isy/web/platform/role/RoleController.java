@@ -64,7 +64,7 @@ public class RoleController {
      */
     @RequestMapping(value = "/web/menu/platform/role", method = RequestMethod.GET)
     public String platformRole() {
-        return "web/platform/role/role_data";
+        return "web/platform/role/role_data::#page-wrapper";
     }
 
     /**
@@ -118,7 +118,7 @@ public class RoleController {
         } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
-        return "web/platform/role/role_add";
+        return "web/platform/role/role_add::#page-wrapper";
     }
 
     /**
@@ -146,7 +146,7 @@ public class RoleController {
         } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
-        return "web/platform/role/role_edit";
+        return "web/platform/role/role_edit::#page-wrapper";
     }
 
     /**

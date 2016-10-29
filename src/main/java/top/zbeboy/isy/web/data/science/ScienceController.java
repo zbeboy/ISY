@@ -72,7 +72,7 @@ public class ScienceController {
      */
     @RequestMapping(value = "/web/menu/data/science", method = RequestMethod.GET)
     public String scienceData() {
-        return "web/data/science/science_data";
+        return "web/data/science/science_data::#page-wrapper";
     }
 
     /**
@@ -115,7 +115,7 @@ public class ScienceController {
     @RequestMapping(value = "/web/data/science/add", method = RequestMethod.GET)
     public String scienceAdd(ModelMap modelMap) {
         pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
-        return "web/data/science/science_add";
+        return "web/data/science/science_add::#page-wrapper";
     }
 
     /**
@@ -136,7 +136,7 @@ public class ScienceController {
         }
         modelMap.addAttribute("science", scienceBean);
         pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
-        return "web/data/science/science_edit";
+        return "web/data/science/science_edit::#page-wrapper";
     }
 
     /**

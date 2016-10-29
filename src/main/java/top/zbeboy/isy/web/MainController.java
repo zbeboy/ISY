@@ -146,16 +146,7 @@ public class MainController {
      * @return 后台欢迎页
      */
     @RequestMapping(value = "/web/menu/backstage", method = RequestMethod.GET)
-    public String backstage(ModelMap modelMap, HttpServletRequest request) {
-        Users users = usersService.getUserFromSession();
-        if (!ObjectUtils.isEmpty(users)) {
-            String ip = RequestUtils.getIpAddress(request);
-            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), "登录系统", new Timestamp(System.currentTimeMillis()), users.getUsername(), ip);
-            systemLogService.save(systemLog);
-        } else {
-            modelMap.addAttribute("msg", "获取用户信息失败");
-            return "msg";
-        }
+    public String backstage() {
         return "backstage";
     }
 

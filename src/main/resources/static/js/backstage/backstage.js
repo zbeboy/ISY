@@ -2,6 +2,7 @@
  * Created by lenovo on 2016-08-19.
  */
 requirejs.config({
+    waitSeconds: 0,
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
@@ -13,7 +14,8 @@ requirejs.config({
         "com": web_path + "/js/util/com",
         "nav": web_path + "/js/util/nav",
         "constants": web_path + "/js/util/constants",
-        "ajax_loading_view": web_path + "/js/util/ajax_loading_view"
+        "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
+        "jquery.address": web_path + "/plugin/jquery_address/jquery.address-1.6.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -31,6 +33,9 @@ requirejs.config({
         },
         "jquery.showLoading": {
             deps: ["jquery"]
+        },
+        "jquery.address": {
+            deps: ["jquery"]
         }
     }
 });
@@ -46,48 +51,67 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "nav", "ajax_loading_view", "csrf", "com",], function ($, nav, loadingView, csrf, com) {
+require(["jquery", "nav", "ajax_loading_view", "csrf", "com", "jquery.address", "requirejs-domready"],
+    function ($, nav, loadingView, csrf, com, jqueryAddress, domready) {
+        domready(function () {
+            //This function is called once the DOM is ready.
+            //It will be safe to query the DOM and manipulate
+            //DOM nodes in this function.
 
-    /*
-     init message.
-     */
-    Messenger.options = {
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
-        theme: 'flat'
-    };
+            /*
+             init message.
+             */
+            Messenger.options = {
+                extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+                theme: 'flat'
+            };
 
+            /*
+             动态链接点击效果
+             */
+            $('.dy_href').click( function () {
+                addActive(this);
+            });
 
-    /**
-     * nav active where page loading.
-     */
-    function addActive(obj){
-        var id = $('ul.nav a');
-        var li = $('ul.nav li');
+            /*
+             init jquery address.
+             */
+            $.address.init(function(event) {
+                // 插件初始化,一般这里调用 $('.nav a').address(); 实现链接单击监听
+                $('.dy_href').address();
+            }).change(function (event) {
+                // 当页面地址更改的时候调用,即#号之后的地址更改
+                if(event.value !== '/'){
+                    loadingView(event.value, '#page-wrapper',web_path);
+                }
+            });
 
-        for(var i = 0;i<id.length;i++){
-            $(id[i]).removeClass('active').parent().parent().removeClass('in').parent();
+        });
+
+        /**
+         * nav active where page loading.
+         */
+        function addActive(obj) {
+            var id = $('ul.nav a');
+            var li = $('ul.nav li');
+
+            for (var i = 0; i < id.length; i++) {
+                $(id[i]).removeClass('active').parent().parent().removeClass('in').parent();
+            }
+
+            for (var i = 0; i < li.length; i++) {
+                $(li[i]).removeClass('active');
+            }
+
+            var width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
+            if (width < 768) {
+                $('div.navbar-collapse').collapse('hide');
+            }
+
+            var parent = $(obj).addClass('active').parent().parent().addClass('in').parent();
+            if (parent.is('li')) {
+                parent.addClass('active');
+            }
+
         }
-
-        for(var i = 0;i<li.length;i++){
-            $(li[i]).removeClass('active');
-        }
-
-        var width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
-        if (width < 768) {
-            $('div.navbar-collapse').collapse('hide');
-        }
-
-        var parent = $(obj).addClass('active').parent().parent().addClass('in').parent();
-        if (parent.is('li')) {
-            parent.addClass('active');
-        }
-
-    }
-
-    /*
-    动态链接点击效果
-     */
-    $(document).delegate('.dy_href',"click",function(){
-        addActive(this);
     });
-});

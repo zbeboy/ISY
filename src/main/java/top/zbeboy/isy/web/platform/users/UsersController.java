@@ -501,7 +501,7 @@ public class UsersController {
      */
     @RequestMapping(value = "/web/menu/platform/users", method = RequestMethod.GET)
     public String platformUsers() {
-        return "web/platform/users/users_data";
+        return "web/platform/users/users_data::#page-wrapper";
     }
 
     /**

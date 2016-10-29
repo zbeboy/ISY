@@ -6,15 +6,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import top.zbeboy.isy.domain.tables.pojos.SystemLog;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.security.AjaxAuthenticationCode;
+import top.zbeboy.isy.service.SystemLogService;
 import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.util.RequestUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.jcaptcha.CaptchaUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
 
 /**
  * Created by lenovo on 2016-09-03.
@@ -33,7 +38,7 @@ public class SecurityLoginFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        if ("POST".equalsIgnoreCase(request.getMethod()) && "/login".equals(request.getRequestURI())) {
+        if ("POST".equalsIgnoreCase(request.getMethod()) && request.getRequestURI().endsWith("/login")) {
             String email = StringUtils.trimWhitespace(request.getParameter("username"));
             String password = StringUtils.trimWhitespace(request.getParameter("password"));
             String j_captcha_response = StringUtils.trimWhitespace(request.getParameter("j_captcha_response"));
@@ -53,6 +58,11 @@ public class SecurityLoginFilter implements Filter {
                                     if (!ObjectUtils.isEmpty(users.getVerifyMailbox()) && users.getVerifyMailbox() == 1) {// 用户邮箱是否已被验证
                                         boolean isDel = usersService.validSCDSOIsDel(users);
                                         if (!isDel) {// 用户所在院校是否已被注销
+                                            String ip = RequestUtils.getIpAddress(request);
+                                            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), "登录系统", new Timestamp(System.currentTimeMillis()), users.getUsername(), ip);
+                                            SystemLogService systemLogService = (SystemLogService) ctx
+                                                    .getBean("systemLogService");
+                                            systemLogService.save(systemLog);
                                             filterChain.doFilter(servletRequest, servletResponse);
                                         } else {
                                             response.getWriter().print(AjaxAuthenticationCode.SCHOOL_IS_DEL_CODE);

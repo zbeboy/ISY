@@ -40,7 +40,7 @@ public class SystemSmsController {
      */
     @RequestMapping("/menu/system/sms")
     public String systemSms() {
-        return "web/system/sms/system_sms";
+        return "web/system/sms/system_sms::#page-wrapper";
     }
 
     /**

@@ -40,7 +40,7 @@ public class SystemLogController {
      */
     @RequestMapping("/menu/system/log")
     public String systemLog() {
-        return "web/system/log/system_log";
+        return "web/system/log/system_log::#page-wrapper";
     }
 
     /**

@@ -195,7 +195,7 @@ public class StudentController {
      */
     @RequestMapping(value = "/web/menu/data/student", method = RequestMethod.GET)
     public String studentData() {
-        return "web/data/student/student_data";
+        return "web/data/student/student_data::#page-wrapper";
     }
 
     /**

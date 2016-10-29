@@ -1,31 +1,7 @@
 /**
  * Created by lenovo on 2016/9/23.
  */
-requirejs.config({
-    // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
-    paths: {
-        "csrf": web_path + "/js/util/csrf",
-        "nav": web_path + "/js/util/nav",
-        "constants": web_path + "/js/util/constants"
-    },
-    // shimオプションの設定。モジュール間の依存関係を定義します。
-    shim: {
-        "messenger": {
-            deps: ["jquery"]
-        }
-    }
-});
-
-// require(["module/name", ...], function(params){ ... });
-require(["jquery", "handlebars", "csrf", "messenger", "nav", "constants"], function ($, Handlebars, csrf, messenger, nav, constants) {
-
-    /*
-     初始化消息机制
-     */
-    Messenger.options = {
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
-        theme: 'flat'
-    };
+require(["jquery", "handlebars", "messenger", "constants","jquery.address"], function ($, Handlebars, messenger, constants,jqueryAddress) {
 
     /*
      ajax url.
@@ -264,7 +240,7 @@ require(["jquery", "handlebars", "csrf", "messenger", "nav", "constants"], funct
      返回
      */
     $('#page_back').click(function () {
-        window.location.href = web_path + ajax_url.back;
+        $.address.value(ajax_url.back);
     });
 
     /*
@@ -395,7 +371,7 @@ require(["jquery", "handlebars", "csrf", "messenger", "nav", "constants"], funct
             data: $('#add_form').serialize(),
             success: function (data) {
                 if (data.state) {
-                    window.location.href = web_path + ajax_url.back;
+                    $.address.value(ajax_url.back);
                 } else {
                     Messenger().post({
                         message: data.msg,

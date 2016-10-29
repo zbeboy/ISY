@@ -1,44 +1,8 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
-requirejs.config({
-    // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
-    paths: {
-        "check.all": web_path + "/plugin/checkall/checkall",
-        "datatables.responsive": web_path + "/plugin/datatables/js/datatables.responsive",
-        "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
-        "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
-        "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
-        "nav": web_path + "/js/util/nav"
-    },
-    // shimオプションの設定。モジュール間の依存関係を定義します。
-    shim: {
-        "check.all": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["jquery"]
-        },
-        "datatables.responsive": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["datatables.bootstrap"]
-        },
-        "messenger": {
-            deps: ["jquery"]
-        }
-    }
-});
-
-// require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "com", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf, com, checkall, nav) {
-    domready(function () {
-        /*
-         初始化消息机制
-         */
-        Messenger.options = {
-            extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
-            theme: 'flat'
-        };
-
+require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all"],
+    function ($, messenger, Handlebars, dt, checkall) {
         /**
          * 角色数据展现
          * @param data json数据
@@ -74,6 +38,9 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 deleteUsers: '/special/channel/users/deletes'
             };
         }
+
+        var passId = $('#pass');
+        var waitId = $('#wait');
 
         /**
          * pass tab param
@@ -375,23 +342,23 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 initComplete: function () {
-                    $(document).on("click", ".del", function () {
+                    tableElement.delegate('.del', "click", function () {
                         cancel($(this).attr('data-id'));
                     });
 
-                    $(document).on("click", ".recovery", function () {
+                    tableElement.delegate('.recovery', "click", function () {
                         recovery($(this).attr('data-id'));
                     });
 
-                    $(document).on("click", "#pass_dels", function () {
+                    passId.delegate('#pass_dels', "click", function () {
                         cancels();
                     });
 
-                    $(document).on("click", "#pass_recoveries", function () {
+                    passId.delegate('#pass_recoveries', "click", function () {
                         recoveries();
                     });
 
-                    $(document).on("click", ".role", function () {
+                    tableElement.delegate('.role', "click", function () {
                         role($(this).attr('data-id'), $(this).attr('data-role'));
                     });
                 }
@@ -851,11 +818,11 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 initComplete: function () {
-                    $(document).on("click", ".delete", function () {
+                    tableElement.delegate('.delete', "click", function () {
                         usersDelete($(this).attr('data-id'));
                     });
 
-                    $(document).on("click", "#wait_deletes", function () {
+                    waitId.delegate('#wait_deletes', "click", function () {
                         usersDeletes();
                     });
                 }
@@ -954,6 +921,4 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 }
             });
         }
-
     });
-});

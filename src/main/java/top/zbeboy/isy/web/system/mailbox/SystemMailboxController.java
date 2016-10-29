@@ -40,7 +40,7 @@ public class SystemMailboxController {
      */
     @RequestMapping("/menu/system/mailbox")
     public String systemMailbox() {
-        return "web/system/mailbox/system_mailbox";
+        return "web/system/mailbox/system_mailbox::#page-wrapper";
     }
 
     /**

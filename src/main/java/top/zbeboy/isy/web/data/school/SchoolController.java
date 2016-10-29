@@ -65,7 +65,7 @@ public class SchoolController {
      */
     @RequestMapping(value = "/web/menu/data/school", method = RequestMethod.GET)
     public String schoolData() {
-        return "web/data/school/school_data";
+        return "web/data/school/school_data::#page-wrapper";
     }
 
     /**
@@ -103,7 +103,7 @@ public class SchoolController {
      */
     @RequestMapping(value = "/web/data/school/add", method = RequestMethod.GET)
     public String schoolAdd() {
-        return "web/data/school/school_add";
+        return "web/data/school/school_add::#page-wrapper";
     }
 
     /**
@@ -117,7 +117,7 @@ public class SchoolController {
     public String schoolEdit(@RequestParam("id") int id, ModelMap modelMap) {
         School school = schoolService.findById(id);
         modelMap.addAttribute("school", school);
-        return "web/data/school/school_edit";
+        return "web/data/school/school_edit::#page-wrapper";
     }
 
     /**

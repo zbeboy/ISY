@@ -1,35 +1,8 @@
 /**
  * Created by lenovo on 2016-09-12.
  */
-requirejs.config({
-    // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
-    paths: {
-        "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
-        "datatables.responsive": web_path + "/plugin/datatables/js/datatables.responsive",
-        "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
-        "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
-        "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
-        "nav": web_path + "/js/util/nav"
-    },
-    // shimオプションの設定。モジュール間の依存関係を定義します。
-    shim: {
-        "jquery.showLoading": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["jquery"]
-        },
-        "datatables.responsive": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["datatables.bootstrap"]
-        }
-    }
-});
-// require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "jquery.showLoading", "datatables.responsive", "csrf", "com", "nav"], function ($, domready, loading, dt, csrf, com, nav) {
-    domready(function () {
-        //This function is called once the DOM is ready.
-        //It will be safe to query the DOM and manipulate
-        //DOM nodes in this function.
+require(["jquery", "datatables.responsive"],
+    function ($, dt) {
 
         function getAjaxUrl() {
             return {
@@ -154,14 +127,13 @@ require(["jquery", "requirejs-domready", "jquery.showLoading", "datatables.respo
             }
         });
 
-        $('#search').click(function () {
+        $('#search').click(function(){
             myTable.ajax.reload();
         });
 
-        $('#reset_search').click(function () {
+        $('#reset_search').click(function(){
             cleanParam();
             myTable.ajax.reload();
         });
 
     });
-});

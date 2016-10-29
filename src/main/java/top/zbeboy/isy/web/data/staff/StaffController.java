@@ -194,7 +194,7 @@ public class StaffController {
      */
     @RequestMapping(value = "/web/menu/data/staff", method = RequestMethod.GET)
     public String staffData() {
-        return "web/data/staff/staff_data";
+        return "web/data/staff/staff_data::#page-wrapper";
     }
 
     /**

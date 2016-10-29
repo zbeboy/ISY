@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +59,7 @@ public class WebSecurity {
         // 权限控制
         String uri = StringUtils.trimAllWhitespace(request.getRequestURI());
         // 欢迎页
-        if (uri.equals("/web/menu/backstage")) {
+        if (uri.endsWith("/web/menu/backstage")) {
             return true;
         }
         boolean hasRole = false;
@@ -78,15 +79,18 @@ public class WebSecurity {
 
                 Result<ApplicationRecord> applicationRecords = applicationService.findInIdsWithUsername(applicationIds, users.getUsername());// 已缓存
                 for (ApplicationRecord applicationRecord : applicationRecords) {
-                    if (uri.equals(applicationRecord.getApplicationUrl())) {
+                    if (uri.endsWith(applicationRecord.getApplicationUrl())) {
                         hasRole = true;
                         break;
                     }
                     if (StringUtils.hasLength(applicationRecord.getApplicationDataUrlStartWith())) {
                         List<String> urlMapping = applicationService.urlMapping(applicationRecord);// 已缓存
-                        if (!ObjectUtils.isEmpty(urlMapping) && urlMapping.contains(uri)) {
-                            hasRole = true;
-                            break;
+                        if (!ObjectUtils.isEmpty(urlMapping)) {
+                            Optional<String> urlOne = urlMapping.stream().filter(uri::endsWith).findFirst();
+                            if(urlOne.isPresent()){
+                                hasRole = true;
+                                break;
+                            }
                         }
                     }
                 }

@@ -78,7 +78,7 @@ public class DepartmentController {
      */
     @RequestMapping(value = "/web/menu/data/department", method = RequestMethod.GET)
     public String departmentData() {
-        return "web/data/department/department_data";
+        return "web/data/department/department_data::#page-wrapper";
     }
 
     /**
@@ -123,7 +123,7 @@ public class DepartmentController {
         } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
-        return "web/data/department/department_add";
+        return "web/data/department/department_add::#page-wrapper";
     }
 
     /**
@@ -149,7 +149,7 @@ public class DepartmentController {
         } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
-        return "web/data/department/department_edit";
+        return "web/data/department/department_edit::#page-wrapper";
     }
 
     /**

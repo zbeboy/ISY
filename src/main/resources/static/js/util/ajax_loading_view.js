@@ -21,33 +21,23 @@ define(["jquery", "jquery.showLoading", "messenger"], function ($, showLoading, 
         $.getScript(jsPath)
             .done(function (script, textStatus) {
                 console.log(textStatus);
-                Messenger().post("loading js " + textStatus + " !");
             })
             .fail(function (jqxhr, settings, exception) {
                 Messenger().post("loading js fail !");
             });
     }
 
-    return function (url, param, targetId, jsPath) {
+    return function (url, targetId, web_path) {
         startLoading(targetId);
-        if (param != null && param.length > 0) {
-            $.get(url, param, function (data) {
-                $(targetId).html($(data).html());
-                if (jsPath != null && jsPath.length > 0) {
-                    loadJs(jsPath);
-                }
-                endLoading(targetId);
-                Messenger().post("loading finish !");
-            });
-        } else {
-            $.get(url, function (data) {
-                $(targetId).html($(data).html());
-                if (jsPath != null && jsPath.length > 0) {
-                    loadJs(jsPath);
-                }
-                endLoading(targetId);
-                Messenger().post("loading finish !");
-            });
-        }
+        $(targetId).empty();
+        $.get(web_path + url, function (data) {
+            $(targetId).html($(data).html());
+            var scripts = $('.dy_script');
+            for (var i = 0; i < scripts.length; i++) {
+                loadJs(web_path + $(scripts[i]).val());
+            }
+            endLoading(targetId);
+            Messenger().post("loading finish !");
+        });
     };
 });

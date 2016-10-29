@@ -1,46 +1,8 @@
 /**
  * Created by lenovo on 2016-09-12.
  */
-requirejs.config({
-    // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
-    paths: {
-        "check.all": web_path + "/plugin/checkall/checkall",
-        "datatables.responsive": web_path + "/plugin/datatables/js/datatables.responsive",
-        "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
-        "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
-        "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
-        "nav": web_path + "/js/util/nav"
-    },
-    // shimオプションの設定。モジュール間の依存関係を定義します。
-    shim: {
-        "check.all": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["jquery"]
-        },
-        "datatables.responsive": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["datatables.bootstrap"]
-        },
-        "messenger": {
-            deps: ["jquery"]
-        }
-    }
-});
-// require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.responsive", "csrf", "com", "check.all", "nav"], function ($, domready, messenger, Handlebars, dt, csrf, com, checkall, nav) {
-    domready(function () {
-        //This function is called once the DOM is ready.
-        //It will be safe to query the DOM and manipulate
-        //DOM nodes in this function.
-
-        /*
-         初始化消息机制
-         */
-        Messenger.options = {
-            extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
-            theme: 'flat'
-        };
+require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all", "jquery.address"],
+    function ($, messenger, Handlebars, dt, checkall, jqueryAddress) {
 
         /*
          ajax url
@@ -173,11 +135,11 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
-                $(document).on("click", ".edit", function () {
+                tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'));
                 });
 
-                $(document).on("click", ".del", function () {
+                tableElement.delegate('.del', "click", function () {
                     application_del($(this).attr('data-id'), $(this).attr('data-application'));
                 });
             }
@@ -243,11 +205,11 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
             }
         });
 
-        $('#search').click(function () {
+        $('#search').click(function(){
             myTable.ajax.reload();
         });
 
-        $('#reset_search').click(function () {
+        $('#reset_search').click(function(){
             cleanParam();
             myTable.ajax.reload();
         });
@@ -255,8 +217,8 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
         /*
          添加页面
          */
-        $('#application_add').click(function () {
-            window.location.href = web_path + getAjaxUrl().add;
+        $('#application_add').click(function(){
+            $.address.value(getAjaxUrl().add);
         });
 
         /*
@@ -299,7 +261,7 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
          编辑页面
          */
         function edit(applicationId) {
-            window.location.href = web_path + getAjaxUrl().edit + '?id=' + applicationId;
+            $.address.value(getAjaxUrl().edit + '?id=' + applicationId);
         }
 
         /*
@@ -363,6 +325,4 @@ require(["jquery", "requirejs-domready", "messenger", "handlebars", "datatables.
                 }
             });
         }
-
     });
-});

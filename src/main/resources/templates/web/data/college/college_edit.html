@@ -427,16 +427,16 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <script id="school-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{school_value}}">{{school_name}}</option>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/data/college/college_edit.js" />
     </div>
     <!-- /#page-wrapper -->
 </div>
 <!-- /#wrapper -->
-
-<script id="school-template" type="text/x-handlebars-template">
-    {{#each listResult}}
-    <option value="{{school_value}}">{{school_name}}</option>
-    {{/each}}
-</script>
 
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"

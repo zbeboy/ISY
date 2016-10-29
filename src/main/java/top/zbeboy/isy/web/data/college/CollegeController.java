@@ -73,7 +73,7 @@ public class CollegeController {
      */
     @RequestMapping(value = "/web/menu/data/college", method = RequestMethod.GET)
     public String collegeData() {
-        return "web/data/college/college_data";
+        return "web/data/college/college_data::#page-wrapper";
     }
 
     /**
@@ -112,7 +112,7 @@ public class CollegeController {
      */
     @RequestMapping(value = "/web/data/college/add", method = RequestMethod.GET)
     public String collegeAdd() {
-        return "web/data/college/college_add";
+        return "web/data/college/college_add::#page-wrapper";
     }
 
     /**
@@ -126,7 +126,7 @@ public class CollegeController {
     public String collegeEdit(@RequestParam("id") int id, ModelMap modelMap) {
         College college = collegeService.findById(id);
         modelMap.addAttribute("college", college);
-        return "web/data/college/college_edit";
+        return "web/data/college/college_edit::#page-wrapper";
     }
 
     /**
@@ -245,8 +245,9 @@ public class CollegeController {
      */
     @RequestMapping(value = "/web/data/college/mount", method = RequestMethod.GET)
     public String collegeMount(@RequestParam("id") int collegeId, ModelMap modelMap) {
-        modelMap.addAttribute("collegeId", collegeId);
-        return "web/data/college/college_mount";
+        College college = collegeService.findById(collegeId);
+        modelMap.addAttribute("college", college);
+        return "web/data/college/college_mount::#page-wrapper";
     }
 
     /**

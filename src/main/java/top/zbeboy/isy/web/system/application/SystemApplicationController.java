@@ -65,7 +65,7 @@ public class SystemApplicationController {
      */
     @RequestMapping(value = "/web/menu/system/application", method = RequestMethod.GET)
     public String systemLog() {
-        return "web/system/application/system_application";
+        return "web/system/application/system_application::#page-wrapper";
     }
 
     /**
@@ -116,7 +116,7 @@ public class SystemApplicationController {
      */
     @RequestMapping(value = "/web/system/application/add", method = RequestMethod.GET)
     public String applicationAdd() {
-        return "web/system/application/system_application_add";
+        return "web/system/application/system_application_add::#page-wrapper";
     }
 
     /**
@@ -128,7 +128,7 @@ public class SystemApplicationController {
     public String applicationEdit(@RequestParam("id") int id, ModelMap modelMap) {
         Application application = applicationService.findById(id);
         modelMap.addAttribute("sys_application", application);
-        return "web/system/application/system_application_edit";
+        return "web/system/application/system_application_edit::#page-wrapper";
     }
 
     /**

@@ -468,20 +468,20 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <!--定义操作列按钮模板-->
+        <script id="operator_button" type="text/x-handlebars-template">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-organize="{{this.organize}}">{{this.name}}
+            </button>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/data/organize/organize_data.js" />
     </div>
     <!-- /#page-wrapper -->
 
 </div>
 <!-- /#wrapper -->
-
-<!--定义操作列按钮模板-->
-<script id="operator_button" type="text/x-handlebars-template">
-    {{#each func}}
-    <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
-            data-organize="{{this.organize}}">{{this.name}}
-    </button>
-    {{/each}}
-</script>
 
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"

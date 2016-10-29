@@ -94,7 +94,7 @@ public class OrganizeController {
      */
     @RequestMapping(value = "/web/menu/data/organize", method = RequestMethod.GET)
     public String organizeData() {
-        return "web/data/organize/organize_data";
+        return "web/data/organize/organize_data::#page-wrapper";
     }
 
     /**
@@ -139,7 +139,7 @@ public class OrganizeController {
     @RequestMapping(value = "/web/data/organize/add", method = RequestMethod.GET)
     public String organizeAdd(ModelMap modelMap) {
         pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
-        return "web/data/organize/organize_add";
+        return "web/data/organize/organize_add::#page-wrapper";
     }
 
     /**
@@ -160,7 +160,7 @@ public class OrganizeController {
         }
         modelMap.addAttribute("organize", organizeBean);
         pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
-        return "web/data/organize/organize_edit";
+        return "web/data/organize/organize_edit::#page-wrapper";
     }
 
     /**
