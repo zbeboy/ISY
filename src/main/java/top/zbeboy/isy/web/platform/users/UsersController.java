@@ -637,34 +637,117 @@ public class UsersController {
 
     /**
      * 用户资料页面
+     *
      * @return 资料页面
      */
     @RequestMapping("/anyone/users/profile")
-    public String usersProfile(ModelMap modelMap,HttpServletRequest request){
+    public String usersProfile(ModelMap modelMap, HttpServletRequest request) {
         Users users = usersService.getUserFromSession();
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
         String page;
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
-                page = "web/platform/users/users_profile_student";
+                page = "web/platform/users/users_profile_student::#page-wrapper";
                 Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
-                if(student.isPresent()){
+                if (student.isPresent()) {
                     StudentBean studentBean = student.get().into(StudentBean.class);
-                    studentBean.setAvatar(requestUtils.getBaseUrl(request)+studentBean.getAvatar());
-                    modelMap.addAttribute("user",studentBean);
+                    studentBean.setAvatar(requestUtils.getBaseUrl(request) + studentBean.getAvatar());
+                    modelMap.addAttribute("user", studentBean);
                 }
                 break;
             case Workbook.STAFF_USERS_TYPE:  // 教职工
-                page = "web/platform/users/users_profile_staff";
+                page = "web/platform/users/users_profile_staff::#page-wrapper";
                 Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
-                if(staff.isPresent()){
+                if (staff.isPresent()) {
                     StaffBean staffBean = staff.get().into(StaffBean.class);
-                    modelMap.addAttribute("user",staffBean);
+                    modelMap.addAttribute("user", staffBean);
                 }
                 break;
             case Workbook.SYSTEM_USERS_TYPE:  // 系统
-                page = "web/platform/users/users_profile_system";
-                modelMap.addAttribute("user",users);
+                page = "web/platform/users/users_profile_system::#page-wrapper";
+                modelMap.addAttribute("user", users);
+                break;
+            default:
+                page = "login";
+                break;
+        }
+        return page;
+    }
+
+    /**
+     * 更新用户学校信息
+     *
+     * @param department 系id
+     * @param organize   班级id
+     * @return true 更新成功 false 更新失败
+     */
+    @RequestMapping(value = "/anyone/users/profile/school/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils usersProfileSchoolUpdate(@RequestParam("department") int department, @RequestParam("organize") int organize) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        switch (usersType.getUsersTypeName()) {
+            case Workbook.STUDENT_USERS_TYPE:  // 学生
+                Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
+                if (student.isPresent()) {
+                    Student updateStudent = student.get().into(Student.class);
+                    updateStudent.setOrganizeId(organize);
+                    studentService.update(updateStudent);
+                    ajaxUtils.success().msg("更新学校信息成功");
+                } else {
+                    ajaxUtils.fail().msg("未查询到当前用户");
+                }
+                break;
+            case Workbook.STAFF_USERS_TYPE:  // 教职工
+                Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
+                if (staff.isPresent()) {
+                    Staff updateStaff = staff.get().into(Staff.class);
+                    updateStaff.setDepartmentId(department);
+                    staffService.update(updateStaff);
+                    ajaxUtils.success().msg("更新学校信息成功");
+                } else {
+                    ajaxUtils.fail().msg("未查询到当前用户");
+                }
+                break;
+            default:
+                ajaxUtils.fail().msg("未查询到当前用户的用户类型");
+                break;
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 用户资料编辑页面
+     *
+     * @return 资料编辑页面
+     */
+    @RequestMapping("/anyone/users/profile/edit")
+    public String usersProfileEdit(ModelMap modelMap, HttpServletRequest request) {
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        String page;
+        switch (usersType.getUsersTypeName()) {
+            case Workbook.STUDENT_USERS_TYPE:  // 学生
+                page = "web/platform/users/users_profile_student_edit::#page-wrapper";
+                Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
+                if (student.isPresent()) {
+                    StudentBean studentBean = student.get().into(StudentBean.class);
+                    studentBean.setAvatar(requestUtils.getBaseUrl(request) + studentBean.getAvatar());
+                    modelMap.addAttribute("user", studentBean);
+                }
+                break;
+            case Workbook.STAFF_USERS_TYPE:  // 教职工
+                page = "web/platform/users/users_profile_staff_edit::#page-wrapper";
+                Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
+                if (staff.isPresent()) {
+                    StaffBean staffBean = staff.get().into(StaffBean.class);
+                    modelMap.addAttribute("user", staffBean);
+                }
+                break;
+            case Workbook.SYSTEM_USERS_TYPE:  // 系统
+                page = "web/platform/users/users_profile_system_edit::#page-wrapper";
+                modelMap.addAttribute("user", users);
                 break;
             default:
                 page = "login";

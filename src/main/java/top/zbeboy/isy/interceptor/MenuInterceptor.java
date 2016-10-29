@@ -33,22 +33,20 @@ public class MenuInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (!ObjectUtils.isEmpty(modelAndView)) {
-            ServletContext context = request.getSession().getServletContext();
-            ApplicationContext ctx = WebApplicationContextUtils
-                    .getWebApplicationContext(context);
-            UsersService usersService = (UsersService) ctx
-                    .getBean("usersService");
-            ApplicationService applicationService = (ApplicationService) ctx
-                    .getBean("applicationService");
-            Users users = usersService.getUserFromSession();
-            if (!ObjectUtils.isEmpty(users)) {
-                Result<Record> roles = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
-                if (roles.isNotEmpty()) {
-                    List<Role> roleList = roles.into(Role.class);
-                    String menuHtml = applicationService.menuHtml(roleList, users.getUsername());
-                    request.setAttribute("menu", menuHtml);
-                }
+        ServletContext context = request.getSession().getServletContext();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getWebApplicationContext(context);
+        UsersService usersService = (UsersService) ctx
+                .getBean("usersService");
+        ApplicationService applicationService = (ApplicationService) ctx
+                .getBean("applicationService");
+        Users users = usersService.getUserFromSession();
+        if (!ObjectUtils.isEmpty(users)) {
+            Result<Record> roles = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
+            if (roles.isNotEmpty()) {
+                List<Role> roleList = roles.into(Role.class);
+                String menuHtml = applicationService.menuHtml(roleList, users.getUsername());
+                request.setAttribute("menu", menuHtml);
             }
         }
     }

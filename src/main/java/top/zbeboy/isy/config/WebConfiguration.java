@@ -35,10 +35,11 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     /**
      * ajax 返回页面
+     *
      * @return 页面节点
      */
     @Bean
-    public AjaxThymeleafView ajaxThymeleafView(){
+    public AjaxThymeleafView ajaxThymeleafView() {
         AjaxThymeleafView ajaxThymeleafView = new AjaxThymeleafView();
         ajaxThymeleafView.setFragmentSpec(new StandardDOMSelectorFragmentSpec("#page-wrapper"));
         return ajaxThymeleafView;
@@ -97,6 +98,6 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new MenuInterceptor()).addPathPatterns("/web/**");
+        registry.addInterceptor(new MenuInterceptor()).addPathPatterns("/web/menu/backstage");
     }
 }

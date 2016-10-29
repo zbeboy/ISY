@@ -30,6 +30,13 @@ public interface StudentService {
     void save(Student student);
 
     /**
+     * 更新学生信息
+     *
+     * @param student
+     */
+    void update(Student student);
+
+    /**
      * 通过用户账号关联查询 注：信息包括学校等 建议用于验证，效率不高
      *
      * @param username 用户账号

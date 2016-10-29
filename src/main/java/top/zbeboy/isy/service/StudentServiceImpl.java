@@ -62,6 +62,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public void update(Student student) {
+        studentDao.update(student);
+    }
+
+    @Override
     public Optional<Record> findByUsernameRelation(String username) {
         return create.select()
                 .from(STUDENT)

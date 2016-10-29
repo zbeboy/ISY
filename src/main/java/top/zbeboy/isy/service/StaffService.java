@@ -30,6 +30,13 @@ public interface StaffService {
     void save(Staff staff);
 
     /**
+     * 更新教职式信息
+     *
+     * @param staff
+     */
+    void update(Staff staff);
+
+    /**
      * 通过用户账号关联查询 注：信息包括学校等 建议用于验证，效率不高
      *
      * @param username 用户账号

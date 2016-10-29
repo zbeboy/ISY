@@ -75,6 +75,11 @@ public final class Workbook {
      */
     public static final String URL_MAPPING_FILE_PATH = SETTINGS_PATH + "url-mapping.txt";
 
+    /*
+    用户默认头像
+     */
+    public static final String USERS_AVATAR = "/images/avatar.jpg";
+
     private Workbook() {
     }
 }

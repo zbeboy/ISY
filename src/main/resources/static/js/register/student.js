@@ -932,7 +932,7 @@ require(["jquery", "sb-admin", "handlebars", "jquery.showLoading", "csrf", "com"
                 validSuccessDom(validId.valid_confirm_password, errorMsgId.confirm_password_error_msg);
                 $.post(web_path + ajax_url.register_student_url, $('#student_register_form').serialize(), function (data) {
                     if (data.state) {
-                        window.location.href = web_path + '/register/finish';
+                        window.location.href = web_path + ajax_url.finish;
                     } else {
                         $('#error_msg').removeClass('hidden').text(data.msg);
                         // 去除遮罩

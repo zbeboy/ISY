@@ -62,6 +62,11 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public void update(Staff staff) {
+        staffDao.update(staff);
+    }
+
+    @Override
     public Optional<Record> findByUsernameRelation(String username) {
         return create.select()
                 .from(STAFF)

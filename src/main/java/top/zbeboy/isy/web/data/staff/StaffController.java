@@ -146,6 +146,7 @@ public class StaffController {
                                                     saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
                                                     saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
                                                     saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                                    saveUsers.setAvatar(Workbook.USERS_AVATAR);
                                                     usersService.save(saveUsers);
 
                                                     Staff saveStaff = new Staff();
