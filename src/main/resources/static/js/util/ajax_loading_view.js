@@ -28,6 +28,7 @@ define(["jquery", "jquery.showLoading", "messenger"], function ($, showLoading, 
     }
 
     return function (url, targetId, web_path) {
+        endLoading(targetId);
         startLoading(targetId);
         $(targetId).empty();
         $.get(web_path + url, function (data) {

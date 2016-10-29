@@ -71,7 +71,7 @@ require(["jquery", "datatables.responsive"], function ($, dt) {
                 "sSortDescending": ": 以降序排列此列"
             }
         },
-        "dom": "<'row'<'col-sm-3'l><'col-sm-4'<'#mytoolbox'>>r>" +
+        "dom": "<'row'<'col-sm-3'l><'#global_button.col-sm-2'><'col-sm-7'<'#mytoolbox'>>r>" +
         "t" +
         "<'row'<'col-sm-5'i><'col-sm-7'p>>"
     });
@@ -80,6 +80,9 @@ require(["jquery", "datatables.responsive"], function ($, dt) {
         '  <button type="button" id="search" class="btn btn-outline btn-default btn-sm"><i class="fa fa-search"></i>搜索</button>' +
         '  <button type="button" id="reset_search" class="btn btn-outline btn-default btn-sm"><i class="fa fa-repeat"></i>重置</button>';
     $('#mytoolbox').append(html);
+
+    var global_button = '<button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+    $('#global_button').append(global_button);
 
     function getParamId() {
         return {
@@ -110,6 +113,10 @@ require(["jquery", "datatables.responsive"], function ($, dt) {
 
     $('#reset_search').click(function(){
         cleanParam();
+        myTable.ajax.reload();
+    });
+
+    $('#refresh').click(function(){
         myTable.ajax.reload();
     });
 });

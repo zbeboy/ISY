@@ -180,12 +180,16 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
         passTable.ajax.reload();
     });
 
-    $('#pass_search').click(function () {
+    passId.delegate('#pass_search', "click", function () {
         passTable.ajax.reload();
     });
 
-    $('#pass_reset_search').click(function () {
+    passId.delegate('#pass_reset_search', "click", function () {
         cleanPassParam();
+        passTable.ajax.reload();
+    });
+
+    passId.delegate('#pass_refresh', "click", function () {
         passTable.ajax.reload();
     });
 
@@ -387,8 +391,9 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             }
         });
 
-        var global_button = '<button type="button" id="pass_dels" class="btn btn-outline btn-danger btn-sm">批量注销</button>' +
-            '  <button type="button" id="pass_recoveries" class="btn btn-outline btn-warning btn-sm">批量恢复</button>';
+        var global_button = '<button type="button" id="pass_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
+            '  <button type="button" id="pass_recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
+            '  <button type="button" id="pass_refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
     }
 
@@ -730,12 +735,16 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
         }
     });
 
-    $('#wait_search').click(function () {
+    waitId.delegate('#wait_search', "click", function () {
         waitTable.ajax.reload();
     });
 
-    $('#wait_reset_search').click(function () {
+    waitId.delegate('#wait_reset_search', "click", function () {
         cleanWaitParam();
+        waitTable.ajax.reload();
+    });
+
+    waitId.delegate('#wait_refresh', "click", function () {
         waitTable.ajax.reload();
     });
 
@@ -872,7 +881,8 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             }
         });
 
-        var wait_global_button = '<button type="button" id="wait_deletes" class="btn btn-outline btn-danger btn-sm">批量删除</button>';
+        var wait_global_button = '<button type="button" id="wait_deletes" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+            '  <button type="button" id="wait_refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#wait_global_button').append(wait_global_button);
     }
 

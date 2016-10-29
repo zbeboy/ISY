@@ -163,7 +163,7 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
                 "sSortDescending": ": 以降序排列此列"
             }
         },
-        "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-3'>r>" +
+        "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-4'>r>" +
         "t" +
         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         initComplete: function () {
@@ -181,9 +181,10 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
         }
     });
 
-    var global_button = '<button type="button" id="science_add" class="btn btn-outline btn-primary btn-sm">添加</button>' +
-        '  <button type="button" id="science_dels" class="btn btn-outline btn-danger btn-sm">批量注销</button>' +
-        '  <button type="button" id="science_recoveries" class="btn btn-outline btn-warning btn-sm">批量恢复</button>';
+    var global_button = '<button type="button" id="science_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+        '  <button type="button" id="science_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
+        '  <button type="button" id="science_recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
+        '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
     $('#global_button').append(global_button);
 
     /*
@@ -250,6 +251,10 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
 
     $('#reset_search').click(function () {
         cleanParam();
+        myTable.ajax.reload();
+    });
+
+    $('#refresh').click(function () {
         myTable.ajax.reload();
     });
 
