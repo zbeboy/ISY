@@ -3,8 +3,8 @@
  */
 require(["jquery", "handlebars", "messenger", "bootstrap-treeview",
         "text!" + web_path + "/webjars/bootstrap-treeview/bootstrap-treeview.min.css",
-        "jquery.address"],
-    function ($, Handlebars, messenger, treeview, jqueryAddress) {
+        "jquery.address","nav_active"],
+    function ($, Handlebars, messenger, treeview, jqueryAddress,nav_active) {
 
         /*
          ajax url.
@@ -15,6 +15,9 @@ require(["jquery", "handlebars", "messenger", "bootstrap-treeview",
             update: '/web/data/college/update/mount',
             back: '/web/menu/data/college'
         };
+
+        // 刷新时选中菜单
+        nav_active(ajax_url.back);
 
         /*
          参数id

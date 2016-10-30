@@ -12,6 +12,7 @@ requirejs.config({
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
         "nav": web_path + "/js/util/nav",
+        "nav_active": web_path + "/js/util/nav_active",
         "constants": web_path + "/js/util/constants",
         "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
         "jquery.address": web_path + "/plugin/jquery_address/jquery.address-1.6.min"

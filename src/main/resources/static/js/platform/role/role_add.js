@@ -2,8 +2,8 @@
  * Created by lenovo on 2016-10-16.
  */
 require(["jquery", "handlebars","messenger", "bootstrap-treeview", "constants",
-    "text!" + web_path + "/webjars/bootstrap-treeview/bootstrap-treeview.min.css", "jquery.address"
-], function ($, Handlebars, messenger, treeview, constants,treeviewcss,jqueryAddress) {
+    "text!" + web_path + "/webjars/bootstrap-treeview/bootstrap-treeview.min.css", "jquery.address","nav_active"
+], function ($, Handlebars, messenger, treeview, constants,treeviewcss,jqueryAddress,nav_active) {
 
     /*
      ajax url.
@@ -16,6 +16,9 @@ require(["jquery", "handlebars","messenger", "bootstrap-treeview", "constants",
         valid: '/web/platform/role/save/valid',
         back: '/web/menu/platform/role'
     };
+
+    // 刷新时选中菜单
+    nav_active(ajax_url.back);
 
     /*
      参数id

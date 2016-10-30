@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-04.
  */
-require(["jquery", "handlebars", "messenger","jquery.address"], function ($, Handlebars, messenger,jqueryAddress) {
+require(["jquery", "handlebars", "messenger","jquery.address","nav_active"], function ($, Handlebars, messenger,jqueryAddress,nav_active) {
 
     /*
      ajax url.
@@ -15,6 +15,9 @@ require(["jquery", "handlebars", "messenger","jquery.address"], function ($, Han
         applicationCodeValid: '/web/system/application/update/valid/code',
         back: '/web/menu/system/application'
     };
+
+    // 刷新时选中菜单
+    nav_active(ajax_url.back);
 
     /*
      参数id

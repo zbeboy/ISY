@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016/9/21.
  */
-require(["jquery", "messenger", "jquery.address"], function ($, messenger, jqueryAddress) {
+require(["jquery", "messenger", "jquery.address", "nav_active"], function ($, messenger, jqueryAddress, nav_active) {
 
     /*
      ajax url.
@@ -11,6 +11,9 @@ require(["jquery", "messenger", "jquery.address"], function ($, messenger, jquer
         valid: '/web/data/school/update/valid',
         back: '/web/menu/data/school'
     };
+
+    // 刷新时选中菜单
+    nav_active(ajax_url.back);
 
     /*
      参数id
