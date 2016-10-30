@@ -80,6 +80,11 @@ public final class Workbook {
      */
     public static final String USERS_AVATAR = "/images/avatar.jpg";
 
+    /*
+    用户档案袋路径
+     */
+    public static final String USERS_PORTFOLIOS = "portfolios/";
+
     private Workbook() {
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import top.zbeboy.isy.config.Workbook;
@@ -153,8 +154,8 @@ public class MainController {
     /**
      * 语言切换，暂时不用
      *
-     * @param request
-     * @param response
+     * @param request 请求对象
+     * @param response 响应对象
      * @param language 语言
      * @return 重置页面
      */

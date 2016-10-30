@@ -15,7 +15,14 @@ requirejs.config({
         "nav_active": web_path + "/js/util/nav_active",
         "constants": web_path + "/js/util/constants",
         "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
-        "jquery.address": web_path + "/plugin/jquery_address/jquery.address-1.6.min"
+        "jquery.address": web_path + "/plugin/jquery_address/jquery.address-1.6.min",
+        "bootstrap-datetimepicker-zh-CN":web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
+        "bootstrap-datetimepicker":web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
+        "jquery-ui/widget":web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",
+        "jquery.iframe-transport":web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
+        "jquery.fileupload-process":web_path +"/plugin/jquery_file_upload/js/jquery.fileupload-process",
+        "jquery.fileupload":web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
+        "jquery.fileupload-validate":web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -36,6 +43,21 @@ requirejs.config({
         },
         "jquery.address": {
             deps: ["jquery"]
+        },
+        "bootstrap-datetimepicker-zh-CN":{
+            deps:["bootstrap-datetimepicker"]
+        },
+        "jquery-ui/widget":{
+            deps: ["jquery"]
+        },
+        "jquery.iframe-transport":{
+            deps: ["jquery"]
+        },
+        "jquery.fileupload":{
+            deps: ["jquery-ui/widget","jquery.iframe-transport"]
+        },
+        "jquery.fileupload-validate":{
+            deps: ["jquery.fileupload","jquery.fileupload-process"]
         }
     }
 });

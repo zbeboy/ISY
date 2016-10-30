@@ -2,7 +2,6 @@
  * Created by lenovo on 2016-10-19.
  */
 require(["jquery", "handlebars", "messenger", "bootstrap-treeview",
-        "text!" + web_path + "/webjars/bootstrap-treeview/bootstrap-treeview.min.css",
         "jquery.address","nav_active"],
     function ($, Handlebars, messenger, treeview, jqueryAddress,nav_active) {
 

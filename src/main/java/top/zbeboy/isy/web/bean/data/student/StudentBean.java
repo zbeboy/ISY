@@ -43,9 +43,9 @@ public class StudentBean extends Student {
     private String langKey;
     private Date joinDate;
 
-    private String  nationName;
+    private String nationName;
 
-    private String  politicalLandscapeName;
+    private String politicalLandscapeName;
 
     private String roleName;
 

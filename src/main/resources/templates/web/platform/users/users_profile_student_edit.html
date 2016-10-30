@@ -379,8 +379,8 @@
             </div>
             <!-- /.col-lg-12 -->
         </div>
-        <div class="row">
-            <div class="col-lg-6">
+        <div class="row" id="loading_region">
+            <div class="col-lg-8">
                 <form role="form" id="edit_form">
                     <div class="form-group" id="valid_real_name">
                         <label>姓名</label>
@@ -396,29 +396,60 @@
                                placeholder="学号"/>
                         <p class="text-danger hidden" id="student_number_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_sex">
+                    <div class="form-group" id="valid_sex" th:if="${user.sex=='男'}">
                         <label>性别</label>
-                        <input class="form-control" name="sex" id="sex" th:value="${user.sex}"
-                               placeholder="性别"/>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="man" value="男" checked=""/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="feman" value="女"/>女
+                        </label>
                         <p class="text-danger hidden" id="sex_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_nation_name">
-                        <label>民族</label>
-                        <input class="form-control" name="nationId" id="nationId" th:value="${user.nationName}"
-                               placeholder="民族"/>
-                        <p class="text-danger hidden" id="nation_name_error_msg"></p>
+                    <div class="form-group" id="valid_sex" th:if="${user.sex=='女'}">
+                        <label>性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="man" value="男"/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="feman" value="女" checked=""/>女
+                        </label>
+                        <p class="text-danger hidden" id="sex_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_political_landscape_name">
-                        <label>政治面貌</label>
-                        <input class="form-control" name="politicalLandscapeId" id="politicalLandscapeId"
-                               th:value="${user.politicalLandscapeName}"
-                               placeholder="政治面貌"/>
-                        <p class="text-danger hidden" id="political_landscape_name_error_msg"></p>
+                    <div class="form-group" id="valid_sex" th:if="${user.sex=='' || user.sex==null}">
+                        <label>性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="man" value="男" checked=""/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="feman" value="女"/>女
+                        </label>
+                        <p class="text-danger hidden" id="sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_nation">
+                        <select class="form-control" name="nationId" id="select_nation">
+                            <option>请选择民族</option>
+                        </select>
+                        <p class="text-danger hidden" id="nation_error_msg"></p>
+                        <input type="hidden" id="nationId" th:value="${user.nationId}"/>
+                    </div>
+                    <div class="form-group" id="valid_political_landscape">
+                        <select class="form-control" name="politicalLandscapeId" id="select_political_landscape">
+                            <option>请选择政治面貌</option>
+                        </select>
+                        <p class="text-danger hidden" id="political_landscape_error_msg"></p>
+                        <input type="hidden" id="politicalLandscapeId" th:value="${user.politicalLandscapeId}"/>
                     </div>
                     <div class="form-group" id="valid_birthday">
                         <label>生日</label>
-                        <input class="form-control" name="birthday" id="birthday" th:value="${user.birthday}"
-                               placeholder="生日"/>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
+                             data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" th:value="${user.birthday}"
+                                   readonly="readonly"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <input type="hidden" id="dtp_input2" name="birthday" th:value="${user.birthday}"/>
                         <p class="text-danger hidden" id="birthday_name_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_dormitory_number">
@@ -460,15 +491,25 @@
                                placeholder="生源地"/>
                         <p class="text-danger hidden" id="place_origin_error_msg"></p>
                     </div>
+                    <input type="hidden" name="avatar" id="form_avatar"/>
                 </form>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="thumbnail">
-                    <img src="#" th:src="${user.avatar}" alt="用户头像"/>
+                    <img src="#" id="avatar" th:src="@{${user.avatar}}" alt="用户头像"/>
                     <div class="caption text-center">
-                        <p><a href="#" class="btn btn-primary" role="button">上传头像</a> <a href="#"
-                                                                                         class="btn btn-default"
-                                                                                         role="button">清除</a></p>
+                        <!-- The global progress bar -->
+                        <div id="progress" class="progress">
+                            <div class="progress-bar progress-bar-success"></div>
+                        </div>
+                        <p>
+                            <span class="btn btn-primary fileinput-button">
+                                <span>上传头像</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files"/>
+                            </span>
+                            <a href="#" class="btn btn-default" role="button">清除</a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -481,6 +522,18 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <!--民族模板-->
+        <script id="nation-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{nation_value}}">{{nation_name}}</option>
+            {{/each}}
+        </script>
+        <!--政治面貌模板-->
+        <script id="political-landscape-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{political_landscape_value}}">{{political_landscape_name}}</option>
+            {{/each}}
+        </script>
         <input type="hidden" class="dy_script" value="/js/platform/users/users_profile_student_edit.js"/>
     </div>
     <!-- /#page-wrapper -->

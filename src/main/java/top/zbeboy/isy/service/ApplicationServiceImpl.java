@@ -487,7 +487,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         List<String> urlMapping = new ArrayList<>();
         File file = new File(Workbook.URL_MAPPING_FILE_PATH);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))){
-            String tempString = null;
+            String tempString;
             // 一次读入一行，直到读入null为文件结束
             while ((tempString = reader.readLine()) != null) {
                 urlMapping.add(tempString);

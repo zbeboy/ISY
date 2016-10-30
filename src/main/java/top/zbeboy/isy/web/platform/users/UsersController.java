@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
@@ -30,6 +31,7 @@ import top.zbeboy.isy.service.util.RandomUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
+import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.jcaptcha.CaptchaServiceSingleton;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -46,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -107,6 +110,9 @@ public class UsersController {
 
     @Resource
     private MobileService mobileService;
+
+    @Resource
+    private UploadService uploadService;
 
     @Autowired
     private ISYProperties isyProperties;
@@ -641,7 +647,7 @@ public class UsersController {
      * @return 资料页面
      */
     @RequestMapping("/anyone/users/profile")
-    public String usersProfile(ModelMap modelMap, HttpServletRequest request) {
+    public String usersProfile(ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
         String page;
@@ -651,7 +657,7 @@ public class UsersController {
                 Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
                 if (student.isPresent()) {
                     StudentBean studentBean = student.get().into(StudentBean.class);
-                    studentBean.setAvatar(requestUtils.getBaseUrl(request) + studentBean.getAvatar());
+                    studentBean.setAvatar("/anyone/users/download/avatar?username=" + users.getUsername());
                     modelMap.addAttribute("user", studentBean);
                 }
                 break;
@@ -723,7 +729,7 @@ public class UsersController {
      * @return 资料编辑页面
      */
     @RequestMapping("/anyone/users/profile/edit")
-    public String usersProfileEdit(ModelMap modelMap, HttpServletRequest request) {
+    public String usersProfileEdit(ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
         String page;
@@ -733,7 +739,7 @@ public class UsersController {
                 Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
                 if (student.isPresent()) {
                     StudentBean studentBean = student.get().into(StudentBean.class);
-                    studentBean.setAvatar(requestUtils.getBaseUrl(request) + studentBean.getAvatar());
+                    studentBean.setAvatar("/anyone/users/download/avatar?username=" + users.getUsername());
                     modelMap.addAttribute("user", studentBean);
                 }
                 break;
@@ -754,5 +760,62 @@ public class UsersController {
                 break;
         }
         return page;
+    }
+
+    /**
+     * 用户上传头像
+     *
+     * @param multipartHttpServletRequest
+     * @param request
+     * @return 文件信息
+     */
+    @RequestMapping(value = "/anyone/users/upload/avatar")
+    @ResponseBody
+    public AjaxUtils<FileBean> usersUploadAvatar(MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
+        AjaxUtils<FileBean> data = new AjaxUtils<FileBean>();
+        try {
+            Users users = usersService.getUserFromSession();
+            List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                    avatarPath(users), request.getRemoteAddr());
+            data.success().listData(fileBeen);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    /**
+     * 用户头像展示
+     * @param username 用户账号
+     * @param response 响应
+     * @param request 请求
+     */
+    @RequestMapping("/anyone/users/download/avatar")
+    public void downloadAvatar(@RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request){
+        Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
+        uploadService.showImage(users.getAvatar(),response,request);
+    }
+
+    /**
+     * 用户头像上传后预览
+     * @param fileName 文件名
+     * @param username 用户账号
+     * @param response 响应
+     * @param request 请求
+     */
+    @RequestMapping("/anyone/users/avatar/preview")
+    public void downloadAvatarPreview(@RequestParam("fileName") String fileName,@RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request){
+        Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
+        String absolutePath = avatarPath(users) + fileName;
+        uploadService.showImage(absolutePath,response,request);
+    }
+
+    /**
+     * 头像路径
+     * @param users 用户
+     * @return 路径
+     */
+    private String avatarPath(Users users){
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + File.separator + "avatar" + File.separator;
     }
 }
