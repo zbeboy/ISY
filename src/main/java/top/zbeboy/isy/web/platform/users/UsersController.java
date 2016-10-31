@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.platform.users;
 
 import com.octo.captcha.service.CaptchaServiceException;
+import org.aspectj.weaver.loadtime.Aj;
 import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Record1;
@@ -21,10 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
-import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
-import top.zbeboy.isy.domain.tables.records.RoleRecord;
-import top.zbeboy.isy.domain.tables.records.UsersTypeRecord;
+import top.zbeboy.isy.domain.tables.records.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.BCryptUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
@@ -654,73 +652,21 @@ public class UsersController {
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
                 page = "web/platform/users/users_profile_student::#page-wrapper";
-                Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
-                if (student.isPresent()) {
-                    StudentBean studentBean = student.get().into(StudentBean.class);
-                    studentBean.setAvatar("/anyone/users/download/avatar?username=" + users.getUsername());
-                    modelMap.addAttribute("user", studentBean);
-                }
+                profileStudent(users, modelMap);
                 break;
             case Workbook.STAFF_USERS_TYPE:  // 教职工
                 page = "web/platform/users/users_profile_staff::#page-wrapper";
-                Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
-                if (staff.isPresent()) {
-                    StaffBean staffBean = staff.get().into(StaffBean.class);
-                    modelMap.addAttribute("user", staffBean);
-                }
+                profileStaff(users, modelMap);
                 break;
             case Workbook.SYSTEM_USERS_TYPE:  // 系统
                 page = "web/platform/users/users_profile_system::#page-wrapper";
-                modelMap.addAttribute("user", users);
+                profileSystem(users, modelMap);
                 break;
             default:
                 page = "login";
                 break;
         }
         return page;
-    }
-
-    /**
-     * 更新用户学校信息
-     *
-     * @param department 系id
-     * @param organize   班级id
-     * @return true 更新成功 false 更新失败
-     */
-    @RequestMapping(value = "/anyone/users/profile/school/update", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils usersProfileSchoolUpdate(@RequestParam("department") int department, @RequestParam("organize") int organize) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
-        Users users = usersService.getUserFromSession();
-        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
-        switch (usersType.getUsersTypeName()) {
-            case Workbook.STUDENT_USERS_TYPE:  // 学生
-                Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
-                if (student.isPresent()) {
-                    Student updateStudent = student.get().into(Student.class);
-                    updateStudent.setOrganizeId(organize);
-                    studentService.update(updateStudent);
-                    ajaxUtils.success().msg("更新学校信息成功");
-                } else {
-                    ajaxUtils.fail().msg("未查询到当前用户");
-                }
-                break;
-            case Workbook.STAFF_USERS_TYPE:  // 教职工
-                Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
-                if (staff.isPresent()) {
-                    Staff updateStaff = staff.get().into(Staff.class);
-                    updateStaff.setDepartmentId(department);
-                    staffService.update(updateStaff);
-                    ajaxUtils.success().msg("更新学校信息成功");
-                } else {
-                    ajaxUtils.fail().msg("未查询到当前用户");
-                }
-                break;
-            default:
-                ajaxUtils.fail().msg("未查询到当前用户的用户类型");
-                break;
-        }
-        return ajaxUtils;
     }
 
     /**
@@ -736,30 +682,113 @@ public class UsersController {
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
                 page = "web/platform/users/users_profile_student_edit::#page-wrapper";
-                Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
-                if (student.isPresent()) {
-                    StudentBean studentBean = student.get().into(StudentBean.class);
-                    studentBean.setAvatar("/anyone/users/download/avatar?username=" + users.getUsername());
-                    modelMap.addAttribute("user", studentBean);
-                }
+                profileStudent(users, modelMap);
                 break;
             case Workbook.STAFF_USERS_TYPE:  // 教职工
                 page = "web/platform/users/users_profile_staff_edit::#page-wrapper";
-                Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
-                if (staff.isPresent()) {
-                    StaffBean staffBean = staff.get().into(StaffBean.class);
-                    modelMap.addAttribute("user", staffBean);
-                }
+                profileStaff(users, modelMap);
                 break;
             case Workbook.SYSTEM_USERS_TYPE:  // 系统
                 page = "web/platform/users/users_profile_system_edit::#page-wrapper";
-                modelMap.addAttribute("user", users);
+                profileSystem(users, modelMap);
                 break;
             default:
                 page = "login";
                 break;
         }
         return page;
+    }
+
+    /**
+     * 处理学生数据
+     *
+     * @param users    用户
+     * @param modelMap 页面对象
+     */
+    private void profileStudent(Users users, ModelMap modelMap) {
+        Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
+        if (student.isPresent()) {
+            StudentBean studentBean = student.get().into(StudentBean.class);
+            if (!studentBean.getAvatar().equals(Workbook.USERS_AVATAR)) {
+                modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + users.getUsername());
+            } else {
+                modelMap.addAttribute("avatarUrl", studentBean.getAvatar());
+            }
+            modelMap.addAttribute("user", studentBean);
+        }
+    }
+
+    /**
+     * 处理教职工数据
+     *
+     * @param users    用户
+     * @param modelMap 页面对象
+     */
+    private void profileStaff(Users users, ModelMap modelMap) {
+        Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
+        if (staff.isPresent()) {
+            StaffBean staffBean = staff.get().into(StaffBean.class);
+            if (!staffBean.getAvatar().equals(Workbook.USERS_AVATAR)) {
+                modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + users.getUsername());
+            } else {
+                modelMap.addAttribute("avatarUrl", staffBean.getAvatar());
+            }
+            modelMap.addAttribute("user", staffBean);
+        }
+    }
+
+    /**
+     * 处理系统数据
+     *
+     * @param users    用户
+     * @param modelMap 页面对象
+     */
+    private void profileSystem(Users users, ModelMap modelMap) {
+        if (!users.getAvatar().equals(Workbook.USERS_AVATAR)) {
+            modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + users.getUsername());
+        } else {
+            modelMap.addAttribute("avatarUrl", users.getAvatar());
+        }
+        modelMap.addAttribute("user", users);
+    }
+
+    /**
+     * 已登录用户身份证号更新检验
+     *
+     * @param username 用户账号
+     * @param idCard   身份证号
+     * @return true 可以用 false 不可以
+     */
+    @RequestMapping(value = "/anyone/users/valid/id_card", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validIdCard(@RequestParam("username") String username, @RequestParam("idCard") String idCard) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        switch (usersType.getUsersTypeName()) {
+            case Workbook.STUDENT_USERS_TYPE:  // 学生
+                Result<StudentRecord> studentRecords = studentService.findByIdCardNeUsername(username, idCard);
+                List<Staff> staffs = staffService.findByIdCard(idCard);
+                if (ObjectUtils.isEmpty(staffs) && staffs.isEmpty() && studentRecords.isEmpty()) {
+                    ajaxUtils.success();
+                } else {
+                    ajaxUtils.fail();
+                }
+                break;
+            case Workbook.STAFF_USERS_TYPE:  // 教职工
+                Result<StaffRecord> staffRecords = staffService.findByIdCardNeUsername(username, idCard);
+                List<Student> students = studentService.findByIdCard(idCard);
+                if (ObjectUtils.isEmpty(students) && students.isEmpty() && staffRecords.isEmpty()) {
+                    ajaxUtils.success();
+                } else {
+                    ajaxUtils.fail();
+                }
+                break;
+            default:
+                ajaxUtils.fail();
+                break;
+        }
+        return ajaxUtils;
     }
 
     /**
@@ -786,36 +815,39 @@ public class UsersController {
 
     /**
      * 用户头像展示
+     *
      * @param username 用户账号
      * @param response 响应
-     * @param request 请求
+     * @param request  请求
      */
     @RequestMapping("/anyone/users/download/avatar")
-    public void downloadAvatar(@RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request){
+    public void downloadAvatar(@RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request) {
         Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
-        uploadService.showImage(users.getAvatar(),response,request);
+        uploadService.showImage(users.getAvatar(), response, request);
     }
 
     /**
      * 用户头像上传后预览
+     *
      * @param fileName 文件名
      * @param username 用户账号
      * @param response 响应
-     * @param request 请求
+     * @param request  请求
      */
     @RequestMapping("/anyone/users/avatar/preview")
-    public void downloadAvatarPreview(@RequestParam("fileName") String fileName,@RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request){
+    public void downloadAvatarPreview(@RequestParam("fileName") String fileName, @RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request) {
         Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
         String absolutePath = avatarPath(users) + fileName;
-        uploadService.showImage(absolutePath,response,request);
+        uploadService.showImage(absolutePath, response, request);
     }
 
     /**
      * 头像路径
+     *
      * @param users 用户
      * @return 路径
      */
-    private String avatarPath(Users users){
+    private String avatarPath(Users users) {
         return Workbook.USERS_PORTFOLIOS + users.getUsername() + File.separator + "avatar" + File.separator;
     }
 }

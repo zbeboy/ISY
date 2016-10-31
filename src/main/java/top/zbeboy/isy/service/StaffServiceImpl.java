@@ -15,6 +15,7 @@ import top.zbeboy.isy.domain.tables.daos.StaffDao;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.domain.tables.records.StaffRecord;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -53,6 +54,17 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public List<Staff> findByStaffNumber(String staffNumber) {
         return staffDao.fetchByStaffNumber(staffNumber);
+    }
+
+    @Override
+    public Result<StaffRecord> findByIdCardNeUsername(String username, String idCard) {
+        return  create.selectFrom(STAFF)
+                .where(STAFF.ID_CARD.eq(idCard).and(STAFF.USERNAME.ne(username))).fetch();
+    }
+
+    @Override
+    public List<Staff> findByIdCard(String idCard) {
+        return staffDao.fetchByIdCard(idCard);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

@@ -19,11 +19,13 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.records.StudentRecord;
 import top.zbeboy.isy.service.MailService;
 import top.zbeboy.isy.service.StudentService;
 import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.service.UsersTypeService;
 import top.zbeboy.isy.service.util.BCryptUtils;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
@@ -36,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,6 +83,23 @@ public class StudentController {
             return new AjaxUtils().fail();
         }
         return new AjaxUtils().success();
+    }
+
+    /**
+     * 已登录用户学号更新检验
+     *
+     * @param username      用户账号
+     * @param studentNumber 学号
+     * @return true 可以用 false 不可以
+     */
+    @RequestMapping(value = "/anyone/users/valid/student", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validAnyoneStudent(@RequestParam("username") String username, @RequestParam("studentNumber") String studentNumber) {
+        Result<StudentRecord> studentRecords = studentService.findByStudentNumberNeUsername(username, studentNumber);
+        if (studentRecords.isEmpty()) {
+            return new AjaxUtils().success();
+        }
+        return new AjaxUtils().fail();
     }
 
     /**
@@ -290,5 +310,68 @@ public class StudentController {
         dataTablesUtils.setiTotalRecords(studentService.countAllNotExistsAuthorities());
         dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionNotExistsAuthorities(dataTablesUtils));
         return dataTablesUtils;
+    }
+
+    /**
+     * 更新用户学校信息
+     *
+     * @param organize 班级id
+     * @return true 更新成功 false 更新失败
+     */
+    @RequestMapping(value = "/anyone/users/profile/student/school/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils studentSchoolUpdate(@RequestParam("organize") int organize) {
+        Users users = usersService.getUserFromSession();
+        Student student = studentService.findByUsername(users.getUsername());
+        student.setOrganizeId(organize);
+        studentService.update(student);
+        return new AjaxUtils().success().msg("更新学校信息成功");
+    }
+
+    /**
+     * 更新基本信息
+     *
+     * @param studentVo     学生信息
+     * @param bindingResult 检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/anyone/users/student/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils studentUpdate(@Valid top.zbeboy.isy.web.vo.platform.users.StudentVo studentVo, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                Users users = usersService.findByUsername(studentVo.getUsername());
+                String realName = studentVo.getRealName();
+                String avatar = studentVo.getAvatar();
+                if (StringUtils.hasLength(realName)) {
+                    users.setRealName(realName);
+                }
+                if(StringUtils.hasLength(avatar)){
+                    users.setAvatar(studentVo.getAvatar());
+                } else {
+                    users.setAvatar(Workbook.USERS_AVATAR);
+                }
+                usersService.update(users);
+
+                Student student = studentService.findByUsername(studentVo.getUsername());
+                student.setStudentNumber(studentVo.getStudentNumber());
+                student.setSex(studentVo.getSex());
+                student.setNationId(studentVo.getNationId());
+                student.setPoliticalLandscapeId(studentVo.getPoliticalLandscapeId());
+                student.setBirthday(DateTimeUtils.formatData(studentVo.getBirthday()));
+                student.setDormitoryNumber(studentVo.getDormitoryNumber());
+                student.setIdCard(studentVo.getIdCard());
+                student.setFamilyResidence(studentVo.getFamilyResidence());
+                student.setParentName(studentVo.getParentName());
+                student.setParentContactPhone(studentVo.getParentContactPhone());
+                student.setPlaceOrigin(studentVo.getPlaceOrigin());
+                studentService.update(student);
+                return new AjaxUtils().success();
+            } catch (ParseException e) {
+                log.error("Birthday to sql date is exception : {}",e.getMessage());
+                return new AjaxUtils().fail().msg("时间转换异常");
+            }
+        }
+        return new AjaxUtils().fail().msg("参数检验错误");
     }
 }

@@ -3,6 +3,7 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Student;
+import top.zbeboy.isy.domain.tables.records.StudentRecord;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -21,6 +22,32 @@ public interface StudentService {
      * @return 学生们
      */
     List<Student> findByStudentNumber(String studentNumber);
+
+    /**
+     * 根据学号查询 注：不等于用户账号
+     *
+     * @param username      用户账号
+     * @param studentNumber 学号
+     * @return 学生
+     */
+    Result<StudentRecord> findByStudentNumberNeUsername(String username, String studentNumber);
+
+    /**
+     * 根据身份证号号查询 注：不等于用户账号
+     *
+     * @param username 用户账号
+     * @param idCard   身份证号
+     * @return 学生
+     */
+    Result<StudentRecord> findByIdCardNeUsername(String username, String idCard);
+
+    /**
+     * 根据身份证号号查询
+     *
+     * @param idCard 身份证号
+     * @return 学生
+     */
+    List<Student> findByIdCard(String idCard);
 
     /**
      * 保存学生信息
@@ -43,6 +70,14 @@ public interface StudentService {
      * @return 关联信息
      */
     Optional<Record> findByUsernameRelation(String username);
+
+    /**
+     * 通过用户账号查询
+     *
+     * @param username 用户账号
+     * @return 学生
+     */
+    Student findByUsername(String username);
 
     /**
      * 通过账号删除

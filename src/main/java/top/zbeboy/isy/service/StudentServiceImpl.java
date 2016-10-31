@@ -15,6 +15,7 @@ import top.zbeboy.isy.domain.tables.daos.StudentDao;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.domain.tables.records.StudentRecord;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -55,6 +56,23 @@ public class StudentServiceImpl implements StudentService {
         return studentDao.fetchByStudentNumber(studentNumber);
     }
 
+    @Override
+    public Result<StudentRecord> findByStudentNumberNeUsername(String username, String studentNumber) {
+        return  create.selectFrom(STUDENT)
+                .where(STUDENT.STUDENT_NUMBER.eq(studentNumber).and(STUDENT.USERNAME.ne(username))).fetch();
+    }
+
+    @Override
+    public Result<StudentRecord> findByIdCardNeUsername(String username, String idCard) {
+        return  create.selectFrom(STUDENT)
+                .where(STUDENT.ID_CARD.eq(idCard).and(STUDENT.USERNAME.ne(username))).fetch();
+    }
+
+    @Override
+    public List<Student> findByIdCard(String idCard) {
+        return studentDao.fetchByIdCard(idCard);
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(Student student) {
@@ -88,6 +106,11 @@ public class StudentServiceImpl implements StudentService {
                 .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                 .where(STUDENT.USERNAME.eq(username))
                 .fetchOptional();
+    }
+
+    @Override
+    public Student findByUsername(String username) {
+        return studentDao.fetchOne(STUDENT.USERNAME,username);
     }
 
     @Override

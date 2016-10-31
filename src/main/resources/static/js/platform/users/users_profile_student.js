@@ -12,7 +12,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             science_data_url: '/user/sciences',
             grade_data_url: '/user/grades',
             organize_data_url: '/user/organizes',
-            school_update: '/anyone/users/profile/school/update',
+            school_update: '/anyone/users/profile/student/school/update',
             profile_edit: '/anyone/users/profile/edit',
             finish: '/anyone/users/profile'
         };
@@ -197,6 +197,21 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         }
 
         /**
+         * 获取系
+         */
+        function getDepartment(id) {
+            var text = '';
+            var departmentChildrens = $('#select_department').children();
+            for (var i = 0; i < departmentChildrens.length; i++) {
+                if (Number($(departmentChildrens[i]).val()) == Number(id)) {
+                    text = $(departmentChildrens[i]).text();
+                    break;
+                }
+            }
+            return text;
+        }
+
+        /**
          * 选中专业
          */
         function selectedScience() {
@@ -209,6 +224,21 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                     break;
                 }
             }
+        }
+
+        /**
+         * 获取专业
+         */
+        function getScience(id) {
+            var text = '';
+            var scienceChildrens = $('#select_science').children();
+            for (var i = 0; i < scienceChildrens.length; i++) {
+                if (Number($(scienceChildrens[i]).val()) == Number(id)) {
+                    text = $(scienceChildrens[i]).text();
+                    break;
+                }
+            }
+            return text;
         }
 
         /**
@@ -227,7 +257,22 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         }
 
         /**
-         * 选中年级
+         * 获取年级
+         */
+        function getGrade(id) {
+            var text = '';
+            var gradeChildrens = $('#select_grade').children();
+            for (var i = 0; i < gradeChildrens.length; i++) {
+                if ($(gradeChildrens[i]).val() === id) {
+                    text = $(gradeChildrens[i]).text();
+                    break;
+                }
+            }
+            return text;
+        }
+
+        /**
+         * 选中班级
          */
         function selectedOrganize() {
             var realOrganize = init_page_param.organizeId;
@@ -238,6 +283,21 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                     break;
                 }
             }
+        }
+
+        /**
+         * 获取班级
+         */
+        function getOrganize(id) {
+            var text = '';
+            var organizeChildrens = $('#select_organize').children();
+            for (var i = 0; i < organizeChildrens.length; i++) {
+                if (Number($(organizeChildrens[i]).val()) == Number(id)) {
+                    text = $(organizeChildrens[i]).text();
+                    break;
+                }
+            }
+            return text;
         }
 
         /**
@@ -531,17 +591,20 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             } else {
                 validSuccessDom(validId.valid_organize, errorMsgId.organize_error_msg);
                 $.post(web_path + ajax_url.school_update, $('#school_form').serialize(), function (data) {
+                    // 去除遮罩
+                    endLoading();
                     if (data.state) {
                         $('#schoolModal').modal('hide');
-                        window.location.reload(true);
+                        $('#updateDepartment').text(getDepartment(param.department));
+                        $('#updateScience').text(getScience(param.science));
+                        $('#updateGrade').text(getGrade(param.grade));
+                        $('#updateOrganize').text(getOrganize(param.organize));
                     } else {
                         Messenger().post({
                             message: data.msg,
                             type: 'error',
                             showCloseButton: true
                         });
-                        // 去除遮罩
-                        endLoading();
                     }
                 });
             }

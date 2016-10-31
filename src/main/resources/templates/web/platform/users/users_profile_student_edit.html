@@ -491,12 +491,12 @@
                                placeholder="生源地"/>
                         <p class="text-danger hidden" id="place_origin_error_msg"></p>
                     </div>
-                    <input type="hidden" name="avatar" id="form_avatar"/>
+                    <input type="hidden" name="avatar" th:value="${user.avatar}" id="form_avatar"/>
                 </form>
             </div>
             <div class="col-lg-4">
                 <div class="thumbnail">
-                    <img src="#" id="avatar" th:src="@{${user.avatar}}" alt="用户头像"/>
+                    <img src="#" id="avatar" th:src="@{${avatarUrl}}" alt="用户头像"/>
                     <div class="caption text-center">
                         <!-- The global progress bar -->
                         <div id="progress" class="progress">
@@ -508,7 +508,7 @@
                                 <!-- The file input field used as target for the file upload widget -->
                                 <input id="fileupload" type="file" name="files"/>
                             </span>
-                            <a href="#" class="btn btn-default" role="button">清除</a>
+                            <a href="javascript:;" id="cleanAvatar" class="btn btn-default" role="button">清除</a>
                         </p>
                     </div>
                 </div>

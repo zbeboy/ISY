@@ -3,6 +3,7 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
+import top.zbeboy.isy.domain.tables.records.StaffRecord;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -21,6 +22,23 @@ public interface StaffService {
      * @return 教职工们
      */
     List<Staff> findByStaffNumber(String staffNumber);
+
+    /**
+     * 通过身份证号查询 注：不等于用户账号
+     *
+     * @param username 用户账号
+     * @param idCard   身份证号
+     * @return 教职工
+     */
+    Result<StaffRecord> findByIdCardNeUsername(String username, String idCard);
+
+    /**
+     * 通过身份证号查询
+     *
+     * @param idCard 身份证号
+     * @return 教职工
+     */
+    List<Staff> findByIdCard(String idCard);
 
     /**
      * 保存教职工信息

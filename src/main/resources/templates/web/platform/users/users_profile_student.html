@@ -389,16 +389,16 @@
                                 <span>院：</span><span th:text="${user.collegeName}"></span>
                             </div>
                             <div class="col-md-4">
-                                <span>系：</span><span th:text="${user.departmentName}"></span>
+                                <span>系：</span><span id="updateDepartment" th:text="${user.departmentName}"></span>
                             </div>
                             <div class="col-md-4">
-                                <span>专业：</span><span th:text="${user.scienceName}"></span>
+                                <span>专业：</span><span id="updateScience" th:text="${user.scienceName}"></span>
                             </div>
                             <div class="col-md-4">
-                                <span>年级：</span><span th:text="${user.grade}"></span>
+                                <span>年级：</span><span id="updateGrade" th:text="${user.grade}"></span>
                             </div>
                             <div class="col-md-4">
-                                <span>班级：</span><span th:text="${user.organizeName}"></span>
+                                <span>班级：</span><span id="updateOrganize" th:text="${user.organizeName}"></span>
                             </div>
                         </div>
                     </div>
@@ -458,7 +458,7 @@
                                 </div>
                             </div>
                             <span class="media-right">
-                                <img th:src="@{${user.avatar}}" src="#" style="width: 120px;height: 120px" alt="用户头像" />
+                                <img th:src="@{${avatarUrl}}" src="#" style="width: 120px;height: 120px" alt="用户头像" />
                             </span>
                         </div>
                     </div>
