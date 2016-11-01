@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -50,6 +51,15 @@ public interface UsersService {
      * @return 用户们
      */
     List<Users> findByMobile(String mobile);
+
+    /**
+     * 根据手机号查询用户 注：不等于用户账号
+     *
+     * @param mobile   手机号
+     * @param username 用户账号
+     * @return 用户们
+     */
+    Result<UsersRecord> findByMobileNeUsername(String mobile, String username);
 
     /**
      * 保存用户

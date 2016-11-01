@@ -262,7 +262,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
                             changeJcaptcha();
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
-                            p_error_msg.removeClass('hidden').text('权限异常');
+                            p_error_msg.removeClass('hidden').text('密码错误');
                             break;
                         case error_code.CAPTCHA_ERROR_CODE:
                             changeJcaptcha();

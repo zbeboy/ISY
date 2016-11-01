@@ -37,5 +37,5 @@ public interface UploadService {
      * @param response 响应
      * @param request 请求
      */
-    void showImage(String absolutePath, HttpServletResponse response, HttpServletRequest request);
+    void downloadImage(String absolutePath, HttpServletResponse response, HttpServletRequest request);
 }

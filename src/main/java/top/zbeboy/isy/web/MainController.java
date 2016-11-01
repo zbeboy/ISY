@@ -36,12 +36,6 @@ public class MainController {
     @Resource
     private LocaleResolver localeResolver;
 
-    @Resource
-    private SystemLogService systemLogService;
-
-    @Resource
-    private UsersService usersService;
-
     @RequestMapping("/")
     public String root() {
         return "index";

@@ -1,7 +1,6 @@
 package top.zbeboy.isy.web.platform.users;
 
 import com.octo.captcha.service.CaptchaServiceException;
-import org.aspectj.weaver.loadtime.Aj;
 import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Record1;
@@ -115,9 +114,6 @@ public class UsersController {
     @Autowired
     private ISYProperties isyProperties;
 
-    @Autowired
-    private RequestUtils requestUtils;
-
     /**
      * 检验注册表单
      *
@@ -140,6 +136,29 @@ public class UsersController {
 
         if (validType == VALID_MOBILE) {
             List<Users> tempUsers = usersService.findByMobile(StringUtils.trimWhitespace(mobile));
+            if (!ObjectUtils.isEmpty(tempUsers)) {
+                return new AjaxUtils().fail().msg("该手机号已被注册");
+            } else {
+                return new AjaxUtils().success();
+            }
+        }
+
+        return new AjaxUtils().fail().msg("检验类型异常");
+    }
+
+    /**
+     * 检验注册表单
+     *
+     * @param username  账号(邮箱)
+     * @param mobile    手机号
+     * @param validType 检验类型：2.手机号
+     * @return true 检验通过 false 不通过
+     */
+    @RequestMapping(value = "/anyone/valid/users", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validLoginUsers(@RequestParam("username") String username, String mobile, int validType) {
+        if (validType == VALID_MOBILE) {
+            Result<UsersRecord> tempUsers = usersService.findByMobileNeUsername(StringUtils.trimWhitespace(mobile), StringUtils.trimWhitespace(username));
             if (!ObjectUtils.isEmpty(tempUsers)) {
                 return new AjaxUtils().fail().msg("该手机号已被注册");
             } else {
@@ -234,7 +253,6 @@ public class UsersController {
             DateTime dateTime = DateTime.now();
             dateTime = dateTime.plusMinutes(30);
             String mobileKey = RandomUtils.generateMobileKey();
-            System.out.println(mobileKey);
             session.setAttribute("mobile", mobile);
             session.setAttribute("mobileExpiry", dateTime.toDate());
             session.setAttribute("mobileCode", mobileKey);
@@ -753,6 +771,19 @@ public class UsersController {
     }
 
     /**
+     * 用户配置页面
+     *
+     * @param modelMap
+     * @return 配置页面
+     */
+    @RequestMapping(value = "/anyone/users/setting", method = RequestMethod.GET)
+    public String userSetting(ModelMap modelMap) {
+        Users users = usersService.getUserFromSession();
+        modelMap.addAttribute("user", users);
+        return "web/platform/users/users_setting::#page-wrapper";
+    }
+
+    /**
      * 已登录用户身份证号更新检验
      *
      * @param username 用户账号
@@ -823,7 +854,7 @@ public class UsersController {
     @RequestMapping("/anyone/users/download/avatar")
     public void downloadAvatar(@RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request) {
         Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
-        uploadService.showImage(users.getAvatar(), response, request);
+        uploadService.downloadImage(users.getAvatar(), response, request);
     }
 
     /**
@@ -838,7 +869,7 @@ public class UsersController {
     public void downloadAvatarPreview(@RequestParam("fileName") String fileName, @RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request) {
         Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
         String absolutePath = avatarPath(users) + fileName;
-        uploadService.showImage(absolutePath, response, request);
+        uploadService.downloadImage(absolutePath, response, request);
     }
 
     /**
@@ -849,5 +880,92 @@ public class UsersController {
      */
     private String avatarPath(Users users) {
         return Workbook.USERS_PORTFOLIOS + users.getUsername() + File.separator + "avatar" + File.separator;
+    }
+
+    /**
+     * 用户更新手机号
+     *
+     * @param username        用户账号
+     * @param newMobile       手机号
+     * @param phoneVerifyCode 验证码
+     * @param session         手机信息
+     * @return true or false
+     */
+    @RequestMapping(value = "/anyone/user/mobile/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils mobileUpdate(@RequestParam("username") String username, @RequestParam("newMobile") String newMobile,
+                                  @RequestParam("phoneVerifyCode") String phoneVerifyCode, HttpSession session) {
+        if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
+            String tempMobile = (String) session.getAttribute("mobile");
+            if (!newMobile.equals(tempMobile)) {
+                return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
+            } else {
+                if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
+                    Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
+                    Date now = new Date();
+                    if (!now.before(mobileExpiry)) {
+                        return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
+                    } else {
+                        if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
+                            String mobileCode = (String) session.getAttribute("mobileCode");
+                            if (!phoneVerifyCode.equals(mobileCode)) {
+                                return new AjaxUtils().fail().msg("验证码错误");
+                            } else {
+                                Users users = usersService.findByUsername(username);
+                                if (!ObjectUtils.isEmpty(users)) {
+                                    usersService.update(users);
+                                    //清空session
+                                    session.removeAttribute("mobileExpiry");
+                                    session.removeAttribute("mobile");
+                                    session.removeAttribute("mobileCode");
+                                    return new AjaxUtils().success().msg("更新手机号成功");
+                                } else {
+                                    return new AjaxUtils().fail().msg("未查询到用户信息");
+                                }
+                            }
+                        } else {
+                            return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
+                        }
+                    }
+                } else {
+                    return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
+                }
+            }
+        } else {
+            return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
+        }
+    }
+
+    /**
+     * 更新用户密码
+     *
+     * @param username    用户账号
+     * @param newPassword 新密码
+     * @param okPassword  确认密码
+     * @return true or false
+     */
+    @RequestMapping(value = "/anyone/user/password/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils passwordUpdate(@RequestParam("username") String username, @RequestParam("newPassword") String newPassword,
+                                    @RequestParam("okPassword") String okPassword) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        String regex = "^[a-zA-Z0-9]\\w{5,17}$";
+        if (newPassword.matches(regex)) {
+            if (okPassword.equals(newPassword)) {
+                Users users = usersService.findByUsername(username);
+                if (!ObjectUtils.isEmpty(users)) {
+                    users.setPassword(BCryptUtils.bCryptPassword(newPassword));
+                    usersService.update(users);
+                    ajaxUtils.success().msg("更新密码成功");
+                } else {
+                    ajaxUtils.fail().msg("未查询到用户信息");
+                }
+            } else {
+                ajaxUtils.fail().msg("密码不一致");
+            }
+        } else {
+            ajaxUtils.fail().msg("密码为6位数字或大小写字母");
+        }
+        return ajaxUtils;
     }
 }

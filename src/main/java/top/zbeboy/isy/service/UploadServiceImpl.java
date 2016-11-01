@@ -112,7 +112,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public void showImage(String absolutePath, HttpServletResponse response, HttpServletRequest request) {
+    public void downloadImage(String absolutePath, HttpServletResponse response, HttpServletRequest request) {
         try {
             response.setContentType("image/jpeg");
             InputStream inputStream = new FileInputStream(absolutePath);

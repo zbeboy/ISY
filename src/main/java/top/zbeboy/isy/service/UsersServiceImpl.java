@@ -18,6 +18,7 @@ import top.zbeboy.isy.domain.tables.daos.UsersDao;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.security.MyUserImpl;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
@@ -96,6 +97,13 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public List<Users> findByMobile(String mobile) {
         return usersDao.fetchByMobile(mobile);
+    }
+
+    @Override
+    public Result<UsersRecord> findByMobileNeUsername(String mobile, String username) {
+        return create.selectFrom(USERS)
+                .where(USERS.MOBILE.eq(mobile).and(USERS.USERNAME.ne(username)))
+                .fetch();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
