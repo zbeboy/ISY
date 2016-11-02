@@ -224,5 +224,4 @@ public class SchoolController {
         }
         return new AjaxUtils().fail().msg("更改学校状态失败");
     }
-
 }
