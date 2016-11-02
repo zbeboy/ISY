@@ -57,6 +57,18 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public Staff findByUsername(String username) {
+        return staffDao.fetchOne(STAFF.USERNAME,username);
+    }
+
+    @Override
+    public Result<StaffRecord> findByStaffNumberNeUsername(String username, String staffNumber) {
+        return create.selectFrom(STAFF)
+                .where(STAFF.STAFF_NUMBER.eq(staffNumber).and(STAFF.USERNAME.ne(username)))
+                .fetch();
+    }
+
+    @Override
     public Result<StaffRecord> findByIdCardNeUsername(String username, String idCard) {
         return  create.selectFrom(STAFF)
                 .where(STAFF.ID_CARD.eq(idCard).and(STAFF.USERNAME.ne(username))).fetch();

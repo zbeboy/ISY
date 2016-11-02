@@ -24,6 +24,23 @@ public interface StaffService {
     List<Staff> findByStaffNumber(String staffNumber);
 
     /**
+     * 根据用户账号查询
+     *
+     * @param username 用户账号
+     * @return 教职工
+     */
+    Staff findByUsername(String username);
+
+    /**
+     * 根据工号查询 注：不等于用户账号
+     *
+     * @param username    用户账号
+     * @param staffNumber 工号
+     * @return 教职工
+     */
+    Result<StaffRecord> findByStaffNumberNeUsername(String username, String staffNumber);
+
+    /**
      * 通过身份证号查询 注：不等于用户账号
      *
      * @param username 用户账号

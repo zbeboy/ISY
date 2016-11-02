@@ -34,6 +34,7 @@ import top.zbeboy.isy.web.jcaptcha.CaptchaServiceSingleton;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
+import top.zbeboy.isy.web.vo.platform.users.UsersVo;
 import top.zbeboy.isy.web.vo.register.student.StudentVo;
 
 import javax.annotation.Resource;
@@ -43,6 +44,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -483,12 +485,10 @@ public class UsersController {
             College college = record.get().into(College.class);
             List<CollegeRoleRecord> collegeRoleRecords = collegeRoleService.findByCollegeId(college.getCollegeId());
             if (!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()) {
-                List<Role> tempRole = new ArrayList<>();
                 List<Integer> roleIds = new ArrayList<>();
                 collegeRoleRecords.forEach(role -> roleIds.add(role.getRoleId()));
                 Result<RoleRecord> roleRecords = roleService.findInRoleId(roleIds);
-                tempRole = roleRecords.into(Role.class);
-                roles.addAll(tempRole);
+                roles.addAll(roleRecords.into(Role.class));
             }
         }
         return new AjaxUtils<Role>().success().listData(roles);
@@ -553,12 +553,7 @@ public class UsersController {
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             usersBeen = records.into(UsersBean.class);
             usersBeen.forEach(user -> {
-                Result<Record1<String>> record1s = usersService.findByUsernameWithRoleNoCache(user.getUsername());
-                StringBuilder stringBuilder = new StringBuilder();
-                for (Record r : record1s) {
-                    stringBuilder.append(r.getValue(0)).append(" ");
-                }
-                user.setRoleName(stringBuilder.toString());
+                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
             });
         }
         dataTablesUtils.setData(usersBeen);
@@ -762,12 +757,13 @@ public class UsersController {
      * @param modelMap 页面对象
      */
     private void profileSystem(Users users, ModelMap modelMap) {
-        if (!users.getAvatar().equals(Workbook.USERS_AVATAR)) {
-            modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + users.getUsername());
+        Users newUsers = usersService.findByUsername(users.getUsername());
+        if (!newUsers.getAvatar().equals(Workbook.USERS_AVATAR)) {
+            modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + newUsers.getUsername());
         } else {
-            modelMap.addAttribute("avatarUrl", users.getAvatar());
+            modelMap.addAttribute("avatarUrl", newUsers.getAvatar());
         }
-        modelMap.addAttribute("user", users);
+        modelMap.addAttribute("user", newUsers);
     }
 
     /**
@@ -967,5 +963,29 @@ public class UsersController {
             ajaxUtils.fail().msg("密码为6位数字或大小写字母");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 系统更新信息
+     *
+     * @param usersVo         系统
+     * @param bindingResult 检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/anyone/users/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils usersUpdate(@Valid UsersVo usersVo, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            Users updateUsers = usersService.findByUsername(usersVo.getUsername());
+            if(!ObjectUtils.isEmpty(updateUsers)){
+                updateUsers.setRealName(usersVo.getRealName());
+                updateUsers.setAvatar(usersVo.getAvatar());
+                usersService.update(updateUsers);
+                return new AjaxUtils().success().msg("更新成功");
+            } else {
+                return new AjaxUtils().fail().msg("未查询到用户");
+            }
+        }
+        return new AjaxUtils().fail().msg("参数异常");
     }
 }

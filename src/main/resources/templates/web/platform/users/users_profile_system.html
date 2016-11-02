@@ -381,20 +381,27 @@
                         系统
                     </div>
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <span>姓名：</span><span th:text="${user.username}"></span>
+                        <div class="media">
+                            <div class="media-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <span>姓名：</span><span th:text="${user.username}"></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span>语言：</span><span th:text="${user.langKey}"></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span>加入时间：</span><span th:text="${user.joinDate}"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <span>语言：</span><span th:text="${user.langKey}"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>加入时间：</span><span th:text="${user.joinDate}"></span>
-                            </div>
+                            <span class="media-right">
+                                <img th:src="@{${avatarUrl}}" src="#" style="width: 120px;height: 120px"/>
+                            </span>
                         </div>
                     </div>
                     <div class="panel-footer text-right">
-                        <button class="btn btn-default">修改</button>
+                        <button class="btn btn-default" id="profileEdit">修改</button>
                     </div>
                 </div>
             </div>
@@ -403,6 +410,7 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <input type="hidden" class="dy_script" value="/js/platform/users/users_profile_system.js" />
     </div>
     <!-- /#page-wrapper -->
 

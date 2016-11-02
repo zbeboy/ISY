@@ -306,6 +306,16 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                 .where(ROLE.ROLE_NAME.eq(roleName).and(ROLE.ROLE_ID.ne(roleId))).andNotExists(select).fetch();
     }
 
+    @Override
+    public String findByUsernameToStringNoCache(String username) {
+        Result<Record1<String>> record1s = usersService.findByUsernameWithRoleNoCache(username);
+        StringBuilder stringBuilder = new StringBuilder();
+        record1s.forEach(r->{
+            stringBuilder.append(r.getValue(0)).append(" ");
+        });
+        return stringBuilder.toString();
+    }
+
     /**
      * 获取系统默认角色
      *

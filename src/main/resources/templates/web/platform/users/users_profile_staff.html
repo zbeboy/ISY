@@ -389,12 +389,12 @@
                                 <span>院：</span><span th:text="${user.collegeName}"></span>
                             </div>
                             <div class="col-md-4">
-                                <span>系：</span><span th:text="${user.departmentName}"></span>
+                                <span>系：</span><span id="updateDepartment" th:text="${user.departmentName}"></span>
                             </div>
                         </div>
                     </div>
                     <div class="panel-footer text-right">
-                        <button class="btn btn-default">修改</button>
+                        <button class="btn btn-default"  data-toggle="modal" data-target="#schoolModal">修改</button>
                     </div>
                 </div>
             </div>
@@ -442,7 +442,7 @@
                         </div>
                     </div>
                     <div class="panel-footer text-right">
-                        <button class="btn btn-default">修改</button>
+                        <button class="btn btn-default" id="profileEdit">修改</button>
                     </div>
                 </div>
             </div>
@@ -451,6 +451,52 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+
+        <!-- 修改学校信息Modal -->
+        <div class="modal fade" id="schoolModal" tabindex="-1" role="dialog" aria-labelledby="schoolModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="schoolModalLabel">学校信息修改</h4>
+                    </div>
+                    <div class="modal-body" id="loading_region">
+                        <form role="form" id="school_form">
+                            <fieldset>
+                                <div class="form-group" id="valid_department">
+                                    <select class="form-control" name="department" id="select_department">
+                                        <option>请选择系</option>
+                                    </select>
+                                    <p class="text-danger hidden" id="department_error_msg"></p>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="school_submit" >保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script id="department-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{department_value}}">{{department_name}}</option>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /*页面参数*/
+            var init_page_param = {
+                'collegeId': /*[[${user.collegeId}]]*/ 0,
+                'departmentId':/*[[${user.departmentId}]]*/ 0
+            };
+            /*]]>*/
+        </script>
+        <input type="hidden" class="dy_script" value="/js/platform/users/users_profile_staff.js" />
     </div>
     <!-- /#page-wrapper -->
 

@@ -228,7 +228,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
             }
         }
 
-        // 打开修改密码模态框
+        // 打开修改手机号模态框
         $('#mobileUpdate').click(function(){
             $(paramId.mobile).val($('#mobile').val());
             $('#mobileModal').modal('show');
@@ -304,6 +304,9 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
                             cancel: {
                                 label: '取消',
                                 action: function() {
+                                    validCleanDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
+                                    validCleanDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg);
+                                    $('#mobileModal').modal('hide');
                                     return msg.cancel();
                                 }
                             }
@@ -367,6 +370,11 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
                             cancel: {
                                 label: '取消',
                                 action: function() {
+                                    validCleanDom(validId.valid_password, errorMsgId.password_error_msg);
+                                    validCleanDom(validId.valid_confirm_password, errorMsgId.confirm_password_error_msg);
+                                    $(paramId.password).val('');
+                                    $(paramId.confirmPassword).val('');
+                                    $('#passwordModal').modal('hide');
                                     return msg.cancel();
                                 }
                             }

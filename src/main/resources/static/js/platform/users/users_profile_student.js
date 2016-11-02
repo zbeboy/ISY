@@ -594,11 +594,15 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                     // 去除遮罩
                     endLoading();
                     if (data.state) {
-                        $('#schoolModal').modal('hide');
                         $('#updateDepartment').text(getDepartment(param.department));
                         $('#updateScience').text(getScience(param.science));
                         $('#updateGrade').text(getGrade(param.grade));
                         $('#updateOrganize').text(getOrganize(param.organize));
+                        validCleanDom(validId.valid_department, errorMsgId.department_error_msg);
+                        validCleanDom(validId.valid_science, errorMsgId.science_error_msg);
+                        validCleanDom(validId.valid_grade, errorMsgId.grade_error_msg);
+                        validCleanDom(validId.valid_organize, errorMsgId.organize_error_msg);
+                        $('#schoolModal').modal('hide');
                     } else {
                         Messenger().post({
                             message: data.msg,

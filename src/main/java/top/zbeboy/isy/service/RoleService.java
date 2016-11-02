@@ -133,4 +133,12 @@ public interface RoleService {
      * @return 结果集
      */
     Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, int roleId);
+
+    /**
+     * 显示角色
+     *
+     * @param username 用户名
+     * @return 角色集合
+     */
+    String findByUsernameToStringNoCache(String username);
 }

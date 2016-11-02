@@ -20,10 +20,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
-import top.zbeboy.isy.service.MailService;
-import top.zbeboy.isy.service.StudentService;
-import top.zbeboy.isy.service.UsersService;
-import top.zbeboy.isy.service.UsersTypeService;
+import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.BCryptUtils;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
@@ -59,6 +56,9 @@ public class StudentController {
 
     @Resource
     private UsersTypeService usersTypeService;
+
+    @Resource
+    private RoleService roleService;
 
     @Resource
     private MailService mailService;
@@ -262,12 +262,7 @@ public class StudentController {
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             studentBeen = records.into(StudentBean.class);
             studentBeen.forEach(user -> {
-                Result<Record1<String>> record1s = usersService.findByUsernameWithRoleNoCache(user.getUsername());
-                StringBuilder stringBuilder = new StringBuilder();
-                for (Record r : record1s) {
-                    stringBuilder.append(r.getValue(0)).append(" ");
-                }
-                user.setRoleName(stringBuilder.toString());
+                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
             });
         }
         dataTablesUtils.setData(studentBeen);

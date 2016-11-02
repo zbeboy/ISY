@@ -19,11 +19,10 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.MailService;
-import top.zbeboy.isy.service.StaffService;
-import top.zbeboy.isy.service.UsersService;
-import top.zbeboy.isy.service.UsersTypeService;
+import top.zbeboy.isy.domain.tables.records.StaffRecord;
+import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.BCryptUtils;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
@@ -36,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,6 +56,9 @@ public class StaffController {
 
     @Resource
     private UsersTypeService usersTypeService;
+
+    @Resource
+    private RoleService roleService;
 
     @Resource
     private MailService mailService;
@@ -80,6 +83,23 @@ public class StaffController {
             return new AjaxUtils().fail();
         }
         return new AjaxUtils().success();
+    }
+
+    /**
+     * 已登录用户工号更新检验
+     *
+     * @param username      用户账号
+     * @param staffNumber 工号
+     * @return true 可以用 false 不可以
+     */
+    @RequestMapping(value = "/anyone/users/valid/staff", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validAnyoneStudent(@RequestParam("username") String username, @RequestParam("staffNumber") String staffNumber) {
+        Result<StaffRecord> staffRecords = staffService.findByStaffNumberNeUsername(username, staffNumber);
+        if (staffRecords.isEmpty()) {
+            return new AjaxUtils().success();
+        }
+        return new AjaxUtils().fail();
     }
 
     /**
@@ -235,12 +255,7 @@ public class StaffController {
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             staffBeen = records.into(StaffBean.class);
             staffBeen.forEach(user -> {
-                Result<Record1<String>> record1s = usersService.findByUsernameWithRoleNoCache(user.getUsername());
-                StringBuilder stringBuilder = new StringBuilder();
-                for (Record r : record1s) {
-                    stringBuilder.append(r.getValue(0)).append(" ");
-                }
-                user.setRoleName(stringBuilder.toString());
+                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
             });
         }
         dataTablesUtils.setData(staffBeen);
@@ -280,5 +295,65 @@ public class StaffController {
         dataTablesUtils.setiTotalRecords(staffService.countAllNotExistsAuthorities());
         dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionNotExistsAuthorities(dataTablesUtils));
         return dataTablesUtils;
+    }
+
+    /**
+     * 更新用户学校信息
+     *
+     * @param department 系id
+     * @return true 更新成功 false 更新失败
+     */
+    @RequestMapping(value = "/anyone/users/profile/staff/school/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils staffSchoolUpdate(@RequestParam("department") int department) {
+        Users users = usersService.getUserFromSession();
+        Staff staff = staffService.findByUsername(users.getUsername());
+        staff.setDepartmentId(department);
+        staffService.update(staff);
+        return new AjaxUtils().success().msg("更新学校信息成功");
+    }
+
+    /**
+     * 更新基本信息
+     *
+     * @param staffVo     教职工信息
+     * @param bindingResult 检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/anyone/users/staff/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils studentUpdate(@Valid top.zbeboy.isy.web.vo.platform.users.StaffVo staffVo, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                Users users = usersService.findByUsername(staffVo.getUsername());
+                String realName = staffVo.getRealName();
+                String avatar = staffVo.getAvatar();
+                if (StringUtils.hasLength(realName)) {
+                    users.setRealName(realName);
+                }
+                if(StringUtils.hasLength(avatar)){
+                    users.setAvatar(staffVo.getAvatar());
+                } else {
+                    users.setAvatar(Workbook.USERS_AVATAR);
+                }
+                usersService.update(users);
+
+                Staff staff = staffService.findByUsername(staffVo.getUsername());
+                staff.setStaffNumber(staffVo.getStaffNumber());
+                staff.setSex(staffVo.getSex());
+                staff.setNationId(staffVo.getNationId());
+                staff.setPoliticalLandscapeId(staffVo.getPoliticalLandscapeId());
+                staff.setBirthday(DateTimeUtils.formatData(staffVo.getBirthday()));
+                staff.setIdCard(staffVo.getIdCard());
+                staff.setFamilyResidence(staffVo.getFamilyResidence());
+                staff.setPost(staffVo.getPost());
+                staffService.update(staff);
+                return new AjaxUtils().success();
+            } catch (ParseException e) {
+                log.error("Birthday to sql date is exception : {}",e.getMessage());
+                return new AjaxUtils().fail().msg("时间转换异常");
+            }
+        }
+        return new AjaxUtils().fail().msg("参数检验错误");
     }
 }

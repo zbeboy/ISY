@@ -370,119 +370,151 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">配置</h1>
+                <h1 class="page-header">用户资料 -
+                    <small>编辑</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        信息
+        <div class="row" id="loading_region">
+            <div class="col-lg-8">
+                <form role="form" id="edit_form">
+                    <div class="form-group" id="valid_real_name">
+                        <label>姓名</label>
+                        <input class="form-control" name="realName" id="realName" th:value="${user.realName}"
+                               placeholder="姓名"/>
+                        <p class="text-danger hidden" id="real_name_error_msg"></p>
+                        <input type="hidden" id="username" name="username" th:value="${user.username}"/>
                     </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">账号：<span th:text="${user.username}"></span></div>
-                            <div class="col-md-6 text-right">
-                                <button class="btn btn-default" type="button" id="passwordUpdate">修改密码</button>
-                            </div>
+                    <div class="form-group" id="valid_staff_number">
+                        <label>工号</label>
+                        <input class="form-control" name="staffNumber" id="staffNumber"
+                               th:value="${user.staffNumber}"
+                               placeholder="工号"/>
+                        <p class="text-danger hidden" id="staff_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_post_number">
+                        <label>职务</label>
+                        <input class="form-control" name="post" id="post"
+                               th:value="${user.post}"
+                               placeholder="职务"/>
+                        <p class="text-danger hidden" id="post_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_sex" th:if="${user.sex=='男'}">
+                        <label>性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="man" value="男" checked=""/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="feman" value="女"/>女
+                        </label>
+                        <p class="text-danger hidden" id="sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_sex" th:if="${user.sex=='女'}">
+                        <label>性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="man" value="男"/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="feman" value="女" checked=""/>女
+                        </label>
+                        <p class="text-danger hidden" id="sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_sex" th:if="${user.sex=='' || user.sex==null}">
+                        <label>性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="man" value="男" checked=""/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="feman" value="女"/>女
+                        </label>
+                        <p class="text-danger hidden" id="sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_nation">
+                        <select class="form-control" name="nationId" id="select_nation">
+                            <option>请选择民族</option>
+                        </select>
+                        <p class="text-danger hidden" id="nation_error_msg"></p>
+                        <input type="hidden" id="nationId" th:value="${user.nationId}"/>
+                    </div>
+                    <div class="form-group" id="valid_political_landscape">
+                        <select class="form-control" name="politicalLandscapeId" id="select_political_landscape">
+                            <option>请选择政治面貌</option>
+                        </select>
+                        <p class="text-danger hidden" id="political_landscape_error_msg"></p>
+                        <input type="hidden" id="politicalLandscapeId" th:value="${user.politicalLandscapeId}"/>
+                    </div>
+                    <div class="form-group" id="valid_birthday">
+                        <label>生日</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
+                             data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" th:value="${user.birthday}"
+                                   readonly="readonly"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <div class="row" style="margin-top: 5%;">
-                            <div class="col-md-6">
-                                手机号：<span th:text="${user.mobile}" id="updateMobile"></span>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                <button class="btn btn-default" type="button" id="mobileUpdate">修改号码</button>
-                            </div>
+                        <input type="hidden" id="dtp_input2" name="birthday" th:value="${user.birthday}"/>
+                        <p class="text-danger hidden" id="birthday_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_id_card">
+                        <label>身份证号</label>
+                        <input class="form-control" name="idCard" id="idCard" th:value="${user.idCard}"
+                               placeholder="身份证号"/>
+                        <p class="text-danger hidden" id="id_card_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_family_residence">
+                        <label>家庭居住地</label>
+                        <input class="form-control" name="familyResidence" id="familyResidence" th:value="${user.familyResidence}"
+                               placeholder="家庭居住地"/>
+                        <p class="text-danger hidden" id="family_residence_error_msg"></p>
+                    </div>
+                    <input type="hidden" name="avatar" th:value="${user.avatar}" id="form_avatar"/>
+                </form>
+            </div>
+            <div class="col-lg-4">
+                <div class="thumbnail">
+                    <img src="#" id="avatar" th:src="@{${avatarUrl}}" alt="用户头像"/>
+                    <div class="caption text-center">
+                        <!-- The global progress bar -->
+                        <div id="progress" class="progress">
+                            <div class="progress-bar progress-bar-success"></div>
                         </div>
+                        <p>
+                            <span class="btn btn-primary fileinput-button">
+                                <span>上传头像</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files"/>
+                            </span>
+                            <a href="javascript:;" id="cleanAvatar" class="btn btn-default" role="button">清除</a>
+                        </p>
                     </div>
                 </div>
+            </div>
+            <div class="text-center col-lg-12">
+                <button type="button" id="save" class="btn btn-default">保存</button>
+                <button type="reset" class="btn btn-default">重置</button>
             </div>
         </div>
         <footer class="footer" th:include="footer::footer">
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
-
-        <!-- 修改密码Modal -->
-        <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="passwordModalLabel">密码修改</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form" id="password_form">
-                            <fieldset>
-                                <div class="form-group" id="valid_new_password">
-                                    <input class="form-control" type="password" name="newPassword" id="newPassword"
-                                           placeholder="新密码"/>
-                                    <p class="text-danger hidden" id="new_password_error_msg"></p>
-                                    <input type="hidden" th:value="${user.username}" name="username"/>
-                                </div>
-                                <div class="form-group" id="valid_ok_password">
-                                    <input class="form-control" type="password" name="okPassword" id="okPassword"
-                                           placeholder="确认密码"/>
-                                    <p class="text-danger hidden" id="ok_password_error_msg"></p>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="password_submit" >确定</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 修改手机号Modal -->
-        <div class="modal fade" id="mobileModal" tabindex="-1" role="dialog" aria-labelledby="mobileModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="mobileModalLabel">手机号修改</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form" id="mobile_form">
-                            <fieldset>
-                                <div class="form-group" id="valid_mobile">
-                                    <input class="form-control" placeholder="手机号" name="newMobile" id="newMobile" type="text"/>
-                                    <p class="text-danger hidden" id="mobile_error_msg"></p>
-                                    <input type="hidden" th:value="${user.username}" name="username"/>
-                                    <input type="hidden" th:value="${user.mobile}" id="mobile"/>
-                                </div>
-                                <div class="form-group" id="valid_phone_verify_code">
-                                    <div class="input-group">
-                                        <input class="form-control" placeholder="手机验证码" name="phoneVerifyCode"
-                                               id="phoneVerifyCode" type="text"/>
-                                    <span class="input-group-btn">
-
-                                            <input type="button" class="btn btn-default" id="get_verification_code"
-                                                   value="获取验证码"/>
-										</span>
-                                    </div><!-- /input-group -->
-                                    <p class="text-danger hidden" id="phone_verify_code_error_msg"></p>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="mobile_submit" >确定</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <input type="hidden" th:value="${user.username}" name="username" id="username"/>
-        <input type="hidden" class="dy_script" value="/js/platform/users/users_setting.js" />
+        <!--民族模板-->
+        <script id="nation-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{nation_value}}">{{nation_name}}</option>
+            {{/each}}
+        </script>
+        <!--政治面貌模板-->
+        <script id="political-landscape-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{political_landscape_value}}">{{political_landscape_name}}</option>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/platform/users/users_profile_staff_edit.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>
@@ -490,7 +522,7 @@
 
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
-        data-main="/users_setting"></script>
+        data-main="/users_profile_staff_edit"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
