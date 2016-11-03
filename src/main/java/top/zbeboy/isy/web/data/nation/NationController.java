@@ -146,7 +146,7 @@ public class NationController {
 
 
     /**
-     * 保存学校更改
+     * 保存更改
      *
      * @param nationVo
      * @param bindingResult

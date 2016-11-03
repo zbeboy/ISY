@@ -55,6 +55,7 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
         return nationDao.fetchByNationName(nationName);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(Nation nation) {
         nationDao.insert(nation);
