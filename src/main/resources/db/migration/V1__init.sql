@@ -9,7 +9,7 @@ CREATE TABLE users(
   enabled BOOLEAN NOT NULL ,
   users_type_id INT NOT NULL ,
   real_name VARCHAR(30) ,
-  mobile VARCHAR(15) NOT NULL ,
+  mobile VARCHAR(15) UNIQUE NOT NULL ,
   avatar VARCHAR(500) ,
   verify_mailbox BOOLEAN ,
   mailbox_verify_code VARCHAR(20) ,
@@ -119,15 +119,15 @@ CREATE TABLE political_landscape(
 
 CREATE TABLE nation(
   nation_id INT AUTO_INCREMENT PRIMARY KEY ,
-  nation_name VARCHAR(30) NOT NULL
+  nation_name VARCHAR(30) UNIQUE NOT NULL
 );
 
 CREATE TABLE student(
   student_id INT AUTO_INCREMENT PRIMARY KEY ,
-  student_number VARCHAR(20) NOT NULL ,
+  student_number VARCHAR(20) UNIQUE NOT NULL ,
   birthday DATE,
   sex VARCHAR(2),
-  id_card VARCHAR(20),
+  id_card VARCHAR(20) UNIQUE ,
   family_residence VARCHAR(600),
   political_landscape_id INT,
   nation_id INT,
@@ -143,10 +143,10 @@ CREATE TABLE student(
 
 CREATE TABLE staff(
   staff_id INT AUTO_INCREMENT PRIMARY KEY ,
-  staff_number VARCHAR(20) NOT NULL ,
+  staff_number VARCHAR(20) UNIQUE NOT NULL ,
   birthday DATE,
   sex VARCHAR(2),
-  id_card VARCHAR(20),
+  id_card VARCHAR(20) UNIQUE ,
   family_residence VARCHAR(600),
   political_landscape_id INT,
   nation_id INT,
