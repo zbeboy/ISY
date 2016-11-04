@@ -155,6 +155,8 @@ public class ISYProperties {
 
         private int serverHttpsPort;
 
+        private String tempDir;
+
         public String getServerName() {
             return serverName;
         }
@@ -193,6 +195,14 @@ public class ISYProperties {
 
         public void setServerHttpsPort(int serverHttpsPort) {
             this.serverHttpsPort = serverHttpsPort;
+        }
+
+        public String getTempDir() {
+            return tempDir;
+        }
+
+        public void setTempDir(String tempDir) {
+            this.tempDir = tempDir;
         }
     }
 }

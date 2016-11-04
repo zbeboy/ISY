@@ -25,8 +25,8 @@ public class RequestUtils {
     /**
      * 获取客服端ip地址
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return ip
      */
     public static String getIpAddress(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
@@ -42,6 +42,11 @@ public class RequestUtils {
         return ip;
     }
 
+    /**
+     * 根据开发环境不同取不同路径
+     * @param request 请求
+     * @return 路径
+     */
     public  String getBaseUrl(HttpServletRequest request) {
         if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
             return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
@@ -49,5 +54,14 @@ public class RequestUtils {
             // 因nginx代理只能在此进行转换下
             return request.getScheme() + "://" + isyProperties.getConstants().getServerName() + request.getContextPath();
         }
+    }
+
+    /**
+     * 获取realPath
+     * @param request 请求
+     * @return real path.
+     */
+    public static String getRealPath(HttpServletRequest request){
+        return request.getSession().getServletContext().getRealPath("/") + "/";
     }
 }

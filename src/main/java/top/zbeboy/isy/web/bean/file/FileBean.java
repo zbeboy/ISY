@@ -9,7 +9,6 @@ public class FileBean {
     private String originalFilename;// 文件原始名字
     private String newName;// 文件新名字
     private String lastPath;// 服务器端最后保存路径
-    private String relativePath;// 服务器端相对保存路径
     private String ext;// 文件扩展名
 
     public String getContentType() {
@@ -60,14 +59,6 @@ public class FileBean {
         this.ext = ext;
     }
 
-    public String getRelativePath() {
-        return relativePath;
-    }
-
-    public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
-    }
-
     @Override
     public String toString() {
         return "FileBean{" +
@@ -76,7 +67,6 @@ public class FileBean {
                 ", originalFilename='" + originalFilename + '\'' +
                 ", newName='" + newName + '\'' +
                 ", lastPath='" + lastPath + '\'' +
-                ", relativePath='" + relativePath + '\'' +
                 ", ext='" + ext + '\'' +
                 '}';
     }

@@ -1,6 +1,7 @@
 /**
  * Created by lenovo on 2016-11-02.
  */
+//# sourceURL=users_profile_system_edit.js
 require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.address",
         "bootstrap-datetimepicker-zh-CN", "jquery.fileupload-validate"],
     function ($) {
@@ -10,8 +11,6 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
          */
         var ajax_url = {
             file_upload_url: '/anyone/users/upload/avatar',
-            download_avatar_url: '/anyone/users/download/avatar',
-            avatar_preview_url: '/anyone/users/avatar/preview',
             update: '/anyone/users/update',
             back: '/anyone/users/profile'
         };
@@ -92,8 +91,8 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
             done: function (e, data) {
                 initParam();
                 $.each(data.result.listResult, function (index, file) {
-                    $('#avatar').attr('src', web_path + ajax_url.avatar_preview_url + "?username=" + param.username + '&fileName=' + file.newName);
-                    $('#form_avatar').val(file.relativePath +  file.newName);
+                    $('#avatar').attr('src', web_path + '/' + data.result.objectResult + file.newName);
+                    $('#form_avatar').val(data.result.objectResult + file.newName);
                 });
             },
             progressall: function (e, data) {

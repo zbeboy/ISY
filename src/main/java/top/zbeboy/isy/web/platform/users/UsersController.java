@@ -116,6 +116,9 @@ public class UsersController {
     @Autowired
     private ISYProperties isyProperties;
 
+    @Autowired
+    private RequestUtils requestUtils;
+
     /**
      * 检验注册表单
      *
@@ -658,22 +661,22 @@ public class UsersController {
      * @return 资料页面
      */
     @RequestMapping("/anyone/users/profile")
-    public String usersProfile(ModelMap modelMap) {
+    public String usersProfile(ModelMap modelMap,HttpServletRequest request) {
         Users users = usersService.getUserFromSession();
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
         String page;
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
                 page = "web/platform/users/users_profile_student::#page-wrapper";
-                profileStudent(users, modelMap);
+                profileStudent(users, modelMap,request);
                 break;
             case Workbook.STAFF_USERS_TYPE:  // 教职工
                 page = "web/platform/users/users_profile_staff::#page-wrapper";
-                profileStaff(users, modelMap);
+                profileStaff(users, modelMap,request);
                 break;
             case Workbook.SYSTEM_USERS_TYPE:  // 系统
                 page = "web/platform/users/users_profile_system::#page-wrapper";
-                profileSystem(users, modelMap);
+                profileSystem(users, modelMap,request);
                 break;
             default:
                 page = "login";
@@ -688,22 +691,22 @@ public class UsersController {
      * @return 资料编辑页面
      */
     @RequestMapping("/anyone/users/profile/edit")
-    public String usersProfileEdit(ModelMap modelMap) {
+    public String usersProfileEdit(ModelMap modelMap,HttpServletRequest request) {
         Users users = usersService.getUserFromSession();
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
         String page;
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
                 page = "web/platform/users/users_profile_student_edit::#page-wrapper";
-                profileStudent(users, modelMap);
+                profileStudent(users, modelMap,request);
                 break;
             case Workbook.STAFF_USERS_TYPE:  // 教职工
                 page = "web/platform/users/users_profile_staff_edit::#page-wrapper";
-                profileStaff(users, modelMap);
+                profileStaff(users, modelMap,request);
                 break;
             case Workbook.SYSTEM_USERS_TYPE:  // 系统
                 page = "web/platform/users/users_profile_system_edit::#page-wrapper";
-                profileSystem(users, modelMap);
+                profileSystem(users, modelMap,request);
                 break;
             default:
                 page = "login";
@@ -718,15 +721,11 @@ public class UsersController {
      * @param users    用户
      * @param modelMap 页面对象
      */
-    private void profileStudent(Users users, ModelMap modelMap) {
+    private void profileStudent(Users users, ModelMap modelMap,HttpServletRequest request) {
         Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
         if (student.isPresent()) {
             StudentBean studentBean = student.get().into(StudentBean.class);
-            if (!studentBean.getAvatar().equals(Workbook.USERS_AVATAR)) {
-                modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + users.getUsername());
-            } else {
-                modelMap.addAttribute("avatarUrl", studentBean.getAvatar());
-            }
+            studentBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + studentBean.getAvatar());
             modelMap.addAttribute("user", studentBean);
         }
     }
@@ -737,15 +736,11 @@ public class UsersController {
      * @param users    用户
      * @param modelMap 页面对象
      */
-    private void profileStaff(Users users, ModelMap modelMap) {
+    private void profileStaff(Users users, ModelMap modelMap,HttpServletRequest request) {
         Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
         if (staff.isPresent()) {
             StaffBean staffBean = staff.get().into(StaffBean.class);
-            if (!staffBean.getAvatar().equals(Workbook.USERS_AVATAR)) {
-                modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + users.getUsername());
-            } else {
-                modelMap.addAttribute("avatarUrl", staffBean.getAvatar());
-            }
+            staffBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + staffBean.getAvatar());
             modelMap.addAttribute("user", staffBean);
         }
     }
@@ -756,13 +751,9 @@ public class UsersController {
      * @param users    用户
      * @param modelMap 页面对象
      */
-    private void profileSystem(Users users, ModelMap modelMap) {
+    private void profileSystem(Users users, ModelMap modelMap,HttpServletRequest request) {
         Users newUsers = usersService.findByUsername(users.getUsername());
-        if (!newUsers.getAvatar().equals(Workbook.USERS_AVATAR)) {
-            modelMap.addAttribute("avatarUrl", "/anyone/users/download/avatar?username=" + newUsers.getUsername());
-        } else {
-            modelMap.addAttribute("avatarUrl", newUsers.getAvatar());
-        }
+        newUsers.setAvatar(requestUtils.getBaseUrl(request) + "/" + newUsers.getAvatar());
         modelMap.addAttribute("user", newUsers);
     }
 
@@ -832,50 +823,12 @@ public class UsersController {
         try {
             Users users = usersService.getUserFromSession();
             List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
-                    avatarPath(users), request.getRemoteAddr());
-            data.success().listData(fileBeen);
+                    RequestUtils.getRealPath(request) + Workbook.avatarPath(users), request.getRemoteAddr());
+            data.success().listData(fileBeen).obj(Workbook.avatarPath(users));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return data;
-    }
-
-    /**
-     * 用户头像展示
-     *
-     * @param username 用户账号
-     * @param response 响应
-     * @param request  请求
-     */
-    @RequestMapping("/anyone/users/download/avatar")
-    public void downloadAvatar(@RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request) {
-        Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
-        uploadService.downloadImage(users.getAvatar(), response, request);
-    }
-
-    /**
-     * 用户头像上传后预览
-     *
-     * @param fileName 文件名
-     * @param username 用户账号
-     * @param response 响应
-     * @param request  请求
-     */
-    @RequestMapping("/anyone/users/avatar/preview")
-    public void downloadAvatarPreview(@RequestParam("fileName") String fileName, @RequestParam("username") String username, HttpServletResponse response, HttpServletRequest request) {
-        Users users = usersService.findByUsername(StringUtils.trimWhitespace(username));
-        String absolutePath = avatarPath(users) + fileName;
-        uploadService.downloadImage(absolutePath, response, request);
-    }
-
-    /**
-     * 头像路径
-     *
-     * @param users 用户
-     * @return 路径
-     */
-    private String avatarPath(Users users) {
-        return Workbook.USERS_PORTFOLIOS + users.getUsername() + File.separator + "avatar" + File.separator;
     }
 
     /**
@@ -968,7 +921,7 @@ public class UsersController {
     /**
      * 系统更新信息
      *
-     * @param usersVo         系统
+     * @param usersVo       系统
      * @param bindingResult 检验
      * @return true or false
      */
@@ -977,7 +930,7 @@ public class UsersController {
     public AjaxUtils usersUpdate(@Valid UsersVo usersVo, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             Users updateUsers = usersService.findByUsername(usersVo.getUsername());
-            if(!ObjectUtils.isEmpty(updateUsers)){
+            if (!ObjectUtils.isEmpty(updateUsers)) {
                 updateUsers.setRealName(usersVo.getRealName());
                 updateUsers.setAvatar(usersVo.getAvatar());
                 usersService.update(updateUsers);

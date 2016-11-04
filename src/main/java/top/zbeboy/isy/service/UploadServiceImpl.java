@@ -7,6 +7,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.service.util.IPTimeStamp;
 import top.zbeboy.isy.web.bean.file.FileBean;
 
@@ -22,7 +23,6 @@ import java.util.List;
  */
 @Service("uploadService")
 public class UploadServiceImpl implements UploadService {
-
     private final Logger log = LoggerFactory.getLogger(UploadServiceImpl.class);
 
     @Override
@@ -30,7 +30,7 @@ public class UploadServiceImpl implements UploadService {
         List<FileBean> list = new ArrayList<>();
         //1. build an iterator.
         Iterator<String> iterator = request.getFileNames();
-        MultipartFile multipartFile;
+        MultipartFile multipartFile = null;
         //2. get each file
         while (iterator.hasNext()) {
             FileBean fileBean = new FileBean();
@@ -52,7 +52,6 @@ public class UploadServiceImpl implements UploadService {
                 fileBean.setSize(multipartFile.getSize());
                 //copy file to local disk (make sure the path "e.g. D:/temp/files" exists)
                 buildList(fileBean, list, path, filename, multipartFile);
-
             } else {
                 // no filename
                 String filename = ipTimeStamp.getIPTimeRand();
@@ -63,14 +62,13 @@ public class UploadServiceImpl implements UploadService {
                 buildList(fileBean, list, path, filename, multipartFile);
             }
         }
-
         return list;
     }
 
     private String buildPath(String path, String filename, MultipartFile multipartFile) throws IOException {
-        String lastPath;
+        String lastPath = null;
         File saveFile = new File(path, filename);
-        path = new File(path).getAbsolutePath();
+        log.info(path);
         if (multipartFile.getSize() < new File(path.split(":")[0] + ":").getFreeSpace()) {// has space with disk
             if (!saveFile.getParentFile().exists()) {//create file
                 saveFile.getParentFile().mkdirs();
@@ -89,7 +87,6 @@ public class UploadServiceImpl implements UploadService {
     private List<FileBean> buildList(FileBean fileBean, List<FileBean> list, String path, String filename, MultipartFile multipartFile) {
         try {
             if (!StringUtils.isEmpty(path.split(":")[0])) {
-                fileBean.setRelativePath(path.replaceAll("\\\\", "/"));
                 fileBean.setLastPath(buildPath(path, filename, multipartFile));
                 list.add(fileBean);
             }
@@ -104,21 +101,11 @@ public class UploadServiceImpl implements UploadService {
         try {
             response.setContentType("application/x-msdownload");
             response.setHeader("Content-disposition", "attachment; filename=\"" + new String((fileName + filePath.substring(filePath.lastIndexOf("."))).getBytes("gb2312"), "ISO8859-1") + "\"");
-            InputStream inputStream = new FileInputStream(filePath);
+            String realPath = request.getSession().getServletContext().getRealPath("/");
+            InputStream inputStream = new FileInputStream(realPath + filePath);
             FileCopyUtils.copy(inputStream, response.getOutputStream());
         } catch (Exception e) {
             log.error(" file is not found exception is {} ", e.getMessage());
-        }
-    }
-
-    @Override
-    public void downloadImage(String absolutePath, HttpServletResponse response, HttpServletRequest request) {
-        try {
-            response.setContentType("image/jpeg");
-            InputStream inputStream = new FileInputStream(absolutePath);
-            FileCopyUtils.copy(inputStream, response.getOutputStream());
-        } catch (Exception e) {
-            log.error(" image is not found exception is {} ", e.getMessage());
         }
     }
 }

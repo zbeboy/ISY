@@ -1,5 +1,9 @@
 package top.zbeboy.isy.config;
 
+import top.zbeboy.isy.domain.tables.pojos.Users;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Application constants.
  * 开发环境配置常量
@@ -86,5 +90,15 @@ public final class Workbook {
     public static final String USERS_PORTFOLIOS = "portfolios/";
 
     private Workbook() {
+    }
+
+    /**
+     * 头像路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String avatarPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "avatar/";
     }
 }

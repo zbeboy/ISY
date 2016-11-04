@@ -30,12 +30,4 @@ public interface UploadService {
      * @param request  请求对象
      */
     void download(String fileName, String filePath, HttpServletResponse response, HttpServletRequest request);
-
-    /**
-     * 图片显示
-     * @param absolutePath 图片绝对路径
-     * @param response 响应
-     * @param request 请求
-     */
-    void downloadImage(String absolutePath, HttpServletResponse response, HttpServletRequest request);
 }

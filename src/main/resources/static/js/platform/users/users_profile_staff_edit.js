@@ -13,8 +13,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             nation_data_url: '/user/nations',
             political_landscape_data_url: '/user/political_landscapes',
             file_upload_url: '/anyone/users/upload/avatar',
-            download_avatar_url: '/anyone/users/download/avatar',
-            avatar_preview_url: '/anyone/users/avatar/preview',
             valid_staff_url: '/anyone/users/valid/staff',
             valid_id_card_url: '/anyone/users/valid/id_card',
             update: '/anyone/users/staff/update',
@@ -121,8 +119,8 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             done: function (e, data) {
                 initParam();
                 $.each(data.result.listResult, function (index, file) {
-                    $('#avatar').attr('src', web_path + ajax_url.avatar_preview_url + "?username=" + param.username + '&fileName=' + file.newName);
-                    $('#form_avatar').val(file.relativePath +  file.newName);
+                    $('#avatar').attr('src', web_path + '/' + data.result.objectResult + file.newName);
+                    $('#form_avatar').val(data.result.objectResult + file.newName);
                 });
             },
             progressall: function (e, data) {
