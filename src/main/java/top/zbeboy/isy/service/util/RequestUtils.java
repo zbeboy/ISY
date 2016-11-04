@@ -44,10 +44,11 @@ public class RequestUtils {
 
     /**
      * 根据开发环境不同取不同路径
+     *
      * @param request 请求
      * @return 路径
      */
-    public  String getBaseUrl(HttpServletRequest request) {
+    public String getBaseUrl(HttpServletRequest request) {
         if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
             return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         } else {
@@ -58,10 +59,11 @@ public class RequestUtils {
 
     /**
      * 获取realPath
+     *
      * @param request 请求
      * @return real path.
      */
-    public static String getRealPath(HttpServletRequest request){
+    public static String getRealPath(HttpServletRequest request) {
         return request.getSession().getServletContext().getRealPath("/") + "/";
     }
 }

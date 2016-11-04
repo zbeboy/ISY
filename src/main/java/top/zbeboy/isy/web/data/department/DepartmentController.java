@@ -84,7 +84,7 @@ public class DepartmentController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/department/data", method = RequestMethod.GET)
@@ -130,7 +130,7 @@ public class DepartmentController {
      * 系数据编辑
      *
      * @param id       系id
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 编辑页面
      */
     @RequestMapping(value = "/web/data/department/edit", method = RequestMethod.GET)
@@ -210,8 +210,8 @@ public class DepartmentController {
     /**
      * 保存系信息
      *
-     * @param departmentVo
-     * @param bindingResult
+     * @param departmentVo  系
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/department/save", method = RequestMethod.POST)
@@ -240,8 +240,8 @@ public class DepartmentController {
     /**
      * 保存系更改
      *
-     * @param departmentVo
-     * @param bindingResult
+     * @param departmentVo  系
+     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/department/update", method = RequestMethod.POST)
@@ -272,7 +272,7 @@ public class DepartmentController {
     /**
      * 保存或更新时获取院id
      *
-     * @param departmentVo
+     * @param departmentVo 系
      * @return 院id
      */
     private int getSaveOrUpdateCollegeId(DepartmentVo departmentVo) {
@@ -290,8 +290,8 @@ public class DepartmentController {
     /**
      * 批量更改系状态
      *
-     * @param departmentIds
-     * @param isDel
+     * @param departmentIds 系ids
+     * @param isDel         is_del
      * @return true注销成功
      */
     @RequestMapping(value = "/web/data/department/update/del", method = RequestMethod.POST)

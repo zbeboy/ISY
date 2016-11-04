@@ -105,104 +105,89 @@ public class StudentController {
     /**
      * 学生注册
      *
-     * @param studentVo     页面 form表单字段
-     * @param bindingResult 是否有错
-     * @param session
-     * @param request
+     * @param studentVo     学生
+     * @param bindingResult 检验
+     * @param session       session
+     * @param request       请求
      * @return true 成功 false失败
      */
     @RequestMapping(value = "/user/register/student", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils registerStudent(@Valid StudentVo studentVo, BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
         if (!bindingResult.hasErrors()) {
-            List<Student> students = studentService.findByStudentNumber(StringUtils.trimWhitespace(studentVo.getStudentNumber()));
             String email = StringUtils.trimWhitespace(studentVo.getEmail());
             String mobile = StringUtils.trimWhitespace(studentVo.getMobile());
-            if (!students.isEmpty()) {
-                return new AjaxUtils().fail().msg("学号已被注册");
-            } else {
-                Users users = usersService.findByUsername(email);
-                if (!ObjectUtils.isEmpty(users)) {
-                    return new AjaxUtils().fail().msg("邮箱已被注册");
+            if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
+                String tempMobile = (String) session.getAttribute("mobile");
+                if (!studentVo.getMobile().equals(tempMobile)) {
+                    return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
                 } else {
-                    List<Users> mobiles = usersService.findByMobile(mobile);
-                    if (!mobiles.isEmpty()) {
-                        return new AjaxUtils().fail().msg("手机号已被注册");
-                    } else {
-                        if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
-                            String tempMobile = (String) session.getAttribute("mobile");
-                            if (!studentVo.getMobile().equals(tempMobile)) {
-                                return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
-                            } else {
-                                if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
-                                    Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
-                                    Date now = new Date();
-                                    if (!now.before(mobileExpiry)) {
-                                        return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
-                                    } else {
-                                        if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
-                                            String mobileCode = (String) session.getAttribute("mobileCode");
-                                            if (!studentVo.getPhoneVerifyCode().equals(mobileCode)) {
-                                                return new AjaxUtils().fail().msg("验证码错误");
-                                            } else {
-                                                String password = StringUtils.trimWhitespace(studentVo.getPassword());
-                                                String confirmPassword = StringUtils.trimWhitespace(studentVo.getConfirmPassword());
-                                                if (!password.equals(confirmPassword)) {
-                                                    return new AjaxUtils().fail().msg("密码不一致");
-                                                } else {
-                                                    // 注册成功
-                                                    Users saveUsers = new Users();
-                                                    Byte enabled = 1;
-                                                    saveUsers.setUsername(email);
-                                                    saveUsers.setEnabled(enabled);
-                                                    saveUsers.setMobile(mobile);
-                                                    saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
-                                                    saveUsers.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
-                                                    saveUsers.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
-
-                                                    DateTime dateTime = DateTime.now();
-                                                    dateTime = dateTime.plusDays(5);
-                                                    String mailboxVerifyCode = RandomUtils.generateEmailCheckKey();
-                                                    saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
-                                                    saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
-                                                    saveUsers.setLangKey(request.getLocale().toLanguageTag());
-                                                    saveUsers.setAvatar(Workbook.USERS_AVATAR);
-                                                    usersService.save(saveUsers);
-
-                                                    Student saveStudent = new Student();
-                                                    saveStudent.setOrganizeId(studentVo.getOrganize());
-                                                    saveStudent.setStudentNumber(studentVo.getStudentNumber());
-                                                    saveStudent.setUsername(email);
-                                                    studentService.save(saveStudent);
-
-                                                    //清空session
-                                                    session.removeAttribute("mobileExpiry");
-                                                    session.removeAttribute("mobile");
-                                                    session.removeAttribute("mobileCode");
-
-                                                    //发送验证邮件
-                                                    if (isyProperties.getMail().isOpen()) {
-                                                        mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
-                                                        return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
-                                                    } else {
-                                                        return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
-                                                    }
-
-                                                }
-                                            }
-                                        } else {
-                                            return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
-                                        }
-                                    }
-                                } else {
-                                    return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
-                                }
-                            }
+                    if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
+                        Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
+                        Date now = new Date();
+                        if (!now.before(mobileExpiry)) {
+                            return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
                         } else {
-                            return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
+                            if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
+                                String mobileCode = (String) session.getAttribute("mobileCode");
+                                if (!studentVo.getPhoneVerifyCode().equals(mobileCode)) {
+                                    return new AjaxUtils().fail().msg("验证码错误");
+                                } else {
+                                    String password = StringUtils.trimWhitespace(studentVo.getPassword());
+                                    String confirmPassword = StringUtils.trimWhitespace(studentVo.getConfirmPassword());
+                                    if (!password.equals(confirmPassword)) {
+                                        return new AjaxUtils().fail().msg("密码不一致");
+                                    } else {
+                                        // 注册成功
+                                        Users saveUsers = new Users();
+                                        Byte enabled = 1;
+                                        saveUsers.setUsername(email);
+                                        saveUsers.setEnabled(enabled);
+                                        saveUsers.setMobile(mobile);
+                                        saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
+                                        saveUsers.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
+                                        saveUsers.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
+
+                                        DateTime dateTime = DateTime.now();
+                                        dateTime = dateTime.plusDays(5);
+                                        String mailboxVerifyCode = RandomUtils.generateEmailCheckKey();
+                                        saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
+                                        saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
+                                        saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                        saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        usersService.save(saveUsers);
+
+                                        Student saveStudent = new Student();
+                                        saveStudent.setOrganizeId(studentVo.getOrganize());
+                                        saveStudent.setStudentNumber(studentVo.getStudentNumber());
+                                        saveStudent.setUsername(email);
+                                        studentService.save(saveStudent);
+
+                                        //清空session
+                                        session.removeAttribute("mobileExpiry");
+                                        session.removeAttribute("mobile");
+                                        session.removeAttribute("mobileCode");
+
+                                        //发送验证邮件
+                                        if (isyProperties.getMail().isOpen()) {
+                                            mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
+                                            return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
+                                        } else {
+                                            return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
+                                        }
+
+                                    }
+                                }
+                            } else {
+                                return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
+                            }
                         }
+                    } else {
+                        return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
                     }
                 }
+            } else {
+                return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
             }
         } else {
             return new AjaxUtils().fail().msg("参数异常，请检查输入内容是否正确");
@@ -222,7 +207,7 @@ public class StudentController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/student/pass/data", method = RequestMethod.GET)
@@ -274,7 +259,7 @@ public class StudentController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/student/wait/data", method = RequestMethod.GET)
@@ -341,7 +326,7 @@ public class StudentController {
                 if (StringUtils.hasLength(realName)) {
                     users.setRealName(realName);
                 }
-                if(StringUtils.hasLength(avatar)){
+                if (StringUtils.hasLength(avatar)) {
                     users.setAvatar(studentVo.getAvatar());
                 } else {
                     users.setAvatar(Workbook.USERS_AVATAR);
@@ -363,7 +348,7 @@ public class StudentController {
                 studentService.update(student);
                 return new AjaxUtils().success();
             } catch (ParseException e) {
-                log.error("Birthday to sql date is exception : {}",e.getMessage());
+                log.error("Birthday to sql date is exception : {}", e.getMessage());
                 return new AjaxUtils().fail().msg("时间转换异常");
             }
         }

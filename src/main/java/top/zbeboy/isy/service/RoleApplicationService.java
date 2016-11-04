@@ -27,7 +27,7 @@ public interface RoleApplicationService {
     /**
      * 保存
      *
-     * @param roleApplication
+     * @param roleApplication 角色与应用
      */
     void save(RoleApplication roleApplication);
 

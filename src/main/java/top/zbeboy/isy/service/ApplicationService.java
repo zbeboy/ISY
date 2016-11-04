@@ -31,14 +31,14 @@ public interface ApplicationService {
     /**
      * 保存
      *
-     * @param application
+     * @param application 应用
      */
     void save(Application application);
 
     /**
      * 保存并返回id
      *
-     * @param application
+     * @param application 应用
      * @return id
      */
     int saveAndReturnId(Application application);
@@ -46,21 +46,21 @@ public interface ApplicationService {
     /**
      * 更新
      *
-     * @param application
+     * @param application 应用
      */
     void update(Application application);
 
     /**
      * 批量删除
      *
-     * @param ids
+     * @param ids ids
      */
     void deletes(List<Integer> ids);
 
     /**
      * 通过id查询
      *
-     * @param id
+     * @param id id
      * @return 应用
      */
     Application findById(int id);
@@ -76,7 +76,7 @@ public interface ApplicationService {
     /**
      * 通过ids查询
      *
-     * @param ids
+     * @param ids      ids
      * @param username 用户账号 缓存
      * @return 应用
      */
@@ -94,7 +94,7 @@ public interface ApplicationService {
     /**
      * 通过ids和父id查询
      *
-     * @param ids
+     * @param ids ids
      * @param pid 父id
      * @return 应用
      */
@@ -112,7 +112,7 @@ public interface ApplicationService {
     /**
      * 分页查询
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
     Result<Record> findAllByPage(DataTablesUtils<ApplicationBean> dataTablesUtils);

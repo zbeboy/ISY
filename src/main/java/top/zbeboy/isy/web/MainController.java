@@ -126,7 +126,7 @@ public class MainController {
     /**
      * 密码重置成功
      *
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 重置成功页面
      */
     @RequestMapping(value = "/user/password/reset/finish", method = RequestMethod.GET)

@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-03.
  */
-require(["jquery", "handlebars", "messenger","jquery.address","nav_active"], function ($, Handlebars, messenger,jqueryAddress,nav_active) {
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"], function ($, Handlebars, nav_active) {
 
     /*
      ajax url.
@@ -147,14 +147,14 @@ require(["jquery", "handlebars", "messenger","jquery.address","nav_active"], fun
     /*
      返回
      */
-    $('#page_back').click(function(){
+    $('#page_back').click(function () {
         $.address.value(ajax_url.back);
     });
 
     /*
      保存数据
      */
-    $('#save').click(function(){
+    $('#save').click(function () {
         add();
     });
 

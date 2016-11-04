@@ -78,7 +78,7 @@ public class ScienceController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/science/data", method = RequestMethod.GET)
@@ -122,7 +122,7 @@ public class ScienceController {
      * 专业数据编辑
      *
      * @param id       专业id
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 编辑页面
      */
     @RequestMapping(value = "/web/data/science/edit", method = RequestMethod.GET)
@@ -182,8 +182,8 @@ public class ScienceController {
     /**
      * 保存专业信息
      *
-     * @param scienceVo
-     * @param bindingResult
+     * @param scienceVo     专业
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/science/save", method = RequestMethod.POST)
@@ -207,8 +207,8 @@ public class ScienceController {
     /**
      * 保存专业更改
      *
-     * @param scienceVo
-     * @param bindingResult
+     * @param scienceVo     专业
+     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/science/update", method = RequestMethod.POST)
@@ -234,8 +234,8 @@ public class ScienceController {
     /**
      * 批量更改专业状态
      *
-     * @param scienceIds
-     * @param isDel
+     * @param scienceIds 专业ids
+     * @param isDel      is_del
      * @return true注销成功
      */
     @RequestMapping(value = "/web/data/science/update/del", method = RequestMethod.POST)

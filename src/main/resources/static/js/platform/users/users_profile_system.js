@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-11-02.
  */
 require(["jquery", "jquery.address"],
-    function ($, jqueryAddress) {
+    function ($) {
         /*
          ajax url
          */

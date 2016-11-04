@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-21.
  */
-require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all", "jquery.address"],
-    function ($, messenger, Handlebars, dt, checkall, jqueryAddress) {
+require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.all", "jquery.address"],
+    function ($, Handlebars) {
 
         /*
          ajax url

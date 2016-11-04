@@ -15,15 +15,15 @@ public interface AuthoritiesService {
     /**
      * 通过用户名查询
      *
-     * @param username
-     * @return
+     * @param username 账号
+     * @return 权限
      */
     List<AuthoritiesRecord> findByUsername(String username);
 
     /**
      * 保存
      *
-     * @param authorities
+     * @param authorities 权限
      */
     void save(Authorities authorities);
 
@@ -44,7 +44,7 @@ public interface AuthoritiesService {
     /**
      * 检查当前用户是否有此权限
      *
-     * @param authority
+     * @param authority 权限
      * @return true 有 false 无
      */
     boolean isCurrentUserInRole(String authority);

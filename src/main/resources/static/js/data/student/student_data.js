@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-15.
  */
-require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all"], function ($, messenger, Handlebars, dt, checkall) {
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenger"], function ($, Handlebars) {
     /**
      * 角色数据展现
      * @param data json数据

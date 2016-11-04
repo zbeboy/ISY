@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016/9/21.
  */
-require(["jquery", "messenger", "jquery.address", "nav_active"], function ($, messenger, jqueryAddress, nav_active) {
+require(["jquery", "nav_active", "messenger", "jquery.address"], function ($, nav_active) {
 
     /*
      ajax url.

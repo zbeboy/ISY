@@ -3,6 +3,7 @@ package top.zbeboy.isy.web.util;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class SmallPropsUtils {
     /**
      * 参数ids ',' 分隔转list<Integer>
      *
-     * @param ids
+     * @param ids string ids
      * @return list<Integer>
      */
     public static List<Integer> StringIdsToList(String ids) {
@@ -28,22 +29,20 @@ public class SmallPropsUtils {
     /**
      * 参数ids ',' 分隔转list<String>
      *
-     * @param ids
+     * @param ids string ids
      * @return list<String>
      */
     public static List<String> StringIdsToStringList(String ids) {
         String[] idArr = ids.split(",");
         List<String> newIds = new ArrayList<>();
-        for (String id : idArr) {
-            newIds.add(id);
-        }
+        Collections.addAll(newIds, idArr);
         return newIds;
     }
 
     /**
      * 参数ids ',' 是否为Integer类型
      *
-     * @param ids
+     * @param ids string ids
      * @return true or false
      */
     public static boolean StringIdsIsNumber(String ids) {

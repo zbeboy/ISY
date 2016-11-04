@@ -12,7 +12,7 @@ public class DateTimeUtils {
     /**
      * timestamp
      *
-     * @param timestamp
+     * @param timestamp java.sql.timestamp
      * @return java.util.date
      */
     public static java.util.Date timestampToDate(java.sql.Timestamp timestamp) {

@@ -100,7 +100,7 @@ public class OrganizeController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/organize/data", method = RequestMethod.GET)
@@ -146,7 +146,7 @@ public class OrganizeController {
      * 班级数据编辑
      *
      * @param id       班级id
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 编辑页面
      */
     @RequestMapping(value = "/web/data/organize/edit", method = RequestMethod.GET)
@@ -206,8 +206,8 @@ public class OrganizeController {
     /**
      * 保存班级信息
      *
-     * @param organizeVo
-     * @param bindingResult
+     * @param organizeVo    班级
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/organize/save", method = RequestMethod.POST)
@@ -232,8 +232,8 @@ public class OrganizeController {
     /**
      * 保存班级更改
      *
-     * @param organizeVo
-     * @param bindingResult
+     * @param organizeVo    班级
+     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/organize/update", method = RequestMethod.POST)
@@ -260,8 +260,8 @@ public class OrganizeController {
     /**
      * 批量更改班级状态
      *
-     * @param organizeIds
-     * @param isDel
+     * @param organizeIds 班级ids
+     * @param isDel       is_del
      * @return true注销成功
      */
     @RequestMapping(value = "/web/data/organize/update/del", method = RequestMethod.POST)

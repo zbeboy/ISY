@@ -71,7 +71,7 @@ public class SchoolController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/school/data", method = RequestMethod.GET)
@@ -110,7 +110,7 @@ public class SchoolController {
      * 学校数据编辑
      *
      * @param id       学校id
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 编辑页面
      */
     @RequestMapping(value = "/web/data/school/edit", method = RequestMethod.GET)
@@ -143,8 +143,8 @@ public class SchoolController {
     /**
      * 保存学校信息
      *
-     * @param schoolVo
-     * @param bindingResult
+     * @param schoolVo      学校
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/school/save", method = RequestMethod.POST)
@@ -185,8 +185,8 @@ public class SchoolController {
     /**
      * 保存学校更改
      *
-     * @param schoolVo
-     * @param bindingResult
+     * @param schoolVo      学校
+     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/school/update", method = RequestMethod.POST)
@@ -211,8 +211,8 @@ public class SchoolController {
     /**
      * 批量更改学校状态
      *
-     * @param schoolIds
-     * @param isDel
+     * @param schoolIds 学校ids
+     * @param isDel     is_del
      * @return true注销成功
      */
     @RequestMapping(value = "/web/data/school/update/del", method = RequestMethod.POST)

@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-08-27.
  */
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "sb-admin"], function ($, sa, Handlebars) {
+require(["jquery"], function ($) {
     var ajax_url = {
         login: '/login'
     };

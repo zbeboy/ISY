@@ -79,7 +79,7 @@ public class CollegeController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/college/data", method = RequestMethod.GET)
@@ -119,7 +119,7 @@ public class CollegeController {
      * 院数据编辑
      *
      * @param id       院id
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 编辑页面
      */
     @RequestMapping(value = "/web/data/college/edit", method = RequestMethod.GET)
@@ -172,8 +172,8 @@ public class CollegeController {
     /**
      * 保存院更改
      *
-     * @param collegeVo
-     * @param bindingResult
+     * @param collegeVo     院
+     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/college/update", method = RequestMethod.POST)
@@ -199,8 +199,8 @@ public class CollegeController {
     /**
      * 保存院信息
      *
-     * @param collegeVo
-     * @param bindingResult
+     * @param collegeVo     院
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/college/save", method = RequestMethod.POST)
@@ -224,8 +224,8 @@ public class CollegeController {
     /**
      * 批量更改院状态
      *
-     * @param collegeIds
-     * @param isDel
+     * @param collegeIds 院ids
+     * @param isDel      is_del
      * @return true注销成功
      */
     @RequestMapping(value = "/web/data/college/update/del", method = RequestMethod.POST)

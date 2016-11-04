@@ -47,8 +47,8 @@ public class WebSecurity {
     /**
      * 权限控制检查
      *
-     * @param authentication
-     * @param request
+     * @param authentication 权限对象
+     * @param request 请求
      * @return true可访问 false 不可访问该路径
      */
     public boolean check(Authentication authentication, HttpServletRequest request) {

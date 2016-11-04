@@ -70,7 +70,7 @@ public class RoleController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/platform/role/data", method = RequestMethod.GET)

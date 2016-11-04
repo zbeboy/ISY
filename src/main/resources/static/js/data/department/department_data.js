@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-22.
  */
-require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all", "jquery.address"],
-    function ($, messenger, Handlebars, dt, checkall, jqueryAddress) {
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars) {
 
         /*
          ajax url
@@ -245,7 +245,7 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             myTable.ajax.reload();
         });
 
-        $('#refresh').click(function(){
+        $('#refresh').click(function () {
             myTable.ajax.reload();
         });
 

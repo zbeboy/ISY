@@ -18,7 +18,7 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "sb-admin", "handlebars", "jquery.showLoading", "csrf", "com"], function ($, sa, Handlebars, loading, csrf, com) {
+require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"], function ($, Handlebars) {
 
     /*
      ajax url

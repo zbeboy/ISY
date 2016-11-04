@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-06.
  */
-require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all"], function ($, messenger, Handlebars, dt, checkall) {
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenger"], function ($, Handlebars) {
 
     /**
      * 用户类型数据展现

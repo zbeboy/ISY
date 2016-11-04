@@ -16,13 +16,13 @@ requirejs.config({
         "constants": web_path + "/js/util/constants",
         "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
         "jquery.address": web_path + "/plugin/jquery_address/jquery.address-1.6.min",
-        "bootstrap-datetimepicker-zh-CN":web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
-        "bootstrap-datetimepicker":web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
-        "jquery-ui/widget":web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",
-        "jquery.iframe-transport":web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
-        "jquery.fileupload-process":web_path +"/plugin/jquery_file_upload/js/jquery.fileupload-process",
-        "jquery.fileupload":web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
-        "jquery.fileupload-validate":web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate"
+        "bootstrap-datetimepicker-zh-CN": web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
+        "bootstrap-datetimepicker": web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
+        "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",
+        "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
+        "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
+        "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
+        "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -44,20 +44,20 @@ requirejs.config({
         "jquery.address": {
             deps: ["jquery"]
         },
-        "bootstrap-datetimepicker-zh-CN":{
-            deps:["bootstrap-datetimepicker"]
+        "bootstrap-datetimepicker-zh-CN": {
+            deps: ["bootstrap-datetimepicker"]
         },
-        "jquery-ui/widget":{
+        "jquery-ui/widget": {
             deps: ["jquery"]
         },
-        "jquery.iframe-transport":{
+        "jquery.iframe-transport": {
             deps: ["jquery"]
         },
-        "jquery.fileupload":{
-            deps: ["jquery-ui/widget","jquery.iframe-transport"]
+        "jquery.fileupload": {
+            deps: ["jquery-ui/widget", "jquery.iframe-transport"]
         },
-        "jquery.fileupload-validate":{
-            deps: ["jquery.fileupload","jquery.fileupload-process"]
+        "jquery.fileupload-validate": {
+            deps: ["jquery.fileupload", "jquery.fileupload-process"]
         }
     }
 });
@@ -73,8 +73,8 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "nav", "ajax_loading_view", "csrf", "com", "jquery.address", "requirejs-domready"],
-    function ($, nav, loadingView, csrf, com, jqueryAddress, domready) {
+require(["jquery", "ajax_loading_view", "requirejs-domready", "csrf", "com", "jquery.address", "nav"],
+    function ($, loadingView, domready) {
         domready(function () {
             //This function is called once the DOM is ready.
             //It will be safe to query the DOM and manipulate
@@ -91,20 +91,20 @@ require(["jquery", "nav", "ajax_loading_view", "csrf", "com", "jquery.address", 
             /*
              动态链接点击效果
              */
-            $('.dy_href').click( function () {
+            $('.dy_href').click(function () {
                 addActive(this);
             });
 
             /*
              init jquery address.
              */
-            $.address.init(function(event) {
+            $.address.init(function (event) {
                 // 插件初始化,一般这里调用 $('.nav a').address(); 实现链接单击监听
                 $('.dy_href').address();
             }).change(function (event) {
                 // 当页面地址更改的时候调用,即#号之后的地址更改
-                if(event.value !== '/'){
-                    loadingView(event.value, '#page-wrapper',web_path);
+                if (event.value !== '/') {
+                    loadingView(event.value, '#page-wrapper', web_path);
                 }
             });
 

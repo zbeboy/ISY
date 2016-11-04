@@ -14,14 +14,14 @@ public interface SystemLogService {
     /**
      * 保存
      *
-     * @param systemLog
+     * @param systemLog 系统日志
      */
     void save(SystemLog systemLog);
 
     /**
      * 分页查询
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
     Result<Record> findAllByPage(DataTablesUtils<SystemLogBean> dataTablesUtils);

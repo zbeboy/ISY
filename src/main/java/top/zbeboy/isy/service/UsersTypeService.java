@@ -12,23 +12,23 @@ public interface UsersTypeService {
     /**
      * 根据用户类型查询id
      *
-     * @param usersTypeName
-     * @return
+     * @param usersTypeName 用户类型名
+     * @return 用户类型
      */
     UsersType findByUsersTypeName(String usersTypeName);
 
     /**
      * 根据用户id查询类型
      *
-     * @param usersTypeId
-     * @return
+     * @param usersTypeId 用户类型id
+     * @return 用户类型
      */
     UsersType findByUsersTypeId(int usersTypeId);
 
     /**
      * 查询全部
      *
-     * @return
+     * @return 用户类型
      */
     Result<UsersTypeRecord> findAll();
 }

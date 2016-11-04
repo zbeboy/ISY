@@ -23,21 +23,21 @@ public interface SchoolService {
     /**
      * 保存
      *
-     * @param school
+     * @param school 学校
      */
     void save(School school);
 
     /**
      * 更新
      *
-     * @param school
+     * @param school 学校
      */
     void update(School school);
 
     /**
      * 分页查询
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
     Result<Record> findAllByPage(DataTablesUtils<School> dataTablesUtils);
@@ -76,15 +76,15 @@ public interface SchoolService {
     /**
      * 通过id更新is_del状态
      *
-     * @param ids
-     * @param isDel
+     * @param ids   ids
+     * @param isDel is_del
      */
     void updateIsDel(List<Integer> ids, Byte isDel);
 
     /**
      * 通过id查询学校
      *
-     * @param id
+     * @param id id
      * @return 学校
      */
     School findById(int id);

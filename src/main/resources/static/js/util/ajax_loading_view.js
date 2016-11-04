@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016/10/25.
  */
-define(["jquery", "jquery.showLoading", "messenger"], function ($, showLoading, messenger) {
+define(["jquery", "jquery.showLoading", "messenger"], function ($) {
 
     function startLoading(targetId) {
         // 显示遮罩

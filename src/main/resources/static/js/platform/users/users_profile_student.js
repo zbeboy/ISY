@@ -3,7 +3,7 @@
  */
 //# sourceURL=users_profile_student.js
 require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap","jquery.address"],
-    function ($, Handlebars, loading, messenger, bootstrap,jqueryAddress) {
+    function ($, Handlebars) {
         /*
          ajax url
          */

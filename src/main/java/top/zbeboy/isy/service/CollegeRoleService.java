@@ -21,7 +21,7 @@ public interface CollegeRoleService {
     /**
      * 保存
      *
-     * @param collegeRole
+     * @param collegeRole 院与角色
      */
     void save(CollegeRole collegeRole);
 

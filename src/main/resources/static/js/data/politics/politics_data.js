@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-11-03.
  */
-require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all", "jquery.address","bootstrap"],
-    function ($, messenger, Handlebars, dt, checkall, jqueryAddress,bootstrap) {
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "bootstrap", "messenger"],
+    function ($, Handlebars) {
 
         /*
          ajax url
@@ -111,7 +111,7 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.edit', "click", function () {
-                    edit($(this).attr('data-id'),$(this).attr('data-value'));
+                    edit($(this).attr('data-id'), $(this).attr('data-value'));
                 });
             }
         });
@@ -131,9 +131,9 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
         function getParamId() {
             return {
                 politicalLandscapeName: '#search_politics',
-                addPolitics:'#addPoliticalLandscapeName',
-                updatePoliticalLandscapeId:'#updatePoliticalLandscapeId',
-                updatePolitics:'#updatePoliticalLandscapeName'
+                addPolitics: '#addPoliticalLandscapeName',
+                updatePoliticalLandscapeId: '#updatePoliticalLandscapeId',
+                updatePolitics: '#updatePoliticalLandscapeName'
             };
         }
 
@@ -206,20 +206,20 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
         /*
          检验id
          */
-        function getValidId(){
+        function getValidId() {
             return {
                 add_politics: '#valid_add_political_landscape',
-                update_politics:'#valid_update_political_landscape'
+                update_politics: '#valid_update_political_landscape'
             };
         }
 
         /*
          错误消息id
          */
-        function getErrorMsgId(){
+        function getErrorMsgId() {
             return {
                 add_politics: '#add_political_landscape_name_error_msg',
-                update_politics:'#update_political_landscape_name_error_msg'
+                update_politics: '#update_political_landscape_name_error_msg'
             };
         }
 
@@ -237,7 +237,7 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
                 }, {
                     url: web_path + getAjaxUrl().save_valid,
                     type: 'post',
-                    data: {politicalLandscapeName:politics},
+                    data: {politicalLandscapeName: politics},
                     success: function (data) {
                         if (data.state) {
                             validSuccessDom(getValidId().add_politics, getErrorMsgId().add_politics);
@@ -266,7 +266,10 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
                 }, {
                     url: web_path + getAjaxUrl().update_valid,
                     type: 'post',
-                    data: {politicalLandscapeId:$(getParamId().updatePoliticalLandscapeId).val(),politicalLandscapeName:politics},
+                    data: {
+                        politicalLandscapeId: $(getParamId().updatePoliticalLandscapeId).val(),
+                        politicalLandscapeName: politics
+                    },
                     success: function (data) {
                         if (data.state) {
                             validSuccessDom(getValidId().update_politics, getErrorMsgId().update_politics);
@@ -291,32 +294,32 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             $('#addPoliticsModal').modal('show');
         });
 
-        $('#add_politics').click(function(){
+        $('#add_politics').click(function () {
             validSave();
         });
 
         /*
          编辑页面
          */
-        function edit(politicsId,politicsName) {
+        function edit(politicsId, politicsName) {
             $(getParamId().updatePoliticalLandscapeId).val(politicsId);
             $(getParamId().updatePolitics).val(politicsName);
             $('#updatePoliticalLandscapeNameModal').modal('show');
         }
 
-        $('#update_politics').click(function(){
+        $('#update_politics').click(function () {
             validUpdate();
         });
 
-        function validSave(){
+        function validSave() {
             var politics = $(getParamId().addPolitics).val();
             if (politics.length <= 0 || politics.length > 30) {
                 validErrorDom(getValidId().add_politics, getErrorMsgId().add_politics, '政治面貌30个字符以内');
             } else {
-                $.post(web_path + getAjaxUrl().save_valid,$('#add_form').serialize(),function(data){
+                $.post(web_path + getAjaxUrl().save_valid, $('#add_form').serialize(), function (data) {
                     if (data.state) {
                         validSuccessDom(getValidId().add_politics, getErrorMsgId().add_politics);
-                        sendAjax('保存',web_path + getAjaxUrl().save,'#add_form');
+                        sendAjax('保存', web_path + getAjaxUrl().save, '#add_form');
                     } else {
                         validErrorDom(getValidId().add_politics, getErrorMsgId().add_politics, data.msg);
                     }
@@ -324,15 +327,18 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             }
         }
 
-        function validUpdate(){
+        function validUpdate() {
             var politics = $(getParamId().updatePolitics).val();
             if (politics.length <= 0 || politics.length > 30) {
                 validErrorDom(getValidId().update_politics, getErrorMsgId().update_politics, '政治面貌30个字符以内');
             } else {
-                $.post(web_path + getAjaxUrl().update_valid,{politicalLandscapeId:$(getParamId().updatePoliticalLandscapeId).val(),politicalLandscapeName:politics},function(data){
+                $.post(web_path + getAjaxUrl().update_valid, {
+                    politicalLandscapeId: $(getParamId().updatePoliticalLandscapeId).val(),
+                    politicalLandscapeName: politics
+                }, function (data) {
                     if (data.state) {
                         validSuccessDom(getValidId().update_politics, getErrorMsgId().update_politics);
-                        sendAjax('更新',web_path + getAjaxUrl().update,'#update_form');
+                        sendAjax('更新', web_path + getAjaxUrl().update, '#update_form');
                     } else {
                         validErrorDom(getValidId().update_politics, getErrorMsgId().update_politics, data.msg);
                     }
@@ -340,7 +346,7 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             }
         }
 
-        function sendAjax(message,url,id){
+        function sendAjax(message, url, id) {
             Messenger().run({
                 successMessage: message + '政治面貌成功',
                 errorMessage: message + '政治面貌失败',

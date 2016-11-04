@@ -61,7 +61,7 @@ public interface RoleService {
     /**
      * 保存
      *
-     * @param role
+     * @param role 角色
      */
     void save(Role role);
 
@@ -90,7 +90,7 @@ public interface RoleService {
     /**
      * 批量查询
      *
-     * @param ids
+     * @param ids ids
      * @return roles
      */
     Result<RoleRecord> findInRoleId(List<Integer> ids);
@@ -98,7 +98,7 @@ public interface RoleService {
     /**
      * 分页查询
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
     Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils);

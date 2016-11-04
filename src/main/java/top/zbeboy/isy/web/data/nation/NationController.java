@@ -64,7 +64,7 @@ public class NationController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/nation/data", method = RequestMethod.GET)
@@ -110,8 +110,8 @@ public class NationController {
     /**
      * 保存民族信息
      *
-     * @param nationVo
-     * @param bindingResult
+     * @param nationVo      民族
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/nation/save", method = RequestMethod.POST)
@@ -148,8 +148,8 @@ public class NationController {
     /**
      * 保存更改
      *
-     * @param nationVo
-     * @param bindingResult
+     * @param nationVo      民族
+     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/nation/update", method = RequestMethod.POST)

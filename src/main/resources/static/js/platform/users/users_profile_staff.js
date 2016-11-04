@@ -2,8 +2,8 @@
  * Created by lenovo on 2016-11-02.
  */
 //# sourceURL=users_profile_staff.js
-require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap","jquery.address"],
-    function ($, Handlebars, loading, messenger, bootstrap,jqueryAddress) {
+require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap", "jquery.address"],
+    function ($, Handlebars) {
         /*
          ajax url
          */
@@ -27,7 +27,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         /*
          用户信息编辑
          */
-        $('#profileEdit').click(function(){
+        $('#profileEdit').click(function () {
             $.address.value(ajax_url.profile_edit);
         });
 

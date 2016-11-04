@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-09-12.
  */
 require(["jquery", "datatables.responsive"],
-    function ($, dt) {
+    function ($) {
 
         function getAjaxUrl() {
             return {

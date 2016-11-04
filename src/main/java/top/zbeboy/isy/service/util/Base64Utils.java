@@ -27,8 +27,8 @@ public class Base64Utils {
     /**
      * 解密
      *
-     * @param str
-     * @return
+     * @param str 字符串
+     * @return 解密串
      */
     public static byte[] decode(String str) {
         byte[] data = str.getBytes();

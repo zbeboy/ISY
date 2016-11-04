@@ -88,7 +88,7 @@ public class StaffController {
     /**
      * 已登录用户工号更新检验
      *
-     * @param username      用户账号
+     * @param username    用户账号
      * @param staffNumber 工号
      * @return true 可以用 false 不可以
      */
@@ -105,103 +105,88 @@ public class StaffController {
     /**
      * 教职工注册
      *
-     * @param staffVo
-     * @param bindingResult
-     * @param session
-     * @param request
+     * @param staffVo       教职工
+     * @param bindingResult 检验
+     * @param session       session
+     * @param request       请求
      * @return true 注册成功 false注册失败
      */
     @RequestMapping(value = "/user/register/staff", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils registerStaff(@Valid StaffVo staffVo, BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
         if (!bindingResult.hasErrors()) {
-            List<Staff> staffs = staffService.findByStaffNumber(StringUtils.trimWhitespace(staffVo.getStaffNumber()));
             String email = StringUtils.trimWhitespace(staffVo.getEmail());
             String mobile = StringUtils.trimWhitespace(staffVo.getMobile());
-            if (!staffs.isEmpty()) {
-                return new AjaxUtils().fail().msg("工号已被注册");
-            } else {
-                Users users = usersService.findByUsername(email);
-                if (!ObjectUtils.isEmpty(users)) {
-                    return new AjaxUtils().fail().msg("邮箱已被注册");
+            if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
+                String tempMobile = (String) session.getAttribute("mobile");
+                if (!staffVo.getMobile().equals(tempMobile)) {
+                    return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
                 } else {
-                    List<Users> mobiles = usersService.findByMobile(mobile);
-                    if (!mobiles.isEmpty()) {
-                        return new AjaxUtils().fail().msg("手机号已被注册");
-                    } else {
-                        if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
-                            String tempMobile = (String) session.getAttribute("mobile");
-                            if (!staffVo.getMobile().equals(tempMobile)) {
-                                return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
-                            } else {
-                                if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
-                                    Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
-                                    Date now = new Date();
-                                    if (!now.before(mobileExpiry)) {
-                                        return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
+                    if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
+                        Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
+                        Date now = new Date();
+                        if (!now.before(mobileExpiry)) {
+                            return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
+                        } else {
+                            if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
+                                String mobileCode = (String) session.getAttribute("mobileCode");
+                                if (!staffVo.getPhoneVerifyCode().equals(mobileCode)) {
+                                    return new AjaxUtils().fail().msg("验证码错误");
+                                } else {
+                                    String password = StringUtils.trimWhitespace(staffVo.getPassword());
+                                    String confirmPassword = StringUtils.trimWhitespace(staffVo.getConfirmPassword());
+                                    if (!password.equals(confirmPassword)) {
+                                        return new AjaxUtils().fail().msg("密码不一致");
                                     } else {
-                                        if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
-                                            String mobileCode = (String) session.getAttribute("mobileCode");
-                                            if (!staffVo.getPhoneVerifyCode().equals(mobileCode)) {
-                                                return new AjaxUtils().fail().msg("验证码错误");
-                                            } else {
-                                                String password = StringUtils.trimWhitespace(staffVo.getPassword());
-                                                String confirmPassword = StringUtils.trimWhitespace(staffVo.getConfirmPassword());
-                                                if (!password.equals(confirmPassword)) {
-                                                    return new AjaxUtils().fail().msg("密码不一致");
-                                                } else {
-                                                    // 注册成功
-                                                    Users saveUsers = new Users();
-                                                    Byte enabled = 1;
-                                                    saveUsers.setUsername(email);
-                                                    saveUsers.setEnabled(enabled);
-                                                    saveUsers.setMobile(mobile);
-                                                    saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
-                                                    saveUsers.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
-                                                    saveUsers.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
+                                        // 注册成功
+                                        Users saveUsers = new Users();
+                                        Byte enabled = 1;
+                                        saveUsers.setUsername(email);
+                                        saveUsers.setEnabled(enabled);
+                                        saveUsers.setMobile(mobile);
+                                        saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
+                                        saveUsers.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
+                                        saveUsers.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
 
-                                                    DateTime dateTime = DateTime.now();
-                                                    dateTime = dateTime.plusDays(5);
-                                                    String mailboxVerifyCode = RandomUtils.generateEmailCheckKey();
-                                                    saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
-                                                    saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
-                                                    saveUsers.setLangKey(request.getLocale().toLanguageTag());
-                                                    saveUsers.setAvatar(Workbook.USERS_AVATAR);
-                                                    usersService.save(saveUsers);
+                                        DateTime dateTime = DateTime.now();
+                                        dateTime = dateTime.plusDays(5);
+                                        String mailboxVerifyCode = RandomUtils.generateEmailCheckKey();
+                                        saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
+                                        saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
+                                        saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                        saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        usersService.save(saveUsers);
 
-                                                    Staff saveStaff = new Staff();
-                                                    saveStaff.setDepartmentId(staffVo.getDepartment());
-                                                    saveStaff.setStaffNumber(staffVo.getStaffNumber());
-                                                    saveStaff.setUsername(email);
-                                                    staffService.save(saveStaff);
+                                        Staff saveStaff = new Staff();
+                                        saveStaff.setDepartmentId(staffVo.getDepartment());
+                                        saveStaff.setStaffNumber(staffVo.getStaffNumber());
+                                        saveStaff.setUsername(email);
+                                        staffService.save(saveStaff);
 
-                                                    //清空session
-                                                    session.removeAttribute("mobile");
-                                                    session.removeAttribute("mobileExpiry");
-                                                    session.removeAttribute("mobileCode");
+                                        //清空session
+                                        session.removeAttribute("mobile");
+                                        session.removeAttribute("mobileExpiry");
+                                        session.removeAttribute("mobileCode");
 
-                                                    //发送验证邮件
-                                                    if (isyProperties.getMail().isOpen()) {
-                                                        mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
-                                                        return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
-                                                    } else {
-                                                        return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
-                                                    }
-                                                }
-                                            }
+                                        //发送验证邮件
+                                        if (isyProperties.getMail().isOpen()) {
+                                            mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
+                                            return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
                                         } else {
-                                            return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
+                                            return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
                                         }
                                     }
-                                } else {
-                                    return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
                                 }
+                            } else {
+                                return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
                             }
-                        } else {
-                            return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
                         }
+                    } else {
+                        return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
                     }
                 }
+            } else {
+                return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
             }
         } else {
             return new AjaxUtils().fail().msg("参数异常，请检查输入内容是否正确");
@@ -221,7 +206,7 @@ public class StaffController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/staff/pass/data", method = RequestMethod.GET)
@@ -267,7 +252,7 @@ public class StaffController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/staff/wait/data", method = RequestMethod.GET)
@@ -316,7 +301,7 @@ public class StaffController {
     /**
      * 更新基本信息
      *
-     * @param staffVo     教职工信息
+     * @param staffVo       教职工信息
      * @param bindingResult 检验
      * @return true or false
      */
@@ -331,7 +316,7 @@ public class StaffController {
                 if (StringUtils.hasLength(realName)) {
                     users.setRealName(realName);
                 }
-                if(StringUtils.hasLength(avatar)){
+                if (StringUtils.hasLength(avatar)) {
                     users.setAvatar(staffVo.getAvatar());
                 } else {
                     users.setAvatar(Workbook.USERS_AVATAR);
@@ -350,7 +335,7 @@ public class StaffController {
                 staffService.update(staff);
                 return new AjaxUtils().success();
             } catch (ParseException e) {
-                log.error("Birthday to sql date is exception : {}",e.getMessage());
+                log.error("Birthday to sql date is exception : {}", e.getMessage());
                 return new AjaxUtils().fail().msg("时间转换异常");
             }
         }

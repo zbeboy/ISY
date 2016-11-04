@@ -3,7 +3,7 @@
  */
 //# sourceURL=users_setting.js
 require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
-    function ($, Handlebars, messenger, bootstrap, jqueryAddress) {
+    function ($) {
         /*
          ajax url
          */

@@ -25,7 +25,7 @@ public interface CollegeService {
     /**
      * 分页查询
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
     Result<Record> findAllByPage(DataTablesUtils<CollegeBean> dataTablesUtils);

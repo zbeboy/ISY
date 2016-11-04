@@ -71,7 +71,7 @@ public class SystemApplicationController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/system/application/data", method = RequestMethod.GET)
@@ -328,8 +328,8 @@ public class SystemApplicationController {
     /**
      * 保存应用信息
      *
-     * @param applicationVo
-     * @param bindingResult
+     * @param applicationVo 应用
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/system/application/save", method = RequestMethod.POST)
@@ -357,8 +357,8 @@ public class SystemApplicationController {
     /**
      * 更新应用信息
      *
-     * @param applicationVo
-     * @param bindingResult
+     * @param applicationVo 应用
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/system/application/update", method = RequestMethod.POST)
@@ -383,7 +383,7 @@ public class SystemApplicationController {
     /**
      * 批量删除应用
      *
-     * @param applicationIds
+     * @param applicationIds 应用ids
      * @return true删除成功
      */
     @RequestMapping(value = "/web/system/application/update/del", method = RequestMethod.POST)

@@ -65,7 +65,7 @@ public class PoliticalLandscapeController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/data/politics/data", method = RequestMethod.GET)
@@ -111,8 +111,8 @@ public class PoliticalLandscapeController {
     /**
      * 保存政治面貌信息
      *
-     * @param politicsVo
-     * @param bindingResult
+     * @param politicsVo    政治面貌
+     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/politics/save", method = RequestMethod.POST)
@@ -130,7 +130,7 @@ public class PoliticalLandscapeController {
     /**
      * 检验编辑时政治面貌重复
      *
-     * @param id         政治面貌id
+     * @param id                     政治面貌id
      * @param politicalLandscapeName 政治面貌
      * @return true 合格 false 不合格
      */
@@ -147,8 +147,8 @@ public class PoliticalLandscapeController {
     /**
      * 保存更改
      *
-     * @param politicsVo
-     * @param bindingResult
+     * @param politicsVo    政治面貌
+     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/politics/update", method = RequestMethod.POST)

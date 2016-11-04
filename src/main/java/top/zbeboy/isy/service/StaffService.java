@@ -60,14 +60,14 @@ public interface StaffService {
     /**
      * 保存教职工信息
      *
-     * @param staff
+     * @param staff 教职工
      */
     void save(Staff staff);
 
     /**
      * 更新教职式信息
      *
-     * @param staff
+     * @param staff 教职工
      */
     void update(Staff staff);
 
@@ -89,7 +89,7 @@ public interface StaffService {
     /**
      * 分页查询有权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 用户
      */
     Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils);
@@ -97,7 +97,7 @@ public interface StaffService {
     /**
      * 分页查询无权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 用户
      */
     Result<Record> findAllByPageNotExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils);
@@ -119,7 +119,7 @@ public interface StaffService {
     /**
      * 根据条件统计有权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 数量
      */
     int countByConditionExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils);
@@ -127,7 +127,7 @@ public interface StaffService {
     /**
      * 根据条件统计无权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 数量
      */
     int countByConditionNotExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils);

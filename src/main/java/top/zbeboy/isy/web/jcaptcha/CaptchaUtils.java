@@ -16,9 +16,9 @@ public class CaptchaUtils {
     /**
      * 验证验证码
      *
-     * @param captcha
-     * @param request
-     * @return
+     * @param captcha 验证码
+     * @param request 请求
+     * @return true or false
      */
     public static boolean validCaptcha(String captcha, HttpServletRequest request) {
         Boolean isResponseCorrect = Boolean.FALSE;

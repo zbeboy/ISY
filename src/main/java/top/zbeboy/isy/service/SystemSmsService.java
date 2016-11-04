@@ -14,14 +14,14 @@ public interface SystemSmsService {
     /**
      * 保存
      *
-     * @param systemSms
+     * @param systemSms 系统短信
      */
     void save(SystemSms systemSms);
 
     /**
      * 分页查询
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
     Result<Record> findAllByPage(DataTablesUtils<SystemSmsBean> dataTablesUtils);

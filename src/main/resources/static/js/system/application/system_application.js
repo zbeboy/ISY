@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-12.
  */
-require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all", "jquery.address"],
-    function ($, messenger, Handlebars, dt, checkall, jqueryAddress) {
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars) {
 
         /*
          ajax url
@@ -205,11 +205,11 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             }
         });
 
-        $('#search').click(function(){
+        $('#search').click(function () {
             myTable.ajax.reload();
         });
 
-        $('#reset_search').click(function(){
+        $('#reset_search').click(function () {
             cleanParam();
             myTable.ajax.reload();
         });
@@ -217,7 +217,7 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
         /*
          添加页面
          */
-        $('#application_add').click(function(){
+        $('#application_add').click(function () {
             $.address.value(getAjaxUrl().add);
         });
 

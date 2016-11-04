@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
-require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.all"],
-    function ($, messenger, Handlebars, dt, checkall) {
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenger"],
+    function ($, Handlebars) {
         /**
          * 角色数据展现
          * @param data json数据
@@ -838,7 +838,7 @@ require(["jquery", "messenger", "handlebars", "datatables.responsive", "check.al
             });
 
             var wait_global_button = '<button type="button" id="wait_deletes" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
-                 '  <button type="button" id="wait_refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+                '  <button type="button" id="wait_refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
             $('#wait_global_button').append(wait_global_button);
         }
 

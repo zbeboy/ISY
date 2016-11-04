@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-24.
  */
-require(["jquery", "handlebars", "messenger", "constants", "jquery.address", "nav_active"],
-    function ($, Handlebars, messenger, constants, jqueryAddress, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address"],
+    function ($, Handlebars, constants, nav_active) {
         /*
          ajax url.
          */

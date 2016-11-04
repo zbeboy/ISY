@@ -46,7 +46,7 @@ public class SystemMailboxController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/system/mailbox/data", method = RequestMethod.GET)

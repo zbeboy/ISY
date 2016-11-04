@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
-require(["jquery", "handlebars","messenger", "bootstrap-treeview", "constants", "jquery.address","nav_active"
-], function ($, Handlebars, messenger, treeview, constants,jqueryAddress,nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address"
+], function ($, Handlebars, constants, nav_active) {
 
     /*
      ajax url.

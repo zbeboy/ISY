@@ -179,7 +179,7 @@ public class UsersController {
      *
      * @param mobile          手机号
      * @param phoneVerifyCode 验证码
-     * @param session
+     * @param session         session
      * @return true 通过 false 不通过
      */
     @RequestMapping(value = "/user/register/valid/mobile", method = RequestMethod.POST)
@@ -214,9 +214,9 @@ public class UsersController {
     /**
      * 邮箱邮件验证
      *
-     * @param key
-     * @param username
-     * @param modelMap
+     * @param key      验证码
+     * @param username 账号
+     * @param modelMap 页面对象
      * @return 消息页面
      */
     @RequestMapping("/user/register/mailbox/valid")
@@ -247,7 +247,7 @@ public class UsersController {
      * 获取手机验证码
      *
      * @param mobile  手机号
-     * @param session
+     * @param session session
      * @return 发送验证码到手机
      */
     @RequestMapping(value = "/user/register/mobile/code", method = RequestMethod.GET)
@@ -275,8 +275,8 @@ public class UsersController {
     /**
      * 获取验证码
      *
-     * @param request
-     * @param response
+     * @param request  请求
+     * @param response 响应
      * @throws ServletException
      * @throws IOException
      */
@@ -294,11 +294,11 @@ public class UsersController {
             // a jpeg encoder
             ImageIO.write(challenge, "jpeg", jpegOutputStream);
         } catch (IllegalArgumentException e) {
-            response.sendError(response.SC_NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
             log.error(" jcaptcha exception : {} ", e.getMessage());
             return;
         } catch (CaptchaServiceException e) {
-            response.sendError(response.SC_INTERNAL_SERVER_ERROR);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             log.error(" jcaptcha exception : {} ", e.getMessage());
             return;
         }
@@ -320,9 +320,9 @@ public class UsersController {
     /**
      * js 检验验证码
      *
-     * @param captcha
-     * @param request
-     * @return
+     * @param captcha 验证码
+     * @param request 请求
+     * @return true or false
      */
     @RequestMapping("/user/login/valid/jcaptcha")
     @ResponseBody
@@ -353,7 +353,7 @@ public class UsersController {
      * 忘记密码邮件
      *
      * @param email 账号
-     * @return
+     * @return 是否发送成功
      */
     @RequestMapping("/user/login/password/forget/email")
     @ResponseBody
@@ -385,7 +385,7 @@ public class UsersController {
      *
      * @param key      验证码
      * @param email    邮箱账号
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 密码重置页面
      */
     @RequestMapping("/user/login/password/forget/reset")
@@ -422,7 +422,7 @@ public class UsersController {
      * 重置密码
      *
      * @param studentVo     页面对象
-     * @param bindingResult
+     * @param bindingResult 检验
      * @return true重置成功 false重置失败
      */
     @RequestMapping("/user/login/password/reset")
@@ -532,7 +532,7 @@ public class UsersController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/platform/users/pass/data", method = RequestMethod.GET)
@@ -568,7 +568,7 @@ public class UsersController {
     /**
      * datatables ajax查询数据
      *
-     * @param request
+     * @param request 请求
      * @return datatables数据
      */
     @RequestMapping(value = "/web/platform/users/wait/data", method = RequestMethod.GET)
@@ -661,22 +661,22 @@ public class UsersController {
      * @return 资料页面
      */
     @RequestMapping("/anyone/users/profile")
-    public String usersProfile(ModelMap modelMap,HttpServletRequest request) {
+    public String usersProfile(ModelMap modelMap, HttpServletRequest request) {
         Users users = usersService.getUserFromSession();
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
         String page;
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
                 page = "web/platform/users/users_profile_student::#page-wrapper";
-                profileStudent(users, modelMap,request);
+                profileStudent(users, modelMap, request);
                 break;
             case Workbook.STAFF_USERS_TYPE:  // 教职工
                 page = "web/platform/users/users_profile_staff::#page-wrapper";
-                profileStaff(users, modelMap,request);
+                profileStaff(users, modelMap, request);
                 break;
             case Workbook.SYSTEM_USERS_TYPE:  // 系统
                 page = "web/platform/users/users_profile_system::#page-wrapper";
-                profileSystem(users, modelMap,request);
+                profileSystem(users, modelMap, request);
                 break;
             default:
                 page = "login";
@@ -691,22 +691,22 @@ public class UsersController {
      * @return 资料编辑页面
      */
     @RequestMapping("/anyone/users/profile/edit")
-    public String usersProfileEdit(ModelMap modelMap,HttpServletRequest request) {
+    public String usersProfileEdit(ModelMap modelMap, HttpServletRequest request) {
         Users users = usersService.getUserFromSession();
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
         String page;
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
                 page = "web/platform/users/users_profile_student_edit::#page-wrapper";
-                profileStudent(users, modelMap,request);
+                profileStudent(users, modelMap, request);
                 break;
             case Workbook.STAFF_USERS_TYPE:  // 教职工
                 page = "web/platform/users/users_profile_staff_edit::#page-wrapper";
-                profileStaff(users, modelMap,request);
+                profileStaff(users, modelMap, request);
                 break;
             case Workbook.SYSTEM_USERS_TYPE:  // 系统
                 page = "web/platform/users/users_profile_system_edit::#page-wrapper";
-                profileSystem(users, modelMap,request);
+                profileSystem(users, modelMap, request);
                 break;
             default:
                 page = "login";
@@ -721,7 +721,7 @@ public class UsersController {
      * @param users    用户
      * @param modelMap 页面对象
      */
-    private void profileStudent(Users users, ModelMap modelMap,HttpServletRequest request) {
+    private void profileStudent(Users users, ModelMap modelMap, HttpServletRequest request) {
         Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
         if (student.isPresent()) {
             StudentBean studentBean = student.get().into(StudentBean.class);
@@ -736,7 +736,7 @@ public class UsersController {
      * @param users    用户
      * @param modelMap 页面对象
      */
-    private void profileStaff(Users users, ModelMap modelMap,HttpServletRequest request) {
+    private void profileStaff(Users users, ModelMap modelMap, HttpServletRequest request) {
         Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
         if (staff.isPresent()) {
             StaffBean staffBean = staff.get().into(StaffBean.class);
@@ -751,7 +751,7 @@ public class UsersController {
      * @param users    用户
      * @param modelMap 页面对象
      */
-    private void profileSystem(Users users, ModelMap modelMap,HttpServletRequest request) {
+    private void profileSystem(Users users, ModelMap modelMap, HttpServletRequest request) {
         Users newUsers = usersService.findByUsername(users.getUsername());
         newUsers.setAvatar(requestUtils.getBaseUrl(request) + "/" + newUsers.getAvatar());
         modelMap.addAttribute("user", newUsers);
@@ -760,7 +760,7 @@ public class UsersController {
     /**
      * 用户配置页面
      *
-     * @param modelMap
+     * @param modelMap 页面对象
      * @return 配置页面
      */
     @RequestMapping(value = "/anyone/users/setting", method = RequestMethod.GET)
@@ -812,8 +812,8 @@ public class UsersController {
     /**
      * 用户上传头像
      *
-     * @param multipartHttpServletRequest
-     * @param request
+     * @param multipartHttpServletRequest 文件请求
+     * @param request                     请求
      * @return 文件信息
      */
     @RequestMapping(value = "/anyone/users/upload/avatar")

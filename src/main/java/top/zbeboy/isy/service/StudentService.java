@@ -52,14 +52,14 @@ public interface StudentService {
     /**
      * 保存学生信息
      *
-     * @param student
+     * @param student 学生
      */
     void save(Student student);
 
     /**
      * 更新学生信息
      *
-     * @param student
+     * @param student 学生
      */
     void update(Student student);
 
@@ -89,7 +89,7 @@ public interface StudentService {
     /**
      * 分页查询有权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 用户
      */
     Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
@@ -97,7 +97,7 @@ public interface StudentService {
     /**
      * 分页查询无权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 用户
      */
     Result<Record> findAllByPageNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
@@ -119,7 +119,7 @@ public interface StudentService {
     /**
      * 根据条件统计有权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 数量
      */
     int countByConditionExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
@@ -127,7 +127,7 @@ public interface StudentService {
     /**
      * 根据条件统计无权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 数量
      */
     int countByConditionNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);

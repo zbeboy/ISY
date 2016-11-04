@@ -64,22 +64,22 @@ public interface UsersService {
     /**
      * 保存用户
      *
-     * @param users
+     * @param users 用户
      */
     void save(Users users);
 
     /**
      * 更新用户
      *
-     * @param users
+     * @param users 用户
      */
     void update(Users users);
 
     /**
      * 更新注销状态
      *
-     * @param ids
-     * @param enabled
+     * @param ids     ids
+     * @param enabled 状态
      */
     void updateEnabled(List<String> ids, Byte enabled);
 
@@ -118,14 +118,14 @@ public interface UsersService {
     /**
      * 根据当前用户权限查询低于当前用户权限的用户的 select
      *
-     * @return
+     * @return 条件
      */
     Select<AuthoritiesRecord> existsAuthoritiesSelect();
 
     /**
      * 分页查询有权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 用户
      */
     Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
@@ -133,7 +133,7 @@ public interface UsersService {
     /**
      * 分页查询无权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 用户
      */
     Result<Record> findAllByPageNotExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
@@ -155,7 +155,7 @@ public interface UsersService {
     /**
      * 根据条件统计有权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 数量
      */
     int countByConditionExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
@@ -163,7 +163,7 @@ public interface UsersService {
     /**
      * 根据条件统计无权限的用户
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 数量
      */
     int countByConditionNotExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
