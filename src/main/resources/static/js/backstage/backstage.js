@@ -2,6 +2,11 @@
  * Created by lenovo on 2016-08-19.
  */
 requirejs.config({
+    map: {
+        '*': {
+            'css': web_path + '/webjars/require-css/css.min.js' // or whatever the path to require-css is
+        }
+    },
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
@@ -30,13 +35,14 @@ requirejs.config({
             deps: ["jquery"]
         },
         "datatables.responsive": {
-            deps: ["datatables.bootstrap"]
+            deps: ["datatables.bootstrap", "css!" + web_path + "/plugin/datatables/css/dataTables.bootstrap.min",
+                "css!" + web_path + "/plugin/datatables/css/datatables.responsive"]
         },
         "messenger": {
             deps: ["jquery"]
         },
         "bootstrap-treeview": {
-            deps: ["jquery"]
+            deps: ["jquery", "css!" + web_path + "/webjars/bootstrap-treeview/bootstrap-treeview.min"]
         },
         "jquery.showLoading": {
             deps: ["jquery"]
@@ -45,7 +51,7 @@ requirejs.config({
             deps: ["jquery"]
         },
         "bootstrap-datetimepicker-zh-CN": {
-            deps: ["bootstrap-datetimepicker"]
+            deps: ["bootstrap-datetimepicker", "css!" + web_path + "/plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min"]
         },
         "jquery-ui/widget": {
             deps: ["jquery"]
@@ -57,7 +63,7 @@ requirejs.config({
             deps: ["jquery-ui/widget", "jquery.iframe-transport"]
         },
         "jquery.fileupload-validate": {
-            deps: ["jquery.fileupload", "jquery.fileupload-process"]
+            deps: ["jquery.fileupload", "jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload"]
         }
     }
 });

@@ -28,6 +28,7 @@
         <webjars.requirejs.version>2.2.0</webjars.requirejs.version>
         <webjars.requirejs-domready.version>2.0.1-2</webjars.requirejs-domready.version>
         <webjars.requirejs-text.version>2.0.15</webjars.requirejs-text.version>
+        <webjars.requirejs-css.version>0.1.8</webjars.requirejs-css.version>
         <webjars.handlebars.version>4.0.5</webjars.handlebars.version>
         <webjars.messenger.version>1.5.0</webjars.messenger.version>
         <webjars.lato.version>0.3.0</webjars.lato.version>
@@ -292,6 +293,13 @@
             <groupId>org.webjars</groupId>
             <artifactId>requirejs-text</artifactId>
             <version>${webjars.requirejs-text.version}</version>
+        </dependency>
+
+        <!-- requirejs css -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>require-css</artifactId>
+            <version>${webjars.requirejs-css.version}</version>
         </dependency>
 
         <!-- webjars handlebars -->

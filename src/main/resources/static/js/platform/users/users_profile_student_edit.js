@@ -243,7 +243,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          * @param data json数据
          */
         function politicalLandscapeData(data) {
-            var source = $("#political-politics-template").html();
+            var source = $("#political-landscape-template").html();
             var template = Handlebars.compile(source);
 
             Handlebars.registerHelper('political_landscape_value', function () {

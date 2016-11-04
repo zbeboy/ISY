@@ -143,6 +143,7 @@
     <orderEntry type="library" name="Maven: org.webjars:requirejs:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:requirejs-domready:2.0.1-2" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:requirejs-text:2.0.15" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:require-css:0.1.8" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:handlebars:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:webjars-locator:0.30" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:webjars-locator-core:0.30" level="project" />
