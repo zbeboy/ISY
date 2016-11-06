@@ -47,6 +47,11 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
     }
 
     @Override
+    public void deleteBySendTime(Timestamp sendTime) {
+        create.deleteFrom(SYSTEM_SMS).where(SYSTEM_SMS.SEND_TIME.le(sendTime)).execute();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
         return dataPagingQueryAll(dataTablesUtils, create, SYSTEM_SMS);
     }

@@ -1,13 +1,78 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta name="generator"
-          content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39"/>
     <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="keywords" name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta http-equiv="description" name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
     <title>Error</title>
+
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+    <!-- sticky-footer CSS -->
+    <style>
+        /* Sticky footer styles
+-------------------------------------------------- */
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        body {
+            /* Margin bottom by footer height */
+            margin-bottom: 60px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+            background-color: #f5f5f5;
+        }
+
+        /* Custom page CSS
+        -------------------------------------------------- */
+        /* Not required for template or sticky footer method. */
+
+        .container {
+            width: auto;
+            max-width: 680px;
+            padding: 0 15px;
+        }
+
+        .container .text-muted {
+            margin: 20px 0;
+        }
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
-<h1 th:text="${status}">500</h1>
-<p th:text="${message}">Fake content</p>
+<!-- Begin page content -->
+<div class="container">
+    <div class="page-header">
+        <h1 th:text="${status}">500</h1>
+    </div>
+    <p th:text="${message}">Fake content</p>
+</div>
+
+<footer class="footer">
+    <div class="container" th:include="footer::footer">
+        <p class="text-muted">Place sticky footer content here.</p>
+    </div>
+</footer>
 </body>
 </html>

@@ -41,8 +41,4 @@ public class BCryptUtils {
     }
 
     /*$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2  123456*/
-    /*   public static void main(String[] args)  {
-
-           System.out.println(bCryptPassword("123456"));
-    }*/
 }

@@ -47,6 +47,11 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
     }
 
     @Override
+    public void deleteBySendTime(Timestamp sendTime) {
+        create.deleteFrom(SYSTEM_MAILBOX).where(SYSTEM_MAILBOX.SEND_TIME.le(sendTime)).execute();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
         return dataPagingQueryAll(dataTablesUtils, create, SYSTEM_MAILBOX);
     }

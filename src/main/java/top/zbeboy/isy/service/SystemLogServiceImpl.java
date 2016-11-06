@@ -47,6 +47,11 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
     }
 
     @Override
+    public void deleteByOperatingTime(Timestamp operatingTime) {
+        create.deleteFrom(SYSTEM_LOG).where(SYSTEM_LOG.OPERATING_TIME.le(operatingTime)).execute();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtils<SystemLogBean> dataTablesUtils) {
         return dataPagingQueryAll(dataTablesUtils, create, SYSTEM_LOG);
     }

@@ -52,16 +52,4 @@ public class MD5Utils {
         // 使用动态加密盐的只需要在注册用户的时候将第二个参数换成用户名即可
         return md5.encodePassword(password, "acegisalt");
     }
-
-  /*  public static void main(String[] args) throws NoSuchAlgorithmException {
-        md5("1234"); // 使用简单的MD5加密方式
-
-        sha_256("1234"); // 使用256的哈希算法(SHA)加密
-
-        sha_SHA_256("1234"); // 使用SHA-256的哈希算法(SHA)加密
-
-        md5_SystemWideSaltSource("1234"); // 使用MD5再加全局加密盐加密的方式加密
-
-        bCryptPassword("1234"); // 使用BCrypt加密方式
-    }*/
 }

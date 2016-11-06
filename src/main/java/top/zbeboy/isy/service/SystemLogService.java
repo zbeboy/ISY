@@ -6,6 +6,8 @@ import top.zbeboy.isy.domain.tables.pojos.SystemLog;
 import top.zbeboy.isy.web.bean.system.log.SystemLogBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.sql.Timestamp;
+
 /**
  * Created by lenovo on 2016-09-11.
  */
@@ -17,6 +19,13 @@ public interface SystemLogService {
      * @param systemLog 系统日志
      */
     void save(SystemLog systemLog);
+
+    /**
+     * 根据操作时间删除
+     *
+     * @param operatingTime 操作时间
+     */
+    void deleteByOperatingTime(Timestamp operatingTime);
 
     /**
      * 分页查询

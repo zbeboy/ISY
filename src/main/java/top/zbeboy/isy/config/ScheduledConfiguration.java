@@ -1,10 +1,17 @@
 package top.zbeboy.isy.config;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import top.zbeboy.isy.service.SystemLogService;
+import top.zbeboy.isy.service.SystemMailboxService;
+import top.zbeboy.isy.service.SystemSmsService;
+
+import javax.annotation.Resource;
+import java.sql.Timestamp;
 
 /**
  * 定时任务配置
@@ -37,8 +44,24 @@ public class ScheduledConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(ScheduledConfiguration.class);
 
+    @Resource
+    private SystemLogService systemLogService;
+
+    @Resource
+    private SystemMailboxService systemMailboxService;
+
+    @Resource
+    private SystemSmsService systemSmsService;
+
     @Scheduled(cron = "0 15 01 01 * ?")// 每月1号 晚间1点15分
     public void scheduler() {
-        log.info(">>>>>>>>>>>>> scheduled ... ");
+        // 清理日志,邮件，短信
+        DateTime dateTime = DateTime.now();
+        DateTime oldTime = dateTime.minusDays(120);
+        Timestamp ts = new Timestamp(oldTime.getMillis());
+        systemLogService.deleteByOperatingTime(ts);
+        systemMailboxService.deleteBySendTime(ts);
+        systemSmsService.deleteBySendTime(ts);
+        log.info(">>>>>>>>>>>>> scheduled ... log , mailbox , sms ");
     }
 }

@@ -6,6 +6,8 @@ import top.zbeboy.isy.domain.tables.pojos.SystemMailbox;
 import top.zbeboy.isy.web.bean.system.mailbox.SystemMailboxBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.sql.Timestamp;
+
 /**
  * Created by lenovo on 2016-09-17.
  */
@@ -17,6 +19,13 @@ public interface SystemMailboxService {
      * @param systemMailbox 系统邮件
      */
     void save(SystemMailbox systemMailbox);
+
+    /**
+     * 根据发送时间删除
+     *
+     * @param sendTime 发送时间
+     */
+    void deleteBySendTime(Timestamp sendTime);
 
     /**
      * 分页查询
