@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-	private static final long serialVersionUID = -1689424729;
+	private static final long serialVersionUID = 51327448;
 
 	/**
 	 * The reference instance of <code>isy.users</code>
@@ -156,7 +156,7 @@ public class Users extends TableImpl<UsersRecord> {
 	 */
 	@Override
 	public List<UniqueKey<UsersRecord>> getKeys() {
-		return Arrays.<UniqueKey<UsersRecord>>asList(Keys.KEY_USERS_PRIMARY);
+		return Arrays.<UniqueKey<UsersRecord>>asList(Keys.KEY_USERS_PRIMARY, Keys.KEY_USERS_MOBILE);
 	}
 
 	/**

@@ -73,6 +73,13 @@ public class StudentDao extends DAOImpl<StudentRecord, top.zbeboy.isy.domain.tab
 	}
 
 	/**
+	 * Fetch a unique record that has <code>student_number = value</code>
+	 */
+	public top.zbeboy.isy.domain.tables.pojos.Student fetchOneByStudentNumber(String value) {
+		return fetchOne(Student.STUDENT.STUDENT_NUMBER, value);
+	}
+
+	/**
 	 * Fetch records that have <code>birthday IN (values)</code>
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.Student> fetchByBirthday(Date... values) {
@@ -91,6 +98,13 @@ public class StudentDao extends DAOImpl<StudentRecord, top.zbeboy.isy.domain.tab
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.Student> fetchByIdCard(String... values) {
 		return fetch(Student.STUDENT.ID_CARD, values);
+	}
+
+	/**
+	 * Fetch a unique record that has <code>id_card = value</code>
+	 */
+	public top.zbeboy.isy.domain.tables.pojos.Student fetchOneByIdCard(String value) {
+		return fetchOne(Student.STUDENT.ID_CARD, value);
 	}
 
 	/**

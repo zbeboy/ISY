@@ -70,4 +70,11 @@ public class NationDao extends DAOImpl<NationRecord, top.zbeboy.isy.domain.table
 	public List<top.zbeboy.isy.domain.tables.pojos.Nation> fetchByNationName(String... values) {
 		return fetch(Nation.NATION.NATION_NAME, values);
 	}
+
+	/**
+	 * Fetch a unique record that has <code>nation_name = value</code>
+	 */
+	public top.zbeboy.isy.domain.tables.pojos.Nation fetchOneByNationName(String value) {
+		return fetchOne(Nation.NATION.NATION_NAME, value);
+	}
 }

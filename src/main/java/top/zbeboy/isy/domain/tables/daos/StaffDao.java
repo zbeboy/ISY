@@ -73,6 +73,13 @@ public class StaffDao extends DAOImpl<StaffRecord, top.zbeboy.isy.domain.tables.
 	}
 
 	/**
+	 * Fetch a unique record that has <code>staff_number = value</code>
+	 */
+	public top.zbeboy.isy.domain.tables.pojos.Staff fetchOneByStaffNumber(String value) {
+		return fetchOne(Staff.STAFF.STAFF_NUMBER, value);
+	}
+
+	/**
 	 * Fetch records that have <code>birthday IN (values)</code>
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.Staff> fetchByBirthday(Date... values) {
@@ -91,6 +98,13 @@ public class StaffDao extends DAOImpl<StaffRecord, top.zbeboy.isy.domain.tables.
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.Staff> fetchByIdCard(String... values) {
 		return fetch(Staff.STAFF.ID_CARD, values);
+	}
+
+	/**
+	 * Fetch a unique record that has <code>id_card = value</code>
+	 */
+	public top.zbeboy.isy.domain.tables.pojos.Staff fetchOneByIdCard(String value) {
+		return fetchOne(Staff.STAFF.ID_CARD, value);
 	}
 
 	/**

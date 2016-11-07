@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.StaffRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Staff extends TableImpl<StaffRecord> {
 
-	private static final long serialVersionUID = 1406010724;
+	private static final long serialVersionUID = -663396396;
 
 	/**
 	 * The reference instance of <code>isy.staff</code>
@@ -149,7 +149,7 @@ public class Staff extends TableImpl<StaffRecord> {
 	 */
 	@Override
 	public List<UniqueKey<StaffRecord>> getKeys() {
-		return Arrays.<UniqueKey<StaffRecord>>asList(Keys.KEY_STAFF_PRIMARY);
+		return Arrays.<UniqueKey<StaffRecord>>asList(Keys.KEY_STAFF_PRIMARY, Keys.KEY_STAFF_STAFF_NUMBER, Keys.KEY_STAFF_ID_CARD);
 	}
 
 	/**

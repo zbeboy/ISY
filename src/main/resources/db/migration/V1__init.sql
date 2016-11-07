@@ -511,6 +511,12 @@ INSERT INTO application(application_name, application_sort,
                         application_code, application_en_name, icon,application_data_url_start_with)
 VALUES ('系统邮件',1004,4,'/web/menu/system/mailbox','system_mailbox','system_mailbox','','/web/system/mailbox');
 
+INSERT INTO internship_type(internship_type_name) VALUES ('顶岗实习(留学院)');
+INSERT INTO internship_type(internship_type_name) VALUES ('校外自主实习(去单位)');
+INSERT INTO internship_type(internship_type_name) VALUES ('毕业实习(校内)');
+INSERT INTO internship_type(internship_type_name) VALUES ('毕业实习(学校统一组织校外实习)');
+INSERT INTO internship_type(internship_type_name) VALUES ('毕业实习(学生校外自主实习)');
+
 INSERT INTO role_application(role_id, application_id) VALUES (1,1);
 INSERT INTO role_application(role_id, application_id) VALUES (1,2);
 INSERT INTO role_application(role_id, application_id) VALUES (1,3);

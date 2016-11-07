@@ -102,6 +102,13 @@ public class UsersDao extends DAOImpl<UsersRecord, top.zbeboy.isy.domain.tables.
 	}
 
 	/**
+	 * Fetch a unique record that has <code>mobile = value</code>
+	 */
+	public top.zbeboy.isy.domain.tables.pojos.Users fetchOneByMobile(String value) {
+		return fetchOne(Users.USERS.MOBILE, value);
+	}
+
+	/**
 	 * Fetch records that have <code>avatar IN (values)</code>
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.Users> fetchByAvatar(String... values) {

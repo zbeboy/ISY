@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.NationRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Nation extends TableImpl<NationRecord> {
 
-	private static final long serialVersionUID = -1175290168;
+	private static final long serialVersionUID = -1296496073;
 
 	/**
 	 * The reference instance of <code>isy.nation</code>
@@ -102,7 +102,7 @@ public class Nation extends TableImpl<NationRecord> {
 	 */
 	@Override
 	public List<UniqueKey<NationRecord>> getKeys() {
-		return Arrays.<UniqueKey<NationRecord>>asList(Keys.KEY_NATION_PRIMARY);
+		return Arrays.<UniqueKey<NationRecord>>asList(Keys.KEY_NATION_PRIMARY, Keys.KEY_NATION_NATION_NAME);
 	}
 
 	/**

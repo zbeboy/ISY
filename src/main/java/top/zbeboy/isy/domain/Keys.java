@@ -136,6 +136,7 @@ public class Keys {
 	public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY;
 	public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TYPE_PRIMARY;
 	public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = UniqueKeys0.KEY_NATION_PRIMARY;
+	public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = UniqueKeys0.KEY_NATION_NATION_NAME;
 	public static final UniqueKey<OrganizeRecord> KEY_ORGANIZE_PRIMARY = UniqueKeys0.KEY_ORGANIZE_PRIMARY;
 	public static final UniqueKey<PersistentLoginsRecord> KEY_PERSISTENT_LOGINS_PRIMARY = UniqueKeys0.KEY_PERSISTENT_LOGINS_PRIMARY;
 	public static final UniqueKey<PoliticalLandscapeRecord> KEY_POLITICAL_LANDSCAPE_PRIMARY = UniqueKeys0.KEY_POLITICAL_LANDSCAPE_PRIMARY;
@@ -145,11 +146,16 @@ public class Keys {
 	public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = UniqueKeys0.KEY_SCHOOL_PRIMARY;
 	public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = UniqueKeys0.KEY_SCIENCE_PRIMARY;
 	public static final UniqueKey<StaffRecord> KEY_STAFF_PRIMARY = UniqueKeys0.KEY_STAFF_PRIMARY;
+	public static final UniqueKey<StaffRecord> KEY_STAFF_STAFF_NUMBER = UniqueKeys0.KEY_STAFF_STAFF_NUMBER;
+	public static final UniqueKey<StaffRecord> KEY_STAFF_ID_CARD = UniqueKeys0.KEY_STAFF_ID_CARD;
 	public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = UniqueKeys0.KEY_STUDENT_PRIMARY;
+	public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = UniqueKeys0.KEY_STUDENT_STUDENT_NUMBER;
+	public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = UniqueKeys0.KEY_STUDENT_ID_CARD;
 	public static final UniqueKey<SystemLogRecord> KEY_SYSTEM_LOG_PRIMARY = UniqueKeys0.KEY_SYSTEM_LOG_PRIMARY;
 	public static final UniqueKey<SystemMailboxRecord> KEY_SYSTEM_MAILBOX_PRIMARY = UniqueKeys0.KEY_SYSTEM_MAILBOX_PRIMARY;
 	public static final UniqueKey<SystemSmsRecord> KEY_SYSTEM_SMS_PRIMARY = UniqueKeys0.KEY_SYSTEM_SMS_PRIMARY;
 	public static final UniqueKey<UsersRecord> KEY_USERS_PRIMARY = UniqueKeys0.KEY_USERS_PRIMARY;
+	public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = UniqueKeys0.KEY_USERS_MOBILE;
 	public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = UniqueKeys0.KEY_USERS_TYPE_PRIMARY;
 
 	// -------------------------------------------------------------------------
@@ -239,6 +245,7 @@ public class Keys {
 		public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = createUniqueKey(InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_TEACHER_DISTRIBUTION_ID);
 		public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = createUniqueKey(InternshipType.INTERNSHIP_TYPE, InternshipType.INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID);
 		public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = createUniqueKey(Nation.NATION, Nation.NATION.NATION_ID);
+		public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = createUniqueKey(Nation.NATION, Nation.NATION.NATION_NAME);
 		public static final UniqueKey<OrganizeRecord> KEY_ORGANIZE_PRIMARY = createUniqueKey(Organize.ORGANIZE, Organize.ORGANIZE.ORGANIZE_ID);
 		public static final UniqueKey<PersistentLoginsRecord> KEY_PERSISTENT_LOGINS_PRIMARY = createUniqueKey(PersistentLogins.PERSISTENT_LOGINS, PersistentLogins.PERSISTENT_LOGINS.SERIES);
 		public static final UniqueKey<PoliticalLandscapeRecord> KEY_POLITICAL_LANDSCAPE_PRIMARY = createUniqueKey(PoliticalLandscape.POLITICAL_LANDSCAPE, PoliticalLandscape.POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID);
@@ -248,11 +255,16 @@ public class Keys {
 		public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = createUniqueKey(School.SCHOOL, School.SCHOOL.SCHOOL_ID);
 		public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = createUniqueKey(Science.SCIENCE, Science.SCIENCE.SCIENCE_ID);
 		public static final UniqueKey<StaffRecord> KEY_STAFF_PRIMARY = createUniqueKey(Staff.STAFF, Staff.STAFF.STAFF_ID);
+		public static final UniqueKey<StaffRecord> KEY_STAFF_STAFF_NUMBER = createUniqueKey(Staff.STAFF, Staff.STAFF.STAFF_NUMBER);
+		public static final UniqueKey<StaffRecord> KEY_STAFF_ID_CARD = createUniqueKey(Staff.STAFF, Staff.STAFF.ID_CARD);
 		public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = createUniqueKey(Student.STUDENT, Student.STUDENT.STUDENT_ID);
+		public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = createUniqueKey(Student.STUDENT, Student.STUDENT.STUDENT_NUMBER);
+		public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = createUniqueKey(Student.STUDENT, Student.STUDENT.ID_CARD);
 		public static final UniqueKey<SystemLogRecord> KEY_SYSTEM_LOG_PRIMARY = createUniqueKey(SystemLog.SYSTEM_LOG, SystemLog.SYSTEM_LOG.SYSTEM_LOG_ID);
 		public static final UniqueKey<SystemMailboxRecord> KEY_SYSTEM_MAILBOX_PRIMARY = createUniqueKey(SystemMailbox.SYSTEM_MAILBOX, SystemMailbox.SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID);
 		public static final UniqueKey<SystemSmsRecord> KEY_SYSTEM_SMS_PRIMARY = createUniqueKey(SystemSms.SYSTEM_SMS, SystemSms.SYSTEM_SMS.SYSTEM_SMS_ID);
 		public static final UniqueKey<UsersRecord> KEY_USERS_PRIMARY = createUniqueKey(Users.USERS, Users.USERS.USERNAME);
+		public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = createUniqueKey(Users.USERS, Users.USERS.MOBILE);
 		public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = createUniqueKey(UsersType.USERS_TYPE, UsersType.USERS_TYPE.USERS_TYPE_ID);
 	}
 
