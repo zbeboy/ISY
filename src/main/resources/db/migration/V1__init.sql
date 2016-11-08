@@ -162,8 +162,7 @@ CREATE TABLE system_log(
   behavior VARCHAR(200) NOT NULL ,
   operating_time DATETIME NOT NULL ,
   username VARCHAR(200) NOT NULL ,
-  ip_address VARCHAR(50) NOT NULL ,
-  FOREIGN KEY (username) REFERENCES users(username)
+  ip_address VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE system_mailbox(
@@ -401,6 +400,7 @@ INSERT INTO role(role_name, role_en_name) VALUES ('系统','ROLE_SYSTEM');
 INSERT INTO role(role_name, role_en_name) VALUES ('管理员','ROLE_ADMIN');
 
 INSERT INTO authorities(username, authority) VALUES ('863052317@qq.com','ROLE_SYSTEM');
+INSERT INTO authorities(username, authority) VALUES ('863052317@qq.com','ROLE_ADMIN');
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
