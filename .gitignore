@@ -1,0 +1,6 @@
+/logs/*
+/settings/url-mapping.txt
+/target/*
+/root/*
+*.properties
+*.jks
