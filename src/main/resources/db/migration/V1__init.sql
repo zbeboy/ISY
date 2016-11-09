@@ -188,6 +188,8 @@ CREATE TABLE internship_release(
   release_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   username VARCHAR(200) NOT NULL ,
   allow_grade VARCHAR(5) NOT NULL ,
+  teacher_distribution_start_time DATETIME NOT NULL ,
+  teacher_distribution_end_time DATETIME NOT NULL ,
   start_time DATETIME NOT NULL ,
   end_time DATETIME NOT NULL ,
   internship_release_is_del BOOLEAN NOT NULL ,
