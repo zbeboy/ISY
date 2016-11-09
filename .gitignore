@@ -2,5 +2,5 @@
 /settings/url-mapping.txt
 /target/*
 /root/*
-*.properties
+/src/main/resources/*.properties
 *.jks
