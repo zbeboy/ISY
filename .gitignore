@@ -1,6 +1,7 @@
-/logs/*
+/logs
+*.log
 /settings/*
 /target/*
 /root/*
-src/main/resources/*.properties
+*.properties
 *.jks
