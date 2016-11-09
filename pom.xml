@@ -255,6 +255,14 @@
             <version>${webjars.bootstrap-treeview.version}</version>
         </dependency>
 
+
+        <!-- daterangepicker -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap-daterangepicker</artifactId>
+            <version>${webjars.bootstrap-daterangepicker.version}</version>
+        </dependency>
+
         <!-- lato -->
         <dependency>
             <groupId>org.webjars</groupId>
@@ -316,14 +324,6 @@
             <artifactId>webjars-locator</artifactId>
             <version>${webjars-locator.version}</version>
         </dependency>
-
-        <!-- daterangepicker -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap-daterangepicker</artifactId>
-            <version>${webjars.bootstrap-daterangepicker.version}</version>
-        </dependency>
-
     </dependencies>
 
     <repositories>
