@@ -3,5 +3,5 @@
 /settings/*
 /target/*
 /root/*
-*.properties
+application*.properties
 *.jks
