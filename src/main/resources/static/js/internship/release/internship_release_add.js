@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-11-10.
  */
 //# sourceURL=internship_release_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address","bootstrap-select"],
+require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address","bootstrap-select-zh-CN"],
     function ($, Handlebars, nav_active, moment) {
 
         /*
