@@ -94,6 +94,20 @@ public class InternshipReleaseDao extends DAOImpl<InternshipReleaseRecord, top.z
 	}
 
 	/**
+	 * Fetch records that have <code>teacher_distribution_start_time IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipRelease> fetchByTeacherDistributionStartTime(Timestamp... values) {
+		return fetch(InternshipRelease.INTERNSHIP_RELEASE.TEACHER_DISTRIBUTION_START_TIME, values);
+	}
+
+	/**
+	 * Fetch records that have <code>teacher_distribution_end_time IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipRelease> fetchByTeacherDistributionEndTime(Timestamp... values) {
+		return fetch(InternshipRelease.INTERNSHIP_RELEASE.TEACHER_DISTRIBUTION_END_TIME, values);
+	}
+
+	/**
 	 * Fetch records that have <code>start_time IN (values)</code>
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.InternshipRelease> fetchByStartTime(Timestamp... values) {

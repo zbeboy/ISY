@@ -11,7 +11,6 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.jooq.Field;
-import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
@@ -35,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.SystemLogRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemLog extends TableImpl<SystemLogRecord> {
 
-	private static final long serialVersionUID = -1170092919;
+	private static final long serialVersionUID = -688567381;
 
 	/**
 	 * The reference instance of <code>isy.system_log</code>
@@ -111,14 +110,6 @@ public class SystemLog extends TableImpl<SystemLogRecord> {
 	@Override
 	public List<UniqueKey<SystemLogRecord>> getKeys() {
 		return Arrays.<UniqueKey<SystemLogRecord>>asList(Keys.KEY_SYSTEM_LOG_PRIMARY);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<ForeignKey<SystemLogRecord, ?>> getReferences() {
-		return Arrays.<ForeignKey<SystemLogRecord, ?>>asList(Keys.SYSTEM_LOG_IBFK_1);
 	}
 
 	/**

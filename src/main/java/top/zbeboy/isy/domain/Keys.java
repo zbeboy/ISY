@@ -204,7 +204,6 @@ public class Keys {
 	public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = ForeignKeys0.STAFF_IBFK_2;
 	public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = ForeignKeys0.STUDENT_IBFK_1;
 	public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = ForeignKeys0.STUDENT_IBFK_2;
-	public static final ForeignKey<SystemLogRecord, UsersRecord> SYSTEM_LOG_IBFK_1 = ForeignKeys0.SYSTEM_LOG_IBFK_1;
 	public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = ForeignKeys0.USERS_IBFK_1;
 
 	// -------------------------------------------------------------------------
@@ -311,7 +310,6 @@ public class Keys {
 		public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, Staff.STAFF, Staff.STAFF.USERNAME);
 		public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_ORGANIZE_PRIMARY, Student.STUDENT, Student.STUDENT.ORGANIZE_ID);
 		public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, Student.STUDENT, Student.STUDENT.USERNAME);
-		public static final ForeignKey<SystemLogRecord, UsersRecord> SYSTEM_LOG_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, SystemLog.SYSTEM_LOG, SystemLog.SYSTEM_LOG.USERNAME);
 		public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, Users.USERS.USERS_TYPE_ID);
 	}
 }
