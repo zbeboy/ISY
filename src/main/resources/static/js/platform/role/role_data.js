@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         function getAjaxUrl() {
             return {
                 roles: '/web/platform/role/data',
-                delete: '/web/platform/role/delete',
+                del: '/web/platform/role/delete',
                 add: '/web/platform/role/add',
                 edit: '/web/platform/role/edit'
             };
@@ -264,7 +264,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 errorMessage: message + '角色失败',
                 progressMessage: '正在' + message + '角色....'
             }, {
-                url: web_path + getAjaxUrl().delete,
+                url: web_path + getAjaxUrl().del,
                 type: 'post',
                 data: {roleId: roleId,},
                 success: function (data) {
