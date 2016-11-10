@@ -23,6 +23,9 @@ requirejs.config({
         "jquery.address": web_path + "/plugin/jquery_address/jquery.address-1.6.min",
         "bootstrap-datetimepicker-zh-CN": web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
         "bootstrap-datetimepicker": web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
+        "bootstrap-daterangepicker": web_path + "/plugin/bootstrap-daterangepicker/daterangepicker",
+        "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
+        "moment": web_path + "/plugin/moment/moment.min",
         "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",
         "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
@@ -52,6 +55,12 @@ requirejs.config({
         },
         "bootstrap-datetimepicker-zh-CN": {
             deps: ["bootstrap-datetimepicker", "css!" + web_path + "/plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min"]
+        },
+        "bootstrap-daterangepicker": {
+            deps: ["css!" + web_path + "/plugin/bootstrap-daterangepicker/daterangepicker"]
+        },
+        "bootstrap-select": {
+            deps: ["css!" + web_path + "/plugin/bootstrap-select/css/bootstrap-select.min"]
         },
         "jquery-ui/widget": {
             deps: ["jquery"]

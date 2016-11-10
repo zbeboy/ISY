@@ -27,15 +27,16 @@
                         <input class="form-control" name="releaseTitle" id="releaseTitle" placeholder="标题"/>
                         <p class="text-danger hidden" id="release_title_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_start_time">
-                        <label>开始时间</label>
-                        <input class="form-control" name="startTime" id="startTime" placeholder="开始时间"/>
-                        <p class="text-danger hidden" id="start_time_error_msg"></p>
+                    <div class="form-group" id="valid_teacher_distribution_time">
+                        <label>指导教师分配时间</label>
+                        <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime" placeholder="指导教师分配时间"/>
+                        <p class="text-danger hidden" id="teacher_distribution_time_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_end_time">
-                        <label>结束时间</label>
-                        <input class="form-control" name="endTime" id="endTime" placeholder="结束时间"/>
-                        <p class="text-danger hidden" id="end_time_error_msg"></p>
+                    <div class="form-group" id="valid_time">
+                        <label>实习时间</label>
+                        <input class="form-control" name="time" id="time" placeholder="实习开始时间"/>
+                        <p class="help-block">建议：实习时间晚于指导教师分配时间</p>
+                        <p class="text-danger hidden" id="time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_department">
                         <select class="form-control" name="departmentId" id="select_department">
@@ -50,10 +51,21 @@
                         <p class="text-danger hidden" id="grade_error_msg"></p>
                     </div>
                     <div class="form-group">
-                        <label>请选择专业</label>
-                        <div style="height: 300px;overflow: auto">
-
-                        </div>
+                            <select id="select_science" class="form-control show-tick" multiple="" data-actions-box="true" data-done-button="true" title="请选择专业">
+                                <option>Apple</option>
+                                <option>Banana</option>
+                                <option>Orange</option>
+                                <option>Pineapple</option>
+                                <option>Apple2</option>
+                                <option>Banana2</option>
+                                <option>Orange2</option>
+                                <option>Pineapple2</option>
+                                <option>Apple2</option>
+                                <option>Banana2</option>
+                                <option>Orange2</option>
+                                <option>Pineapple2</option>
+                            </select>
+                        <p class="text-danger hidden" id="science_error_msg"></p>
                     </div>
                     <div class="form-group">
                         <label>状态</label>
@@ -62,7 +74,6 @@
                                 <input type="checkbox" name="internshipReleaseIsDel" value="1" checked="checked" />注销
                             </label>
                         </div>
-                        <p class="help-block">注：在注销状态下，才可重新编辑已发布内容</p>
                     </div>
                     <div class="text-center">
                         <button type="button" id="save" class="btn btn-default">保存</button>
@@ -86,7 +97,7 @@
             <option value="{{grade_value}}">{{grade_name}}</option>
             {{/each}}
         </script>
-
+        <input type="hidden" class="dy_script" value="/js/internship/release/internship_release_add.js" />
     </div>
     <!-- /#page-wrapper -->
 </div>
