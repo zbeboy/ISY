@@ -223,6 +223,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
+        Users users = getUserFromSession();
         Select<AuthoritiesRecord> select = existsAuthoritiesSelect();
         Result<Record> records ;
         Condition a = searchCondition(dataTablesUtils);
@@ -231,7 +232,7 @@ public class UsersServiceImpl implements UsersService {
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
-                    .whereExists(select);
+                    .whereExists(select).and(USERS.USERNAME.ne(users.getUsername()));
             sortCondition(dataTablesUtils, selectConditionStep);
             pagination(dataTablesUtils, selectConditionStep);
             records = selectConditionStep.fetch();
@@ -240,7 +241,7 @@ public class UsersServiceImpl implements UsersService {
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
-                    .where(a).andExists(select);
+                    .where(a).andExists(select).and(USERS.USERNAME.ne(users.getUsername()));
             sortCondition(dataTablesUtils, selectConditionStep);
             pagination(dataTablesUtils, selectConditionStep);
             records = selectConditionStep.fetch();
@@ -278,10 +279,11 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public int countAllExistsAuthorities() {
+        Users users = getUserFromSession();
         Select<AuthoritiesRecord> select = existsAuthoritiesSelect();
         Record1<Integer> count = create.selectCount()
                 .from(USERS)
-                .whereExists(select)
+                .whereExists(select).and(USERS.USERNAME.ne(users.getUsername()))
                 .fetchOne();
         return count.value1();
     }
@@ -299,20 +301,21 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public int countByConditionExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
+        Users users = getUserFromSession();
         Select<AuthoritiesRecord> select = existsAuthoritiesSelect();
         Record1<Integer> count;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                     .from(USERS)
-                    .whereExists(select);
+                    .whereExists(select).and(USERS.USERNAME.ne(users.getUsername()));
             count = selectConditionStep.fetchOne();
         } else {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
-                    .where(a).andExists(select);
+                    .where(a).andExists(select).and(USERS.USERNAME.ne(users.getUsername()));
             count = selectConditionStep.fetchOne();
         }
         return count.value1();
