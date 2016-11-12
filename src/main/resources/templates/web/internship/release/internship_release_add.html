@@ -27,6 +27,13 @@
                         <input class="form-control" name="releaseTitle" id="releaseTitle" placeholder="标题"/>
                         <p class="text-danger hidden" id="release_title_error_msg"></p>
                     </div>
+                    <div class="form-group" id="valid_internship_type">
+                        <label>实习类型</label>
+                        <select class="form-control" name="internshipTypeId" id="select_internship_type">
+                            <option>请选择实习类型</option>
+                        </select>
+                        <p class="text-danger hidden" id="internship_type_error_msg"></p>
+                    </div>
                     <div class="form-group" id="valid_teacher_distribution_time">
                         <label>指导教师分配时间</label>
                         <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime" placeholder="指导教师分配时间"/>
@@ -37,6 +44,18 @@
                         <input class="form-control" name="time" id="time" placeholder="实习开始时间"/>
                         <p class="help-block">建议：实习时间晚于指导教师分配时间</p>
                         <p class="text-danger hidden" id="time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_school">
+                        <select class="form-control" name="schoolId" id="select_school">
+                            <option>请选择学校</option>
+                        </select>
+                        <p class="text-danger hidden" id="school_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_college">
+                        <select class="form-control" name="collegeId" id="select_college">
+                            <option>请选择院</option>
+                        </select>
+                        <p class="text-danger hidden" id="college_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_department">
                         <select class="form-control" name="departmentId" id="select_department">
@@ -50,20 +69,8 @@
                         </select>
                         <p class="text-danger hidden" id="grade_error_msg"></p>
                     </div>
-                    <div class="form-group">
-                            <select id="select_science" class="form-control show-tick" multiple="" data-actions-box="true" data-done-button="true" title="请选择专业">
-                                <option>Apple</option>
-                                <option>Banana</option>
-                                <option>Orange</option>
-                                <option>Pineapple</option>
-                                <option>Apple2</option>
-                                <option>Banana2</option>
-                                <option>Orange2</option>
-                                <option>Pineapple2</option>
-                                <option>Apple2</option>
-                                <option>Banana2</option>
-                                <option>Orange2</option>
-                                <option>Pineapple2</option>
+                    <div class="form-group" id="valid_science">
+                            <select name="science" id="select_science" class="form-control show-tick" multiple="" data-actions-box="true" data-done-button="true" title="请选择专业">
                             </select>
                         <p class="text-danger hidden" id="science_error_msg"></p>
                     </div>
@@ -71,7 +78,7 @@
                         <label>状态</label>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="internshipReleaseIsDel" value="1" checked="checked" />注销
+                                <input type="checkbox" name="internshipReleaseIsDel" id="internshipReleaseIsDel" value="1" checked="checked" />注销
                             </label>
                         </div>
                     </div>
@@ -87,6 +94,21 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <script id="school-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{school_value}}">{{school_name}}</option>
+            {{/each}}
+        </script>
+        <script id="college-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{college_value}}">{{college_name}}</option>
+            {{/each}}
+        </script>
+        <script id="internship-type-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{internship_type_value}}">{{internship_type_name}}</option>
+            {{/each}}
+        </script>
         <script id="department-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <option value="{{department_value}}">{{department_name}}</option>
@@ -95,6 +117,11 @@
         <script id="grade-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <option value="{{grade_value}}">{{grade_name}}</option>
+            {{/each}}
+        </script>
+        <script id="science-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{science_value}}">{{science_name}}</option>
             {{/each}}
         </script>
         <input type="hidden" class="dy_script" value="/js/internship/release/internship_release_add.js" />

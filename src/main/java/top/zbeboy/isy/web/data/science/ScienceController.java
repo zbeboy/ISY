@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.data.science;
 
 import org.jooq.Record;
+import org.jooq.Record2;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,20 @@ public class ScienceController {
             Science tempScience = new Science(r.getScienceId(), r.getScienceName(), r.getScienceIsDel(), r.getDepartmentId());
             sciences.add(tempScience);
         }
+        return new AjaxUtils<Science>().success().msg("获取专业数据成功！").listData(sciences);
+    }
+
+    /**
+     * 通过年级获取全部专业
+     *
+     * @param grade 年级
+     * @return 年级下全部专业
+     */
+    @RequestMapping(value = "/user/grade/sciences", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<Science> gradeSciences(@RequestParam("grade") String grade) {
+        Result<Record2<String,Integer>> scienceRecords = scienceService.findByGrade(grade);
+        List<Science> sciences = scienceRecords.into(Science.class);
         return new AjaxUtils<Science>().success().msg("获取专业数据成功！").listData(sciences);
     }
 

@@ -24,6 +24,15 @@ public interface OrganizeService {
      */
     Result<Record1<String>> findByScienceIdAndDistinctGrade(int scienceId);
 
+
+    /**
+     * 根据系id查询全部年级
+     *
+     * @param departmentId 系id
+     * @return 系下全部年级
+     */
+    Result<Record1<String>> findByDepartmentIdAndDistinctGrade(int departmentId);
+
     /**
      * 查找专业下不等于该班级id的班级名
      *

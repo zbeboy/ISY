@@ -5,3 +5,4 @@
 /root/*
 application*.properties
 *.jks
+/.gitignore

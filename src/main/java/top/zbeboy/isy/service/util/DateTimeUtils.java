@@ -48,9 +48,35 @@ public class DateTimeUtils {
      * @return sql date
      * @throws ParseException
      */
-    public static java.sql.Date formatData(String date) throws ParseException {
+    public static java.sql.Date formatDate(String date) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date d = sdf.parse(date);
         return new java.sql.Date(d.getTime());
+    }
+
+    /**
+     * 格式化成sql date
+     * @param date date 日期
+     * @param format 格式
+     * @return sql date
+     * @throws ParseException
+     */
+    public static java.sql.Date formatDate(String date,String format) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        java.util.Date d = sdf.parse(date);
+        return new java.sql.Date(d.getTime());
+    }
+
+    /**
+     * 格式化成sql date
+     * @param date date 日期
+     * @param format 格式
+     * @return sql date
+     * @throws ParseException
+     */
+    public static java.sql.Timestamp formatDateToTimestamp(String date,String format) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        java.util.Date d = sdf.parse(date);
+        return new java.sql.Timestamp(d.getTime());
     }
 }

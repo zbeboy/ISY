@@ -328,7 +328,7 @@ public class StaffController {
                 staff.setSex(staffVo.getSex());
                 staff.setNationId(staffVo.getNationId());
                 staff.setPoliticalLandscapeId(staffVo.getPoliticalLandscapeId());
-                staff.setBirthday(DateTimeUtils.formatData(staffVo.getBirthday()));
+                staff.setBirthday(DateTimeUtils.formatDate(staffVo.getBirthday()));
                 staff.setIdCard(staffVo.getIdCard());
                 staff.setFamilyResidence(staffVo.getFamilyResidence());
                 staff.setPost(staffVo.getPost());

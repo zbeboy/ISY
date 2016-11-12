@@ -514,7 +514,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
 
         /**
          * 检验学校id
-         * @param msg
          */
         function validSchoolId() {
             initParam();

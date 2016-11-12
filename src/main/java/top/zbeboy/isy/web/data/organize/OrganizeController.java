@@ -67,6 +67,26 @@ public class OrganizeController {
     }
 
     /**
+     * 通过系id获取全部年级
+     *
+     * @param departmentId 系id
+     * @return 系下全部年级
+     */
+    @RequestMapping(value = "/user/department/grades", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<SelectUtils> departmentGrades(@RequestParam("departmentId") int departmentId) {
+        List<SelectUtils> grades = new ArrayList<>();
+        SelectUtils selectUtils = new SelectUtils(0, "0", "请选择年级", true);
+        grades.add(selectUtils);
+        Result<Record1<String>> gradeRecord = organizeService.findByDepartmentIdAndDistinctGrade(departmentId);
+        for (Record r : gradeRecord) {
+            SelectUtils tempGrade = new SelectUtils(0, r.getValue("grade").toString(), r.getValue("grade").toString(), false);
+            grades.add(tempGrade);
+        }
+        return new AjaxUtils<SelectUtils>().success().msg("获取年级数据成功！").listData(grades);
+    }
+
+    /**
      * 通过年级获取全部班级
      *
      * @param grade 年级

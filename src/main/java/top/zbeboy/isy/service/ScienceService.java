@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service;
 
 import org.jooq.Record;
+import org.jooq.Record2;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.domain.tables.records.ScienceRecord;
@@ -22,6 +23,14 @@ public interface ScienceService {
      * @return 系下全部专业
      */
     Result<ScienceRecord> findByDepartmentId(int departmentId);
+
+    /**
+     * 通过年级查询全部专业
+     *
+     * @param grade 年级
+     * @return 年级下全部专业
+     */
+    Result<Record2<String,Integer>> findByGrade(String grade);
 
     /**
      * 保存

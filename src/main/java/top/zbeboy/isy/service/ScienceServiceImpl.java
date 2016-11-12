@@ -24,10 +24,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.COLLEGE;
-import static top.zbeboy.isy.domain.Tables.DEPARTMENT;
-import static top.zbeboy.isy.domain.Tables.SCHOOL;
-import static top.zbeboy.isy.domain.Tables.SCIENCE;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-08-21.
@@ -58,6 +55,17 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
         Byte isDel = 0;
         return create.selectFrom(SCIENCE)
                 .where(SCIENCE.SCIENCE_IS_DEL.eq(isDel).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record2<String,Integer>> findByGrade(String grade) {
+        Byte isDel = 0;
+        return create.selectDistinct(SCIENCE.SCIENCE_NAME,SCIENCE.SCIENCE_ID)
+                .from(SCIENCE)
+                .join(ORGANIZE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .where(SCIENCE.SCIENCE_IS_DEL.eq(isDel).and(ORGANIZE.GRADE.eq(grade)))
                 .fetch();
     }
 
