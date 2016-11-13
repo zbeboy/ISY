@@ -32,54 +32,83 @@
                         <select class="form-control" name="internshipTypeId" id="select_internship_type">
                             <option>请选择实习类型</option>
                         </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="internship_type_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_teacher_distribution_time">
                         <label>指导教师分配时间</label>
-                        <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime" placeholder="指导教师分配时间"/>
+                        <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime"
+                               placeholder="指导教师分配时间"/>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="teacher_distribution_time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_time">
                         <label>实习时间</label>
                         <input class="form-control" name="time" id="time" placeholder="实习开始时间"/>
-                        <p class="help-block">建议：实习时间晚于指导教师分配时间</p>
+                        <p class="help-block">建议：实习时间晚于指导教师分配时间,保存后不可编辑</p>
                         <p class="text-danger hidden" id="time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_school">
                         <select class="form-control" name="schoolId" id="select_school">
                             <option>请选择学校</option>
                         </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="school_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_college">
                         <select class="form-control" name="collegeId" id="select_college">
                             <option>请选择院</option>
                         </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="college_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_department">
                         <select class="form-control" name="departmentId" id="select_department">
                             <option>请选择系</option>
                         </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="department_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_grade">
                         <select class="form-control" name="grade" id="select_grade">
                             <option>请选择年级</option>
                         </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="grade_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_science">
-                            <select name="science" id="select_science" class="form-control show-tick" multiple="" data-actions-box="true" data-done-button="true" title="请选择专业">
-                            </select>
+                        <select name="science" id="select_science" class="form-control show-tick" multiple=""
+                                data-actions-box="true" data-done-button="true" title="请选择专业">
+                        </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="science_error_msg"></p>
                     </div>
                     <div class="form-group">
                         <label>状态</label>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="internshipReleaseIsDel" id="internshipReleaseIsDel" value="1" checked="checked" />注销
+                                <input type="checkbox" name="internshipReleaseIsDel" id="internshipReleaseIsDel"
+                                       value="1" checked="checked"/>注销
                             </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>附件</label>
+                        <div class="row" id="fileShow">
+
+                        </div>
+                        <div class="text-center">
+                            <!-- The global progress bar -->
+                            <div id="progress" class="progress">
+                                <div class="progress-bar progress-bar-success"></div>
+                            </div>
+                            <p>
+                            <span class="btn btn-primary fileinput-button">
+                                <span>添加附件</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files[]" multiple="multiple" />
+                            </span>
+                            </p>
                         </div>
                     </div>
                     <div class="text-center">
@@ -124,7 +153,22 @@
             <option value="{{science_value}}">{{science_name}}</option>
             {{/each}}
         </script>
-        <input type="hidden" class="dy_script" value="/js/internship/release/internship_release_add.js" />
+        <script id="file-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{originalFilename}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+                <div class="col-lg-8" style="width:100%; cursor:default; border-width:0; border-style:none; background-color:transparent;">
+                    {{originalFilename}}
+                </div>
+                <div class="col-lg-2">
+                    {{size}}
+                </div>
+                <div class="col-lg-2 text-center">
+                    <a class="clearfile" data-file-path="{{lastPath}}" href="javascript:;">删除</a>
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/internship/release/internship_release_add.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

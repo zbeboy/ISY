@@ -2,7 +2,8 @@
  * Created by lenovo on 2016-11-10.
  */
 //# sourceURL=internship_release_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address", "bootstrap-select-zh-CN"],
+require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
+        "bootstrap-select-zh-CN", "jquery.fileupload-validate"],
     function ($, Handlebars, nav_active, moment) {
 
         /*
@@ -16,7 +17,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             science_data_url: '/user/grade/sciences',
             internship_type_url: '/user/internship/types',
             valid: '/web/internship/release/save/valid',
-            save:'/web/internship/release/save',
+            file_upload_url: '/anyone/users/upload/internship',
+            delete_file_url: '/anyone/users/delete/file',
+            save: '/web/internship/release/save',
             back: '/web/menu/internship/release'
         };
 
@@ -36,7 +39,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             departmentId: '#select_department',
             grade: '#select_grade',
             scienceId: '#select_science',
-            internshipReleaseIsDel:'#internshipReleaseIsDel'
+            internshipReleaseIsDel: '#internshipReleaseIsDel'
         };
 
         /*
@@ -52,7 +55,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             departmentId: $(paramId.departmentId).val().trim(),
             grade: $(paramId.grade).val().trim(),
             scienceId: $(paramId.scienceId).val(),
-            internshipReleaseIsDel:$('input[name="internshipReleaseIsDel"]:checked').val()
+            internshipReleaseIsDel: $('input[name="internshipReleaseIsDel"]:checked').val(),
+            files: ''
         };
 
         /*
@@ -127,6 +131,23 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             param.departmentId = $(paramId.departmentId).val().trim();
             param.grade = $(paramId.grade).val().trim();
             param.scienceId = $(paramId.scienceId).val();
+            param.internshipReleaseIsDel = $('input[name="internshipReleaseIsDel"]:checked').val();
+            if (typeof(param.internshipReleaseIsDel) == "undefined") {
+                param.internshipReleaseIsDel = 0;
+            }
+            var f = $('.fileobj');
+            var p = [];
+            for (var i = 0; i < f.length; i++) {
+                p.push(new fileObj($(f[i]).attr('data-original-file-name'),
+                    $(f[i]).attr('data-new-name') ,
+                    $(f[i]).attr('data-file-path'),
+                    $(f[i]).attr('data-ext'),
+                    $(f[i]).attr('data-size')
+                ));
+            }
+            if (p.length > 0) {
+                param.files = JSON.stringify(p);
+            }
         }
 
         /*
@@ -150,7 +171,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 fromLabel: '起始时间',
                 toLabel: '结束时间',
                 customRangeLabel: '自定义',
-                separator : ' 至 ',
+                separator: ' 至 ',
                 daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
                 monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
                     '七月', '八月', '九月', '十月', '十一月', '十二月']
@@ -173,7 +194,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 fromLabel: '起始时间',
                 toLabel: '结束时间',
                 customRangeLabel: '自定义',
-                separator : ' 至 ',
+                separator: ' 至 ',
                 daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
                 monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
                     '七月', '八月', '九月', '十月', '十一月', '十二月']
@@ -546,6 +567,167 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
 
         }
 
+        // 上传组件
+        $('#fileupload').fileupload({
+            url: web_path + ajax_url.file_upload_url,
+            dataType: 'json',
+            maxFileSize: 100000000,// 100MB
+            formAcceptCharset: 'utf-8',
+            submit: function (e, data) {
+                initParam();
+                if (Number(param.schoolId) <= 0) {
+                    Messenger().post({
+                        message: '请选择学校',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    return false;
+                }
+
+                if (Number(param.collegeId) <= 0) {
+                    Messenger().post({
+                        message: '请选择院',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    return false;
+                }
+
+                if (Number(param.departmentId) <= 0) {
+                    Messenger().post({
+                        message: '请选择系',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    return false;
+                }
+
+                data.formData = param;
+            },
+            done: function (e, data) {
+                initParam();
+                if (data.result.state) {
+                    fileShow(data.result);
+                } else {
+                    Messenger().post({
+                        message: data.result.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress').find('.progress-bar').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+        });
+
+        /**
+         * 文件对象
+         * @param originalFileName 原名
+         * @param newName 新名
+         * @param relativePath 相对路径
+         * @param ext 后缀
+         * @param size 尺寸
+         */
+        function fileObj(originalFileName, newName, relativePath, ext,size) {
+            this.originalFileName = originalFileName;
+            this.newName = newName;
+            this.relativePath = relativePath;
+            this.ext = ext;
+            this.size = size;
+        }
+
+        /**
+         * 文件显示
+         * @param data 数据
+         */
+        function fileShow(data) {
+            var source = $("#file-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper('originalFilename', function () {
+                var value = Handlebars.escapeExpression(this.originalFilename);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('size', function () {
+                var value = Handlebars.escapeExpression(transformationFileUnit(this.size));
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('lastPath', function () {
+                var value = Handlebars.escapeExpression(data.objectResult + this.newName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('new_name', function () {
+                var value = Handlebars.escapeExpression(this.newName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('ext', function () {
+                var value = Handlebars.escapeExpression(this.ext);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('l_size', function () {
+                var value = Handlebars.escapeExpression(this.size);
+                return new Handlebars.SafeString(value);
+            });
+
+            var html = template(data);
+            $('#fileShow').append(html);
+        }
+
+        /*
+         删除附件
+         */
+        $('#fileShow').delegate('.clearfile', "click", function () {
+            var path = $(this).attr('data-file-path');
+            var obj = $(this);
+            $.post(web_path + ajax_url.delete_file_url, {filePath: path}, function (data) {
+                if (data.state) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                    obj.parent().parent().remove();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /**
+         * 转换文件单位
+         *
+         * @param size 文件大小
+         * @return 文件尺寸
+         */
+        function transformationFileUnit(size) {
+            var str = "";
+            if (size < 1024) {
+                str = size + "B";
+            } else if (size >= 1024 && size < 1024 * 1024) {
+                str = (size / 1024) + "KB";
+            } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
+                str = (size / (1024 * 1024)) + "MB";
+            } else {
+                str = (size / (1024 * 1024 * 1024)) + "GB";
+            }
+
+            return str;
+        }
+
         $('#save').click(function () {
             add();
         });
@@ -622,7 +804,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         /**
          * 检验实习类型
          */
-        function validInternshipTypeId(){
+        function validInternshipTypeId() {
             initParam();
             var internshipTypeId = param.internshipTypeId;
             // 改变选项时，检验
@@ -630,7 +812,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 validSchoolId();
             } else {
                 Messenger().post({
-                    message:  '请选择实习类型',
+                    message: '请选择实习类型',
                     type: 'error',
                     showCloseButton: true
                 });
@@ -689,7 +871,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         /**
          * 检验年级
          */
-        function validGrade(){
+        function validGrade() {
             var grade = param.grade;
             if (Number(grade) <= 0) {
                 Messenger().post({
@@ -718,7 +900,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             }
         }
 
-        function sendAjax(){
+        function sendAjax() {
             param.scienceId = param.scienceId.join(',');
             Messenger().run({
                 successMessage: '保存数据成功',

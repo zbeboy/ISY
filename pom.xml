@@ -385,10 +385,10 @@
                         <!-- This is a minimal working configuration. See the manual's section about the code generator for more details -->
                         <configuration>
                             <jdbc>
-                                <driver>${spring.datasource.driver-class-name}</driver>
-                                <url>${spring.datasource.url}</url>
-                                <user>${spring.datasource.username}</user>
-                                <password>${spring.datasource.password}</password>
+                                <driver>${datasource.mine.driverClassName}</driver>
+                                <url>${datasource.mine.jdbcUrl}</url>
+                                <user>${datasource.mine.username}</user>
+                                <password>${datasource.mine.password}</password>
                             </jdbc>
                             <generator>
                                 <generate>
@@ -398,7 +398,7 @@
                                 <database>
                                     <name>org.jooq.util.mysql.MySQLDatabase</name>
                                     <includes>.*</includes>
-                                    <inputSchema>${spring.datasource.schema}</inputSchema>
+                                    <inputSchema>${datasource.schema}</inputSchema>
                                     <!-- First, register your custom types here -->
                                     <customTypes>
                                         <customType>

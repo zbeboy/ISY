@@ -1,5 +1,7 @@
 package top.zbeboy.isy.web.internship.release;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,20 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
-import top.zbeboy.isy.domain.tables.pojos.InternshipReleaseScience;
-import top.zbeboy.isy.domain.tables.pojos.InternshipType;
-import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.InternshipReleaseScienceService;
-import top.zbeboy.isy.service.InternshipReleaseService;
-import top.zbeboy.isy.service.InternshipTypeService;
-import top.zbeboy.isy.service.UsersService;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
+import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -51,6 +52,24 @@ public class ReleaseController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private UploadService uploadService;
+
+    @Resource
+    private SchoolService schoolService;
+
+    @Resource
+    private CollegeService collegeService;
+
+    @Resource
+    private DepartmentService departmentService;
+
+    @Resource
+    private FilesService filesService;
+
+    @Resource
+    private InternshipFileService internshipFileService;
 
     /**
      * 实习发布数据
@@ -146,11 +165,60 @@ public class ReleaseController {
                 for (String scienceId : scienceArr) {
                     internshipReleaseScienceService.save(internshipReleaseId, NumberUtils.toInt(scienceId));
                 }
+
+                List<Files> files = JSON.parseArray(internshipReleaseVo.getFiles(),Files.class);
+                for(Files f:files){
+                    String fileId = UUIDUtils.getUUID();
+                    f.setFileId(fileId);
+                    filesService.save(f);
+                    InternshipFile internshipFile = new InternshipFile(internshipReleaseId,fileId);
+                    internshipFileService.save(internshipFile);
+                }
                 return new AjaxUtils().success().msg("保存成功");
             }
         } catch (ParseException e) {
             log.error(" format time is exception.", e);
         }
         return new AjaxUtils().fail().msg("保存失败");
+    }
+
+    /**
+     * 上传实习附件
+     *
+     * @param schoolId                    学校id
+     * @param collegeId                   院id
+     * @param departmentId                系id
+     * @param multipartHttpServletRequest 文件请求
+     * @return 文件信息
+     */
+    @RequestMapping("/anyone/users/upload/internship")
+    @ResponseBody
+    public AjaxUtils<FileBean> usersUploadInternship(@RequestParam("schoolId") int schoolId, @RequestParam("collegeId") int collegeId, @RequestParam("departmentId") int departmentId,
+                                                     MultipartHttpServletRequest multipartHttpServletRequest) {
+        AjaxUtils<FileBean> data = new AjaxUtils<>();
+        try {
+            School school = schoolService.findById(schoolId);
+            College college = collegeService.findById(collegeId);
+            Department department = departmentService.findById(departmentId);
+            if (!ObjectUtils.isEmpty(school)) {
+                if (!ObjectUtils.isEmpty(college)) {
+                    if (!ObjectUtils.isEmpty(department)) {
+                        String path = Workbook.internshipPath(school.getSchoolName(), college.getCollegeName(), department.getDepartmentName());
+                        List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                                RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.getRemoteAddr());
+                        data.success().listData(fileBeen).obj(path);
+                    } else {
+                        data.fail().msg("上传失败，未查询到系信息");
+                    }
+                } else {
+                    data.fail().msg("上传失败，未查询到院信息");
+                }
+            } else {
+                data.fail().msg("上传失败，未查询到学校信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

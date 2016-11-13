@@ -177,6 +177,15 @@ CREATE TABLE system_sms(
   accept_phone VARCHAR(15)
 );
 
+CREATE TABLE files(
+  file_id VARCHAR(100) PRIMARY KEY,
+  size LONG,
+  original_file_name VARCHAR(300),
+  new_name VARCHAR(300),
+  relative_path VARCHAR(800),
+  ext VARCHAR(20)
+);
+
 CREATE TABLE internship_type(
   internship_type_id INT AUTO_INCREMENT PRIMARY KEY ,
   internship_type_name VARCHAR(100) NOT NULL
@@ -205,6 +214,13 @@ CREATE TABLE internship_release_science(
   science_id INT NOT NULL ,
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
   FOREIGN KEY (science_id) REFERENCES science(science_id)
+);
+
+CREATE TABLE internship_file(
+  internship_release_id VARCHAR(100) NOT NULL ,
+  file_id VARCHAR(100) NOT NULL ,
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  FOREIGN KEY (file_id) REFERENCES files(file_id)
 );
 
 CREATE TABLE internship_teacher_distribution(
@@ -396,7 +412,7 @@ INSERT INTO users(username, password, enabled, users_type_id, real_name, mobile,
                    verify_mailbox, mailbox_verify_code,
                   password_reset_key, mailbox_verify_valid,
                   password_reset_key_valid, lang_key, join_date)
-VALUES ('863052317@qq.com','$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2',1,3,'赵银','13987614709','',1,'','',NULL ,NULL ,'zh-CN','2016-08-18');
+VALUES ('863052317@qq.com','$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2',1,3,'赵银','13987614709','/images/avatar.jpg',1,'','',NULL ,NULL ,'zh-CN','2016-08-18');
 
 INSERT INTO role(role_name, role_en_name) VALUES ('系统','ROLE_SYSTEM');
 INSERT INTO role(role_name, role_en_name) VALUES ('管理员','ROLE_ADMIN');

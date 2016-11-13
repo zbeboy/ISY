@@ -19,6 +19,7 @@ import top.zbeboy.isy.domain.tables.College;
 import top.zbeboy.isy.domain.tables.CollegeApplication;
 import top.zbeboy.isy.domain.tables.CollegeRole;
 import top.zbeboy.isy.domain.tables.Department;
+import top.zbeboy.isy.domain.tables.Files;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCompany;
 import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
@@ -26,6 +27,7 @@ import top.zbeboy.isy.domain.tables.InternshipApply;
 import top.zbeboy.isy.domain.tables.InternshipCollege;
 import top.zbeboy.isy.domain.tables.InternshipCompany;
 import top.zbeboy.isy.domain.tables.InternshipCompanyHistory;
+import top.zbeboy.isy.domain.tables.InternshipFile;
 import top.zbeboy.isy.domain.tables.InternshipJournal;
 import top.zbeboy.isy.domain.tables.InternshipRegulate;
 import top.zbeboy.isy.domain.tables.InternshipRelease;
@@ -63,7 +65,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-	private static final long serialVersionUID = -448659319;
+	private static final long serialVersionUID = 1197881747;
 
 	/**
 	 * The reference instance of <code>isy</code>
@@ -92,6 +94,7 @@ public class Isy extends SchemaImpl {
 			CollegeApplication.COLLEGE_APPLICATION,
 			CollegeRole.COLLEGE_ROLE,
 			Department.DEPARTMENT,
+			Files.FILES,
 			GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE,
 			GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY,
 			GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY,
@@ -99,6 +102,7 @@ public class Isy extends SchemaImpl {
 			InternshipCollege.INTERNSHIP_COLLEGE,
 			InternshipCompany.INTERNSHIP_COMPANY,
 			InternshipCompanyHistory.INTERNSHIP_COMPANY_HISTORY,
+			InternshipFile.INTERNSHIP_FILE,
 			InternshipJournal.INTERNSHIP_JOURNAL,
 			InternshipRegulate.INTERNSHIP_REGULATE,
 			InternshipRelease.INTERNSHIP_RELEASE,

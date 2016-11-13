@@ -32,6 +32,7 @@ public class InternshipReleaseVo {
     @NotNull
     private String scienceId;
     private Byte internshipReleaseIsDel;
+    private String files;
 
     public String getReleaseTitle() {
         return releaseTitle;
@@ -111,5 +112,13 @@ public class InternshipReleaseVo {
 
     public void setInternshipReleaseIsDel(Byte internshipReleaseIsDel) {
         this.internshipReleaseIsDel = internshipReleaseIsDel;
+    }
+
+    public String getFiles() {
+        return files;
+    }
+
+    public void setFiles(String files) {
+        this.files = files;
     }
 }

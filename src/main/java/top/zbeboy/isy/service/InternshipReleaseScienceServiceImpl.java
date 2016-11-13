@@ -7,11 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
-import java.util.List;
-
-import static top.zbeboy.isy.domain.Tables.AUTHORITIES;
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE_SCIENCE;
 
 /**
@@ -30,6 +26,7 @@ public class InternshipReleaseScienceServiceImpl implements InternshipReleaseSci
         this.create = dslContext;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(String internshipReleaseId, int scienceId) {
         create.insertInto(INTERNSHIP_RELEASE_SCIENCE)

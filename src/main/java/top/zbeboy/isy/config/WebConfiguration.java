@@ -7,6 +7,7 @@ import io.undertow.servlet.api.SecurityConstraint;
 import io.undertow.servlet.api.SecurityInfo;
 import io.undertow.servlet.api.TransportGuaranteeType;
 import io.undertow.servlet.api.WebResourceCollection;
+import org.apache.commons.lang3.CharEncoding;
 import org.jooq.util.derby.sys.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
@@ -73,6 +74,8 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
                             .addUrlPattern("/*"))
                     .setTransportGuaranteeType(TransportGuaranteeType.CONFIDENTIAL)
                     .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
+                    .setDefaultEncoding(CharEncoding.UTF_8)
+                    .setUrlEncoding(CharEncoding.UTF_8)
                     .setConfidentialPortManager(exchange -> isyProperties.getConstants().getServerHttpsPort());
         });
         if (env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION)) {

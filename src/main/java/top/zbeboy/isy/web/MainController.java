@@ -16,12 +16,15 @@ import top.zbeboy.isy.domain.tables.pojos.SystemLog;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.SystemLogService;
 import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
+import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Locale;
 
@@ -146,9 +149,32 @@ public class MainController {
     }
 
     /**
+     * 删除文件
+     *
+     * @param filePath 文件路径
+     * @return true or false
+     */
+    @RequestMapping("/anyone/users/delete/file")
+    @ResponseBody
+    public AjaxUtils deleteFile(@RequestParam("filePath") String filePath,HttpServletRequest request) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        try {
+            if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
+                ajaxUtils.success().msg("删除文件成功");
+            } else {
+                ajaxUtils.fail().msg("删除文件失败");
+            }
+        } catch (IOException e) {
+            log.error(" delete file is exception.", e);
+            ajaxUtils.fail().msg("删除文件异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 语言切换，暂时不用
      *
-     * @param request 请求对象
+     * @param request  请求对象
      * @param response 响应对象
      * @param language 语言
      * @return 重置页面
