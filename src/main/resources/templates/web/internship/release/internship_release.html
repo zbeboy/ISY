@@ -16,86 +16,11 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="text-right" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-outline btn-primary" id="release">发布<i class="fa fa-edit"></i></button>
+                    <button type="button" class="btn btn-outline btn-primary" id="release">发布<i class="fa fa-edit"></i>
+                    </button>
                     <button type="button" class="btn btn-outline btn-default"><i class="fa fa-refresh"></i>刷新</button>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        实习标题
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-4"><span>系：</span><span>信息工程系</span></div>
-                            <div class="col-md-4"><span>年级：</span><span>2012</span></div>
-                            <div class="col-md-4"><span>状态：</span><span>正常</span></div>
-                        </div>
-                        <div class="row" style="margin-top:10px;">
-                            <div class="col-md-4"><span>实习类型：</span><span>自主实习</span></div>
-                            <div class="col-md-4"><span>开始时间：</span><span>2016-11-02 20:32</span></div>
-                            <div class="col-md-4"><span>结束时间：</span><span>2016-11-02 20:32</span></div>
-                        </div>
-                        <p style="margin-top:10px;">
-                            <span>专业：</span>
-                            <span class="label label-default">计算机科学与技术</span>
-                            <span class="label label-default">交通</span>
-                            <span class="label label-default">电信</span>
-                            <span class="label label-default">土木工程</span>
-                            <span class="label label-default">地球</span>
-                            <span class="label label-default">未来人类</span>
-                            <span class="label label-default">斯巴达光年</span>
-                            <span class="label label-default">电子信息科技</span>
-                            <span class="label label-default">自动化</span>
-                            <span class="label label-default">软件工程</span>
-                            <span class="label label-default">计算机科学与技术</span>
-                            <span class="label label-default">交通</span>
-                            <span class="label label-default">电信</span>
-                            <span class="label label-default">土木工程</span>
-                            <span class="label label-default">地球</span>
-                            <span class="label label-default">未来人类</span>
-                            <span class="label label-default">斯巴达光年</span>
-                            <span class="label label-default">电子信息科技</span>
-                            <span class="label label-default">自动化</span>
-                            <span class="label label-default">软件工程</span>
-                            <span class="label label-default">计算机科学与技术</span>
-                            <span class="label label-default">交通</span>
-                            <span class="label label-default">电信</span>
-                            <span class="label label-default">土木工程</span>
-                            <span class="label label-default">地球</span>
-                            <span class="label label-default">未来人类</span>
-                            <span class="label label-default">斯巴达光年</span>
-                            <span class="label label-default">电子信息科技</span>
-                            <span class="label label-default">自动化</span>
-                            <span class="label label-default">软件工程</span>
-                            <span class="label label-default">计算机科学与技术</span>
-                            <span class="label label-default">交通</span>
-                            <span class="label label-default">电信</span>
-                            <span class="label label-default">土木工程</span>
-                            <span class="label label-default">地球</span>
-                            <span class="label label-default">未来人类</span>
-                            <span class="label label-default">斯巴达光年</span>
-                            <span class="label label-default">电子信息科技</span>
-                            <span class="label label-default">自动化</span>
-                            <span class="label label-default">软件工程</span>
-                            <span class="label label-default">计算机科学与技术</span>
-                            <span class="label label-default">交通</span>
-                            <span class="label label-default">电信</span>
-                            <span class="label label-default">土木工程</span>
-                            <span class="label label-default">地球</span>
-                            <span class="label label-default">未来人类</span>
-                            <span class="label label-default">斯巴达光年</span>
-                            <span class="label label-default">电子信息科技</span>
-                            <span class="label label-default">自动化</span>
-                            <span class="label label-default">软件工程</span>
-                        </p>
-                        <div class="text-right">
-                            <small><em><span>发布人：</span><span>赵银</span> <span>2016-11-01 20:41</span></em></small>
-                        </div>
-                    </div>
-                    <div class="panel-footer text-right">
-                        <button type="button" class="btn btn-primary">编辑</button>
-                        <button type="button" class="btn btn-outline btn-danger">注销</button>
-                        <button type="button" class="btn btn-outline btn-warning">恢复</button>
-                    </div>
+                <div id="tableData">
                 </div>
             </div>
         </div>
@@ -104,7 +29,58 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
-        <input type="hidden" class="dy_script" value="/js/internship/release/internship_release.js" />
+        <script id="internship-release-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{internship_title}}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-2"><span>系：</span><span>{{department_name}}</span></div>
+                        <div class="col-md-2"><span>年级：</span><span>{{allowGrade}}</span></div>
+                        <div class="col-md-3">
+                            <span>状态：</span>
+                            {{#if internshipReleaseIsDel}}
+                            <span class="text-danger">注销</span>
+                            {{else}}
+                            <span>正常</span>
+                            {{/if}}
+                        </div>
+                        <div class="col-md-4"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-6"><span>教师分配开始时间：</span><span>{{teacherDistributionStartTimeStr}}</span>
+                        </div>
+                        <div class="col-md-6"><span>实习申请开始时间：</span><span>{{startTimeStr}}</span></div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-6"><span>教师分配结束时间：</span><span>{{teacherDistributionEndTimeStr}}</span></div>
+                        <div class="col-md-6"><span>实习申请结束时间：</span><span>{{endTimeStr}}</span></div>
+                    </div>
+                    <p style="margin-top:10px;">
+                        <span>专业：</span>
+                        {{#each sciences}}
+                        <span class="label label-default">{{scienceName}}</span>
+                        {{/each}}
+                    </p>
+                    <div class="text-right">
+                        <small><em><span>发布人：</span><span>{{real_name}}</span> <span>{{releaseTimeStr}}</span></em>
+                        </small>
+                    </div>
+                </div>
+                <div class="panel-footer text-right">
+                    <button type="button" class="btn btn-primary">编辑</button>
+                    {{#if internshipReleaseIsDel}}
+                    <button type="button" class="btn btn-outline btn-warning">恢复</button>
+                    {{else}}
+                    <button type="button" class="btn btn-outline btn-danger">注销</button>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/internship/release/internship_release.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

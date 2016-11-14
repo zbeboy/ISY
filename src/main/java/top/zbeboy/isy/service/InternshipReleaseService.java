@@ -1,5 +1,7 @@
 package top.zbeboy.isy.service;
 
+import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
 
 import java.util.List;
@@ -19,7 +21,15 @@ public interface InternshipReleaseService {
 
     /**
      * 保存
+     *
      * @param internshipRelease 实习
      */
     void save(InternshipRelease internshipRelease);
+
+    /**
+     * 分页查询全部
+     *
+     * @return 分页数据
+     */
+    Result<Record> findAllByPage();
 }

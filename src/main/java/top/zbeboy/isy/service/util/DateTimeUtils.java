@@ -16,8 +16,18 @@ public class DateTimeUtils {
      * @return java.util.date
      */
     public static java.util.Date timestampToDate(java.sql.Timestamp timestamp) {
-        java.util.Date date = new java.util.Date(timestamp.getTime());
-        return date;
+        return new java.util.Date(timestamp.getTime());
+    }
+
+    /**
+     * timestamp to string
+     * @param timestamp sql
+     * @param format 格式
+     * @return string
+     */
+    public static String timestampToString(java.sql.Timestamp timestamp,String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(new java.util.Date(timestamp.getTime()));
     }
 
     /**

@@ -1,6 +1,8 @@
 package top.zbeboy.isy.service;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE_SCIENCE;
+import static top.zbeboy.isy.domain.Tables.SCIENCE;
 
 /**
  * Created by lenovo on 2016-11-12.
@@ -34,5 +37,15 @@ public class InternshipReleaseScienceServiceImpl implements InternshipReleaseSci
                 .set(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID,scienceId)
                 .execute();
 
+    }
+
+    @Override
+    public Result<Record> findByInternshipReleaseId(String internshipReleaseId) {
+        return create.select()
+                .from(INTERNSHIP_RELEASE_SCIENCE)
+                .join(SCIENCE)
+                .on(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .fetch();
     }
 }

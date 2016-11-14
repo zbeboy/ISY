@@ -1,8 +1,9 @@
 package top.zbeboy.isy.web.internship.release;
 
 import com.alibaba.fastjson.JSON;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,15 +22,14 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.file.FileBean;
+import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseVo;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +37,9 @@ import java.util.List;
  * Created by lenovo on 2016-11-08.
  */
 @Controller
-public class ReleaseController {
+public class InternshipReleaseController {
 
-    private final Logger log = LoggerFactory.getLogger(ReleaseController.class);
+    private final Logger log = LoggerFactory.getLogger(InternshipReleaseController.class);
 
     @Resource
     private InternshipTypeService internshipTypeService;
@@ -79,6 +79,31 @@ public class ReleaseController {
     @RequestMapping(value = "/web/menu/internship/release", method = RequestMethod.GET)
     public String releaseData() {
         return "/web/internship/release/internship_release::#page-wrapper";
+    }
+
+    /**
+     * 获取实习发布数据
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/release/data",method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipReleaseBean> releaseDatas(){
+        List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
+        Result<Record> records = internshipReleaseService.findAllByPage();
+        if(records.isNotEmpty()){
+            internshipReleaseBeens = records.into(InternshipReleaseBean.class);
+            String format = "yyyy-MM-dd HH:mm:ss";
+            internshipReleaseBeens.forEach(i->{
+                i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(),format));
+                i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(),format));
+                i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(),format));
+                i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(),format));
+                i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(),format));
+                Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseId(i.getInternshipReleaseId());
+                i.setSciences(records1.into(Science.class));
+            });
+        }
+        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens);
     }
 
     /**

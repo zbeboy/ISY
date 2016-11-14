@@ -2,6 +2,8 @@ package top.zbeboy.isy.service;
 
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import top.zbeboy.isy.domain.tables.daos.InternshipReleaseDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
 
 import java.util.List;
+
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-11-12.
@@ -41,5 +45,19 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     @Override
     public void save(InternshipRelease internshipRelease) {
         internshipTypeDao.insert(internshipRelease);
+    }
+
+    @Override
+    public Result<Record> findAllByPage() {
+        return create.select()
+                .from(INTERNSHIP_RELEASE)
+                .join(USERS)
+                .on(INTERNSHIP_RELEASE.USERNAME.eq(USERS.USERNAME))
+                .join(DEPARTMENT)
+                .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(INTERNSHIP_TYPE)
+                .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
+                .fetch();
+
     }
 }
