@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -51,5 +52,29 @@ public class MD5Utils {
 
         // 使用动态加密盐的只需要在注册用户的时候将第二个参数换成用户名即可
         return md5.encodePassword(password, "acegisalt");
+    }
+
+    public static String sha_1(String decript) {
+        try {
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance("SHA-1");
+            digest.update(decript.getBytes());
+            byte messageDigest[] = digest.digest();
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            // 字节数组转换为 十六进制 数
+            for (byte aMessageDigest : messageDigest) {
+                String shaHex = Integer.toHexString(aMessageDigest & 0xFF);
+                if (shaHex.length() < 2) {
+                    hexString.append(0);
+                }
+                hexString.append(shaHex);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

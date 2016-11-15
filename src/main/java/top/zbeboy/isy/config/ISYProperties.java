@@ -16,6 +16,8 @@ public class ISYProperties {
 
     private final Constants constants = new Constants();
 
+    private final Weixin weixin = new Weixin();
+
     public Async getAsync() {
         return async;
     }
@@ -32,7 +34,9 @@ public class ISYProperties {
         return constants;
     }
 
-    ;
+    public Weixin getWeixin() {
+        return weixin;
+    }
 
     public static class Async {
 
@@ -203,6 +207,45 @@ public class ISYProperties {
 
         public void setTempDir(String tempDir) {
             this.tempDir = tempDir;
+        }
+    }
+
+    public static class Weixin {
+        private String token;
+        private String appId;
+        private String appSecret;
+        private String encodingAESKey;
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public void setAppId(String appId) {
+            this.appId = appId;
+        }
+
+        public String getAppSecret() {
+            return appSecret;
+        }
+
+        public void setAppSecret(String appSecret) {
+            this.appSecret = appSecret;
+        }
+
+        public String getEncodingAESKey() {
+            return encodingAESKey;
+        }
+
+        public void setEncodingAESKey(String encodingAESKey) {
+            this.encodingAESKey = encodingAESKey;
         }
     }
 }
