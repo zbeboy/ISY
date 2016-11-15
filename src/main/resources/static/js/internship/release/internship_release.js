@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-11-10.
  */
 //# sourceURL=internship_release.js
-require(["jquery", "handlebars", "messenger", "jquery.address"], function ($, Handlebars) {
+require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination"], function ($, Handlebars) {
 
     /*
      ajax url.
@@ -37,8 +37,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address"], function ($, Ha
             return new Handlebars.SafeString(value);
         });
 
-
-
         Handlebars.registerHelper('real_name', function () {
             var value = Handlebars.escapeExpression(this.realName);
             return new Handlebars.SafeString(value);
@@ -58,5 +56,20 @@ require(["jquery", "handlebars", "messenger", "jquery.address"], function ($, Ha
             listData(data);
         });
     }
+
+    $('#pagination').pagination({
+        items: 100,
+        itemsOnPage: 10,
+        hrefTextPrefix: '',
+        prevText: '上一页',
+        nextText: '下一页',
+        cssStyle: '',
+        listStyle: 'pagination',
+        onPageClick: function (pageNumber, event) {
+            // Callback triggered when a page is clicked
+            // Page number is given as an optional parameter
+            console.log(pageNumber);
+        }
+    });
 
 });

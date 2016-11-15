@@ -31,7 +31,8 @@ requirejs.config({
         "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
         "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
-        "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate"
+        "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate",
+        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -74,6 +75,9 @@ requirejs.config({
         },
         "jquery.fileupload-validate": {
             deps: ["jquery.fileupload", "jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload"]
+        },
+        "jquery.simple-pagination":{
+            deps: ["jquery"]
         }
     }
 });
