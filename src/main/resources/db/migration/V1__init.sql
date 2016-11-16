@@ -418,7 +418,6 @@ INSERT INTO role(role_name, role_en_name) VALUES ('系统','ROLE_SYSTEM');
 INSERT INTO role(role_name, role_en_name) VALUES ('管理员','ROLE_ADMIN');
 
 INSERT INTO authorities(username, authority) VALUES ('863052317@qq.com','ROLE_SYSTEM');
-INSERT INTO authorities(username, authority) VALUES ('863052317@qq.com','ROLE_ADMIN');
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
