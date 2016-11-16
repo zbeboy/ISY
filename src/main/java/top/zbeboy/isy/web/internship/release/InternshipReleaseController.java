@@ -24,6 +24,7 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseVo;
 
 import javax.annotation.Resource;
@@ -87,9 +88,9 @@ public class InternshipReleaseController {
      */
     @RequestMapping(value = "/web/internship/release/data",method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<InternshipReleaseBean> releaseDatas(){
+    public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils){
         List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
-        Result<Record> records = internshipReleaseService.findAllByPage();
+        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils);
         if(records.isNotEmpty()){
             internshipReleaseBeens = records.into(InternshipReleaseBean.class);
             String format = "yyyy-MM-dd HH:mm:ss";
@@ -102,8 +103,9 @@ public class InternshipReleaseController {
                 Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseId(i.getInternshipReleaseId());
                 i.setSciences(records1.into(Science.class));
             });
+            paginationUtils.setTotalPages(internshipReleaseService.countByCondition(paginationUtils));
         }
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens);
+        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
