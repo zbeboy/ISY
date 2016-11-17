@@ -12,7 +12,6 @@
     <springProfile name="prod">
         <include resource="org/springframework/boot/logging/logback/defaults.xml" />
         <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-
         <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
         <logger name="org.thymeleaf" level="ERROR">
             <appender-ref ref="FILE" />
