@@ -39,7 +39,7 @@ require(["jquery", "datatables.responsive"], function ($) {
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
-                var searchParam = initParam();
+                var searchParam = getParam();
                 d.extra_search = JSON.stringify(searchParam);
             }
         },
@@ -90,11 +90,22 @@ require(["jquery", "datatables.responsive"], function ($) {
         };
     }
 
+    /*
+     参数
+     */
+    var param = {
+        acceptPhone: ''
+    };
+
+    /*
+     得到参数
+     */
+    function getParam() {
+        return param;
+    }
 
     function initParam() {
-        return {
-            acceptPhone: $(getParamId().acceptPhone).val()
-        };
+        param.acceptPhone = $(getParamId().acceptPhone).val();
     }
 
     function cleanParam() {
@@ -103,20 +114,22 @@ require(["jquery", "datatables.responsive"], function ($) {
 
     $(getParamId().acceptPhone).keyup(function (event) {
         if (event.keyCode == 13) {
+            initParam();
             myTable.ajax.reload();
         }
     });
 
-    $('#search').click(function(){
+    $('#search').click(function () {
+        initParam();
         myTable.ajax.reload();
     });
 
-    $('#reset_search').click(function(){
+    $('#reset_search').click(function () {
         cleanParam();
         myTable.ajax.reload();
     });
 
-    $('#refresh').click(function(){
+    $('#refresh').click(function () {
         myTable.ajax.reload();
     });
 });

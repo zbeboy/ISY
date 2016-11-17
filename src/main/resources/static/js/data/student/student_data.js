@@ -62,25 +62,48 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         };
     }
 
+    /*
+     参数
+     */
+    var passParam = {
+        school: '',
+        college: '',
+        department: '',
+        science: '',
+        grade: '',
+        organize: '',
+        studentNumber: '',
+        username: '',
+        mobile: '',
+        idCard: '',
+        realName: '',
+        sex: ''
+    };
+
+    /*
+     得到参数
+     */
+    function getPassParam() {
+        return param;
+    }
+
     /**
      * init pass tab param.
      * @returns {{username: (*|jQuery), mobile: (*|jQuery), usersType: (*|jQuery)}}
      */
     function initPassParam() {
-        return {
-            school: $(getPassParamId().school).val(),
-            college: $(getPassParamId().college).val(),
-            department: $(getPassParamId().department).val(),
-            science: $(getPassParamId().science).val(),
-            grade: $(getPassParamId().grade).val(),
-            organize: $(getPassParamId().organize).val(),
-            studentNumber: $(getPassParamId().studentNumber).val(),
-            username: $(getPassParamId().username).val(),
-            mobile: $(getPassParamId().mobile).val(),
-            idCard: $(getPassParamId().idCard).val(),
-            realName: $(getPassParamId().realName).val(),
-            sex: $(getPassParamId().sex).val()
-        };
+        passParam.school = $(getPassParamId().school).val();
+        passParam.college = $(getPassParamId().college).val();
+        passParam.department = $(getPassParamId().department).val();
+        passParam.science = $(getPassParamId().science).val();
+        passParam.grade = $(getPassParamId().grade).val();
+        passParam.organize = $(getPassParamId().organize).val();
+        passParam.studentNumber = $(getPassParamId().studentNumber).val();
+        passParam.username = $(getPassParamId().username).val();
+        passParam.mobile = $(getPassParamId().mobile).val();
+        passParam.idCard = $(getPassParamId().idCard).val();
+        passParam.realName = $(getPassParamId().realName).val();
+        passParam.sex = $(getPassParamId().sex).val();
     }
 
     /**
@@ -112,75 +135,88 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     $(getPassParamId().school).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().college).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().department).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().science).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().grade).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().organize).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().studentNumber).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().username).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().mobile).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().idCard).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().realName).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().sex).change(function () {
+        initPassParam();
         passTable.ajax.reload();
     });
 
     passId.delegate('#pass_search', "click", function () {
+        initPassParam();
         passTable.ajax.reload();
     });
 
@@ -234,7 +270,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
-                    var searchParam = initPassParam();
+                    var searchParam = getPassParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },
@@ -661,17 +697,36 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         };
     }
 
+    /*
+     参数
+     */
+    var waitParam = {
+        school: '',
+        college: '',
+        department: '',
+        science: '',
+        grade: '',
+        organize: '',
+        studentNumber: '',
+        username: ''
+    };
+
+    /*
+     得到参数
+     */
+    function getWaitParam() {
+        return param;
+    }
+
     function initWaitParam() {
-        return {
-            school: $(getWaitParamId().school).val(),
-            college: $(getWaitParamId().college).val(),
-            department: $(getWaitParamId().department).val(),
-            science: $(getWaitParamId().science).val(),
-            grade: $(getWaitParamId().grade).val(),
-            organize: $(getWaitParamId().organize).val(),
-            studentNumber: $(getWaitParamId().studentNumber).val(),
-            username: $(getWaitParamId().username).val()
-        };
+        waitParam.school = $(getWaitParamId().school).val();
+        waitParam.college = $(getWaitParamId().college).val();
+        waitParam.department = $(getWaitParamId().department).val();
+        waitParam.science = $(getWaitParamId().science).val();
+        waitParam.grade = $(getWaitParamId().grade).val();
+        waitParam.organize = $(getWaitParamId().organize).val();
+        waitParam.studentNumber = $(getWaitParamId().studentNumber).val();
+        waitParam.username = $(getWaitParamId().username).val();
     }
 
     function cleanWaitParam() {
@@ -689,53 +744,62 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     $(getWaitParamId().school).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().college).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().department).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().science).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().grade).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().organize).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().studentNumber).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().username).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     waitId.delegate('#wait_search', "click", function () {
+        initWaitParam();
         waitTable.ajax.reload();
     });
 
@@ -786,7 +850,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
-                    var searchParam = initWaitParam();
+                    var searchParam = getWaitParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },

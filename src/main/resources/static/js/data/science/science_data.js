@@ -52,7 +52,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
-                var searchParam = initParam();
+                var searchParam = getParam();
                 d.extra_search = JSON.stringify(searchParam);
             }
         },
@@ -200,15 +200,30 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     }
 
     /*
+     参数
+     */
+    var param = {
+        schoolName: '',
+        collegeName: '',
+        departmentName: '',
+        scienceName: ''
+    };
+
+    /*
+     得到参数
+     */
+    function getParam() {
+        return param;
+    }
+
+    /*
      初始化参数
      */
     function initParam() {
-        return {
-            schoolName: $(getParamId().schoolName).val(),
-            collegeName: $(getParamId().collegeName).val(),
-            departmentName: $(getParamId().departmentName).val(),
-            scienceName: $(getParamId().scienceName).val()
-        };
+        param.schoolName = $(getParamId().schoolName).val();
+        param.collegeName = $(getParamId().collegeName).val();
+        param.departmentName = $(getParamId().departmentName).val();
+        param.scienceName = $(getParamId().scienceName).val();
     }
 
     /*
@@ -223,29 +238,34 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
     $(getParamId().schoolName).keyup(function (event) {
         if (event.keyCode == 13) {
+            initParam();
             myTable.ajax.reload();
         }
     });
 
     $(getParamId().collegeName).keyup(function (event) {
         if (event.keyCode == 13) {
+            initParam();
             myTable.ajax.reload();
         }
     });
 
     $(getParamId().departmentName).keyup(function (event) {
         if (event.keyCode == 13) {
+            initParam();
             myTable.ajax.reload();
         }
     });
 
     $(getParamId().scienceName).keyup(function (event) {
         if (event.keyCode == 13) {
+            initParam();
             myTable.ajax.reload();
         }
     });
 
     $('#search').click(function () {
+        initParam();
         myTable.ajax.reload();
     });
 

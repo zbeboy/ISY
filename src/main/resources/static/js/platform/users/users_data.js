@@ -83,16 +83,30 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         };
     }
 
+    /*
+     参数
+     */
+    var passParam = {
+        username: '',
+        mobile: '',
+        usersType: ''
+    };
+
+    /*
+     得到参数
+     */
+    function getPassParam() {
+        return param;
+    }
+
     /**
      * init pass tab param.
      * @returns {{username: (*|jQuery), mobile: (*|jQuery), usersType: (*|jQuery)}}
      */
     function initPassParam() {
-        return {
-            username: $(getPassParamId().username).val(),
-            mobile: $(getPassParamId().mobile).val(),
-            usersType: $(getPassParamId().usersType).val()
-        };
+        passParam.username = $(getPassParamId().username).val();
+        passParam.mobile = $(getPassParamId().mobile).val();
+        passParam.usersType = $(getPassParamId().usersType).val();
     }
 
     /**
@@ -118,21 +132,25 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     $(getPassParamId().username).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().mobile).keyup(function (event) {
         if (event.keyCode == 13) {
+            initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().usersType).change(function () {
+        initPassParam();
         passTable.ajax.reload();
     });
 
     passId.delegate('#pass_search', "click", function () {
+        initPassParam();
         passTable.ajax.reload();
     });
 
@@ -186,7 +204,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
-                    var searchParam = initPassParam();
+                    var searchParam = getPassParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },
@@ -595,12 +613,26 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         };
     }
 
+    /*
+     参数
+     */
+    var waitParam = {
+        username: '',
+        mobile: '',
+        usersType: ''
+    };
+
+    /*
+     得到参数
+     */
+    function getWaitParam() {
+        return param;
+    }
+
     function initWaitParam() {
-        return {
-            username: $(getWaitParamId().username).val(),
-            mobile: $(getWaitParamId().mobile).val(),
-            usersType: $(getWaitParamId().usersType).val()
-        };
+        waitParam.username = $(getWaitParamId().username).val();
+        waitParam.mobile = $(getWaitParamId().mobile).val();
+        waitParam.usersType = $(getWaitParamId().usersType).val();
     }
 
     function cleanWaitParam() {
@@ -619,21 +651,25 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     $(getWaitParamId().username).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().mobile).keyup(function (event) {
         if (event.keyCode == 13) {
+            initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().usersType).change(function (event) {
+        initWaitParam();
         waitTable.ajax.reload();
     });
 
     waitId.delegate('#wait_search', "click", function () {
+        initWaitParam();
         waitTable.ajax.reload();
     });
 
@@ -684,7 +720,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
-                    var searchParam = initWaitParam();
+                    var searchParam = getWaitParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },

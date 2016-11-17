@@ -53,7 +53,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
-                    var searchParam = initParam();
+                    var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },
@@ -168,14 +168,28 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
+         参数
+         */
+        var param = {
+            applicationName: '',
+            applicationEnName: '',
+            applicationCode: ''
+        };
+
+        /*
+         得到参数
+         */
+        function getParam() {
+            return param;
+        }
+
+        /*
          初始化参数
          */
         function initParam() {
-            return {
-                applicationName: $(getParamId().applicationName).val(),
-                applicationEnName: $(getParamId().applicationEnName).val(),
-                applicationCode: $(getParamId().applicationCode).val()
-            };
+            param.applicationName = $(getParamId().applicationName).val();
+            param.applicationEnName = $(getParamId().applicationEnName).val();
+            param.applicationCode = $(getParamId().applicationCode).val();
         }
 
         /*
@@ -189,23 +203,27 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         $(getParamId().applicationName).keyup(function (event) {
             if (event.keyCode == 13) {
+                initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().applicationEnName).keyup(function (event) {
             if (event.keyCode == 13) {
+                initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().applicationCode).keyup(function (event) {
             if (event.keyCode == 13) {
+                initParam();
                 myTable.ajax.reload();
             }
         });
 
         $('#search').click(function () {
+            initParam();
             myTable.ajax.reload();
         });
 

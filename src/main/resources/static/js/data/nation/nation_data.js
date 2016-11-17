@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-11-02.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address","bootstrap","messenger"],
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "bootstrap", "messenger"],
     function ($, Handlebars) {
 
         /*
@@ -51,7 +51,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
-                    var searchParam = initParam();
+                    var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },
@@ -111,7 +111,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.edit', "click", function () {
-                    edit($(this).attr('data-id'),$(this).attr('data-value'));
+                    edit($(this).attr('data-id'), $(this).attr('data-value'));
                 });
             }
         });
@@ -131,19 +131,34 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         function getParamId() {
             return {
                 nationName: '#search_nation',
-                addNation:'#addNationName',
-                updateNationId:'#updateNationId',
-                updateNation:'#updateNationName'
+                addNation: '#addNationName',
+                updateNationId: '#updateNationId',
+                updateNation: '#updateNationName'
             };
+        }
+
+        /*
+         参数
+         */
+        var param = {
+            nationName: '',
+            addNation: '',
+            updateNationId: '',
+            updateNation: ''
+        };
+
+        /*
+         得到参数
+         */
+        function getParam() {
+            return param;
         }
 
         /*
          初始化参数
          */
         function initParam() {
-            return {
-                nationName: $(getParamId().nationName).val()
-            };
+            param.nationName = $(getParamId().nationName).val();
         }
 
         /*
@@ -155,11 +170,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         $(getParamId().nationName).keyup(function (event) {
             if (event.keyCode == 13) {
+                initParam();
                 myTable.ajax.reload();
             }
         });
 
         $('#search').click(function () {
+            initParam();
             myTable.ajax.reload();
         });
 
@@ -206,20 +223,20 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         /*
          检验id
          */
-        function getValidId(){
+        function getValidId() {
             return {
                 add_nation: '#valid_add_nation',
-                update_nation:'#valid_update_nation'
+                update_nation: '#valid_update_nation'
             };
         }
 
         /*
          错误消息id
          */
-        function getErrorMsgId(){
+        function getErrorMsgId() {
             return {
                 add_nation: '#add_nation_name_error_msg',
-                update_nation:'#update_nation_name_error_msg'
+                update_nation: '#update_nation_name_error_msg'
             };
         }
 
@@ -237,7 +254,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 }, {
                     url: web_path + getAjaxUrl().save_valid,
                     type: 'post',
-                    data: {nationName:nation},
+                    data: {nationName: nation},
                     success: function (data) {
                         if (data.state) {
                             validSuccessDom(getValidId().add_nation, getErrorMsgId().add_nation);
@@ -266,7 +283,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 }, {
                     url: web_path + getAjaxUrl().update_valid,
                     type: 'post',
-                    data: {nationId:$(getParamId().updateNationId).val(),nationName:nation},
+                    data: {nationId: $(getParamId().updateNationId).val(), nationName: nation},
                     success: function (data) {
                         if (data.state) {
                             validSuccessDom(getValidId().update_nation, getErrorMsgId().update_nation);
@@ -291,32 +308,32 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             $('#addNationModal').modal('show');
         });
 
-        $('#add_nation').click(function(){
+        $('#add_nation').click(function () {
             validSave();
         });
 
         /*
          编辑页面
          */
-        function edit(nationId,nationName) {
+        function edit(nationId, nationName) {
             $(getParamId().updateNationId).val(nationId);
             $(getParamId().updateNation).val(nationName);
             $('#updateNationModal').modal('show');
         }
 
-        $('#update_nation').click(function(){
+        $('#update_nation').click(function () {
             validUpdate();
         });
 
-        function validSave(){
+        function validSave() {
             var nation = $(getParamId().addNation).val();
             if (nation.length <= 0 || nation.length > 30) {
                 validErrorDom(getValidId().add_nation, getErrorMsgId().add_nation, '民族30个字符以内');
             } else {
-                $.post(web_path + getAjaxUrl().save_valid,$('#add_form').serialize(),function(data){
+                $.post(web_path + getAjaxUrl().save_valid, $('#add_form').serialize(), function (data) {
                     if (data.state) {
                         validSuccessDom(getValidId().add_nation, getErrorMsgId().add_nation);
-                        sendAjax('保存',web_path + getAjaxUrl().save,'#add_form');
+                        sendAjax('保存', web_path + getAjaxUrl().save, '#add_form');
                     } else {
                         validErrorDom(getValidId().add_nation, getErrorMsgId().add_nation, data.msg);
                     }
@@ -324,15 +341,18 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             }
         }
 
-        function validUpdate(){
+        function validUpdate() {
             var nation = $(getParamId().updateNation).val();
             if (nation.length <= 0 || nation.length > 30) {
                 validErrorDom(getValidId().update_nation, getErrorMsgId().update_nation, '民族30个字符以内');
             } else {
-                $.post(web_path + getAjaxUrl().update_valid,{nationId:$(getParamId().updateNationId).val(),nationName:nation},function(data){
+                $.post(web_path + getAjaxUrl().update_valid, {
+                    nationId: $(getParamId().updateNationId).val(),
+                    nationName: nation
+                }, function (data) {
                     if (data.state) {
                         validSuccessDom(getValidId().update_nation, getErrorMsgId().update_nation);
-                        sendAjax('更新',web_path + getAjaxUrl().update,'#update_form');
+                        sendAjax('更新', web_path + getAjaxUrl().update, '#update_form');
                     } else {
                         validErrorDom(getValidId().update_nation, getErrorMsgId().update_nation, data.msg);
                     }
@@ -340,7 +360,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             }
         }
 
-        function sendAjax(message,url,id){
+        function sendAjax(message, url, id) {
             Messenger().run({
                 successMessage: message + '民族成功',
                 errorMessage: message + '民族失败',

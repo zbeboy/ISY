@@ -40,7 +40,7 @@ require(["jquery", "datatables.responsive"],
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
-                    var searchParam = initParam();
+                    var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },
@@ -97,13 +97,26 @@ require(["jquery", "datatables.responsive"],
             };
         }
 
+        /*
+         参数
+         */
+        var param = {
+            username: '',
+            behavior: '',
+            ipAddress: ''
+        };
+
+        /*
+         得到参数
+         */
+        function getParam() {
+            return param;
+        }
 
         function initParam() {
-            return {
-                username: $(getParamId().username).val(),
-                behavior: $(getParamId().behavior).val(),
-                ipAddress: $(getParamId().ipAddress).val()
-            };
+            param.username = $(getParamId().username).val();
+            param.behavior = $(getParamId().behavior).val();
+            param.ipAddress = $(getParamId().ipAddress).val();
         }
 
         function cleanParam() {
@@ -114,32 +127,36 @@ require(["jquery", "datatables.responsive"],
 
         $(getParamId().username).keyup(function (event) {
             if (event.keyCode == 13) {
+                initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().behavior).keyup(function (event) {
             if (event.keyCode == 13) {
+                initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().ipAddress).keyup(function (event) {
             if (event.keyCode == 13) {
+                initParam();
                 myTable.ajax.reload();
             }
         });
 
-        $('#search').click(function(){
+        $('#search').click(function () {
+            initParam();
             myTable.ajax.reload();
         });
 
-        $('#reset_search').click(function(){
+        $('#reset_search').click(function () {
             cleanParam();
             myTable.ajax.reload();
         });
 
-        $('#refresh').click(function(){
+        $('#refresh').click(function () {
             myTable.ajax.reload();
         });
 
