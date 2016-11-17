@@ -26,6 +26,7 @@
         <webjars.metisMenu.version>2.5.2</webjars.metisMenu.version>
         <webjars.sb-admin.version>1.0.8-1</webjars.sb-admin.version>
         <webjars.bootstrap-treeview.version>1.2.0</webjars.bootstrap-treeview.version>
+        <webjars.bootstrap-notify.version>3.1.3-1</webjars.bootstrap-notify.version>
         <webjars.requirejs.version>2.2.0</webjars.requirejs.version>
         <webjars.requirejs-domready.version>2.0.1-2</webjars.requirejs-domready.version>
         <webjars.requirejs-text.version>2.0.15</webjars.requirejs-text.version>
@@ -260,6 +261,13 @@
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap-treeview</artifactId>
             <version>${webjars.bootstrap-treeview.version}</version>
+        </dependency>
+
+        <!-- bootstrap notify -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap-notify</artifactId>
+            <version>${webjars.bootstrap-notify.version}</version>
         </dependency>
 
         <!-- lato -->
