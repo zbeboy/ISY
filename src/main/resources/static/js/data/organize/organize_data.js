@@ -296,6 +296,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         $('#reset_search').click(function () {
             cleanParam();
+            initParam();
             myTable.ajax.reload();
         });
 

@@ -156,6 +156,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     passId.delegate('#pass_reset_search', "click", function () {
         cleanPassParam();
+        initPassParam();
         passTable.ajax.reload();
     });
 
@@ -675,6 +676,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     waitId.delegate('#wait_reset_search', "click", function () {
         cleanWaitParam();
+        initWaitParam();
         waitTable.ajax.reload();
     });
 

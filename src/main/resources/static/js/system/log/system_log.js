@@ -153,6 +153,7 @@ require(["jquery", "datatables.responsive"],
 
         $('#reset_search').click(function () {
             cleanParam();
+            initParam();
             myTable.ajax.reload();
         });
 

@@ -273,6 +273,7 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
 
         $('#reset_search').click(function () {
             cleanParam();
+            initParam();
             myTable.ajax.reload();
         });
 
