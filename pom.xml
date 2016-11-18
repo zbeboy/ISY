@@ -19,6 +19,7 @@
         <springfox-swagger2.version>2.6.0</springfox-swagger2.version>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
         <HikariCP.version>2.5.1</HikariCP.version>
+        <commons-codec.version>1.9</commons-codec.version>
 
         <!-- webjars properties -->
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
@@ -226,6 +227,13 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>${javax.inject.version}</version>
+        </dependency>
+
+        <!-- commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
         </dependency>
 
         <!-- webjars bootstrap -->

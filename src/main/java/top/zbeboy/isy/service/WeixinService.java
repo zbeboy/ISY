@@ -13,4 +13,22 @@ public interface WeixinService {
      * @return true or false
      */
     boolean checkSignature(WeixinVo weixinVo);
+
+    /**
+     * 加密消息
+     *
+     * @param msg      消息
+     * @param weixinVo 微信参数
+     * @return 加密后的内容
+     */
+    String encryptMsg(String msg, WeixinVo weixinVo);
+
+    /**
+     * 解密消息
+     *
+     * @param msg      消息
+     * @param weixinVo 微信参数
+     * @return 加密后的内容
+     */
+    String decryptMsg(String msg, WeixinVo weixinVo);
 }

@@ -22,6 +22,14 @@ public class WeixinVo {
     随机字符串
      */
     private String echostr;
+    /*
+    加密类型，为aes
+     */
+    private String encrypt_type;
+    /*
+    消息体签名，用于验证消息体的正确性
+     */
+    private String msg_signature;
 
     public String getSignature() {
         return signature;
@@ -53,5 +61,21 @@ public class WeixinVo {
 
     public void setEchostr(String echostr) {
         this.echostr = echostr;
+    }
+
+    public String getEncrypt_type() {
+        return encrypt_type;
+    }
+
+    public void setEncrypt_type(String encrypt_type) {
+        this.encrypt_type = encrypt_type;
+    }
+
+    public String getMsg_signature() {
+        return msg_signature;
+    }
+
+    public void setMsg_signature(String msg_signature) {
+        this.msg_signature = msg_signature;
     }
 }
