@@ -3,14 +3,32 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
+import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-11-12.
  */
 public interface InternshipReleaseService {
+
+    /**
+     * 通过id查询
+     *
+     * @param internshipReleaseId 实习id
+     * @return 实习
+     */
+    InternshipRelease findById(String internshipReleaseId);
+
+    /**
+     * 通过id关联查询查询
+     *
+     * @param internshipReleaseId 实习id
+     * @return 实习
+     */
+    Optional<Record> findByIdRelation(String internshipReleaseId);
 
     /**
      * 通过标题查询
@@ -21,11 +39,27 @@ public interface InternshipReleaseService {
     List<InternshipRelease> findByReleaseTitle(String releaseTitle);
 
     /**
+     * 通过标题查询
+     *
+     * @param releaseTitle        实习标题
+     * @param internshipReleaseId 实习id
+     * @return 实习
+     */
+    Result<InternshipReleaseRecord> findByReleaseTitleNeInternshipReleaseId(String releaseTitle, String internshipReleaseId);
+
+    /**
      * 保存
      *
      * @param internshipRelease 实习
      */
     void save(InternshipRelease internshipRelease);
+
+    /**
+     * 更新
+     *
+     * @param internshipRelease 实习
+     */
+    void update(InternshipRelease internshipRelease);
 
     /**
      * 分页查询全部

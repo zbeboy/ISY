@@ -39,13 +39,12 @@
                         <label>指导教师分配时间</label>
                         <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime"
                                placeholder="指导教师分配时间"/>
-                        <p class="help-block">注意：此字段保存后不可编辑</p>
                         <p class="text-danger hidden" id="teacher_distribution_time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_time">
                         <label>实习时间</label>
                         <input class="form-control" name="time" id="time" placeholder="实习开始时间"/>
-                        <p class="help-block">建议：实习时间晚于指导教师分配时间,保存后不可编辑</p>
+                        <p class="help-block">建议：实习时间晚于指导教师分配时间</p>
                         <p class="text-danger hidden" id="time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_school">
@@ -155,9 +154,9 @@
         </script>
         <script id="file-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{originalFilename}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
                 <div class="col-lg-6">
-                    {{originalFilename}}
+                    {{original_file_name}}
                 </div>
                 <div class="col-lg-4">
                     {{size}}

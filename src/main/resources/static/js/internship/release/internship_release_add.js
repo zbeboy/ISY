@@ -649,8 +649,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             var source = $("#file-template").html();
             var template = Handlebars.compile(source);
 
-            Handlebars.registerHelper('originalFilename', function () {
-                var value = Handlebars.escapeExpression(this.originalFilename);
+            Handlebars.registerHelper('original_file_name', function () {
+                var value = Handlebars.escapeExpression(this.originalFileName);
                 return new Handlebars.SafeString(value);
             });
 

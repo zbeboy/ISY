@@ -7,6 +7,7 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -17,22 +18,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
-import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseVo;
+import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseAddVo;
+import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseUpdateVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-11-08.
@@ -84,26 +90,27 @@ public class InternshipReleaseController {
 
     /**
      * 获取实习发布数据
+     *
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/release/data",method = RequestMethod.GET)
+    @RequestMapping(value = "/web/internship/release/data", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils){
+    public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
         List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils);
-        if(records.isNotEmpty()){
+        if (records.isNotEmpty()) {
             internshipReleaseBeens = records.into(InternshipReleaseBean.class);
             String format = "yyyy-MM-dd HH:mm:ss";
-            internshipReleaseBeens.forEach(i->{
-                i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(),format));
-                i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(),format));
-                i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(),format));
-                i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(),format));
-                i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(),format));
+            internshipReleaseBeens.forEach(i -> {
+                i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(), format));
+                i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(), format));
+                i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(), format));
+                i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(), format));
+                i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(), format));
                 Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseId(i.getInternshipReleaseId());
                 i.setSciences(records1.into(Science.class));
             });
-            paginationUtils.setTotalPages(internshipReleaseService.countByCondition(paginationUtils));
+            paginationUtils.setTotalDatas(internshipReleaseService.countByCondition(paginationUtils));
         }
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
@@ -119,6 +126,22 @@ public class InternshipReleaseController {
     }
 
     /**
+     * 实习发布编辑页面
+     *
+     * @return 实习发布编辑页面
+     */
+    @RequestMapping(value = "/web/internship/release/edit", method = RequestMethod.GET)
+    public String releaseEdit(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        Optional<Record> records = internshipReleaseService.findByIdRelation(internshipReleaseId);
+        InternshipReleaseBean internshipRelease = new InternshipReleaseBean();
+        if (records.isPresent()) {
+            internshipRelease = records.get().into(InternshipReleaseBean.class);
+        }
+        modelMap.addAttribute("internshipRelease", internshipRelease);
+        return "/web/internship/release/internship_release_edit::#page-wrapper";
+    }
+
+    /**
      * 获取实习类型数据
      *
      * @return 实习类型数据
@@ -131,6 +154,22 @@ public class InternshipReleaseController {
         internshipTypes.add(internshipType);
         internshipTypes.addAll(internshipTypeService.findAll());
         return new AjaxUtils<InternshipType>().success().msg("获取实习类型数据成功").listData(internshipTypes);
+    }
+
+    /**
+     * 获取实习附件数据
+     *
+     * @return 实习附件数据
+     */
+    @RequestMapping(value = "/user/internship/files", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<Files> internshipFiles(@RequestParam("internshipReleaseId") String internshipReleaseId) {
+        List<Files> files = new ArrayList<>();
+        Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
+        if (records.isNotEmpty()) {
+            files = records.into(Files.class);
+        }
+        return new AjaxUtils<Files>().success().msg("获取实习附件数据成功").listData(files);
     }
 
     /**
@@ -153,60 +192,159 @@ public class InternshipReleaseController {
     }
 
     /**
+     * 更新时检验标题
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param title               标题
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/release/update/valid", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils updateValid(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("releaseTitle") String title) {
+        String releaseTitle = StringUtils.trimWhitespace(title);
+        if (StringUtils.hasLength(releaseTitle)) {
+            Result<InternshipReleaseRecord> internshipReleases = internshipReleaseService.findByReleaseTitleNeInternshipReleaseId(releaseTitle, internshipReleaseId);
+            if (ObjectUtils.isEmpty(internshipReleases) && internshipReleases.isEmpty()) {
+                return new AjaxUtils().success().msg("标题不重复");
+            }
+        }
+        return new AjaxUtils().fail().msg("标题重复");
+    }
+
+    /**
      * 保存
      *
-     * @param internshipReleaseVo 实习
-     * @param bindingResult       检验
+     * @param internshipReleaseAddVo 实习
+     * @param bindingResult          检验
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/release/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils save(@Valid InternshipReleaseVo internshipReleaseVo, BindingResult bindingResult) {
+    public AjaxUtils save(@Valid InternshipReleaseAddVo internshipReleaseAddVo, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            String internshipReleaseId = UUIDUtils.getUUID();
+            String teacherDistributionTime = internshipReleaseAddVo.getTeacherDistributionTime();
+            String time = internshipReleaseAddVo.getTime();
+            String files = internshipReleaseAddVo.getFiles();
+            InternshipRelease internshipRelease = new InternshipRelease();
+            internshipRelease.setInternshipReleaseId(internshipReleaseId);
+            internshipRelease.setInternshipTitle(internshipReleaseAddVo.getReleaseTitle());
+            internshipRelease.setReleaseTime(new Timestamp(System.currentTimeMillis()));
+            Users users = usersService.getUserFromSession();
+            internshipRelease.setUsername(users.getUsername());
+            saveOrUpdateTime(internshipRelease, teacherDistributionTime, time);
+            internshipRelease.setAllowGrade(internshipReleaseAddVo.getGrade());
+
+            internshipRelease.setDepartmentId(internshipReleaseAddVo.getDepartmentId());
+            internshipRelease.setInternshipReleaseIsDel(internshipReleaseAddVo.getInternshipReleaseIsDel());
+            internshipRelease.setInternshipTypeId(internshipReleaseAddVo.getInternshipTypeId());
+            internshipReleaseService.save(internshipRelease);
+            if (StringUtils.hasLength(internshipReleaseAddVo.getScienceId())) {
+                String[] scienceArr = internshipReleaseAddVo.getScienceId().split(",");
+                for (String scienceId : scienceArr) {
+                    internshipReleaseScienceService.save(internshipReleaseId, NumberUtils.toInt(scienceId));
+                }
+            }
+            saveOrUpdateFiles(files, internshipReleaseId);
+            return new AjaxUtils().success().msg("保存成功");
+        }
+        return new AjaxUtils().fail().msg("保存失败");
+    }
+
+    /**
+     * 更新
+     *
+     * @param internshipReleaseUpdateVo 实习
+     * @param bindingResult             检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/release/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils update(@Valid InternshipReleaseUpdateVo internshipReleaseUpdateVo, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            String internshipReleaseId = internshipReleaseUpdateVo.getInternshipReleaseId();
+            String teacherDistributionTime = internshipReleaseUpdateVo.getTeacherDistributionTime();
+            String time = internshipReleaseUpdateVo.getTime();
+            String files = internshipReleaseUpdateVo.getFiles();
+            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            internshipRelease.setInternshipTitle(internshipReleaseUpdateVo.getReleaseTitle());
+            saveOrUpdateTime(internshipRelease, teacherDistributionTime, time);
+            internshipRelease.setInternshipReleaseIsDel(internshipReleaseUpdateVo.getInternshipReleaseIsDel());
+            internshipReleaseService.update(internshipRelease);
+            Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
+            if (records.isNotEmpty()) {
+                internshipFileService.deleteByInternshipReleaseId(internshipReleaseId);
+                List<InternshipFile> internshipFiles = records.into(InternshipFile.class);
+                internshipFiles.forEach(f -> filesService.deleteById(f.getFileId()));
+            }
+            saveOrUpdateFiles(files, internshipReleaseId);
+            return new AjaxUtils().success().msg("保存成功");
+        }
+        return new AjaxUtils().fail().msg("保存失败");
+    }
+
+    /**
+     * 更新实习发布状态
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param isDel               注销参数
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/release/update/del", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils updateDel(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("isDel") Byte isDel) {
+        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        internshipRelease.setInternshipReleaseIsDel(isDel);
+        internshipReleaseService.update(internshipRelease);
+        return new AjaxUtils().success().msg("更新状态成功");
+    }
+
+    /**
+     * 更新或保存时间
+     *
+     * @param internshipRelease       实习
+     * @param teacherDistributionTime 教师分配时间
+     * @param time                    申请时间
+     */
+    private void saveOrUpdateTime(InternshipRelease internshipRelease, String teacherDistributionTime, String time) {
         try {
-            if (!bindingResult.hasErrors()) {
-                String format = "yyyy-MM-dd HH:mm:ss";
-                String internshipReleaseId = UUIDUtils.getUUID();
-                InternshipRelease internshipRelease = new InternshipRelease();
-                internshipRelease.setInternshipReleaseId(internshipReleaseId);
-                internshipRelease.setInternshipTitle(internshipReleaseVo.getReleaseTitle());
-                internshipRelease.setReleaseTime(new Timestamp(System.currentTimeMillis()));
-                Users users = usersService.getUserFromSession();
-                internshipRelease.setUsername(users.getUsername());
-                String[] teacherDistributionArr = internshipReleaseVo.getTeacherDistributionTime().split("至");
+            String format = "yyyy-MM-dd HH:mm:ss";
+            if (StringUtils.hasLength(teacherDistributionTime)) {
+                String[] teacherDistributionArr = teacherDistributionTime.split("至");
                 if (!ObjectUtils.isEmpty(teacherDistributionArr) && teacherDistributionArr.length >= 2) {
                     internshipRelease.setTeacherDistributionStartTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[0], format));
                     internshipRelease.setTeacherDistributionEndTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[1], format));
                 }
-                internshipRelease.setAllowGrade(internshipReleaseVo.getGrade());
-                String[] timeArr = internshipReleaseVo.getTime().split("至");
+            }
+            if (StringUtils.hasLength(time)) {
+                String[] timeArr = time.split("至");
                 if (!ObjectUtils.isEmpty(timeArr) && timeArr.length >= 2) {
                     internshipRelease.setStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
                     internshipRelease.setEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
                 }
-                internshipRelease.setDepartmentId(internshipReleaseVo.getDepartmentId());
-                internshipRelease.setInternshipReleaseIsDel(internshipReleaseVo.getInternshipReleaseIsDel());
-                internshipRelease.setInternshipTypeId(internshipReleaseVo.getInternshipTypeId());
-                internshipReleaseService.save(internshipRelease);
-
-                String[] scienceArr = internshipReleaseVo.getScienceId().split(",");
-                for (String scienceId : scienceArr) {
-                    internshipReleaseScienceService.save(internshipReleaseId, NumberUtils.toInt(scienceId));
-                }
-
-                List<Files> files = JSON.parseArray(internshipReleaseVo.getFiles(),Files.class);
-                for(Files f:files){
-                    String fileId = UUIDUtils.getUUID();
-                    f.setFileId(fileId);
-                    filesService.save(f);
-                    InternshipFile internshipFile = new InternshipFile(internshipReleaseId,fileId);
-                    internshipFileService.save(internshipFile);
-                }
-                return new AjaxUtils().success().msg("保存成功");
             }
         } catch (ParseException e) {
             log.error(" format time is exception.", e);
         }
-        return new AjaxUtils().fail().msg("保存失败");
+    }
+
+    /**
+     * 更新或保存文件
+     *
+     * @param files               文件json
+     * @param internshipReleaseId 实习id
+     */
+    private void saveOrUpdateFiles(String files, String internshipReleaseId) {
+        if (StringUtils.hasLength(files)) {
+            List<Files> filesList = JSON.parseArray(files, Files.class);
+            for (Files f : filesList) {
+                String fileId = UUIDUtils.getUUID();
+                f.setFileId(fileId);
+                filesService.save(f);
+                InternshipFile internshipFile = new InternshipFile(internshipReleaseId, fileId);
+                internshipFileService.save(internshipFile);
+            }
+        }
     }
 
     /**
@@ -247,5 +385,33 @@ public class InternshipReleaseController {
             e.printStackTrace();
         }
         return data;
+    }
+
+    /**
+     * 删除实习附件
+     *
+     * @param filePath            文件路径
+     * @param fileId              文件id
+     * @param internshipReleaseId 实习id
+     * @param request             请求
+     * @return true or false
+     */
+    @RequestMapping("/anyone/users/delete/file/internship")
+    @ResponseBody
+    public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId, @RequestParam("internshipReleaseId") String internshipReleaseId,
+                                          HttpServletRequest request) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        try {
+            if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
+                internshipFileService.deleteByFileIdAndInternshipReleaseId(fileId, internshipReleaseId);
+                filesService.deleteById(fileId);
+                ajaxUtils.success().msg("删除文件成功");
+            } else {
+                ajaxUtils.fail().msg("删除文件失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ajaxUtils;
     }
 }

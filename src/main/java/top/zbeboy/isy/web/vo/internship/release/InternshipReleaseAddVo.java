@@ -7,7 +7,8 @@ import javax.validation.constraints.Size;
 /**
  * Created by lenovo on 2016-11-12.
  */
-public class InternshipReleaseVo {
+public class InternshipReleaseAddVo {
+    private String internshipReleaseId;
     @NotNull
     @Size(max = 100)
     private String releaseTitle;
@@ -33,6 +34,14 @@ public class InternshipReleaseVo {
     private String scienceId;
     private Byte internshipReleaseIsDel;
     private String files;
+
+    public String getInternshipReleaseId() {
+        return internshipReleaseId;
+    }
+
+    public void setInternshipReleaseId(String internshipReleaseId) {
+        this.internshipReleaseId = internshipReleaseId;
+    }
 
     public String getReleaseTitle() {
         return releaseTitle;

@@ -13,10 +13,12 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipReleaseDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
+import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -31,23 +33,54 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
 
     private final DSLContext create;
 
-    private InternshipReleaseDao internshipTypeDao;
+    private InternshipReleaseDao internshipReleaseDao;
 
     @Autowired
     public InternshipReleaseServiceImpl(DSLContext dslContext, Configuration configuration) {
         this.create = dslContext;
-        this.internshipTypeDao = new InternshipReleaseDao(configuration);
+        this.internshipReleaseDao = new InternshipReleaseDao(configuration);
+    }
+
+    @Override
+    public InternshipRelease findById(String internshipReleaseId) {
+        return internshipReleaseDao.findById(internshipReleaseId);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String internshipReleaseId) {
+        return create.select()
+                .from(INTERNSHIP_RELEASE)
+                .join(DEPARTMENT)
+                .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .fetchOptional();
     }
 
     @Override
     public List<InternshipRelease> findByReleaseTitle(String releaseTitle) {
-        return internshipTypeDao.fetchByInternshipTitle(releaseTitle);
+        return internshipReleaseDao.fetchByInternshipTitle(releaseTitle);
+    }
+
+    @Override
+    public Result<InternshipReleaseRecord> findByReleaseTitleNeInternshipReleaseId(String releaseTitle, String internshipReleaseId) {
+        return create.selectFrom(INTERNSHIP_RELEASE)
+                .where(INTERNSHIP_RELEASE.INTERNSHIP_TITLE.eq(releaseTitle).and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.ne(internshipReleaseId)))
+                .fetch();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(InternshipRelease internshipRelease) {
-        internshipTypeDao.insert(internshipRelease);
+        internshipReleaseDao.insert(internshipRelease);
+    }
+
+    @Override
+    public void update(InternshipRelease internshipRelease) {
+        internshipReleaseDao.update(internshipRelease);
     }
 
     @Override
@@ -64,6 +97,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
                 .join(INTERNSHIP_TYPE)
                 .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
                 .where(a)
+                .orderBy(INTERNSHIP_RELEASE.RELEASE_TIME.desc())
                 .limit((pageNum - 1) * pageSize, pageSize)
                 .fetch();
 

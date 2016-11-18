@@ -48,7 +48,7 @@ public class UploadServiceImpl implements UploadService {
                 if (filename.contains(":")) {
                     filename = filename.substring(filename.lastIndexOf(":") + 1, filename.length());
                 }
-                fileBean.setOriginalFilename(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf(".")));
+                fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf(".")));
                 fileBean.setExt(ext);
                 fileBean.setNewName(filename);
                 fileBean.setSize(multipartFile.getSize());
@@ -57,7 +57,7 @@ public class UploadServiceImpl implements UploadService {
             } else {
                 // no filename
                 String filename = ipTimeStamp.getIPTimeRand();
-                fileBean.setOriginalFilename(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf(".")));
+                fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf(".")));
                 fileBean.setNewName(filename);
                 fileBean.setSize(multipartFile.getSize());
                 // copy file to local disk (make sure the path "e.g. D:/temp/files" exists)

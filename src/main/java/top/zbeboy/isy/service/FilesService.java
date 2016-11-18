@@ -13,4 +13,11 @@ public interface FilesService {
      * @param files 文件
      */
     void save(Files files);
+
+    /**
+     * 通过id删除
+     *
+     * @param fileId 文件id
+     */
+    void deleteById(String fileId);
 }

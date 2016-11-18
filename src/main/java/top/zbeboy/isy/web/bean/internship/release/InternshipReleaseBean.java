@@ -13,6 +13,8 @@ public class InternshipReleaseBean extends InternshipRelease {
     private String departmentName;
     private String internshipTypeName;
     private List<Science> sciences;
+    private int schoolId;
+    private int collegeId;
     private String teacherDistributionStartTimeStr;
     private String teacherDistributionEndTimeStr;
     private String startTimeStr;
@@ -41,6 +43,22 @@ public class InternshipReleaseBean extends InternshipRelease {
 
     public void setInternshipTypeName(String internshipTypeName) {
         this.internshipTypeName = internshipTypeName;
+    }
+
+    public int getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(int schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public int getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(int collegeId) {
+        this.collegeId = collegeId;
     }
 
     public List<Science> getSciences() {

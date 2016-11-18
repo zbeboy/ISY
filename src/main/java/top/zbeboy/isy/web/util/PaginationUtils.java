@@ -32,6 +32,7 @@ public class PaginationUtils {
     }
 
     public int getTotalPages() {
+        totalPages = totalDatas % pageSize == 0 ? totalDatas / pageSize : totalDatas / pageSize + 1;
         return totalPages;
     }
 
@@ -67,15 +68,15 @@ public class PaginationUtils {
     }
 
     public int getDisplayedPages() {
-        return displayedPages;
-    }
-
-    public void setDisplayedPages(int displayedPages) {
         if (totalPages > 3 || totalPages == 1) {
             displayedPages = 3;
         } else {
             displayedPages = totalPages;
         }
+        return displayedPages;
+    }
+
+    public void setDisplayedPages(int displayedPages) {
         this.displayedPages = displayedPages;
     }
 

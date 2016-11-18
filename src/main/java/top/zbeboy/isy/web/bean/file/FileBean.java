@@ -6,7 +6,7 @@ package top.zbeboy.isy.web.bean.file;
 public class FileBean {
     private String contentType;// 文件头信息
     private Long size;// 文件大小
-    private String originalFilename;// 文件原始名字
+    private String originalFileName;// 文件原始名字
     private String newName;// 文件新名字
     private String lastPath;// 服务器端最后保存路径
     private String ext;// 文件扩展名
@@ -27,12 +27,12 @@ public class FileBean {
         this.size = size;
     }
 
-    public String getOriginalFilename() {
-        return originalFilename;
+    public String getOriginalFileName() {
+        return originalFileName;
     }
 
-    public void setOriginalFilename(String originalFilename) {
-        this.originalFilename = originalFilename;
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
     }
 
     public String getNewName() {
@@ -64,7 +64,7 @@ public class FileBean {
         return "FileBean{" +
                 "contentType='" + contentType + '\'' +
                 ", size=" + size +
-                ", originalFilename='" + originalFilename + '\'' +
+                ", originalFileName='" + originalFileName + '\'' +
                 ", newName='" + newName + '\'' +
                 ", lastPath='" + lastPath + '\'' +
                 ", ext='" + ext + '\'' +

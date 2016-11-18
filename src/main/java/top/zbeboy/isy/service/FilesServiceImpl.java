@@ -37,4 +37,9 @@ public class FilesServiceImpl implements FilesService {
     public void save(Files files) {
         filesDao.insert(files);
     }
+
+    @Override
+    public void deleteById(String fileId) {
+        filesDao.deleteById(fileId);
+    }
 }
