@@ -84,7 +84,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
      得到参数
      */
     function getPassParam() {
-        return param;
+        return passParam;
     }
 
     /**
@@ -716,7 +716,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
      得到参数
      */
     function getWaitParam() {
-        return param;
+        return waitParam;
     }
 
     function initWaitParam() {

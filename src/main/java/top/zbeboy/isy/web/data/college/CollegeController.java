@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-08-21.
@@ -245,7 +246,11 @@ public class CollegeController {
      */
     @RequestMapping(value = "/web/data/college/mount", method = RequestMethod.GET)
     public String collegeMount(@RequestParam("id") int collegeId, ModelMap modelMap) {
-        College college = collegeService.findById(collegeId);
+        Optional<Record> record = collegeService.findByIdRelation(collegeId);
+        College college = new College();
+        if(record.isPresent()){
+            college = record.get().into(CollegeBean.class);
+        }
         modelMap.addAttribute("college", college);
         return "web/data/college/college_mount::#page-wrapper";
     }

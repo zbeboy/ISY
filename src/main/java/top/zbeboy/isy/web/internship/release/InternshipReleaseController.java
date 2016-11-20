@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
+import top.zbeboy.isy.domain.tables.records.ScienceRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.FilesUtils;
@@ -71,6 +72,9 @@ public class InternshipReleaseController {
 
     @Resource
     private DepartmentService departmentService;
+
+    @Resource
+    private ScienceService scienceService;
 
     @Resource
     private FilesService filesService;
@@ -134,10 +138,16 @@ public class InternshipReleaseController {
     public String releaseEdit(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         Optional<Record> records = internshipReleaseService.findByIdRelation(internshipReleaseId);
         InternshipReleaseBean internshipRelease = new InternshipReleaseBean();
+        List<Science> sciences = new ArrayList<>();
         if (records.isPresent()) {
             internshipRelease = records.get().into(InternshipReleaseBean.class);
+            Result<Record> recordResult = internshipReleaseScienceService.findByInternshipReleaseId(internshipRelease.getInternshipReleaseId());
+            if(recordResult.isNotEmpty()){
+                sciences = recordResult.into(Science.class);
+            }
         }
         modelMap.addAttribute("internshipRelease", internshipRelease);
+        modelMap.addAttribute("sciences", sciences);
         return "/web/internship/release/internship_release_edit::#page-wrapper";
     }
 

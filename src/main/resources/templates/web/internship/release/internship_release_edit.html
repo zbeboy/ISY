@@ -31,6 +31,10 @@
                         <input type="hidden" th:value="${internshipRelease.collegeId}" id="collegeId"/>
                         <input type="hidden" th:value="${internshipRelease.departmentId}" id="departmentId"/>
                     </div>
+                    <div class="form-group">
+                        <label>实习类型</label>
+                        <input class="form-control" name="internshipTypeName" th:value="${internshipRelease.internshipTypeName}" readonly="readonly"/>
+                    </div>
                     <div class="form-group" id="valid_teacher_distribution_time">
                         <label>指导教师分配时间</label>
                         <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime"
@@ -46,6 +50,26 @@
                         <p class="text-danger hidden" id="time_error_msg"></p>
                         <input type="hidden" th:value="${internshipRelease.startTime}" id="startTime" />
                         <input type="hidden" th:value="${internshipRelease.endTime}" id="endTime" />
+                    </div>
+                    <div class="form-group">
+                        <label>学校</label>
+                        <input class="form-control" name="schoolName" th:value="${internshipRelease.schoolName}" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>院</label>
+                        <input class="form-control" name="collegeName" th:value="${internshipRelease.collegeName}" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>系</label>
+                        <input class="form-control" name="departmentName" th:value="${internshipRelease.departmentName}" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>年级</label>
+                        <input class="form-control" name="allowGrade" th:value="${internshipRelease.allowGrade}" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>专业</label>
+                        <span class="label label-default" th:each="s:${sciences}" th:text="${s.scienceName}"></span>
                     </div>
                     <div class="form-group">
                         <label>状态</label>

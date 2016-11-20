@@ -19,6 +19,7 @@ import top.zbeboy.isy.web.bean.data.college.CollegeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.COLLEGE;
 import static top.zbeboy.isy.domain.Tables.SCHOOL;
@@ -127,6 +128,16 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     @Override
     public College findById(int id) {
         return collegeDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(int collegeId) {
+        return create.select()
+                .from(COLLEGE)
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(COLLEGE.COLLEGE_ID.eq(collegeId))
+                .fetchOptional();
     }
 
     @Override

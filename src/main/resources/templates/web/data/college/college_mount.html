@@ -21,6 +21,10 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <form role="form" id="add_form">
+                    <div class="form-group" id="valid_school_name">
+                        <label>学校</label>
+                        <input class="form-control" name="schoolName" id="schoolName" th:value="${college.schoolName}" readonly="readonly"/>
+                    </div>
                     <div class="form-group" id="valid_college_name">
                         <label>院</label>
                         <input class="form-control" name="collegeName" id="collegeName" th:value="${college.collegeName}" readonly="readonly"/>

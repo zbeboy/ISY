@@ -8,6 +8,7 @@ import top.zbeboy.isy.web.bean.data.college.CollegeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-08-21.
@@ -63,15 +64,15 @@ public interface CollegeService {
     /**
      * 更新
      *
-     * @param college
+     * @param college 院
      */
     void update(College college);
 
     /**
      * 通过id更新is_del状态
      *
-     * @param ids
-     * @param isDel
+     * @param ids   ids
+     * @param isDel 状态
      */
     void updateIsDel(List<Integer> ids, Byte isDel);
 
@@ -82,6 +83,14 @@ public interface CollegeService {
      * @return 院
      */
     College findById(int id);
+
+    /**
+     * 通过id关联查询
+     *
+     * @param collegeId 院id
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(int collegeId);
 
     /**
      * 查找学校下不等于该院id的院名

@@ -11,6 +11,8 @@ import java.util.List;
 public class InternshipReleaseBean extends InternshipRelease {
     private String realName;
     private String departmentName;
+    private String schoolName;
+    private String collegeName;
     private String internshipTypeName;
     private List<Science> sciences;
     private int schoolId;
@@ -35,6 +37,22 @@ public class InternshipReleaseBean extends InternshipRelease {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
     }
 
     public String getInternshipTypeName() {

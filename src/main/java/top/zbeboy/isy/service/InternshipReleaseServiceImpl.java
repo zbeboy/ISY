@@ -50,6 +50,8 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     public Optional<Record> findByIdRelation(String internshipReleaseId) {
         return create.select()
                 .from(INTERNSHIP_RELEASE)
+                .join(INTERNSHIP_TYPE)
+                .on(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID))
                 .join(DEPARTMENT)
                 .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                 .join(COLLEGE)
