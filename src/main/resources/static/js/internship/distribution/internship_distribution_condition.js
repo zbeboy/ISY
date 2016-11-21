@@ -69,7 +69,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 {"data": "studentNumber"},
                 {"data": "teacherRealName"},
                 {"data": "teacherUsername"},
-                {"data": "teacherNumber"},
                 {"data": "realName"},
                 {"data": "username"},
                 {"data": null}

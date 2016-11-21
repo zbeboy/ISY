@@ -100,7 +100,6 @@ public class InternshipTeacherDistributionController {
         headers.add("student_number");
         headers.add("teacher_real_name");
         headers.add("teacher_username");
-        headers.add("teacher_number");
         headers.add("real_name");
         headers.add("username");
         headers.add("operator");
