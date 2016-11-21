@@ -16,7 +16,7 @@ public interface InternshipTeacherDistributionService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils);
+    Result<Record> findAllByPage(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils,String internshipReleaseId);
 
     /**
      * 学校总数

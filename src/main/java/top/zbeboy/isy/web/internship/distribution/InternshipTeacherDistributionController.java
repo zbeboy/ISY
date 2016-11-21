@@ -15,6 +15,7 @@ import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.service.InternshipReleaseScienceService;
 import top.zbeboy.isy.service.InternshipReleaseService;
+import top.zbeboy.isy.service.InternshipTeacherDistributionService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
@@ -39,7 +40,7 @@ public class InternshipTeacherDistributionController {
     private InternshipReleaseService internshipReleaseService;
 
     @Resource
-    private InternshipReleaseScienceService internshipReleaseScienceService;
+    private InternshipTeacherDistributionService internshipTeacherDistributionService;
 
     /**
      * 实习教师分配数据
@@ -103,7 +104,9 @@ public class InternshipTeacherDistributionController {
         headers.add("real_name");
         headers.add("username");
         headers.add("operator");
+        String internshipReleaseId = request.getParameter("internshipReleaseId");
         DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        internshipTeacherDistributionService.findAllByPage(dataTablesUtils,"71ec7f4d6b024b82937c76b82cb04e3f");
         return dataTablesUtils;
     }
 }
