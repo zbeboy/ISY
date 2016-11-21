@@ -138,7 +138,6 @@ public class Keys {
 	public static final UniqueKey<InternshipJournalRecord> KEY_INTERNSHIP_JOURNAL_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_JOURNAL_PRIMARY;
 	public static final UniqueKey<InternshipRegulateRecord> KEY_INTERNSHIP_REGULATE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_REGULATE_PRIMARY;
 	public static final UniqueKey<InternshipReleaseRecord> KEY_INTERNSHIP_RELEASE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_RELEASE_PRIMARY;
-	public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY;
 	public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TYPE_PRIMARY;
 	public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = UniqueKeys0.KEY_NATION_PRIMARY;
 	public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = UniqueKeys0.KEY_NATION_NATION_NAME;
@@ -203,6 +202,7 @@ public class Keys {
 	public static final ForeignKey<InternshipTeacherDistributionRecord, StaffRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_1 = ForeignKeys0.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_1;
 	public static final ForeignKey<InternshipTeacherDistributionRecord, StudentRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_2 = ForeignKeys0.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_2;
 	public static final ForeignKey<InternshipTeacherDistributionRecord, InternshipReleaseRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_3 = ForeignKeys0.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_3;
+	public static final ForeignKey<InternshipTeacherDistributionRecord, UsersRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_4 = ForeignKeys0.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_4;
 	public static final ForeignKey<OrganizeRecord, ScienceRecord> ORGANIZE_IBFK_1 = ForeignKeys0.ORGANIZE_IBFK_1;
 	public static final ForeignKey<RoleApplicationRecord, RoleRecord> ROLE_APPLICATION_IBFK_1 = ForeignKeys0.ROLE_APPLICATION_IBFK_1;
 	public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = ForeignKeys0.ROLE_APPLICATION_IBFK_2;
@@ -249,7 +249,6 @@ public class Keys {
 		public static final UniqueKey<InternshipJournalRecord> KEY_INTERNSHIP_JOURNAL_PRIMARY = createUniqueKey(InternshipJournal.INTERNSHIP_JOURNAL, InternshipJournal.INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID);
 		public static final UniqueKey<InternshipRegulateRecord> KEY_INTERNSHIP_REGULATE_PRIMARY = createUniqueKey(InternshipRegulate.INTERNSHIP_REGULATE, InternshipRegulate.INTERNSHIP_REGULATE.INTERNSHIP_REGULATE_ID);
 		public static final UniqueKey<InternshipReleaseRecord> KEY_INTERNSHIP_RELEASE_PRIMARY = createUniqueKey(InternshipRelease.INTERNSHIP_RELEASE, InternshipRelease.INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID);
-		public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = createUniqueKey(InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_TEACHER_DISTRIBUTION_ID);
 		public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = createUniqueKey(InternshipType.INTERNSHIP_TYPE, InternshipType.INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID);
 		public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = createUniqueKey(Nation.NATION, Nation.NATION.NATION_ID);
 		public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = createUniqueKey(Nation.NATION, Nation.NATION.NATION_NAME);
@@ -312,6 +311,7 @@ public class Keys {
 		public static final ForeignKey<InternshipTeacherDistributionRecord, StaffRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_STAFF_PRIMARY, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID);
 		public static final ForeignKey<InternshipTeacherDistributionRecord, StudentRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_STUDENT_PRIMARY, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID);
 		public static final ForeignKey<InternshipTeacherDistributionRecord, InternshipReleaseRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_3 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_INTERNSHIP_RELEASE_PRIMARY, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID);
+		public static final ForeignKey<InternshipTeacherDistributionRecord, UsersRecord> INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_4 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME);
 		public static final ForeignKey<OrganizeRecord, ScienceRecord> ORGANIZE_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_SCIENCE_PRIMARY, Organize.ORGANIZE, Organize.ORGANIZE.SCIENCE_ID);
 		public static final ForeignKey<RoleApplicationRecord, RoleRecord> ROLE_APPLICATION_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_ROLE_PRIMARY, RoleApplication.ROLE_APPLICATION, RoleApplication.ROLE_APPLICATION.ROLE_ID);
 		public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_APPLICATION_PRIMARY, RoleApplication.ROLE_APPLICATION, RoleApplication.ROLE_APPLICATION.APPLICATION_ID);

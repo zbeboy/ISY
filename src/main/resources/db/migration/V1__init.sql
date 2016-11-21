@@ -224,13 +224,14 @@ CREATE TABLE internship_file(
 );
 
 CREATE TABLE internship_teacher_distribution(
-  internship_teacher_distribution_id VARCHAR(100) PRIMARY KEY ,
   staff_id INT NOT NULL ,
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(100) NOT NULL ,
+  username VARCHAR(200) NOT NULL ,
   FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  FOREIGN KEY (username) REFERENCES users(username)
 );
 
 CREATE TABLE internship_apply(

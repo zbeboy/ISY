@@ -1,7 +1,7 @@
 /**
- * Created by lenovo on 2016-11-10.
+ * Created by lenovo on 2016/11/21.
  */
-//# sourceURL=internship_release.js
+//# sourceURL=internship_teacher_distribution.js
 require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
     function ($, Handlebars) {
 
@@ -9,10 +9,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            internship_release_data_url: '/web/internship/release/data',
-            add: '/web/internship/release/add',
-            edit: '/web/internship/release/edit',
-            updateDel:'/web/internship/release/update/del'
+            internship_distribution_data_url: '/web/internship/teacher_distribution/data',
+            distribution_condition_url: '/web/internship/teacher_distribution/distribution/condition'
         };
 
         /*
@@ -90,13 +88,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             }
         });
 
-        /*
-         发布
-         */
-        $('#release').click(function () {
-            $.address.value(ajax_url.add);
-        });
-
         /**
          * 列表数据
          * @param data 数据
@@ -135,126 +126,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-         编辑
+         分配情况
          */
-        $(tableData).delegate('.edit', "click", function () {
-            $.address.value(ajax_url.edit + '?id=' + $(this).attr('data-id'));
+        $(tableData).delegate('.distribution', "click", function () {
+            $.address.value(ajax_url.distribution_condition_url + "?id=" + $(this).attr('data-id'));
         });
-
-        /*
-         注销
-         */
-        $(tableData).delegate('.del', "click", function () {
-            internshipReleaseDel($(this).attr('data-id'),$(this).attr('data-name'));
-        });
-
-        /*
-         恢复
-         */
-        $(tableData).delegate('.recovery', "click", function () {
-            internshipReleaseRecovery($(this).attr('data-id'),$(this).attr('data-name'));
-        });
-
-        /**
-         * 注销确认
-         * @param id 实习发布id
-         * @param name 标题
-         */
-        function internshipReleaseDel(id,name){
-            var msg;
-            msg = Messenger().post({
-                message: "确定注销实习发布 '" + name + "' 吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            del(id);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-        }
-
-        /**
-         * 恢复确认
-         * @param id 实习发布id
-         * @param name 标题
-         */
-        function internshipReleaseRecovery(id,name){
-            var msg;
-            msg = Messenger().post({
-                message: "确定恢复实习发布 '" + name + "' 吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            recovery(id);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-        }
-
-        /**
-         * 注销
-         * @param id
-         */
-        function del(id){
-            sendUpdateDelAjax(id,"注销",1);
-        }
-
-        /**
-         * 恢复
-         * @param id
-         */
-        function recovery(id){
-            sendUpdateDelAjax(id,"恢复",0);
-        }
-
-        /**
-         * 注销或恢复ajax
-         * @param internshipReleaseId
-         * @param message
-         * @param isDel
-         */
-        function sendUpdateDelAjax(internshipReleaseId, message, isDel) {
-            Messenger().run({
-                successMessage: message + '实习发布成功',
-                errorMessage: message + '实习发布失败',
-                progressMessage: '正在' + message + '实习发布....'
-            }, {
-                url: web_path + ajax_url.updateDel,
-                type: 'post',
-                data: {internshipReleaseId: internshipReleaseId, isDel: isDel},
-                success: function (data) {
-                    if (data.state) {
-                        init();
-                    }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
-        }
 
         init();
 
@@ -263,7 +139,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function init() {
             startLoading(tableData);
-            $.get(web_path + ajax_url.internship_release_data_url, param, function (data) {
+            $.get(web_path + ajax_url.internship_distribution_data_url, param, function (data) {
                 endLoading(tableData);
                 if (data.listResult.length > 0) {
                     createPage(data);

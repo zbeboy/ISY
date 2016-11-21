@@ -13,7 +13,6 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
-import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -34,7 +33,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDistributionRecord> {
 
-	private static final long serialVersionUID = 861028167;
+	private static final long serialVersionUID = 1827337894;
 
 	/**
 	 * The reference instance of <code>isy.internship_teacher_distribution</code>
@@ -50,11 +49,6 @@ public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDi
 	}
 
 	/**
-	 * The column <code>isy.internship_teacher_distribution.internship_teacher_distribution_id</code>.
-	 */
-	public final TableField<InternshipTeacherDistributionRecord, String> INTERNSHIP_TEACHER_DISTRIBUTION_ID = createField("internship_teacher_distribution_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
-
-	/**
 	 * The column <code>isy.internship_teacher_distribution.staff_id</code>.
 	 */
 	public final TableField<InternshipTeacherDistributionRecord, Integer> STAFF_ID = createField("staff_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
@@ -68,6 +62,11 @@ public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDi
 	 * The column <code>isy.internship_teacher_distribution.internship_release_id</code>.
 	 */
 	public final TableField<InternshipTeacherDistributionRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+
+	/**
+	 * The column <code>isy.internship_teacher_distribution.username</code>.
+	 */
+	public final TableField<InternshipTeacherDistributionRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
 
 	/**
 	 * Create a <code>isy.internship_teacher_distribution</code> table reference
@@ -95,24 +94,8 @@ public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDi
 	 * {@inheritDoc}
 	 */
 	@Override
-	public UniqueKey<InternshipTeacherDistributionRecord> getPrimaryKey() {
-		return Keys.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<UniqueKey<InternshipTeacherDistributionRecord>> getKeys() {
-		return Arrays.<UniqueKey<InternshipTeacherDistributionRecord>>asList(Keys.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public List<ForeignKey<InternshipTeacherDistributionRecord, ?>> getReferences() {
-		return Arrays.<ForeignKey<InternshipTeacherDistributionRecord, ?>>asList(Keys.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_1, Keys.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_2, Keys.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_3);
+		return Arrays.<ForeignKey<InternshipTeacherDistributionRecord, ?>>asList(Keys.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_1, Keys.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_2, Keys.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_3, Keys.INTERNSHIP_TEACHER_DISTRIBUTION_IBFK_4);
 	}
 
 	/**

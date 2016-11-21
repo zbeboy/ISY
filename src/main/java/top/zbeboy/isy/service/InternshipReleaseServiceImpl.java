@@ -13,10 +13,15 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipReleaseDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
+import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +39,9 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     private final DSLContext create;
 
     private InternshipReleaseDao internshipReleaseDao;
+
+    @Resource
+    private InternshipReleaseScienceService internshipReleaseScienceService;
 
     @Autowired
     public InternshipReleaseServiceImpl(DSLContext dslContext, Configuration configuration) {
@@ -86,10 +94,35 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     }
 
     @Override
-    public Result<Record> findAllByPage(PaginationUtils paginationUtils) {
+    public Result<Record> findAllByPage(PaginationUtils paginationUtils,InternshipRelease internshipRelease) {
         int pageNum = paginationUtils.getPageNum();
         int pageSize = paginationUtils.getPageSize();
         Condition a = searchCondition(paginationUtils);
+        if(!ObjectUtils.isEmpty(internshipRelease)){
+            if(!ObjectUtils.isEmpty(internshipRelease.getDepartmentId())){
+                if(!ObjectUtils.isEmpty(a)){
+                    a.and(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId()));
+                } else {
+                    a = INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId());
+                }
+            }
+
+            if(!ObjectUtils.isEmpty(internshipRelease.getInternshipReleaseIsDel())){
+                if(!ObjectUtils.isEmpty(a)){
+                    a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel()));
+                } else {
+                    a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel());
+                }
+            }
+
+            if(!ObjectUtils.isEmpty(internshipRelease.getAllowGrade())){
+                if(!ObjectUtils.isEmpty(a)){
+                    a.and(INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade()));
+                } else {
+                    a = INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade());
+                }
+            }
+        }
         return create.select()
                 .from(INTERNSHIP_RELEASE)
                 .join(USERS)
@@ -98,11 +131,35 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
                 .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                 .join(INTERNSHIP_TYPE)
                 .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID))
                 .where(a)
                 .orderBy(INTERNSHIP_RELEASE.RELEASE_TIME.desc())
                 .limit((pageNum - 1) * pageSize, pageSize)
                 .fetch();
 
+    }
+
+    @Override
+    public List<InternshipReleaseBean> dealData(PaginationUtils paginationUtils, Result<Record> records) {
+        List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
+        if (records.isNotEmpty()) {
+            internshipReleaseBeens = records.into(InternshipReleaseBean.class);
+            String format = "yyyy-MM-dd HH:mm:ss";
+            internshipReleaseBeens.forEach(i -> {
+                i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(), format));
+                i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(), format));
+                i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(), format));
+                i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(), format));
+                i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(), format));
+                Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseId(i.getInternshipReleaseId());
+                i.setSciences(records1.into(Science.class));
+            });
+            paginationUtils.setTotalDatas(countByCondition(paginationUtils));
+        }
+        return internshipReleaseBeens;
     }
 
     @Override

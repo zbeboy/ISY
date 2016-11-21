@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
+import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import java.util.List;
@@ -67,7 +68,16 @@ public interface InternshipReleaseService {
      * @param paginationUtils 分页工具
      * @return 分页数据
      */
-    Result<Record> findAllByPage(PaginationUtils paginationUtils);
+    Result<Record> findAllByPage(PaginationUtils paginationUtils, InternshipRelease internshipRelease);
+
+    /**
+     * 处理实习返回数据
+     *
+     * @param paginationUtils 分页工具
+     * @param records         数据
+     * @return 处理后的数据
+     */
+    List<InternshipReleaseBean> dealData(PaginationUtils paginationUtils, Result<Record> records);
 
     /**
      * 根据条件统计

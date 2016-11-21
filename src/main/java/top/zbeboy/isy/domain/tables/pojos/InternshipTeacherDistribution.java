@@ -24,42 +24,32 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipTeacherDistribution implements Serializable {
 
-	private static final long serialVersionUID = 116023156;
+	private static final long serialVersionUID = -959625526;
 
-	private String  internshipTeacherDistributionId;
 	private Integer staffId;
 	private Integer studentId;
 	private String  internshipReleaseId;
+	private String  username;
 
 	public InternshipTeacherDistribution() {}
 
 	public InternshipTeacherDistribution(InternshipTeacherDistribution value) {
-		this.internshipTeacherDistributionId = value.internshipTeacherDistributionId;
 		this.staffId = value.staffId;
 		this.studentId = value.studentId;
 		this.internshipReleaseId = value.internshipReleaseId;
+		this.username = value.username;
 	}
 
 	public InternshipTeacherDistribution(
-		String  internshipTeacherDistributionId,
 		Integer staffId,
 		Integer studentId,
-		String  internshipReleaseId
+		String  internshipReleaseId,
+		String  username
 	) {
-		this.internshipTeacherDistributionId = internshipTeacherDistributionId;
 		this.staffId = staffId;
 		this.studentId = studentId;
 		this.internshipReleaseId = internshipReleaseId;
-	}
-
-	@NotNull
-	@Size(max = 100)
-	public String getInternshipTeacherDistributionId() {
-		return this.internshipTeacherDistributionId;
-	}
-
-	public void setInternshipTeacherDistributionId(String internshipTeacherDistributionId) {
-		this.internshipTeacherDistributionId = internshipTeacherDistributionId;
+		this.username = username;
 	}
 
 	@NotNull
@@ -90,14 +80,24 @@ public class InternshipTeacherDistribution implements Serializable {
 		this.internshipReleaseId = internshipReleaseId;
 	}
 
+	@NotNull
+	@Size(max = 200)
+	public String getUsername() {
+		return this.username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("InternshipTeacherDistribution (");
 
-		sb.append(internshipTeacherDistributionId);
-		sb.append(", ").append(staffId);
+		sb.append(staffId);
 		sb.append(", ").append(studentId);
 		sb.append(", ").append(internshipReleaseId);
+		sb.append(", ").append(username);
 
 		sb.append(")");
 		return sb.toString();

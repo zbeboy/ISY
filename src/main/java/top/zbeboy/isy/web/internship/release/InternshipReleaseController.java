@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
-import top.zbeboy.isy.domain.tables.records.ScienceRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.FilesUtils;
@@ -74,9 +73,6 @@ public class InternshipReleaseController {
     private DepartmentService departmentService;
 
     @Resource
-    private ScienceService scienceService;
-
-    @Resource
     private FilesService filesService;
 
     @Resource
@@ -100,22 +96,8 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/web/internship/release/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
-        List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
-        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils);
-        if (records.isNotEmpty()) {
-            internshipReleaseBeens = records.into(InternshipReleaseBean.class);
-            String format = "yyyy-MM-dd HH:mm:ss";
-            internshipReleaseBeens.forEach(i -> {
-                i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(), format));
-                i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(), format));
-                i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(), format));
-                i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(), format));
-                i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(), format));
-                Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseId(i.getInternshipReleaseId());
-                i.setSciences(records1.into(Science.class));
-            });
-            paginationUtils.setTotalDatas(internshipReleaseService.countByCondition(paginationUtils));
-        }
+        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils,null);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils,records);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
