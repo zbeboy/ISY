@@ -26,6 +26,7 @@ requirejs.config({
         "bootstrap-daterangepicker": web_path + "/plugin/bootstrap-daterangepicker/daterangepicker",
         "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min",
+        "bootstrap-duallistbox": web_path + "/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
         "moment": web_path + "/plugin/moment/moment.min",
         "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",
         "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
@@ -63,6 +64,9 @@ requirejs.config({
         },
         "bootstrap-select-zh-CN": {
             deps: ["bootstrap-select","css!" + web_path + "/plugin/bootstrap-select/css/bootstrap-select.min"]
+        },
+        "bootstrap-duallistbox":{
+            deps: ["jquery","css!" + web_path + "/plugin/bootstrap-duallistbox/bootstrap-duallistbox.min"]
         },
         "jquery-ui/widget": {
             deps: ["jquery"]
