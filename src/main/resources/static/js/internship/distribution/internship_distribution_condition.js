@@ -150,7 +150,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             }
         });
 
-        var global_button = '<button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+        var global_button = '<button type="button" id="add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+            '  <button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
             '  <button type="button" id="distributions" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量分配</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
@@ -267,6 +268,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
+        });
+
+        /*
+         添加
+         */
+        $('#add').click(function () {
+
         });
 
         /*
