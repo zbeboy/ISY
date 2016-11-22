@@ -69,6 +69,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 {"data": "studentNumber"},
                 {"data": "teacherRealName"},
                 {"data": "teacherUsername"},
+                {"data": "teacherNumber"},
                 {"data": "realName"},
                 {"data": "username"},
                 {"data": null}
@@ -164,7 +165,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 staffUsername: '#search_staff_username',
                 studentNumber: '#search_student_number',
                 staffNumber: '#search_staff_number',
-                username: '#search_username'
+                username: '#search_username',
+                realName: '#search_real_name'
             };
         }
 
@@ -176,7 +178,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             staffUsername: '',
             studentNumber: '',
             staffNumber: '',
-            username: ''
+            username: '',
+            realName:''
         };
 
         /*
@@ -195,6 +198,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.studentNumber = $(getParamId().studentNumber).val();
             param.staffNumber = $(getParamId().staffNumber).val();
             param.username = $(getParamId().username).val();
+            param.realName = $(getParamId().realName).val();
         }
 
         /*
@@ -206,6 +210,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             $(getParamId().studentNumber).val('');
             $(getParamId().staffNumber).val('');
             $(getParamId().username).val('');
+            $(getParamId().realName).val('');
         }
 
         $(getParamId().studentUsername).keyup(function (event) {
@@ -237,6 +242,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         });
 
         $(getParamId().username).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().realName).keyup(function (event) {
             if (event.keyCode == 13) {
                 initParam();
                 myTable.ajax.reload();

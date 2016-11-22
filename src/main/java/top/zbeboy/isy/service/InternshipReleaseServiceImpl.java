@@ -94,35 +94,11 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     }
 
     @Override
-    public Result<Record> findAllByPage(PaginationUtils paginationUtils,InternshipRelease internshipRelease) {
+    public Result<Record> findAllByPage(PaginationUtils paginationUtils, InternshipRelease internshipRelease) {
         int pageNum = paginationUtils.getPageNum();
         int pageSize = paginationUtils.getPageSize();
         Condition a = searchCondition(paginationUtils);
-        if(!ObjectUtils.isEmpty(internshipRelease)){
-            if(!ObjectUtils.isEmpty(internshipRelease.getDepartmentId())){
-                if(!ObjectUtils.isEmpty(a)){
-                    a.and(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId()));
-                } else {
-                    a = INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId());
-                }
-            }
-
-            if(!ObjectUtils.isEmpty(internshipRelease.getInternshipReleaseIsDel())){
-                if(!ObjectUtils.isEmpty(a)){
-                    a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel()));
-                } else {
-                    a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel());
-                }
-            }
-
-            if(!ObjectUtils.isEmpty(internshipRelease.getAllowGrade())){
-                if(!ObjectUtils.isEmpty(a)){
-                    a.and(INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade()));
-                } else {
-                    a = INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade());
-                }
-            }
-        }
+        a = otherCondition(a, internshipRelease);
         return create.select()
                 .from(INTERNSHIP_RELEASE)
                 .join(USERS)
@@ -143,7 +119,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     }
 
     @Override
-    public List<InternshipReleaseBean> dealData(PaginationUtils paginationUtils, Result<Record> records) {
+    public List<InternshipReleaseBean> dealData(PaginationUtils paginationUtils, Result<Record> records, InternshipRelease internshipRelease) {
         List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
         if (records.isNotEmpty()) {
             internshipReleaseBeens = records.into(InternshipReleaseBean.class);
@@ -157,15 +133,16 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
                 Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseId(i.getInternshipReleaseId());
                 i.setSciences(records1.into(Science.class));
             });
-            paginationUtils.setTotalDatas(countByCondition(paginationUtils));
+            paginationUtils.setTotalDatas(countByCondition(paginationUtils, internshipRelease));
         }
         return internshipReleaseBeens;
     }
 
     @Override
-    public int countByCondition(PaginationUtils paginationUtils) {
+    public int countByCondition(PaginationUtils paginationUtils, InternshipRelease internshipRelease) {
         Record1<Integer> count;
         Condition a = searchCondition(paginationUtils);
+        a = otherCondition(a, internshipRelease);
         if (ObjectUtils.isEmpty(a)) {
             SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
                     .from(INTERNSHIP_RELEASE);
@@ -198,6 +175,42 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
             String internshipTitle = StringUtils.trimWhitespace(search.getString("internshipTitle"));
             if (StringUtils.hasLength(internshipTitle)) {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
+            }
+        }
+        return a;
+    }
+
+    /**
+     * 其它条件参数
+     *
+     * @param a                 搜索条件
+     * @param internshipRelease 额外参数
+     * @return 条件
+     */
+    private Condition otherCondition(Condition a, InternshipRelease internshipRelease) {
+        if (!ObjectUtils.isEmpty(internshipRelease)) {
+            if (!ObjectUtils.isEmpty(internshipRelease.getDepartmentId())) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId()));
+                } else {
+                    a = INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId());
+                }
+            }
+
+            if (!ObjectUtils.isEmpty(internshipRelease.getInternshipReleaseIsDel())) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel()));
+                } else {
+                    a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel());
+                }
+            }
+
+            if (!ObjectUtils.isEmpty(internshipRelease.getAllowGrade())) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade()));
+                } else {
+                    a = INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade());
+                }
             }
         }
         return a;

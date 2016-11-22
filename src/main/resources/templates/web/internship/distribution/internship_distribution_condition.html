@@ -10,7 +10,12 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">实习教师分配情况</h1>
+                <h1 class="page-header">实习教师分配 -
+                    <small>分配详情</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -35,8 +40,11 @@
                         </div>
                     </div>
                     <div class="row" style="margin-top:2px;">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <input type="text" id="search_username" class="form-control input-sm" placeholder="分配人账号"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="search_real_name" class="form-control input-sm" placeholder="分配人姓名"/>
                         </div>
                     </div>
                     <div class="text-center" style="margin-top:4px;">
@@ -63,6 +71,7 @@
                         <th data-hide="always">学生学号</th>
                         <th data-hide="phone">指导教师</th>
                         <th data-hide="always">指导教师ID</th>
+                        <th data-hide="always">指导教师工号</th>
                         <th data-hide="phone">分配人</th>
                         <th data-hide="always">分配人ID</th>
                         <th data-hide="phone">操作</th>
@@ -81,6 +90,7 @@
                         <th>学生学号</th>
                         <th>指导教师</th>
                         <th>指导教师ID</th>
+                        <th>指导教师工号</th>
                         <th>分配人</th>
                         <th>分配人ID</th>
                         <th>操作</th>

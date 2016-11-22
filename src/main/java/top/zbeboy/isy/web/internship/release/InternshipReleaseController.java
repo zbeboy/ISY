@@ -97,7 +97,7 @@ public class InternshipReleaseController {
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils,null);
-        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils,records);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils,records,null);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 

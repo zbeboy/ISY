@@ -64,7 +64,7 @@ public class InternshipTeacherDistributionController {
         InternshipRelease internshipRelease = new InternshipRelease();
         internshipRelease.setInternshipReleaseIsDel(isDel);
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipRelease);
-        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records,internshipRelease);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
@@ -101,12 +101,16 @@ public class InternshipTeacherDistributionController {
         headers.add("student_number");
         headers.add("teacher_real_name");
         headers.add("teacher_username");
+        headers.add("teacher_number");
         headers.add("real_name");
         headers.add("username");
         headers.add("operator");
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        internshipTeacherDistributionService.findAllByPage(dataTablesUtils,"71ec7f4d6b024b82937c76b82cb04e3f");
+        List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils,internshipReleaseId);
+        dataTablesUtils.setData(internshipTeacherDistributionBeens);
+        dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
+        dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils,internshipReleaseId));
         return dataTablesUtils;
     }
 }
