@@ -16,12 +16,46 @@ import java.util.Optional;
 public interface StudentService {
 
     /**
+     * 通过id关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(int id);
+
+    /**
      * 根据学号查询学生
      *
      * @param studentNumber 学号
      * @return 学生们
      */
     List<Student> findByStudentNumber(String studentNumber);
+
+    /**
+     * 根据班级id查询学生
+     *
+     * @param organizeId 班级id
+     * @return 学生们
+     */
+    List<Student> findByOrganizeId(int organizeId);
+
+    /**
+     * 通过账号与系id查询
+     *
+     * @param username     账号
+     * @param departmentId 系id
+     * @return 数据
+     */
+    Optional<Record> findByUsernameAndDepartmentId(String username, int departmentId);
+
+    /**
+     * 通过账号与系id查询
+     *
+     * @param studentNumber 学号
+     * @param departmentId  系id
+     * @return 数据
+     */
+    Optional<Record> findByStudentNumberAndDepartmentId(String studentNumber, int departmentId);
 
     /**
      * 根据学号查询 注：不等于用户账号

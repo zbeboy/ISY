@@ -130,7 +130,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
                 i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(), format));
                 i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(), format));
                 i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(), format));
-                Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseId(i.getInternshipReleaseId());
+                Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseIdRelation(i.getInternshipReleaseId());
                 i.setSciences(records1.into(Science.class));
             });
             paginationUtils.setTotalDatas(countByCondition(paginationUtils, internshipRelease));

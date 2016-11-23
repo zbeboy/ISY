@@ -123,7 +123,7 @@ public class InternshipReleaseController {
         List<Science> sciences = new ArrayList<>();
         if (records.isPresent()) {
             internshipRelease = records.get().into(InternshipReleaseBean.class);
-            Result<Record> recordResult = internshipReleaseScienceService.findByInternshipReleaseId(internshipRelease.getInternshipReleaseId());
+            Result<Record> recordResult = internshipReleaseScienceService.findByInternshipReleaseIdRelation(internshipRelease.getInternshipReleaseId());
             if(recordResult.isNotEmpty()){
                 sciences = recordResult.into(Science.class);
             }

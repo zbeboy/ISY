@@ -52,8 +52,53 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .where(STUDENT.STUDENT_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public List<Student> findByStudentNumber(String studentNumber) {
         return studentDao.fetchByStudentNumber(studentNumber);
+    }
+
+    @Override
+    public List<Student> findByOrganizeId(int organizeId) {
+        return studentDao.fetchByOrganizeId(organizeId);
+    }
+
+    @Override
+    public Optional<Record> findByUsernameAndDepartmentId(String username, int departmentId) {
+        return create.select()
+                .from(STUDENT)
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(SCIENCE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .where(STUDENT.USERNAME.eq(username).and(DEPARTMENT.DEPARTMENT_ID.eq(departmentId)))
+                .fetchOptional();
+    }
+
+    @Override
+    public Optional<Record> findByStudentNumberAndDepartmentId(String studentNumber, int departmentId) {
+        return create.select()
+                .from(STUDENT)
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(SCIENCE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .where(STUDENT.STUDENT_NUMBER.eq(studentNumber).and(DEPARTMENT.DEPARTMENT_ID.eq(departmentId)))
+                .fetchOptional();
     }
 
     @Override

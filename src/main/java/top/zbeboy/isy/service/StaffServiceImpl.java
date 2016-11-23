@@ -57,6 +57,11 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public List<Staff> findByDepartmentId(int departmentId) {
+        return staffDao.fetchByDepartmentId(departmentId);
+    }
+
+    @Override
     public Staff findByUsername(String username) {
         return staffDao.fetchOne(STAFF.USERNAME,username);
     }

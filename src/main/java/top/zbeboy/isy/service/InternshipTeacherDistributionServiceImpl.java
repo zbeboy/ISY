@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -17,6 +19,7 @@ import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -34,6 +37,51 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     @Autowired
     public InternshipTeacherDistributionServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public Result<Record1<Integer>> findByInternshipReleaseIdDistinctOrganizeId(String internshipReleaseId) {
+        return create.selectDistinct(STUDENT.ORGANIZE_ID)
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .join(STUDENT)
+                .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .fetch();
+    }
+
+    @Override
+    public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        return create.select()
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                .fetchOptional();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(InternshipTeacherDistribution internshipTeacherDistribution) {
+        create.insertInto(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID,internshipTeacherDistribution.getInternshipReleaseId())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID,internshipTeacherDistribution.getStaffId())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID,internshipTeacherDistribution.getStudentId())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME,internshipTeacherDistribution.getUsername())
+                .execute();
+    }
+
+    @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
+
+    @Override
+    public void updateStaffId(InternshipTeacherDistribution internshipTeacherDistribution) {
+        create.update(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID,internshipTeacherDistribution.getStaffId())
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipTeacherDistribution.getInternshipReleaseId())
+                        .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(internshipTeacherDistribution.getStudentId())))
+                .execute();
     }
 
     @Override
@@ -95,6 +143,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                 internshipTeacherDistributionBeen.setStudentRealName(r.getValue(USERS.as("T").REAL_NAME));
                 internshipTeacherDistributionBeen.setStudentUsername(r.getValue(USERS.as("T").USERNAME));
                 internshipTeacherDistributionBeen.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
+                internshipTeacherDistributionBeen.setStudentId(r.getValue(STUDENT.STUDENT_ID));
                 internshipTeacherDistributionBeen.setTeacherRealName(r.getValue(USERS.as("S").REAL_NAME));
                 internshipTeacherDistributionBeen.setTeacherUsername(r.getValue(USERS.as("S").USERNAME));
                 internshipTeacherDistributionBeen.setRealName(r.getValue(USERS.as("U").REAL_NAME));

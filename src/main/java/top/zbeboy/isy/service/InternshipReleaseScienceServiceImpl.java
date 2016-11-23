@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE_SCIENCE;
 import static top.zbeboy.isy.domain.Tables.SCIENCE;
@@ -40,11 +41,18 @@ public class InternshipReleaseScienceServiceImpl implements InternshipReleaseSci
     }
 
     @Override
-    public Result<Record> findByInternshipReleaseId(String internshipReleaseId) {
+    public Result<Record> findByInternshipReleaseIdRelation(String internshipReleaseId) {
         return create.select()
                 .from(INTERNSHIP_RELEASE_SCIENCE)
                 .join(SCIENCE)
                 .on(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .fetch();
+    }
+
+    @Override
+    public Result<InternshipReleaseScienceRecord> findByInternshipReleaseId(String internshipReleaseId) {
+        return create.selectFrom(INTERNSHIP_RELEASE_SCIENCE)
                 .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
                 .fetch();
     }

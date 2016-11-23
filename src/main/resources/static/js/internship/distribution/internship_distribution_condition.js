@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016/11/21.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars,nav_active) {
 
         /*
          ajax url
@@ -12,9 +12,14 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 datas: '/web/internship/teacher_distribution/distribution/condition/data',
                 del: '/web/internship/teacher_distribution/distribution/condition/del',
                 add: '/web/internship/teacher_distribution/distribution/condition/add',
-                edit: '/web/internship/teacher_distribution/distribution/condition/edit'
+                edit: '/web/internship/teacher_distribution/distribution/condition/edit',
+                batch_distribution_url:'/web/internship/teacher_distribution/batch/distribution',
+                back:'/web/menu/internship/teacher_distribution'
             };
         }
+
+        // 刷新时选中菜单
+        nav_active(getAjaxUrl().back);
 
         var operator_button = $("#operator_button").html();
         // 预编译模板
@@ -79,7 +84,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     targets: 0,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        return '<input type="checkbox" value="' + c.studentUsername + '" name="check"/>';
+                        return '<input type="checkbox" value="' + c.studentId + '" name="check"/>';
                     }
                 },
                 {
@@ -94,13 +99,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                                         "name": "编辑",
                                         "css": "edit",
                                         "type": "primary",
-                                        "id": c.studentUsername
+                                        "id": c.studentId
                                     },
                                     {
                                         "name": "删除",
                                         "css": "del",
                                         "type": "danger",
-                                        "id": c.studentUsername
+                                        "id": c.studentId
                                     }
                                 ]
                             };
@@ -141,11 +146,11 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.edit', "click", function () {
-                    edit($(this).attr('data-id'));
+                    edit($(this).attr('data-id'),init_page_param.internshipReleaseId);
                 });
 
                 tableElement.delegate('.del', "click", function () {
-                    student_del($(this).attr('data-id'));
+                    student_del($(this).attr('data-id'),init_page_param.internshipReleaseId);
                 });
             }
         });
@@ -274,7 +279,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          添加
          */
         $('#add').click(function () {
-
+            $.address.value(getAjaxUrl().add + "?id=" + init_page_param.internshipReleaseId);
         });
 
         /*
@@ -288,6 +293,15 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          批量分配
          */
         $('#distributions').click(function () {
-
+            $.address.value(getAjaxUrl().batch_distribution_url + "?id=" + init_page_param.internshipReleaseId);
         });
+
+        /**
+         * 编辑
+         * @param studentId
+         * @param internshipReleaseId
+         */
+        function edit(studentId,internshipReleaseId){
+            $.address.value(getAjaxUrl().edit + "?id=" + internshipReleaseId + '&studentId' + studentId);
+        }
     });
