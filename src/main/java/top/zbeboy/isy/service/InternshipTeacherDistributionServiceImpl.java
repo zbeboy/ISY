@@ -144,8 +144,9 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                 internshipTeacherDistributionBeen.setStudentUsername(r.getValue(USERS.as("T").USERNAME));
                 internshipTeacherDistributionBeen.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
                 internshipTeacherDistributionBeen.setStudentId(r.getValue(STUDENT.STUDENT_ID));
-                internshipTeacherDistributionBeen.setTeacherRealName(r.getValue(USERS.as("S").REAL_NAME));
-                internshipTeacherDistributionBeen.setTeacherUsername(r.getValue(USERS.as("S").USERNAME));
+                internshipTeacherDistributionBeen.setStaffRealName(r.getValue(USERS.as("S").REAL_NAME));
+                internshipTeacherDistributionBeen.setStaffUsername(r.getValue(USERS.as("S").USERNAME));
+                internshipTeacherDistributionBeen.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
                 internshipTeacherDistributionBeen.setRealName(r.getValue(USERS.as("U").REAL_NAME));
                 internshipTeacherDistributionBeen.setUsername(r.getValue(USERS.as("U").USERNAME));
                 internshipTeacherDistributionBeens.add(internshipTeacherDistributionBeen);
@@ -259,5 +260,154 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
             }
         }
         return a;
+    }
+
+    /**
+     * 院数据排序
+     *
+     * @param dataTablesUtils
+     * @param selectConditionStep
+     */
+    @Override
+    public void sortCondition(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
+        String orderColumnName = dataTablesUtils.getOrderColumnName();
+        String orderDir = dataTablesUtils.getOrderDir();
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        SortField<Integer> a = null;
+        SortField<String> b = null;
+        SortField<Byte> c = null;
+        if (StringUtils.hasLength(orderColumnName)) {
+            if ("internship_title".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.asc();
+                } else {
+                    b = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.desc();
+                }
+            }
+
+            if ("school_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = SCHOOL.SCHOOL_NAME.asc();
+                } else {
+                    b = SCHOOL.SCHOOL_NAME.desc();
+                }
+            }
+
+            if ("college_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = COLLEGE.COLLEGE_NAME.asc();
+                } else {
+                    b = COLLEGE.COLLEGE_NAME.desc();
+                }
+            }
+
+            if ("department_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = DEPARTMENT.DEPARTMENT_NAME.asc();
+                } else {
+                    b = DEPARTMENT.DEPARTMENT_NAME.desc();
+                }
+            }
+
+            if ("student_real_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = USERS.as("T").REAL_NAME.asc();
+                } else {
+                    b = USERS.as("T").REAL_NAME.desc();
+                }
+            }
+
+            if ("student_username".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = USERS.as("T").USERNAME.asc();
+                } else {
+                    b = USERS.as("T").USERNAME.desc();
+                }
+            }
+
+            if ("student_number".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = STUDENT.STUDENT_NUMBER.asc();
+                } else {
+                    b = STUDENT.STUDENT_NUMBER.desc();
+                }
+            }
+
+            if ("staff_real_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = USERS.as("S").REAL_NAME.asc();
+                } else {
+                    b = USERS.as("S").REAL_NAME.desc();
+                }
+            }
+
+            if ("staff_username".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = USERS.as("S").USERNAME.asc();
+                } else {
+                    b = USERS.as("S").USERNAME.desc();
+                }
+            }
+
+            if ("staff_number".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = STAFF.STAFF_NUMBER.asc();
+                } else {
+                    b = STAFF.STAFF_NUMBER.desc();
+                }
+            }
+
+            if ("real_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = USERS.as("U").REAL_NAME.asc();
+                } else {
+                    b = USERS.as("U").REAL_NAME.desc();
+                }
+            }
+
+            if ("username".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    b = USERS.as("U").USERNAME.asc();
+                } else {
+                    b = USERS.as("U").USERNAME.desc();
+                }
+            }
+
+        }
+
+        if (!ObjectUtils.isEmpty(a)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(a);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(a);
+            }
+
+        } else if (!ObjectUtils.isEmpty(b)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(b);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(b);
+            }
+        } else if (!ObjectUtils.isEmpty(c)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(c);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(c);
+            }
+        } else {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(STUDENT.STUDENT_ID.desc());
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(STUDENT.STUDENT_ID.desc());
+            }
+        }
     }
 }

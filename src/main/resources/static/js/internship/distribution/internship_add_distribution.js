@@ -32,9 +32,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
          参数
          */
         var param = {
-            studentUsername: $(paramId.studentUsername).val().trim(),
-            studentNumber: $(paramId.studentNumber).val().trim(),
-            staffId:$(paramId.staffId).val().trim()
+            studentUsername: $(paramId.studentUsername).val(),
+            studentNumber: $(paramId.studentNumber).val(),
+            staffId:$(paramId.staffId).val()
         };
 
         /*
@@ -76,9 +76,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
          * 初始化参数
          */
         function initParam() {
-            param.studentUsername = $(paramId.studentUsername).val().trim();
-            param.studentNumber = $(paramId.studentNumber).val().trim();
-            param.staffId = $(paramId.staffId).val().trim();
+            param.studentUsername = $(paramId.studentUsername).val();
+            param.studentNumber = $(paramId.studentNumber).val();
+            param.staffId = $(paramId.staffId).val();
         }
 
         init();
@@ -106,12 +106,20 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
             });
 
             Handlebars.registerHelper('teacher_name', function () {
-                var name = Handlebars.escapeExpression(this.staffName);
+                var name = Handlebars.escapeExpression(this.realName + ' ' + this.staffNumber);
                 return new Handlebars.SafeString(name);
             });
 
             var html = template(data);
             $(paramId.staffId).html(html);
+            initStaffSelect();
+        }
+
+        function initStaffSelect(){
+            $(paramId.staffId).selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
         }
 
         /*
@@ -215,6 +223,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
         function sendAjax() {
             var student = "";
             var type = -1;
+            var studentUsername = param.studentUsername;
+            var studentNumber = param.studentNumber;
             if (studentUsername.length > 0) {
                 student = studentUsername;
                 type = 0;
@@ -229,7 +239,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
                 staffId:param.staffId,
                 type:type,
                 id:init_page_param.internshipReleaseId
-            }
+            };
             Messenger().run({
                 successMessage: '保存数据成功',
                 errorMessage: '保存数据失败',

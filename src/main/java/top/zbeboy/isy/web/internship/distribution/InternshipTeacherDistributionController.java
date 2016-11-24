@@ -18,6 +18,8 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.web.bean.data.staff.StaffBean;
+import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
@@ -95,7 +97,7 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
@@ -113,7 +115,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping("/web/internship/teacher_distribution/distribution/condition")
     public String distributionCondition(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "/web/internship/distribution/internship_distribution_condition::#page-wrapper";
@@ -124,11 +126,13 @@ public class InternshipTeacherDistributionController {
     /**
      * 进入指导教师分配入口条件
      *
+     * @param internshipReleaseId 实习发布id
      * @return true or false
      */
-    private ErrorBean accessCondition(String internshipReleaseId) {
-        ErrorBean errorBean = new ErrorBean();
+    private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId) {
+        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        errorBean.setData(internshipRelease);
         if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
             errorBean.setHasError(false);
         } else {
@@ -149,7 +153,7 @@ public class InternshipTeacherDistributionController {
     public DataTablesUtils<InternshipTeacherDistributionBean> distributionConditionDatas(HttpServletRequest request) {
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = null;
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             // 前台数据标题 注：要和前台标题顺序一致，获取order用
             List<String> headers = new ArrayList<>();
@@ -161,9 +165,9 @@ public class InternshipTeacherDistributionController {
             headers.add("student_real_name");
             headers.add("student_username");
             headers.add("student_number");
-            headers.add("teacher_real_name");
-            headers.add("teacher_username");
-            headers.add("teacher_number");
+            headers.add("staff_real_name");
+            headers.add("staff_username");
+            headers.add("staff_number");
             headers.add("real_name");
             headers.add("username");
             headers.add("operator");
@@ -186,7 +190,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/add", method = RequestMethod.GET)
     public String addDistribution(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "/web/internship/distribution/internship_add_distribution::#page-wrapper";
@@ -205,10 +209,10 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/edit", method = RequestMethod.GET)
     public String editDistribution(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipTeacherDistribution internshipTeacherDistribution;
-            Student student = null;
+            StudentBean studentBean = null;
             Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
             if (record.isPresent()) {
                 internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
@@ -216,10 +220,10 @@ public class InternshipTeacherDistributionController {
                 modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
                 Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
                 if (studentRecord.isPresent()) {
-                    student = studentRecord.get().into(Student.class);
+                    studentBean = studentRecord.get().into(StudentBean.class);
                 }
             }
-            modelMap.addAttribute("student", student);
+            modelMap.addAttribute("student", studentBean);
             page = "/web/internship/distribution/internship_edit_distribution::#page-wrapper";
         }
         return page;
@@ -235,7 +239,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution", method = RequestMethod.GET)
     public String batchDistribution(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "/web/internship/distribution/internship_batch_distribution::#page-wrapper";
@@ -255,7 +259,7 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils validStudent(@RequestParam("id") String internshipReleaseId, @RequestParam("student") String info, int type) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
             int departmentId = internshipRelease.getDepartmentId();
@@ -292,15 +296,16 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils<Organize> batchDistributionOrganizes(@RequestParam("id") String internshipReleaseId) {
         AjaxUtils<Organize> ajaxUtils = new AjaxUtils<>();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             List<Organize> organizes = new ArrayList<>();
             List<Integer> hasOrganizes = new ArrayList<>();
+            InternshipRelease internshipRelease = errorBean.getData();
             Result<InternshipReleaseScienceRecord> records = internshipReleaseScienceService.findByInternshipReleaseId(internshipReleaseId);
             if (records.isNotEmpty()) {
                 List<Integer> scienceIds = new ArrayList<>();
                 records.forEach(id -> scienceIds.add(id.getScienceId()));
-                Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIds(scienceIds);
+                Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIdsAndGrade(scienceIds,internshipRelease.getAllowGrade());
                 if (organizeRecords.isNotEmpty()) {
                     organizes = organizeRecords.into(Organize.class);
                 }
@@ -327,19 +332,22 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/teachers", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<Staff> batchDistributionTeachers(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils<Staff> ajaxUtils = new AjaxUtils<>();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+    public AjaxUtils<StaffBean> batchDistributionTeachers(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils<StaffBean> ajaxUtils = new AjaxUtils<>();
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
-            List<Staff> staffs = new ArrayList<>();
+            List<StaffBean> staffs = new ArrayList<>();
             InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
             if (!ObjectUtils.isEmpty(internshipRelease)) {
                 int departmentId = internshipRelease.getDepartmentId();
-                staffs = staffService.findByDepartmentId(departmentId);
+                Result<Record> staffRecords = staffService.findByDepartmentId(departmentId);
+                if(staffRecords.isNotEmpty()){
+                    staffs = staffRecords.into(StaffBean.class);
+                }
             }
             ajaxUtils.success().msg("获取教师数据成功").listData(staffs);
         } else {
-           ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据获取，请返回首页");
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据获取，请返回首页");
         }
         return ajaxUtils;
     }
@@ -356,7 +364,7 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils batchDistributionSave(@RequestParam("id") String internshipReleaseId, String organizeId, String staffId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(organizeId) && StringUtils.hasLength(staffId)
                     && SmallPropsUtils.StringIdsIsNumber(organizeId) && SmallPropsUtils.StringIdsIsNumber(staffId)) {
@@ -366,6 +374,10 @@ public class InternshipTeacherDistributionController {
                 Users users = usersService.getUserFromSession();
                 for (Integer id : organizeIds) {
                     List<Student> students = studentService.findByOrganizeId(id);
+                    // 删除以前的分配记录
+                    students.forEach(s->
+                        internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,s.getStudentId())
+                    );
                     for (Student s : students) {
                         if (i >= staffIds.size()) {
                             i = 0;
@@ -401,7 +413,7 @@ public class InternshipTeacherDistributionController {
     public AjaxUtils save(@RequestParam("student") String info, @RequestParam("staffId") int staffId,
                           @RequestParam("id") String internshipReleaseId, int type) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
             int departmentId = internshipRelease.getDepartmentId();
@@ -440,7 +452,7 @@ public class InternshipTeacherDistributionController {
     public AjaxUtils update(@RequestParam("studentId") int studentId, @RequestParam("staffId") int staffId,
                             @RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
             if (record.isPresent()) {
@@ -464,11 +476,11 @@ public class InternshipTeacherDistributionController {
      * @param internshipReleaseId 实习id
      * @return true or false
      */
-    @RequestMapping(value = "/web/internship/teacher_distribution/del", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils collegeUpdateDel(String studentIds, @RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(studentIds) && SmallPropsUtils.StringIdsIsNumber(studentIds)) {
                 List<Integer> ids = SmallPropsUtils.StringIdsToList(studentIds);

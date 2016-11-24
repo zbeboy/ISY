@@ -13,10 +13,10 @@ public class InternshipTeacherDistributionBean extends InternshipTeacherDistribu
     private String studentRealName;
     private String studentUsername;
     private String studentNumber;
-    private String teacherRealName;
-    private String teacherUsername;
+    private String staffRealName;
+    private String staffUsername;
+    private String staffNumber;
     private String realName;
-    private String username;
 
     public String getInternshipTitle() {
         return internshipTitle;
@@ -74,20 +74,28 @@ public class InternshipTeacherDistributionBean extends InternshipTeacherDistribu
         this.studentNumber = studentNumber;
     }
 
-    public String getTeacherRealName() {
-        return teacherRealName;
+    public String getStaffRealName() {
+        return staffRealName;
     }
 
-    public void setTeacherRealName(String teacherRealName) {
-        this.teacherRealName = teacherRealName;
+    public void setStaffRealName(String staffRealName) {
+        this.staffRealName = staffRealName;
     }
 
-    public String getTeacherUsername() {
-        return teacherUsername;
+    public String getStaffUsername() {
+        return staffUsername;
     }
 
-    public void setTeacherUsername(String teacherUsername) {
-        this.teacherUsername = teacherUsername;
+    public void setStaffUsername(String staffUsername) {
+        this.staffUsername = staffUsername;
+    }
+
+    public String getStaffNumber() {
+        return staffNumber;
+    }
+
+    public void setStaffNumber(String staffNumber) {
+        this.staffNumber = staffNumber;
     }
 
     public String getRealName() {
@@ -96,15 +104,5 @@ public class InternshipTeacherDistributionBean extends InternshipTeacherDistribu
 
     public void setRealName(String realName) {
         this.realName = realName;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
     }
 }

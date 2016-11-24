@@ -29,8 +29,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
          参数
          */
         var param = {
-            studentId: $(paramId.studentId).val().trim(),
-            staffId: $(paramId.staffId).val().trim(),
+            studentId: $(paramId.studentId).val(),
+            staffId: $(paramId.staffId).val(),
             id: init_page_param.internshipReleaseId
         };
 
@@ -38,8 +38,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
          * 初始化参数
          */
         function initParam() {
-            param.studentId = $(paramId.studentId).val().trim();
-            param.staffId = $(paramId.staffId).val().trim();
+            param.studentId = $(paramId.studentId).val();
+            param.staffId = $(paramId.staffId).val();
             param.id = init_page_param.internshipReleaseId;
         }
 
@@ -53,6 +53,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
                 staffData(data);
             });
         }
+
+        // 选中
+        var selectedStaffCount = true;
 
         /**
          * 教职工数据
@@ -68,12 +71,47 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
             });
 
             Handlebars.registerHelper('teacher_name', function () {
-                var name = Handlebars.escapeExpression(this.staffName);
+                var name = Handlebars.escapeExpression(this.realName + ' ' + this.staffNumber);
                 return new Handlebars.SafeString(name);
             });
 
             var html = template(data);
             $(paramId.staffId).html(html);
+
+
+            initStaffSelect();
+        }
+
+        function initStaffSelect(){
+            $(paramId.staffId).selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
+        }
+
+        $(paramId.staffId).on('loaded.bs.select', function (e) {
+            // do something...
+            // 只在页面初始化加载一次
+            if (selectedStaffCount) {
+                selectedStaff();
+                $(paramId.staffId).selectpicker('refresh');
+                selectedStaffCount = false;
+            }
+        });
+
+        /**
+         * 选中教职工
+         */
+        function selectedStaff() {
+            var realStaffId = init_page_param.staffId;
+            var staffChildrens = $(paramId.staffId).children();
+            for (var i = 0; i < staffChildrens.length; i++) {
+                console.log(Number($(staffChildrens[i]).val()) == realStaffId);
+                if (Number($(staffChildrens[i]).val()) == realStaffId) {
+                    $(staffChildrens[i]).prop('selected', true);
+                    break;
+                }
+            }
         }
 
         /*

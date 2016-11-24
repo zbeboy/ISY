@@ -67,9 +67,9 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     }
 
     @Override
-    public Result<OrganizeRecord> findInScienceIds(List<Integer> scienceIds) {
+    public Result<OrganizeRecord> findInScienceIdsAndGrade(List<Integer> scienceIds,String grade) {
         return create.selectFrom(ORGANIZE)
-                .where(ORGANIZE.SCIENCE_ID.in(scienceIds))
+                .where(ORGANIZE.SCIENCE_ID.in(scienceIds).and(ORGANIZE.GRADE.eq(grade)))
                 .fetch();
     }
 

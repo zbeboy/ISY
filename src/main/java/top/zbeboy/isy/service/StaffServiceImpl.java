@@ -57,8 +57,14 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public List<Staff> findByDepartmentId(int departmentId) {
-        return staffDao.fetchByDepartmentId(departmentId);
+    public Result<Record> findByDepartmentId(int departmentId) {
+        return create.select()
+                .from(STAFF)
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(STAFF.DEPARTMENT_ID.eq(departmentId))
+                .fetch();
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 /**
  * Created by lenovo on 2016/11/21.
  */
+//# sourceURL=internship_distribution_condition.js
 require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
     function ($, Handlebars,nav_active) {
 
@@ -72,9 +73,9 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
                 {"data": "studentRealName"},
                 {"data": "studentUsername"},
                 {"data": "studentNumber"},
-                {"data": "teacherRealName"},
-                {"data": "teacherUsername"},
-                {"data": "teacherNumber"},
+                {"data": "staffRealName"},
+                {"data": "staffUsername"},
+                {"data": "staffNumber"},
                 {"data": "realName"},
                 {"data": "username"},
                 {"data": null}
@@ -276,6 +277,13 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
         });
 
         /*
+         返回
+         */
+        $('#page_back').click(function () {
+            $.address.value(getAjaxUrl().back);
+        });
+
+        /*
          添加
          */
         $('#add').click(function () {
@@ -302,7 +310,7 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
                             phrase: 'Retrying TIME',
                             action: function () {
                                 msg.cancel();
-                                dels(studentIds);
+                                dels(studentIds,init_page_param.internshipReleaseId);
                             }
                         },
                         cancel: {
@@ -357,7 +365,7 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
          * @param internshipReleaseId
          */
         function edit(studentId,internshipReleaseId){
-            $.address.value(getAjaxUrl().edit + "?id=" + internshipReleaseId + '&studentId' + studentId);
+            $.address.value(getAjaxUrl().edit + "?id=" + internshipReleaseId + '&studentId=' + studentId);
         }
 
         function del(studentId,internshipReleaseId) {
