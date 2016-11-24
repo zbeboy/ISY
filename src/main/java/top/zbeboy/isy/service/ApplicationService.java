@@ -74,6 +74,15 @@ public interface ApplicationService {
     List<Application> findByPid(int pid);
 
     /**
+     * 通过pid查询
+     *
+     * @param pid 父id
+     * @param collegeId 院id
+     * @return 应用
+     */
+    List<Application> findByPidAndCollegeId(int pid,int collegeId);
+
+    /**
      * 通过ids查询
      *
      * @param ids      ids

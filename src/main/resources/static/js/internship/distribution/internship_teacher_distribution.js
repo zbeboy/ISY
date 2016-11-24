@@ -10,7 +10,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             internship_distribution_data_url: '/web/internship/teacher_distribution/data',
-            distribution_condition_url: '/web/internship/teacher_distribution/distribution/condition'
+            distribution_condition_url: '/web/internship/teacher_distribution/distribution/condition',
+            access_condition_url:'/web/internship/teacher_distribution/condition'
         };
 
         /*
@@ -129,7 +130,19 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          分配情况
          */
         $(tableData).delegate('.distribution', "click", function () {
-            $.address.value(ajax_url.distribution_condition_url + "?id=" + $(this).attr('data-id'));
+            var id = $(this).attr('data-id');
+            // 进入条件判断
+            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
+                if(data.state){
+                    $.address.value(ajax_url.distribution_condition_url + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         init();

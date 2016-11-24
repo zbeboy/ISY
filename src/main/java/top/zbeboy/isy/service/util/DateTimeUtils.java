@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.util;
 
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -21,11 +22,12 @@ public class DateTimeUtils {
 
     /**
      * timestamp to string
+     *
      * @param timestamp sql
-     * @param format 格式
+     * @param format    格式
      * @return string
      */
-    public static String timestampToString(java.sql.Timestamp timestamp,String format) {
+    public static String timestampToString(java.sql.Timestamp timestamp, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(new java.util.Date(timestamp.getTime()));
     }
@@ -54,6 +56,7 @@ public class DateTimeUtils {
 
     /**
      * 格式化成sql date
+     *
      * @param date 日期
      * @return sql date
      * @throws ParseException
@@ -66,12 +69,13 @@ public class DateTimeUtils {
 
     /**
      * 格式化成sql date
-     * @param date date 日期
+     *
+     * @param date   date 日期
      * @param format 格式
      * @return sql date
      * @throws ParseException
      */
-    public static java.sql.Date formatDate(String date,String format) throws ParseException {
+    public static java.sql.Date formatDate(String date, String format) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         java.util.Date d = sdf.parse(date);
         return new java.sql.Date(d.getTime());
@@ -79,14 +83,30 @@ public class DateTimeUtils {
 
     /**
      * 格式化成sql date
-     * @param date date 日期
+     *
+     * @param date   date 日期
      * @param format 格式
      * @return sql date
      * @throws ParseException
      */
-    public static java.sql.Timestamp formatDateToTimestamp(String date,String format) throws ParseException {
+    public static java.sql.Timestamp formatDateToTimestamp(String date, String format) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         java.util.Date d = sdf.parse(date);
         return new java.sql.Timestamp(d.getTime());
+    }
+
+    /**
+     * 当前时间是否在时间范围
+     *
+     * @param after  之前时间
+     * @param before 之后时间
+     * @return true or false
+     */
+    public static boolean timestampRangeDecide(java.sql.Timestamp after, java.sql.Timestamp before) {
+        java.sql.Timestamp now = new Timestamp(System.currentTimeMillis());
+        if (now.after(after) && now.before(before)) {
+            return true;
+        }
+        return false;
     }
 }

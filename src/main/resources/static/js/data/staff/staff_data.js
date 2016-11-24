@@ -889,6 +889,10 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                         usersDelete($(this).attr('data-id'));
                     });
 
+                    tableElement.delegate('.role', "click", function () {
+                        role($(this).attr('data-id'), $(this).attr('data-role'));
+                    });
+
                     waitId.delegate('#wait_deletes', "click", function () {
                         usersDeletes();
                     });

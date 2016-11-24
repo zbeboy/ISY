@@ -17,6 +17,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.ApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
+import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -29,9 +30,11 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static top.zbeboy.isy.domain.Tables.APPLICATION;
+import static top.zbeboy.isy.domain.Tables.COLLEGE_APPLICATION;
 
 /**
  * Created by lenovo on 2016-09-28.
@@ -48,6 +51,12 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Resource
     private RoleApplicationService roleApplicationService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
+
+    @Resource
+    private UsersService usersService;
 
     @Autowired
     public ApplicationServiceImpl(DSLContext dslContext, Configuration configuration) {
@@ -195,6 +204,21 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     @Override
+    public List<Application> findByPidAndCollegeId(int pid, int collegeId) {
+        List<Application> applications = new ArrayList<>();
+        Result<Record> records = create.select()
+                .from(APPLICATION)
+                .join(COLLEGE_APPLICATION)
+                .on(APPLICATION.APPLICATION_ID.eq(COLLEGE_APPLICATION.APPLICATION_ID))
+                .where(APPLICATION.APPLICATION_PID.eq(pid).and(COLLEGE_APPLICATION.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+        if(records.isNotEmpty()){
+            applications =  records.into(Application.class);
+        }
+        return applications;
+    }
+
+    @Override
     public Result<ApplicationRecord> findInIdsWithUsername(List<Integer> ids, String username) {
         return create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_ID.in(ids))
@@ -305,7 +329,15 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      * @return list treeBean
      */
     private List<TreeBean> bindingDataToJson(int id) {
-        List<Application> applications = findByPid(id);
+        List<Application> applications;
+        if(authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)){
+            applications = findByPid(id);
+        } else {
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            int collegeId = authoritiesService.getRoleCollegeId(record);
+            applications = findByPidAndCollegeId(id,collegeId);
+        }
         List<TreeBean> treeBeens = new ArrayList<>();
         if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
             treeBeens = null;

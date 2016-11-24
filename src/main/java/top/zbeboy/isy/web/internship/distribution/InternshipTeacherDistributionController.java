@@ -18,6 +18,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -85,6 +86,25 @@ public class InternshipTeacherDistributionController {
     }
 
     /**
+     * 进入指导教师分配页面判断条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/teacher_distribution/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("在条件范围，允许使用");
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 分配情况页面
      *
      * @param internshipReleaseId 实习发布id
@@ -92,9 +112,30 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping("/web/internship/teacher_distribution/distribution/condition")
     public String distributionCondition(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-        // TODO:未判断时间条件
-        return "/web/internship/distribution/internship_distribution_condition::#page-wrapper";
+        String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/distribution/internship_distribution_condition::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 进入指导教师分配入口条件
+     *
+     * @return true or false
+     */
+    private ErrorBean accessCondition(String internshipReleaseId) {
+        ErrorBean errorBean = new ErrorBean();
+        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
+            errorBean.setHasError(false);
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("不在时间范围，无法进入");
+        }
+        return errorBean;
     }
 
     /**
@@ -106,28 +147,32 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/data", method = RequestMethod.GET)
     @ResponseBody
     public DataTablesUtils<InternshipTeacherDistributionBean> distributionConditionDatas(HttpServletRequest request) {
-        // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
-        headers.add("select");
-        headers.add("internship_title");
-        headers.add("school_name");
-        headers.add("college_name");
-        headers.add("department_name");
-        headers.add("student_real_name");
-        headers.add("student_username");
-        headers.add("student_number");
-        headers.add("teacher_real_name");
-        headers.add("teacher_username");
-        headers.add("teacher_number");
-        headers.add("real_name");
-        headers.add("username");
-        headers.add("operator");
         String internshipReleaseId = request.getParameter("internshipReleaseId");
-        DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils, internshipReleaseId);
-        dataTablesUtils.setData(internshipTeacherDistributionBeens);
-        dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
-        dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId));
+        DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = null;
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            // 前台数据标题 注：要和前台标题顺序一致，获取order用
+            List<String> headers = new ArrayList<>();
+            headers.add("select");
+            headers.add("internship_title");
+            headers.add("school_name");
+            headers.add("college_name");
+            headers.add("department_name");
+            headers.add("student_real_name");
+            headers.add("student_username");
+            headers.add("student_number");
+            headers.add("teacher_real_name");
+            headers.add("teacher_username");
+            headers.add("teacher_number");
+            headers.add("real_name");
+            headers.add("username");
+            headers.add("operator");
+            dataTablesUtils = new DataTablesUtils<>(request, headers);
+            List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils, internshipReleaseId);
+            dataTablesUtils.setData(internshipTeacherDistributionBeens);
+            dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
+            dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId));
+        }
         return dataTablesUtils;
     }
 
@@ -140,8 +185,13 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/add", method = RequestMethod.GET)
     public String addDistribution(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-        return "/web/internship/distribution/internship_add_distribution::#page-wrapper";
+        String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/distribution/internship_add_distribution::#page-wrapper";
+        }
+        return page;
     }
 
     /**
@@ -154,20 +204,25 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/edit", method = RequestMethod.GET)
     public String editDistribution(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
-        InternshipTeacherDistribution internshipTeacherDistribution;
-        Student student = null;
-        Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-        if (record.isPresent()) {
-            internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
-            modelMap.addAttribute("internshipReleaseId", internshipTeacherDistribution.getInternshipReleaseId());
-            modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
-            Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
-            if (studentRecord.isPresent()) {
-                student = studentRecord.get().into(Student.class);
+        String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            InternshipTeacherDistribution internshipTeacherDistribution;
+            Student student = null;
+            Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (record.isPresent()) {
+                internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
+                modelMap.addAttribute("internshipReleaseId", internshipTeacherDistribution.getInternshipReleaseId());
+                modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
+                Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+                if (studentRecord.isPresent()) {
+                    student = studentRecord.get().into(Student.class);
+                }
             }
+            modelMap.addAttribute("student", student);
+            page = "/web/internship/distribution/internship_edit_distribution::#page-wrapper";
         }
-        modelMap.addAttribute("student", student);
-        return "/web/internship/distribution/internship_edit_distribution::#page-wrapper";
+        return page;
     }
 
     /**
@@ -179,8 +234,13 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution", method = RequestMethod.GET)
     public String batchDistribution(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-        return "/web/internship/distribution/internship_batch_distribution::#page-wrapper";
+        String page = "/web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/distribution/internship_batch_distribution::#page-wrapper";
+        }
+        return page;
     }
 
     /**
@@ -195,24 +255,29 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils validStudent(@RequestParam("id") String internshipReleaseId, @RequestParam("student") String info, int type) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        int departmentId = internshipRelease.getDepartmentId();
-        Optional<Record> record = Optional.empty();
-        if (type == 0) {
-            record = studentService.findByUsernameAndDepartmentId(info, departmentId);
-        } else if (type == 1) {
-            record = studentService.findByStudentNumberAndDepartmentId(info, departmentId);
-        }
-        if (record.isPresent()) {
-            Student student = record.get().into(Student.class);
-            Optional<Record> distribution = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.getStudentId());
-            if (distribution.isPresent()) {
-                ajaxUtils.fail().msg("该学生账号已分配指导教师");
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            int departmentId = internshipRelease.getDepartmentId();
+            Optional<Record> record = Optional.empty();
+            if (type == 0) {
+                record = studentService.findByUsernameAndDepartmentId(info, departmentId);
+            } else if (type == 1) {
+                record = studentService.findByStudentNumberAndDepartmentId(info, departmentId);
+            }
+            if (record.isPresent()) {
+                Student student = record.get().into(Student.class);
+                Optional<Record> distribution = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.getStudentId());
+                if (distribution.isPresent()) {
+                    ajaxUtils.fail().msg("该学生账号已分配指导教师");
+                } else {
+                    ajaxUtils.success().msg("可分配");
+                }
             } else {
-                ajaxUtils.success().msg("可分配");
+                ajaxUtils.fail().msg("参数有误");
             }
         } else {
-            ajaxUtils.fail().msg("参数有误");
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据检验，请返回首页");
         }
         return ajaxUtils;
     }
@@ -226,25 +291,32 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/organizes", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<Organize> batchDistributionOrganizes(@RequestParam("id") String internshipReleaseId) {
-        List<Organize> organizes = new ArrayList<>();
-        List<Integer> hasOrganizes = new ArrayList<>();
-        Result<InternshipReleaseScienceRecord> records = internshipReleaseScienceService.findByInternshipReleaseId(internshipReleaseId);
-        if (records.isNotEmpty()) {
-            List<Integer> scienceIds = new ArrayList<>();
-            records.forEach(id -> scienceIds.add(id.getScienceId()));
-            Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIds(scienceIds);
-            if (organizeRecords.isNotEmpty()) {
-                organizes = organizeRecords.into(Organize.class);
+        AjaxUtils<Organize> ajaxUtils = new AjaxUtils<>();
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            List<Organize> organizes = new ArrayList<>();
+            List<Integer> hasOrganizes = new ArrayList<>();
+            Result<InternshipReleaseScienceRecord> records = internshipReleaseScienceService.findByInternshipReleaseId(internshipReleaseId);
+            if (records.isNotEmpty()) {
+                List<Integer> scienceIds = new ArrayList<>();
+                records.forEach(id -> scienceIds.add(id.getScienceId()));
+                Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIds(scienceIds);
+                if (organizeRecords.isNotEmpty()) {
+                    organizes = organizeRecords.into(Organize.class);
+                }
+                Result<Record1<Integer>> record1s = internshipTeacherDistributionService.findByInternshipReleaseIdDistinctOrganizeId(internshipReleaseId);
+                if (record1s.isNotEmpty()) {
+                    record1s.forEach(r -> hasOrganizes.add(r.value1()));
+                }
             }
-            Result<Record1<Integer>> record1s = internshipTeacherDistributionService.findByInternshipReleaseIdDistinctOrganizeId(internshipReleaseId);
-            if (record1s.isNotEmpty()) {
-                record1s.forEach(r -> hasOrganizes.add(r.value1()));
-            }
+            Map<String, Object> result = new HashMap<>();
+            result.put("listResult", organizes);
+            result.put("hasOrganizes", hasOrganizes);
+            ajaxUtils.success().msg("获取班级数据成功").mapData(result);
+        } else {
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据保存，请返回首页");
         }
-        Map<String, Object> result = new HashMap<>();
-        result.put("listResult", organizes);
-        result.put("hasOrganizes", hasOrganizes);
-        return new AjaxUtils<Organize>().success().msg("获取班级数据成功").mapData(result);
+        return ajaxUtils;
     }
 
     /**
@@ -256,13 +328,20 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/teachers", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<Staff> batchDistributionTeachers(@RequestParam("id") String internshipReleaseId) {
-        List<Staff> staffs = new ArrayList<>();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if (!ObjectUtils.isEmpty(internshipRelease)) {
-            int departmentId = internshipRelease.getDepartmentId();
-            staffs = staffService.findByDepartmentId(departmentId);
+        AjaxUtils<Staff> ajaxUtils = new AjaxUtils<>();
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            List<Staff> staffs = new ArrayList<>();
+            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            if (!ObjectUtils.isEmpty(internshipRelease)) {
+                int departmentId = internshipRelease.getDepartmentId();
+                staffs = staffService.findByDepartmentId(departmentId);
+            }
+            ajaxUtils.success().msg("获取教师数据成功").listData(staffs);
+        } else {
+           ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据获取，请返回首页");
         }
-        return new AjaxUtils<Staff>().success().msg("获取教师数据成功").listData(staffs);
+        return ajaxUtils;
     }
 
     /**
@@ -277,28 +356,33 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils batchDistributionSave(@RequestParam("id") String internshipReleaseId, String organizeId, String staffId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        if (StringUtils.hasLength(organizeId) && StringUtils.hasLength(staffId)
-                && SmallPropsUtils.StringIdsIsNumber(organizeId) && SmallPropsUtils.StringIdsIsNumber(staffId)) {
-            List<Integer> organizeIds = SmallPropsUtils.StringIdsToList(organizeId);
-            List<Integer> staffIds = SmallPropsUtils.StringIdsToList(staffId);
-            int i = 0;
-            Users users = usersService.getUserFromSession();
-            for (Integer id : organizeIds) {
-                List<Student> students = studentService.findByOrganizeId(id);
-                for (Student s : students) {
-                    if (i >= staffIds.size()) {
-                        i = 0;
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            if (StringUtils.hasLength(organizeId) && StringUtils.hasLength(staffId)
+                    && SmallPropsUtils.StringIdsIsNumber(organizeId) && SmallPropsUtils.StringIdsIsNumber(staffId)) {
+                List<Integer> organizeIds = SmallPropsUtils.StringIdsToList(organizeId);
+                List<Integer> staffIds = SmallPropsUtils.StringIdsToList(staffId);
+                int i = 0;
+                Users users = usersService.getUserFromSession();
+                for (Integer id : organizeIds) {
+                    List<Student> students = studentService.findByOrganizeId(id);
+                    for (Student s : students) {
+                        if (i >= staffIds.size()) {
+                            i = 0;
+                        }
+                        int tempStaffId = staffIds.get(i);
+                        InternshipTeacherDistribution internshipTeacherDistribution =
+                                new InternshipTeacherDistribution(tempStaffId, s.getStudentId(), internshipReleaseId, users.getUsername());
+                        internshipTeacherDistributionService.save(internshipTeacherDistribution);
+                        i++;
                     }
-                    int tempStaffId = staffIds.get(i);
-                    InternshipTeacherDistribution internshipTeacherDistribution =
-                            new InternshipTeacherDistribution(tempStaffId, s.getStudentId(), internshipReleaseId, users.getUsername());
-                    internshipTeacherDistributionService.save(internshipTeacherDistribution);
-                    i++;
                 }
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg("保存失败，参数异常");
             }
-            ajaxUtils.success().msg("保存成功");
         } else {
-            ajaxUtils.fail().msg("保存失败，参数异常");
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据保存，请返回首页");
         }
         return ajaxUtils;
     }
@@ -317,23 +401,28 @@ public class InternshipTeacherDistributionController {
     public AjaxUtils save(@RequestParam("student") String info, @RequestParam("staffId") int staffId,
                           @RequestParam("id") String internshipReleaseId, int type) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        int departmentId = internshipRelease.getDepartmentId();
-        Optional<Record> record = Optional.empty();
-        Users users = usersService.getUserFromSession();
-        if (type == 0) {
-            record = studentService.findByUsernameAndDepartmentId(info, departmentId);
-        } else if (type == 1) {
-            record = studentService.findByStudentNumberAndDepartmentId(info, departmentId);
-        }
-        if (record.isPresent()) {
-            Student student = record.get().into(Student.class);
-            InternshipTeacherDistribution internshipTeacherDistribution =
-                    new InternshipTeacherDistribution(staffId, student.getStudentId(), internshipReleaseId, users.getUsername());
-            internshipTeacherDistributionService.save(internshipTeacherDistribution);
-            ajaxUtils.success().msg("保存成功");
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            int departmentId = internshipRelease.getDepartmentId();
+            Optional<Record> record = Optional.empty();
+            Users users = usersService.getUserFromSession();
+            if (type == 0) {
+                record = studentService.findByUsernameAndDepartmentId(info, departmentId);
+            } else if (type == 1) {
+                record = studentService.findByStudentNumberAndDepartmentId(info, departmentId);
+            }
+            if (record.isPresent()) {
+                Student student = record.get().into(Student.class);
+                InternshipTeacherDistribution internshipTeacherDistribution =
+                        new InternshipTeacherDistribution(staffId, student.getStudentId(), internshipReleaseId, users.getUsername());
+                internshipTeacherDistributionService.save(internshipTeacherDistribution);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg("保存失败，参数有误");
+            }
         } else {
-            ajaxUtils.fail().msg("保存失败，参数有误");
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据保存，请返回首页");
         }
         return ajaxUtils;
     }
@@ -351,14 +440,19 @@ public class InternshipTeacherDistributionController {
     public AjaxUtils update(@RequestParam("studentId") int studentId, @RequestParam("staffId") int staffId,
                             @RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-        if (record.isPresent()) {
-            InternshipTeacherDistribution internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
-            internshipTeacherDistribution.setStaffId(staffId);
-            internshipTeacherDistributionService.updateStaffId(internshipTeacherDistribution);
-            ajaxUtils.success().msg("保存成功");
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (record.isPresent()) {
+                InternshipTeacherDistribution internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
+                internshipTeacherDistribution.setStaffId(staffId);
+                internshipTeacherDistributionService.updateStaffId(internshipTeacherDistribution);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg("保存失败，参数有误");
+            }
         } else {
-            ajaxUtils.fail().msg("保存失败，参数有误");
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据保存，请返回首页");
         }
         return ajaxUtils;
     }
@@ -373,14 +467,20 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils collegeUpdateDel(String studentIds, @RequestParam("id") String internshipReleaseId) {
-        if (StringUtils.hasLength(studentIds) && SmallPropsUtils.StringIdsIsNumber(studentIds)) {
-            List<Integer> ids = SmallPropsUtils.StringIdsToList(studentIds);
-            ids.forEach(id ->
-                    internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, id)
-            );
-            return new AjaxUtils().success().msg("删除成功");
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        ErrorBean errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            if (StringUtils.hasLength(studentIds) && SmallPropsUtils.StringIdsIsNumber(studentIds)) {
+                List<Integer> ids = SmallPropsUtils.StringIdsToList(studentIds);
+                ids.forEach(id ->
+                        internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, id)
+                );
+                ajaxUtils.success().msg("删除成功");
+            }
+        } else {
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据操作，请返回首页");
         }
-        return new AjaxUtils().fail().msg("删除失败");
+        return ajaxUtils;
     }
 
 }
