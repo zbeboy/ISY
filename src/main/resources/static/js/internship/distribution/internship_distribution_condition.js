@@ -286,8 +286,63 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
          批量删除
          */
         $('#dels').click(function () {
+            var studentIds = [];
+            var ids = $('input[name="check"]:checked');
+            for (var i = 0; i < ids.length; i++) {
+                studentIds.push($(ids[i]).val());
+            }
 
+            if (studentIds.length > 0) {
+                var msg;
+                msg = Messenger().post({
+                    message: "确定删除选中的学生吗?",
+                    actions: {
+                        retry: {
+                            label: '确定',
+                            phrase: 'Retrying TIME',
+                            action: function () {
+                                msg.cancel();
+                                dels(studentIds);
+                            }
+                        },
+                        cancel: {
+                            label: '取消',
+                            action: function () {
+                                return msg.cancel();
+                            }
+                        }
+                    }
+                });
+            } else {
+                Messenger().post("未发现有选中的学生!");
+            }
         });
+
+        /*
+         删除
+         */
+        function student_del(studentId, internshipReleaseId) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定删除该学生吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            del(studentId,internshipReleaseId);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
 
         /*
          批量分配
@@ -303,5 +358,42 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
          */
         function edit(studentId,internshipReleaseId){
             $.address.value(getAjaxUrl().edit + "?id=" + internshipReleaseId + '&studentId' + studentId);
+        }
+
+        function del(studentId,internshipReleaseId) {
+            sendDelAjax(studentId,internshipReleaseId, '删除');
+        }
+
+        function dels(studentIds,internshipReleaseId) {
+            sendDelAjax(studentIds.join(","),internshipReleaseId, '批量删除');
+        }
+
+        /**
+         * 删除 ajax
+         * @param studentId
+         * @param internshipReleaseId
+         * @param message
+         */
+        function sendDelAjax(studentId,internshipReleaseId, message) {
+            Messenger().run({
+                successMessage: message + '学生成功',
+                errorMessage: message + '学生失败',
+                progressMessage: '正在' + message + '学生....'
+            }, {
+                url: web_path + getAjaxUrl().del,
+                type: 'post',
+                data: {studentIds: studentId, id: internshipReleaseId},
+                success: function (data) {
+                    if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
         }
     });

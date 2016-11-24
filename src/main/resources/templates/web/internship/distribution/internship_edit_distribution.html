@@ -24,6 +24,7 @@
                     <div class="form-group">
                         <label>姓名</label>
                         <input th:value="${student.realName}" readonly="readonly"  />
+                        <input type="hidden" id="studentId" th:value="${student.studentId}"/>
                     </div>
                     <div class="form-group">
                         <label>学号</label>
@@ -64,7 +65,7 @@
             };
             /*]]>*/
         </script>
-        <input type="hidden" class="dy_script" value="/js/internship/distribution/internship_add_distribution.js"/>
+        <input type="hidden" class="dy_script" value="/js/internship/distribution/internship_edit_distribution.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>
