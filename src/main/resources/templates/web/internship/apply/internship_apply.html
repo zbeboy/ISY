@@ -8,7 +8,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">实习教师分配</h1>
+                <h1 class="page-header">实习申请</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -18,7 +18,8 @@
                 <div class="well">
                     <div class="row" style="margin-top:2px;">
                         <div class="col-md-12">
-                            <input type="text" id="search_internship_title" class="form-control input-sm" placeholder="标题"/>
+                            <input type="text" id="search_internship_title" class="form-control input-sm"
+                                   placeholder="标题"/>
                         </div>
                     </div>
                     <div class="text-center" style="margin-top:4px;">
@@ -31,12 +32,12 @@
                     </div>
                 </div>
                 <div class="text-right" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
+                    </button>
                 </div>
                 <div id="tableData">
                 </div>
                 <div id="pagination" class="text-center">
-
                 </div>
             </div>
         </div>
@@ -45,6 +46,43 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <!-- Student Modal -->
+        <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="studentModalLabel">学生账号</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form">
+                            <div class="form-group" id="valid_student">
+                                <label>学生</label>
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <input type="text" class="form-control" id="studentUsername" placeholder="学生账号"/>
+                                    </div>
+                                    <div class="col-xs-2 text-center">
+                                        <span>or</span>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <input type="text" class="form-control" id="studentNumber" placeholder="学生学号"/>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="studentInfoInternshipReleaseId" />
+                                <p class="text-danger hidden" id="student_error_msg"></p>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="studentInfo">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="internship-release-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <div class="panel panel-default">
@@ -90,17 +128,18 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="distribution" data-id="{{internshipReleaseId}}">分配情况</a>
-                    <a href="javascript:;" class="batch_distribution" data-id="{{internshipReleaseId}}">批量分配</a>
+                    <a href="javascript:;" class="apply" data-id="{{internshipReleaseId}}">进行申请</a>
+                    <a href="javascript:;" data-id="{{internshipReleaseId}}">撤消申请</a>
+                    <a href="javascript:;" data-id="{{internshipReleaseId}}">基础信息变更申请</a>
+                    <a href="javascript:;" data-id="{{internshipReleaseId}}">单位信息变更申请</a>
                 </div>
             </div>
             {{/each}}
         </script>
-        <input type="hidden" class="dy_script" value="/js/internship/distribution/internship_teacher_distribution.js"/>
+        <input type="hidden" class="dy_script" value="/js/internship/apply/internship_apply.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>
 <!-- /#wrapper -->
 </body>
-
 </html>

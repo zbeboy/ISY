@@ -78,8 +78,8 @@ public class StudentController {
     @RequestMapping(value = "/user/register/valid/student", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStudent(@RequestParam("studentNumber") String studentNumber) {
-        List<Student> students = studentService.findByStudentNumber(StringUtils.trimWhitespace(studentNumber));
-        if (!students.isEmpty()) {
+        Student student = studentService.findByStudentNumber(StringUtils.trimWhitespace(studentNumber));
+        if (!ObjectUtils.isEmpty(student)) {
             return new AjaxUtils().fail();
         }
         return new AjaxUtils().success();

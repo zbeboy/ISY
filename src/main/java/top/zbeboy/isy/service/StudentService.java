@@ -27,9 +27,9 @@ public interface StudentService {
      * 根据学号查询学生
      *
      * @param studentNumber 学号
-     * @return 学生们
+     * @return 学生
      */
-    List<Student> findByStudentNumber(String studentNumber);
+    Student findByStudentNumber(String studentNumber);
 
     /**
      * 根据班级id查询学生

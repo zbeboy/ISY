@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 
+import java.util.Optional;
+
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE_SCIENCE;
 import static top.zbeboy.isy.domain.Tables.SCIENCE;
 
@@ -34,8 +36,8 @@ public class InternshipReleaseScienceServiceImpl implements InternshipReleaseSci
     @Override
     public void save(String internshipReleaseId, int scienceId) {
         create.insertInto(INTERNSHIP_RELEASE_SCIENCE)
-                .set(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID,internshipReleaseId)
-                .set(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID,scienceId)
+                .set(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID, internshipReleaseId)
+                .set(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID, scienceId)
                 .execute();
 
     }
@@ -55,5 +57,14 @@ public class InternshipReleaseScienceServiceImpl implements InternshipReleaseSci
         return create.selectFrom(INTERNSHIP_RELEASE_SCIENCE)
                 .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
                 .fetch();
+    }
+
+    @Override
+    public Optional<Record> findByInternshipReleaseIdAndScienceId(String internshipReleaseId, int scienceId) {
+        return create.select()
+                .from(INTERNSHIP_RELEASE_SCIENCE)
+                .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                        .and(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(scienceId)))
+                .fetchOptional();
     }
 }

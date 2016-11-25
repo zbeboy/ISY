@@ -5,6 +5,7 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,13 +25,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipApply implements Serializable {
 
-	private static final long serialVersionUID = 69340559;
+	private static final long serialVersionUID = 1296408356;
 
-	private String  internshipApplyId;
-	private Integer studentId;
-	private String  internshipReleaseId;
-	private Integer internshipApplyState;
-	private Integer originallyState;
+	private String    internshipApplyId;
+	private Integer   studentId;
+	private String    internshipReleaseId;
+	private Integer   internshipApplyState;
+	private Timestamp changeFillStartTime;
+	private Timestamp changeFillEndTime;
 
 	public InternshipApply() {}
 
@@ -39,21 +41,24 @@ public class InternshipApply implements Serializable {
 		this.studentId = value.studentId;
 		this.internshipReleaseId = value.internshipReleaseId;
 		this.internshipApplyState = value.internshipApplyState;
-		this.originallyState = value.originallyState;
+		this.changeFillStartTime = value.changeFillStartTime;
+		this.changeFillEndTime = value.changeFillEndTime;
 	}
 
 	public InternshipApply(
-		String  internshipApplyId,
-		Integer studentId,
-		String  internshipReleaseId,
-		Integer internshipApplyState,
-		Integer originallyState
+		String    internshipApplyId,
+		Integer   studentId,
+		String    internshipReleaseId,
+		Integer   internshipApplyState,
+		Timestamp changeFillStartTime,
+		Timestamp changeFillEndTime
 	) {
 		this.internshipApplyId = internshipApplyId;
 		this.studentId = studentId;
 		this.internshipReleaseId = internshipReleaseId;
 		this.internshipApplyState = internshipApplyState;
-		this.originallyState = originallyState;
+		this.changeFillStartTime = changeFillStartTime;
+		this.changeFillEndTime = changeFillEndTime;
 	}
 
 	@NotNull
@@ -93,12 +98,20 @@ public class InternshipApply implements Serializable {
 		this.internshipApplyState = internshipApplyState;
 	}
 
-	public Integer getOriginallyState() {
-		return this.originallyState;
+	public Timestamp getChangeFillStartTime() {
+		return this.changeFillStartTime;
 	}
 
-	public void setOriginallyState(Integer originallyState) {
-		this.originallyState = originallyState;
+	public void setChangeFillStartTime(Timestamp changeFillStartTime) {
+		this.changeFillStartTime = changeFillStartTime;
+	}
+
+	public Timestamp getChangeFillEndTime() {
+		return this.changeFillEndTime;
+	}
+
+	public void setChangeFillEndTime(Timestamp changeFillEndTime) {
+		this.changeFillEndTime = changeFillEndTime;
 	}
 
 	@Override
@@ -109,7 +122,8 @@ public class InternshipApply implements Serializable {
 		sb.append(", ").append(studentId);
 		sb.append(", ").append(internshipReleaseId);
 		sb.append(", ").append(internshipApplyState);
-		sb.append(", ").append(originallyState);
+		sb.append(", ").append(changeFillStartTime);
+		sb.append(", ").append(changeFillEndTime);
 
 		sb.append(")");
 		return sb.toString();

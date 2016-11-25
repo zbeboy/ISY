@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -86,9 +87,16 @@ public class InternshipApplyDao extends DAOImpl<InternshipApplyRecord, top.zbebo
 	}
 
 	/**
-	 * Fetch records that have <code>originally_state IN (values)</code>
+	 * Fetch records that have <code>change_fill_start_time IN (values)</code>
 	 */
-	public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByOriginallyState(Integer... values) {
-		return fetch(InternshipApply.INTERNSHIP_APPLY.ORIGINALLY_STATE, values);
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByChangeFillStartTime(Timestamp... values) {
+		return fetch(InternshipApply.INTERNSHIP_APPLY.CHANGE_FILL_START_TIME, values);
+	}
+
+	/**
+	 * Fetch records that have <code>change_fill_end_time IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByChangeFillEndTime(Timestamp... values) {
+		return fetch(InternshipApply.INTERNSHIP_APPLY.CHANGE_FILL_END_TIME, values);
 	}
 }

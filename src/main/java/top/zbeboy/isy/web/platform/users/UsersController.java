@@ -175,6 +175,34 @@ public class UsersController {
     }
 
     /**
+     * 检验当前用户类型是否为学生
+     *
+     * @return true or false
+     */
+    @RequestMapping(value = "/anyone/valid/cur/is/student",method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils validIsStudent() {
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            return new AjaxUtils().success().msg("学生用户");
+        }
+        return new AjaxUtils().fail().msg("非学生用户");
+    }
+
+    /**
+     * 检验当前用户类型是否为教职工
+     *
+     * @return true or false
+     */
+    @RequestMapping(value = "/anyone/valid/cur/is/staff",method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils validIsStaff() {
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            return new AjaxUtils().success().msg("教职工用户");
+        }
+        return new AjaxUtils().fail().msg("非教职工用户");
+    }
+
+    /**
      * 检验手机验证码
      *
      * @param mobile          手机号

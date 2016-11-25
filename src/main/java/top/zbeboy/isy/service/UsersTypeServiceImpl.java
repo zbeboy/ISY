@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao;
+import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.UsersTypeRecord;
+
+import javax.annotation.Resource;
 
 import static top.zbeboy.isy.domain.tables.UsersType.USERS_TYPE;
 
@@ -27,6 +30,9 @@ public class UsersTypeServiceImpl implements UsersTypeService {
     private final DSLContext create;
 
     private UsersTypeDao usersTypeDao;
+
+    @Resource
+    private UsersService usersService;
 
     @Autowired
     public UsersTypeServiceImpl(DSLContext dslContext, Configuration configuration) {
@@ -48,5 +54,15 @@ public class UsersTypeServiceImpl implements UsersTypeService {
     @Override
     public Result<UsersTypeRecord> findAll() {
         return create.selectFrom(USERS_TYPE).fetch();
+    }
+
+    @Override
+    public boolean isCurrentUsersTypeName(String usersTypeName) {
+        Users users = usersService.getUserFromSession();
+        String usersType = usersTypeDao.fetchOneByUsersTypeId(users.getUsersTypeId()).getUsersTypeName();
+        if(usersTypeName.equals(usersType)){
+            return true;
+        }
+        return false;
     }
 }

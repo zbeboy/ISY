@@ -78,8 +78,8 @@ public class StaffController {
     @RequestMapping(value = "/user/register/valid/staff", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStaff(@RequestParam("staffNumber") String staffNumber) {
-        List<Staff> staffs = staffService.findByStaffNumber(staffNumber);
-        if (!staffs.isEmpty()) {
+        Staff staff = staffService.findByStaffNumber(staffNumber);
+        if (!ObjectUtils.isEmpty(staff)) {
             return new AjaxUtils().fail();
         }
         return new AjaxUtils().success();

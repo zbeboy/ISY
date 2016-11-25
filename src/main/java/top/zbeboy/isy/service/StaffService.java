@@ -21,7 +21,7 @@ public interface StaffService {
      * @param staffNumber 工号
      * @return 教职工们
      */
-    List<Staff> findByStaffNumber(String staffNumber);
+    Staff findByStaffNumber(String staffNumber);
 
     /**
      * 根据系id查询

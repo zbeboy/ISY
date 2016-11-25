@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.bean.error;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zbeboy on 2016/11/24.
@@ -9,6 +10,7 @@ public class ErrorBean<T> {
     private boolean hasError;
     private String errorMsg;
     private T data;
+    private Map<String,Object> mapData;
     private List<T> listData;
 
     public boolean isHasError() {
@@ -35,6 +37,14 @@ public class ErrorBean<T> {
         this.data = data;
     }
 
+    public Map<String, Object> getMapData() {
+        return mapData;
+    }
+
+    public void setMapData(Map<String, Object> mapData) {
+        this.mapData = mapData;
+    }
+
     public List<T> getListData() {
         return listData;
     }
@@ -49,6 +59,7 @@ public class ErrorBean<T> {
                 "hasError=" + hasError +
                 ", errorMsg='" + errorMsg + '\'' +
                 ", data=" + data +
+                ", mapData=" + mapData +
                 ", listData=" + listData +
                 '}';
     }

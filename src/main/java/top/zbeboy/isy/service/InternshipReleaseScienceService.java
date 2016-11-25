@@ -4,6 +4,8 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 
+import java.util.Optional;
+
 /**
  * Created by lenovo on 2016-11-12.
  */
@@ -32,4 +34,13 @@ public interface InternshipReleaseScienceService {
      * @return 数据
      */
     Result<InternshipReleaseScienceRecord> findByInternshipReleaseId(String internshipReleaseId);
+
+    /**
+     * 通过实习发布id与专业id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param scienceId           专业id
+     * @return 数据
+     */
+    Optional<Record> findByInternshipReleaseIdAndScienceId(String internshipReleaseId, int scienceId);
 }

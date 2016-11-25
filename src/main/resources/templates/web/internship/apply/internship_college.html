@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习申请 -
+                    <small>添加</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="add_form">
+                    <div class="form-group" id="valid_student_name">
+                        <label>学生姓名</label>
+                        <input class="form-control" name="studentName" id="studentName" placeholder="学生姓名"/>
+                        <p class="text-danger hidden" id="student_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_college_class">
+                        <label>专业班级</label>
+                        <input class="form-control" name="collegeClass" id="collegeClass" placeholder="专业班级"/>
+                        <p class="text-danger hidden" id="college_class_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_sex">
+                        <label>学生性别</label>
+                        <input class="form-control" name="studentSex" id="studentSex" placeholder="学生性别"/>
+                        <p class="text-danger hidden" id="student_sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_number">
+                        <label>学生学号</label>
+                        <input class="form-control" name="studentNumber" id="studentNumber" placeholder="学生学号"/>
+                        <p class="text-danger hidden" id="student_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_phone_number">
+                        <label>电话号码</label>
+                        <input class="form-control" name="phoneNumber" id="phoneNumber" placeholder="电话号码"/>
+                        <p class="text-danger hidden" id="phone_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_qq_mailbox">
+                        <label>QQ邮箱</label>
+                        <input class="form-control" name="qqMailbox" id="qqMailbox" placeholder="QQ邮箱"/>
+                        <p class="text-danger hidden" id="qq_mailbox_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_parental_contact">
+                        <label>父母联系方式</label>
+                        <input class="form-control" name="parentalContact" id="parentalContact" placeholder="父母联系方式"/>
+                        <p class="text-danger hidden" id="parental_contact_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_headmaster">
+                        <label>班主任</label>
+                        <input class="form-control" name="headmaster" id="headmaster" placeholder="班主任"/>
+                        <p class="text-danger hidden" id="headmaster_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_college_name">
+                        <label>实习单位名称</label>
+                        <input class="form-control" name="internshipCollegeName" id="internshipCollegeName" placeholder="实习单位名称"/>
+                        <p class="text-danger hidden" id="internship_college_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_college_address">
+                        <label>实习单位地址</label>
+                        <input class="form-control" name="internshipCollegeAddress" id="internshipCollegeAddress" placeholder="实习单位地址"/>
+                        <p class="text-danger hidden" id="internship_college_address_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_college_contacts">
+                        <label>实习单位联系人</label>
+                        <input class="form-control" name="internshipCollegeContacts" id="internshipCollegeContacts" placeholder="实习单位联系人"/>
+                        <p class="text-danger hidden" id="internship_college_contacts_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_college_tel">
+                        <label>实习单位联系人联系方式</label>
+                        <input class="form-control" name="internshipCollegeTel" id="internshipCollegeTel" placeholder="实习单位联系人联系方式"/>
+                        <p class="text-danger hidden" id="internship_college_tel_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_school_guidance_teacher">
+                        <label>校内指导教师</label>
+                        <input class="form-control" name="schoolGuidanceTeacher" id="schoolGuidanceTeacher" placeholder="校内指导教师"/>
+                        <p class="text-danger hidden" id="school_guidance_teacher_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_start_time">
+                        <label>实习开始时间</label>
+                        <input class="form-control" name="startTime" id="startTime" placeholder="实习开始时间"/>
+                        <p class="text-danger hidden" id="Start_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_end_time">
+                        <label>实习结束时间</label>
+                        <input class="form-control" name="endTime" id="endTime" placeholder="实习结束时间"/>
+                        <p class="text-danger hidden" id="end_time_error_msg"></p>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="teacher-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{teacher_value}}">{{teacher_name}}</option>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /*页面参数*/
+            var init_page_param = {
+                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ ''
+            };
+            /*]]>*/
+        </script>
+        <input type="hidden" class="dy_script" value="/js/internship/apply/internship_college.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

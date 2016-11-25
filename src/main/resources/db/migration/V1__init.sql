@@ -239,7 +239,8 @@ CREATE TABLE internship_apply(
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(100) NOT NULL ,
   internship_apply_state INT NOT NULL DEFAULT 0,
-  originally_state INT,
+  change_fill_start_time DATETIME,
+  change_fill_end_time DATETIME,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
 );

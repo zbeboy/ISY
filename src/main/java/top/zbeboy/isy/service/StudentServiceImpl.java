@@ -59,13 +59,17 @@ public class StudentServiceImpl implements StudentService {
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .join(ORGANIZE)
                 .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(SCIENCE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                 .where(STUDENT.STUDENT_ID.eq(id))
                 .fetchOptional();
     }
 
     @Override
-    public List<Student> findByStudentNumber(String studentNumber) {
-        return studentDao.fetchByStudentNumber(studentNumber);
+    public Student findByStudentNumber(String studentNumber) {
+        return studentDao.fetchOneByStudentNumber(studentNumber);
     }
 
     @Override

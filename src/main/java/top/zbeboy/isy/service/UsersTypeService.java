@@ -31,4 +31,12 @@ public interface UsersTypeService {
      * @return 用户类型
      */
     Result<UsersTypeRecord> findAll();
+
+    /**
+     * 当前用户类型
+     *
+     * @param usersTypeName 用户类型名
+     * @return true or false
+     */
+    boolean isCurrentUsersTypeName(String usersTypeName);
 }

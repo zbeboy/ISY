@@ -261,7 +261,7 @@ public class InternshipTeacherDistributionController {
         AjaxUtils ajaxUtils = new AjaxUtils();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
-            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            InternshipRelease internshipRelease = errorBean.getData();
             int departmentId = internshipRelease.getDepartmentId();
             Optional<Record> record = Optional.empty();
             if (type == 0) {
@@ -337,7 +337,7 @@ public class InternshipTeacherDistributionController {
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             List<StaffBean> staffs = new ArrayList<>();
-            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            InternshipRelease internshipRelease = errorBean.getData();
             if (!ObjectUtils.isEmpty(internshipRelease)) {
                 int departmentId = internshipRelease.getDepartmentId();
                 Result<Record> staffRecords = staffService.findByDepartmentId(departmentId);
@@ -415,7 +415,7 @@ public class InternshipTeacherDistributionController {
         AjaxUtils ajaxUtils = new AjaxUtils();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
-            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            InternshipRelease internshipRelease = errorBean.getData();
             int departmentId = internshipRelease.getDepartmentId();
             Optional<Record> record = Optional.empty();
             Users users = usersService.getUserFromSession();

@@ -52,8 +52,8 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public List<Staff> findByStaffNumber(String staffNumber) {
-        return staffDao.fetchByStaffNumber(staffNumber);
+    public Staff findByStaffNumber(String staffNumber) {
+        return staffDao.fetchOneByStaffNumber(staffNumber);
     }
 
     @Override
