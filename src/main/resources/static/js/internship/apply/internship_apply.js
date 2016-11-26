@@ -173,7 +173,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             // 如果用户类型不是学生，则这里需要一个弹窗，填写学生账号或学生学号以获取学生id
             $.get(web_path + ajax_url.valid_is_student, function (data) {
                 if (data.state) {
-                    accessApply(id, 0);
+                    accessApply(id, data.objectResult);
                 } else {
                     $('#studentInfoInternshipReleaseId').val(id);
                     $('#studentModal').modal('show');

@@ -23,42 +23,49 @@
                 <form role="form" id="add_form">
                     <div class="form-group" id="valid_student_name">
                         <label>学生姓名</label>
-                        <input class="form-control" name="studentName" id="studentName" placeholder="学生姓名"/>
+                        <input class="form-control" th:value="${student.realName}" name="studentName" id="studentName" placeholder="学生姓名"/>
                         <p class="text-danger hidden" id="student_name_error_msg"></p>
+                        <input type="hidden" th:value="${student.studentId}" name="studentId" id="studentId" />
                     </div>
                     <div class="form-group" id="valid_college_class">
                         <label>专业班级</label>
-                        <input class="form-control" name="collegeClass" id="collegeClass" placeholder="专业班级"/>
+                        <input class="form-control" th:value="${student.organizeName}" name="collegeClass" id="collegeClass" placeholder="专业班级" readonly="readonly" />
                         <p class="text-danger hidden" id="college_class_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_student_sex">
                         <label>学生性别</label>
-                        <input class="form-control" name="studentSex" id="studentSex" placeholder="学生性别"/>
+                        <label class="radio-inline" th:if="${student.sex==null || student.sex == '' || student.sex == '男'}">
+                            <input type="radio" name="sex" id="man" value="男" checked="checked">男
+                        </label>
+                        <label class="radio-inline" th:if="${student.sex == '女'}">
+                            <input type="radio" name="sex" id="woman" value="女" checked="checked">女
+                        </label>
                         <p class="text-danger hidden" id="student_sex_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_student_number">
                         <label>学生学号</label>
-                        <input class="form-control" name="studentNumber" id="studentNumber" placeholder="学生学号"/>
+                        <input class="form-control" th:value="${student.studentNumber}" name="studentNumber" id="studentNumber" placeholder="学生学号" readonly="readonly" />
                         <p class="text-danger hidden" id="student_number_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_phone_number">
                         <label>电话号码</label>
-                        <input class="form-control" name="phoneNumber" id="phoneNumber" placeholder="电话号码"/>
+                        <input class="form-control" th:value="${student.mobile}" name="phoneNumber" id="phoneNumber" placeholder="电话号码" readonly="readonly" />
                         <p class="text-danger hidden" id="phone_number_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_qq_mailbox">
                         <label>QQ邮箱</label>
-                        <input class="form-control" name="qqMailbox" id="qqMailbox" placeholder="QQ邮箱"/>
+                        <input class="form-control" name="qqMailbox" th:value="${qqMail}" id="qqMailbox" placeholder="QQ邮箱"/>
                         <p class="text-danger hidden" id="qq_mailbox_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_parental_contact">
                         <label>父母联系方式</label>
-                        <input class="form-control" name="parentalContact" id="parentalContact" placeholder="父母联系方式"/>
+                        <input class="form-control" th:value="${student.parentContactPhone}" name="parentalContact" id="parentalContact" placeholder="父母联系方式"/>
                         <p class="text-danger hidden" id="parental_contact_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_headmaster">
                         <label>班主任</label>
-                        <input class="form-control" name="headmaster" id="headmaster" placeholder="班主任"/>
+                        <select name="headmaster" id="select_headmaster" class="form-control selectpicker show-tick" title="请选择班主任">
+                        </select>
                         <p class="text-danger hidden" id="headmaster_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_college_name">
@@ -83,18 +90,13 @@
                     </div>
                     <div class="form-group" id="valid_school_guidance_teacher">
                         <label>校内指导教师</label>
-                        <input class="form-control" name="schoolGuidanceTeacher" id="schoolGuidanceTeacher" placeholder="校内指导教师"/>
+                        <input class="form-control" name="schoolGuidanceTeacher" th:value="${internshipTeacher}" id="schoolGuidanceTeacher" placeholder="校内指导教师"/>
                         <p class="text-danger hidden" id="school_guidance_teacher_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_start_time">
-                        <label>实习开始时间</label>
-                        <input class="form-control" name="startTime" id="startTime" placeholder="实习开始时间"/>
-                        <p class="text-danger hidden" id="Start_time_error_msg"></p>
-                    </div>
-                    <div class="form-group" id="valid_end_time">
-                        <label>实习结束时间</label>
-                        <input class="form-control" name="endTime" id="endTime" placeholder="实习结束时间"/>
-                        <p class="text-danger hidden" id="end_time_error_msg"></p>
+                    <div class="form-group" id="valid_time">
+                        <label>实习时间</label>
+                        <input class="form-control" name="time" id="time" placeholder="实习开始时间"/>
+                        <p class="text-danger hidden" id="time_error_msg"></p>
                     </div>
                     <div class="text-center">
                         <button type="button" id="save" class="btn btn-default">保存</button>

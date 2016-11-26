@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
-import top.zbeboy.isy.domain.tables.pojos.Student;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
@@ -26,9 +24,7 @@ import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by zbeboy on 2016/11/25.
@@ -84,24 +80,24 @@ public class InternshipApplyController {
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)
-                && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
-            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-            if(studentRecord.isPresent()){
-                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
-                internshipReleaseBean.setAllowGrade(studentBean.getGrade());
-                internshipReleaseBean.setDepartmentId(studentBean.getDepartmentId());
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            int departmentId = roleService.getRoleDepartmentId(record);
+            internshipReleaseBean.setDepartmentId(departmentId);
+            if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Organize organize = record.get().into(Organize.class);
+                internshipReleaseBean.setAllowGrade(organize.getGrade());
             }
         }
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)
-                && usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
-            Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-            if(staffRecord.isPresent()){
-                StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                internshipReleaseBean.setDepartmentId(staffBean.getDepartmentId());
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            int collegeId = roleService.getRoleCollegeId(record);
+            internshipReleaseBean.setCollegeId(collegeId);
+            if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Organize organize = record.get().into(Organize.class);
+                internshipReleaseBean.setAllowGrade(organize.getGrade());
             }
         }
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
@@ -118,9 +114,28 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/access", method = RequestMethod.GET)
     public String applyAccess(@RequestParam("id") String internshipReleaseId, int studentId, ModelMap modelMap) {
         String page = "/web/internship/apply/internship_apply::#page-wrapper";
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,studentId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            StudentBean studentBean = (StudentBean) errorBean.getMapData().get("student");
+            String qqMail = "";
+            if(studentBean.getUsername().toLowerCase().contains("@qq.com")){
+                qqMail = studentBean.getUsername();
+            }
+                modelMap.addAttribute("qqMail",qqMail);
+
+            modelMap.addAttribute("student",studentBean);
+            InternshipTeacherDistribution internshipTeacherDistribution = (InternshipTeacherDistribution)errorBean.getMapData().get("internshipTeacherDistribution");
+            int staffId = internshipTeacherDistribution.getStaffId();
+            Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
+            String internshipTeacher = "";
+            if(staffRecord.isPresent()){
+                StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                internshipTeacher = staffBean.getRealName() + " " + staffBean.getMobile();
+            }
+            modelMap.addAttribute("internshipTeacher",internshipTeacher);
+            // TODO:根据实习类型进入不同的页面
+
             page = "/web/internship/apply/internship_college::#page-wrapper";
         }
         return page;
@@ -136,7 +151,7 @@ public class InternshipApplyController {
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId, int studentId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,studentId);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
@@ -176,36 +191,32 @@ public class InternshipApplyController {
      * @param internshipReleaseId 实习发布id
      * @return true or false
      */
-    private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId,int studentId) {
+    private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
         errorBean.setData(internshipRelease);
+        Map<String,Object> mapData = new HashMap<>();
+
         if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
-            if(studentRecord.isPresent()){
+            if (studentRecord.isPresent()) {
                 StudentBean studentBean = studentRecord.get().into(StudentBean.class);
-                if(Objects.equals(studentBean.getDepartmentId(), internshipRelease.getDepartmentId())){ // 判断系
-                    if(studentBean.getGrade().equals(internshipRelease.getAllowGrade())){ // 判断年级
-                        Optional<Record> internshipReleaseScienceRecord = internshipReleaseScienceService.findByInternshipReleaseIdAndScienceId(internshipReleaseId,studentBean.getScienceId());
-                        if(internshipReleaseScienceRecord.isPresent()){ // 判断专业
-                            Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId,studentBean.getStudentId());
-                            if(internshipTeacherDistributionRecord.isPresent()){ // 判断指导教师
-                                errorBean.setHasError(false);
-                            } else {
-                                errorBean.setHasError(true);
-                                errorBean.setErrorMsg("未分配指导教师，无法进入");
-                            }
-                        } else {
-                            errorBean.setHasError(true);
-                            errorBean.setErrorMsg("不在专业范围，无法进入");
-                        }
+                mapData.put("student",studentBean);
+                errorBean.setMapData(mapData);
+                Optional<Record> internshipReleaseScienceRecord = internshipReleaseScienceService.findByInternshipReleaseIdAndScienceId(internshipReleaseId, studentBean.getScienceId());
+                if (internshipReleaseScienceRecord.isPresent()) { // 判断专业
+                    Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                    if (internshipTeacherDistributionRecord.isPresent()) { // 判断指导教师
+                        InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
+                        mapData.put("internshipTeacherDistribution",internshipTeacherDistribution);
+                        errorBean.setHasError(false);
                     } else {
                         errorBean.setHasError(true);
-                        errorBean.setErrorMsg("不在年级范围，无法进入");
+                        errorBean.setErrorMsg("未分配指导教师，无法进入");
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("不在系范围，无法进入");
+                    errorBean.setErrorMsg("不在专业范围，无法进入");
                 }
             } else {
                 errorBean.setHasError(true);

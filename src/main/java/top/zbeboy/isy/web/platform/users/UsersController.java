@@ -183,7 +183,9 @@ public class UsersController {
     @ResponseBody
     public AjaxUtils validIsStudent() {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            return new AjaxUtils().success().msg("学生用户");
+            Users users = usersService.getUserFromSession();
+            Student student = studentService.findByUsername(users.getUsername());
+            return new AjaxUtils().success().msg("学生用户").obj(student.getStudentId());
         }
         return new AjaxUtils().fail().msg("非学生用户");
     }
@@ -197,7 +199,9 @@ public class UsersController {
     @ResponseBody
     public AjaxUtils validIsStaff() {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            return new AjaxUtils().success().msg("教职工用户");
+            Users users = usersService.getUserFromSession();
+            Staff staff = staffService.findByUsername(users.getUsername());
+            return new AjaxUtils().success().msg("教职工用户").obj(staff.getStaffId());
         }
         return new AjaxUtils().fail().msg("非教职工用户");
     }

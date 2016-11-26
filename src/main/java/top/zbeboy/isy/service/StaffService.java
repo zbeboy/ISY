@@ -16,6 +16,14 @@ import java.util.Optional;
 public interface StaffService {
 
     /**
+     * 通过id关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(int id);
+
+    /**
      * 根据工号查询
      *
      * @param staffNumber 工号

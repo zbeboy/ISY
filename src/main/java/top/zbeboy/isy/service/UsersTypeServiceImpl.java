@@ -60,9 +60,6 @@ public class UsersTypeServiceImpl implements UsersTypeService {
     public boolean isCurrentUsersTypeName(String usersTypeName) {
         Users users = usersService.getUserFromSession();
         String usersType = usersTypeDao.fetchOneByUsersTypeId(users.getUsersTypeId()).getUsersTypeName();
-        if(usersTypeName.equals(usersType)){
-            return true;
-        }
-        return false;
+        return usersTypeName.equals(usersType);
     }
 }
