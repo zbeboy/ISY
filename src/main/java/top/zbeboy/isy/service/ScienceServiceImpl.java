@@ -39,7 +39,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     private ScienceDao scienceDao;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     @Resource
     private UsersService usersService;
@@ -59,13 +59,13 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     }
 
     @Override
-    public Result<Record2<String,Integer>> findByGrade(String grade) {
+    public Result<Record2<String,Integer>> findByGradeAndDepartmentId(String grade,int departmentId) {
         Byte isDel = 0;
         return create.selectDistinct(SCIENCE.SCIENCE_NAME,SCIENCE.SCIENCE_ID)
                 .from(SCIENCE)
                 .join(ORGANIZE)
                 .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
-                .where(SCIENCE.SCIENCE_IS_DEL.eq(isDel).and(ORGANIZE.GRADE.eq(grade)))
+                .where(SCIENCE.SCIENCE_IS_DEL.eq(isDel).and(ORGANIZE.GRADE.eq(grade)).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
                 .fetch();
     }
 
@@ -112,7 +112,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record> selectJoinStep = create.select()
                         .from(SCIENCE)
                         .join(DEPARTMENT)
@@ -124,10 +124,10 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                 sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
                 pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
                 records = selectJoinStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(SCIENCE)
                         .join(DEPARTMENT)
@@ -143,7 +143,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(SCIENCE)
                         .join(DEPARTMENT)
@@ -156,10 +156,10 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(SCIENCE)
                         .join(DEPARTMENT)
@@ -181,12 +181,12 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     @Override
     public int countAll() {
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             return statisticsAll(create, SCIENCE);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(SCIENCE)
                     .join(DEPARTMENT)
@@ -206,14 +206,14 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
                         .from(SCIENCE);
                 count = selectJoinStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(SCIENCE)
                         .join(DEPARTMENT)
@@ -226,7 +226,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
 
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(SCIENCE)
                         .join(DEPARTMENT)
@@ -237,10 +237,10 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .where(a);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(SCIENCE)
                         .join(DEPARTMENT)

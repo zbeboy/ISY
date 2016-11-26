@@ -505,7 +505,7 @@ public class UsersController {
     @ResponseBody
     public AjaxUtils<Role> roleData(@RequestParam("username") String username) {
         List<Role> roles = new ArrayList<>();
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             Role role = roleService.findByRoleName(Workbook.ADMIN_ROLE_NAME);
             roles.add(role);
         }

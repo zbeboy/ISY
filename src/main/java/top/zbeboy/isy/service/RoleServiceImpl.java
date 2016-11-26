@@ -5,6 +5,11 @@ import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +17,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.RoleDao;
-import top.zbeboy.isy.domain.tables.pojos.Role;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 import top.zbeboy.isy.domain.tables.records.RoleRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -141,7 +145,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
@@ -154,10 +158,10 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
@@ -173,7 +177,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
@@ -186,10 +190,10 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
@@ -210,17 +214,17 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     @Override
     public int countAll() {
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             List<String> defaultRoles = getDefaultRoles();
             Record1<Integer> count = create.selectCount()
                     .from(ROLE)
                     .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles))
                     .fetchOne();
             return count.value1();
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(ROLE)
                     .leftJoin(COLLEGE_ROLE)
@@ -239,15 +243,15 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         List<String> defaultRoles = getDefaultRoles();
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ROLE)
                         .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles));
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
@@ -257,7 +261,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
@@ -268,10 +272,10 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a));
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
@@ -310,10 +314,59 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     public String findByUsernameToStringNoCache(String username) {
         Result<Record1<String>> record1s = usersService.findByUsernameWithRoleNoCache(username);
         StringBuilder stringBuilder = new StringBuilder();
-        record1s.forEach(r->{
+        record1s.forEach(r -> {
             stringBuilder.append(r.getValue(0)).append(" ");
         });
         return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean isCurrentUserInRole(String role) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
+                return springSecurityUser.getAuthorities().contains(new SimpleGrantedAuthority(role));
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int getRoleCollegeId(Optional<Record> record) {
+        int collegeId = 0;
+        if (record.isPresent()) {
+            College college = record.get().into(College.class);
+            if (!ObjectUtils.isEmpty(college)) {
+                collegeId = college.getCollegeId();
+            }
+        }
+        return collegeId;
+    }
+
+    @Override
+    public int getRoleDepartmentId(Optional<Record> record) {
+        int departmentId = 0;
+        if (record.isPresent()) {
+            Department department = record.get().into(Department.class);
+            if (!ObjectUtils.isEmpty(department)) {
+                departmentId = department.getDepartmentId();
+            }
+        }
+        return departmentId;
+    }
+
+    @Override
+    public int getRoleSchoolId(Optional<Record> record) {
+        int schoolId = 0;
+        if (record.isPresent()) {
+            School school = record.get().into(School.class);
+            if (!ObjectUtils.isEmpty(school)) {
+                schoolId = school.getSchoolId();
+            }
+        }
+        return schoolId;
     }
 
     /**

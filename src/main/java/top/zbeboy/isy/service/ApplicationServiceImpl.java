@@ -53,7 +53,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     private RoleApplicationService roleApplicationService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     @Resource
     private UsersService usersService;
@@ -329,17 +329,17 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      * @return list treeBean
      */
     private List<TreeBean> bindingDataToJson(int id) {
-        List<Application> applications;
-        if(authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)){
+        List<Application> applications = null;
+        if(roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)){
             applications = findByPid(id);
-        } else {
+        } else if(roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             applications = findByPidAndCollegeId(id,collegeId);
         }
         List<TreeBean> treeBeens = new ArrayList<>();
-        if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
+        if (ObjectUtils.isEmpty(applications)) {
             treeBeens = null;
         } else {
             for (Application application : applications) { // pid = 0

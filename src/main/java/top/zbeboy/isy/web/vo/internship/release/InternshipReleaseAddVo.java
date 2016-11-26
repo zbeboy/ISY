@@ -19,11 +19,7 @@ public class InternshipReleaseAddVo {
     private String teacherDistributionTime;
     @NotNull
     private String time;
-    @NotNull
-    @Min(1)
     private int schoolId;
-    @NotNull
-    @Min(1)
     private int collegeId;
     @NotNull
     @Min(1)

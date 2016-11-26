@@ -113,9 +113,9 @@ public class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/add", method = RequestMethod.GET)
     public String roleAdd(ModelMap modelMap) {
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
         return "web/platform/role/role_add::#page-wrapper";
@@ -141,9 +141,9 @@ public class RoleController {
             roleBean.setSchoolName(temp.getValue(SCHOOL.SCHOOL_NAME));
         }
         modelMap.addAttribute("role", roleBean);
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
         return "web/platform/role/role_edit::#page-wrapper";
@@ -161,10 +161,10 @@ public class RoleController {
     public AjaxUtils saveValid(@RequestParam("roleName") String name, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
-            if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                collegeId = authoritiesService.getRoleCollegeId(record);
+                collegeId = roleService.getRoleCollegeId(record);
             }
             if (collegeId > 0) {
                 Result<Record> records = roleService.findByRoleNameAndCollegeId(roleName, collegeId);
@@ -199,10 +199,10 @@ public class RoleController {
                                  @RequestParam("roleId") int roleId) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
-            if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                collegeId = authoritiesService.getRoleCollegeId(record);
+                collegeId = roleService.getRoleCollegeId(record);
             }
             if (collegeId > 0) {
                 Result<Record> records = roleService.findByRoleNameAndCollegeIdNeRoleId(roleName, collegeId, roleId);
@@ -277,10 +277,10 @@ public class RoleController {
      * @param roleId         角色id
      */
     private void saveOrUpdate(int collegeId, String applicationIds, int roleId) {
-        if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = authoritiesService.getRoleCollegeId(record);
+            collegeId = roleService.getRoleCollegeId(record);
         }
         if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
             List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);

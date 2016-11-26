@@ -46,14 +46,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          参数
          */
         var param = {
-            releaseTitle: $(paramId.releaseTitle).val().trim(),
-            internshipTypeId: $(paramId.internshipTypeId).val().trim(),
+            releaseTitle: $(paramId.releaseTitle).val(),
+            internshipTypeId: $(paramId.internshipTypeId).val(),
             teacherDistributionTime: $(paramId.teacherDistributionTime).val(),
             time: $(paramId.time).val(),
             schoolId: $(paramId.schoolId).val(),
             collegeId: $(paramId.collegeId).val(),
-            departmentId: $(paramId.departmentId).val().trim(),
-            grade: $(paramId.grade).val().trim(),
+            departmentId: $(paramId.departmentId).val(),
+            grade: $(paramId.grade).val(),
             scienceId: $(paramId.scienceId).val(),
             internshipReleaseIsDel: $('input[name="internshipReleaseIsDel"]:checked').val(),
             files: ''
@@ -122,13 +122,24 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * 初始化参数
          */
         function initParam() {
-            param.releaseTitle = $(paramId.releaseTitle).val().trim();
-            param.internshipTypeId = $(paramId.internshipTypeId).val().trim();
+            param.releaseTitle = $(paramId.releaseTitle).val();
+            param.internshipTypeId = $(paramId.internshipTypeId).val();
             param.teacherDistributionTime = $(paramId.teacherDistributionTime).val();
             param.time = $(paramId.time).val();
             param.schoolId = $(paramId.schoolId).val();
-            param.collegeId = $(paramId.collegeId).val();
-            param.departmentId = $(paramId.departmentId).val().trim();
+            if(init_page_param.collegeId != -1){
+                param.collegeId = init_page_param.collegeId;
+                param.schoolId = 0;
+            } else {
+                param.collegeId = $(paramId.collegeId).val();
+            }
+            if(init_page_param.departmentId != -1){
+                param.departmentId = init_page_param.departmentId;
+                param.schoolId = 0;
+                param.collegeId = 0;
+            } else {
+                param.departmentId = $(paramId.departmentId).val();
+            }
             param.grade = $(paramId.grade).val().trim();
             param.scienceId = $(paramId.scienceId).val();
             param.internshipReleaseIsDel = $('input[name="internshipReleaseIsDel"]:checked').val();
@@ -147,6 +158,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             }
             if (p.length > 0) {
                 param.files = JSON.stringify(p);
+            } else {
+                param.files = '';
             }
         }
 
@@ -217,9 +230,15 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 internshipTypeData(data);
             });
 
-            $.get(web_path + ajax_url.school_data_url, function (data) {
-                schoolData(data);
-            });
+            if(init_page_param.departmentId != -1){
+                changeGrade(init_page_param.departmentId);
+            } else if(init_page_param.collegeId != -1) {
+                changeDepartment(init_page_param.collegeId);
+            } else {
+                $.get(web_path + ajax_url.school_data_url, function (data) {
+                    schoolData(data);
+                });
+            }
         }
 
         /**
@@ -376,7 +395,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         $(paramId.grade).change(function () {
             initParam();
             var grade = param.grade;
-            changeScience(grade);// 根据系重新加载专业数据
+            var department = param.departmentId;
+            changeScience(grade,department);// 根据系重新加载专业数据
 
             if (Number(grade) > 0) {
                 validSuccessDom(validId.grade, errorMsgId.grade);
@@ -537,15 +557,16 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         /**
          * 改变专业选项
          * @param grade 年级
+         * @param department 系
          */
-        function changeScience(grade) {
+        function changeScience(grade,department) {
 
             if (Number(grade) == 0) {
                 $(paramId.scienceId).html('');
                 $(paramId.scienceId).selectpicker('refresh');
             } else {
                 // 根据年级查询全部专业
-                $.post(web_path + ajax_url.science_data_url, {grade: grade}, function (data) {
+                $.post(web_path + ajax_url.science_data_url, {grade: grade,departmentId:department}, function (data) {
                     var source = $("#science-template").html();
                     var template = Handlebars.compile(source);
 
@@ -575,7 +596,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             formAcceptCharset: 'utf-8',
             submit: function (e, data) {
                 initParam();
-                if (Number(param.schoolId) <= 0) {
+                if (init_page_param.departmentId == -1 && init_page_param.collegeId == -1 && Number(param.schoolId) <= 0) {
                     Messenger().post({
                         message: '请选择学校',
                         type: 'error',
@@ -584,7 +605,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     return false;
                 }
 
-                if (Number(param.collegeId) <= 0) {
+                if (init_page_param.departmentId == -1 && init_page_param.collegeId == -1 && Number(param.collegeId) <= 0) {
                     Messenger().post({
                         message: '请选择院',
                         type: 'error',
@@ -601,7 +622,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     });
                     return false;
                 }
-
                 data.formData = param;
             },
             done: function (e, data) {
@@ -764,7 +784,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * 检验实习标题
          */
         function validReleaseTitle() {
-            initParam();
             var releaseTitle = param.releaseTitle;
             if (releaseTitle.length <= 0 || releaseTitle.length > 100) {
                 Messenger().post({
@@ -805,11 +824,15 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * 检验实习类型
          */
         function validInternshipTypeId() {
-            initParam();
             var internshipTypeId = param.internshipTypeId;
             // 改变选项时，检验
             if (Number(internshipTypeId) > 0) {
-                validSchoolId();
+                if(init_page_param.departmentId != -1 || init_page_param.collegeId != -1){
+                    validGrade();
+                } else {
+                    console.log('hahah');
+                    validSchoolId();
+                }
             } else {
                 Messenger().post({
                     message: '请选择实习类型',
@@ -823,7 +846,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * 检验学校id
          */
         function validSchoolId() {
-            initParam();
             var schoolId = param.schoolId;
             if (Number(schoolId) <= 0) {
                 Messenger().post({

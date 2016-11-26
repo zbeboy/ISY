@@ -43,7 +43,7 @@ public class StaffServiceImpl implements StaffService {
     private UsersService usersService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     @Autowired
     public StaffServiceImpl(DSLContext dslContext, Configuration configuration) {
@@ -133,7 +133,7 @@ public class StaffServiceImpl implements StaffService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -152,10 +152,10 @@ public class StaffServiceImpl implements StaffService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -178,7 +178,7 @@ public class StaffServiceImpl implements StaffService {
 
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -197,10 +197,10 @@ public class StaffServiceImpl implements StaffService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -233,7 +233,7 @@ public class StaffServiceImpl implements StaffService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -252,10 +252,10 @@ public class StaffServiceImpl implements StaffService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -277,7 +277,7 @@ public class StaffServiceImpl implements StaffService {
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -296,10 +296,10 @@ public class StaffServiceImpl implements StaffService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -328,7 +328,7 @@ public class StaffServiceImpl implements StaffService {
     public int countAllExistsAuthorities() {
         Select<AuthoritiesRecord> select = usersService.existsAuthoritiesSelect();
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             Record1<Integer> count = create.selectCount()
                     .from(STAFF)
                     .join(USERS)
@@ -336,10 +336,10 @@ public class StaffServiceImpl implements StaffService {
                     .whereExists(select)
                     .fetchOne();
             return count.value1();
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(STAFF)
                     .join(USERS)
@@ -360,7 +360,7 @@ public class StaffServiceImpl implements StaffService {
         Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             Record1<Integer> count = create.selectCount()
                     .from(STAFF)
                     .join(USERS)
@@ -368,10 +368,10 @@ public class StaffServiceImpl implements StaffService {
                     .whereNotExists(select)
                     .fetchOne();
             return count.value1();
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(STAFF)
                     .join(USERS)
@@ -394,17 +394,17 @@ public class StaffServiceImpl implements StaffService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
                         .whereExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(USERS)
@@ -418,7 +418,7 @@ public class StaffServiceImpl implements StaffService {
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -435,10 +435,10 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .where(a).andExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -472,17 +472,17 @@ public class StaffServiceImpl implements StaffService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
                         .whereNotExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(USERS)
@@ -496,7 +496,7 @@ public class StaffServiceImpl implements StaffService {
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(DEPARTMENT)
@@ -513,10 +513,10 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .where(a).andNotExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STAFF)
                         .join(DEPARTMENT)

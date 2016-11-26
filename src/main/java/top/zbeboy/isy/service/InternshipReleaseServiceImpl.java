@@ -94,11 +94,11 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     }
 
     @Override
-    public Result<Record> findAllByPage(PaginationUtils paginationUtils, InternshipRelease internshipRelease) {
+    public Result<Record> findAllByPage(PaginationUtils paginationUtils, InternshipReleaseBean internshipReleaseBean) {
         int pageNum = paginationUtils.getPageNum();
         int pageSize = paginationUtils.getPageSize();
         Condition a = searchCondition(paginationUtils);
-        a = otherCondition(a, internshipRelease);
+        a = otherCondition(a, internshipReleaseBean);
         return create.select()
                 .from(INTERNSHIP_RELEASE)
                 .join(USERS)
@@ -119,7 +119,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     }
 
     @Override
-    public List<InternshipReleaseBean> dealData(PaginationUtils paginationUtils, Result<Record> records, InternshipRelease internshipRelease) {
+    public List<InternshipReleaseBean> dealData(PaginationUtils paginationUtils, Result<Record> records, InternshipReleaseBean internshipReleaseBean) {
         List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
         if (records.isNotEmpty()) {
             internshipReleaseBeens = records.into(InternshipReleaseBean.class);
@@ -133,16 +133,16 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
                 Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseIdRelation(i.getInternshipReleaseId());
                 i.setSciences(records1.into(Science.class));
             });
-            paginationUtils.setTotalDatas(countByCondition(paginationUtils, internshipRelease));
+            paginationUtils.setTotalDatas(countByCondition(paginationUtils, internshipReleaseBean));
         }
         return internshipReleaseBeens;
     }
 
     @Override
-    public int countByCondition(PaginationUtils paginationUtils, InternshipRelease internshipRelease) {
+    public int countByCondition(PaginationUtils paginationUtils,InternshipReleaseBean internshipReleaseBean) {
         Record1<Integer> count;
         Condition a = searchCondition(paginationUtils);
-        a = otherCondition(a, internshipRelease);
+        a = otherCondition(a, internshipReleaseBean);
         if (ObjectUtils.isEmpty(a)) {
             SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
                     .from(INTERNSHIP_RELEASE);
@@ -156,6 +156,10 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
                     .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(INTERNSHIP_TYPE)
                     .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
+                    .join(COLLEGE)
+                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .join(SCHOOL)
+                    .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID))
                     .where(a);
             count = selectConditionStep.fetchOne();
         }
@@ -184,32 +188,40 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
      * 其它条件参数
      *
      * @param a                 搜索条件
-     * @param internshipRelease 额外参数
+     * @param internshipReleaseBean 额外参数
      * @return 条件
      */
-    private Condition otherCondition(Condition a, InternshipRelease internshipRelease) {
-        if (!ObjectUtils.isEmpty(internshipRelease)) {
-            if (!ObjectUtils.isEmpty(internshipRelease.getDepartmentId())) {
+    private Condition otherCondition(Condition a, InternshipReleaseBean internshipReleaseBean) {
+        if (!ObjectUtils.isEmpty(internshipReleaseBean)) {
+            if (!ObjectUtils.isEmpty(internshipReleaseBean.getDepartmentId()) && internshipReleaseBean.getDepartmentId()>0) {
                 if (!ObjectUtils.isEmpty(a)) {
-                    a = a.and(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId()));
+                    a = a.and(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipReleaseBean.getDepartmentId()));
                 } else {
-                    a = INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipRelease.getDepartmentId());
+                    a = INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipReleaseBean.getDepartmentId());
                 }
             }
 
-            if (!ObjectUtils.isEmpty(internshipRelease.getInternshipReleaseIsDel())) {
+            if (!ObjectUtils.isEmpty(internshipReleaseBean.getCollegeId()) && internshipReleaseBean.getCollegeId()>0) {
                 if (!ObjectUtils.isEmpty(a)) {
-                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel()));
+                    a = a.and(COLLEGE.COLLEGE_ID.eq(internshipReleaseBean.getCollegeId()));
                 } else {
-                    a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipRelease.getInternshipReleaseIsDel());
+                    a = COLLEGE.COLLEGE_ID.eq(internshipReleaseBean.getCollegeId());
                 }
             }
 
-            if (!ObjectUtils.isEmpty(internshipRelease.getAllowGrade())) {
+            if (!ObjectUtils.isEmpty(internshipReleaseBean.getInternshipReleaseIsDel())) {
                 if (!ObjectUtils.isEmpty(a)) {
-                    a = a.and(INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade()));
+                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipReleaseBean.getInternshipReleaseIsDel()));
                 } else {
-                    a = INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipRelease.getAllowGrade());
+                    a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipReleaseBean.getInternshipReleaseIsDel());
+                }
+            }
+
+            if (!ObjectUtils.isEmpty(internshipReleaseBean.getAllowGrade())) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipReleaseBean.getAllowGrade()));
+                } else {
+                    a = INTERNSHIP_RELEASE.ALLOW_GRADE.eq(internshipReleaseBean.getAllowGrade());
                 }
             }
         }

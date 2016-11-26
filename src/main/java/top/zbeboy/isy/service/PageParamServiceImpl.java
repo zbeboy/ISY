@@ -26,7 +26,7 @@ public class PageParamServiceImpl implements PageParamService {
     private UsersService usersService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     /**
      * 页面参数
@@ -34,13 +34,13 @@ public class PageParamServiceImpl implements PageParamService {
      * @param modelMap
      */
     public void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap) {
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             modelMap.addAttribute("collegeId", collegeId);
         }
     }

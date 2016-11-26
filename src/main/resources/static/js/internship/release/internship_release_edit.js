@@ -133,6 +133,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             }
             if (p.length > 0) {
                 param.files = JSON.stringify(p);
+            } else {
+                param.files = '';
             }
         }
 
@@ -431,7 +433,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             var releaseTitle = param.releaseTitle;
             var msg;
             msg = Messenger().post({
-                message: "确定添加实习 '" + releaseTitle + "'  吗?",
+                message: "确定更新实习 '" + releaseTitle + "'  吗?",
                 actions: {
                     retry: {
                         label: '确定',

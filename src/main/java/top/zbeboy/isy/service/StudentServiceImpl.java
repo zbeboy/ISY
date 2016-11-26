@@ -43,7 +43,7 @@ public class StudentServiceImpl implements StudentService {
     private UsersService usersService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     @Autowired
     public StudentServiceImpl(DSLContext dslContext, Configuration configuration) {
@@ -174,7 +174,7 @@ public class StudentServiceImpl implements StudentService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -197,10 +197,10 @@ public class StudentServiceImpl implements StudentService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -227,7 +227,7 @@ public class StudentServiceImpl implements StudentService {
 
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -250,10 +250,10 @@ public class StudentServiceImpl implements StudentService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -289,7 +289,7 @@ public class StudentServiceImpl implements StudentService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -312,10 +312,10 @@ public class StudentServiceImpl implements StudentService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -341,7 +341,7 @@ public class StudentServiceImpl implements StudentService {
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -364,10 +364,10 @@ public class StudentServiceImpl implements StudentService {
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -400,7 +400,7 @@ public class StudentServiceImpl implements StudentService {
     public int countAllExistsAuthorities() {
         Select<AuthoritiesRecord> select = usersService.existsAuthoritiesSelect();
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             Record1<Integer> count = create.selectCount()
                     .from(STUDENT)
                     .join(USERS)
@@ -408,10 +408,10 @@ public class StudentServiceImpl implements StudentService {
                     .whereExists(select)
                     .fetchOne();
             return count.value1();
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(STUDENT)
                     .join(USERS)
@@ -436,7 +436,7 @@ public class StudentServiceImpl implements StudentService {
         Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             Record1<Integer> count = create.selectCount()
                     .from(STUDENT)
                     .join(USERS)
@@ -444,10 +444,10 @@ public class StudentServiceImpl implements StudentService {
                     .whereNotExists(select)
                     .fetchOne();
             return count.value1();
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(STUDENT)
                     .join(USERS)
@@ -474,17 +474,17 @@ public class StudentServiceImpl implements StudentService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                         .whereExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(USERS)
@@ -502,7 +502,7 @@ public class StudentServiceImpl implements StudentService {
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -523,10 +523,10 @@ public class StudentServiceImpl implements StudentService {
                         .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .where(a).andExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -563,17 +563,17 @@ public class StudentServiceImpl implements StudentService {
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                         .whereNotExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(USERS)
@@ -591,7 +591,7 @@ public class StudentServiceImpl implements StudentService {
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(ORGANIZE)
@@ -612,10 +612,10 @@ public class StudentServiceImpl implements StudentService {
                         .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .where(a).andNotExists(select);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(STUDENT)
                         .join(ORGANIZE)

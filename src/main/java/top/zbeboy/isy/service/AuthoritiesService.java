@@ -40,20 +40,4 @@ public interface AuthoritiesService {
      * @param authorities 权限
      */
     void deleteByAuthorities(String authorities);
-
-    /**
-     * 检查当前用户是否有此权限
-     *
-     * @param authority 权限
-     * @return true 有 false 无
-     */
-    boolean isCurrentUserInRole(String authority);
-
-    /**
-     * 获取角色院id
-     *
-     * @param record 数据库信息
-     * @return id
-     */
-    int getRoleCollegeId(Optional<Record> record);
 }

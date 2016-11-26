@@ -56,7 +56,7 @@ public class UsersServiceImpl implements UsersService {
     private StaffService staffService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     @Autowired
     public UsersServiceImpl(DSLContext dslContext, Configuration configuration) {
@@ -350,7 +350,7 @@ public class UsersServiceImpl implements UsersService {
      * @return select
      */
     public Select<AuthoritiesRecord> existsAuthoritiesSelect() {
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             return create.selectFrom(AUTHORITIES)
                     .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME).and(AUTHORITIES.AUTHORITY.ne(Workbook.SYSTEM_AUTHORITIES)));
         } else {

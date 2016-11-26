@@ -80,10 +80,10 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> distributionDatas(PaginationUtils paginationUtils) {
         Byte isDel = 0;
-        InternshipRelease internshipRelease = new InternshipRelease();
-        internshipRelease.setInternshipReleaseIsDel(isDel);
-        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipRelease);
-        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipRelease);
+        InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
+        internshipReleaseBean.setInternshipReleaseIsDel(isDel);
+        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 

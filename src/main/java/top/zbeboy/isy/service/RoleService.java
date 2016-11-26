@@ -141,4 +141,36 @@ public interface RoleService {
      * @return 角色集合
      */
     String findByUsernameToStringNoCache(String username);
+
+    /**
+     * 检查当前用户是否有此权限
+     *
+     * @param role 权限
+     * @return true 有 false 无
+     */
+    boolean isCurrentUserInRole(String role);
+
+    /**
+     * 获取角色院id
+     *
+     * @param record 数据库信息
+     * @return id
+     */
+    int getRoleCollegeId(Optional<Record> record);
+
+    /**
+     * 获取角色系id
+     *
+     * @param record 数据库信息
+     * @return id
+     */
+    int getRoleDepartmentId(Optional<Record> record);
+
+    /**
+     * 获取角色学校id
+     *
+     * @param record 数据库信息
+     * @return id
+     */
+    int getRoleSchoolId(Optional<Record> record);
 }

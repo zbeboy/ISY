@@ -67,15 +67,15 @@ public class ScienceController {
     }
 
     /**
-     * 通过年级获取全部专业
+     * 通过年级与系id获取全部专业
      *
      * @param grade 年级
      * @return 年级下全部专业
      */
     @RequestMapping(value = "/user/grade/sciences", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<Science> gradeSciences(@RequestParam("grade") String grade) {
-        Result<Record2<String,Integer>> scienceRecords = scienceService.findByGrade(grade);
+    public AjaxUtils<Science> gradeSciences(@RequestParam("grade") String grade,@RequestParam("departmentId") int departmentId) {
+        Result<Record2<String,Integer>> scienceRecords = scienceService.findByGradeAndDepartmentId(grade,departmentId);
         List<Science> sciences = scienceRecords.into(Science.class);
         return new AjaxUtils<Science>().success().msg("获取专业数据成功！").listData(sciences);
     }

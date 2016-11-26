@@ -42,7 +42,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     private DepartmentDao departmentDao;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     @Resource
     private UsersService usersService;
@@ -85,7 +85,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record> selectJoinStep = create.select()
                         .from(DEPARTMENT)
                         .join(COLLEGE)
@@ -95,10 +95,10 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
                 sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
                 pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
                 records = selectJoinStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(DEPARTMENT)
                         .join(COLLEGE)
@@ -113,7 +113,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
 
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(DEPARTMENT)
                         .join(COLLEGE)
@@ -124,10 +124,10 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(DEPARTMENT)
                         .join(COLLEGE)
@@ -147,12 +147,12 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     @Override
     public int countAll() {
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             return statisticsAll(create, DEPARTMENT);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(DEPARTMENT)
                     .join(COLLEGE)
@@ -171,14 +171,14 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
                         .from(DEPARTMENT);
                 count = selectJoinStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(DEPARTMENT)
                         .join(COLLEGE)
@@ -189,7 +189,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
 
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(DEPARTMENT)
                         .join(COLLEGE)
@@ -198,10 +198,10 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .where(a);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(DEPARTMENT)
                         .join(COLLEGE)

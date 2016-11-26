@@ -44,7 +44,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     private OrganizeDao organizeDao;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     @Resource
     private UsersService usersService;
@@ -148,7 +148,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record> selectJoinStep = create.select()
                         .from(ORGANIZE)
                         .join(SCIENCE)
@@ -162,10 +162,10 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
                 pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
                 records = selectJoinStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(ORGANIZE)
                         .join(SCIENCE)
@@ -183,7 +183,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
             }
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(ORGANIZE)
                         .join(SCIENCE)
@@ -198,10 +198,10 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
                         .from(ORGANIZE)
                         .join(SCIENCE)
@@ -224,12 +224,12 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     @Override
     public int countAll() {
         // 分权限显示用户数据
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             return statisticsAll(create, ORGANIZE);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = authoritiesService.getRoleCollegeId(record);
+            int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
                     .from(ORGANIZE)
                     .join(SCIENCE)
@@ -251,14 +251,14 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
                         .from(ORGANIZE);
                 count = selectJoinStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ORGANIZE)
                         .join(SCIENCE)
@@ -273,7 +273,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
 
         } else {
             // 分权限显示用户数据
-            if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ORGANIZE)
                         .join(SCIENCE)
@@ -286,10 +286,10 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .where(a);
                 count = selectConditionStep.fetchOne();
-            } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                int collegeId = authoritiesService.getRoleCollegeId(record);
+                int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ORGANIZE)
                         .join(SCIENCE)

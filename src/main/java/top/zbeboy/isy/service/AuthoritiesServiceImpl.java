@@ -18,6 +18,8 @@ import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Authorities;
 import top.zbeboy.isy.domain.tables.pojos.College;
+import top.zbeboy.isy.domain.tables.pojos.Department;
+import top.zbeboy.isy.domain.tables.pojos.School;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
 import java.util.List;
@@ -67,32 +69,5 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
         create.deleteFrom(AUTHORITIES)
                 .where(AUTHORITIES.AUTHORITY.eq(authorities))
                 .execute();
-    }
-
-    @Override
-    public boolean isCurrentUserInRole(String authority) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        if (authentication != null) {
-            if (authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
-                return springSecurityUser.getAuthorities().contains(new SimpleGrantedAuthority(authority));
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int getRoleCollegeId(Optional<Record> record) {
-        int collegeId = 0;
-        if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            if (record.isPresent()) {
-                College college = record.get().into(College.class);
-                if (!ObjectUtils.isEmpty(college)) {
-                    collegeId = college.getCollegeId();
-                }
-            }
-        }
-        return collegeId;
     }
 }

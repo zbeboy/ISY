@@ -19,6 +19,7 @@ import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.DepartmentRecord;
 import top.zbeboy.isy.service.AuthoritiesService;
 import top.zbeboy.isy.service.DepartmentService;
+import top.zbeboy.isy.service.RoleService;
 import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -48,7 +49,7 @@ public class DepartmentController {
     private UsersService usersService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private RoleService roleService;
 
     /**
      * 根据院id获取全部系
@@ -118,9 +119,9 @@ public class DepartmentController {
      */
     @RequestMapping(value = "/web/data/department/add", method = RequestMethod.GET)
     public String departmentAdd(ModelMap modelMap) {
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
         return "web/data/department/department_add::#page-wrapper";
@@ -144,9 +145,9 @@ public class DepartmentController {
         }
         modelMap.addAttribute("department", departmentBean);
 
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
         return "web/data/department/department_edit::#page-wrapper";
@@ -163,10 +164,10 @@ public class DepartmentController {
     @ResponseBody
     public AjaxUtils saveValid(@RequestParam("departmentName") String name, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId) {
         String departmentName = StringUtils.trimWhitespace(name);
-        if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = authoritiesService.getRoleCollegeId(record);
+            collegeId = roleService.getRoleCollegeId(record);
         }
         if (StringUtils.hasLength(departmentName) && collegeId > 0) {
             Result<DepartmentRecord> departmentRecords = departmentService.findByDepartmentNameAndCollegeId(departmentName, collegeId);
@@ -191,10 +192,10 @@ public class DepartmentController {
     @ResponseBody
     public AjaxUtils updateValid(@RequestParam("departmentId") int id, @RequestParam("departmentName") String name, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId) {
         String departmentName = StringUtils.trimWhitespace(name);
-        if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = authoritiesService.getRoleCollegeId(record);
+            collegeId = roleService.getRoleCollegeId(record);
         }
         if (StringUtils.hasLength(departmentName) && collegeId > 0) {
             Result<DepartmentRecord> departmentRecords = departmentService.findByDepartmentNameAndCollegeIdNeDepartmentId(departmentName, id, collegeId);
@@ -277,12 +278,12 @@ public class DepartmentController {
      */
     private int getSaveOrUpdateCollegeId(DepartmentVo departmentVo) {
         int collegeId = 0;
-        if (authoritiesService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             collegeId = departmentVo.getCollegeId();
-        } else if (authoritiesService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = authoritiesService.getRoleCollegeId(record);
+            collegeId = roleService.getRoleCollegeId(record);
         }
         return collegeId;
     }
