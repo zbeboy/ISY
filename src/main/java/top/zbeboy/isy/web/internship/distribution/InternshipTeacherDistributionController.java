@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
@@ -61,6 +62,9 @@ public class InternshipTeacherDistributionController {
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 实习教师分配
      *
@@ -82,6 +86,19 @@ public class InternshipTeacherDistributionController {
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
+        if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            int departmentId = roleService.getRoleDepartmentId(record);
+            internshipReleaseBean.setDepartmentId(departmentId);
+        }
+        if(roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            int collegeId = roleService.getRoleCollegeId(record);
+            internshipReleaseBean.setCollegeId(collegeId);
+        }
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
