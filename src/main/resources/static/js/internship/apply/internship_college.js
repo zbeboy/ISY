@@ -2,15 +2,15 @@
  * Created by lenovo on 2016/11/25.
  */
 //# sourceURL=internship_college.js
-require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.address","bootstrap-select-zh-CN","bootstrap-daterangepicker"],
-    function ($, Handlebars,nav_active,moment) {
+require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-select-zh-CN", "bootstrap-daterangepicker"],
+    function ($, Handlebars, nav_active, moment) {
         /*
          ajax url.
          */
         var ajax_url = {
-            save: '/web/internship/teacher_distribution/save',
-            teacher_data_url: '/web/internship/teacher_distribution/batch/distribution/teachers',
-            back: ''
+            save: '/web/internship/apply/save',
+            teacher_data_url: '/web/internship/apply/teachers',
+            back: '/web/menu/internship/apply'
         };
 
         // 刷新时选中菜单
@@ -20,6 +20,7 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
          参数id
          */
         var paramId = {
+            studentId: '#studentId',
             studentName: '#studentName',
             qqMailbox: '#qqMailbox',
             parentalContact: '#parentalContact',
@@ -28,13 +29,15 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
             internshipCollegeAddress: '#internshipCollegeAddress',
             internshipCollegeContacts: '#internshipCollegeContacts',
             internshipCollegeTel: '#internshipCollegeTel',
-            time: '#time'
+            startTime: '#startTime',
+            endTime: '#endTime'
         };
 
         /*
          参数
          */
         var param = {
+            studentId: $(paramId.studentId).val(),
             studentName: $(paramId.studentName).val(),
             qqMailbox: $(paramId.qqMailbox).val(),
             parentalContact: $(paramId.parentalContact).val(),
@@ -43,7 +46,8 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
             internshipCollegeAddress: $(paramId.internshipCollegeAddress).val(),
             internshipCollegeContacts: $(paramId.internshipCollegeContacts).val(),
             internshipCollegeTel: $(paramId.internshipCollegeTel).val(),
-            time: $(paramId.time).val()
+            startTime: $(paramId.startTime).val(),
+            endTime: $(paramId.endTime).val()
         };
 
         /*
@@ -58,7 +62,8 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
             internshipCollegeAddress: '#valid_internship_college_address',
             internshipCollegeContacts: '#valid_internship_college_contacts',
             internshipCollegeTel: '#valid_internship_college_tel',
-            time: '#valid_time'
+            startTime: '#valid_start_time',
+            endTime: '#valid_end_time'
         };
 
         /*
@@ -73,7 +78,8 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
             internshipCollegeAddress: '#internship_college_address_error_msg',
             internshipCollegeContacts: '#internship_college_contacts_error_msg',
             internshipCollegeTel: '#internship_college_tel_error_msg',
-            time: '#time'
+            startTime: '#start_time_error_msg',
+            endTime: '#end_time_error_msg'
         };
 
         /**
@@ -109,6 +115,7 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
          * 初始化参数
          */
         function initParam() {
+            param.studentId = $(paramId.studentId).val();
             param.studentName = $(paramId.studentName).val();
             param.qqMailbox = $(paramId.qqMailbox).val();
             param.parentalContact = $(paramId.parentalContact).val();
@@ -117,7 +124,8 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
             param.internshipCollegeAddress = $(paramId.internshipCollegeAddress).val();
             param.internshipCollegeContacts = $(paramId.internshipCollegeContacts).val();
             param.internshipCollegeTel = $(paramId.internshipCollegeTel).val();
-            param.time = $(paramId.time).val();
+            param.startTime = $(paramId.startTime).val();
+            param.endTime = $(paramId.endTime).val();
         }
 
         /*
@@ -127,10 +135,9 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
             $.address.value(ajax_url.back);
         });
 
-        // 实习时间
-        $(paramId.time).daterangepicker({
-            "startDate": moment().add(2, "days"),
-            "endDate": moment().add(3, "days"),
+        // 实习开始时间
+        $(paramId.startTime).daterangepicker({
+            "singleDatePicker": true,
             "locale": {
                 format: 'YYYY-MM-DD',
                 applyLabel: '确定',
@@ -147,15 +154,36 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
 
-        // 选择班主任
-        $(paramId.headmaster).selectpicker({
-            liveSearch: true
+        // 实习结束时间
+        $(paramId.endTime).daterangepicker({
+            "singleDatePicker": true,
+            "locale": {
+                format: 'YYYY-MM-DD',
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                fromLabel: '起始时间',
+                toLabel: '结束时间',
+                customRangeLabel: '自定义',
+                separator: ' 至 ',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月']
+            }
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
 
         init();
 
-        function init(){
+        function init() {
+            initParam();
             // 初始化班主任数据
+            $.get(web_path + ajax_url.teacher_data_url, {
+                id: init_page_param.internshipReleaseId,
+                studentId: param.studentId
+            }, function (data) {
+                headmasterData(data);
+            });
         }
 
         /**
@@ -178,5 +206,14 @@ require(["jquery", "handlebars","nav_active","moment", "messenger", "jquery.addr
 
             var html = template(data);
             $(paramId.headmaster).html(html);
+            initHeadmasterSelect();
+        }
+
+        // 选择班主任
+        function initHeadmasterSelect(){
+            $(paramId.headmaster).selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
         }
     });

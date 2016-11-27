@@ -37,7 +37,7 @@ public interface StaffService {
      * @param departmentId 系id
      * @return 教职工们
      */
-    Result<Record> findByDepartmentId(int departmentId);
+    Result<Record> findByDepartmentIdRelation(int departmentId);
 
     /**
      * 根据用户账号查询

@@ -201,6 +201,18 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             });
         }
 
+        // 用于可以去申请页
+        var to_apply = false;
+        var to_apply_data = '';
+
+        $('#studentModal').on('hidden.bs.modal', function (e) {
+            // do something...
+            if(to_apply){
+                to_apply = false;
+                accessApply($('#studentInfoInternshipReleaseId').val(),to_apply_data);
+            }
+        });
+
         /**
          * 检验学生信息
          */
@@ -231,7 +243,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                     data: {student: student, type: type},
                     success: function (data) {
                         if (data.state) {
-                            accessApply($('#studentInfoInternshipReleaseId').val(),data.objectResult);
+                            to_apply_data = data.objectResult;
+                            to_apply = true;
+                            $('#studentModal').modal('hide');
                         } else {
                             validErrorDom(validId.student,errorMsgId.student,data.msg);
                         }

@@ -58,6 +58,24 @@ public class InternshipApplyController {
     @Resource
     private InternshipTeacherDistributionService internshipTeacherDistributionService;
 
+    @Resource
+    private InternshipTypeService internshipTypeService;
+
+    @Resource
+    private InternshipCollegeService internshipCollegeService;
+
+    @Resource
+    private InternshipCompanyService internshipCompanyService;
+
+    @Resource
+    private GraduationPracticeCollegeService graduationPracticeCollegeService;
+
+    @Resource
+    private GraduationPracticeCompanyService graduationPracticeCompanyService;
+
+    @Resource
+    private GraduationPracticeUnifyService graduationPracticeUnifyService;
+
     /**
      * 实习申请
      *
@@ -116,29 +134,91 @@ public class InternshipApplyController {
         String page = "/web/internship/apply/internship_apply::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
-            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            StudentBean studentBean = (StudentBean) errorBean.getMapData().get("student");
-            String qqMail = "";
-            if(studentBean.getUsername().toLowerCase().contains("@qq.com")){
-                qqMail = studentBean.getUsername();
+            InternshipRelease internshipRelease = errorBean.getData();
+            InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
+            switch (internshipType.getInternshipTypeName()) {
+                case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                    Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (internshipCollegeRecord.isPresent()) {
+                        InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
+                        modelMap.addAttribute("internshipData", internshipCollege);
+                        page = "/web/internship/apply/internship_college_edit::#page-wrapper";
+                    } else {
+                        internshipCollegePageParam(modelMap,errorBean);
+                        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+                        page = "/web/internship/apply/internship_college_add::#page-wrapper";
+                    }
+                    break;
+                case Workbook.INTERNSHIP_COMPANY_TYPE:
+                    Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (internshipCompanyRecord.isPresent()) {
+                        InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
+                        modelMap.addAttribute("internshipData", internshipCompany);
+                        page = "/web/internship/apply/internship_company_edit::#page-wrapper";
+                    } else {
+                        page = "/web/internship/apply/internship_company_add::#page-wrapper";
+                    }
+                    break;
+                case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                    Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (graduationPracticeCollegeRecord.isPresent()) {
+                        GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeCollege);
+                        page = "/web/internship/apply/graduation_practice_college_edit::#page-wrapper";
+                    } else {
+                        page = "/web/internship/apply/graduation_practice_college_add::#page-wrapper";
+                    }
+                    break;
+                case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                    Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (graduationPracticeUnifyRecord.isPresent()) {
+                        GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeUnify);
+                        page = "/web/internship/apply/graduation_practice_unify_edit::#page-wrapper";
+                    } else {
+                        page = "/web/internship/apply/graduation_practice_unify_add::#page-wrapper";
+                    }
+                    break;
+                case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                    Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (graduationPracticeCompanyRecord.isPresent()) {
+                        GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeCompany);
+                        page = "/web/internship/apply/graduation_practice_company_edit::#page-wrapper";
+                    } else {
+                        page = "/web/internship/apply/graduation_practice_company_add::#page-wrapper";
+                    }
+                    break;
+                default:
+                    page = "/web/internship/apply/internship_apply::#page-wrapper";
             }
-                modelMap.addAttribute("qqMail",qqMail);
-
-            modelMap.addAttribute("student",studentBean);
-            InternshipTeacherDistribution internshipTeacherDistribution = (InternshipTeacherDistribution)errorBean.getMapData().get("internshipTeacherDistribution");
-            int staffId = internshipTeacherDistribution.getStaffId();
-            Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
-            String internshipTeacher = "";
-            if(staffRecord.isPresent()){
-                StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                internshipTeacher = staffBean.getRealName() + " " + staffBean.getMobile();
-            }
-            modelMap.addAttribute("internshipTeacher",internshipTeacher);
-            // TODO:根据实习类型进入不同的页面
-
-            page = "/web/internship/apply/internship_college::#page-wrapper";
         }
         return page;
+    }
+
+    /**
+     * 顶岗实习(留学院) 页面数据
+     *
+     * @param modelMap  页面对象
+     * @param errorBean 判断条件
+     */
+    private void internshipCollegePageParam(ModelMap modelMap, ErrorBean<InternshipRelease> errorBean) {
+        StudentBean studentBean = (StudentBean) errorBean.getMapData().get("student");
+        String qqMail = "";
+        if (studentBean.getUsername().toLowerCase().contains("@qq.com")) {
+            qqMail = studentBean.getUsername();
+        }
+        modelMap.addAttribute("qqMail", qqMail);
+        modelMap.addAttribute("student", studentBean);
+        InternshipTeacherDistribution internshipTeacherDistribution = (InternshipTeacherDistribution) errorBean.getMapData().get("internshipTeacherDistribution");
+        int staffId = internshipTeacherDistribution.getStaffId();
+        Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
+        String internshipTeacher = "";
+        if (staffRecord.isPresent()) {
+            StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+            internshipTeacher = staffBean.getRealName() + " " + staffBean.getMobile();
+        }
+        modelMap.addAttribute("internshipTeacher", internshipTeacher);
     }
 
     /**
@@ -186,6 +266,32 @@ public class InternshipApplyController {
     }
 
     /**
+     * 获取班主任数据
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/apply/teachers", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<StaffBean> teachers(@RequestParam("id") String internshipReleaseId, int studentId) {
+        AjaxUtils<StaffBean> ajaxUtils = new AjaxUtils<>();
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
+        if (!errorBean.isHasError()) {
+            InternshipRelease internshipRelease = errorBean.getData();
+            List<StaffBean> staffs = new ArrayList<>();
+            Result<Record> staffRecord = staffService.findByDepartmentIdRelation(internshipRelease.getDepartmentId());
+            if (staffRecord.isNotEmpty()) {
+                staffs = staffRecord.into(StaffBean.class);
+            }
+            ajaxUtils.success().msg("获取班主任数据成功").listData(staffs);
+        } else {
+            ajaxUtils.fail().msg("您不符合申请条件，无法获取数据");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入实习申请入口条件
      *
      * @param internshipReleaseId 实习发布id
@@ -196,19 +302,18 @@ public class InternshipApplyController {
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
         errorBean.setData(internshipRelease);
-        Map<String,Object> mapData = new HashMap<>();
-
+        Map<String, Object> mapData = new HashMap<>();
         if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
             if (studentRecord.isPresent()) {
                 StudentBean studentBean = studentRecord.get().into(StudentBean.class);
-                mapData.put("student",studentBean);
+                mapData.put("student", studentBean);
                 errorBean.setMapData(mapData);
                 Optional<Record> internshipReleaseScienceRecord = internshipReleaseScienceService.findByInternshipReleaseIdAndScienceId(internshipReleaseId, studentBean.getScienceId());
                 if (internshipReleaseScienceRecord.isPresent()) { // 判断专业
                     Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                     if (internshipTeacherDistributionRecord.isPresent()) { // 判断指导教师
                         InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
-                        mapData.put("internshipTeacherDistribution",internshipTeacherDistribution);
+                        mapData.put("internshipTeacherDistribution", internshipTeacherDistribution);
                         errorBean.setHasError(false);
                     } else {
                         errorBean.setHasError(true);

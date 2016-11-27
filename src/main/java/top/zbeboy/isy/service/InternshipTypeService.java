@@ -15,4 +15,12 @@ public interface InternshipTypeService {
      * @return 全部类型
      */
     List<InternshipType> findAll();
+
+    /**
+     * 根据实习类型id查询
+     *
+     * @param internshipTypeId 实习类型id
+     * @return 实习类型
+     */
+    InternshipType findByInternshipTypeId(int internshipTypeId);
 }

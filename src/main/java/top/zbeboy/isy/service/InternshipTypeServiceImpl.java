@@ -36,4 +36,9 @@ public class InternshipTypeServiceImpl implements InternshipTypeService {
     public List<InternshipType> findAll() {
         return internshipTypeDao.findAll();
     }
+
+    @Override
+    public InternshipType findByInternshipTypeId(int internshipTypeId) {
+        return internshipTypeDao.findById(internshipTypeId);
+    }
 }

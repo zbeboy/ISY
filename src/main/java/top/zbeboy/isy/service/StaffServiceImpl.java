@@ -69,7 +69,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Result<Record> findByDepartmentId(int departmentId) {
+    public Result<Record> findByDepartmentIdRelation(int departmentId) {
         return create.select()
                 .from(STAFF)
                 .join(USERS)

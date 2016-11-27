@@ -48,6 +48,15 @@ public final class Workbook {
     public static final String SYSTEM_USERS_TYPE = "系统";
 
     /*
+    实习类型
+     */
+    public static final String INTERNSHIP_COLLEGE_TYPE = "顶岗实习(留学院)";
+    public static final String INTERNSHIP_COMPANY_TYPE = "校外自主实习(去单位)";
+    public static final String GRADUATION_PRACTICE_COLLEGE_TYPE = "毕业实习(校内)";
+    public static final String GRADUATION_PRACTICE_UNIFY_TYPE = "毕业实习(学校统一组织校外实习)";
+    public static final String GRADUATION_PRACTICE_COMPANY_TYPE = "毕业实习(学生校外自主实习)";
+
+    /*
     系统角色
      */
     public static final String SYSTEM_ROLE_NAME = "系统";
