@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,14 +17,20 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
+import top.zbeboy.isy.web.vo.internship.apply.InternshipCollegeVo;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -36,6 +43,9 @@ public class InternshipApplyController {
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
+
+    @Resource
+    private InternshipApplyService internshipApplyService;
 
     @Resource
     private StudentService studentService;
@@ -124,6 +134,29 @@ public class InternshipApplyController {
     }
 
     /**
+     * 获取获取我的实习申请数据
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/apply/my/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipApplyBean> myApplyDatas(PaginationUtils paginationUtils) {
+        Byte isDel = 0;
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipReleaseIsDel(isDel);
+        Users users = usersService.getUserFromSession();
+        Optional<Record> record = usersService.findUserSchoolInfo(users);
+        List<InternshipApplyBean> internshipApplyBeens = new ArrayList<>();
+        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = record.get().into(Student.class);
+            internshipApplyBean.setStudentId(student.getStudentId());
+            Result<Record> records = internshipApplyService.findAllByPage(paginationUtils, internshipApplyBean);
+            internshipApplyBeens = internshipApplyService.dealData(paginationUtils, records, internshipApplyBean);
+        }
+        return new AjaxUtils<InternshipApplyBean>().success().msg("获取数据成功").listData(internshipApplyBeens).paginationUtils(paginationUtils);
+    }
+
+    /**
      * 进入申请页
      *
      * @param internshipReleaseId 实习发布id
@@ -144,7 +177,7 @@ public class InternshipApplyController {
                         modelMap.addAttribute("internshipData", internshipCollege);
                         page = "/web/internship/apply/internship_college_edit::#page-wrapper";
                     } else {
-                        internshipCollegePageParam(modelMap,errorBean);
+                        internshipCollegePageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
                         page = "/web/internship/apply/internship_college_add::#page-wrapper";
                     }
@@ -194,6 +227,123 @@ public class InternshipApplyController {
             }
         }
         return page;
+    }
+
+    /**
+     * 保存校外自主实习(去单位)
+     *
+     * @param internshipCollegeVo 校外自主实习(去单位)
+     * @param bindingResult       检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/apply/college/save", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils applyCollegeSave(@Valid InternshipCollegeVo internshipCollegeVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        try {
+            if (!bindingResult.hasErrors()) {
+                // 处理实习申请表
+                InternshipApply internshipApply = new InternshipApply();
+                internshipApply.setInternshipApplyId(UUIDUtils.getUUID());
+                internshipApply.setInternshipReleaseId(internshipCollegeVo.getInternshipReleaseId());
+                internshipApply.setStudentId(internshipCollegeVo.getStudentId());
+                internshipApply.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                internshipApply.setInternshipApplyState(0);
+                internshipApplyService.save(internshipApply);
+
+                String[] headmasterArr = internshipCollegeVo.getHeadmaster().split(" ");
+                if (headmasterArr.length >= 2) {
+                    internshipCollegeVo.setHeadmaster(headmasterArr[0]);
+                    internshipCollegeVo.setHeadmasterContact(headmasterArr[1]);
+                }
+                String[] schoolGuidanceTeacherArr = internshipCollegeVo.getSchoolGuidanceTeacher().split(" ");
+                if (schoolGuidanceTeacherArr.length >= 2) {
+                    internshipCollegeVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                    internshipCollegeVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+                }
+                InternshipCollege internshipCollege = new InternshipCollege();
+                internshipCollege.setInternshipCollegeId(UUIDUtils.getUUID());
+                internshipCollege.setStudentId(internshipCollegeVo.getStudentId());
+                internshipCollege.setInternshipReleaseId(internshipCollegeVo.getInternshipReleaseId());
+                internshipCollege.setStudentName(internshipCollegeVo.getStudentName());
+                internshipCollege.setCollegeClass(internshipCollegeVo.getCollegeClass());
+                internshipCollege.setStudentSex(internshipCollegeVo.getStudentSex());
+                internshipCollege.setStudentNumber(internshipCollegeVo.getStudentNumber());
+                internshipCollege.setPhoneNumber(internshipCollegeVo.getPhoneNumber());
+                internshipCollege.setQqMailbox(internshipCollegeVo.getQqMailbox());
+                internshipCollege.setParentalContact(internshipCollegeVo.getParentalContact());
+                internshipCollege.setHeadmaster(internshipCollegeVo.getHeadmaster());
+                internshipCollege.setHeadmasterContact(internshipCollegeVo.getHeadmasterContact());
+                internshipCollege.setInternshipCollegeName(internshipCollegeVo.getInternshipCollegeName());
+                internshipCollege.setInternshipCollegeAddress(internshipCollegeVo.getInternshipCollegeAddress());
+                internshipCollege.setInternshipCollegeContacts(internshipCollegeVo.getInternshipCollegeContacts());
+                internshipCollege.setInternshipCollegeTel(internshipCollegeVo.getInternshipCollegeTel());
+                internshipCollege.setSchoolGuidanceTeacher(internshipCollegeVo.getSchoolGuidanceTeacher());
+                internshipCollege.setSchoolGuidanceTeacherTel(internshipCollegeVo.getSchoolGuidanceTeacherTel());
+                internshipCollege.setStartTime(DateTimeUtils.formatDate(internshipCollegeVo.getStartTime()));
+                internshipCollege.setEndTime(DateTimeUtils.formatDate(internshipCollegeVo.getEndTime()));
+                internshipCollegeService.save(internshipCollege);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg("参数异常，保存失败");
+            }
+        } catch (ParseException e) {
+            log.error("Parse time is exception {}", e);
+            ajaxUtils.fail().msg("转换时间异常，保存失败");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 更新校外自主实习(去单位)
+     * @param internshipCollegeVo 校外自主实习(去单位)
+     * @param bindingResult 检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/apply/college/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils applyCollegeUpdate(@Valid InternshipCollegeVo internshipCollegeVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        try {
+            if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipCollegeVo.getInternshipCollegeId())) {
+                String[] headmasterArr = internshipCollegeVo.getHeadmaster().split(" ");
+                if (headmasterArr.length >= 2) {
+                    internshipCollegeVo.setHeadmaster(headmasterArr[0]);
+                    internshipCollegeVo.setHeadmasterContact(headmasterArr[1]);
+                }
+                String[] schoolGuidanceTeacherArr = internshipCollegeVo.getSchoolGuidanceTeacher().split(" ");
+                if (schoolGuidanceTeacherArr.length >= 2) {
+                    internshipCollegeVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                    internshipCollegeVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+                }
+                InternshipCollege internshipCollege = internshipCollegeService.findById(internshipCollegeVo.getInternshipCollegeId());
+                internshipCollege.setStudentName(internshipCollegeVo.getStudentName());
+                internshipCollege.setCollegeClass(internshipCollegeVo.getCollegeClass());
+                internshipCollege.setStudentSex(internshipCollegeVo.getStudentSex());
+                internshipCollege.setStudentNumber(internshipCollegeVo.getStudentNumber());
+                internshipCollege.setPhoneNumber(internshipCollegeVo.getPhoneNumber());
+                internshipCollege.setQqMailbox(internshipCollegeVo.getQqMailbox());
+                internshipCollege.setParentalContact(internshipCollegeVo.getParentalContact());
+                internshipCollege.setHeadmaster(internshipCollegeVo.getHeadmaster());
+                internshipCollege.setHeadmasterContact(internshipCollegeVo.getHeadmasterContact());
+                internshipCollege.setInternshipCollegeName(internshipCollegeVo.getInternshipCollegeName());
+                internshipCollege.setInternshipCollegeAddress(internshipCollegeVo.getInternshipCollegeAddress());
+                internshipCollege.setInternshipCollegeContacts(internshipCollegeVo.getInternshipCollegeContacts());
+                internshipCollege.setInternshipCollegeTel(internshipCollegeVo.getInternshipCollegeTel());
+                internshipCollege.setSchoolGuidanceTeacher(internshipCollegeVo.getSchoolGuidanceTeacher());
+                internshipCollege.setSchoolGuidanceTeacherTel(internshipCollegeVo.getSchoolGuidanceTeacherTel());
+                internshipCollege.setStartTime(DateTimeUtils.formatDate(internshipCollegeVo.getStartTime()));
+                internshipCollege.setEndTime(DateTimeUtils.formatDate(internshipCollegeVo.getEndTime()));
+                internshipCollegeService.update(internshipCollege);
+                ajaxUtils.success().msg("更新成功");
+            } else {
+                ajaxUtils.fail().msg("参数异常，更新失败");
+            }
+        } catch (ParseException e) {
+            log.error("Parse time is exception {}", e);
+            ajaxUtils.fail().msg("转换时间异常，更新失败");
+        }
+        return ajaxUtils;
     }
 
     /**
@@ -303,7 +453,8 @@ public class InternshipApplyController {
         Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
         errorBean.setData(internshipRelease);
         Map<String, Object> mapData = new HashMap<>();
-        if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
+        // TODO:可能还需要判断状态...
+        if (DateTimeUtils.timestampRangeDecide(internshipRelease.getStartTime(), internshipRelease.getEndTime())) {
             if (studentRecord.isPresent()) {
                 StudentBean studentBean = studentRecord.get().into(StudentBean.class);
                 mapData.put("student", studentBean);

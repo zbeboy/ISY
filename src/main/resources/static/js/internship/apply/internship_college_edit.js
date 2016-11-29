@@ -1,14 +1,14 @@
 /**
- * Created by lenovo on 2016/11/25.
+ * Created by lenovo on 2016-11-27.
  */
-//# sourceURL=internship_college_add.js
+//# sourceURL=internship_college_edit.js
 require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", "jquery.address", "bootstrap-select-zh-CN", "bootstrap-daterangepicker"],
     function ($, Handlebars, nav_active, moment, D) {
         /*
          ajax url.
          */
         var ajax_url = {
-            save: '/web/internship/apply/college/save',
+            update: '/web/internship/apply/college/update',
             teacher_data_url: '/web/internship/apply/teachers',
             back: '/web/menu/internship/apply'
         };
@@ -128,6 +128,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             param.endTime = $(paramId.endTime).val();
         }
 
+        var selectedHeadmasterCount = true;
+
         /*
          返回
          */
@@ -138,6 +140,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         // 实习开始时间
         $(paramId.startTime).daterangepicker({
             "singleDatePicker": true,
+            "startDate": init_page_param.startTime,
             "locale": {
                 format: 'YYYY-MM-DD',
                 applyLabel: '确定',
@@ -157,6 +160,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         // 实习结束时间
         $(paramId.endTime).daterangepicker({
             "singleDatePicker": true,
+            "startDate": init_page_param.endTime,
             "locale": {
                 format: 'YYYY-MM-DD',
                 applyLabel: '确定',
@@ -215,6 +219,27 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
                 liveSearch: true,
                 maxOptions: 1
             });
+        }
+
+        $(paramId.headmaster).on('loaded.bs.select', function (e) {
+            // do something...
+            // 只在页面初始化加载一次
+            if (selectedHeadmasterCount) {
+                selectedHeadmaster();
+                $(paramId.headmaster).selectpicker('refresh');
+                selectedHeadmasterCount = false;
+            }
+        });
+
+        function selectedHeadmaster(){
+            var realHeadmaster = $('#headmaster').val() + ' ' + $('#headmasterContact').val();
+            var headmasterChildrens = $(paramId.headmaster).children();
+            for (var i = 0; i < headmasterChildrens.length; i++) {
+                if ($(headmasterChildrens[i]).val() === realHeadmaster) {
+                    $(headmasterChildrens[i]).prop('selected', true);
+                    break;
+                }
+            }
         }
 
         $(paramId.studentName).blur(function () {
@@ -460,9 +485,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
                 errorMessage: '保存数据失败',
                 progressMessage: '正在保存数据....'
             }, {
-                url: web_path + ajax_url.save,
+                url: web_path + ajax_url.update,
                 type: 'post',
-                data: $('#add_form').serialize(),
+                data: $('#edit_form').serialize(),
                 success: function (data) {
                     if (data.state) {
                         $.address.value(ajax_url.back);

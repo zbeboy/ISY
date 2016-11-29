@@ -24,9 +24,9 @@ import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCompany;
 import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
 import top.zbeboy.isy.domain.tables.InternshipApply;
+import top.zbeboy.isy.domain.tables.InternshipChangeHistory;
 import top.zbeboy.isy.domain.tables.InternshipCollege;
 import top.zbeboy.isy.domain.tables.InternshipCompany;
-import top.zbeboy.isy.domain.tables.InternshipCompanyHistory;
 import top.zbeboy.isy.domain.tables.InternshipFile;
 import top.zbeboy.isy.domain.tables.InternshipJournal;
 import top.zbeboy.isy.domain.tables.InternshipRegulate;
@@ -65,7 +65,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-	private static final long serialVersionUID = 1197881747;
+	private static final long serialVersionUID = -875418394;
 
 	/**
 	 * The reference instance of <code>isy</code>
@@ -99,9 +99,9 @@ public class Isy extends SchemaImpl {
 			GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY,
 			GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY,
 			InternshipApply.INTERNSHIP_APPLY,
+			InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY,
 			InternshipCollege.INTERNSHIP_COLLEGE,
 			InternshipCompany.INTERNSHIP_COMPANY,
-			InternshipCompanyHistory.INTERNSHIP_COMPANY_HISTORY,
 			InternshipFile.INTERNSHIP_FILE,
 			InternshipJournal.INTERNSHIP_JOURNAL,
 			InternshipRegulate.INTERNSHIP_REGULATE,

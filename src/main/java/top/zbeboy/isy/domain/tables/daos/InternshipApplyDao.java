@@ -87,6 +87,13 @@ public class InternshipApplyDao extends DAOImpl<InternshipApplyRecord, top.zbebo
 	}
 
 	/**
+	 * Fetch records that have <code>reason IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByReason(String... values) {
+		return fetch(InternshipApply.INTERNSHIP_APPLY.REASON, values);
+	}
+
+	/**
 	 * Fetch records that have <code>change_fill_start_time IN (values)</code>
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByChangeFillStartTime(Timestamp... values) {
@@ -98,5 +105,12 @@ public class InternshipApplyDao extends DAOImpl<InternshipApplyRecord, top.zbebo
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByChangeFillEndTime(Timestamp... values) {
 		return fetch(InternshipApply.INTERNSHIP_APPLY.CHANGE_FILL_END_TIME, values);
+	}
+
+	/**
+	 * Fetch records that have <code>apply_time IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByApplyTime(Timestamp... values) {
+		return fetch(InternshipApply.INTERNSHIP_APPLY.APPLY_TIME, values);
 	}
 }

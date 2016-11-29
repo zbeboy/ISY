@@ -239,8 +239,21 @@ CREATE TABLE internship_apply(
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(100) NOT NULL ,
   internship_apply_state INT NOT NULL DEFAULT 0,
+  reason VARCHAR(500) NOT NULL ,
   change_fill_start_time DATETIME,
   change_fill_end_time DATETIME,
+  apply_time DATETIME NOT NULL ,
+  FOREIGN KEY (student_id) REFERENCES student(student_id),
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+);
+
+CREATE TABLE internship_change_history(
+  internship_change_history_id VARCHAR(100) PRIMARY KEY ,
+  reason VARCHAR(500) NOT NULL ,
+  change_type INT NOT NULL ,
+  student_id INT NOT NULL ,
+  internship_release_id VARCHAR(100) NOT NULL ,
+  apply_time DATETIME NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
 );
@@ -303,18 +316,6 @@ CREATE TABLE internship_company(
   practice_receiving BOOLEAN,
   security_education_agreement BOOLEAN,
   parental_consent BOOLEAN,
-  student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
-  FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
-);
-
-CREATE TABLE internship_company_history(
-  internship_company_history_id INT AUTO_INCREMENT PRIMARY KEY ,
-  internship_company_name VARCHAR(200) NOT NULL ,
-  internship_company_address VARCHAR(500) NOT NULL ,
-  internship_company_contacts VARCHAR(10) NOT NULL ,
-  internship_company_tel VARCHAR(20) NOT NULL ,
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(100) NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),

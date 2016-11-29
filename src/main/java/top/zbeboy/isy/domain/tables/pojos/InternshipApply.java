@@ -25,14 +25,16 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipApply implements Serializable {
 
-	private static final long serialVersionUID = 1296408356;
+	private static final long serialVersionUID = -47574184;
 
 	private String    internshipApplyId;
 	private Integer   studentId;
 	private String    internshipReleaseId;
 	private Integer   internshipApplyState;
+	private String    reason;
 	private Timestamp changeFillStartTime;
 	private Timestamp changeFillEndTime;
+	private Timestamp applyTime;
 
 	public InternshipApply() {}
 
@@ -41,8 +43,10 @@ public class InternshipApply implements Serializable {
 		this.studentId = value.studentId;
 		this.internshipReleaseId = value.internshipReleaseId;
 		this.internshipApplyState = value.internshipApplyState;
+		this.reason = value.reason;
 		this.changeFillStartTime = value.changeFillStartTime;
 		this.changeFillEndTime = value.changeFillEndTime;
+		this.applyTime = value.applyTime;
 	}
 
 	public InternshipApply(
@@ -50,15 +54,19 @@ public class InternshipApply implements Serializable {
 		Integer   studentId,
 		String    internshipReleaseId,
 		Integer   internshipApplyState,
+		String    reason,
 		Timestamp changeFillStartTime,
-		Timestamp changeFillEndTime
+		Timestamp changeFillEndTime,
+		Timestamp applyTime
 	) {
 		this.internshipApplyId = internshipApplyId;
 		this.studentId = studentId;
 		this.internshipReleaseId = internshipReleaseId;
 		this.internshipApplyState = internshipApplyState;
+		this.reason = reason;
 		this.changeFillStartTime = changeFillStartTime;
 		this.changeFillEndTime = changeFillEndTime;
+		this.applyTime = applyTime;
 	}
 
 	@NotNull
@@ -98,6 +106,16 @@ public class InternshipApply implements Serializable {
 		this.internshipApplyState = internshipApplyState;
 	}
 
+	@NotNull
+	@Size(max = 500)
+	public String getReason() {
+		return this.reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
 	public Timestamp getChangeFillStartTime() {
 		return this.changeFillStartTime;
 	}
@@ -114,6 +132,15 @@ public class InternshipApply implements Serializable {
 		this.changeFillEndTime = changeFillEndTime;
 	}
 
+	@NotNull
+	public Timestamp getApplyTime() {
+		return this.applyTime;
+	}
+
+	public void setApplyTime(Timestamp applyTime) {
+		this.applyTime = applyTime;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("InternshipApply (");
@@ -122,8 +149,10 @@ public class InternshipApply implements Serializable {
 		sb.append(", ").append(studentId);
 		sb.append(", ").append(internshipReleaseId);
 		sb.append(", ").append(internshipApplyState);
+		sb.append(", ").append(reason);
 		sb.append(", ").append(changeFillStartTime);
 		sb.append(", ").append(changeFillEndTime);
+		sb.append(", ").append(applyTime);
 
 		sb.append(")");
 		return sb.toString();

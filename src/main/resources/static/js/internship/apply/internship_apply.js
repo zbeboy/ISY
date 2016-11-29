@@ -10,6 +10,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             internship_apply_data_url: '/web/internship/apply/data',
+            my_internship_apply_data_url:'/web/internship/apply/my/data',
             access_url: '/web/internship/apply/access',
             valid_is_student: '/anyone/valid/cur/is/student',
             valid_student: '/web/internship/apply/valid/student',
@@ -26,9 +27,26 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         };
 
         /*
+        我的实习参数id
+         */
+        var myParamId = {
+            internshipTitle: '#my_search_internship_title',
+        };
+
+        /*
          参数
          */
         var param = {
+            searchParams: '',
+            pageNum: 0,
+            pageSize: 2,
+            displayedPages: 3
+        };
+
+        /*
+         参数
+         */
+        var myParam = {
             searchParams: '',
             pageNum: 0,
             pageSize: 2,
@@ -71,15 +89,16 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         var tableData = '#tableData';
+        var myTableData = '#myTableData';
 
         function startLoading(targetId) {
             // 显示遮罩
-            $(targetId).showLoading();
+            $('#page-wrapper').showLoading();
         }
 
         function endLoading(targetId) {
             // 去除遮罩
-            $(targetId).hideLoading();
+            $('#page-wrapper').hideLoading();
         }
 
         /*
@@ -87,6 +106,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function cleanParam() {
             $(paramId.internshipTitle).val('');
+        }
+
+        /*
+         清空我的实习参数
+         */
+        function cleanMyParam(){
+            $(myParamId.internshipTitle).val('');
         }
 
         /**
@@ -100,12 +126,31 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             param.searchParams = JSON.stringify(params);
         }
 
+        /**
+         * 刷新查询参数
+         */
+        function refreshMySearch() {
+            var params = {
+                internshipTitle: $(paramId.internshipTitle).val()
+            };
+            myParam.pageNum = 0;
+            myParam.searchParams = JSON.stringify(params);
+        }
+
         /*
          搜索
          */
         $('#search').click(function () {
             refreshSearch();
             init();
+        });
+
+        /*
+         我的申请搜索
+         */
+        $('#my_search').click(function () {
+            refreshMySearch();
+            initMyData();
         });
 
         /*
@@ -117,13 +162,33 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             init();
         });
 
+        /*
+         我的申请重置
+         */
+        $('#my_reset_search').click(function () {
+            cleanMyParam();
+            refreshMySearch();
+            initMyData();
+        });
+
         $('#refresh').click(function () {
             init();
+        });
+
+        $('#my_refresh').click(function () {
+            initMyData();
         });
 
         $(paramId.internshipTitle).keyup(function (event) {
             if (event.keyCode == 13) {
                 refreshSearch();
+                init();
+            }
+        });
+
+        $(myParamId.internshipTitle).keyup(function (event) {
+            if (event.keyCode == 13) {
+                refreshMySearch();
                 init();
             }
         });
@@ -165,8 +230,86 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             $(tableData).html(html);
         }
 
+        /**
+         * 我的申请列表数据
+         * @param data 数据
+         */
+        function myListData(data) {
+            var source = $("#my-internship-release-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper('internship_title', function () {
+                var value = Handlebars.escapeExpression(this.internshipTitle);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('school_name', function () {
+                var value = Handlebars.escapeExpression(this.schoolName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('college_name', function () {
+                var value = Handlebars.escapeExpression(this.collegeName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('department_name', function () {
+                var value = Handlebars.escapeExpression(this.departmentName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('real_name', function () {
+                var value = Handlebars.escapeExpression(this.realName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('internship_apply_state', function () {
+                var value = Handlebars.escapeExpression(internshipApplyStateCode(this.internshipApplyState));
+                return new Handlebars.SafeString(value);
+            });
+
+            var html = template(data);
+            $(myTableData).html(html);
+        }
+
+        /**
+         * 状态码表
+         * @param state 状态码
+         * @returns {string}
+         */
+        function internshipApplyStateCode(state){
+            var msg = '';
+            switch (state){
+                case 0:
+                    msg = '未提交';
+                    break;
+                case 1:
+                    msg = '审核中...';
+                    break;
+                case 2:
+                    msg = '已通过';
+                    break;
+                case 3:
+                    msg = '未通过';
+                    break;
+                case 4:
+                    msg = '基本信息变更审核中...';
+                    break;
+                case 5:
+                    msg = '基本信息变更填写中...';
+                    break;
+                case 6:
+                    msg = '单位信息变更申请中...';
+                    break;
+                case 7:
+                    msg = '单位信息变更填写中...';
+                    break;
+            }
+            return msg;
+        }
+
         /*
-         进入申请
+         进行申请
          */
         $(tableData).delegate('.apply', "click", function () {
             var id = $(this).attr('data-id');
@@ -178,7 +321,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                     $('#studentInfoInternshipReleaseId').val(id);
                     $('#studentModal').modal('show');
                 }
-            })
+            });
+        });
+
+        /*
+         进入申请
+         */
+        $(myTableData).delegate('.myApply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            // 如果用户类型不是学生，则这里需要一个弹窗，填写学生账号或学生学号以获取学生id
+            accessApply(id, studentId);
         });
 
         /**
@@ -267,19 +420,44 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             validStudent();
         });
 
+        // tab
+        $('#myTab').find('a').click(function (e) {
+            e.preventDefault();
+            var t = $(this).text();
+            if (t === '申请列表') {
+                init();
+            } else if (t === '我的申请') {
+                initMyData();
+            }
+        });
+
         init();
 
         /**
          * 初始化数据
          */
         function init() {
-            startLoading(tableData);
+            startLoading();
             $.get(web_path + ajax_url.internship_apply_data_url, param, function (data) {
-                endLoading(tableData);
+                endLoading();
                 if (data.listResult.length > 0) {
                     createPage(data);
                 }
                 listData(data);
+            });
+        }
+
+        /**
+         * 初始化数据
+         */
+        function initMyData() {
+            startLoading();
+            $.get(web_path + ajax_url.my_internship_apply_data_url, myParam, function (data) {
+                endLoading();
+                if (data.listResult.length > 0) {
+                    myCreatePage(data);
+                }
+                myListData(data);
             });
         }
 
@@ -306,15 +484,50 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /**
+         * 我的申请创建分页
+         * @param data 数据
+         */
+        function myCreatePage(data) {
+            $('#myPagination').pagination({
+                pages: data.paginationUtils.totalPages,
+                displayedPages: data.paginationUtils.displayedPages,
+                hrefTextPrefix: '',
+                prevText: '上一页',
+                nextText: '下一页',
+                cssStyle: '',
+                listStyle: 'pagination',
+                onPageClick: function (pageNumber, event) {
+                    // Callback triggered when a page is clicked
+                    // Page number is given as an optional parameter
+                    console.log(pageNumber);
+                    myNextPage(pageNumber);
+                }
+            });
+        }
+
+        /**
          * 下一页
          * @param pageNumber 当前页
          */
         function nextPage(pageNumber) {
             param.pageNum = pageNumber;
-            startLoading(tableData);
+            startLoading();
             $.get(web_path + ajax_url.internship_apply_data_url, param, function (data) {
-                endLoading(tableData);
+                endLoading();
                 listData(data);
+            });
+        }
+
+        /**
+         * 我的申请下一页
+         * @param pageNumber 当前页
+         */
+        function myNextPage(pageNumber) {
+            myParam.pageNum = pageNumber;
+            startLoading();
+            $.get(web_path + ajax_url.my_internship_apply_data_url, myParam, function (data) {
+                endLoading();
+                myListData(data);
             });
         }
 

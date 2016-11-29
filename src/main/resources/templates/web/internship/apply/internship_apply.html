@@ -15,29 +15,66 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                <div class="well">
-                    <div class="row" style="margin-top:2px;">
-                        <div class="col-md-12">
-                            <input type="text" id="search_internship_title" class="form-control input-sm"
-                                   placeholder="标题"/>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="active"><a href="#out" data-toggle="tab">申请列表</a></li>
+                    <li><a href="#my" data-toggle="tab">我的申请</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="out">
+                        <div class="well">
+                            <div class="row" style="margin-top:2px;">
+                                <div class="col-md-12">
+                                    <input type="text" id="search_internship_title" class="form-control input-sm"
+                                           placeholder="标题"/>
+                                </div>
+                            </div>
+                            <div class="text-center" style="margin-top:4px;">
+                                <button type="button" id="search" class="btn btn-outline btn-default"><i
+                                        class="fa fa-search"></i>搜索
+                                </button>
+                                <button type="button" id="reset_search" class="btn btn-outline btn-default"><i
+                                        class="fa fa-repeat"></i>重置
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-right" style="margin-bottom: 10px;">
+                            <button type="button" class="btn btn-outline btn-default" id="refresh"><i
+                                    class="fa fa-refresh"></i>刷新
+                            </button>
+                        </div>
+                        <div id="tableData">
+                        </div>
+                        <div id="pagination" class="text-center">
                         </div>
                     </div>
-                    <div class="text-center" style="margin-top:4px;">
-                        <button type="button" id="search" class="btn btn-outline btn-default"><i
-                                class="fa fa-search"></i>搜索
-                        </button>
-                        <button type="button" id="reset_search" class="btn btn-outline btn-default"><i
-                                class="fa fa-repeat"></i>重置
-                        </button>
+                    <div class="tab-pane fade" id="my"><div class="well">
+                        <div class="row" style="margin-top:2px;">
+                            <div class="col-md-12">
+                                <input type="text" id="my_search_internship_title" class="form-control input-sm"
+                                       placeholder="标题"/>
+                            </div>
+                        </div>
+                        <div class="text-center" style="margin-top:4px;">
+                            <button type="button" id="my_search" class="btn btn-outline btn-default"><i
+                                    class="fa fa-search"></i>搜索
+                            </button>
+                            <button type="button" id="my_reset_search" class="btn btn-outline btn-default"><i
+                                    class="fa fa-repeat"></i>重置
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="text-right" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
-                    </button>
-                </div>
-                <div id="tableData">
-                </div>
-                <div id="pagination" class="text-center">
+                        <div class="text-right" style="margin-bottom: 10px;">
+                            <button type="button" class="btn btn-outline btn-default" id="my_refresh"><i
+                                    class="fa fa-refresh"></i>刷新
+                            </button>
+                        </div>
+                        <div id="myTableData">
+                        </div>
+                        <div id="myPagination" class="text-center">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,7 +99,8 @@
                                 <label>学生</label>
                                 <div class="row">
                                     <div class="col-xs-5">
-                                        <input type="text" class="form-control" id="studentUsername" placeholder="学生账号"/>
+                                        <input type="text" class="form-control" id="studentUsername"
+                                               placeholder="学生账号"/>
                                     </div>
                                     <div class="col-xs-2 text-center">
                                         <span>or</span>
@@ -71,7 +109,7 @@
                                         <input type="text" class="form-control" id="studentNumber" placeholder="学生学号"/>
                                     </div>
                                 </div>
-                                <input type="hidden" id="studentInfoInternshipReleaseId" />
+                                <input type="hidden" id="studentInfoInternshipReleaseId"/>
                                 <p class="text-danger hidden" id="student_error_msg"></p>
                             </div>
                         </form>
@@ -96,16 +134,8 @@
                         <div class="col-md-4"><span>系：</span><span>{{department_name}}</span></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4"><span>年级：</span><span>{{allowGrade}}</span></div>
-                        <div class="col-md-4"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
-                        <div class="col-md-4">
-                            <span>状态：</span>
-                            {{#if internshipReleaseIsDel}}
-                            <span class="text-danger">注销</span>
-                            {{else}}
-                            <span>正常</span>
-                            {{/if}}
-                        </div>
+                        <div class="col-md-6"><span>年级：</span><span>{{allowGrade}}</span></div>
+                        <div class="col-md-6"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
                     </div>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-6"><span>教师分配开始时间：</span><span>{{teacherDistributionStartTimeStr}}</span>
@@ -129,6 +159,52 @@
                 </div>
                 <div class="panel-footer">
                     <a href="javascript:;" class="apply" data-id="{{internshipReleaseId}}">进行申请</a>
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <script id="my-internship-release-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{internship_title}}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4"><span>学校：</span><span>{{school_name}}</span></div>
+                        <div class="col-md-4"><span>院：</span><span>{{college_name}}</span></div>
+                        <div class="col-md-4"><span>系：</span><span>{{department_name}}</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4"><span>年级：</span><span>{{allowGrade}}</span></div>
+                        <div class="col-md-4"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
+                        <div class="col-md-4">
+                            <span>申请状态：</span>
+                            <span>{{internship_apply_state}}</span>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-6"><span>教师分配开始时间：</span><span>{{teacherDistributionStartTimeStr}}</span>
+                        </div>
+                        <div class="col-md-6"><span>实习申请开始时间：</span><span>{{startTimeStr}}</span></div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-6"><span>教师分配结束时间：</span><span>{{teacherDistributionEndTimeStr}}</span></div>
+                        <div class="col-md-6"><span>实习申请结束时间：</span><span>{{endTimeStr}}</span></div>
+                    </div>
+                    <p style="margin-top:10px;">
+                        <span>专业：</span>
+                        {{#each sciences}}
+                        <span class="label label-default">{{scienceName}}</span>
+                        {{/each}}
+                    </p>
+                    <div class="text-right">
+                        <small><em><span>发布人：</span><span>{{real_name}}</span> <span>{{releaseTimeStr}}</span></em>
+                        </small>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="javascript:;" class="myApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">编辑</a>
                     <a href="javascript:;" data-id="{{internshipReleaseId}}">撤消申请</a>
                     <a href="javascript:;" data-id="{{internshipReleaseId}}">基础信息变更申请</a>
                     <a href="javascript:;" data-id="{{internshipReleaseId}}">单位信息变更申请</a>

@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipApplyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 
-	private static final long serialVersionUID = -2071417300;
+	private static final long serialVersionUID = 1761468614;
 
 	/**
 	 * The reference instance of <code>isy.internship_apply</code>
@@ -71,6 +71,11 @@ public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 	public final TableField<InternshipApplyRecord, Integer> INTERNSHIP_APPLY_STATE = createField("internship_apply_state", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaulted(true), this, "");
 
 	/**
+	 * The column <code>isy.internship_apply.reason</code>.
+	 */
+	public final TableField<InternshipApplyRecord, String> REASON = createField("reason", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
+
+	/**
 	 * The column <code>isy.internship_apply.change_fill_start_time</code>.
 	 */
 	public final TableField<InternshipApplyRecord, Timestamp> CHANGE_FILL_START_TIME = createField("change_fill_start_time", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
@@ -79,6 +84,11 @@ public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 	 * The column <code>isy.internship_apply.change_fill_end_time</code>.
 	 */
 	public final TableField<InternshipApplyRecord, Timestamp> CHANGE_FILL_END_TIME = createField("change_fill_end_time", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+
+	/**
+	 * The column <code>isy.internship_apply.apply_time</code>.
+	 */
+	public final TableField<InternshipApplyRecord, Timestamp> APPLY_TIME = createField("apply_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
 	/**
 	 * Create a <code>isy.internship_apply</code> table reference

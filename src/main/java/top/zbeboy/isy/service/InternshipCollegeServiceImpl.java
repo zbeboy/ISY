@@ -39,10 +39,26 @@ public class InternshipCollegeServiceImpl implements InternshipCollegeService {
     }
 
     @Override
+    public InternshipCollege findById(String id) {
+        return internshipCollegeDao.findById(id);
+    }
+
+    @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(INTERNSHIP_COLLEGE)
                 .where(INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_COLLEGE.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(InternshipCollege internshipCollege) {
+        internshipCollegeDao.insert(internshipCollege);
+    }
+
+    @Override
+    public void update(InternshipCollege internshipCollege) {
+        internshipCollegeDao.update(internshipCollege);
     }
 }

@@ -34,14 +34,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
 
         var tableData = '#tableData';
 
-        function startLoading(targetId) {
+        function startLoading() {
             // 显示遮罩
-            $(targetId).showLoading();
+            $('#page-wrapper').showLoading();
         }
 
-        function endLoading(targetId) {
+        function endLoading() {
             // 去除遮罩
-            $(targetId).hideLoading();
+            $('#page-wrapper').hideLoading();
         }
 
         /*
@@ -262,9 +262,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 初始化数据
          */
         function init() {
-            startLoading(tableData);
+            startLoading();
             $.get(web_path + ajax_url.internship_release_data_url, param, function (data) {
-                endLoading(tableData);
+                endLoading();
                 if (data.listResult.length > 0) {
                     createPage(data);
                 }
@@ -300,9 +300,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function nextPage(pageNumber) {
             param.pageNum = pageNumber;
-            startLoading(tableData);
+            startLoading();
             $.get(web_path + ajax_url.internship_release_data_url, param, function (data) {
-                endLoading(tableData);
+                endLoading();
                 listData(data);
             });
         }

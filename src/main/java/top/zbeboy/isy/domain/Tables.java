@@ -17,9 +17,9 @@ import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCompany;
 import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
 import top.zbeboy.isy.domain.tables.InternshipApply;
+import top.zbeboy.isy.domain.tables.InternshipChangeHistory;
 import top.zbeboy.isy.domain.tables.InternshipCollege;
 import top.zbeboy.isy.domain.tables.InternshipCompany;
-import top.zbeboy.isy.domain.tables.InternshipCompanyHistory;
 import top.zbeboy.isy.domain.tables.InternshipFile;
 import top.zbeboy.isy.domain.tables.InternshipJournal;
 import top.zbeboy.isy.domain.tables.InternshipRegulate;
@@ -114,6 +114,11 @@ public class Tables {
 	public static final InternshipApply INTERNSHIP_APPLY = top.zbeboy.isy.domain.tables.InternshipApply.INTERNSHIP_APPLY;
 
 	/**
+	 * The table isy.internship_change_history
+	 */
+	public static final InternshipChangeHistory INTERNSHIP_CHANGE_HISTORY = top.zbeboy.isy.domain.tables.InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY;
+
+	/**
 	 * The table isy.internship_college
 	 */
 	public static final InternshipCollege INTERNSHIP_COLLEGE = top.zbeboy.isy.domain.tables.InternshipCollege.INTERNSHIP_COLLEGE;
@@ -122,11 +127,6 @@ public class Tables {
 	 * The table isy.internship_company
 	 */
 	public static final InternshipCompany INTERNSHIP_COMPANY = top.zbeboy.isy.domain.tables.InternshipCompany.INTERNSHIP_COMPANY;
-
-	/**
-	 * The table isy.internship_company_history
-	 */
-	public static final InternshipCompanyHistory INTERNSHIP_COMPANY_HISTORY = top.zbeboy.isy.domain.tables.InternshipCompanyHistory.INTERNSHIP_COMPANY_HISTORY;
 
 	/**
 	 * The table isy.internship_file
