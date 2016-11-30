@@ -239,7 +239,7 @@ CREATE TABLE internship_apply(
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(100) NOT NULL ,
   internship_apply_state INT NOT NULL DEFAULT 0,
-  reason VARCHAR(500) NOT NULL ,
+  reason VARCHAR(500) ,
   change_fill_start_time DATETIME,
   change_fill_end_time DATETIME,
   apply_time DATETIME NOT NULL ,

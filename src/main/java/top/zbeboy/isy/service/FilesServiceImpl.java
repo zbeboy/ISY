@@ -42,4 +42,9 @@ public class FilesServiceImpl implements FilesService {
     public void deleteById(String fileId) {
         filesDao.deleteById(fileId);
     }
+
+    @Override
+    public Files findById(String id) {
+        return filesDao.findById(id);
+    }
 }

@@ -20,4 +20,12 @@ public interface FilesService {
      * @param fileId 文件id
      */
     void deleteById(String fileId);
+
+    /**
+     * 根据id查询
+     *
+     * @param id 主键
+     * @return 文件
+     */
+    Files findById(String id);
 }

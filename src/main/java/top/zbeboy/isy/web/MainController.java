@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.Files;
 import top.zbeboy.isy.domain.tables.pojos.SystemLog;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.service.FilesService;
 import top.zbeboy.isy.service.SystemLogService;
+import top.zbeboy.isy.service.UploadService;
 import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
@@ -38,6 +41,12 @@ public class MainController {
 
     @Resource
     private LocaleResolver localeResolver;
+
+    @Resource
+    private UploadService uploadService;
+
+    @Resource
+    private FilesService filesService;
 
     @RequestMapping("/")
     public String root() {
@@ -156,7 +165,7 @@ public class MainController {
      */
     @RequestMapping("/anyone/users/delete/file")
     @ResponseBody
-    public AjaxUtils deleteFile(@RequestParam("filePath") String filePath,HttpServletRequest request) {
+    public AjaxUtils deleteFile(@RequestParam("filePath") String filePath, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
@@ -169,6 +178,21 @@ public class MainController {
             ajaxUtils.fail().msg("删除文件异常");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileId   文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    @RequestMapping("/anyone/users/download/file")
+    public void downloadFile(@RequestParam("fileId") String fileId, HttpServletRequest request, HttpServletResponse response) {
+        Files files = filesService.findById(fileId);
+        if (!ObjectUtils.isEmpty(files)) {
+            uploadService.download(files.getOriginalFileName(), "/" + files.getRelativePath(), response, request);
+        }
     }
 
     /**

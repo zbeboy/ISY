@@ -10,6 +10,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         var ajax_url = {
             save: '/web/internship/apply/college/save',
             teacher_data_url: '/web/internship/apply/teachers',
+            internship_files_url: '/user/internship/files',
+            download_file: '/anyone/users/download/file',
             back: '/web/menu/internship/apply'
         };
 
@@ -184,6 +186,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }, function (data) {
                 headmasterData(data);
             });
+
+            $.get(web_path + ajax_url.internship_files_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
+                initFileShow(data);
+            });
         }
 
         /**
@@ -215,6 +221,77 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
                 liveSearch: true,
                 maxOptions: 1
             });
+        }
+
+        /**
+         * 文件显示
+         * @param data 数据
+         */
+        function initFileShow(data) {
+            var source = $("#file-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper('original_file_name', function () {
+                var value = Handlebars.escapeExpression(this.originalFileName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('size', function () {
+                var value = Handlebars.escapeExpression(transformationFileUnit(this.size));
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('lastPath', function () {
+                var value = Handlebars.escapeExpression(this.relativePath);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('new_name', function () {
+                var value = Handlebars.escapeExpression(this.newName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('ext', function () {
+                var value = Handlebars.escapeExpression(this.ext);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('l_size', function () {
+                var value = Handlebars.escapeExpression(this.size);
+                return new Handlebars.SafeString(value);
+            });
+
+            var html = template(data);
+            $('#fileShow').append(html);
+        }
+
+        /*
+         下载附件
+         */
+        $('#fileShow').delegate('.downloadfile', "click", function () {
+            var id = $(this).attr('data-file-id');
+            window.location.href = ajax_url.download_file + '?fileId=' + id;
+        });
+
+        /**
+         * 转换文件单位
+         *
+         * @param size 文件大小
+         * @return 文件尺寸
+         */
+        function transformationFileUnit(size) {
+            var str = "";
+            if (size < 1024) {
+                str = size + "B";
+            } else if (size >= 1024 && size < 1024 * 1024) {
+                str = (size / 1024) + "KB";
+            } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
+                str = (size / (1024 * 1024)) + "MB";
+            } else {
+                str = (size / (1024 * 1024 * 1024)) + "GB";
+            }
+
+            return str;
         }
 
         $(paramId.studentName).blur(function () {
@@ -337,7 +414,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             });
         }
 
-        function validStudentName(){
+        function validStudentName() {
             var studentName = param.studentName;
             if (studentName.length <= 0 || studentName.length > 15) {
                 Messenger().post({
@@ -350,7 +427,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validQqMailbox(){
+        function validQqMailbox() {
             var qqMailbox = param.qqMailbox;
             if (qqMailbox.length <= 0 || qqMailbox.length > 100) {
                 Messenger().post({
@@ -371,7 +448,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validParentalContact(){
+        function validParentalContact() {
             var parentalContact = param.parentalContact;
             var regex = /^1[0-9]{10}/;
             if (!regex.test(parentalContact)) {
@@ -385,7 +462,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validHeadmaster(){
+        function validHeadmaster() {
             var headmaster = param.headmaster;
             if (headmaster.length <= 0) {
                 Messenger().post({
@@ -398,7 +475,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeName(){
+        function validInternshipCollegeName() {
             var internshipCollegeName = param.internshipCollegeName;
             if (internshipCollegeName.length <= 0 || internshipCollegeName.length > 200) {
                 Messenger().post({
@@ -411,7 +488,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeAddress(){
+        function validInternshipCollegeAddress() {
             var internshipCollegeAddress = param.internshipCollegeAddress;
             if (internshipCollegeAddress.length <= 0 || internshipCollegeAddress.length > 500) {
                 Messenger().post({
@@ -424,7 +501,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeContacts(){
+        function validInternshipCollegeContacts() {
             var internshipCollegeContacts = param.internshipCollegeContacts;
             if (internshipCollegeContacts.length <= 0 || internshipCollegeContacts.length > 10) {
                 Messenger().post({
@@ -437,7 +514,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeTel(){
+        function validInternshipCollegeTel() {
             var internshipCollegeTel = param.internshipCollegeTel;
             var regex = /^1[0-9]{10}/;
             if (!regex.test(internshipCollegeTel)) {

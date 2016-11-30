@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.InternshipApply;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipApplyRecord extends UpdatableRecordImpl<InternshipApplyRecord> implements Record8<String, Integer, String, Integer, String, Timestamp, Timestamp, Timestamp> {
 
-	private static final long serialVersionUID = 869965941;
+	private static final long serialVersionUID = 99433390;
 
 	/**
 	 * Setter for <code>isy.internship_apply.internship_apply_id</code>.
@@ -105,7 +105,6 @@ public class InternshipApplyRecord extends UpdatableRecordImpl<InternshipApplyRe
 	/**
 	 * Getter for <code>isy.internship_apply.reason</code>.
 	 */
-	@NotNull
 	@Size(max = 500)
 	public String getReason() {
 		return (String) getValue(4);
