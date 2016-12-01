@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service;
 
 import org.jooq.Record;
+import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCollege;
 
 import java.util.Optional;
 
@@ -10,6 +11,14 @@ import java.util.Optional;
 public interface GraduationPracticeCollegeService {
 
     /**
+     * 通过id查询
+     *
+     * @param id 主键
+     * @return 毕业实习(校内)
+     */
+    GraduationPracticeCollege findById(String id);
+
+    /**
      * 通过实习发布id与学生id查询
      *
      * @param internshipReleaseId 实习发布id
@@ -17,4 +26,18 @@ public interface GraduationPracticeCollegeService {
      * @return 数据
      */
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 保存
+     *
+     * @param graduationPracticeCollege 毕业实习(校内)
+     */
+    void save(GraduationPracticeCollege graduationPracticeCollege);
+
+    /**
+     * 更新
+     *
+     * @param graduationPracticeCollege 毕业实习(校内)
+     */
+    void update(GraduationPracticeCollege graduationPracticeCollege);
 }

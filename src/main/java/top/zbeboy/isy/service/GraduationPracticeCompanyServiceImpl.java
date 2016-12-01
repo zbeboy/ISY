@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.GraduationPracticeCompanyDao;
 import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
+import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany;
 
 import java.util.Optional;
 
@@ -35,10 +36,26 @@ public class GraduationPracticeCompanyServiceImpl implements GraduationPracticeC
     }
 
     @Override
+    public GraduationPracticeCompany findById(String id) {
+        return graduationPracticeCompanyDao.findById(id);
+    }
+
+    @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(GRADUATION_PRACTICE_COMPANY)
                 .where(GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_COMPANY.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationPracticeCompany graduationPracticeCompany) {
+        graduationPracticeCompanyDao.insert(graduationPracticeCompany);
+    }
+
+    @Override
+    public void update(GraduationPracticeCompany graduationPracticeCompany) {
+        graduationPracticeCompanyDao.update(graduationPracticeCompany);
     }
 }

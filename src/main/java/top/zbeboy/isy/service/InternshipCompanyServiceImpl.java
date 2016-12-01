@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
 import top.zbeboy.isy.domain.tables.daos.InternshipCompanyDao;
+import top.zbeboy.isy.domain.tables.pojos.InternshipCompany;
 
 import java.util.Optional;
 
@@ -36,10 +37,26 @@ public class InternshipCompanyServiceImpl implements InternshipCompanyService {
     }
 
     @Override
+    public InternshipCompany findById(String id) {
+        return internshipCompanyDao.findById(id);
+    }
+
+    @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(INTERNSHIP_COMPANY)
                 .where(INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_COMPANY.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(InternshipCompany internshipCompany) {
+        internshipCompanyDao.insert(internshipCompany);
+    }
+
+    @Override
+    public void update(InternshipCompany internshipCompany) {
+        internshipCompanyDao.update(internshipCompany);
     }
 }

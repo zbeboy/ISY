@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.GraduationPracticeUnifyDao;
 import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
+import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify;
 
 import java.util.Optional;
 
@@ -35,10 +36,26 @@ public class GraduationPracticeUnifyServiceImpl implements GraduationPracticeUni
     }
 
     @Override
+    public GraduationPracticeUnify findById(String id) {
+        return graduationPracticeUnifyDao.findById(id);
+    }
+
+    @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(GRADUATION_PRACTICE_UNIFY)
                 .where(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_UNIFY.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationPracticeUnify graduationPracticeUnify) {
+        graduationPracticeUnifyDao.insert(graduationPracticeUnify);
+    }
+
+    @Override
+    public void update(GraduationPracticeUnify graduationPracticeUnify) {
+        graduationPracticeUnifyDao.update(graduationPracticeUnify);
     }
 }

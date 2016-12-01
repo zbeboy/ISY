@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习申请 -
+                    <small>编辑</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="edit_form">
+                    <div class="form-group" id="valid_student_name">
+                        <label>学生姓名</label>
+                        <input class="form-control" th:value="${student.realName}" name="studentName" id="studentName" placeholder="学生姓名" readonly="readonly" />
+                        <p class="text-danger hidden" id="student_name_error_msg"></p>
+                        <input type="hidden" th:value="${student.studentId}" name="studentId" id="studentId" />
+                        <input type="hidden" th:value="${internshipReleaseId}" name="internshipReleaseId" />
+                    </div>
+                    <div class="form-group" id="valid_college_class">
+                        <label>专业班级</label>
+                        <input class="form-control" th:value="${student.organizeName}" name="collegeClass" id="collegeClass" placeholder="专业班级" readonly="readonly" />
+                        <p class="text-danger hidden" id="college_class_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_number">
+                        <label>学生学号</label>
+                        <input class="form-control" th:value="${student.studentNumber}" name="studentNumber" id="studentNumber" placeholder="学生学号" readonly="readonly" />
+                        <p class="text-danger hidden" id="student_number_error_msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>附件下载</label>
+                        <div class="row" id="fileShow">
+
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="file-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+                <div class="col-lg-6">
+                    {{original_file_name}}
+                </div>
+                <div class="col-lg-4">
+                    {{size}}
+                </div>
+                <div class="col-lg-2 text-center">
+                    <a class="downloadfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-file-id="{{fileId}}" href="javascript:;">下载</a>
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /*页面参数*/
+            var init_page_param = {
+                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ ''
+            };
+            /*]]>*/
+        </script>
+        <input type="hidden" class="dy_script" value="/js/internship/apply/graduation_practice_unify_edit.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

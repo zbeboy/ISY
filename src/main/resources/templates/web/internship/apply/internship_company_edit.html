@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习申请 -
+                    <small>编辑</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="edit_form">
+                    <div class="form-group" id="valid_student_name">
+                        <label>学生姓名</label>
+                        <input class="form-control" th:value="${internshipData.studentName}" name="studentName" id="studentName" placeholder="学生姓名"/>
+                        <p class="text-danger hidden" id="student_name_error_msg"></p>
+                        <input type="hidden" th:value="${internshipData.internshipCompanyId}" name="internshipCompanyId" />
+                        <input type="hidden" th:value="${internshipData.studentId}" name="studentId" id="studentId" />
+                        <input type="hidden" th:value="${internshipData.internshipReleaseId}" name="internshipReleaseId" />
+                    </div>
+                    <div class="form-group" id="valid_college_class">
+                        <label>专业班级</label>
+                        <input class="form-control" th:value="${internshipData.collegeClass}" name="collegeClass" id="collegeClass" placeholder="专业班级" readonly="readonly" />
+                        <p class="text-danger hidden" id="college_class_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_sex" th:if="${internshipData.studentSex==null || internshipData.studentSex == '' || internshipData.studentSex == '男'}">
+                        <label>学生性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="man" value="男" checked="checked"/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="woman" value="女"/>女
+                        </label>
+                        <p class="text-danger hidden" id="student_sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_sex" th:if="${internshipData.studentSex == '女'}">
+                        <label>学生性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="man" value="男"/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="woman" value="女" checked="checked"/>女
+                        </label>
+                        <p class="text-danger hidden" id="student_sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_number">
+                        <label>学生学号</label>
+                        <input class="form-control" th:value="${internshipData.studentNumber}" name="studentNumber" id="studentNumber" placeholder="学生学号" readonly="readonly" />
+                        <p class="text-danger hidden" id="student_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_phone_number">
+                        <label>电话号码</label>
+                        <input class="form-control" th:value="${internshipData.phoneNumber}" name="phoneNumber" id="phoneNumber" placeholder="电话号码" readonly="readonly" />
+                        <p class="text-danger hidden" id="phone_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_qq_mailbox">
+                        <label>QQ邮箱</label>
+                        <input class="form-control" name="qqMailbox" th:value="${internshipData.qqMailbox}" id="qqMailbox" placeholder="QQ邮箱"/>
+                        <p class="text-danger hidden" id="qq_mailbox_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_parental_contact">
+                        <label>父母联系方式</label>
+                        <input class="form-control" th:value="${internshipData.parentalContact}" name="parentalContact" id="parentalContact" placeholder="父母联系方式"/>
+                        <p class="text-danger hidden" id="parental_contact_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_headmaster">
+                        <label>班主任</label>
+                        <select name="headmaster" id="select_headmaster" class="form-control selectpicker show-tick" title="请选择班主任">
+                        </select>
+                        <p class="text-danger hidden" id="headmaster_error_msg"></p>
+                        <input type="hidden" th:value="${internshipData.headmaster}" id="headmaster" />
+                        <input type="hidden" th:value="${internshipData.headmasterContact}" id="headmasterContact" />
+                    </div>
+                    <div class="form-group" id="valid_internship_company_name">
+                        <label>实习单位名称</label>
+                        <input class="form-control" name="internshipCompanyName" th:value="${internshipData.internshipCompanyName}" id="internshipCompanyName" placeholder="实习单位名称"/>
+                        <p class="text-danger hidden" id="internship_company_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_company_address">
+                        <label>实习单位地址</label>
+                        <input class="form-control" name="internshipCompanyAddress" th:value="${internshipData.internshipCompanyAddress}" id="internshipCompanyAddress" placeholder="实习单位地址"/>
+                        <p class="text-danger hidden" id="internship_company_address_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_company_contacts">
+                        <label>实习单位联系人</label>
+                        <input class="form-control" name="internshipCompanyContacts" th:value="${internshipData.internshipCompanyContacts}" id="internshipCompanyContacts" placeholder="实习单位联系人"/>
+                        <p class="text-danger hidden" id="internship_company_contacts_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_company_tel">
+                        <label>实习单位联系人联系方式</label>
+                        <input class="form-control" name="internshipCompanyTel" th:value="${internshipData.internshipCompanyTel}" id="internshipCompanyTel" placeholder="实习单位联系人联系方式"/>
+                        <p class="text-danger hidden" id="internship_company_tel_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_school_guidance_teacher">
+                        <label>校内指导教师</label>
+                        <input class="form-control" name="schoolGuidanceTeacher" th:value="${internshipData.schoolGuidanceTeacher + ' ' + internshipData.schoolGuidanceTeacherTel}" id="schoolGuidanceTeacher" placeholder="校内指导教师" readonly="readonly" />
+                        <p class="text-danger hidden" id="school_guidance_teacher_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_start_time">
+                        <label>实习开始时间</label>
+                        <input class="form-control" name="startTime" id="startTime" placeholder="实习开始时间"/>
+                        <p class="text-danger hidden" id="start_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_end_time">
+                        <label>实习结束时间</label>
+                        <input class="form-control" name="endTime" id="endTime" placeholder="实习结束时间"/>
+                        <p class="text-danger hidden" id="end_time_error_msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>附件下载</label>
+                        <div class="row" id="fileShow">
+
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="teacher-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{teacher_value}}">{{teacher_name}}</option>
+            {{/each}}
+        </script><script id="file-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+            <div class="col-lg-6">
+                {{original_file_name}}
+            </div>
+            <div class="col-lg-4">
+                {{size}}
+            </div>
+            <div class="col-lg-2 text-center">
+                <a class="downloadfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-file-id="{{fileId}}" href="javascript:;">下载</a>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /*页面参数*/
+            var init_page_param = {
+                'internshipReleaseId': /*[[${internshipData.internshipReleaseId}]]*/ '',
+                'startTime':/*[[${internshipData.startTime}]]*/ '',
+                'endTime':/*[[${internshipData.endTime}]]*/ ''
+            };
+            /*]]>*/
+        </script>
+        <input type="hidden" class="dy_script" value="/js/internship/apply/internship_company_edit.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>
