@@ -47,6 +47,14 @@ public interface InternshipApplyService {
     void update(InternshipApply internshipApply);
 
     /**
+     * 通过实习id与学生id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
      * 分页查询全部
      *
      * @param paginationUtils     分页工具

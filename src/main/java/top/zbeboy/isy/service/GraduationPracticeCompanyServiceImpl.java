@@ -58,4 +58,11 @@ public class GraduationPracticeCompanyServiceImpl implements GraduationPracticeC
     public void update(GraduationPracticeCompany graduationPracticeCompany) {
         graduationPracticeCompanyDao.update(graduationPracticeCompany);
     }
+
+    @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(GRADUATION_PRACTICE_COMPANY)
+                .where(GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_COMPANY.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
 }

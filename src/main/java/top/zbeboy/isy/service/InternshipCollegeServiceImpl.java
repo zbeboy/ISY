@@ -61,4 +61,11 @@ public class InternshipCollegeServiceImpl implements InternshipCollegeService {
     public void update(InternshipCollege internshipCollege) {
         internshipCollegeDao.update(internshipCollege);
     }
+
+    @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(INTERNSHIP_COLLEGE)
+                .where(INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_COLLEGE.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
 }

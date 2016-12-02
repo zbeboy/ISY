@@ -40,4 +40,12 @@ public interface GraduationPracticeCollegeService {
      * @param graduationPracticeCollege 毕业实习(校内)
      */
     void update(GraduationPracticeCollege graduationPracticeCollege);
+
+    /**
+     * 通过实习发布id与学生id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 }

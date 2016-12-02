@@ -75,6 +75,13 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
     }
 
     @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(INTERNSHIP_APPLY)
+                .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_APPLY.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
+
+    @Override
     public Result<Record> findAllByPage(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean) {
         int pageNum = paginationUtils.getPageNum();
         int pageSize = paginationUtils.getPageSize();

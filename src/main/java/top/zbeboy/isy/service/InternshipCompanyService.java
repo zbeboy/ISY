@@ -40,4 +40,12 @@ public interface InternshipCompanyService {
      * @param internshipCompany 校外自主实习(去单位)
      */
     void update(InternshipCompany internshipCompany);
+
+    /**
+     * 通过实习发布id与学生id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 }

@@ -58,4 +58,11 @@ public class GraduationPracticeUnifyServiceImpl implements GraduationPracticeUni
     public void update(GraduationPracticeUnify graduationPracticeUnify) {
         graduationPracticeUnifyDao.update(graduationPracticeUnify);
     }
+
+    @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(GRADUATION_PRACTICE_UNIFY)
+                .where(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_UNIFY.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
 }

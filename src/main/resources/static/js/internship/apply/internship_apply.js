@@ -10,7 +10,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             internship_apply_data_url: '/web/internship/apply/data',
-            my_internship_apply_data_url:'/web/internship/apply/my/data',
+            my_internship_apply_data_url: '/web/internship/apply/my/data',
+            recall_apply_url: '/web/internship/apply/recall',
+            change_state_url:'/web/internship/apply/state',
             access_url: '/web/internship/apply/access',
             valid_is_student: '/anyone/valid/cur/is/student',
             valid_student: '/web/internship/apply/valid/student',
@@ -27,7 +29,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         };
 
         /*
-        我的实习参数id
+         我的实习参数id
          */
         var myParamId = {
             internshipTitle: '#my_search_internship_title',
@@ -88,6 +90,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
+        /*
+         清除验证
+         */
+        function validCleanDom(inputId, errorId) {
+            $(inputId).removeClass('has-error').removeClass('has-success');
+            $(errorId).addClass('hidden').text('');
+        }
+
         var tableData = '#tableData';
         var myTableData = '#myTableData';
 
@@ -111,7 +121,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /*
          清空我的实习参数
          */
-        function cleanMyParam(){
+        function cleanMyParam() {
             $(myParamId.internshipTitle).val('');
         }
 
@@ -277,9 +287,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param state 状态码
          * @returns {string}
          */
-        function internshipApplyStateCode(state){
+        function internshipApplyStateCode(state) {
             var msg = '';
-            switch (state){
+            switch (state) {
                 case 0:
                     msg = '未提交';
                     break;
@@ -334,6 +344,195 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             accessApply(id, studentId);
         });
 
+        /*
+         撤消申请
+         */
+        $(myTableData).delegate('.recallApply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            recall(id, studentId);
+        });
+
+        /*
+         基础信息变更申请
+         */
+        $(myTableData).delegate('.basisApply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            showStateModal(4,id,studentId,'基础信息变更申请');
+        });
+
+        /*
+         单位信息变更申请
+         */
+        $(myTableData).delegate('.firmApply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            showStateModal(6,id,studentId,'单位信息变更申请');
+        });
+
+        /**
+         * 撤消询问
+         * @param id
+         * @param studentId
+         */
+        function recall(id, studentId) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定撤消申请吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            sendRecallAjax(id, studentId);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * 撤消ajax
+         * @param id
+         * @param studentId
+         */
+        function sendRecallAjax(id, studentId) {
+            $.post(web_path + ajax_url.recall_apply_url, {id: id, studentId: studentId}, function (data) {
+                if (data.state) {
+                    Messenger().post({
+                        message: data.msg + '，请点击刷新按钮查看效果',
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 展示变更模态框
+         * @param state
+         * @param internshipReleaseId
+         * @param studentId
+         * @param title
+         */
+        function showStateModal(state,internshipReleaseId,studentId,title){
+            $('#applyState').val(state);
+            $('#applyInternshipReleaseId').val(internshipReleaseId);
+            $('#applyStudentId').val(studentId);
+            $('#stateModalLabel').text(title);
+            $('#stateModal').modal('show');
+        }
+
+        /*
+        检验原因字数
+         */
+        $('#reason').blur(function(){
+            var reason = $('#reason').val();
+            if(reason.length<=0 || reason.length > 500){
+                validErrorDom('#valid_reason', '#reason_error_msg', '原因500个字符以内');
+            } else {
+                validSuccessDom('#valid_reason', '#reason_error_msg');
+            }
+        });
+
+        /**
+         * 隐藏变更模态框
+         */
+        function hideStateModal(){
+            $('#applyState').val('');
+            $('#applyInternshipReleaseId').val('');
+            $('#applyStudentId').val('');
+            $('#reason').val('');
+            $('#stateModalLabel').text('');
+            validCleanDom('#valid_reason', '#reason_error_msg');
+            $('#stateModal').modal('hide');
+        }
+
+        /*
+        提交变更申请
+         */
+        $('#stateOk').click(function(){
+            stateAdd();
+        });
+
+        /*
+        取消变更申请
+         */
+        $('#stateCancel').click(function(){
+            hideStateModal();
+        });
+
+        /*
+        状态申请提交询问
+         */
+        function stateAdd(){
+            var msg;
+            msg = Messenger().post({
+                message: '确定申请吗?',
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            validReason();
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        function validReason(){
+            var reason = $('#reason').val();
+            if(reason.length<=0 || reason.length > 500){
+                validErrorDom('#valid_reason', '#reason_error_msg', '原因500个字符以内');
+            } else {
+                sendStateAjax();
+            }
+        }
+
+        /**
+         * 发送状态申请
+         */
+        function sendStateAjax(){
+            $.post(web_path + ajax_url.change_state_url,$('#state_form').serialize,function(data){
+                if (data.state) {
+                    hideStateModal();
+                    Messenger().post({
+                        message: data.msg + '，请点击刷新按钮查看效果',
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
         /**
          * 进入申请页面
          * @param id
@@ -360,9 +559,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
 
         $('#studentModal').on('hidden.bs.modal', function (e) {
             // do something...
-            if(to_apply){
+            if (to_apply) {
                 to_apply = false;
-                accessApply($('#studentInfoInternshipReleaseId').val(),to_apply_data);
+                accessApply($('#studentInfoInternshipReleaseId').val(), to_apply_data);
             }
         });
 
@@ -373,7 +572,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             var studentUsername = $(paramId.studentUsername).val();
             var studentNumber = $(paramId.studentNumber).val();
             if (studentUsername.length <= 0 && studentNumber.length <= 0) {
-                validErrorDom(validId.student,errorMsgId.student,'请至少填写一项学生信息');
+                validErrorDom(validId.student, errorMsgId.student, '请至少填写一项学生信息');
             } else {
                 var student = "";
                 var type = -1;
@@ -400,7 +599,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                             to_apply = true;
                             $('#studentModal').modal('hide');
                         } else {
-                            validErrorDom(validId.student,errorMsgId.student,data.msg);
+                            validErrorDom(validId.student, errorMsgId.student, data.msg);
                         }
                     },
                     error: function (xhr) {

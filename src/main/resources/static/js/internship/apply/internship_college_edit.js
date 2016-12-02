@@ -194,6 +194,32 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             $.get(web_path + ajax_url.internship_files_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
                 initFileShow(data);
             });
+
+            initInputState();
+        }
+
+        /**
+         * 初始化input
+         */
+        function initInputState(){
+            var internshipApplyState = init_page_param.internshipApplyState;
+            if(internshipApplyState !== ''){
+                if(internshipApplyState == 5){ // 基本信息修改状态，不允许修改单位信息
+                    $(paramId.internshipCollegeName).attr("disabled", true);
+                    $(paramId.internshipCollegeAddress).attr("disabled", true);
+                    $(paramId.internshipCollegeContacts).attr("disabled", true);
+                    $(paramId.internshipCollegeTel).attr("disabled", true);
+                }
+
+                if(internshipApplyState == 7){// 单位信息修改状态，不允许修改基本信息
+                    $(paramId.studentName).attr("disabled", true);
+                    $(paramId.qqMailbox).attr("disabled", true);
+                    $(paramId.parentalContact).attr("disabled", true);
+                    $(paramId.headmaster).attr("disabled", true);
+                    $(paramId.startTime).attr("disabled", true);
+                    $(paramId.endTime).attr("disabled", true);
+                }
+            }
         }
 
         /**

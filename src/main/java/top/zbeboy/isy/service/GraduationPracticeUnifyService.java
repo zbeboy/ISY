@@ -40,4 +40,12 @@ public interface GraduationPracticeUnifyService {
      * @param graduationPracticeUnify 毕业实习(学校统一组织校外实习)
      */
     void update(GraduationPracticeUnify graduationPracticeUnify);
+
+    /**
+     * 通过实习发布id与学生id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 }
