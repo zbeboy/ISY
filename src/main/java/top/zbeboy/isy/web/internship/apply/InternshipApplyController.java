@@ -1133,11 +1133,16 @@ public class InternshipApplyController {
         if (internshipApplyRecord.isPresent()) {
             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
             mapData.put("internshipApply",internshipApply);
-            // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视时间条件
+            // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
             if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
-                // 位于这两个特殊状态，可直接填写
-                errorBean.setHasError(false);
-                errorBean.setErrorMsg("允许填写");
+                // 判断更改时间条件
+                if (DateTimeUtils.timestampRangeDecide(internshipApply.getChangeFillStartTime(), internshipApply.getChangeFillEndTime())) {
+                    errorBean.setHasError(false);
+                    errorBean.setErrorMsg("允许填写");
+                } else {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("不在时间范围，无法进入");
+                }
             }
             // 状态为 3：未通过 该状态下 无视时间条件
             if (internshipApply.getInternshipApplyState() == 3) {

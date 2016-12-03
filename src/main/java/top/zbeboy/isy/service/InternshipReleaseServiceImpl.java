@@ -21,6 +21,7 @@ import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,13 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     public InternshipReleaseServiceImpl(DSLContext dslContext, Configuration configuration) {
         this.create = dslContext;
         this.internshipReleaseDao = new InternshipReleaseDao(configuration);
+    }
+
+    @Override
+    public Result<InternshipReleaseRecord> findByEndTime(Timestamp endTime) {
+        return create.selectFrom(INTERNSHIP_RELEASE)
+                .where(INTERNSHIP_RELEASE.END_TIME.le(endTime))
+                .fetch();
     }
 
     @Override

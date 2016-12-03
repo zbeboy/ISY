@@ -7,6 +7,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,14 @@ import java.util.Optional;
  * Created by lenovo on 2016-11-12.
  */
 public interface InternshipReleaseService {
+
+    /**
+     * 通过实习结束时间查询
+     *
+     * @param endTime 实习结束时间
+     * @return 实习
+     */
+    Result<InternshipReleaseRecord> findByEndTime(Timestamp endTime);
 
     /**
      * 通过id查询

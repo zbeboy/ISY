@@ -7,6 +7,7 @@ import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,24 @@ public interface InternshipApplyService {
      * @param internshipApply 实习申请
      */
     void update(InternshipApply internshipApply);
+
+    /**
+     * 通过实习发布id与申请状态更新状态 定时任务
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param changeState         当前状态
+     * @param updateState         新状态
+     */
+    void updateStateWithInternshipReleaseIdAndState(String internshipReleaseId, int changeState, int updateState);
+
+    /**
+     * 更改超过信息填写时间的申请状态为申请中
+     *
+     * @param changeFillEndTime 填写结束时间
+     * @param changeState       当前状态
+     * @param updateState       新状态
+     */
+    void updateStateByChangeFillEndTime(Timestamp changeFillEndTime, int changeState, int updateState);
 
     /**
      * 通过实习id与学生id查询

@@ -1,14 +1,14 @@
 package top.zbeboy.isy.config;
 
 import org.joda.time.DateTime;
+import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import top.zbeboy.isy.service.SystemLogService;
-import top.zbeboy.isy.service.SystemMailboxService;
-import top.zbeboy.isy.service.SystemSmsService;
+import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
+import top.zbeboy.isy.service.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -53,8 +53,17 @@ public class ScheduledConfiguration {
     @Resource
     private SystemSmsService systemSmsService;
 
+    @Resource
+    private InternshipReleaseService internshipReleaseService;
+
+    @Resource
+    private InternshipApplyService internshipApplyService;
+
+    /**
+     * 清理信息
+     */
     @Scheduled(cron = "0 15 01 01 * ?")// 每月1号 晚间1点15分
-    public void scheduler() {
+    public void clean() {
         // 清理日志,邮件，短信
         DateTime dateTime = DateTime.now();
         DateTime oldTime = dateTime.minusDays(120);
@@ -63,5 +72,20 @@ public class ScheduledConfiguration {
         systemMailboxService.deleteBySendTime(ts);
         systemSmsService.deleteBySendTime(ts);
         log.info(">>>>>>>>>>>>> scheduled ... log , mailbox , sms ");
+    }
+
+    /**
+     * 更改实习状态为申请中
+     */
+    @Scheduled(cron = "0 15 02 * * ?")// 每天 晚间2点15分
+    public void internshipApply() {
+        // 更改实习提交状态
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Result<InternshipReleaseRecord> internshipReleaseRecords = internshipReleaseService.findByEndTime(now);
+        for(InternshipReleaseRecord r:internshipReleaseRecords){
+            internshipApplyService.updateStateWithInternshipReleaseIdAndState(r.getInternshipReleaseId(),0,1);
+        }
+        internshipApplyService.updateStateByChangeFillEndTime(now,5,1);
+        internshipApplyService.updateStateByChangeFillEndTime(now,7,1);
     }
 }

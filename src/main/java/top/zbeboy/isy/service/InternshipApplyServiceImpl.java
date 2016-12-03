@@ -22,6 +22,7 @@ import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +73,22 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
     @Override
     public void update(InternshipApply internshipApply) {
         internshipApplyDao.update(internshipApply);
+    }
+
+    @Override
+    public void updateStateWithInternshipReleaseIdAndState(String internshipReleaseId, int changeState, int updateState) {
+        create.update(INTERNSHIP_APPLY)
+                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE,updateState)
+                .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(changeState)))
+                .execute();
+    }
+
+    @Override
+    public void updateStateByChangeFillEndTime(Timestamp changeFillEndTime, int changeState, int updateState) {
+        create.update(INTERNSHIP_APPLY)
+                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE,updateState)
+                .where(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME.le(changeFillEndTime).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(changeState)))
+                .execute();
     }
 
     @Override
