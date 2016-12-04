@@ -1101,33 +1101,50 @@ public class InternshipApplyController {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         Map<String, Object> mapData = new HashMap<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        if(ObjectUtils.isEmpty(internshipRelease)){
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("未查询到相关实习信息");
+            return errorBean;
+        }
         errorBean.setData(internshipRelease);
-        StudentBean studentBean;
-        Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
-        if (studentRecord.isPresent()) {
-            studentBean = studentRecord.get().into(StudentBean.class);
-            mapData.put("student", studentBean);
-            Optional<Record> internshipReleaseScienceRecord = internshipReleaseScienceService.findByInternshipReleaseIdAndScienceId(internshipReleaseId, studentBean.getScienceId());
-            if (internshipReleaseScienceRecord.isPresent()) { // 判断专业
-                Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                if (internshipTeacherDistributionRecord.isPresent()) { // 判断指导教师
-                    InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
-                    mapData.put("internshipTeacherDistribution", internshipTeacherDistribution);
-                    errorBean.setHasError(false);
+        boolean inTimeRange;// 在实习申请时间范围
+        if (DateTimeUtils.timestampRangeDecide(internshipRelease.getStartTime(), internshipRelease.getEndTime())) {
+            errorBean.setHasError(false);
+            errorBean.setErrorMsg("允许填写");
+            inTimeRange = true;
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("不在时间范围，无法进入");
+            inTimeRange = false;
+        }
+        if(inTimeRange){
+            StudentBean studentBean;
+            Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+            if (studentRecord.isPresent()) {
+                studentBean = studentRecord.get().into(StudentBean.class);
+                mapData.put("student", studentBean);
+                Optional<Record> internshipReleaseScienceRecord = internshipReleaseScienceService.findByInternshipReleaseIdAndScienceId(internshipReleaseId, studentBean.getScienceId());
+                if (internshipReleaseScienceRecord.isPresent()) { // 判断专业
+                    Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (internshipTeacherDistributionRecord.isPresent()) { // 判断指导教师
+                        InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
+                        mapData.put("internshipTeacherDistribution", internshipTeacherDistribution);
+                        errorBean.setHasError(false);
+                    } else {
+                        errorBean.setHasError(true);
+                        errorBean.setErrorMsg("该学生账号未分配实习指导教师");
+                        return errorBean;
+                    }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("该学生账号未分配实习指导教师");
+                    errorBean.setErrorMsg("该学生账号所在专业不在实习范围");
                     return errorBean;
                 }
             } else {
                 errorBean.setHasError(true);
-                errorBean.setErrorMsg("该学生账号所在专业不在实习范围");
+                errorBean.setErrorMsg("未查询学生信息");
                 return errorBean;
             }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询学生信息");
-            return errorBean;
         }
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
@@ -1159,13 +1176,25 @@ public class InternshipApplyController {
             }
             // 状态为 0：未提交申请
             if(internshipApply.getInternshipApplyState() == 0){
-                if (DateTimeUtils.timestampRangeDecide(internshipRelease.getStartTime(), internshipRelease.getEndTime())) {
+                if (inTimeRange) {
                     errorBean.setHasError(false);
                     errorBean.setErrorMsg("允许填写");
                 } else {
                     errorBean.setHasError(true);
                     errorBean.setErrorMsg("不在时间范围，无法进入");
                 }
+            }
+        }
+        if(!inTimeRange && !errorBean.isHasError()){
+            Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+            if (studentRecord.isPresent()) {
+                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                mapData.put("student", studentBean);
+            }
+            Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (internshipTeacherDistributionRecord.isPresent()) {
+                InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
+                mapData.put("internshipTeacherDistribution", internshipTeacherDistribution);
             }
         }
         errorBean.setMapData(mapData);
