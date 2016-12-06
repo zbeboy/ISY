@@ -162,6 +162,10 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
                     .on(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
                     .join(STUDENT)
                     .on(INTERNSHIP_APPLY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(ORGANIZE)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .join(SCIENCE)
+                    .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                     .join(INTERNSHIP_TYPE)
                     .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
                     .join(USERS)
@@ -189,8 +193,17 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
         JSONObject search = JSON.parseObject(paginationUtils.getSearchParams());
         if (!ObjectUtils.isEmpty(search)) {
             String internshipTitle = StringUtils.trimWhitespace(search.getString("internshipTitle"));
+            String internshipReleaseId = StringUtils.trimWhitespace(search.getString("internshipReleaseId"));
             if (StringUtils.hasLength(internshipTitle)) {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
+            }
+
+            if (StringUtils.hasLength(internshipReleaseId)) {
+                if(!ObjectUtils.isEmpty(a)){
+                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId));
+                } else {
+                    a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
+                }
             }
         }
         return a;

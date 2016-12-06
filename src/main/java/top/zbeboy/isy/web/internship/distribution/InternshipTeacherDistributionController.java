@@ -149,17 +149,22 @@ public class InternshipTeacherDistributionController {
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        errorBean.setData(internshipRelease);
-        if(internshipRelease.getInternshipReleaseIsDel() == 1){
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("该实习已被注销");
-        } else {
-            if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
-                errorBean.setHasError(false);
-            } else {
+        if(!ObjectUtils.isEmpty(internshipRelease)){
+            errorBean.setData(internshipRelease);
+            if(internshipRelease.getInternshipReleaseIsDel() == 1){
                 errorBean.setHasError(true);
-                errorBean.setErrorMsg("不在时间范围，无法进入");
+                errorBean.setErrorMsg("该实习已被注销");
+            } else {
+                if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
+                    errorBean.setHasError(false);
+                } else {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("不在时间范围，无法进入");
+                }
             }
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("未查询到相关实习信息");
         }
         return errorBean;
     }
