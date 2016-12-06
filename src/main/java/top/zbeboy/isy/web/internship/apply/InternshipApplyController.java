@@ -1107,6 +1107,11 @@ public class InternshipApplyController {
             return errorBean;
         }
         errorBean.setData(internshipRelease);
+        if(internshipRelease.getInternshipReleaseIsDel() == 1){
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("该实习已被注销");
+            return errorBean;
+        }
         boolean inTimeRange;// 在实习申请时间范围
         if (DateTimeUtils.timestampRangeDecide(internshipRelease.getStartTime(), internshipRelease.getEndTime())) {
             errorBean.setHasError(false);

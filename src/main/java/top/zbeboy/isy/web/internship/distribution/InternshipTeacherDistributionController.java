@@ -150,11 +150,16 @@ public class InternshipTeacherDistributionController {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         errorBean.setData(internshipRelease);
-        if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
-            errorBean.setHasError(false);
-        } else {
+        if(internshipRelease.getInternshipReleaseIsDel() == 1){
             errorBean.setHasError(true);
-            errorBean.setErrorMsg("不在时间范围，无法进入");
+            errorBean.setErrorMsg("该实习已被注销");
+        } else {
+            if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
+                errorBean.setHasError(false);
+            } else {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在时间范围，无法进入");
+            }
         }
         return errorBean;
     }
