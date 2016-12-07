@@ -7,11 +7,13 @@ public class InternshipReviewBean {
     private int studentId;
     private String internshipReleaseId;
     private String realName;
+    private String studentName;
     private String studentNumber;
     private String scienceName;
     private String organizeName;
     private String reason;
     private int internshipApplyState;
+    private Boolean hasController;
     private Boolean commitmentBook;
     private Boolean safetyResponsibilityBook;
     private Boolean practiceAgreement;
@@ -138,5 +140,21 @@ public class InternshipReviewBean {
 
     public void setParentalConsent(Boolean parentalConsent) {
         this.parentalConsent = parentalConsent;
+    }
+
+    public Boolean getHasController() {
+        return hasController;
+    }
+
+    public void setHasController(Boolean hasController) {
+        this.hasController = hasController;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 }

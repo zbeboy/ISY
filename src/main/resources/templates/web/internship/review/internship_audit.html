@@ -68,7 +68,7 @@
             {{#each listResult}}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    {{real_name}} - {{student_number}}
+                    {{real_name}} - {{studentNumber}}
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -79,56 +79,126 @@
                     <div class="row">
                         <div class="col-md-12"><span>原因：</span><span>{{reason}}</span></div>
                     </div>
+                    {{#if hasController}}
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-4">
+                            {{#if commitmentBook}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" checked="checked" />
+                                    承诺书
+                                </label>
+                            </div>
+                            {{else}}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value="1"/>
                                     承诺书
                                 </label>
                             </div>
+                            {{/if}}
+
+                            {{#if safetyResponsibilityBook}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" checked="checked" />
+                                    安全责任书
+                                </label>
+                            </div>
+                            {{else}}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value="1"/>
                                     安全责任书
                                 </label>
                             </div>
+                            {{/if}}
+
+                            {{#if practiceAgreement}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" checked="checked" />
+                                    实践协议书
+                                </label>
+                            </div>
+                            {{else}}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value="1"/>
                                     实践协议书
                                 </label>
                             </div>
+                            {{/if}}
                         </div>
                         <div class="col-md-4">
+                            {{#if internshipApplication}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" checked="checked"/>
+                                    实习申请书
+                                </label>
+                            </div>
+                            {{else}}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value="1"/>
                                     实习申请书
                                 </label>
                             </div>
+                            {{/if}}
+
+                            {{#if practiceReceiving}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" checked="checked"/>
+                                    实习接收
+                                </label>
+                            </div>
+                            {{else}}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value="1"/>
                                     实习接收
                                 </label>
                             </div>
+                            {{/if}}
+
+                            {{#if securityEducationAgreement}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" checked="checked"/>
+                                    安全教育协议
+                                </label>
+                            </div>
+                            {{else}}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value="1"/>
                                     安全教育协议
                                 </label>
                             </div>
+                            {{/if}}
+
                         </div>
                         <div class="col-md-4">
+                            {{#if parentalConsent}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1" checked="checked"/>
+                                    父母同意书
+                                </label>
+                            </div>
+                            {{else}}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value="1"/>
                                     父母同意书
                                 </label>
                             </div>
+                            {{/if}}
                         </div>
                     </div>
+                    {{/if}}
                 </div>
                 <div class="panel-footer">
                     <a href="javascript:;" class="detail_apply" data-id="{{internshipReleaseId}}">查看详情</a>

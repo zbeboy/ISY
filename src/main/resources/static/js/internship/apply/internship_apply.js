@@ -515,7 +515,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 发送状态申请
          */
         function sendStateAjax(){
-            $.post(web_path + ajax_url.change_state_url,$('#state_form').serialize,function(data){
+            $.post(web_path + ajax_url.change_state_url,$('#state_form').serialize(),function(data){
                 if (data.state) {
                     hideStateModal();
                     Messenger().post({

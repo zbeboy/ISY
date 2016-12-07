@@ -15,10 +15,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.InternshipApplyService;
-import top.zbeboy.isy.service.InternshipReleaseService;
-import top.zbeboy.isy.service.RoleService;
-import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
@@ -44,7 +41,7 @@ public class InternshipReviewController {
     private InternshipReleaseService internshipReleaseService;
 
     @Resource
-    private InternshipApplyService internshipApplyService;
+    private InternshipReviewService internshipReviewService;
 
     @Resource
     private UsersService usersService;
@@ -133,16 +130,12 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/audit", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/audit/data", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
         internshipApplyBean.setInternshipApplyState(1);
-        Result<Record> records = internshipApplyService.findAllByPage(paginationUtils, internshipApplyBean);
-        List<InternshipReviewBean> internshipReviewBeens = new ArrayList<>();
-        if(records.isNotEmpty()){
-            internshipReviewBeens = records.into(InternshipReviewBean.class);
-        }
+        List<InternshipReviewBean> internshipReviewBeens = internshipReviewService.findAllByPage(paginationUtils, internshipApplyBean);
         return new AjaxUtils<InternshipReviewBean>().success().msg("获取数据成功").listData(internshipReviewBeens).paginationUtils(paginationUtils);
     }
 
