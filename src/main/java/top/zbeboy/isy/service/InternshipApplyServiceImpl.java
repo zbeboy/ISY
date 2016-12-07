@@ -241,6 +241,14 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
                     a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(internshipApplyBean.getInternshipReleaseIsDel());
                 }
             }
+
+            if (!ObjectUtils.isEmpty(internshipApplyBean.getInternshipApplyState())) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(internshipApplyBean.getInternshipApplyState()));
+                } else {
+                    a = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(internshipApplyBean.getInternshipApplyState());
+                }
+            }
         }
         return a;
     }

@@ -136,7 +136,9 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditDatas(PaginationUtils paginationUtils) {
-        Result<Record> records = internshipApplyService.findAllByPage(paginationUtils, null);
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipApplyState(1);
+        Result<Record> records = internshipApplyService.findAllByPage(paginationUtils, internshipApplyBean);
         List<InternshipReviewBean> internshipReviewBeens = new ArrayList<>();
         if(records.isNotEmpty()){
             internshipReviewBeens = records.into(InternshipReviewBean.class);
