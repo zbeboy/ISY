@@ -18,9 +18,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var paramId = {
             studentName: '#search_real_name',
-            studentNumber:'#search_student_number',
-            scienceName:'#search_science_name',
-            organizeName:'#search_organize_name'
+            studentNumber: '#search_student_number',
+            scienceName: '#search_science_name',
+            organizeName: '#search_organize_name'
         };
 
         /*
@@ -64,9 +64,19 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 studentNumber: $(paramId.studentNumber).val(),
                 scienceName: $(paramId.scienceName).val(),
                 organizeName: $(paramId.organizeName).val(),
-                internshipReleaseId:init_page_param.internshipReleaseId
+                internshipReleaseId: init_page_param.internshipReleaseId
             };
             param.pageNum = 0;
+            param.searchParams = JSON.stringify(params);
+        }
+
+        /**
+         * 初始化参数
+         */
+        function initParam() {
+            var params = {
+                internshipReleaseId: init_page_param.internshipReleaseId
+            };
             param.searchParams = JSON.stringify(params);
         }
 
@@ -126,8 +136,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         function listData(data) {
             var source = $("#internship-audit-template").html();
             var template = Handlebars.compile(source);
-            Handlebars.registerHelper('real_name', function () {
-                var value = Handlebars.escapeExpression(this.realName);
+            Handlebars.registerHelper('student_name', function () {
+                var value = Handlebars.escapeExpression(this.studentName);
                 return new Handlebars.SafeString(value);
             });
             Handlebars.registerHelper('science_name', function () {
@@ -193,6 +203,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function init() {
             startLoading();
+            initParam();
             $.post(web_path + ajax_url.audit_data_url, param, function (data) {
                 endLoading();
                 if (data.listResult.length > 0) {

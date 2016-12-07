@@ -71,6 +71,7 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
             InternshipReviewBean internshipReviewBean = new InternshipReviewBean();
             internshipReviewBean.setStudentId(r.getValue(INTERNSHIP_APPLY.STUDENT_ID));
             internshipReviewBean.setInternshipReleaseId(r.getValue(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID));
+            internshipReviewBean.setInternshipTypeId(r.getValue(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID));
             internshipReviewBean.setRealName(r.getValue(USERS.REAL_NAME));
             internshipReviewBean.setStudentName(r.getValue(USERS.as("T").REAL_NAME));
             internshipReviewBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
@@ -131,7 +132,7 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
         if (!ObjectUtils.isEmpty(search)) {
             String internshipReleaseId = StringUtils.trimWhitespace(search.getString("internshipReleaseId"));
             if (StringUtils.hasLength(internshipReleaseId)) {
-                a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.eq(internshipReleaseId);
+                a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId);
             }
         }
         return a;

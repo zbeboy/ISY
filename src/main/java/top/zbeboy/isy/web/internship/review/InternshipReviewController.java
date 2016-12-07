@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.internship.review;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -12,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
-import top.zbeboy.isy.domain.tables.pojos.Student;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
@@ -44,10 +43,28 @@ public class InternshipReviewController {
     private InternshipReviewService internshipReviewService;
 
     @Resource
+    private InternshipTypeService internshipTypeService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private InternshipCollegeService internshipCollegeService;
+
+    @Resource
+    private InternshipCompanyService internshipCompanyService;
+
+    @Resource
+    private GraduationPracticeCollegeService graduationPracticeCollegeService;
+
+    @Resource
+    private GraduationPracticeCompanyService graduationPracticeCompanyService;
+
+    @Resource
+    private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
     /**
      * 实习审核
@@ -136,7 +153,74 @@ public class InternshipReviewController {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
         internshipApplyBean.setInternshipApplyState(1);
         List<InternshipReviewBean> internshipReviewBeens = internshipReviewService.findAllByPage(paginationUtils, internshipApplyBean);
+        if (!ObjectUtils.isEmpty(internshipReviewBeens)) {
+            for (int i = 0; i < internshipReviewBeens.size(); i++) {
+                InternshipReviewBean internshipReviewBean = internshipReviewBeens.get(i);
+                internshipReviewBeens.set(i, fillInternshipReviewBean(internshipReviewBean));
+            }
+        }
         return new AjaxUtils<InternshipReviewBean>().success().msg("获取数据成功").listData(internshipReviewBeens).paginationUtils(paginationUtils);
+    }
+
+    /**
+     * 填充实习数据
+     *
+     * @param internshipReviewBean 学生申请数据
+     * @return 学生申请数据
+     */
+    private InternshipReviewBean fillInternshipReviewBean(InternshipReviewBean internshipReviewBean) {
+        int internshipTypeId = internshipReviewBean.getInternshipTypeId();
+        int studentId = internshipReviewBean.getStudentId();
+        String internshipReleaseId = internshipReviewBean.getInternshipReleaseId();
+        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipTypeId);
+        switch (internshipType.getInternshipTypeName()) {
+            case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipCollegeRecord.isPresent()) {
+                    InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
+                    internshipReviewBean.setHasController(true);
+                    internshipReviewBean.setCommitmentBook(internshipCollege.getCommitmentBook());
+                    internshipReviewBean.setSafetyResponsibilityBook(internshipCollege.getSafetyResponsibilityBook());
+                    internshipReviewBean.setPracticeAgreement(internshipCollege.getPracticeAgreement());
+                    internshipReviewBean.setInternshipApplication(internshipCollege.getInternshipApplication());
+                    internshipReviewBean.setPracticeReceiving(internshipCollege.getPracticeReceiving());
+                    internshipReviewBean.setSecurityEducationAgreement(internshipCollege.getSecurityEducationAgreement());
+                }
+                break;
+            case Workbook.INTERNSHIP_COMPANY_TYPE:
+                Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipCompanyRecord.isPresent()) {
+                    InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
+                    internshipReviewBean.setHasController(true);
+                    internshipReviewBean.setCommitmentBook(internshipCompany.getCommitmentBook());
+                    internshipReviewBean.setSafetyResponsibilityBook(internshipCompany.getSafetyResponsibilityBook());
+                    internshipReviewBean.setPracticeAgreement(internshipCompany.getPracticeAgreement());
+                    internshipReviewBean.setInternshipApplication(internshipCompany.getInternshipApplication());
+                    internshipReviewBean.setPracticeReceiving(internshipCompany.getPracticeReceiving());
+                    internshipReviewBean.setSecurityEducationAgreement(internshipCompany.getSecurityEducationAgreement());
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                internshipReviewBean.setHasController(false);
+                break;
+            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                internshipReviewBean.setHasController(false);
+                break;
+            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (graduationPracticeCompanyRecord.isPresent()) {
+                    GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
+                    internshipReviewBean.setHasController(true);
+                    internshipReviewBean.setCommitmentBook(graduationPracticeCompany.getCommitmentBook());
+                    internshipReviewBean.setSafetyResponsibilityBook(graduationPracticeCompany.getSafetyResponsibilityBook());
+                    internshipReviewBean.setPracticeAgreement(graduationPracticeCompany.getPracticeAgreement());
+                    internshipReviewBean.setInternshipApplication(graduationPracticeCompany.getInternshipApplication());
+                    internshipReviewBean.setPracticeReceiving(graduationPracticeCompany.getPracticeReceiving());
+                    internshipReviewBean.setSecurityEducationAgreement(graduationPracticeCompany.getSecurityEducationAgreement());
+                }
+                break;
+        }
+        return internshipReviewBean;
     }
 
     /**

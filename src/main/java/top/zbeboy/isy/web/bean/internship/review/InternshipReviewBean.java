@@ -6,6 +6,7 @@ package top.zbeboy.isy.web.bean.internship.review;
 public class InternshipReviewBean {
     private int studentId;
     private String internshipReleaseId;
+    private int internshipTypeId;
     private String realName;
     private String studentName;
     private String studentNumber;
@@ -14,13 +15,13 @@ public class InternshipReviewBean {
     private String reason;
     private int internshipApplyState;
     private Boolean hasController;
-    private Boolean commitmentBook;
-    private Boolean safetyResponsibilityBook;
-    private Boolean practiceAgreement;
-    private Boolean internshipApplication;
-    private Boolean practiceReceiving;
-    private Boolean securityEducationAgreement;
-    private Boolean parentalConsent;
+    private Byte commitmentBook;
+    private Byte safetyResponsibilityBook;
+    private Byte practiceAgreement;
+    private Byte internshipApplication;
+    private Byte practiceReceiving;
+    private Byte securityEducationAgreement;
+    private Byte parentalConsent;
 
     public int getStudentId() {
         return studentId;
@@ -38,12 +39,28 @@ public class InternshipReviewBean {
         this.internshipReleaseId = internshipReleaseId;
     }
 
+    public int getInternshipTypeId() {
+        return internshipTypeId;
+    }
+
+    public void setInternshipTypeId(int internshipTypeId) {
+        this.internshipTypeId = internshipTypeId;
+    }
+
     public String getRealName() {
         return realName;
     }
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public String getStudentNumber() {
@@ -86,62 +103,6 @@ public class InternshipReviewBean {
         this.internshipApplyState = internshipApplyState;
     }
 
-    public Boolean getCommitmentBook() {
-        return commitmentBook;
-    }
-
-    public void setCommitmentBook(Boolean commitmentBook) {
-        this.commitmentBook = commitmentBook;
-    }
-
-    public Boolean getSafetyResponsibilityBook() {
-        return safetyResponsibilityBook;
-    }
-
-    public void setSafetyResponsibilityBook(Boolean safetyResponsibilityBook) {
-        this.safetyResponsibilityBook = safetyResponsibilityBook;
-    }
-
-    public Boolean getPracticeAgreement() {
-        return practiceAgreement;
-    }
-
-    public void setPracticeAgreement(Boolean practiceAgreement) {
-        this.practiceAgreement = practiceAgreement;
-    }
-
-    public Boolean getInternshipApplication() {
-        return internshipApplication;
-    }
-
-    public void setInternshipApplication(Boolean internshipApplication) {
-        this.internshipApplication = internshipApplication;
-    }
-
-    public Boolean getPracticeReceiving() {
-        return practiceReceiving;
-    }
-
-    public void setPracticeReceiving(Boolean practiceReceiving) {
-        this.practiceReceiving = practiceReceiving;
-    }
-
-    public Boolean getSecurityEducationAgreement() {
-        return securityEducationAgreement;
-    }
-
-    public void setSecurityEducationAgreement(Boolean securityEducationAgreement) {
-        this.securityEducationAgreement = securityEducationAgreement;
-    }
-
-    public Boolean getParentalConsent() {
-        return parentalConsent;
-    }
-
-    public void setParentalConsent(Boolean parentalConsent) {
-        this.parentalConsent = parentalConsent;
-    }
-
     public Boolean getHasController() {
         return hasController;
     }
@@ -150,11 +111,59 @@ public class InternshipReviewBean {
         this.hasController = hasController;
     }
 
-    public String getStudentName() {
-        return studentName;
+    public Byte getCommitmentBook() {
+        return commitmentBook;
     }
 
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
+    public void setCommitmentBook(Byte commitmentBook) {
+        this.commitmentBook = commitmentBook;
+    }
+
+    public Byte getSafetyResponsibilityBook() {
+        return safetyResponsibilityBook;
+    }
+
+    public void setSafetyResponsibilityBook(Byte safetyResponsibilityBook) {
+        this.safetyResponsibilityBook = safetyResponsibilityBook;
+    }
+
+    public Byte getPracticeAgreement() {
+        return practiceAgreement;
+    }
+
+    public void setPracticeAgreement(Byte practiceAgreement) {
+        this.practiceAgreement = practiceAgreement;
+    }
+
+    public Byte getInternshipApplication() {
+        return internshipApplication;
+    }
+
+    public void setInternshipApplication(Byte internshipApplication) {
+        this.internshipApplication = internshipApplication;
+    }
+
+    public Byte getPracticeReceiving() {
+        return practiceReceiving;
+    }
+
+    public void setPracticeReceiving(Byte practiceReceiving) {
+        this.practiceReceiving = practiceReceiving;
+    }
+
+    public Byte getSecurityEducationAgreement() {
+        return securityEducationAgreement;
+    }
+
+    public void setSecurityEducationAgreement(Byte securityEducationAgreement) {
+        this.securityEducationAgreement = securityEducationAgreement;
+    }
+
+    public Byte getParentalConsent() {
+        return parentalConsent;
+    }
+
+    public void setParentalConsent(Byte parentalConsent) {
+        this.parentalConsent = parentalConsent;
     }
 }
