@@ -555,7 +555,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      */
     function changeOrganize(grade) {
 
-        if (grade === '') {
+        if (grade == 0 || grade === '') {
             var source = $("#organize-template").html();
             var template = Handlebars.compile(source);
 

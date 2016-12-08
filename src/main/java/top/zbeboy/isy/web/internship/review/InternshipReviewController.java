@@ -49,10 +49,16 @@ public class InternshipReviewController {
     private InternshipTypeService internshipTypeService;
 
     @Resource
+    private InternshipReleaseScienceService internshipReleaseScienceService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private OrganizeService organizeService;
 
     @Resource
     private InternshipCollegeService internshipCollegeService;
@@ -408,6 +414,46 @@ public class InternshipReviewController {
                 break;
         }
         return internshipReviewBean;
+    }
+
+    /**
+     * 获取专业数据
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return 专业数据
+     */
+    @RequestMapping(value = "/web/internship/review/audit/sciences", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<Science> auditSciences(@RequestParam("internshipReleaseId") String internshipReleaseId) {
+        AjaxUtils<Science> ajaxUtils = new AjaxUtils<>();
+        List<Science> sciences = new ArrayList<>();
+        Science science = new Science();
+        science.setScienceId(0);
+        science.setScienceName("请选择专业");
+        sciences.add(science);
+        Result<Record> records = internshipReleaseScienceService.findByInternshipReleaseIdRelation(internshipReleaseId);
+        if (records.isNotEmpty()) {
+            sciences.addAll(records.into(Science.class));
+        }
+        return ajaxUtils.success().msg("获取专业数据成功").listData(sciences);
+    }
+
+    /**
+     * 获取班级数据
+     *
+     * @param scienceId 专业id
+     * @return 班级
+     */
+    @RequestMapping(value = "/web/internship/review/audit/organizes", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<Organize> auditOrganizes(@RequestParam("scienceId") int scienceId) {
+        List<Organize> organizes = new ArrayList<>();
+        Organize organize = new Organize();
+        organize.setOrganizeId(0);
+        organize.setOrganizeName("请选择班级");
+        organizes.add(organize);
+        organizes.addAll(organizeService.findByScienceId(scienceId));
+        return new AjaxUtils<Organize>().success().msg("获取班级数据成功").listData(organizes);
     }
 
     /**

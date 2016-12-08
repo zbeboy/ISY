@@ -13,7 +13,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             save: '/web/internship/review/audit/save',
             audit_pass_url: '/web/internship/review/audit/pass',
             audit_fail_url: '/web/internship/review/audit/fail',
-            back: '/web/menu/internship/apply'
+            science_data_url: '/web/internship/review/audit/sciences',
+            organize_data_url: '/web/internship/review/audit/organizes',
+            back: '/web/menu/internship/review'
         };
 
         // 刷新时选中菜单
@@ -65,15 +67,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          * 刷新查询参数
          */
         function refreshSearch() {
-            var params = {
-                studentName: $(paramId.studentName).val(),
-                studentNumber: $(paramId.studentNumber).val(),
-                scienceName: $(paramId.scienceName).val(),
-                organizeName: $(paramId.organizeName).val(),
-                internshipReleaseId: init_page_param.internshipReleaseId
-            };
             param.pageNum = 0;
-            param.searchParams = JSON.stringify(params);
         }
 
         /**
@@ -81,6 +75,10 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         function initParam() {
             var params = {
+                studentName: $(paramId.studentName).val(),
+                studentNumber: $(paramId.studentNumber).val(),
+                scienceName: $(paramId.scienceName).val(),
+                organizeName: $(paramId.organizeName).val(),
                 internshipReleaseId: init_page_param.internshipReleaseId
             };
             param.searchParams = JSON.stringify(params);
@@ -158,17 +156,15 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         $(paramId.scienceName).change(function (event) {
-            if (event.keyCode == 13) {
-                refreshSearch();
-                init();
-            }
+            refreshSearch();
+            var science = $(paramId.scienceName).val();
+            changeOrganize(science);
+            init();
         });
 
         $(paramId.organizeName).change(function (event) {
-            if (event.keyCode == 13) {
-                refreshSearch();
-                init();
-            }
+            refreshSearch();
+            init();
         });
 
         /**
@@ -450,6 +446,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         }
 
         init();
+        initSearchSciences();
 
         /**
          * 初始化数据
@@ -464,6 +461,79 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                 }
                 listData(data);
             });
+        }
+
+        /**
+         * 初始化专业数据
+         */
+        function initSearchSciences(){
+            $.post(web_path + ajax_url.science_data_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
+                var source = $("#science-template").html();
+                var template = Handlebars.compile(source);
+
+                Handlebars.registerHelper('science_value', function () {
+                    var value = Handlebars.escapeExpression(this.scienceId);
+                    return new Handlebars.SafeString(value);
+                });
+
+                Handlebars.registerHelper('science_name', function () {
+                    var name = Handlebars.escapeExpression(this.scienceName);
+                    return new Handlebars.SafeString(name);
+                });
+
+                var html = template(data);
+                $(paramId.scienceName).html(html);
+            });
+        }
+
+        /**
+         * 改变班级选项
+         * @param science 专业
+         */
+        function changeOrganize(science) {
+
+            if (science === 0) {
+                var source = $("#organize-template").html();
+                var template = Handlebars.compile(source);
+
+                var context = {
+                    listResult: [
+                        {name: "请选择班级", value: ""}
+                    ]
+                };
+
+                Handlebars.registerHelper('organize_value', function () {
+                    var value = Handlebars.escapeExpression(this.value);
+                    return new Handlebars.SafeString(value);
+                });
+
+                Handlebars.registerHelper('organize_name', function () {
+                    var name = Handlebars.escapeExpression(this.name);
+                    return new Handlebars.SafeString(name);
+                });
+
+                var html = template(context);
+                $(paramId.select_organize).html(html);
+            } else {
+                // 根据年级查询全部班级
+                $.post(web_path + ajax_url.organize_data_url, {scienceId: science}, function (data) {
+                    var source = $("#organize-template").html();
+                    var template = Handlebars.compile(source);
+
+                    Handlebars.registerHelper('organize_value', function () {
+                        var value = Handlebars.escapeExpression(this.organizeId);
+                        return new Handlebars.SafeString(value);
+                    });
+
+                    Handlebars.registerHelper('organize_name', function () {
+                        var name = Handlebars.escapeExpression(this.organizeName);
+                        return new Handlebars.SafeString(name);
+                    });
+
+                    var html = template(data);
+                    $(paramId.organizeName).html(html);
+                });
+            }
         }
 
         /**

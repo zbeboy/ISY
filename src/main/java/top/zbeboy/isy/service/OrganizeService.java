@@ -33,6 +33,13 @@ public interface OrganizeService {
      */
     Result<OrganizeRecord> findInScienceIdsAndGrade(List<Integer> scienceIds, String grade);
 
+    /**
+     * 通过专业查询
+     *
+     * @param scienceId 专业id
+     * @return 班级
+     */
+    List<Organize> findByScienceId(int scienceId);
 
     /**
      * 根据系id查询全部年级

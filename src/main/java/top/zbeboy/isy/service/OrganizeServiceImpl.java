@@ -74,6 +74,11 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     }
 
     @Override
+    public List<Organize> findByScienceId(int scienceId) {
+        return organizeDao.fetchByScienceId(scienceId);
+    }
+
+    @Override
     public Result<Record1<String>> findByDepartmentIdAndDistinctGrade(int departmentId) {
         Byte isDel = 0;
         return create.selectDistinct(ORGANIZE.GRADE)

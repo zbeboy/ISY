@@ -2,6 +2,7 @@ package top.zbeboy.isy.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,8 +132,50 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
         JSONObject search = JSON.parseObject(paginationUtils.getSearchParams());
         if (!ObjectUtils.isEmpty(search)) {
             String internshipReleaseId = StringUtils.trimWhitespace(search.getString("internshipReleaseId"));
+            String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
+            String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
+            String scienceName = StringUtils.trimWhitespace(search.getString("scienceName"));
+            String organizeName = StringUtils.trimWhitespace(search.getString("organizeName"));
             if (StringUtils.hasLength(internshipReleaseId)) {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId);
+            }
+
+            if(StringUtils.hasLength(studentName)){
+                if(!ObjectUtils.isEmpty(a)){
+                    a = a.and(USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName)));
+                } else {
+                    a = USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
+                }
+            }
+
+            if(StringUtils.hasLength(studentNumber)){
+                if(!ObjectUtils.isEmpty(a)){
+                    a = a.and(STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
+                } else {
+                    a = STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
+                }
+            }
+
+            if(StringUtils.hasLength(scienceName)){
+                int scienceId = NumberUtils.toInt(scienceName);
+                if(scienceId >  0){
+                    if(!ObjectUtils.isEmpty(a)){
+                        a = a.and(SCIENCE.SCIENCE_ID.eq(scienceId));
+                    } else {
+                        a = SCIENCE.SCIENCE_ID.eq(scienceId);
+                    }
+                }
+            }
+
+            if(StringUtils.hasLength(organizeName)){
+                int organizeId = NumberUtils.toInt(organizeName);
+                if(organizeId >  0){
+                    if(!ObjectUtils.isEmpty(a)){
+                        a = a.and(ORGANIZE.ORGANIZE_ID.eq(organizeId));
+                    } else {
+                        a = ORGANIZE.ORGANIZE_ID.eq(organizeId);
+                    }
+                }
             }
         }
         return a;

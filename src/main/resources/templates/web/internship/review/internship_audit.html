@@ -32,11 +32,13 @@
                     </div>
                     <div class="row" style="margin-top:2px;">
                         <div class="col-md-6">
-                            <select id="search_science_name" class="form-control selectpicker show-tick" title="请选择专业">
+                            <select id="search_science_name" class="form-control input-sm">
+                                <option value="0">请选择专业</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <select id="search_organize_name" class="form-control selectpicker show-tick" title="请选择班级">
+                            <select id="search_organize_name" class="form-control input-sm">
+                                <option value="0">请选择班级</option>
                             </select>
                         </div>
                     </div>
@@ -217,6 +219,16 @@
                        data-student="{{studentId}}" data-name="{{student_name}}">不通过</a>
                 </div>
             </div>
+            {{/each}}
+        </script>
+        <script id="science-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{science_value}}">{{science_name}}</option>
+            {{/each}}
+        </script>
+        <script id="organize-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{organize_value}}">{{organize_name}}</option>
             {{/each}}
         </script>
         <script th:inline="javascript">
