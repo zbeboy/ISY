@@ -80,131 +80,141 @@
                         <div class="col-md-12"><span>原因：</span><span>{{reason}}</span></div>
                     </div>
                     {{#if hasController}}
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-4">
-                            {{#if commitmentBook}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" checked="checked" />
-                                    承诺书
-                                </label>
-                            </div>
-                            {{else}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1"/>
-                                    承诺书
-                                </label>
-                            </div>
-                            {{/if}}
+                    <form role="form">
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-4">
+                                {{#if commitmentBook}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="commitmentBook"/>
+                                        承诺书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="commitmentBook"/>
+                                        承诺书
+                                    </label>
+                                </div>
+                                {{/if}}
 
-                            {{#if safetyResponsibilityBook}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" checked="checked" />
-                                    安全责任书
-                                </label>
-                            </div>
-                            {{else}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1"/>
-                                    安全责任书
-                                </label>
-                            </div>
-                            {{/if}}
+                                {{#if safetyResponsibilityBook}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked"
+                                               name="safetyResponsibilityBook"/>
+                                        安全责任书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="safetyResponsibilityBook"/>
+                                        安全责任书
+                                    </label>
+                                </div>
+                                {{/if}}
 
-                            {{#if practiceAgreement}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" checked="checked" />
-                                    实践协议书
-                                </label>
+                                {{#if practiceAgreement}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="practiceAgreement"/>
+                                        实践协议书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="practiceAgreement"/>
+                                        实践协议书
+                                    </label>
+                                </div>
+                                {{/if}}
                             </div>
-                            {{else}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1"/>
-                                    实践协议书
-                                </label>
+                            <div class="col-md-4">
+                                {{#if internshipApplication}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked"
+                                               name="internshipApplication"/>
+                                        实习申请书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="internshipApplication"/>
+                                        实习申请书
+                                    </label>
+                                </div>
+                                {{/if}}
+
+                                {{#if practiceReceiving}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="practiceReceiving"/>
+                                        实习接收
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="practiceReceiving"/>
+                                        实习接收
+                                    </label>
+                                </div>
+                                {{/if}}
+
+                                {{#if securityEducationAgreement}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked"
+                                               name="securityEducationAgreement"/>
+                                        安全教育协议
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="securityEducationAgreement"/>
+                                        安全教育协议
+                                    </label>
+                                </div>
+                                {{/if}}
+
                             </div>
-                            {{/if}}
+                            <div class="col-md-4">
+                                {{#if parentalConsent}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="parentalConsent"/>
+                                        父母同意书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="parentalConsent"/>
+                                        父母同意书
+                                    </label>
+                                </div>
+                                {{/if}}
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            {{#if internshipApplication}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" checked="checked"/>
-                                    实习申请书
-                                </label>
-                            </div>
-                            {{else}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1"/>
-                                    实习申请书
-                                </label>
-                            </div>
-                            {{/if}}
-
-                            {{#if practiceReceiving}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" checked="checked"/>
-                                    实习接收
-                                </label>
-                            </div>
-                            {{else}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1"/>
-                                    实习接收
-                                </label>
-                            </div>
-                            {{/if}}
-
-                            {{#if securityEducationAgreement}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" checked="checked"/>
-                                    安全教育协议
-                                </label>
-                            </div>
-                            {{else}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1"/>
-                                    安全教育协议
-                                </label>
-                            </div>
-                            {{/if}}
-
-                        </div>
-                        <div class="col-md-4">
-                            {{#if parentalConsent}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" checked="checked"/>
-                                    父母同意书
-                                </label>
-                            </div>
-                            {{else}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1"/>
-                                    父母同意书
-                                </label>
-                            </div>
-                            {{/if}}
-                        </div>
-                    </div>
+                        <input type="hidden" name="internshipReleaseId" value="{{internshipReleaseId}}"/>
+                        <input type="hidden" name="studentId" value="{{studentId}}"/>
+                    </form>
                     {{/if}}
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="detail_apply" data-id="{{internshipReleaseId}}">查看详情</a>
-                    <a href="javascript:;" class="save_apply" data-id="{{internshipReleaseId}}">保存</a>
-                    <a href="javascript:;" class="pass_apply" data-id="{{internshipReleaseId}}">通过</a>
-                    <a href="javascript:;" class="fail_apply" data-id="{{internshipReleaseId}}">不通过</a>
+                    <a href="javascript:;" class="detail_apply" data-id="{{internshipReleaseId}}"
+                       data-student="{{studentId}}">查看详情</a>
+                    <a href="javascript:;" class="save_apply">保存</a>
+                    <a href="javascript:;" class="pass_apply" data-id="{{internshipReleaseId}}"
+                       data-student="{{studentId}}" data-name="{{student_name}}">通过</a>
+                    <a href="javascript:;" class="fail_apply" data-id="{{internshipReleaseId}}"
+                       data-student="{{studentId}}" data-name="{{student_name}}">不通过</a>
                 </div>
             </div>
             {{/each}}
@@ -217,6 +227,33 @@
             };
             /*]]>*/
         </script>
+        <!-- 状态修改Modal -->
+        <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="stateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="stateModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" id="state_form">
+                            <div class="form-group" id="valid_reason">
+                                <label for="reason">原因</label>
+                                <textarea class="form-control" name="reason" id="reason" rows="3"></textarea>
+                                <p id="reason_error_msg" class="hidden"></p>
+                                <input type="hidden" id="applyState" name="internshipApplyState" />
+                                <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId" />
+                                <input type="hidden" id="applyStudentId" name="studentId" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="stateOk">确定</button>
+                        <button type="button" class="btn btn-default" id="stateCancel">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <input type="hidden" class="dy_script" value="/js/internship/review/internship_audit.js"/>
     </div>
     <!-- /#page-wrapper -->

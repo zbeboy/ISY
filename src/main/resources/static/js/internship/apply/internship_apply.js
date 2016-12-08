@@ -407,11 +407,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         function sendRecallAjax(id, studentId) {
             $.post(web_path + ajax_url.recall_apply_url, {id: id, studentId: studentId}, function (data) {
                 if (data.state) {
-                    Messenger().post({
-                        message: data.msg + '，请点击刷新按钮查看效果',
-                        type: 'success',
-                        showCloseButton: true
-                    });
+                    initMyData();
                 } else {
                     Messenger().post({
                         message: data.msg,
@@ -518,11 +514,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             $.post(web_path + ajax_url.change_state_url,$('#state_form').serialize(),function(data){
                 if (data.state) {
                     hideStateModal();
-                    Messenger().post({
-                        message: data.msg + '，请点击刷新按钮查看效果',
-                        type: 'success',
-                        showCloseButton: true
-                    });
+                    initMyData();
                 } else {
                     Messenger().post({
                         message: data.msg,
