@@ -153,6 +153,114 @@ public class InternshipReviewController {
     }
 
     /**
+     * 实习已通过学生页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/review/pass", method = RequestMethod.GET)
+    public String reviewPass(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "/web/internship/review/internship_pass::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/review/internship_pass::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 实习未通过学生页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/review/fail", method = RequestMethod.GET)
+    public String reviewFail(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "/web/internship/review/internship_fail::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/review/internship_fail::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 实习申请基本信息修改学生页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/review/base_info_apply", method = RequestMethod.GET)
+    public String reviewBaseInfoApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "/web/internship/review/internship_base_info_apply::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/review/internship_base_info_apply::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 实习基本信息修改填写中学生页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/review/base_info_fill", method = RequestMethod.GET)
+    public String reviewBaseInfoFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "/web/internship/review/internship_base_info_fill::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/review/internship_base_info_fill::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 实习单位信息修改申请学生页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/review/company_apply", method = RequestMethod.GET)
+    public String reviewCompanyApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "/web/internship/review/internship_company_apply::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/review/internship_company_apply::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 实习单位信息修改填写中学生页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/review/company_fill", method = RequestMethod.GET)
+    public String reviewCompanyFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "/web/internship/review/internship_company_fill::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "/web/internship/review/internship_company_fill::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
      * 查看详情页
      *
      * @param internshipReleaseId 实习发布id
@@ -185,7 +293,7 @@ public class InternshipReviewController {
                     break;
                 case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
                     Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                    if(graduationPracticeCollegeRecord.isPresent()){
+                    if (graduationPracticeCollegeRecord.isPresent()) {
                         GraduationPracticeCollegeBean graduationPracticeCollegeBean = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollegeBean.class);
                         modelMap.addAttribute("internshipData", graduationPracticeCollegeBean);
                         page = "/web/internship/review/graduation_practice_college_detail::#page-wrapper";
@@ -193,7 +301,7 @@ public class InternshipReviewController {
                     break;
                 case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
                     Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                    if(graduationPracticeUnifyRecord.isPresent()){
+                    if (graduationPracticeUnifyRecord.isPresent()) {
                         GraduationPracticeUnifyBean graduationPracticeUnifyBean = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnifyBean.class);
                         modelMap.addAttribute("internshipData", graduationPracticeUnifyBean);
                         page = "/web/internship/review/graduation_practice_unify_detail::#page-wrapper";
@@ -223,6 +331,101 @@ public class InternshipReviewController {
     public AjaxUtils auditDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
         internshipApplyBean.setInternshipApplyState(1);
+        return internshipReviewData(paginationUtils, internshipApplyBean);
+    }
+
+    /**
+     * 查询已通过的学生数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/review/pass/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils passDatas(PaginationUtils paginationUtils) {
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipApplyState(2);
+        return internshipReviewData(paginationUtils, internshipApplyBean);
+    }
+
+    /**
+     * 查询未通过的学生数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/review/fail/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils failDatas(PaginationUtils paginationUtils) {
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipApplyState(3);
+        return internshipReviewData(paginationUtils, internshipApplyBean);
+    }
+
+    /**
+     * 查询基本信息变更申请的学生数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/review/base_info_apply/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils baseInfoApplyDatas(PaginationUtils paginationUtils) {
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipApplyState(4);
+        return internshipReviewData(paginationUtils, internshipApplyBean);
+    }
+
+    /**
+     * 查询基本信息变更填写中的学生数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/review/base_info_fill/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils baseInfoFillDatas(PaginationUtils paginationUtils) {
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipApplyState(5);
+        return internshipReviewData(paginationUtils, internshipApplyBean);
+    }
+
+    /**
+     * 查询单位信息变更申请的学生数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/review/company_apply/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils companyApplyDatas(PaginationUtils paginationUtils) {
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipApplyState(6);
+        return internshipReviewData(paginationUtils, internshipApplyBean);
+    }
+
+    /**
+     * 查询单位信息变更填写中的学生数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/review/company_fill/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils companyFillDatas(PaginationUtils paginationUtils) {
+        InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
+        internshipApplyBean.setInternshipApplyState(7);
+        return internshipReviewData(paginationUtils, internshipApplyBean);
+    }
+
+    /**
+     * 数据
+     *
+     * @param paginationUtils     分页工具
+     * @param internshipApplyBean 申请条件
+     * @return 数据
+     */
+    private AjaxUtils<InternshipReviewBean> internshipReviewData(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean) {
         List<InternshipReviewBean> internshipReviewBeens = internshipReviewService.findAllByPage(paginationUtils, internshipApplyBean);
         if (!ObjectUtils.isEmpty(internshipReviewBeens)) {
             for (int i = 0; i < internshipReviewBeens.size(); i++) {

@@ -82,6 +82,7 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
             internshipReviewBean.setInternshipApplyState(r.getValue(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE));
             internshipReviewBeens.add(internshipReviewBean);
         });
+        paginationUtils.setTotalDatas(countByCondition(paginationUtils, internshipApplyBean));
         return internshipReviewBeens;
     }
 
