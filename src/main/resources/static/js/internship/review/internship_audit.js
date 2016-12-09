@@ -10,6 +10,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         var ajax_url = {
             audit_data_url: '/web/internship/review/audit/data',
+            audit_detail_url:'/web/internship/review/audit/detail',
             save: '/web/internship/review/audit/save',
             audit_pass_url: '/web/internship/review/audit/pass',
             audit_fail_url: '/web/internship/review/audit/fail',
@@ -235,6 +236,15 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         }
 
         /*
+         查看详情
+         */
+        $(tableData).delegate('.detail_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            $.address.value(ajax_url.audit_detail_url + '?internshipReleaseId=' + id + '&studentId=' + studentId);
+        });
+
+        /*
          保存
          */
         $(tableData).delegate('.save_apply', "click", function () {
@@ -264,7 +274,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         $(tableData).delegate('.fail_apply', "click", function () {
             var id = $(this).attr('data-id');
             var studentId = $(this).attr('data-student');
-            var studentName = $(this).attr('data-name');
             showStateModal(3, id, studentId, '审核不通过');
         });
 
@@ -328,7 +337,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function stateAdd() {
             var msg;
             msg = Messenger().post({
-                message: '确定申请吗?',
+                message: '确定不通过吗?',
                 actions: {
                     retry: {
                         label: '确定',
@@ -466,7 +475,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         /**
          * 初始化专业数据
          */
-        function initSearchSciences(){
+        function initSearchSciences() {
             $.post(web_path + ajax_url.science_data_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
                 var source = $("#science-template").html();
                 var template = Handlebars.compile(source);

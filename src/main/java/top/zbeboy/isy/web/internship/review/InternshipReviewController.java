@@ -19,6 +19,8 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
+import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -146,6 +148,66 @@ public class InternshipReviewController {
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "/web/internship/review/internship_audit::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 查看详情页
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/review/audit/detail", method = RequestMethod.GET)
+    public String auditDetail(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
+        String page = "/web/internship/review/internship_review::#page-wrapper";
+        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        if (!ObjectUtils.isEmpty(internshipRelease)) {
+            InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
+            switch (internshipType.getInternshipTypeName()) {
+                case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                    Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (internshipCollegeRecord.isPresent()) {
+                        InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
+                        modelMap.addAttribute("internshipData", internshipCollege);
+                        page = "/web/internship/review/internship_college_detail::#page-wrapper";
+                    }
+                    break;
+                case Workbook.INTERNSHIP_COMPANY_TYPE:
+                    Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (internshipCompanyRecord.isPresent()) {
+                        InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
+                        modelMap.addAttribute("internshipData", internshipCompany);
+                        page = "/web/internship/review/internship_company_detail::#page-wrapper";
+                    }
+                    break;
+                case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                    Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if(graduationPracticeCollegeRecord.isPresent()){
+                        GraduationPracticeCollegeBean graduationPracticeCollegeBean = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollegeBean.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeCollegeBean);
+                        page = "/web/internship/review/graduation_practice_college_detail::#page-wrapper";
+                    }
+                    break;
+                case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                    Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if(graduationPracticeUnifyRecord.isPresent()){
+                        GraduationPracticeUnifyBean graduationPracticeUnifyBean = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnifyBean.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeUnifyBean);
+                        page = "/web/internship/review/graduation_practice_unify_detail::#page-wrapper";
+                    }
+                    break;
+                case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                    Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (graduationPracticeCompanyRecord.isPresent()) {
+                        GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeCompany);
+                        page = "/web/internship/review/graduation_practice_company_detail::#page-wrapper";
+                    }
+                    break;
+            }
         }
         return page;
     }

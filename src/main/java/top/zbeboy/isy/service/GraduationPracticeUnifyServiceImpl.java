@@ -3,6 +3,7 @@ package top.zbeboy.isy.service;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,8 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify;
 
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.GRADUATION_PRACTICE_UNIFY;
+import static top.zbeboy.isy.domain.Tables.*;
+
 /**
  * Created by lenovo on 2016-11-27.
  */
@@ -46,6 +48,20 @@ public class GraduationPracticeUnifyServiceImpl implements GraduationPracticeUni
                 .from(GRADUATION_PRACTICE_UNIFY)
                 .where(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_UNIFY.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
+    }
+
+    @Override
+    public Result<Record> findByInternshipReleaseIdAndStudentIdRelation(String internshipReleaseId, int studentId) {
+        return create.select()
+                .from(GRADUATION_PRACTICE_UNIFY)
+                .join(STUDENT)
+                .on(GRADUATION_PRACTICE_UNIFY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_UNIFY.STUDENT_ID.eq(studentId)))
+                .fetch();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
