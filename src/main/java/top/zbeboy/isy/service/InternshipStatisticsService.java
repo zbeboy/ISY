@@ -1,0 +1,40 @@
+package top.zbeboy.isy.service;
+
+import org.jooq.Record;
+import org.jooq.Result;
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
+import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
+import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
+import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
+import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
+
+import java.util.List;
+
+/**
+ * Created by lenovo on 2016-12-10.
+ */
+public interface InternshipStatisticsService {
+
+    /**
+     * 分页查询 已提交数据
+     *
+     * @param dataTablesUtils datatables工具类
+     * @return 分页数据
+     */
+    Result<Record> submittedFindAllByPage(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils,InternshipStatisticsBean internshipStatisticsBean);
+
+    /**
+     * 已提交数据 总数
+     *
+     * @return 总数
+     */
+    int submittedCountAll(InternshipStatisticsBean internshipStatisticsBean);
+
+    /**
+     * 根据条件查询总数 已提交数据
+     *
+     * @return 条件查询总数
+     */
+    int submittedCountByCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils,InternshipStatisticsBean internshipStatisticsBean);
+}

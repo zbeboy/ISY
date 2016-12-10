@@ -18,7 +18,6 @@ public interface InternshipReviewService {
      *
      * @param paginationUtils     分页工具
      * @param internshipApplyBean 额外参数
-     * @param hasController       是否有控制台
      * @return 数据
      */
     List<InternshipReviewBean> findAllByPage(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean);

@@ -522,7 +522,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                 });
 
                 var html = template(context);
-                $(paramId.select_organize).html(html);
+                $(paramId.organizeName).html(html);
             } else {
                 // 根据年级查询全部班级
                 $.post(web_path + ajax_url.organize_data_url, {scienceId: science}, function (data) {
