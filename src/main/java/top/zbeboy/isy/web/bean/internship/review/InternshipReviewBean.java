@@ -1,5 +1,7 @@
 package top.zbeboy.isy.web.bean.internship.review;
 
+import java.sql.Timestamp;
+
 /**
  * Created by zbeboy on 2016/12/6.
  */
@@ -14,6 +16,9 @@ public class InternshipReviewBean {
     private String organizeName;
     private String reason;
     private int internshipApplyState;
+    private Timestamp changeFillStartTime;
+    private Timestamp changeFillEndTime;
+    private Timestamp applyTime;
     private Boolean hasController;
     private Byte commitmentBook;
     private Byte safetyResponsibilityBook;
@@ -103,6 +108,30 @@ public class InternshipReviewBean {
 
     public void setInternshipApplyState(int internshipApplyState) {
         this.internshipApplyState = internshipApplyState;
+    }
+
+    public Timestamp getChangeFillStartTime() {
+        return changeFillStartTime;
+    }
+
+    public void setChangeFillStartTime(Timestamp changeFillStartTime) {
+        this.changeFillStartTime = changeFillStartTime;
+    }
+
+    public Timestamp getChangeFillEndTime() {
+        return changeFillEndTime;
+    }
+
+    public void setChangeFillEndTime(Timestamp changeFillEndTime) {
+        this.changeFillEndTime = changeFillEndTime;
+    }
+
+    public Timestamp getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Timestamp applyTime) {
+        this.applyTime = applyTime;
     }
 
     public Boolean getHasController() {

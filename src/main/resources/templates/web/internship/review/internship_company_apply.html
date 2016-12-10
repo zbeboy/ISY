@@ -1,10 +1,305 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8"/>
 </head>
 <body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习审核 -
+                    <small>单位信息修改申请</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="well">
+                    <div class="row" style="margin-top:2px;">
+                        <div class="col-md-6">
+                            <input type="text" id="search_real_name" class="form-control input-sm" placeholder="学生姓名"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="search_student_number" class="form-control input-sm"
+                                   placeholder="学生学号"/>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2px;">
+                        <div class="col-md-6">
+                            <select id="search_science_name" class="form-control input-sm">
+                                <option value="0">请选择专业</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select id="search_organize_name" class="form-control input-sm">
+                                <option value="0">请选择班级</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top:4px;">
+                        <button type="button" id="search" class="btn btn-outline btn-default"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline btn-default"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="text-right" style="margin-bottom: 10px;">
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
+                    </button>
+                </div>
+                <div id="tableData">
+                </div>
+                <div id="pagination" class="text-center">
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="internship-audit-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{student_name}} - {{studentNumber}}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4"><span>专业：</span><span>{{science_name}}</span></div>
+                        <div class="col-md-4"><span>班级：</span><span>{{organize_name}}</span></div>
+                        <div class="col-md-4"><span>状态：</span><span>{{internship_apply_state}}</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><span>原因：</span><span>{{reason}}</span></div>
+                    </div>
+                    <div class="text-right">
+                        <small><em><span>申请时间：</span><span>{{applyTime}}</span></em>
+                        </small>
+                    </div>
+                    {{#if hasController}}
+                    <form role="form">
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-4">
+                                {{#if commitmentBook}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="commitmentBook"/>
+                                        承诺书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="commitmentBook"/>
+                                        承诺书
+                                    </label>
+                                </div>
+                                {{/if}}
 
+                                {{#if safetyResponsibilityBook}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked"
+                                               name="safetyResponsibilityBook"/>
+                                        安全责任书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="safetyResponsibilityBook"/>
+                                        安全责任书
+                                    </label>
+                                </div>
+                                {{/if}}
+
+                                {{#if practiceAgreement}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="practiceAgreement"/>
+                                        实践协议书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="practiceAgreement"/>
+                                        实践协议书
+                                    </label>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div class="col-md-4">
+                                {{#if internshipApplication}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked"
+                                               name="internshipApplication"/>
+                                        实习申请书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="internshipApplication"/>
+                                        实习申请书
+                                    </label>
+                                </div>
+                                {{/if}}
+
+                                {{#if practiceReceiving}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="practiceReceiving"/>
+                                        实习接收
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="practiceReceiving"/>
+                                        实习接收
+                                    </label>
+                                </div>
+                                {{/if}}
+
+                                {{#if securityEducationAgreement}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked"
+                                               name="securityEducationAgreement"/>
+                                        安全教育协议
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="securityEducationAgreement"/>
+                                        安全教育协议
+                                    </label>
+                                </div>
+                                {{/if}}
+
+                            </div>
+                            <div class="col-md-4">
+                                {{#if parentalConsent}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" checked="checked" name="parentalConsent"/>
+                                        父母同意书
+                                    </label>
+                                </div>
+                                {{else}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="parentalConsent"/>
+                                        父母同意书
+                                    </label>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <input type="hidden" name="internshipReleaseId" value="{{internshipReleaseId}}"/>
+                        <input type="hidden" name="studentId" value="{{studentId}}"/>
+                    </form>
+                    {{/if}}
+                </div>
+                <div class="panel-footer">
+                    <a href="javascript:;" class="agree_apply" data-id="{{internshipReleaseId}}"
+                       data-student="{{studentId}}" data-name="{{student_name}}">同意</a>
+                    <a href="javascript:;" class="disagree_apply" data-id="{{internshipReleaseId}}"
+                       data-student="{{studentId}}" data-name="{{student_name}}">拒绝</a>
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <script id="science-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{science_value}}">{{science_name}}</option>
+            {{/each}}
+        </script>
+        <script id="organize-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{organize_value}}">{{organize_name}}</option>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /*页面参数*/
+            var init_page_param = {
+                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ ''
+            };
+            /*]]>*/
+        </script>
+        <!-- 状态修改Modal -->
+        <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="stateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="stateModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" id="state_form">
+                            <div class="form-group" id="valid_reason">
+                                <label for="reason">原因</label>
+                                <textarea class="form-control" name="reason" id="reason" rows="3"></textarea>
+                                <p id="reason_error_msg" class="hidden"></p>
+                                <input type="hidden" id="applyState" name="internshipApplyState" />
+                                <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId" />
+                                <input type="hidden" id="applyStudentId" name="studentId" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="stateOk">确定</button>
+                        <button type="button" class="btn btn-default" id="stateCancel">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 填写时间Modal -->
+        <div class="modal fade" id="fillTimeModal" tabindex="-1" role="dialog" aria-labelledby="fillTimeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="fillTimeModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" id="fill_time_form">
+                            <div class="form-group" id="valid_fill_time">
+                                <label>填写时间</label>
+                                <input class="form-control" id="fill_time" name="fillTime" placeholder="填写时间"/>
+                                <p class="help-block">在该时间范围内可修改基本信息</p>
+                                <p class="text-danger hidden" id="fill_time_error_msg"></p>
+                            </div>
+                            <input type="hidden" id="fillTimeState" name="internshipApplyState" />
+                            <input type="hidden" id="fillTimeInternshipReleaseId" name="internshipReleaseId" />
+                            <input type="hidden" id="fillTimeStudentId" name="studentId" />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="fillTimeOk">确定</button>
+                        <button type="button" class="btn btn-default" id="fillTimeCancel">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" class="dy_script" value="/js/internship/review/internship_company_apply.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
 </body>
+
 </html>
