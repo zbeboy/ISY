@@ -294,7 +294,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                 },
                 success: function (data) {
                     if (data.state) {
-                        obj.parent().parent().remove();
+                        init();
                     } else {
                         Messenger().post({
                             message: data.msg,
@@ -321,7 +321,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function init() {
             startLoading();
             initParam();
-            $.post(web_path + ajax_url.base_info_fill_url, param, function (data) {
+            $.get(web_path + ajax_url.base_info_fill_url, param, function (data) {
                 endLoading();
                 if (data.listResult.length > 0) {
                     createPage(data);

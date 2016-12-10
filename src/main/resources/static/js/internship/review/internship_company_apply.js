@@ -452,7 +452,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         function init() {
             startLoading();
             initParam();
-            $.post(web_path + ajax_url.company_apply_data_url, param, function (data) {
+            $.get(web_path + ajax_url.company_apply_data_url, param, function (data) {
                 endLoading();
                 if (data.listResult.length > 0) {
                     createPage(data);

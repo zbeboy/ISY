@@ -328,7 +328,7 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/audit/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/audit/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils auditDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
@@ -342,7 +342,7 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/pass/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/pass/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils passDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
@@ -356,7 +356,7 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/fail/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/fail/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils failDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
@@ -370,7 +370,7 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/base_info_apply/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/base_info_apply/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils baseInfoApplyDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
@@ -384,7 +384,7 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/base_info_fill/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/base_info_fill/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils baseInfoFillDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
@@ -398,7 +398,7 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/company_apply/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/company_apply/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils companyApplyDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
@@ -412,7 +412,7 @@ public class InternshipReviewController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/review/company_fill/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/review/company_fill/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils companyFillDatas(PaginationUtils paginationUtils) {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
