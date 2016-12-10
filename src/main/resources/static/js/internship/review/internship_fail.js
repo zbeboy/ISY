@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          ajax url.
          */
         var ajax_url = {
-            audit_data_url: '/web/internship/review/audit/data',
+            fail_data_url: '/web/internship/review/fail/data',
             audit_detail_url:'/web/internship/review/audit/detail',
             save: '/web/internship/review/audit/save',
             audit_pass_url: '/web/internship/review/audit/pass',
@@ -346,7 +346,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function init() {
             startLoading();
             initParam();
-            $.post(web_path + ajax_url.audit_data_url, param, function (data) {
+            $.post(web_path + ajax_url.fail_data_url, param, function (data) {
                 endLoading();
                 if (data.listResult.length > 0) {
                     createPage(data);

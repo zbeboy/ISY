@@ -11,6 +11,12 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             internship_review_data_url: '/web/internship/review/data',
             audit_url: '/web/internship/review/audit',
+            pass_url:'/web/internship/review/pass',
+            fail_url:'/web/internship/review/fail',
+            base_info_apply_url:'/web/internship/review/base_info_apply',
+            base_info_fill_url:'/web/internship/review/base_info_fill',
+            company_apply_url:'/web/internship/review/company_apply',
+            company_fill_url:'/web/internship/review/company_fill',
             access_condition_url:'/web/internship/review/condition'
         };
 
@@ -135,6 +141,120 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
                 if(data.state){
                     $.address.value(ajax_url.audit_url + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /*
+         已通过列表
+         */
+        $(tableData).delegate('.pass_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            // 进入条件判断
+            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
+                if(data.state){
+                    $.address.value(ajax_url.pass_url + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /*
+         未通过列表
+         */
+        $(tableData).delegate('.fail_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            // 进入条件判断
+            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
+                if(data.state){
+                    $.address.value(ajax_url.fail_url + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /*
+         基本信息修改申请
+         */
+        $(tableData).delegate('.basic_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            // 进入条件判断
+            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
+                if(data.state){
+                    $.address.value(ajax_url.base_info_apply_url + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /*
+         单位信息修改申请
+         */
+        $(tableData).delegate('.company_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            // 进入条件判断
+            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
+                if(data.state){
+                    $.address.value(ajax_url.company_apply_url + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /*
+         基本信息填写中
+         */
+        $(tableData).delegate('.basic_fill', "click", function () {
+            var id = $(this).attr('data-id');
+            // 进入条件判断
+            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
+                if(data.state){
+                    $.address.value(ajax_url.base_info_fill_url + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /*
+         单位信息填写中
+         */
+        $(tableData).delegate('.company_fill', "click", function () {
+            var id = $(this).attr('data-id');
+            // 进入条件判断
+            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
+                if(data.state){
+                    $.address.value(ajax_url.company_fill_url + "?id=" + id);
                 } else {
                     Messenger().post({
                         message: data.msg,

@@ -1,18 +1,17 @@
 /**
- * Created by lenovo on 2016/12/6.
+ * Created by lenovo on 2016-12-10.
  */
-//# sourceURL=internship_pass.js
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
-    function ($, Handlebars, nav_active) {
+//# sourceURL=internship_base_info_apply.js
+require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker","messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
+    function ($, Handlebars, nav_active,moment) {
 
         /*
          ajax url.
          */
         var ajax_url = {
-            pass_data_url: '/web/internship/review/pass/data',
-            audit_detail_url:'/web/internship/review/audit/detail',
-            save: '/web/internship/review/audit/save',
-            audit_fail_url: '/web/internship/review/audit/fail',
+            base_info_apply_data_url: '/web/internship/review/base_info_apply/data',
+            agree: '/web/internship/review/audit/agree',
+            disagree: '/web/internship/review/audit/disagree',
             science_data_url: '/web/internship/review/audit/sciences',
             organize_data_url: '/web/internship/review/audit/organizes',
             back: '/web/menu/internship/review'
@@ -235,35 +234,21 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         }
 
         /*
-         查看详情
+         同意
          */
-        $(tableData).delegate('.detail_apply', "click", function () {
+        $(tableData).delegate('.agree_apply', "click", function () {
             var id = $(this).attr('data-id');
             var studentId = $(this).attr('data-student');
-            $.address.value(ajax_url.audit_detail_url + '?internshipReleaseId=' + id + '&studentId=' + studentId);
+            showFillTimeModal(5, id, studentId, '同意');
         });
 
         /*
-         保存
+         拒绝
          */
-        $(tableData).delegate('.save_apply', "click", function () {
-            var form = $(this).parent().prev().find('form');
-            $.post(web_path + ajax_url.save, form.serialize(), function (data) {
-                Messenger().post({
-                    message: data.msg,
-                    type: 'info',
-                    showCloseButton: true
-                });
-            });
-        });
-
-        /*
-         不通过
-         */
-        $(tableData).delegate('.fail_apply', "click", function () {
+        $(tableData).delegate('.disagree_apply', "click", function () {
             var id = $(this).attr('data-id');
             var studentId = $(this).attr('data-student');
-            showStateModal(3, id, studentId, '审核不通过');
+            showStateModal(2, id, studentId, '拒绝');
         });
 
         /*
@@ -274,10 +259,24 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         /*
+         提交同意申请
+         */
+        $('#fillTimeOk').click(function () {
+            fillTimeAdd();
+        });
+
+        /*
          取消变更申请
          */
         $('#stateCancel').click(function () {
             hideStateModal();
+        });
+
+        /*
+         取消同意申请
+         */
+        $('#fillTimeCancel').click(function () {
+            hideFillTimeModal();
         });
 
         /**
@@ -296,6 +295,22 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         }
 
         /**
+         * 展示填写时间模态框
+         * @param state
+         * @param internshipReleaseId
+         * @param studentId
+         * @param title
+         */
+        function showFillTimeModal(state, internshipReleaseId, studentId, title) {
+            $('#fillTimeState').val(state);
+            $('#fillTimeInternshipReleaseId').val(internshipReleaseId);
+            $('#fillTimeStudentId').val(studentId);
+            $('#fillTimeModalLabel').text(title);
+            initFillTime();
+            $('#fillTimeModal').modal('show');
+        }
+
+        /**
          * 隐藏变更模态框
          */
         function hideStateModal() {
@@ -306,6 +321,17 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             $('#stateModalLabel').text('');
             validCleanDom('#valid_reason', '#reason_error_msg');
             $('#stateModal').modal('hide');
+        }
+
+        /**
+         * 隐藏变更模态框
+         */
+        function hideFillTimeModal() {
+            $('#fillTimeState').val('');
+            $('#fillTimeInternshipReleaseId').val('');
+            $('#fillTimeStudentId').val('');
+            $('#fillTimeModalLabel').text('');
+            $('#fillTimeModal').modal('hide');
         }
 
         /*
@@ -326,7 +352,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function stateAdd() {
             var msg;
             msg = Messenger().post({
-                message: '确定不通过吗?',
+                message: '确定拒绝吗?',
                 actions: {
                     retry: {
                         label: '确定',
@@ -334,6 +360,32 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                         action: function () {
                             msg.cancel();
                             validReason();
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        /*
+         同意提交询问
+         */
+        function fillTimeAdd() {
+            var msg;
+            msg = Messenger().post({
+                message: '确定同意吗?',
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            sendFillTimeAjax();
                         }
                     },
                     cancel: {
@@ -356,82 +408,30 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         }
 
         /**
-         * 状态修改询问
-         * @param internshipReleaseId 实习发布id
-         * @param studentId 学生id
-         * @param reason 原因
-         * @param state 状态
-         * @param studentName 学生名
-         * @param obj 当前dom对象
-         * @param url 提交url
-         */
-        function ask(internshipReleaseId, studentId, reason, state, studentName, obj, url) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定通过学生 '" + studentName + "'  吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            sendAjax(internshipReleaseId, studentId, reason, state, obj, url);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-        }
-
-        /**
-         * 发送数据到后台
-         */
-        function sendAjax(internshipReleaseId, studentId, reason, state, obj, url) {
-            Messenger().run({
-                successMessage: '保存数据成功',
-                errorMessage: '保存数据失败',
-                progressMessage: '正在保存数据....'
-            }, {
-                url: web_path + url,
-                type: 'post',
-                data: {
-                    internshipReleaseId: internshipReleaseId,
-                    studentId: studentId,
-                    reason: reason,
-                    internshipApplyState: state
-                },
-                success: function (data) {
-                    if (data.state) {
-                        obj.parent().parent().remove();
-                    } else {
-                        Messenger().post({
-                            message: data.msg,
-                            type: 'error',
-                            showCloseButton: true
-                        });
-                    }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
-        }
-
-        /**
          * 发送状态申请
          */
         function sendStateAjax() {
-            $.post(web_path + ajax_url.audit_fail_url, $('#state_form').serialize(), function (data) {
+            $.post(web_path + ajax_url.disagree, $('#state_form').serialize(), function (data) {
                 if (data.state) {
                     hideStateModal();
+                    init();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 发送同意申请
+         */
+        function sendFillTimeAjax() {
+            $.post(web_path + ajax_url.agree, $('#fill_time_form').serialize(), function (data) {
+                if (data.state) {
+                    hideFillTimeModal();
                     init();
                 } else {
                     Messenger().post({
@@ -452,7 +452,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function init() {
             startLoading();
             initParam();
-            $.post(web_path + ajax_url.pass_data_url, param, function (data) {
+            $.post(web_path + ajax_url.base_info_apply_data_url, param, function (data) {
                 endLoading();
                 if (data.listResult.length > 0) {
                     createPage(data);
@@ -481,6 +481,33 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
 
                 var html = template(data);
                 $(paramId.scienceName).html(html);
+            });
+        }
+
+        /**
+         * 初始化填写时间
+         */
+        function initFillTime(){
+            $('#fill_time').daterangepicker({
+                "startDate": moment().add(1, "days"),
+                "endDate": moment().add(2, "days"),
+                "timePicker": true,
+                "timePicker24Hour": true,
+                "timePickerIncrement": 30,
+                "locale": {
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    applyLabel: '确定',
+                    cancelLabel: '取消',
+                    fromLabel: '起始时间',
+                    toLabel: '结束时间',
+                    customRangeLabel: '自定义',
+                    separator: ' 至 ',
+                    daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                        '七月', '八月', '九月', '十月', '十一月', '十二月']
+                }
+            }, function (start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
             });
         }
 
@@ -563,7 +590,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function nextPage(pageNumber) {
             param.pageNum = pageNumber;
             startLoading();
-            $.get(web_path + ajax_url.audit_data_url, param, function (data) {
+            $.get(web_path + ajax_url.base_info_apply_data_url, param, function (data) {
                 endLoading();
                 listData(data);
             });

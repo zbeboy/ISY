@@ -23,6 +23,8 @@ public class InternshipReviewBean {
     private Byte securityEducationAgreement;
     private Byte parentalConsent;
 
+    private String fillTime;
+
     public int getStudentId() {
         return studentId;
     }
@@ -165,5 +167,13 @@ public class InternshipReviewBean {
 
     public void setParentalConsent(Byte parentalConsent) {
         this.parentalConsent = parentalConsent;
+    }
+
+    public String getFillTime() {
+        return fillTime;
+    }
+
+    public void setFillTime(String fillTime) {
+        this.fillTime = fillTime;
     }
 }

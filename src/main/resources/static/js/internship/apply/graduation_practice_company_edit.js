@@ -205,19 +205,19 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             var internshipApplyState = init_page_param.internshipApplyState;
             if(internshipApplyState !== ''){
                 if(internshipApplyState == 5){ // 基本信息修改状态，不允许修改单位信息
-                    $(paramId.graduationPracticeCompanyName).attr("disabled", true);
-                    $(paramId.graduationPracticeCompanyAddress).attr("disabled", true);
-                    $(paramId.graduationPracticeCompanyContacts).attr("disabled", true);
-                    $(paramId.graduationPracticeCompanyTel).attr("disabled", true);
+                    $(paramId.graduationPracticeCompanyName).attr("readonly", true);
+                    $(paramId.graduationPracticeCompanyAddress).attr("readonly", true);
+                    $(paramId.graduationPracticeCompanyContacts).attr("readonly", true);
+                    $(paramId.graduationPracticeCompanyTel).attr("readonly", true);
                 }
 
                 if(internshipApplyState == 7){// 单位信息修改状态，不允许修改基本信息
-                    $(paramId.studentName).attr("disabled", true);
-                    $(paramId.qqMailbox).attr("disabled", true);
-                    $(paramId.parentalContact).attr("disabled", true);
-                    $(paramId.headmaster).attr("disabled", true);
-                    $(paramId.startTime).attr("disabled", true);
-                    $(paramId.endTime).attr("disabled", true);
+                    $(paramId.studentName).attr("readonly", true);
+                    $(paramId.qqMailbox).attr("readonly", true);
+                    $(paramId.parentalContact).attr("readonly", true);
+                    $(paramId.headmaster).attr("readonly", true);
+                    $(paramId.startTime).attr("readonly", true);
+                    $(paramId.endTime).attr("readonly", true);
                 }
             }
         }

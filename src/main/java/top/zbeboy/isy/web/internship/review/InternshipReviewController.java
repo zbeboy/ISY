@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,7 @@ import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -581,6 +583,73 @@ public class InternshipReviewController {
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习信息");
                 }
+            } else {
+                ajaxUtils.fail().msg("未查询到相关实习申请信息");
+            }
+        } else {
+            ajaxUtils.fail().msg("缺失必要参数");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 实习审核 同意  基本信息修改申请 单位信息修改申请
+     *
+     * @param internshipReviewBean 数据
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/review/audit/agree", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils auditAgree(InternshipReviewBean internshipReviewBean) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        try {
+            if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (internshipApplyRecord.isPresent()) {
+                    InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                    internshipApply.setReason(internshipReviewBean.getReason());
+                    internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
+                    String format = "yyyy-MM-dd HH:mm:ss";
+                    if (StringUtils.hasLength(internshipReviewBean.getFillTime())) {
+                        String[] timeArr = internshipReviewBean.getFillTime().split("至");
+                        if (!ObjectUtils.isEmpty(timeArr) && timeArr.length >= 2) {
+                            internshipApply.setChangeFillStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
+                            internshipApply.setChangeFillEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
+                        }
+                    }
+                    internshipApplyService.update(internshipApply);
+                    ajaxUtils.success().msg("更新状态成功");
+                } else {
+                    ajaxUtils.fail().msg("未查询到相关实习申请信息");
+                }
+            } else {
+                ajaxUtils.fail().msg("缺失必要参数");
+            }
+        } catch (ParseException e) {
+            log.error(" format time is exception.", e);
+            ajaxUtils.fail().msg("时间参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 实习审核 拒绝  基本信息修改申请 单位信息修改申请
+     *
+     * @param internshipReviewBean 数据
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/review/audit/disagree", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils auditDisagree(InternshipReviewBean internshipReviewBean) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                internshipApply.setReason(internshipReviewBean.getReason());
+                internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
+                internshipApplyService.update(internshipApply);
+                ajaxUtils.success().msg("更新状态成功");
             } else {
                 ajaxUtils.fail().msg("未查询到相关实习申请信息");
             }

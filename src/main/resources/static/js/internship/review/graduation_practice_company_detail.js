@@ -11,8 +11,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
             save: '/web/internship/review/audit/save',
             audit_pass_url: '/web/internship/review/audit/pass',
             audit_fail_url: '/web/internship/review/audit/fail',
-            nav: '/web/menu/internship/review',
-            back: '/web/internship/review/audit'
+            nav: '/web/menu/internship/review'
         };
 
         // 刷新时选中菜单
@@ -51,8 +50,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
          返回
          */
         $('#page_back').click(function () {
-            var id = $('#internshipReleaseId').val();
-            $.address.value(ajax_url.back + '?id='+id);
+            window.history.go(-1);
         });
 
         /*
@@ -161,8 +159,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
             // do something...
             if (to_audit) {
                 to_audit = false;
-                var id = $('#internshipReleaseId').val();
-                $.address.value(ajax_url.back + '?id='+id);
+                window.history.go(-1);
             }
         });
 
