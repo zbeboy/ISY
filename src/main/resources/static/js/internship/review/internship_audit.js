@@ -14,8 +14,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             save: '/web/internship/review/audit/save',
             audit_pass_url: '/web/internship/review/audit/pass',
             audit_fail_url: '/web/internship/review/audit/fail',
-            science_data_url: '/web/internship/review/audit/sciences',
-            organize_data_url: '/web/internship/review/audit/organizes',
+            science_data_url: '/anyone/internship/sciences',
+            organize_data_url: '/anyone/internship/organizes',
             back: '/web/menu/internship/review'
         };
 

@@ -91,35 +91,6 @@ public class InternshipReviewController {
     }
 
     /**
-     * 获取实习审核数据
-     *
-     * @return 数据
-     */
-    @RequestMapping(value = "/web/internship/review/data", method = RequestMethod.GET)
-    @ResponseBody
-    public AjaxUtils<InternshipReleaseBean> reviewDatas(PaginationUtils paginationUtils) {
-        Byte isDel = 0;
-        InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
-        internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int departmentId = roleService.getRoleDepartmentId(record);
-            internshipReleaseBean.setDepartmentId(departmentId);
-        }
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = roleService.getRoleCollegeId(record);
-            internshipReleaseBean.setCollegeId(collegeId);
-        }
-        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
-        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
-    }
-
-    /**
      * 进入实习审核页面判断条件
      *
      * @param internshipReleaseId 实习发布id
@@ -274,8 +245,9 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/detail", method = RequestMethod.GET)
     public String auditDetail(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         String page = "/web/internship/review/internship_review::#page-wrapper";
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if (!ObjectUtils.isEmpty(internshipRelease)) {
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            InternshipRelease internshipRelease = errorBean.getData();
             InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
             switch (internshipType.getInternshipTypeName()) {
                 case Workbook.INTERNSHIP_COLLEGE_TYPE:
@@ -450,8 +422,9 @@ public class InternshipReviewController {
     public AjaxUtils auditSave(InternshipReviewBean internshipReviewBean) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
-            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReviewBean.getInternshipReleaseId());
-            if (!ObjectUtils.isEmpty(internshipRelease)) {
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReviewBean.getInternshipReleaseId());
+            if (!errorBean.isHasError()) {
+                InternshipRelease internshipRelease = errorBean.getData();
                 InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
                 switch (internshipType.getInternshipTypeName()) {
                     case Workbook.INTERNSHIP_COLLEGE_TYPE:
@@ -757,7 +730,7 @@ public class InternshipReviewController {
      * @param internshipReleaseId 实习发布id
      * @return 专业数据
      */
-    @RequestMapping(value = "/web/internship/review/audit/sciences", method = RequestMethod.POST)
+    @RequestMapping(value = "/anyone/internship/sciences", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Science> auditSciences(@RequestParam("internshipReleaseId") String internshipReleaseId) {
         AjaxUtils<Science> ajaxUtils = new AjaxUtils<>();
@@ -779,7 +752,7 @@ public class InternshipReviewController {
      * @param scienceId 专业id
      * @return 班级
      */
-    @RequestMapping(value = "/web/internship/review/audit/organizes", method = RequestMethod.POST)
+    @RequestMapping(value = "/anyone/internship/organizes", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Organize> auditOrganizes(@RequestParam("scienceId") int scienceId) {
         List<Organize> organizes = new ArrayList<>();

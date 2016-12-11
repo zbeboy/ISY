@@ -11,8 +11,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         var ajax_url = {
             company_fill_url: '/web/internship/review/company_fill/data',
             audit_pass_url: '/web/internship/review/audit/pass',
-            science_data_url: '/web/internship/review/audit/sciences',
-            organize_data_url: '/web/internship/review/audit/organizes',
+            science_data_url: '/anyone/internship/sciences',
+            organize_data_url: '/anyone/internship/organizes',
             back: '/web/menu/internship/review'
         };
 

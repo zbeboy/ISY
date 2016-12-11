@@ -10,8 +10,8 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
         function getAjaxUrl() {
             return {
                 submitted_data_url: '/web/internship/statistical/submitted/data',
-                science_data_url: '/web/internship/review/statistics/sciences',
-                organize_data_url: '/web/internship/review/statistics/organizes',
+                science_data_url: '/anyone/internship/sciences',
+                organize_data_url: '/anyone/internship/organizes',
                 back:'/web/menu/internship/statistical'
             };
         }

@@ -76,35 +76,6 @@ public class InternshipTeacherDistributionController {
     }
 
     /**
-     * 获取实习教师分配数据
-     *
-     * @return 数据
-     */
-    @RequestMapping(value = "/web/internship/teacher_distribution/data", method = RequestMethod.GET)
-    @ResponseBody
-    public AjaxUtils<InternshipReleaseBean> distributionDatas(PaginationUtils paginationUtils) {
-        Byte isDel = 0;
-        InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
-        internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int departmentId = roleService.getRoleDepartmentId(record);
-            internshipReleaseBean.setDepartmentId(departmentId);
-        }
-        if(roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = roleService.getRoleCollegeId(record);
-            internshipReleaseBean.setCollegeId(collegeId);
-        }
-        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
-        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
-    }
-
-    /**
      * 进入指导教师分配页面判断条件
      *
      * @param internshipReleaseId 实习发布id

@@ -12,8 +12,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             company_apply_data_url: '/web/internship/review/company_apply/data',
             agree: '/web/internship/review/audit/agree',
             disagree: '/web/internship/review/audit/disagree',
-            science_data_url: '/web/internship/review/audit/sciences',
-            organize_data_url: '/web/internship/review/audit/organizes',
+            science_data_url: '/anyone/internship/sciences',
+            organize_data_url: '/anyone/internship/organizes',
             back: '/web/menu/internship/review'
         };
 

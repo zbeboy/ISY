@@ -100,22 +100,48 @@ public class InternshipReleaseController {
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
-        if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+        accessRoleCondition(internshipReleaseBean);
+        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
+        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+    }
+
+    /**
+     * 获取实习列表数据 用于实习教师分配等通用列表数据
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = "/anyone/internship/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        Byte isDel = 0;
+        InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
+        internshipReleaseBean.setInternshipReleaseIsDel(isDel);
+        accessRoleCondition(internshipReleaseBean);
+        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
+        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+    }
+
+    /**
+     * 实习角色数据
+     *
+     * @param internshipReleaseBean 条件
+     */
+    private void accessRoleCondition(InternshipReleaseBean internshipReleaseBean) {
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int departmentId = roleService.getRoleDepartmentId(record);
             internshipReleaseBean.setDepartmentId(departmentId);
         }
-        if(roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int collegeId = roleService.getRoleCollegeId(record);
             internshipReleaseBean.setCollegeId(collegeId);
         }
-        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils,internshipReleaseBean);
-        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils,records,internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -127,19 +153,19 @@ public class InternshipReleaseController {
     public String releaseAdd(ModelMap modelMap) {
         int departmentId = -1;
         int collegeId = -1;
-        if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             departmentId = roleService.getRoleDepartmentId(record);
         }
-        if(roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             collegeId = roleService.getRoleCollegeId(record);
         }
         modelMap.addAttribute("departmentId", departmentId);
-        modelMap.addAttribute("collegeId",collegeId);
+        modelMap.addAttribute("collegeId", collegeId);
         return "/web/internship/release/internship_release_add::#page-wrapper";
     }
 
@@ -156,7 +182,7 @@ public class InternshipReleaseController {
         if (records.isPresent()) {
             internshipRelease = records.get().into(InternshipReleaseBean.class);
             Result<Record> recordResult = internshipReleaseScienceService.findByInternshipReleaseIdRelation(internshipRelease.getInternshipReleaseId());
-            if(recordResult.isNotEmpty()){
+            if (recordResult.isNotEmpty()) {
                 sciences = recordResult.into(Science.class);
             }
         }
@@ -382,32 +408,32 @@ public class InternshipReleaseController {
      */
     @RequestMapping("/anyone/users/upload/internship")
     @ResponseBody
-    public AjaxUtils<FileBean> usersUploadInternship( int schoolId,int collegeId, @RequestParam("departmentId") int departmentId,
+    public AjaxUtils<FileBean> usersUploadInternship(int schoolId, int collegeId, @RequestParam("departmentId") int departmentId,
                                                      MultipartHttpServletRequest multipartHttpServletRequest) {
         AjaxUtils<FileBean> data = new AjaxUtils<>();
         try {
             School school = null;
             College college = null;
-            if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                    && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                    && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                if(record.isPresent()){
+                if (record.isPresent()) {
                     school = record.get().into(School.class);
-                    college =  record.get().into(College.class);
+                    college = record.get().into(College.class);
                 }
             }
-            if(roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
+            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
-                if(record.isPresent()){
+                if (record.isPresent()) {
                     school = record.get().into(School.class);
-                    college =  record.get().into(College.class);
+                    college = record.get().into(College.class);
                 }
             }
-            if(roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)){
-                 school = schoolService.findById(schoolId);
-                 college = collegeService.findById(collegeId);
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+                school = schoolService.findById(schoolId);
+                college = collegeService.findById(collegeId);
             }
             Department department = departmentService.findById(departmentId);
             if (!ObjectUtils.isEmpty(school)) {

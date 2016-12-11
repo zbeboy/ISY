@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            internship_statistics_data_url: '/web/internship/statistical/data',
+            internship_statistics_data_url: '/anyone/internship/data',
             submitted_url: '/web/internship/statistical/submitted',
             unsubmitted_url:'/web/internship/statistical/unsubmitted',
             access_condition_url:'/web/internship/review/condition'
