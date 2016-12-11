@@ -81,7 +81,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public Staff findByUsername(String username) {
-        return staffDao.fetchOne(STAFF.USERNAME,username);
+        return staffDao.fetchOne(STAFF.USERNAME, username);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public Result<StaffRecord> findByIdCardNeUsername(String username, String idCard) {
-        return  create.selectFrom(STAFF)
+        return create.selectFrom(STAFF)
                 .where(STAFF.ID_CARD.eq(idCard).and(STAFF.USERNAME.ne(username))).fetch();
     }
 

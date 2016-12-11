@@ -1,7 +1,5 @@
 package top.zbeboy.isy.service;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.util.PaginationUtils;

@@ -24,11 +24,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.COLLEGE;
-import static top.zbeboy.isy.domain.Tables.DEPARTMENT;
-import static top.zbeboy.isy.domain.Tables.ORGANIZE;
-import static top.zbeboy.isy.domain.Tables.SCHOOL;
-import static top.zbeboy.isy.domain.Tables.SCIENCE;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-08-21.
@@ -67,7 +63,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     }
 
     @Override
-    public Result<OrganizeRecord> findInScienceIdsAndGrade(List<Integer> scienceIds,String grade) {
+    public Result<OrganizeRecord> findInScienceIdsAndGrade(List<Integer> scienceIds, String grade) {
         return create.selectFrom(ORGANIZE)
                 .where(ORGANIZE.SCIENCE_ID.in(scienceIds).and(ORGANIZE.GRADE.eq(grade)))
                 .fetch();
@@ -467,6 +463,6 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,ORGANIZE.ORGANIZE_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, ORGANIZE.ORGANIZE_ID);
     }
 }

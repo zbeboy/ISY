@@ -1,7 +1,6 @@
 package top.zbeboy.isy.service;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,20 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
-import top.zbeboy.isy.domain.tables.daos.InternshipReleaseDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
-import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import javax.annotation.Resource;
-
-import java.sql.Date;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.*;
+import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COLLEGE;
 
 /**
  * Created by lenovo on 2016-11-27.
@@ -84,12 +77,12 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
 
     @Override
     public int countAll(InternshipCollege internshipCollege) {
-        return statisticsAllWithCondition(create,INTERNSHIP_COLLEGE,INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
+        return statisticsAllWithCondition(create, INTERNSHIP_COLLEGE, INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
     }
 
     @Override
     public int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege) {
-        return statisticsWithCondition(dataTablesUtils,create,INTERNSHIP_COLLEGE,INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
+        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_COLLEGE, INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
     }
 
     /**
@@ -363,6 +356,6 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,INTERNSHIP_COLLEGE.STUDENT_NUMBER);
+        sortToFinish(selectConditionStep, selectJoinStep, type, INTERNSHIP_COLLEGE.STUDENT_NUMBER);
     }
 }

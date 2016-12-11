@@ -30,10 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.COLLEGE_ROLE;
-import static top.zbeboy.isy.domain.Tables.ROLE;
-import static top.zbeboy.isy.domain.Tables.COLLEGE;
-import static top.zbeboy.isy.domain.Tables.SCHOOL;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-10-04.
@@ -464,6 +461,6 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,ROLE.ROLE_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, ROLE.ROLE_ID);
     }
 }

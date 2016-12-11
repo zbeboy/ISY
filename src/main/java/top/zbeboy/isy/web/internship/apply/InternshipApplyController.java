@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +27,6 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.internship.apply.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -176,7 +174,7 @@ public class InternshipApplyController {
                     if (internshipCollegeRecord.isPresent()) {
                         InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
                         modelMap.addAttribute("internshipData", internshipCollege);
-                        modelMap.addAttribute("internshipApply",errorBean.getMapData().get("internshipApply"));
+                        modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
                         page = "/web/internship/apply/internship_college_edit::#page-wrapper";
                     } else {
                         internshipCollegePageParam(modelMap, errorBean);
@@ -189,7 +187,7 @@ public class InternshipApplyController {
                     if (internshipCompanyRecord.isPresent()) {
                         InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
                         modelMap.addAttribute("internshipData", internshipCompany);
-                        modelMap.addAttribute("internshipApply",errorBean.getMapData().get("internshipApply"));
+                        modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
                         page = "/web/internship/apply/internship_company_edit::#page-wrapper";
                     } else {
                         internshipCompanyPageParam(modelMap, errorBean);
@@ -204,7 +202,7 @@ public class InternshipApplyController {
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
                         GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
                         modelMap.addAttribute("internshipData", graduationPracticeCollege);
-                        modelMap.addAttribute("internshipApply",errorBean.getMapData().get("internshipApply"));
+                        modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
                         page = "/web/internship/apply/graduation_practice_college_edit::#page-wrapper";
                     } else {
                         graduationPracticeCollegePageParam(modelMap, errorBean);
@@ -219,7 +217,7 @@ public class InternshipApplyController {
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
                         GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
                         modelMap.addAttribute("internshipData", graduationPracticeUnify);
-                        modelMap.addAttribute("internshipApply",errorBean.getMapData().get("internshipApply"));
+                        modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
                         page = "/web/internship/apply/graduation_practice_unify_edit::#page-wrapper";
                     } else {
                         graduationPracticeUnifyPageParam(modelMap, errorBean);
@@ -232,7 +230,7 @@ public class InternshipApplyController {
                     if (graduationPracticeCompanyRecord.isPresent()) {
                         GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
                         modelMap.addAttribute("internshipData", graduationPracticeCompany);
-                        modelMap.addAttribute("internshipApply",errorBean.getMapData().get("internshipApply"));
+                        modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
                         page = "/web/internship/apply/graduation_practice_company_edit::#page-wrapper";
                     } else {
                         graduationPracticeCompanyPageParam(modelMap, errorBean);
@@ -343,8 +341,8 @@ public class InternshipApplyController {
                         internshipCollegeVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
                     }
                     InternshipCollege internshipCollege = internshipCollegeService.findById(internshipCollegeVo.getInternshipCollegeId());
-                    InternshipApply internshipApply = (InternshipApply)errorBean.getMapData().get("internshipApply");
-                    if(internshipApply.getInternshipApplyState() == 5){// 5：基本信息变更填写中
+                    InternshipApply internshipApply = (InternshipApply) errorBean.getMapData().get("internshipApply");
+                    if (internshipApply.getInternshipApplyState() == 5) {// 5：基本信息变更填写中
                         internshipCollege.setStudentName(internshipCollegeVo.getStudentName());
                         internshipCollege.setCollegeClass(internshipCollegeVo.getCollegeClass());
                         internshipCollege.setStudentSex(internshipCollegeVo.getStudentSex());
@@ -360,7 +358,7 @@ public class InternshipApplyController {
                         internshipCollege.setEndTime(DateTimeUtils.formatDate(internshipCollegeVo.getEndTime()));
                         internshipCollegeService.update(internshipCollege);
                         ajaxUtils.success().msg("更新成功");
-                    } else if(internshipApply.getInternshipApplyState() == 7){// 7：单位信息变更填写中
+                    } else if (internshipApply.getInternshipApplyState() == 7) {// 7：单位信息变更填写中
                         internshipCollege.setInternshipCollegeName(internshipCollegeVo.getInternshipCollegeName());
                         internshipCollege.setInternshipCollegeAddress(internshipCollegeVo.getInternshipCollegeAddress());
                         internshipCollege.setInternshipCollegeContacts(internshipCollegeVo.getInternshipCollegeContacts());
@@ -497,8 +495,8 @@ public class InternshipApplyController {
                         internshipCompanyVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
                     }
                     InternshipCompany internshipCompany = internshipCompanyService.findById(internshipCompanyVo.getInternshipCompanyId());
-                    InternshipApply internshipApply = (InternshipApply)errorBean.getMapData().get("internshipApply");
-                    if(internshipApply.getInternshipApplyState() == 5){
+                    InternshipApply internshipApply = (InternshipApply) errorBean.getMapData().get("internshipApply");
+                    if (internshipApply.getInternshipApplyState() == 5) {
                         internshipCompany.setStudentName(internshipCompanyVo.getStudentName());
                         internshipCompany.setCollegeClass(internshipCompanyVo.getCollegeClass());
                         internshipCompany.setStudentSex(internshipCompanyVo.getStudentSex());
@@ -514,7 +512,7 @@ public class InternshipApplyController {
                         internshipCompany.setEndTime(DateTimeUtils.formatDate(internshipCompanyVo.getEndTime()));
                         internshipCompanyService.update(internshipCompany);
                         ajaxUtils.success().msg("更新成功");
-                    } else if(internshipApply.getInternshipApplyState() == 7){
+                    } else if (internshipApply.getInternshipApplyState() == 7) {
                         internshipCompany.setInternshipCompanyName(internshipCompanyVo.getInternshipCompanyName());
                         internshipCompany.setInternshipCompanyAddress(internshipCompanyVo.getInternshipCompanyAddress());
                         internshipCompany.setInternshipCompanyContacts(internshipCompanyVo.getInternshipCompanyContacts());
@@ -777,8 +775,8 @@ public class InternshipApplyController {
                         graduationPracticeCompanyVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
                     }
                     GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyService.findById(graduationPracticeCompanyVo.getGraduationPracticeCompanyId());
-                    InternshipApply internshipApply = (InternshipApply)errorBean.getMapData().get("internshipApply");
-                    if(internshipApply.getInternshipApplyState() == 5){
+                    InternshipApply internshipApply = (InternshipApply) errorBean.getMapData().get("internshipApply");
+                    if (internshipApply.getInternshipApplyState() == 5) {
                         graduationPracticeCompany.setStudentName(graduationPracticeCompanyVo.getStudentName());
                         graduationPracticeCompany.setCollegeClass(graduationPracticeCompanyVo.getCollegeClass());
                         graduationPracticeCompany.setStudentSex(graduationPracticeCompanyVo.getStudentSex());
@@ -794,7 +792,7 @@ public class InternshipApplyController {
                         graduationPracticeCompany.setEndTime(DateTimeUtils.formatDate(graduationPracticeCompanyVo.getEndTime()));
                         graduationPracticeCompanyService.update(graduationPracticeCompany);
                         ajaxUtils.success().msg("更新成功");
-                    } else if(internshipApply.getInternshipApplyState() == 7){
+                    } else if (internshipApply.getInternshipApplyState() == 7) {
                         graduationPracticeCompany.setGraduationPracticeCompanyName(graduationPracticeCompanyVo.getGraduationPracticeCompanyName());
                         graduationPracticeCompany.setGraduationPracticeCompanyAddress(graduationPracticeCompanyVo.getGraduationPracticeCompanyAddress());
                         graduationPracticeCompany.setGraduationPracticeCompanyContacts(graduationPracticeCompanyVo.getGraduationPracticeCompanyContacts());
@@ -1101,13 +1099,13 @@ public class InternshipApplyController {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         Map<String, Object> mapData = new HashMap<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if(ObjectUtils.isEmpty(internshipRelease)){
+        if (ObjectUtils.isEmpty(internshipRelease)) {
             errorBean.setHasError(true);
             errorBean.setErrorMsg("未查询到相关实习信息");
             return errorBean;
         }
         errorBean.setData(internshipRelease);
-        if(internshipRelease.getInternshipReleaseIsDel() == 1){
+        if (internshipRelease.getInternshipReleaseIsDel() == 1) {
             errorBean.setHasError(true);
             errorBean.setErrorMsg("该实习已被注销");
             return errorBean;
@@ -1122,7 +1120,7 @@ public class InternshipApplyController {
             errorBean.setErrorMsg("不在时间范围，无法进入");
             inTimeRange = false;
         }
-        if(inTimeRange){
+        if (inTimeRange) {
             StudentBean studentBean;
             Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
             if (studentRecord.isPresent()) {
@@ -1154,7 +1152,7 @@ public class InternshipApplyController {
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-            mapData.put("internshipApply",internshipApply);
+            mapData.put("internshipApply", internshipApply);
             // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
             if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
                 // 判断更改时间条件
@@ -1180,7 +1178,7 @@ public class InternshipApplyController {
                 errorBean.setErrorMsg("您当前状态，不允许填写");
             }
             // 状态为 0：未提交申请
-            if(internshipApply.getInternshipApplyState() == 0){
+            if (internshipApply.getInternshipApplyState() == 0) {
                 if (inTimeRange) {
                     errorBean.setHasError(false);
                     errorBean.setErrorMsg("允许填写");
@@ -1190,7 +1188,7 @@ public class InternshipApplyController {
                 }
             }
         }
-        if(!inTimeRange && !errorBean.isHasError()){
+        if (!inTimeRange && !errorBean.isHasError()) {
             Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
             if (studentRecord.isPresent()) {
                 StudentBean studentBean = studentRecord.get().into(StudentBean.class);

@@ -136,6 +136,6 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
             }
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,NATION.NATION_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, NATION.NATION_ID);
     }
 }

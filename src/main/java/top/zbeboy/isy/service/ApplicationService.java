@@ -76,11 +76,11 @@ public interface ApplicationService {
     /**
      * 通过pid查询
      *
-     * @param pid 父id
+     * @param pid       父id
      * @param collegeId 院id
      * @return 应用
      */
-    List<Application> findByPidAndCollegeId(int pid,int collegeId);
+    List<Application> findByPidAndCollegeId(int pid, int collegeId);
 
     /**
      * 通过ids查询

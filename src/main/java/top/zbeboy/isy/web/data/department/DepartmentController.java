@@ -17,7 +17,6 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Department;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.DepartmentRecord;
-import top.zbeboy.isy.service.AuthoritiesService;
 import top.zbeboy.isy.service.DepartmentService;
 import top.zbeboy.isy.service.RoleService;
 import top.zbeboy.isy.service.UsersService;

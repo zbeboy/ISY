@@ -3,7 +3,6 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.Optional;
@@ -58,7 +57,7 @@ public interface InternshipCollegeService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<InternshipCollege> dataTablesUtils,InternshipCollege internshipCollege);
+    Result<Record> findAllByPage(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
 
     /**
      * 系总数
@@ -72,5 +71,5 @@ public interface InternshipCollegeService {
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils,InternshipCollege internshipCollege);
+    int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
 }

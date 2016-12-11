@@ -3,7 +3,6 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany;
-import top.zbeboy.isy.domain.tables.pojos.InternshipCompany;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.Optional;
@@ -72,5 +71,5 @@ public interface GraduationPracticeCompanyService {
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils,GraduationPracticeCompany graduationPracticeCompany);
+    int countByCondition(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils, GraduationPracticeCompany graduationPracticeCompany);
 }

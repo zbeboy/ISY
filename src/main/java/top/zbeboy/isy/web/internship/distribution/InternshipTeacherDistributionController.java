@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
@@ -23,10 +22,8 @@ import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
-import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;
@@ -120,9 +117,9 @@ public class InternshipTeacherDistributionController {
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if(!ObjectUtils.isEmpty(internshipRelease)){
+        if (!ObjectUtils.isEmpty(internshipRelease)) {
             errorBean.setData(internshipRelease);
-            if(internshipRelease.getInternshipReleaseIsDel() == 1){
+            if (internshipRelease.getInternshipReleaseIsDel() == 1) {
                 errorBean.setHasError(true);
                 errorBean.setErrorMsg("该实习已被注销");
             } else {
@@ -303,7 +300,7 @@ public class InternshipTeacherDistributionController {
             if (records.isNotEmpty()) {
                 List<Integer> scienceIds = new ArrayList<>();
                 records.forEach(id -> scienceIds.add(id.getScienceId()));
-                Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIdsAndGrade(scienceIds,internshipRelease.getAllowGrade());
+                Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIdsAndGrade(scienceIds, internshipRelease.getAllowGrade());
                 if (organizeRecords.isNotEmpty()) {
                     organizes = organizeRecords.into(Organize.class);
                 }
@@ -339,7 +336,7 @@ public class InternshipTeacherDistributionController {
             if (!ObjectUtils.isEmpty(internshipRelease)) {
                 int departmentId = internshipRelease.getDepartmentId();
                 Result<Record> staffRecords = staffService.findByDepartmentIdRelation(departmentId);
-                if(staffRecords.isNotEmpty()){
+                if (staffRecords.isNotEmpty()) {
                     staffs = staffRecords.into(StaffBean.class);
                 }
             }
@@ -373,8 +370,8 @@ public class InternshipTeacherDistributionController {
                 for (Integer id : organizeIds) {
                     List<Student> students = studentService.findByOrganizeId(id);
                     // 删除以前的分配记录
-                    students.forEach(s->
-                        internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,s.getStudentId())
+                    students.forEach(s ->
+                            internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, s.getStudentId())
                     );
                     for (Student s : students) {
                         if (i >= staffIds.size()) {

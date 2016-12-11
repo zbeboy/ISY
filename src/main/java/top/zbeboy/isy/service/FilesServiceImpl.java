@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.FilesDao;
 import top.zbeboy.isy.domain.tables.pojos.Files;
 
-import java.io.File;
-
 /**
  * Created by lenovo on 2016-11-13.
  */

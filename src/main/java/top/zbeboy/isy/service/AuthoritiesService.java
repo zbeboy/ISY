@@ -1,11 +1,9 @@
 package top.zbeboy.isy.service;
 
-import org.jooq.Record;
 import top.zbeboy.isy.domain.tables.pojos.Authorities;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-02-21.

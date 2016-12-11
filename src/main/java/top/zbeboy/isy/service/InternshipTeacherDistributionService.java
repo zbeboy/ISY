@@ -4,7 +4,6 @@ import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 

@@ -43,7 +43,7 @@ public class MobileServiceImpl implements MobileService {
             String sendContent = URLEncoder.encode(content, CharEncoding.UTF_8);
             log.debug(" mobile sendContent : {}", sendContent);
             String httpArg = "mobile=" + mobile + "&content=" + sendContent;
-            BufferedReader reader ;
+            BufferedReader reader;
             StringBuilder sbf = new StringBuilder();
             httpUrl = httpUrl + "?" + httpArg;
             URL url = new URL(httpUrl);
@@ -55,7 +55,7 @@ public class MobileServiceImpl implements MobileService {
             connection.connect();
             InputStream is = connection.getInputStream();
             reader = new BufferedReader(new InputStreamReader(is, CharEncoding.UTF_8));
-            String strRead ;
+            String strRead;
             while ((strRead = reader.readLine()) != null) {
                 sbf.append(strRead);
                 sbf.append("\r\n");
@@ -63,7 +63,7 @@ public class MobileServiceImpl implements MobileService {
             reader.close();
             result = sbf.toString();
         } catch (Exception e) {
-            log.info("Send sms to mobile {} is exception : {}",mobile,e.getMessage());
+            log.info("Send sms to mobile {} is exception : {}", mobile, e.getMessage());
         }
         log.debug(" mobile result : {}", result);
         SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(System.currentTimeMillis()), mobile);

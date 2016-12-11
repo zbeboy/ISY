@@ -4,8 +4,6 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipApply;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
-import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import java.sql.Timestamp;

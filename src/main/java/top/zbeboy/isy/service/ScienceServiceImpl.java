@@ -59,9 +59,9 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     }
 
     @Override
-    public Result<Record2<String,Integer>> findByGradeAndDepartmentId(String grade,int departmentId) {
+    public Result<Record2<String, Integer>> findByGradeAndDepartmentId(String grade, int departmentId) {
         Byte isDel = 0;
-        return create.selectDistinct(SCIENCE.SCIENCE_NAME,SCIENCE.SCIENCE_ID)
+        return create.selectDistinct(SCIENCE.SCIENCE_NAME, SCIENCE.SCIENCE_ID)
                 .from(SCIENCE)
                 .join(ORGANIZE)
                 .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
@@ -384,6 +384,6 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,SCIENCE.SCIENCE_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, SCIENCE.SCIENCE_ID);
     }
 }

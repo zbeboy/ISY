@@ -147,7 +147,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     }
 
     @Override
-    public int countByCondition(PaginationUtils paginationUtils,InternshipReleaseBean internshipReleaseBean) {
+    public int countByCondition(PaginationUtils paginationUtils, InternshipReleaseBean internshipReleaseBean) {
         Record1<Integer> count;
         Condition a = searchCondition(paginationUtils);
         a = otherCondition(a, internshipReleaseBean);
@@ -195,13 +195,13 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
     /**
      * 其它条件参数
      *
-     * @param a                 搜索条件
+     * @param a                     搜索条件
      * @param internshipReleaseBean 额外参数
      * @return 条件
      */
     private Condition otherCondition(Condition a, InternshipReleaseBean internshipReleaseBean) {
         if (!ObjectUtils.isEmpty(internshipReleaseBean)) {
-            if (!ObjectUtils.isEmpty(internshipReleaseBean.getDepartmentId()) && internshipReleaseBean.getDepartmentId()>0) {
+            if (!ObjectUtils.isEmpty(internshipReleaseBean.getDepartmentId()) && internshipReleaseBean.getDepartmentId() > 0) {
                 if (!ObjectUtils.isEmpty(a)) {
                     a = a.and(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(internshipReleaseBean.getDepartmentId()));
                 } else {
@@ -209,7 +209,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
                 }
             }
 
-            if (!ObjectUtils.isEmpty(internshipReleaseBean.getCollegeId()) && internshipReleaseBean.getCollegeId()>0) {
+            if (!ObjectUtils.isEmpty(internshipReleaseBean.getCollegeId()) && internshipReleaseBean.getCollegeId() > 0) {
                 if (!ObjectUtils.isEmpty(a)) {
                     a = a.and(COLLEGE.COLLEGE_ID.eq(internshipReleaseBean.getCollegeId()));
                 } else {

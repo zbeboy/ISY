@@ -20,11 +20,9 @@ import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.util.UUIDUtils;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.Properties;

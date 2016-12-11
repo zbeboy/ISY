@@ -24,9 +24,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.COLLEGE;
-import static top.zbeboy.isy.domain.Tables.DEPARTMENT;
-import static top.zbeboy.isy.domain.Tables.SCHOOL;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-08-21.
@@ -341,6 +339,6 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
             }
 
         }
-        sortToFinish(selectConditionStep,selectJoinStep,type,DEPARTMENT.DEPARTMENT_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, DEPARTMENT.DEPARTMENT_ID);
     }
 }

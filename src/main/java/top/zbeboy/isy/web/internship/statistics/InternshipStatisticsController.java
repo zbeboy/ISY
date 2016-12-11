@@ -14,21 +14,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
-import top.zbeboy.isy.web.bean.data.staff.StaffBean;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
-import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
-import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-12-10.

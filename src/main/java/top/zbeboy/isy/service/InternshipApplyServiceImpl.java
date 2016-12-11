@@ -12,14 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
-import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipApply;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
-import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
@@ -59,7 +56,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
 
     @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
-        return  create.select()
+        return create.select()
                 .from(INTERNSHIP_APPLY)
                 .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_APPLY.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
@@ -79,7 +76,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
     @Override
     public void updateStateWithInternshipReleaseIdAndState(String internshipReleaseId, int changeState, int updateState) {
         create.update(INTERNSHIP_APPLY)
-                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE,updateState)
+                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
                 .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(changeState)))
                 .execute();
     }
@@ -87,7 +84,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
     @Override
     public void updateStateByChangeFillEndTime(Timestamp changeFillEndTime, int changeState, int updateState) {
         create.update(INTERNSHIP_APPLY)
-                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE,updateState)
+                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
                 .where(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME.le(changeFillEndTime).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(changeState)))
                 .execute();
     }
@@ -196,7 +193,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
             }
 
             if (StringUtils.hasLength(internshipReleaseId)) {
-                if(!ObjectUtils.isEmpty(a)){
+                if (!ObjectUtils.isEmpty(a)) {
                     a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId));
                 } else {
                     a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
@@ -209,13 +206,13 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
     /**
      * 其它条件参数
      *
-     * @param a                 搜索条件
+     * @param a                   搜索条件
      * @param internshipApplyBean 额外参数
      * @return 条件
      */
     private Condition otherCondition(Condition a, InternshipApplyBean internshipApplyBean) {
         if (!ObjectUtils.isEmpty(internshipApplyBean)) {
-            if (!ObjectUtils.isEmpty(internshipApplyBean.getStudentId()) && internshipApplyBean.getStudentId()>0) {
+            if (!ObjectUtils.isEmpty(internshipApplyBean.getStudentId()) && internshipApplyBean.getStudentId() > 0) {
                 if (!ObjectUtils.isEmpty(a)) {
                     a = a.and(INTERNSHIP_APPLY.STUDENT_ID.eq(internshipApplyBean.getStudentId()));
                 } else {

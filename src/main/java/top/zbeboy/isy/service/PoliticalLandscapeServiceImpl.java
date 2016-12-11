@@ -136,6 +136,6 @@ public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLan
             }
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID);
     }
 }

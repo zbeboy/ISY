@@ -156,6 +156,6 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,SCHOOL.SCHOOL_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, SCHOOL.SCHOOL_ID);
     }
 }

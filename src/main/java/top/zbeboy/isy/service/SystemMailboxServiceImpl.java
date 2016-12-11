@@ -124,6 +124,6 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,SYSTEM_MAILBOX.SEND_TIME);
+        sortToFinish(selectConditionStep, selectJoinStep, type, SYSTEM_MAILBOX.SEND_TIME);
     }
 }

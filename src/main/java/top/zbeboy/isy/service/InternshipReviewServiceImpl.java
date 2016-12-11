@@ -18,7 +18,6 @@ import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +67,7 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
                 .orderBy(INTERNSHIP_APPLY.APPLY_TIME.desc())
                 .limit((pageNum - 1) * pageSize, pageSize)
                 .fetch();
-        records.forEach(r->{
+        records.forEach(r -> {
             InternshipReviewBean internshipReviewBean = new InternshipReviewBean();
             internshipReviewBean.setStudentId(r.getValue(INTERNSHIP_APPLY.STUDENT_ID));
             internshipReviewBean.setInternshipReleaseId(r.getValue(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID));
@@ -144,26 +143,26 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId);
             }
 
-            if(StringUtils.hasLength(studentName)){
-                if(!ObjectUtils.isEmpty(a)){
+            if (StringUtils.hasLength(studentName)) {
+                if (!ObjectUtils.isEmpty(a)) {
                     a = a.and(USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName)));
                 } else {
                     a = USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
                 }
             }
 
-            if(StringUtils.hasLength(studentNumber)){
-                if(!ObjectUtils.isEmpty(a)){
+            if (StringUtils.hasLength(studentNumber)) {
+                if (!ObjectUtils.isEmpty(a)) {
                     a = a.and(STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
                 } else {
                     a = STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
                 }
             }
 
-            if(StringUtils.hasLength(scienceName)){
+            if (StringUtils.hasLength(scienceName)) {
                 int scienceId = NumberUtils.toInt(scienceName);
-                if(scienceId >  0){
-                    if(!ObjectUtils.isEmpty(a)){
+                if (scienceId > 0) {
+                    if (!ObjectUtils.isEmpty(a)) {
                         a = a.and(SCIENCE.SCIENCE_ID.eq(scienceId));
                     } else {
                         a = SCIENCE.SCIENCE_ID.eq(scienceId);
@@ -171,10 +170,10 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
                 }
             }
 
-            if(StringUtils.hasLength(organizeName)){
+            if (StringUtils.hasLength(organizeName)) {
                 int organizeId = NumberUtils.toInt(organizeName);
-                if(organizeId >  0){
-                    if(!ObjectUtils.isEmpty(a)){
+                if (organizeId > 0) {
+                    if (!ObjectUtils.isEmpty(a)) {
                         a = a.and(ORGANIZE.ORGANIZE_ID.eq(organizeId));
                     } else {
                         a = ORGANIZE.ORGANIZE_ID.eq(organizeId);
@@ -188,7 +187,7 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
     /**
      * 其它条件参数
      *
-     * @param a                 搜索条件
+     * @param a                   搜索条件
      * @param internshipApplyBean 额外参数
      * @return 条件
      */

@@ -11,13 +11,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
-import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -124,7 +121,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
      * @return select
      */
     public Select<InternshipTeacherDistributionRecord> existsInternshipTeacherDistributionSelect(InternshipStatisticsBean internshipStatisticsBean) {
-       return create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+        return create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                 .and(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()));
     }
@@ -257,7 +254,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
 
             if (StringUtils.hasLength(scienceName)) {
                 int scienceId = NumberUtils.toInt(scienceName);
-                if(scienceId>0){
+                if (scienceId > 0) {
                     if (ObjectUtils.isEmpty(a)) {
                         a = SCIENCE.SCIENCE_ID.eq(scienceId);
                     } else {
@@ -268,7 +265,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
 
             if (StringUtils.hasLength(organizeName)) {
                 int organizeId = NumberUtils.toInt(organizeName);
-                if(organizeId>0){
+                if (organizeId > 0) {
                     if (ObjectUtils.isEmpty(a)) {
                         a = ORGANIZE.ORGANIZE_ID.eq(organizeId);
                     } else {
@@ -279,7 +276,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
 
             if (StringUtils.hasLength(internshipApplyState)) {
                 int internshipApplyStateNum = NumberUtils.toInt(internshipApplyState);
-                if(internshipApplyStateNum>-1){
+                if (internshipApplyStateNum > -1) {
                     if (ObjectUtils.isEmpty(a)) {
                         a = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(internshipApplyStateNum);
                     } else {
@@ -298,7 +295,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
      * @param selectConditionStep
      */
     @Override
-    public void sortCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils,SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
+    public void sortCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
@@ -345,6 +342,6 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,STUDENT.STUDENT_NUMBER);
+        sortToFinish(selectConditionStep, selectJoinStep, type, STUDENT.STUDENT_NUMBER);
     }
 }

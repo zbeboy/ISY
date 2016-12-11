@@ -158,6 +158,6 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,SYSTEM_LOG.OPERATING_TIME);
+        sortToFinish(selectConditionStep, selectJoinStep, type, SYSTEM_LOG.OPERATING_TIME);
     }
 }

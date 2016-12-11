@@ -2,7 +2,6 @@ package top.zbeboy.isy.service;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCompany;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -72,5 +71,5 @@ public interface InternshipCompanyService {
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<InternshipCompany> dataTablesUtils,InternshipCompany internshipCompany);
+    int countByCondition(DataTablesUtils<InternshipCompany> dataTablesUtils, InternshipCompany internshipCompany);
 }

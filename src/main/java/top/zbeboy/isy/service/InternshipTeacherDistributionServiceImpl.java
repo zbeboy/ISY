@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -73,10 +72,10 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     @Override
     public void save(InternshipTeacherDistribution internshipTeacherDistribution) {
         create.insertInto(INTERNSHIP_TEACHER_DISTRIBUTION)
-                .set(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID,internshipTeacherDistribution.getInternshipReleaseId())
-                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID,internshipTeacherDistribution.getStaffId())
-                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID,internshipTeacherDistribution.getStudentId())
-                .set(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME,internshipTeacherDistribution.getUsername())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID, internshipTeacherDistribution.getInternshipReleaseId())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID, internshipTeacherDistribution.getStaffId())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID, internshipTeacherDistribution.getStudentId())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME, internshipTeacherDistribution.getUsername())
                 .execute();
     }
 
@@ -90,14 +89,14 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     @Override
     public void updateStaffId(InternshipTeacherDistribution internshipTeacherDistribution) {
         create.update(INTERNSHIP_TEACHER_DISTRIBUTION)
-                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID,internshipTeacherDistribution.getStaffId())
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID, internshipTeacherDistribution.getStaffId())
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipTeacherDistribution.getInternshipReleaseId())
                         .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(internshipTeacherDistribution.getStudentId())))
                 .execute();
     }
 
     @Override
-    public List<InternshipTeacherDistributionBean> findAllByPage(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils,String internshipReleaseId) {
+    public List<InternshipTeacherDistributionBean> findAllByPage(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, String internshipReleaseId) {
         List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = new ArrayList<>();
         Result<Record> records;
         Condition a = searchCondition(dataTablesUtils);
@@ -145,8 +144,8 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
             records = selectConditionStep.fetch();
         }
 
-        if(records.isNotEmpty()){
-            for(Record r:records){
+        if (records.isNotEmpty()) {
+            for (Record r : records) {
                 InternshipTeacherDistributionBean internshipTeacherDistributionBeen = new InternshipTeacherDistributionBean();
                 internshipTeacherDistributionBeen.setInternshipTitle(r.getValue(INTERNSHIP_RELEASE.INTERNSHIP_TITLE));
                 internshipTeacherDistributionBeen.setSchoolName(r.getValue(SCHOOL.SCHOOL_NAME));
@@ -178,8 +177,8 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     @Override
-    public int countByCondition(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils,String internshipReleaseId) {
-        Record1<Integer> count ;
+    public int countByCondition(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, String internshipReleaseId) {
+        Record1<Integer> count;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
@@ -384,6 +383,6 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,STUDENT.STUDENT_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, STUDENT.STUDENT_ID);
     }
 }

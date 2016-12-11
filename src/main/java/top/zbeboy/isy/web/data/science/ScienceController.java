@@ -74,8 +74,8 @@ public class ScienceController {
      */
     @RequestMapping(value = "/user/grade/sciences", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<Science> gradeSciences(@RequestParam("grade") String grade,@RequestParam("departmentId") int departmentId) {
-        Result<Record2<String,Integer>> scienceRecords = scienceService.findByGradeAndDepartmentId(grade,departmentId);
+    public AjaxUtils<Science> gradeSciences(@RequestParam("grade") String grade, @RequestParam("departmentId") int departmentId) {
+        Result<Record2<String, Integer>> scienceRecords = scienceService.findByGradeAndDepartmentId(grade, departmentId);
         List<Science> sciences = scienceRecords.into(Science.class);
         return new AjaxUtils<Science>().success().msg("获取专业数据成功！").listData(sciences);
     }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.domain.tables.pojos.Nation;
 import top.zbeboy.isy.domain.tables.pojos.PoliticalLandscape;
 import top.zbeboy.isy.domain.tables.records.PoliticalLandscapeRecord;
 import top.zbeboy.isy.service.PoliticalLandscapeService;

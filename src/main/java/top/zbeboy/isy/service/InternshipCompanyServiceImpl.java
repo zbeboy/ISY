@@ -10,18 +10,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
 import top.zbeboy.isy.domain.tables.daos.InternshipCompanyDao;
-import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCompany;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import java.sql.Date;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COLLEGE;
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COMPANY;
 
 /**
@@ -81,12 +77,12 @@ public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCom
 
     @Override
     public int countAll(InternshipCompany internshipCompany) {
-        return statisticsAllWithCondition(create,INTERNSHIP_COMPANY,INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipCompany.getInternshipReleaseId()));
+        return statisticsAllWithCondition(create, INTERNSHIP_COMPANY, INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipCompany.getInternshipReleaseId()));
     }
 
     @Override
     public int countByCondition(DataTablesUtils<InternshipCompany> dataTablesUtils, InternshipCompany internshipCompany) {
-        return statisticsWithCondition(dataTablesUtils,create,INTERNSHIP_COMPANY,INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipCompany.getInternshipReleaseId()));
+        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_COMPANY, INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipCompany.getInternshipReleaseId()));
     }
 
 
@@ -360,6 +356,6 @@ public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCom
 
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,INTERNSHIP_COMPANY.STUDENT_NUMBER);
+        sortToFinish(selectConditionStep, selectJoinStep, type, INTERNSHIP_COMPANY.STUDENT_NUMBER);
     }
 }

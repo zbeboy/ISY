@@ -2,28 +2,16 @@ package top.zbeboy.isy.service;
 
 
 import org.jooq.DSLContext;
-import org.jooq.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Authorities;
-import top.zbeboy.isy.domain.tables.pojos.College;
-import top.zbeboy.isy.domain.tables.pojos.Department;
-import top.zbeboy.isy.domain.tables.pojos.School;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
 import java.util.List;
-import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.AUTHORITIES;
 

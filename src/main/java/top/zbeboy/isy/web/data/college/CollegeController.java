@@ -248,7 +248,7 @@ public class CollegeController {
     public String collegeMount(@RequestParam("id") int collegeId, ModelMap modelMap) {
         Optional<Record> record = collegeService.findByIdRelation(collegeId);
         College college = new College();
-        if(record.isPresent()){
+        if (record.isPresent()) {
             college = record.get().into(CollegeBean.class);
         }
         modelMap.addAttribute("college", college);

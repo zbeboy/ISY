@@ -3,8 +3,6 @@ package top.zbeboy.isy.service;
 
 import top.zbeboy.isy.domain.tables.pojos.Users;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Created by Administrator on 2016/3/29.
  */

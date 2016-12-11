@@ -11,15 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.GraduationPracticeCollegeDao;
-import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCollege;
-import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import java.sql.Date;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -216,7 +213,7 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
                 }
             }
 
-            sortToFinish(selectConditionStep,selectJoinStep,type,STUDENT.STUDENT_NUMBER);
+            sortToFinish(selectConditionStep, selectJoinStep, type, STUDENT.STUDENT_NUMBER);
         }
     }
 }

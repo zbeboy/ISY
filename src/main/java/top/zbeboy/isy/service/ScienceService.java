@@ -27,11 +27,11 @@ public interface ScienceService {
     /**
      * 通过年级查询全部专业
      *
-     * @param grade 年级
+     * @param grade        年级
      * @param departmentId 系id
      * @return 年级下全部专业
      */
-    Result<Record2<String,Integer>> findByGradeAndDepartmentId(String grade,int departmentId);
+    Result<Record2<String, Integer>> findByGradeAndDepartmentId(String grade, int departmentId);
 
     /**
      * 保存

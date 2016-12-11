@@ -114,8 +114,8 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public void deletes(List<Integer> ids) {
-        ids.forEach(id->
-            applicationDao.deleteById(id)
+        ids.forEach(id ->
+                applicationDao.deleteById(id)
         );
     }
 
@@ -130,9 +130,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             Result<ApplicationRecord> secondLevelRecord = findInIdsAndPid(applicationIds, applicationRecord.getApplicationId());// 查询二级菜单
             String url = getWebPath(applicationRecord.getApplicationUrl());
             if (secondLevelRecord.isEmpty()) { // 无下级菜单
-                li += "<a href=\""+url+"\" class=\"dy_href\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
+                li += "<a href=\"" + url + "\" class=\"dy_href\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
             } else {
-                li += "<a href=\""+url+"\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
+                li += "<a href=\"" + url + "\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
                 // 生成下级菜单
                 li += secondLevelHtml(secondLevelRecord, applicationIds);
             }
@@ -150,9 +150,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             Result<ApplicationRecord> thirdLevelRecord = findInIdsAndPid(applicationIds, applicationRecord.getApplicationId());// 查询三级菜单
             String url = getWebPath(applicationRecord.getApplicationUrl());
             if (thirdLevelRecord.isEmpty()) { // 无下级菜单
-                li += "<a href=\""+url+"\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
+                li += "<a href=\"" + url + "\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
             } else {
-                li += "<a href=\""+url+"\">" + applicationRecord.getApplicationName() + "</a>";
+                li += "<a href=\"" + url + "\">" + applicationRecord.getApplicationName() + "</a>";
                 // 生成下级菜单
                 li += thirdLevelHtml(thirdLevelRecord);
             }
@@ -169,7 +169,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         for (ApplicationRecord applicationRecord : applicationRecords) { // pid = 2级菜单id
             String url = getWebPath(applicationRecord.getApplicationUrl());
             String li = "<li>";
-            li += "<a href=\""+url+"\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
+            li += "<a href=\"" + url + "\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
             li += "</li>";
             ul += li;
         }
@@ -188,7 +188,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         if ("#".equals(url)) {
             url = "javascript:;";
         } else {
-            url = "#"+url;
+            url = "#" + url;
         }
         return url;
     }
@@ -212,8 +212,8 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 .on(APPLICATION.APPLICATION_ID.eq(COLLEGE_APPLICATION.APPLICATION_ID))
                 .where(APPLICATION.APPLICATION_PID.eq(pid).and(COLLEGE_APPLICATION.COLLEGE_ID.eq(collegeId)))
                 .fetch();
-        if(records.isNotEmpty()){
-            applications =  records.into(Application.class);
+        if (records.isNotEmpty()) {
+            applications = records.into(Application.class);
         }
         return applications;
     }
@@ -249,7 +249,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 urlMappingFromText.stream().filter(url -> url.startsWith(applicationRecord.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
             }
         } catch (FileNotFoundException e) {
-            log.error("url-mapping.txt file not found.The exception is {}",e.getMessage());
+            log.error("url-mapping.txt file not found.The exception is {}", e.getMessage());
         }
         return urlMapping;
     }
@@ -330,13 +330,13 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      */
     private List<TreeBean> bindingDataToJson(int id) {
         List<Application> applications = null;
-        if(roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)){
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             applications = findByPid(id);
-        } else if(roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int collegeId = roleService.getRoleCollegeId(record);
-            applications = findByPidAndCollegeId(id,collegeId);
+            applications = findByPidAndCollegeId(id, collegeId);
         }
         List<TreeBean> treeBeens = new ArrayList<>();
         if (ObjectUtils.isEmpty(applications)) {
@@ -470,7 +470,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             }
         }
 
-        sortToFinish(selectConditionStep,selectJoinStep,type,APPLICATION.APPLICATION_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type, APPLICATION.APPLICATION_ID);
     }
 
     /**
@@ -482,7 +482,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     public List<String> getUrlMappingFromTxt() throws FileNotFoundException {
         List<String> urlMapping = new ArrayList<>();
         File file = new File(Workbook.URL_MAPPING_FILE_PATH);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String tempString;
             // 一次读入一行，直到读入null为文件结束
             while ((tempString = reader.readLine()) != null) {
@@ -490,7 +490,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             }
             reader.close();
         } catch (IOException e) {
-            log.error("Read url-mapping.txt error.The exception is {}.",e.getMessage());
+            log.error("Read url-mapping.txt error.The exception is {}.", e.getMessage());
         }
         return urlMapping;
     }

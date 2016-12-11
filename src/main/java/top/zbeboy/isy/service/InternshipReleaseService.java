@@ -74,7 +74,7 @@ public interface InternshipReleaseService {
     /**
      * 分页查询全部
      *
-     * @param paginationUtils   分页工具
+     * @param paginationUtils       分页工具
      * @param internshipReleaseBean 额外参数
      * @return 分页数据
      */
@@ -83,8 +83,8 @@ public interface InternshipReleaseService {
     /**
      * 处理实习返回数据
      *
-     * @param paginationUtils   分页工具
-     * @param records           数据
+     * @param paginationUtils       分页工具
+     * @param records               数据
      * @param internshipReleaseBean 额外参数
      * @return 处理后的数据
      */
@@ -93,7 +93,7 @@ public interface InternshipReleaseService {
     /**
      * 根据条件统计
      *
-     * @param paginationUtils   分页工具
+     * @param paginationUtils       分页工具
      * @param internshipReleaseBean 额外参数
      * @return 统计
      */

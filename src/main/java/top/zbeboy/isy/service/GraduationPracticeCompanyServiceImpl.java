@@ -11,18 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.GraduationPracticeCompanyDao;
-import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany;
-import top.zbeboy.isy.domain.tables.pojos.InternshipCompany;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import java.sql.Date;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.GRADUATION_PRACTICE_COMPANY;
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COMPANY;
 
 /**
  * Created by lenovo on 2016-11-27.
@@ -81,12 +77,12 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
 
     @Override
     public int countAll(GraduationPracticeCompany graduationPracticeCompany) {
-        return statisticsAllWithCondition(create,GRADUATION_PRACTICE_COMPANY,GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCompany.getInternshipReleaseId()));
+        return statisticsAllWithCondition(create, GRADUATION_PRACTICE_COMPANY, GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCompany.getInternshipReleaseId()));
     }
 
     @Override
     public int countByCondition(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils, GraduationPracticeCompany graduationPracticeCompany) {
-        return statisticsWithCondition(dataTablesUtils,create,GRADUATION_PRACTICE_COMPANY,GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCompany.getInternshipReleaseId()));
+        return statisticsWithCondition(dataTablesUtils, create, GRADUATION_PRACTICE_COMPANY, GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCompany.getInternshipReleaseId()));
     }
 
     /**
@@ -357,6 +353,6 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
             }
 
         }
-        sortToFinish(selectConditionStep,selectJoinStep,type,GRADUATION_PRACTICE_COMPANY.STUDENT_NUMBER);
+        sortToFinish(selectConditionStep, selectJoinStep, type, GRADUATION_PRACTICE_COMPANY.STUDENT_NUMBER);
     }
 }

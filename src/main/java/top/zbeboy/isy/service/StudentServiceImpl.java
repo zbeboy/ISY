@@ -107,13 +107,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Result<StudentRecord> findByStudentNumberNeUsername(String username, String studentNumber) {
-        return  create.selectFrom(STUDENT)
+        return create.selectFrom(STUDENT)
                 .where(STUDENT.STUDENT_NUMBER.eq(studentNumber).and(STUDENT.USERNAME.ne(username))).fetch();
     }
 
     @Override
     public Result<StudentRecord> findByIdCardNeUsername(String username, String idCard) {
-        return  create.selectFrom(STUDENT)
+        return create.selectFrom(STUDENT)
                 .where(STUDENT.ID_CARD.eq(idCard).and(STUDENT.USERNAME.ne(username))).fetch();
     }
 
@@ -159,7 +159,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findByUsername(String username) {
-        return studentDao.fetchOne(STUDENT.USERNAME,username);
+        return studentDao.fetchOne(STUDENT.USERNAME, username);
     }
 
     @Override

@@ -3,7 +3,6 @@ package top.zbeboy.isy.web.platform.users;
 import com.octo.captcha.service.CaptchaServiceException;
 import org.joda.time.DateTime;
 import org.jooq.Record;
-import org.jooq.Record1;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -179,7 +177,7 @@ public class UsersController {
      *
      * @return true or false
      */
-    @RequestMapping(value = "/anyone/valid/cur/is/student",method = RequestMethod.GET)
+    @RequestMapping(value = "/anyone/valid/cur/is/student", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils validIsStudent() {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
@@ -195,7 +193,7 @@ public class UsersController {
      *
      * @return true or false
      */
-    @RequestMapping(value = "/anyone/valid/cur/is/staff",method = RequestMethod.GET)
+    @RequestMapping(value = "/anyone/valid/cur/is/staff", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils validIsStaff() {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {

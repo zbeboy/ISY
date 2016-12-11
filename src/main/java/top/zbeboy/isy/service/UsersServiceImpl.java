@@ -225,7 +225,7 @@ public class UsersServiceImpl implements UsersService {
     public Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
         Users users = getUserFromSession();
         Select<AuthoritiesRecord> select = existsAuthoritiesSelect();
-        Result<Record> records ;
+        Result<Record> records;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record> selectConditionStep = create.select()

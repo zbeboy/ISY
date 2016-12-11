@@ -2,7 +2,6 @@ package top.zbeboy.isy.web.data.staff;
 
 import org.joda.time.DateTime;
 import org.jooq.Record;
-import org.jooq.Record1;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
