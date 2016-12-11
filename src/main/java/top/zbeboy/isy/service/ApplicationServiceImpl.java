@@ -404,6 +404,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        sortInteger = APPLICATION.APPLICATION_ID.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("application_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
@@ -470,7 +471,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             }
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type, APPLICATION.APPLICATION_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type);
     }
 
     /**

@@ -58,6 +58,9 @@ public class InternshipReleaseController {
     private InternshipReleaseScienceService internshipReleaseScienceService;
 
     @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
@@ -100,7 +103,7 @@ public class InternshipReleaseController {
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
-        accessRoleCondition(internshipReleaseBean);
+        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
@@ -117,31 +120,10 @@ public class InternshipReleaseController {
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        accessRoleCondition(internshipReleaseBean);
+        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
-    }
-
-    /**
-     * 实习角色数据
-     *
-     * @param internshipReleaseBean 条件
-     */
-    private void accessRoleCondition(InternshipReleaseBean internshipReleaseBean) {
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int departmentId = roleService.getRoleDepartmentId(record);
-            internshipReleaseBean.setDepartmentId(departmentId);
-        }
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = roleService.getRoleCollegeId(record);
-            internshipReleaseBean.setCollegeId(collegeId);
-        }
     }
 
     /**

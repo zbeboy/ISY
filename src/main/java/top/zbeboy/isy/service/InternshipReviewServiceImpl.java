@@ -124,6 +124,15 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
         return count.value1();
     }
 
+    @Override
+    public int countByInternshipReleaseIdAndInternshipApplyState(String internshipReleaseId, int internshipApplyState) {
+        Record1<Integer> count = create.selectCount()
+                .from(INTERNSHIP_APPLY)
+                .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(internshipApplyState)))
+                .fetchOne();
+        return count.value1();
+    }
+
     /**
      * 搜索条件
      *

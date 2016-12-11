@@ -188,6 +188,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        sortInteger = COLLEGE.COLLEGE_ID.desc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("college_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
@@ -221,6 +222,6 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                 }
             }
         }
-        sortToFinish(selectConditionStep, selectJoinStep, type, COLLEGE.COLLEGE_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type);
     }
 }

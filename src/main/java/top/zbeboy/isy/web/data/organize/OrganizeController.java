@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.Organize;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
 import top.zbeboy.isy.service.OrganizeService;
-import top.zbeboy.isy.service.PageParamService;
+import top.zbeboy.isy.service.CommonControllerMethodService;
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -44,7 +44,7 @@ public class OrganizeController {
     private OrganizeService organizeService;
 
     @Resource
-    private PageParamService pageParamService;
+    private CommonControllerMethodService commonControllerMethodService;
 
     /**
      * 通过专业id获取全部年级
@@ -158,7 +158,7 @@ public class OrganizeController {
      */
     @RequestMapping(value = "/web/data/organize/add", method = RequestMethod.GET)
     public String organizeAdd(ModelMap modelMap) {
-        pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/organize/organize_add::#page-wrapper";
     }
 
@@ -179,7 +179,7 @@ public class OrganizeController {
             organizeBean = new OrganizeBean();
         }
         modelMap.addAttribute("organize", organizeBean);
-        pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/organize/organize_edit::#page-wrapper";
     }
 

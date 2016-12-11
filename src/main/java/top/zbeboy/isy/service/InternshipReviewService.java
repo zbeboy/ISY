@@ -28,4 +28,13 @@ public interface InternshipReviewService {
      * @return 统计
      */
     int countByCondition(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean);
+
+    /**
+     * 统计一个实习不同状态下的数据
+     *
+     * @param internshipReleaseId  实习发布id
+     * @param internshipApplyState 状态
+     * @return 统计结果
+     */
+    int countByInternshipReleaseIdAndInternshipApplyState(String internshipReleaseId, int internshipApplyState);
 }

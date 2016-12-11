@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.domain.tables.records.ScienceRecord;
-import top.zbeboy.isy.service.PageParamService;
+import top.zbeboy.isy.service.CommonControllerMethodService;
 import top.zbeboy.isy.service.ScienceService;
 import top.zbeboy.isy.web.bean.data.science.ScienceBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -43,7 +43,7 @@ public class ScienceController {
     private ScienceService scienceService;
 
     @Resource
-    private PageParamService pageParamService;
+    private CommonControllerMethodService commonControllerMethodService;
 
     /**
      * 通过系id获取全部专业
@@ -129,7 +129,7 @@ public class ScienceController {
      */
     @RequestMapping(value = "/web/data/science/add", method = RequestMethod.GET)
     public String scienceAdd(ModelMap modelMap) {
-        pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/science/science_add::#page-wrapper";
     }
 
@@ -150,7 +150,7 @@ public class ScienceController {
             scienceBean = new ScienceBean();
         }
         modelMap.addAttribute("science", scienceBean);
-        pageParamService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/science/science_edit::#page-wrapper";
     }
 

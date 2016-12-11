@@ -97,6 +97,7 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        sortTimestamp = SYSTEM_MAILBOX.SEND_TIME.desc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_mailbox_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
@@ -124,6 +125,6 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type, SYSTEM_MAILBOX.SEND_TIME);
+        sortToFinish(selectConditionStep, selectJoinStep, type);
     }
 }

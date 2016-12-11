@@ -90,13 +90,13 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="review" data-id="{{internshipReleaseId}}">进行审核</a>
-                    <a href="javascript:;" class="pass_apply" data-id="{{internshipReleaseId}}">已通过列表</a>
-                    <a href="javascript:;" class="fail_apply" data-id="{{internshipReleaseId}}">未通过列表</a>
-                    <a href="javascript:;" class="basic_apply" data-id="{{internshipReleaseId}}">基本信息修改申请</a>
-                    <a href="javascript:;" class="company_apply" data-id="{{internshipReleaseId}}">单位信息修改申请</a>
-                    <a href="javascript:;" class="basic_fill" data-id="{{internshipReleaseId}}">基本信息填写中</a>
-                    <a href="javascript:;" class="company_fill" data-id="{{internshipReleaseId}}">单位信息填写中</a>
+                    <a href="javascript:;" class="review" data-id="{{internshipReleaseId}}">进行审核 <span class="badge">{{waitTotalData}}</span></a>
+                    <a href="javascript:;" class="pass_apply" data-id="{{internshipReleaseId}}">已通过列表 <span class="badge">{{passTotalData}}</span></a>
+                    <a href="javascript:;" class="fail_apply" data-id="{{internshipReleaseId}}">未通过列表 <span class="badge">{{failTotalData}}</span></a>
+                    <a href="javascript:;" class="basic_apply" data-id="{{internshipReleaseId}}">基本信息修改申请 <span class="badge">{{basicApplyTotalData}}</span></a>
+                    <a href="javascript:;" class="company_apply" data-id="{{internshipReleaseId}}">单位信息修改申请 <span class="badge">{{companyApplyTotalData}}</span></a>
+                    <a href="javascript:;" class="basic_fill" data-id="{{internshipReleaseId}}">基本信息填写中 <span class="badge">{{basicFillTotalData}}</span></a>
+                    <a href="javascript:;" class="company_fill" data-id="{{internshipReleaseId}}">单位信息填写中 <span class="badge">{{companyFillTotalData}}</span></a>
                 </div>
             </div>
             {{/each}}

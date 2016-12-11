@@ -192,9 +192,8 @@ public class DataTablesPlugin<T> {
      * @param selectConditionStep  条件1
      * @param selectJoinStep       条件2
      * @param type                 类型
-     * @param defaultSortCondition 默认排序
      */
-    public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type, TableField defaultSortCondition) {
+    public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         if (!ObjectUtils.isEmpty(sortInteger)) {
             if (type == CONDITION_TYPE) {
                 selectConditionStep.orderBy(sortInteger);
@@ -235,14 +234,6 @@ public class DataTablesPlugin<T> {
 
             if (type == JOIN_TYPE) {
                 selectJoinStep.orderBy(sortTimestamp);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(defaultSortCondition.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(defaultSortCondition.desc());
             }
         }
     }

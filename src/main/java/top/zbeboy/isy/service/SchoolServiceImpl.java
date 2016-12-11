@@ -129,6 +129,7 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        sortInteger = SCHOOL.SCHOOL_ID.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("school_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
@@ -156,6 +157,6 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type, SCHOOL.SCHOOL_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type);
     }
 }

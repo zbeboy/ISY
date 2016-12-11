@@ -426,6 +426,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        sortInteger = ROLE.ROLE_ID.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("role_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
@@ -461,6 +462,6 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type, ROLE.ROLE_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type);
     }
 }

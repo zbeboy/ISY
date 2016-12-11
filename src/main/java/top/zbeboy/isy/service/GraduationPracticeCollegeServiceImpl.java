@@ -196,6 +196,7 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        sortString = STUDENT.STUDENT_NUMBER.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
@@ -213,7 +214,7 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
                 }
             }
 
-            sortToFinish(selectConditionStep, selectJoinStep, type, STUDENT.STUDENT_NUMBER);
+            sortToFinish(selectConditionStep, selectJoinStep, type);
         }
     }
 }

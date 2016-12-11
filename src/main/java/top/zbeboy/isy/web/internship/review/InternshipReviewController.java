@@ -18,6 +18,7 @@ import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
+import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
@@ -54,12 +55,6 @@ public class InternshipReviewController {
     private InternshipReleaseScienceService internshipReleaseScienceService;
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
-    private RoleService roleService;
-
-    @Resource
     private OrganizeService organizeService;
 
     @Resource
@@ -77,6 +72,9 @@ public class InternshipReviewController {
     @Resource
     private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
     /**
      * 实习审核
      *
@@ -85,6 +83,32 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/menu/internship/review", method = RequestMethod.GET)
     public String internshipReview() {
         return "/web/internship/review/internship_review::#page-wrapper";
+    }
+
+    /**
+     * 获取实习审核数据
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/review/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        Byte isDel = 0;
+        InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
+        internshipReleaseBean.setInternshipReleaseIsDel(isDel);
+        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
+        internshipReleaseBeens.forEach(r->{
+            r.setWaitTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),1));
+            r.setPassTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),2));
+            r.setFailTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),3));
+            r.setBasicApplyTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),4));
+            r.setCompanyApplyTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),6));
+            r.setBasicFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),5));
+            r.setCompanyFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),7));
+        });
+        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**

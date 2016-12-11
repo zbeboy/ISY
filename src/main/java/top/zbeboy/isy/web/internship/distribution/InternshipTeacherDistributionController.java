@@ -59,9 +59,6 @@ public class InternshipTeacherDistributionController {
     @Resource
     private UsersService usersService;
 
-    @Resource
-    private RoleService roleService;
-
     /**
      * 实习教师分配
      *

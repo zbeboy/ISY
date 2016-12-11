@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/12/6.
  */
 //# sourceURL=internship_pass.js
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
+require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -248,21 +248,13 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         $(tableData).delegate('.save_apply', "click", function () {
             var form = $(this).parent().prev().find('form');
-            if(form){
-                $.post(web_path + ajax_url.save, form.serialize(), function (data) {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'info',
-                        showCloseButton: true
-                    });
-                });
-            } else {
+            $.post(web_path + ajax_url.save, form.serialize(), function (data) {
                 Messenger().post({
-                    message: '没有可以保存的数据',
+                    message: data.msg,
                     type: 'info',
                     showCloseButton: true
                 });
-            }
+            });
         });
 
         /*

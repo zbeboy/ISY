@@ -284,6 +284,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        sortInteger = STUDENT.STUDENT_ID.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("internship_title".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
@@ -383,6 +384,6 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type, STUDENT.STUDENT_ID);
+        sortToFinish(selectConditionStep, selectJoinStep, type);
     }
 }
