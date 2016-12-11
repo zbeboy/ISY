@@ -396,8 +396,10 @@ public class UsersController {
             } else {
                 ajaxUtils.fail().msg("该邮箱未激活");
             }
+        } else {
+            ajaxUtils.fail().msg("该邮箱不存在");
         }
-        return new AjaxUtils().fail().msg("邮箱不存在");
+        return ajaxUtils;
     }
 
     /**
