@@ -380,6 +380,27 @@ public class UsersController {
     }
 
     /**
+     * 忘记密码邮箱验证
+     *
+     * @param email 邮箱
+     * @return true or false
+     */
+    @RequestMapping(value = "/user/login/valid/email", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validEmail(@RequestParam("email") String email) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        Users users = usersService.findByUsername(email);
+        if (!ObjectUtils.isEmpty(users)) {
+            if(users.getVerifyMailbox() == 1){
+                ajaxUtils.success().msg("邮箱正常");
+            } else {
+                ajaxUtils.fail().msg("该邮箱未激活");
+            }
+        }
+        return new AjaxUtils().fail().msg("邮箱不存在");
+    }
+
+    /**
      * 忘记密码邮件
      *
      * @param email 账号
