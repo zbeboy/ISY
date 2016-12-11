@@ -5,6 +5,7 @@ import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by zbeboy on 2016/9/20.
@@ -23,6 +24,7 @@ public class DataTablesPlugin<T> {
     protected SortField<String> sortString;
     protected SortField<Byte> sortByte;
     protected SortField<Date> sortDate;
+    protected SortField<Timestamp> sortTimestamp;
 
     /**
      * 查询全部数据
@@ -225,6 +227,14 @@ public class DataTablesPlugin<T> {
 
             if (type == JOIN_TYPE) {
                 selectJoinStep.orderBy(sortDate);
+            }
+        } else if (!ObjectUtils.isEmpty(sortTimestamp)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(sortTimestamp);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(sortTimestamp);
             }
         } else {
             if (type == CONDITION_TYPE) {

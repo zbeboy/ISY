@@ -118,60 +118,24 @@ public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLan
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("political_landscape_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.asc();
+                    sortInteger = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.asc();
                 } else {
-                    a = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc();
+                    sortInteger = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc();
                 }
             }
 
             if ("political_landscape_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
+                    sortString = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
                 } else {
-                    b = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
+                    sortString = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
                 }
             }
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID);
     }
 }

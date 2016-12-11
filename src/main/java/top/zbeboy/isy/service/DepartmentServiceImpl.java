@@ -299,85 +299,48 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("department_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = DEPARTMENT.DEPARTMENT_ID.asc();
+                    sortInteger = DEPARTMENT.DEPARTMENT_ID.asc();
                 } else {
-                    a = DEPARTMENT.DEPARTMENT_ID.desc();
+                    sortInteger = DEPARTMENT.DEPARTMENT_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCHOOL.SCHOOL_NAME.asc();
+                    sortString = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    b = SCHOOL.SCHOOL_NAME.desc();
+                    sortString = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = COLLEGE.COLLEGE_NAME.asc();
+                    sortString = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    b = COLLEGE.COLLEGE_NAME.desc();
+                    sortString = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortString = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
-                    b = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortString = DEPARTMENT.DEPARTMENT_NAME.desc();
                 }
             }
 
             if ("department_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    c = DEPARTMENT.DEPARTMENT_IS_DEL.asc();
+                    sortByte = DEPARTMENT.DEPARTMENT_IS_DEL.asc();
                 } else {
-                    c = DEPARTMENT.DEPARTMENT_IS_DEL.desc();
+                    sortByte = DEPARTMENT.DEPARTMENT_IS_DEL.desc();
                 }
             }
 
         }
-
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(DEPARTMENT.DEPARTMENT_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(DEPARTMENT.DEPARTMENT_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,DEPARTMENT.DEPARTMENT_ID);
     }
 }

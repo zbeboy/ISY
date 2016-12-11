@@ -429,77 +429,41 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("role_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = ROLE.ROLE_NAME.asc();
+                    sortString = ROLE.ROLE_NAME.asc();
                 } else {
-                    b = ROLE.ROLE_NAME.desc();
+                    sortString = ROLE.ROLE_NAME.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCHOOL.SCHOOL_NAME.asc();
+                    sortString = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    b = SCHOOL.SCHOOL_NAME.desc();
+                    sortString = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = COLLEGE.COLLEGE_NAME.asc();
+                    sortString = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    b = COLLEGE.COLLEGE_NAME.desc();
+                    sortString = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("role_en_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = ROLE.ROLE_EN_NAME.asc();
+                    sortString = ROLE.ROLE_EN_NAME.asc();
                 } else {
-                    b = ROLE.ROLE_EN_NAME.desc();
+                    sortString = ROLE.ROLE_EN_NAME.desc();
                 }
             }
 
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(ROLE.ROLE_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(ROLE.ROLE_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,ROLE.ROLE_ID);
     }
 }

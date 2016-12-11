@@ -333,93 +333,57 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("science_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SCIENCE.SCIENCE_ID.asc();
+                    sortInteger = SCIENCE.SCIENCE_ID.asc();
                 } else {
-                    a = SCIENCE.SCIENCE_ID.desc();
+                    sortInteger = SCIENCE.SCIENCE_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCHOOL.SCHOOL_NAME.asc();
+                    sortString = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    b = SCHOOL.SCHOOL_NAME.desc();
+                    sortString = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = COLLEGE.COLLEGE_NAME.asc();
+                    sortString = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    b = COLLEGE.COLLEGE_NAME.desc();
+                    sortString = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortString = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
-                    b = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortString = DEPARTMENT.DEPARTMENT_NAME.desc();
                 }
             }
 
             if ("science_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCIENCE.SCIENCE_NAME.asc();
+                    sortString = SCIENCE.SCIENCE_NAME.asc();
                 } else {
-                    b = SCIENCE.SCIENCE_NAME.desc();
+                    sortString = SCIENCE.SCIENCE_NAME.desc();
                 }
             }
 
             if ("science_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    c = SCIENCE.SCIENCE_IS_DEL.asc();
+                    sortByte = SCIENCE.SCIENCE_IS_DEL.asc();
                 } else {
-                    c = SCIENCE.SCIENCE_IS_DEL.desc();
+                    sortByte = SCIENCE.SCIENCE_IS_DEL.desc();
                 }
             }
 
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(SCIENCE.SCIENCE_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(SCIENCE.SCIENCE_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,SCIENCE.SCIENCE_ID);
     }
 }

@@ -115,76 +115,49 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<String> a = null;
-        SortField<Timestamp> b = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_log_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
+                    sortString = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
                 } else {
-                    a = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
+                    sortString = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SYSTEM_LOG.USERNAME.asc();
+                    sortString = SYSTEM_LOG.USERNAME.asc();
                 } else {
-                    a = SYSTEM_LOG.USERNAME.desc();
+                    sortString = SYSTEM_LOG.USERNAME.desc();
                 }
             }
 
             if ("behavior".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SYSTEM_LOG.BEHAVIOR.asc();
+                    sortString = SYSTEM_LOG.BEHAVIOR.asc();
                 } else {
-                    a = SYSTEM_LOG.BEHAVIOR.desc();
+                    sortString = SYSTEM_LOG.BEHAVIOR.desc();
                 }
             }
 
             if ("operating_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SYSTEM_LOG.OPERATING_TIME.asc();
+                    sortTimestamp = SYSTEM_LOG.OPERATING_TIME.asc();
                 } else {
-                    b = SYSTEM_LOG.OPERATING_TIME.desc();
+                    sortTimestamp = SYSTEM_LOG.OPERATING_TIME.desc();
                 }
             }
 
             if ("ip_address".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SYSTEM_LOG.IP_ADDRESS.asc();
+                    sortString = SYSTEM_LOG.IP_ADDRESS.asc();
                 } else {
-                    a = SYSTEM_LOG.IP_ADDRESS.desc();
+                    sortString = SYSTEM_LOG.IP_ADDRESS.desc();
                 }
             }
 
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(SYSTEM_LOG.OPERATING_TIME.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(SYSTEM_LOG.OPERATING_TIME.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,SYSTEM_LOG.OPERATING_TIME);
     }
 }

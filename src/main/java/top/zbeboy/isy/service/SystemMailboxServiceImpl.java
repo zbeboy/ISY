@@ -97,60 +97,33 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<String> a = null;
-        SortField<Timestamp> b = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_mailbox_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
+                    sortString = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
                 } else {
-                    a = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
+                    sortString = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
                 }
             }
 
             if ("send_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SYSTEM_MAILBOX.SEND_TIME.asc();
+                    sortTimestamp = SYSTEM_MAILBOX.SEND_TIME.asc();
                 } else {
-                    b = SYSTEM_MAILBOX.SEND_TIME.desc();
+                    sortTimestamp = SYSTEM_MAILBOX.SEND_TIME.desc();
                 }
             }
 
             if ("accept_mail".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SYSTEM_MAILBOX.ACCEPT_MAIL.asc();
+                    sortString = SYSTEM_MAILBOX.ACCEPT_MAIL.asc();
                 } else {
-                    a = SYSTEM_MAILBOX.ACCEPT_MAIL.desc();
+                    sortString = SYSTEM_MAILBOX.ACCEPT_MAIL.desc();
                 }
             }
 
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(SYSTEM_MAILBOX.SEND_TIME.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(SYSTEM_MAILBOX.SEND_TIME.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,SYSTEM_MAILBOX.SEND_TIME);
     }
 }

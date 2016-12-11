@@ -302,85 +302,49 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = USERS.REAL_NAME.asc();
+                    sortString = USERS.REAL_NAME.asc();
                 } else {
-                    b = USERS.REAL_NAME.desc();
+                    sortString = USERS.REAL_NAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = STUDENT.STUDENT_NUMBER.asc();
+                    sortString = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    b = STUDENT.STUDENT_NUMBER.desc();
+                    sortString = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("science_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCIENCE.SCIENCE_NAME.asc();
+                    sortString = SCIENCE.SCIENCE_NAME.asc();
                 } else {
-                    b = SCIENCE.SCIENCE_NAME.desc();
+                    sortString = SCIENCE.SCIENCE_NAME.desc();
                 }
             }
 
             if ("organize_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = ORGANIZE.ORGANIZE_NAME.asc();
+                    sortString = ORGANIZE.ORGANIZE_NAME.asc();
                 } else {
-                    b = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortString = ORGANIZE.ORGANIZE_NAME.desc();
                 }
             }
 
             if ("internship_apply_state".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.asc();
+                    sortInteger = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.asc();
                 } else {
-                    a = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.desc();
+                    sortInteger = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.desc();
                 }
             }
 
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(STUDENT.STUDENT_NUMBER.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(STUDENT.STUDENT_NUMBER.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,STUDENT.STUDENT_NUMBER);
     }
 }

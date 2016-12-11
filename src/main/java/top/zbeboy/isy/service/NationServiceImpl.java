@@ -118,60 +118,24 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("nation_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = NATION.NATION_ID.asc();
+                    sortInteger = NATION.NATION_ID.asc();
                 } else {
-                    a = NATION.NATION_ID.desc();
+                    sortInteger = NATION.NATION_ID.desc();
                 }
             }
 
             if ("nation_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = NATION.NATION_NAME.asc();
+                    sortString = NATION.NATION_NAME.asc();
                 } else {
-                    b = NATION.NATION_NAME.desc();
+                    sortString = NATION.NATION_NAME.desc();
                 }
             }
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(NATION.NATION_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(NATION.NATION_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,NATION.NATION_ID);
     }
 }

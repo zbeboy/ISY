@@ -404,109 +404,73 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("application_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = APPLICATION.APPLICATION_NAME.asc();
+                    sortString = APPLICATION.APPLICATION_NAME.asc();
                 } else {
-                    b = APPLICATION.APPLICATION_NAME.desc();
+                    sortString = APPLICATION.APPLICATION_NAME.desc();
                 }
             }
 
             if ("application_en_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = APPLICATION.APPLICATION_EN_NAME.asc();
+                    sortString = APPLICATION.APPLICATION_EN_NAME.asc();
                 } else {
-                    b = APPLICATION.APPLICATION_EN_NAME.desc();
+                    sortString = APPLICATION.APPLICATION_EN_NAME.desc();
                 }
             }
 
             if ("application_pid".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = APPLICATION.APPLICATION_PID.asc();
+                    sortInteger = APPLICATION.APPLICATION_PID.asc();
                 } else {
-                    a = APPLICATION.APPLICATION_PID.desc();
+                    sortInteger = APPLICATION.APPLICATION_PID.desc();
                 }
             }
 
             if ("application_url".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = APPLICATION.APPLICATION_URL.asc();
+                    sortString = APPLICATION.APPLICATION_URL.asc();
                 } else {
-                    b = APPLICATION.APPLICATION_URL.desc();
+                    sortString = APPLICATION.APPLICATION_URL.desc();
                 }
             }
 
             if ("icon".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = APPLICATION.ICON.asc();
+                    sortString = APPLICATION.ICON.asc();
                 } else {
-                    b = APPLICATION.ICON.desc();
+                    sortString = APPLICATION.ICON.desc();
                 }
             }
 
             if ("application_sort".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = APPLICATION.APPLICATION_SORT.asc();
+                    sortInteger = APPLICATION.APPLICATION_SORT.asc();
                 } else {
-                    a = APPLICATION.APPLICATION_SORT.desc();
+                    sortInteger = APPLICATION.APPLICATION_SORT.desc();
                 }
             }
 
             if ("application_code".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = APPLICATION.APPLICATION_CODE.asc();
+                    sortString = APPLICATION.APPLICATION_CODE.asc();
                 } else {
-                    b = APPLICATION.APPLICATION_CODE.desc();
+                    sortString = APPLICATION.APPLICATION_CODE.desc();
                 }
             }
 
             if ("application_data_url_start_with".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = APPLICATION.APPLICATION_DATA_URL_START_WITH.asc();
+                    sortString = APPLICATION.APPLICATION_DATA_URL_START_WITH.asc();
                 } else {
-                    b = APPLICATION.APPLICATION_DATA_URL_START_WITH.desc();
+                    sortString = APPLICATION.APPLICATION_DATA_URL_START_WITH.desc();
                 }
             }
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(APPLICATION.APPLICATION_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(APPLICATION.APPLICATION_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,APPLICATION.APPLICATION_ID);
     }
 
     /**

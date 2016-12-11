@@ -83,7 +83,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
 
     @Override
     public int countByCondition(DataTablesUtils<CollegeBean> dataTablesUtils) {
-        Record1<Integer> count ;
+        Record1<Integer> count;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
@@ -188,77 +188,39 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("college_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = COLLEGE.COLLEGE_ID.asc();
+                    sortInteger = COLLEGE.COLLEGE_ID.asc();
                 } else {
-                    a = COLLEGE.COLLEGE_ID.desc();
+                    sortInteger = COLLEGE.COLLEGE_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCHOOL.SCHOOL_NAME.asc();
+                    sortString = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    b = SCHOOL.SCHOOL_NAME.desc();
+                    sortString = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = COLLEGE.COLLEGE_NAME.asc();
+                    sortString = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    b = COLLEGE.COLLEGE_NAME.desc();
+                    sortString = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("college_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    c = COLLEGE.COLLEGE_IS_DEL.asc();
+                    sortByte = COLLEGE.COLLEGE_IS_DEL.asc();
                 } else {
-                    c = COLLEGE.COLLEGE_IS_DEL.desc();
+                    sortByte = COLLEGE.COLLEGE_IS_DEL.desc();
                 }
             }
-
         }
-
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(COLLEGE.COLLEGE_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(COLLEGE.COLLEGE_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep, selectJoinStep, type, COLLEGE.COLLEGE_ID);
     }
 }

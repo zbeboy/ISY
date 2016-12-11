@@ -129,69 +129,33 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("school_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    a = SCHOOL.SCHOOL_ID.asc();
+                    sortInteger = SCHOOL.SCHOOL_ID.asc();
                 } else {
-                    a = SCHOOL.SCHOOL_ID.desc();
+                    sortInteger = SCHOOL.SCHOOL_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCHOOL.SCHOOL_NAME.asc();
+                    sortString = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    b = SCHOOL.SCHOOL_NAME.desc();
+                    sortString = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("school_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    c = SCHOOL.SCHOOL_IS_DEL.asc();
+                    sortByte = SCHOOL.SCHOOL_IS_DEL.asc();
                 } else {
-                    c = SCHOOL.SCHOOL_IS_DEL.desc();
+                    sortByte = SCHOOL.SCHOOL_IS_DEL.desc();
                 }
             }
 
         }
 
-        if (!ObjectUtils.isEmpty(a)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(a);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(a);
-            }
-
-        } else if (!ObjectUtils.isEmpty(b)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(b);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(b);
-            }
-        } else if (!ObjectUtils.isEmpty(c)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(c);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(c);
-            }
-        } else {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(SCHOOL.SCHOOL_ID.desc());
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(SCHOOL.SCHOOL_ID.desc());
-            }
-        }
+        sortToFinish(selectConditionStep,selectJoinStep,type,SCHOOL.SCHOOL_ID);
     }
 }
