@@ -4,6 +4,8 @@ import org.jooq.*;
 import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.sql.Date;
+
 /**
  * Created by zbeboy on 2016/9/20.
  * datatables 分页插件
@@ -13,6 +15,14 @@ public class DataTablesPlugin<T> {
     public static final int CONDITION_TYPE = 0;
 
     public static final int JOIN_TYPE = 1;
+
+    /*
+    排序
+     */
+    protected SortField<Integer> sortInteger;
+    protected SortField<String> sortString;
+    protected SortField<Byte> sortByte;
+    protected SortField<Date> sortDate;
 
     /**
      * 查询全部数据
@@ -43,6 +53,36 @@ public class DataTablesPlugin<T> {
     }
 
     /**
+     * 查询全部数据 with 额外条件
+     *
+     * @param dataTablesUtils datatables工具类
+     * @param create          jooq create.
+     * @param table           jooq table.
+     * @param extraCondition  额外条件
+     * @return 全部数据
+     */
+    public Result<Record> dataPagingQueryAllWithCondition(DataTablesUtils<T> dataTablesUtils, final DSLContext create, TableLike<?> table, Condition extraCondition) {
+        Result<Record> records;
+        Condition a = searchCondition(dataTablesUtils);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(table)
+                    .where(extraCondition);
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            records = selectConditionStep.fetch();
+        } else {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(table)
+                    .where(extraCondition.and(a));
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            records = selectConditionStep.fetch();
+        }
+        return records;
+    }
+
+    /**
      * 统计全部
      *
      * @param create jooq create.
@@ -52,6 +92,22 @@ public class DataTablesPlugin<T> {
     public int statisticsAll(final DSLContext create, TableLike<?> table) {
         Record1<Integer> count = create.selectCount()
                 .from(table)
+                .fetchOne();
+        return count.value1();
+    }
+
+    /**
+     * 统计全部 with 额外条件
+     *
+     * @param create         jooq create.
+     * @param table          jooq table.
+     * @param extraCondition 额外条件
+     * @return 统计
+     */
+    public int statisticsAllWithCondition(final DSLContext create, TableLike<?> table, Condition extraCondition) {
+        Record1<Integer> count = create.selectCount()
+                .from(table)
+                .where(extraCondition)
                 .fetchOne();
         return count.value1();
     }
@@ -81,6 +137,32 @@ public class DataTablesPlugin<T> {
     }
 
     /**
+     * 根据条件统计
+     *
+     * @param dataTablesUtils datatables工具类
+     * @param create          jooq create.
+     * @param table           jooq table.
+     * @param extraCondition  额外条件
+     * @return 统计
+     */
+    public int statisticsWithCondition(DataTablesUtils<T> dataTablesUtils, final DSLContext create, TableLike<?> table, Condition extraCondition) {
+        Record1<Integer> count;
+        Condition a = searchCondition(dataTablesUtils);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                    .from(table)
+                    .where(extraCondition);
+            count = selectConditionStep.fetchOne();
+        } else {
+            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                    .from(table)
+                    .where(a);
+            count = selectConditionStep.fetchOne();
+        }
+        return count.value1();
+    }
+
+    /**
      * 查询条件，需要自行覆盖
      *
      * @param dataTablesUtils datatables工具类
@@ -100,6 +182,59 @@ public class DataTablesPlugin<T> {
      */
     public void sortCondition(DataTablesUtils<T> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
 
+    }
+
+    /**
+     * 排序辅助
+     *
+     * @param selectConditionStep  条件1
+     * @param selectJoinStep       条件2
+     * @param type                 类型
+     * @param defaultSortCondition 默认排序
+     */
+    public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type, TableField defaultSortCondition) {
+        if (!ObjectUtils.isEmpty(sortInteger)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(sortInteger);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(sortInteger);
+            }
+
+        } else if (!ObjectUtils.isEmpty(sortString)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(sortString);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(sortString);
+            }
+        } else if (!ObjectUtils.isEmpty(sortByte)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(sortByte);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(sortByte);
+            }
+        } else if (!ObjectUtils.isEmpty(sortDate)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(sortDate);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(sortDate);
+            }
+        } else {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(defaultSortCondition.desc());
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(defaultSortCondition.desc());
+            }
+        }
     }
 
     /**

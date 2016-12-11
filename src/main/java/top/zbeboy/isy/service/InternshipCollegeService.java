@@ -1,7 +1,10 @@
 package top.zbeboy.isy.service;
 
 import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
+import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.Optional;
 
@@ -48,4 +51,26 @@ public interface InternshipCollegeService {
      * @param studentId           学生id
      */
     void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 分页查询
+     *
+     * @param dataTablesUtils datatables工具类
+     * @return 分页数据
+     */
+    Result<Record> findAllByPage(DataTablesUtils<InternshipCollege> dataTablesUtils,InternshipCollege internshipCollege);
+
+    /**
+     * 系总数
+     *
+     * @return 总数
+     */
+    int countAll(InternshipCollege internshipCollege);
+
+    /**
+     * 根据条件查询总数
+     *
+     * @return 条件查询总数
+     */
+    int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils,InternshipCollege internshipCollege);
 }

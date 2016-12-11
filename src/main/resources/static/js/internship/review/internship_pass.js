@@ -248,13 +248,21 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         $(tableData).delegate('.save_apply', "click", function () {
             var form = $(this).parent().prev().find('form');
-            $.post(web_path + ajax_url.save, form.serialize(), function (data) {
+            if(form){
+                $.post(web_path + ajax_url.save, form.serialize(), function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'info',
+                        showCloseButton: true
+                    });
+                });
+            } else {
                 Messenger().post({
-                    message: data.msg,
+                    message: '没有可以保存的数据',
                     type: 'info',
                     showCloseButton: true
                 });
-            });
+            }
         });
 
         /*

@@ -1,30 +1,38 @@
 package top.zbeboy.isy.service;
 
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.Record;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
 import top.zbeboy.isy.domain.tables.daos.InternshipReleaseDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
+import top.zbeboy.isy.service.plugin.DataTablesPlugin;
+import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
+import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
+import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
 
+import java.sql.Date;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COLLEGE;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-11-27.
  */
 @Service("internshipCollegeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class InternshipCollegeServiceImpl implements InternshipCollegeService {
+public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCollege> implements InternshipCollegeService {
 
     private final Logger log = LoggerFactory.getLogger(InternshipCollegeServiceImpl.class);
 
@@ -67,5 +75,294 @@ public class InternshipCollegeServiceImpl implements InternshipCollegeService {
         create.deleteFrom(INTERNSHIP_COLLEGE)
                 .where(INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_COLLEGE.STUDENT_ID.eq(studentId)))
                 .execute();
+    }
+
+    @Override
+    public Result<Record> findAllByPage(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege) {
+        return dataPagingQueryAllWithCondition(dataTablesUtils, create, INTERNSHIP_COLLEGE, INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
+    }
+
+    @Override
+    public int countAll(InternshipCollege internshipCollege) {
+        return statisticsAllWithCondition(create,INTERNSHIP_COLLEGE,INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
+    }
+
+    @Override
+    public int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege) {
+        return statisticsWithCondition(dataTablesUtils,create,INTERNSHIP_COLLEGE,INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
+    }
+
+    /**
+     * 全局搜索条件
+     *
+     * @param dataTablesUtils
+     * @return 搜索条件
+     */
+    @Override
+    public Condition searchCondition(DataTablesUtils<InternshipCollege> dataTablesUtils) {
+        Condition a = null;
+        JSONObject search = dataTablesUtils.getSearch();
+        if (!ObjectUtils.isEmpty(search)) {
+            String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
+            String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
+            String collegeClass = StringUtils.trimWhitespace(search.getString("collegeClass"));
+            String phoneNumber = StringUtils.trimWhitespace(search.getString("phoneNumber"));
+            String headmaster = StringUtils.trimWhitespace(search.getString("headmaster"));
+            String schoolGuidanceTeacher = StringUtils.trimWhitespace(search.getString("schoolGuidanceTeacher"));
+
+            if (StringUtils.hasLength(studentName)) {
+                a = INTERNSHIP_COLLEGE.STUDENT_NAME.like(SQLQueryUtils.likeAllParam(studentName));
+            }
+
+            if (StringUtils.hasLength(studentNumber)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = INTERNSHIP_COLLEGE.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
+                } else {
+                    a = a.and(INTERNSHIP_COLLEGE.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
+                }
+            }
+
+            if (StringUtils.hasLength(collegeClass)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = INTERNSHIP_COLLEGE.COLLEGE_CLASS.like(SQLQueryUtils.likeAllParam(collegeClass));
+                } else {
+                    a = a.and(INTERNSHIP_COLLEGE.COLLEGE_CLASS.like(SQLQueryUtils.likeAllParam(collegeClass)));
+                }
+            }
+
+            if (StringUtils.hasLength(phoneNumber)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = INTERNSHIP_COLLEGE.PHONE_NUMBER.like(SQLQueryUtils.likeAllParam(phoneNumber));
+                } else {
+                    a = a.and(INTERNSHIP_COLLEGE.PHONE_NUMBER.like(SQLQueryUtils.likeAllParam(phoneNumber)));
+                }
+            }
+
+            if (StringUtils.hasLength(headmaster)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = INTERNSHIP_COLLEGE.HEADMASTER.like(SQLQueryUtils.likeAllParam(headmaster));
+                } else {
+                    a = a.and(INTERNSHIP_COLLEGE.HEADMASTER.like(SQLQueryUtils.likeAllParam(headmaster)));
+                }
+            }
+
+            if (StringUtils.hasLength(schoolGuidanceTeacher)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(schoolGuidanceTeacher));
+                } else {
+                    a = a.and(INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(schoolGuidanceTeacher)));
+                }
+            }
+        }
+        return a;
+    }
+
+    /**
+     * 数据排序
+     *
+     * @param dataTablesUtils
+     * @param selectConditionStep
+     */
+    @Override
+    public void sortCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
+        String orderColumnName = dataTablesUtils.getOrderColumnName();
+        String orderDir = dataTablesUtils.getOrderDir();
+        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        if (StringUtils.hasLength(orderColumnName)) {
+            if ("student_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.STUDENT_NAME.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.STUDENT_NAME.desc();
+                }
+            }
+
+            if ("student_number".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.STUDENT_NUMBER.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.STUDENT_NUMBER.desc();
+                }
+            }
+
+            if ("college_class".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.COLLEGE_CLASS.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.COLLEGE_CLASS.desc();
+                }
+            }
+
+            if ("student_sex".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.STUDENT_SEX.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.STUDENT_SEX.desc();
+                }
+            }
+
+            if ("phone_number".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.PHONE_NUMBER.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.PHONE_NUMBER.desc();
+                }
+            }
+
+            if ("qq_mailbox".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.QQ_MAILBOX.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.QQ_MAILBOX.desc();
+                }
+            }
+
+            if ("parental_contact".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.PARENTAL_CONTACT.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.PARENTAL_CONTACT.desc();
+                }
+            }
+
+            if ("headmaster".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.HEADMASTER.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.HEADMASTER.desc();
+                }
+            }
+
+            if ("headmaster_contact".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.HEADMASTER_CONTACT.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.HEADMASTER_CONTACT.desc();
+                }
+            }
+
+            if ("internship_college_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_NAME.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_NAME.desc();
+                }
+            }
+
+            if ("internship_college_address".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_ADDRESS.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_ADDRESS.desc();
+                }
+            }
+
+            if ("internship_college_contacts".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_CONTACTS.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_CONTACTS.desc();
+                }
+            }
+
+            if ("internship_college_tel".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_TEL.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_TEL.desc();
+                }
+            }
+
+            if ("school_guidance_teacher".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER.desc();
+                }
+            }
+
+            if ("school_guidance_teacher_tel".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER_TEL.asc();
+                } else {
+                    sortString = INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER_TEL.desc();
+                }
+            }
+
+            if ("start_time".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortDate = INTERNSHIP_COLLEGE.START_TIME.asc();
+                } else {
+                    sortDate = INTERNSHIP_COLLEGE.START_TIME.desc();
+                }
+            }
+
+            if ("end_time".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortDate = INTERNSHIP_COLLEGE.END_TIME.asc();
+                } else {
+                    sortDate = INTERNSHIP_COLLEGE.END_TIME.desc();
+                }
+            }
+
+            if ("commitment_book".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = INTERNSHIP_COLLEGE.COMMITMENT_BOOK.asc();
+                } else {
+                    sortByte = INTERNSHIP_COLLEGE.COMMITMENT_BOOK.desc();
+                }
+            }
+
+            if ("safety_responsibility_book".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = INTERNSHIP_COLLEGE.SAFETY_RESPONSIBILITY_BOOK.asc();
+                } else {
+                    sortByte = INTERNSHIP_COLLEGE.SAFETY_RESPONSIBILITY_BOOK.desc();
+                }
+            }
+
+            if ("practice_agreement".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = INTERNSHIP_COLLEGE.PRACTICE_AGREEMENT.asc();
+                } else {
+                    sortByte = INTERNSHIP_COLLEGE.PRACTICE_AGREEMENT.desc();
+                }
+            }
+
+            if ("internship_application".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = INTERNSHIP_COLLEGE.INTERNSHIP_APPLICATION.asc();
+                } else {
+                    sortByte = INTERNSHIP_COLLEGE.INTERNSHIP_APPLICATION.desc();
+                }
+            }
+
+            if ("practice_receiving".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = INTERNSHIP_COLLEGE.PRACTICE_RECEIVING.asc();
+                } else {
+                    sortByte = INTERNSHIP_COLLEGE.PRACTICE_RECEIVING.desc();
+                }
+            }
+
+            if ("security_education_agreement".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = INTERNSHIP_COLLEGE.SECURITY_EDUCATION_AGREEMENT.asc();
+                } else {
+                    sortByte = INTERNSHIP_COLLEGE.SECURITY_EDUCATION_AGREEMENT.desc();
+                }
+            }
+
+            if ("parental_consent".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = INTERNSHIP_COLLEGE.PARENTAL_CONSENT.asc();
+                } else {
+                    sortByte = INTERNSHIP_COLLEGE.PARENTAL_CONSENT.desc();
+                }
+            }
+
+        }
+
+        sortToFinish(selectConditionStep,selectJoinStep,type,INTERNSHIP_COLLEGE.STUDENT_NUMBER);
     }
 }

@@ -3,6 +3,9 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify;
+import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
+import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
+import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.Optional;
 
@@ -58,4 +61,26 @@ public interface GraduationPracticeUnifyService {
      * @param studentId           学生id
      */
     void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 分页查询
+     *
+     * @param dataTablesUtils datatables工具类
+     * @return 分页数据
+     */
+    Result<Record> findAllByPage(DataTablesUtils<GraduationPracticeUnifyBean> dataTablesUtils, GraduationPracticeUnifyBean graduationPracticeUnifyBean);
+
+    /**
+     * 系总数
+     *
+     * @return 总数
+     */
+    int countAll(GraduationPracticeUnifyBean graduationPracticeUnifyBean);
+
+    /**
+     * 根据条件查询总数
+     *
+     * @return 条件查询总数
+     */
+    int countByCondition(DataTablesUtils<GraduationPracticeUnifyBean> dataTablesUtils,GraduationPracticeUnifyBean graduationPracticeUnifyBean);
 }

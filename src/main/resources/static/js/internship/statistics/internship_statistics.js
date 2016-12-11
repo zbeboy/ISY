@@ -12,7 +12,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             internship_statistics_data_url: '/anyone/internship/data',
             submitted_url: '/web/internship/statistical/submitted',
             unsubmitted_url:'/web/internship/statistical/unsubmitted',
-            access_condition_url:'/web/internship/review/condition'
+            data_url:'/web/internship/statistical/data_list'
         };
 
         /*
@@ -132,18 +132,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.submitted', "click", function () {
             var id = $(this).attr('data-id');
-            // 进入条件判断
-            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
-                if(data.state){
-                    $.address.value(ajax_url.submitted_url + "?id=" + id);
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
+            $.address.value(ajax_url.submitted_url + "?id=" + id);
         });
 
         /*
@@ -151,18 +140,15 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.unsubmitted', "click", function () {
             var id = $(this).attr('data-id');
-            // 进入条件判断
-            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
-                if(data.state){
-                    $.address.value(ajax_url.unsubmitted_url + "?id=" + id);
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
+            $.address.value(ajax_url.unsubmitted_url + "?id=" + id);
+        });
+
+        /*
+         数据列表
+         */
+        $(tableData).delegate('.data', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.data_url + "?id=" + id);
         });
 
         init();

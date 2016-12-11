@@ -1,5 +1,5 @@
 /**
- * Created by lenovo on 2016-12-10.
+ * Created by lenovo on 2016-12-11.
  */
 require(["jquery", "handlebars", "datatables.responsive","jquery.address", "messenger"],
     function ($, Handlebars) {
@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
          */
         function getAjaxUrl() {
             return {
-                submitted_data_url: '/web/internship/statistical/submitted/data',
+                unsubmitted_data_url: '/web/internship/statistical/unsubmitted/data',
                 science_data_url: '/anyone/internship/sciences',
                 organize_data_url: '/anyone/internship/organizes',
                 back:'/web/menu/internship/statistical'
@@ -95,42 +95,6 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             }
         }
 
-        /**
-         * 状态码表
-         * @param state 状态码
-         * @returns {string}
-         */
-        function internshipApplyStateCode(state) {
-            var msg = '';
-            switch (state) {
-                case 0:
-                    msg = '未提交';
-                    break;
-                case 1:
-                    msg = '审核中...';
-                    break;
-                case 2:
-                    msg = '已通过';
-                    break;
-                case 3:
-                    msg = '未通过';
-                    break;
-                case 4:
-                    msg = '基本信息变更审核中...';
-                    break;
-                case 5:
-                    msg = '基本信息变更填写中...';
-                    break;
-                case 6:
-                    msg = '单位信息变更申请中...';
-                    break;
-                case 7:
-                    msg = '单位信息变更填写中...';
-                    break;
-            }
-            return msg;
-        }
-
         var operator_button = $("#operator_button").html();
         // 预编译模板
         var template = Handlebars.compile(operator_button);
@@ -161,7 +125,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
             "ajax": {
-                "url": web_path + getAjaxUrl().submitted_data_url,
+                "url": web_path + getAjaxUrl().unsubmitted_data_url,
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
@@ -174,44 +138,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
                 {"data": "realName"},
                 {"data": "studentNumber"},
                 {"data": "scienceName"},
-                {"data": "organizeName"},
-                {"data": "internshipApplyState"},
-                {"data": null}
-            ],
-            columnDefs: [
-                {
-                    targets: 5,
-                    orderable: false,
-                    render: function (a, b, c, d) {
-                        var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "申请记录",
-                                        "css": "apply_record",
-                                        "type": "primary",
-                                        "studentId": c.studentId,
-                                        "internshipReleaseId": c.internshipReleaseId
-                                    },
-                                    {
-                                        "name": "变更记录",
-                                        "css": "change_record",
-                                        "type": "primary",
-                                        "studentId": c.studentId,
-                                        "internshipReleaseId": c.internshipReleaseId
-                                    }
-                                ]
-                            };
-                        return template(context);
-                    }
-                },
-                {
-                    targets: 4,
-                    render: function (a, b, c, d) {
-                        return internshipApplyStateCode(c.internshipApplyState);
-                    }
-                }
-
+                {"data": "organizeName"}
             ],
             "language": {
                 "sProcessing": "处理中...",
@@ -239,14 +166,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             },
             "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-5'>r>" +
             "t" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-            initComplete: function () {
-                tableElement.delegate('.apply_record', "click", function () {
-                });
-
-                tableElement.delegate('.change_record', "click", function () {
-                });
-            }
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>"
         });
 
         var global_button = '<button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
@@ -260,8 +180,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
                 studentName: '#search_student_name',
                 studentNumber: '#search_student_number',
                 scienceName: '#search_science_name',
-                organizeName: '#search_organize_name',
-                internshipApplyState:'#select_internship_apply_state'
+                organizeName: '#search_organize_name'
             };
         }
 
@@ -272,8 +191,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             studentName: '',
             studentNumber: '',
             scienceName: '',
-            organizeName: '',
-            internshipApplyState:''
+            organizeName: ''
         };
 
         /*
@@ -291,7 +209,6 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             param.studentNumber = $(getParamId().studentNumber).val();
             param.scienceName = $(getParamId().scienceName).val();
             param.organizeName = $(getParamId().organizeName).val();
-            param.internshipApplyState = $(getParamId().internshipApplyState).val();
         }
 
         /*
@@ -302,7 +219,6 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             $(getParamId().studentNumber).val('');
             $(getParamId().scienceName).val(0);
             $(getParamId().organizeName).val(0);
-            $(getParamId().internshipApplyState).val(-1);
         }
 
         $(getParamId().studentName).keyup(function (event) {
@@ -327,11 +243,6 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
         });
 
         $(getParamId().organizeName).change(function () {
-            initParam();
-            myTable.ajax.reload();
-        });
-
-        $(getParamId().internshipApplyState).change(function () {
             initParam();
             myTable.ajax.reload();
         });

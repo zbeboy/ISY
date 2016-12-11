@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">实习统计 -
-                    <small>未提交列表</small>
+                    <small>数据列表</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -29,18 +29,6 @@
                             <input type="text" id="search_student_number" class="form-control input-sm" placeholder="学生学号"/>
                         </div>
                     </div>
-                    <div class="row" style="margin-top:2px;">
-                        <div class="col-md-6">
-                            <select id="search_science_name" class="form-control input-sm">
-                                <option value="0">请选择专业</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <select id="search_organize_name" class="form-control input-sm">
-                                <option value="0">请选择班级</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="text-center" style="margin-top:4px;">
                         <button type="button" id="search" class="btn btn-outline btn-default"><i
                                 class="fa fa-search"></i>搜索
@@ -55,8 +43,6 @@
                     <tr>
                         <th data-class="expand">姓名</th>
                         <th>学号</th>
-                        <th data-hide="phone">专业</th>
-                        <th data-hide="phone">班级</th>
                     </tr>
                     </thead>
 
@@ -64,8 +50,6 @@
                     <tr>
                         <th>姓名</th>
                         <th>学号</th>
-                        <th>专业</th>
-                        <th>班级</th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -87,16 +71,6 @@
             </button>
             {{/each}}
         </script>
-        <script id="science-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{science_value}}">{{science_name}}</option>
-            {{/each}}
-        </script>
-        <script id="organize-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{organize_value}}">{{organize_name}}</option>
-            {{/each}}
-        </script>
         <script th:inline="javascript">
             /*<![CDATA[*/
             /*页面参数*/
@@ -105,7 +79,7 @@
             };
             /*]]>*/
         </script>
-        <input type="hidden" class="dy_script" value="/js/internship/statistics/internship_unsubmitted.js" />
+        <input type="hidden" class="dy_script" value="/js/internship/statistics/graduation_practice_college_data.js" />
     </div>
     <!-- /#page-wrapper -->
 </div>

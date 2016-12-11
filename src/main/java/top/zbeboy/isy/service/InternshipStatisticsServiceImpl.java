@@ -11,7 +11,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
+import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
+import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
@@ -24,7 +28,7 @@ import static top.zbeboy.isy.domain.Tables.*;
  */
 @Service("internshipStatisticsService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class InternshipStatisticsServiceImpl implements InternshipStatisticsService {
+public class InternshipStatisticsServiceImpl extends DataTablesPlugin<InternshipStatisticsBean> implements InternshipStatisticsService {
 
     private final Logger log = LoggerFactory.getLogger(InternshipStatisticsServiceImpl.class);
 
@@ -41,7 +45,7 @@ public class InternshipStatisticsServiceImpl implements InternshipStatisticsServ
     @Override
     public Result<Record> submittedFindAllByPage(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils, InternshipStatisticsBean internshipStatisticsBean) {
         Result<Record> records;
-        Condition a = submittedSearchCondition(dataTablesUtils);
+        Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record> selectConditionStep = create.select()
                     .from(INTERNSHIP_APPLY)
@@ -54,8 +58,8 @@ public class InternshipStatisticsServiceImpl implements InternshipStatisticsServ
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()));
-            submittedSortCondition(dataTablesUtils, selectConditionStep);
-            submittedPagination(dataTablesUtils, selectConditionStep);
+            sortCondition(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
             records = selectConditionStep.fetch();
         } else {
             SelectConditionStep<Record> selectConditionStep = create.select()
@@ -69,8 +73,8 @@ public class InternshipStatisticsServiceImpl implements InternshipStatisticsServ
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId())).and(a);
-            submittedSortCondition(dataTablesUtils, selectConditionStep);
-            submittedPagination(dataTablesUtils, selectConditionStep);
+            sortCondition(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
             records = selectConditionStep.fetch();
         }
         return records;
@@ -88,7 +92,7 @@ public class InternshipStatisticsServiceImpl implements InternshipStatisticsServ
     @Override
     public int submittedCountByCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils, InternshipStatisticsBean internshipStatisticsBean) {
         Record1<Integer> count;
-        Condition a = submittedSearchCondition(dataTablesUtils);
+        Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                     .from(INTERNSHIP_APPLY)
@@ -115,12 +119,121 @@ public class InternshipStatisticsServiceImpl implements InternshipStatisticsServ
     }
 
     /**
-     * 已提交列表全局搜索条件
+     * 组装exists条件
+     *
+     * @return select
+     */
+    public Select<InternshipTeacherDistributionRecord> existsInternshipTeacherDistributionSelect(InternshipStatisticsBean internshipStatisticsBean) {
+       return create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .and(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()));
+    }
+
+    @Override
+    public Result<Record> unsubmittedFindAllByPage(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils, InternshipStatisticsBean internshipStatisticsBean) {
+        Result<Record> records;
+        Condition a = searchCondition(dataTablesUtils);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(INTERNSHIP_RELEASE_SCIENCE)
+                    .join(SCIENCE)
+                    .on(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(ORGANIZE)
+                    .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(STUDENT)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
+                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean));
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            records = selectConditionStep.fetch();
+        } else {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(INTERNSHIP_RELEASE_SCIENCE)
+                    .join(SCIENCE)
+                    .on(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(ORGANIZE)
+                    .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(STUDENT)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
+                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean)).and(a);
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            records = selectConditionStep.fetch();
+        }
+        return records;
+    }
+
+    @Override
+    public int unsubmittedCountAll(InternshipStatisticsBean internshipStatisticsBean) {
+        Record1<Integer> count = create.selectCount()
+                .from(INTERNSHIP_RELEASE_SCIENCE)
+                .join(SCIENCE)
+                .on(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(ORGANIZE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(STUDENT)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
+                .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean))
+                .fetchOne();
+        return count.value1();
+    }
+
+    @Override
+    public int unsubmittedCountByCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils, InternshipStatisticsBean internshipStatisticsBean) {
+        Record1<Integer> count;
+        Condition a = searchCondition(dataTablesUtils);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                    .from(INTERNSHIP_RELEASE_SCIENCE)
+                    .join(SCIENCE)
+                    .on(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(ORGANIZE)
+                    .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(STUDENT)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
+                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean));
+            count = selectConditionStep.fetchOne();
+        } else {
+            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                    .from(INTERNSHIP_RELEASE_SCIENCE)
+                    .join(SCIENCE)
+                    .on(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(ORGANIZE)
+                    .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(STUDENT)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
+                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean)).and(a);
+            count = selectConditionStep.fetchOne();
+        }
+        if (!ObjectUtils.isEmpty(count)) {
+            return count.value1();
+        }
+        return 0;
+    }
+
+    /**
+     * 全局搜索条件
      *
      * @param dataTablesUtils
      * @return 搜索条件
      */
-    public Condition submittedSearchCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils) {
+    @Override
+    public Condition searchCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils) {
         Condition a = null;
 
         JSONObject search = dataTablesUtils.getSearch();
@@ -179,12 +292,13 @@ public class InternshipStatisticsServiceImpl implements InternshipStatisticsServ
     }
 
     /**
-     * 已提交列表数据排序
+     * 数据排序
      *
      * @param dataTablesUtils
      * @param selectConditionStep
      */
-    public void submittedSortCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {
+    @Override
+    public void sortCondition(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils,SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
@@ -235,25 +349,38 @@ public class InternshipStatisticsServiceImpl implements InternshipStatisticsServ
         }
 
         if (!ObjectUtils.isEmpty(a)) {
-            selectConditionStep.orderBy(a);
-        } else if (!ObjectUtils.isEmpty(b)) {
-            selectConditionStep.orderBy(b);
-        } else if (!ObjectUtils.isEmpty(c)) {
-            selectConditionStep.orderBy(c);
-        } else {
-            selectConditionStep.orderBy(INTERNSHIP_APPLY.APPLY_TIME.desc());
-        }
-    }
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(a);
+            }
 
-    /**
-     * 已提交列表分页方式
-     *
-     * @param dataTablesUtils     datatables工具类
-     * @param selectConditionStep 条件1
-     */
-    public void submittedPagination(DataTablesUtils<InternshipStatisticsBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {
-        int start = dataTablesUtils.getStart();
-        int length = dataTablesUtils.getLength();
-        selectConditionStep.limit(start, length);
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(a);
+            }
+
+        } else if (!ObjectUtils.isEmpty(b)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(b);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(b);
+            }
+        } else if (!ObjectUtils.isEmpty(c)) {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(c);
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(c);
+            }
+        } else {
+            if (type == CONDITION_TYPE) {
+                selectConditionStep.orderBy(STUDENT.STUDENT_NUMBER.desc());
+            }
+
+            if (type == JOIN_TYPE) {
+                selectJoinStep.orderBy(STUDENT.STUDENT_NUMBER.desc());
+            }
+        }
     }
 }
