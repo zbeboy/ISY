@@ -17,6 +17,8 @@ import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
+import top.zbeboy.isy.web.bean.internship.statistics.InternshipChangeCompanyHistoryBean;
+import top.zbeboy.isy.web.bean.internship.statistics.InternshipChangeHistoryBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -62,6 +64,12 @@ public class InternshipStatisticsController {
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
 
+    @Resource
+    private InternshipChangeHistoryService internshipChangeHistoryService;
+
+    @Resource
+    private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
+
     /**
      * 实习统计
      *
@@ -89,10 +97,22 @@ public class InternshipStatisticsController {
      * @return 申请记录列表页面
      */
     @RequestMapping(value = "/web/internship/statistical/record/apply", method = RequestMethod.GET)
-    public String changeHistory(@RequestParam("id") String internshipReleaseId,@RequestParam("studentId") int studentId, ModelMap modelMap) {
+    public String changeHistory(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-        modelMap.addAttribute("studentId",studentId);
+        modelMap.addAttribute("studentId", studentId);
         return "/web/internship/statistics/internship_change_history::#page-wrapper";
+    }
+
+    /**
+     * 单位变更记录列表
+     *
+     * @return 单位变更记录列表页面
+     */
+    @RequestMapping(value = "/web/internship/statistical/record/company", method = RequestMethod.GET)
+    public String changeCompanyHistory(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        modelMap.addAttribute("studentId", studentId);
+        return "/web/internship/statistics/internship_change_company_history::#page-wrapper";
     }
 
     /**
@@ -153,7 +173,7 @@ public class InternshipStatisticsController {
         commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        internshipReleaseBeens.forEach(r->{
+        internshipReleaseBeens.forEach(r -> {
             InternshipStatisticsBean internshipStatisticsBean = new InternshipStatisticsBean();
             internshipStatisticsBean.setInternshipReleaseId(r.getInternshipReleaseId());
             r.setSubmittedTotalData(internshipStatisticsService.submittedCountAll(internshipStatisticsBean));
@@ -198,6 +218,42 @@ public class InternshipStatisticsController {
             dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 申请变更记录数据
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/statistical/record/apply/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<InternshipChangeHistoryBean> changeHistoryDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+        List<InternshipChangeHistoryBean> internshipChangeHistoryBeans = new ArrayList<>();
+        Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+        if (records.isNotEmpty()) {
+            internshipChangeHistoryBeans = records.into(InternshipChangeHistoryBean.class);
+        }
+        return new AjaxUtils<InternshipChangeHistoryBean>().success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
+    }
+
+    /**
+     * 单位变更记录数据
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/statistical/record/company/data", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<InternshipChangeCompanyHistoryBean> changeCompanyDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+        List<InternshipChangeCompanyHistoryBean> internshipChangeCompanyHistoryBeans = new ArrayList<>();
+        Result<Record> records = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+        if (records.isNotEmpty()) {
+            internshipChangeCompanyHistoryBeans = records.into(InternshipChangeCompanyHistoryBean.class);
+        }
+        return new AjaxUtils<InternshipChangeCompanyHistoryBean>().success().msg("获取数据成功").listData(internshipChangeCompanyHistoryBeans);
     }
 
     /**

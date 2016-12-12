@@ -79,7 +79,7 @@
                             </div>
                             <div class="timeline-body">
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis minus modi quam ipsum alias at est molestiae excepturi delectus nesciunt, quibusdam debitis amet, beatae consequuntur impedit nulla qui! Laborum, atque.</p>
-                                <hr>
+                                <hr/>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                         <i class="fa fa-gear"></i>  <span class="caret"></span>
@@ -145,18 +145,17 @@
                 </div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">{{time}}</h4>
+                        <h4 class="timeline-title">{{internship_title}}</h4>
+                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> {{time}}</small>
+                        </p>
                     </div>
                     <div class="timeline-body">
-                        <span>{{real_name}}  {{studentNum}}</span><br/>
+                        <span>{{real_name}}  {{studentNumber}}</span><br/>
                         <span>班级: </span><span>{{organize_name}}</span><br/>
                         <span>状态: </span><span>{{state}}</span><br/>
                         <span>开始填写时间: </span><span>{{changeFillStartTime}}</span><br/>
                         <span>结束填写时间: </span><span>{{changeFillEndTime}}</span>
                         <p><span>原因: </span><span>{{reason}}</span></p>
-                        <div class="text-right">
-                            <em>{{internship_title}}</em>
-                        </div>
                     </div>
                 </div>
             </li>

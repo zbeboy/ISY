@@ -249,7 +249,7 @@ CREATE TABLE internship_apply(
 
 CREATE TABLE internship_change_history(
   internship_change_history_id VARCHAR(100) PRIMARY KEY ,
-  reason VARCHAR(500) NOT NULL ,
+  reason VARCHAR(500) ,
   change_fill_start_time DATETIME,
   change_fill_end_time DATETIME,
   student_id INT NOT NULL ,
