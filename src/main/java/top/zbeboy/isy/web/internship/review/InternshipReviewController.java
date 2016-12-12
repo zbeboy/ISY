@@ -16,6 +16,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
@@ -26,6 +27,7 @@ import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +76,9 @@ public class InternshipReviewController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private InternshipChangeHistoryService internshipChangeHistoryService;
 
     /**
      * 实习审核
@@ -575,6 +580,13 @@ public class InternshipReviewController {
                             break;
                     }
                     ajaxUtils.success().msg("保存成功");
+                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
+                    internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
+                    internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
+                    internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
+                    internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                    internshipChangeHistoryService.save(internshipChangeHistory);
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习信息");
                 }
@@ -614,6 +626,13 @@ public class InternshipReviewController {
                     }
                     internshipApplyService.update(internshipApply);
                     ajaxUtils.success().msg("更新状态成功");
+                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
+                    internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
+                    internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
+                    internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
+                    internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                    internshipChangeHistoryService.save(internshipChangeHistory);
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习申请信息");
                 }
@@ -645,6 +664,13 @@ public class InternshipReviewController {
                 internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
                 internshipApplyService.update(internshipApply);
                 ajaxUtils.success().msg("更新状态成功");
+                InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
+                internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
+                internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
+                internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
+                internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                internshipChangeHistoryService.save(internshipChangeHistory);
             } else {
                 ajaxUtils.fail().msg("未查询到相关实习申请信息");
             }
@@ -675,6 +701,13 @@ public class InternshipReviewController {
             internshipApply.setReason(reason);
             internshipApplyService.update(internshipApply);
             ajaxUtils.success().msg("更改成功");
+            InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+            internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
+            internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+            internshipChangeHistory.setStudentId(studentId);
+            internshipChangeHistory.setState(internshipApplyState);
+            internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+            internshipChangeHistoryService.save(internshipChangeHistory);
         } else {
             ajaxUtils.fail().msg("未查询到相关申请信息");
         }

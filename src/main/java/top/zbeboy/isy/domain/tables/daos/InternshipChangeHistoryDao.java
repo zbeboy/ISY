@@ -73,10 +73,17 @@ public class InternshipChangeHistoryDao extends DAOImpl<InternshipChangeHistoryR
 	}
 
 	/**
-	 * Fetch records that have <code>change_type IN (values)</code>
+	 * Fetch records that have <code>change_fill_start_time IN (values)</code>
 	 */
-	public List<top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory> fetchByChangeType(Integer... values) {
-		return fetch(InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY.CHANGE_TYPE, values);
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory> fetchByChangeFillStartTime(Timestamp... values) {
+		return fetch(InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY.CHANGE_FILL_START_TIME, values);
+	}
+
+	/**
+	 * Fetch records that have <code>change_fill_end_time IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory> fetchByChangeFillEndTime(Timestamp... values) {
+		return fetch(InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY.CHANGE_FILL_END_TIME, values);
 	}
 
 	/**
@@ -98,5 +105,12 @@ public class InternshipChangeHistoryDao extends DAOImpl<InternshipChangeHistoryR
 	 */
 	public List<top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory> fetchByApplyTime(Timestamp... values) {
 		return fetch(InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, values);
+	}
+
+	/**
+	 * Fetch records that have <code>state IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory> fetchByState(Integer... values) {
+		return fetch(InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY.STATE, values);
 	}
 }

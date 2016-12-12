@@ -55,8 +55,8 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()));
-            sortCondition(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             records = selectConditionStep.fetch();
         } else {
             SelectConditionStep<Record> selectConditionStep = create.select()
@@ -70,8 +70,8 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId())).and(a);
-            sortCondition(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, JOIN_TYPE);
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             records = selectConditionStep.fetch();
         }
         return records;

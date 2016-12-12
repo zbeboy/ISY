@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipChangeHistoryRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipChangeHistory extends TableImpl<InternshipChangeHistoryRecord> {
 
-	private static final long serialVersionUID = -775943747;
+	private static final long serialVersionUID = -783477036;
 
 	/**
 	 * The reference instance of <code>isy.internship_change_history</code>
@@ -61,9 +61,14 @@ public class InternshipChangeHistory extends TableImpl<InternshipChangeHistoryRe
 	public final TableField<InternshipChangeHistoryRecord, String> REASON = createField("reason", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
 
 	/**
-	 * The column <code>isy.internship_change_history.change_type</code>.
+	 * The column <code>isy.internship_change_history.change_fill_start_time</code>.
 	 */
-	public final TableField<InternshipChangeHistoryRecord, Integer> CHANGE_TYPE = createField("change_type", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+	public final TableField<InternshipChangeHistoryRecord, Timestamp> CHANGE_FILL_START_TIME = createField("change_fill_start_time", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+
+	/**
+	 * The column <code>isy.internship_change_history.change_fill_end_time</code>.
+	 */
+	public final TableField<InternshipChangeHistoryRecord, Timestamp> CHANGE_FILL_END_TIME = createField("change_fill_end_time", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
 	/**
 	 * The column <code>isy.internship_change_history.student_id</code>.
@@ -79,6 +84,11 @@ public class InternshipChangeHistory extends TableImpl<InternshipChangeHistoryRe
 	 * The column <code>isy.internship_change_history.apply_time</code>.
 	 */
 	public final TableField<InternshipChangeHistoryRecord, Timestamp> APPLY_TIME = createField("apply_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+	/**
+	 * The column <code>isy.internship_change_history.state</code>.
+	 */
+	public final TableField<InternshipChangeHistoryRecord, Integer> STATE = createField("state", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
 	/**
 	 * Create a <code>isy.internship_change_history</code> table reference

@@ -250,10 +250,25 @@ CREATE TABLE internship_apply(
 CREATE TABLE internship_change_history(
   internship_change_history_id VARCHAR(100) PRIMARY KEY ,
   reason VARCHAR(500) NOT NULL ,
-  change_type INT NOT NULL ,
+  change_fill_start_time DATETIME,
+  change_fill_end_time DATETIME,
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(100) NOT NULL ,
   apply_time DATETIME NOT NULL ,
+  state INT NOT NULL ,
+  FOREIGN KEY (student_id) REFERENCES student(student_id),
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+);
+
+CREATE TABLE internship_change_company_history(
+  internship_change_company_history_id VARCHAR(100) PRIMARY KEY ,
+  student_id INT NOT NULL ,
+  internship_release_id VARCHAR(100) NOT NULL ,
+  company_name VARCHAR(200),
+  company_address  VARCHAR(500),
+  company_contacts VARCHAR(10),
+  company_tel VARCHAR(20),
+  change_time DATETIME NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
 );

@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
+import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +59,9 @@ public class InternshipStatisticsController {
     @Resource
     private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
     /**
      * 实习统计
      *
@@ -75,6 +81,18 @@ public class InternshipStatisticsController {
     public String statisticalSubmitted(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         return "/web/internship/statistics/internship_submitted::#page-wrapper";
+    }
+
+    /**
+     * 申请记录列表
+     *
+     * @return 申请记录列表页面
+     */
+    @RequestMapping(value = "/web/internship/statistical/record/apply", method = RequestMethod.GET)
+    public String changeHistory(@RequestParam("id") String internshipReleaseId,@RequestParam("studentId") int studentId, ModelMap modelMap) {
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        modelMap.addAttribute("studentId",studentId);
+        return "/web/internship/statistics/internship_change_history::#page-wrapper";
     }
 
     /**
@@ -119,6 +137,29 @@ public class InternshipStatisticsController {
             }
         }
         return page;
+    }
+
+    /**
+     * 获取实习统计数据
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/statistical/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        Byte isDel = 0;
+        InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
+        internshipReleaseBean.setInternshipReleaseIsDel(isDel);
+        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
+        List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
+        internshipReleaseBeens.forEach(r->{
+            InternshipStatisticsBean internshipStatisticsBean = new InternshipStatisticsBean();
+            internshipStatisticsBean.setInternshipReleaseId(r.getInternshipReleaseId());
+            r.setSubmittedTotalData(internshipStatisticsService.submittedCountAll(internshipStatisticsBean));
+            r.setUnsubmittedTotalData(internshipStatisticsService.unsubmittedCountAll(internshipStatisticsBean));
+        });
+        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**

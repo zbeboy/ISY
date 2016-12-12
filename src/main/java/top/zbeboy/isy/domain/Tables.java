@@ -17,6 +17,7 @@ import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCompany;
 import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
 import top.zbeboy.isy.domain.tables.InternshipApply;
+import top.zbeboy.isy.domain.tables.InternshipChangeCompanyHistory;
 import top.zbeboy.isy.domain.tables.InternshipChangeHistory;
 import top.zbeboy.isy.domain.tables.InternshipCollege;
 import top.zbeboy.isy.domain.tables.InternshipCompany;
@@ -112,6 +113,11 @@ public class Tables {
 	 * The table isy.internship_apply
 	 */
 	public static final InternshipApply INTERNSHIP_APPLY = top.zbeboy.isy.domain.tables.InternshipApply.INTERNSHIP_APPLY;
+
+	/**
+	 * The table isy.internship_change_company_history
+	 */
+	public static final InternshipChangeCompanyHistory INTERNSHIP_CHANGE_COMPANY_HISTORY = top.zbeboy.isy.domain.tables.InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY;
 
 	/**
 	 * The table isy.internship_change_history
