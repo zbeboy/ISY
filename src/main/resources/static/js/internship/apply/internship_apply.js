@@ -101,12 +101,12 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var tableData = '#tableData';
         var myTableData = '#myTableData';
 
-        function startLoading(targetId) {
+        function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();
         }
 
-        function endLoading(targetId) {
+        function endLoading() {
             // 去除遮罩
             $('#page-wrapper').hideLoading();
         }
@@ -141,7 +141,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function refreshMySearch() {
             var params = {
-                internshipTitle: $(paramId.internshipTitle).val()
+                internshipTitle: $(myParamId.internshipTitle).val()
             };
             myParam.pageNum = 0;
             myParam.searchParams = JSON.stringify(params);
@@ -199,7 +199,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(myParamId.internshipTitle).keyup(function (event) {
             if (event.keyCode == 13) {
                 refreshMySearch();
-                init();
+                initMyData();
             }
         });
 
