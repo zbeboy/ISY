@@ -214,10 +214,14 @@
                     {{/if}}
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="agree_apply" data-id="{{internshipReleaseId}}"
-                       data-student="{{studentId}}" data-name="{{student_name}}">同意</a>
-                    <a href="javascript:;" class="disagree_apply" data-id="{{internshipReleaseId}}"
-                       data-student="{{studentId}}" data-name="{{student_name}}">拒绝</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default agree_apply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}" data-name="{{student_name}}">
+                            同意</button>
+                        <button type="button" class="btn btn-default disagree_apply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}" data-name="{{student_name}}">
+                            拒绝</button>
+                    </div>
                 </div>
             </div>
             {{/each}}

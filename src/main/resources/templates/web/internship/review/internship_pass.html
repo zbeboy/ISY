@@ -210,11 +210,16 @@
                     {{/if}}
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="detail_apply" data-id="{{internshipReleaseId}}"
-                       data-student="{{studentId}}">查看详情</a>
-                    <a href="javascript:;" class="save_apply">保存</a>
-                    <a href="javascript:;" class="fail_apply" data-id="{{internshipReleaseId}}"
-                       data-student="{{studentId}}" data-name="{{student_name}}">不通过</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default detail_apply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            查看详情</button>
+                        <button type="button" class="btn btn-default save_apply">
+                            保存</button>
+                        <button type="button" class="btn btn-default fail_apply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}" data-name="{{student_name}}">
+                            不通过</button>
+                    </div>
                 </div>
             </div>
             {{/each}}

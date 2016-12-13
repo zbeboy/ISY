@@ -218,8 +218,11 @@
                     {{/if}}
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="pass_apply" data-id="{{internshipReleaseId}}"
-                       data-student="{{studentId}}" data-name="{{student_name}}">通过</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default pass_apply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}" data-name="{{student_name}}">
+                            通过</button>
+                    </div>
                 </div>
             </div>
             {{/each}}

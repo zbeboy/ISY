@@ -185,7 +185,10 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="apply" data-id="{{internshipReleaseId}}">进行申请</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default apply" data-id="{{internshipReleaseId}}">
+                            进行申请</button>
+                    </div>
                 </div>
             </div>
             {{/each}}
@@ -235,10 +238,16 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="myApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">编辑</a>
-                    <a href="javascript:;" class="recallApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">撤消申请</a>
-                    <a href="javascript:;" class="basisApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">基础信息变更申请</a>
-                    <a href="javascript:;" class="firmApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">单位信息变更申请</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default myApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
+                            编辑</button>
+                        <button type="button" class="btn btn-default recallApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
+                            撤消申请</button>
+                        <button type="button" class="btn btn-default basisApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
+                            基础信息变更申请</button>
+                        <button type="button" class="btn btn-default firmApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
+                            单位信息变更申请</button>
+                    </div>
                 </div>
             </div>
             {{/each}}

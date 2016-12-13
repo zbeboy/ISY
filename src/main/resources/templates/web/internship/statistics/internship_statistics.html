@@ -90,9 +90,14 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="submitted" data-id="{{internshipReleaseId}}">已提交列表 <span class="badge">{{submittedTotalData}}</span></a>
-                    <a href="javascript:;" class="unsubmitted" data-id="{{internshipReleaseId}}">未提交列表 <span class="badge">{{unsubmittedTotalData}}</span></a>
-                    <a href="javascript:;" class="data" data-id="{{internshipReleaseId}}">数据列表 <span class="badge">{{submittedTotalData}}</span></a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default submitted" data-id="{{internshipReleaseId}}">
+                            已提交列表 <span class="badge">{{submittedTotalData}}</span></button>
+                        <button type="button" class="btn btn-default unsubmitted" data-id="{{internshipReleaseId}}">
+                            未提交列表 <span class="badge">{{unsubmittedTotalData}}</span></button>
+                        <button type="button" class="btn btn-default data" data-id="{{internshipReleaseId}}">
+                            数据列表 <span class="badge">{{submittedTotalData}}</span></button>
+                    </div>
                 </div>
             </div>
             {{/each}}

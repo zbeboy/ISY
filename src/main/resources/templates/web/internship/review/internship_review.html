@@ -18,7 +18,8 @@
                 <div class="well">
                     <div class="row" style="margin-top:2px;">
                         <div class="col-md-12">
-                            <input type="text" id="search_internship_title" class="form-control input-sm" placeholder="标题"/>
+                            <input type="text" id="search_internship_title" class="form-control input-sm"
+                                   placeholder="标题"/>
                         </div>
                     </div>
                     <div class="text-center" style="margin-top:4px;">
@@ -31,7 +32,8 @@
                     </div>
                 </div>
                 <div class="text-right" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
+                    </button>
                 </div>
                 <div id="tableData">
                 </div>
@@ -90,13 +92,32 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <a href="javascript:;" class="review" data-id="{{internshipReleaseId}}">进行审核 <span class="badge">{{waitTotalData}}</span></a>
-                    <a href="javascript:;" class="pass_apply" data-id="{{internshipReleaseId}}">已通过列表 <span class="badge">{{passTotalData}}</span></a>
-                    <a href="javascript:;" class="fail_apply" data-id="{{internshipReleaseId}}">未通过列表 <span class="badge">{{failTotalData}}</span></a>
-                    <a href="javascript:;" class="basic_apply" data-id="{{internshipReleaseId}}">基本信息修改申请 <span class="badge">{{basicApplyTotalData}}</span></a>
-                    <a href="javascript:;" class="company_apply" data-id="{{internshipReleaseId}}">单位信息修改申请 <span class="badge">{{companyApplyTotalData}}</span></a>
-                    <a href="javascript:;" class="basic_fill" data-id="{{internshipReleaseId}}">基本信息填写中 <span class="badge">{{basicFillTotalData}}</span></a>
-                    <a href="javascript:;" class="company_fill" data-id="{{internshipReleaseId}}">单位信息填写中 <span class="badge">{{companyFillTotalData}}</span></a>
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default review" data-id="{{internshipReleaseId}}">进行审核
+                                <span class="badge">{{waitTotalData}}</span></button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default pass_apply" data-id="{{internshipReleaseId}}">
+                                已通过列表 <span class="badge">{{passTotalData}}</span></button>
+                            <button type="button" class="btn btn-default fail_apply" data-id="{{internshipReleaseId}}">
+                                未通过列表 <span class="badge">{{failTotalData}}</span></button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default basic_apply" data-id="{{internshipReleaseId}}">
+                                基本信息修改申请 <span class="badge">{{basicApplyTotalData}}</span></button>
+                            <button type="button" class="btn btn-default company_apply"
+                                    data-id="{{internshipReleaseId}}">单位信息修改申请 <span class="badge">{{companyApplyTotalData}}</span>
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default basic_fill" data-id="{{internshipReleaseId}}">
+                                基本信息填写中 <span class="badge">{{basicFillTotalData}}</span></button>
+                            <button type="button" class="btn btn-default company_fill"
+                                    data-id="{{internshipReleaseId}}">单位信息填写中 <span class="badge">{{companyFillTotalData}}</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             {{/each}}

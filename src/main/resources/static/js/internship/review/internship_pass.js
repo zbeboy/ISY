@@ -247,7 +247,7 @@ require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "
          保存
          */
         $(tableData).delegate('.save_apply', "click", function () {
-            var form = $(this).parent().prev().find('form');
+            var form = $(this).parent().parent().prev().find('form');
             $.post(web_path + ajax_url.save, form.serialize(), function (data) {
                 Messenger().post({
                     message: data.msg,
