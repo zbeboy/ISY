@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.SystemLog;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemLogRecord extends UpdatableRecordImpl<SystemLogRecord> implements Record5<String, String, Timestamp, String, String> {
 
-	private static final long serialVersionUID = -1015890529;
+	private static final long serialVersionUID = 1327001140;
 
 	/**
 	 * Setter for <code>isy.system_log.system_log_id</code>.
@@ -45,7 +45,7 @@ public class SystemLogRecord extends UpdatableRecordImpl<SystemLogRecord> implem
 	 * Getter for <code>isy.system_log.system_log_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getSystemLogId() {
 		return (String) getValue(0);
 	}
@@ -92,7 +92,7 @@ public class SystemLogRecord extends UpdatableRecordImpl<SystemLogRecord> implem
 	 * Getter for <code>isy.system_log.username</code>.
 	 */
 	@NotNull
-	@Size(max = 200)
+	@Size(max = 64)
 	public String getUsername() {
 		return (String) getValue(3);
 	}

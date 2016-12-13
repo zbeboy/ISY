@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.PersistentLogins;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class PersistentLoginsRecord extends UpdatableRecordImpl<PersistentLoginsRecord> implements Record4<String, String, String, Timestamp> {
 
-	private static final long serialVersionUID = -349445456;
+	private static final long serialVersionUID = 1391142726;
 
 	/**
 	 * Setter for <code>isy.persistent_logins.username</code>.
@@ -45,7 +45,7 @@ public class PersistentLoginsRecord extends UpdatableRecordImpl<PersistentLogins
 	 * Getter for <code>isy.persistent_logins.username</code>.
 	 */
 	@NotNull
-	@Size(max = 200)
+	@Size(max = 64)
 	public String getUsername() {
 		return (String) getValue(0);
 	}

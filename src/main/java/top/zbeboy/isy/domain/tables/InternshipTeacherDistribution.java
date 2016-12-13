@@ -13,6 +13,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -33,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDistributionRecord> {
 
-	private static final long serialVersionUID = 1827337894;
+	private static final long serialVersionUID = -1880571065;
 
 	/**
 	 * The reference instance of <code>isy.internship_teacher_distribution</code>
@@ -61,7 +62,7 @@ public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDi
 	/**
 	 * The column <code>isy.internship_teacher_distribution.internship_release_id</code>.
 	 */
-	public final TableField<InternshipTeacherDistributionRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipTeacherDistributionRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_teacher_distribution.username</code>.
@@ -88,6 +89,22 @@ public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDi
 
 	private InternshipTeacherDistribution(String alias, Table<InternshipTeacherDistributionRecord> aliased, Field<?>[] parameters) {
 		super(alias, Isy.ISY, aliased, parameters, "");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UniqueKey<InternshipTeacherDistributionRecord> getPrimaryKey() {
+		return Keys.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UniqueKey<InternshipTeacherDistributionRecord>> getKeys() {
+		return Arrays.<UniqueKey<InternshipTeacherDistributionRecord>>asList(Keys.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY);
 	}
 
 	/**

@@ -33,7 +33,7 @@ import top.zbeboy.isy.domain.tables.Users;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UsersRecord extends UpdatableRecordImpl<UsersRecord> implements Record14<String, String, Byte, Integer, String, String, String, Byte, String, String, Timestamp, Timestamp, String, Date> {
 
-	private static final long serialVersionUID = -150441551;
+	private static final long serialVersionUID = 471657848;
 
 	/**
 	 * Setter for <code>isy.users.username</code>.
@@ -46,7 +46,7 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> implements Rec
 	 * Getter for <code>isy.users.username</code>.
 	 */
 	@NotNull
-	@Size(max = 200)
+	@Size(max = 64)
 	public String getUsername() {
 		return (String) getValue(0);
 	}
@@ -62,7 +62,7 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> implements Rec
 	 * Getter for <code>isy.users.password</code>.
 	 */
 	@NotNull
-	@Size(max = 800)
+	@Size(max = 300)
 	public String getPassword() {
 		return (String) getValue(1);
 	}

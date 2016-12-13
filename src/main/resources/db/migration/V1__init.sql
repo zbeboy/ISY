@@ -4,8 +4,8 @@ CREATE TABLE users_type(
 );
 
 CREATE TABLE users(
-  username VARCHAR(200) PRIMARY KEY,
-  password VARCHAR(800) NOT NULL,
+  username VARCHAR(64) PRIMARY KEY,
+  password VARCHAR(300) NOT NULL,
   enabled BOOLEAN NOT NULL ,
   users_type_id INT NOT NULL ,
   real_name VARCHAR(30) ,
@@ -28,9 +28,10 @@ CREATE TABLE role(
 );
 
 CREATE TABLE authorities(
-  username VARCHAR(200) NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
   authority VARCHAR(50) NOT NULL ,
-  FOREIGN KEY (username) REFERENCES users(username)
+  FOREIGN KEY (username) REFERENCES users(username),
+  PRIMARY KEY (username,authority)
 );
 
 CREATE TABLE application(
@@ -49,11 +50,12 @@ CREATE TABLE role_application(
   role_id INT NOT NULL ,
   application_id INT NOT NULL ,
   FOREIGN KEY (role_id) REFERENCES role(role_id),
-  FOREIGN KEY (application_id) REFERENCES application(application_id)
+  FOREIGN KEY (application_id) REFERENCES application(application_id),
+  PRIMARY KEY (role_id,application_id)
 );
 
 CREATE TABLE persistent_logins(
-  username VARCHAR(200) NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
   series VARCHAR(64) PRIMARY KEY,
   token VARCHAR(64) NOT NULL ,
   last_used TIMESTAMP NOT NULL
@@ -77,14 +79,16 @@ CREATE TABLE college_application(
   application_id INT NOT NULL ,
   college_id INT NOT NULL ,
   FOREIGN KEY (application_id) REFERENCES application(application_id),
-  FOREIGN KEY (college_id) REFERENCES college(college_id)
+  FOREIGN KEY (college_id) REFERENCES college(college_id),
+  PRIMARY KEY (application_id,college_id)
 );
 
 CREATE TABLE college_role(
   role_id INT NOT NULL ,
   college_id INT NOT NULL ,
   FOREIGN KEY (role_id) REFERENCES role(role_id),
-  FOREIGN KEY (college_id) REFERENCES college(college_id)
+  FOREIGN KEY (college_id) REFERENCES college(college_id),
+  PRIMARY KEY (role_id,college_id)
 );
 
 CREATE TABLE department(
@@ -136,7 +140,7 @@ CREATE TABLE student(
   parent_contact_phone VARCHAR(15),
   place_origin VARCHAR(500),
   organize_id INT NOT NULL ,
-  username VARCHAR(200) NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
   FOREIGN KEY (organize_id) REFERENCES organize(organize_id),
   FOREIGN KEY (username) REFERENCES users(username)
 );
@@ -152,33 +156,33 @@ CREATE TABLE staff(
   nation_id INT,
   post VARCHAR(500),
   department_id INT NOT NULL ,
-  username VARCHAR(200) NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
   FOREIGN KEY (department_id) REFERENCES department(department_id),
   FOREIGN KEY (username) REFERENCES users(username)
 );
 
 CREATE TABLE system_log(
-  system_log_id VARCHAR(100) PRIMARY KEY ,
+  system_log_id VARCHAR(64) PRIMARY KEY ,
   behavior VARCHAR(200) NOT NULL ,
   operating_time DATETIME NOT NULL ,
-  username VARCHAR(200) NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
   ip_address VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE system_mailbox(
-  system_mailbox_id VARCHAR(100) PRIMARY KEY ,
+  system_mailbox_id VARCHAR(64) PRIMARY KEY ,
   send_time DATETIME,
   accept_mail VARCHAR(200)
 );
 
 CREATE TABLE system_sms(
-  system_sms_id VARCHAR(100) PRIMARY KEY ,
+  system_sms_id VARCHAR(64) PRIMARY KEY ,
   send_time DATETIME,
   accept_phone VARCHAR(15)
 );
 
 CREATE TABLE files(
-  file_id VARCHAR(100) PRIMARY KEY,
+  file_id VARCHAR(64) PRIMARY KEY,
   size LONG,
   original_file_name VARCHAR(300),
   new_name VARCHAR(300),
@@ -192,10 +196,10 @@ CREATE TABLE internship_type(
 );
 
 CREATE TABLE internship_release(
-  internship_release_id VARCHAR(100) PRIMARY KEY ,
+  internship_release_id VARCHAR(64) PRIMARY KEY ,
   internship_title VARCHAR(100) NOT NULL ,
   release_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  username VARCHAR(200) NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
   allow_grade VARCHAR(5) NOT NULL ,
   teacher_distribution_start_time DATETIME NOT NULL ,
   teacher_distribution_end_time DATETIME NOT NULL ,
@@ -210,50 +214,54 @@ CREATE TABLE internship_release(
 );
 
 CREATE TABLE internship_release_science(
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   science_id INT NOT NULL ,
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
-  FOREIGN KEY (science_id) REFERENCES science(science_id)
+  FOREIGN KEY (science_id) REFERENCES science(science_id),
+  PRIMARY KEY (internship_release_id,science_id)
 );
 
 CREATE TABLE internship_file(
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   file_id VARCHAR(100) NOT NULL ,
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
-  FOREIGN KEY (file_id) REFERENCES files(file_id)
+  FOREIGN KEY (file_id) REFERENCES files(file_id),
+  PRIMARY KEY (internship_release_id,file_id)
 );
 
 CREATE TABLE internship_teacher_distribution(
   staff_id INT NOT NULL ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   username VARCHAR(200) NOT NULL ,
   FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
-  FOREIGN KEY (username) REFERENCES users(username)
+  FOREIGN KEY (username) REFERENCES users(username),
+  PRIMARY KEY (staff_id,student_id,internship_release_id)
 );
 
 CREATE TABLE internship_apply(
-  internship_apply_id VARCHAR(100) PRIMARY KEY ,
+  internship_apply_id VARCHAR(64) PRIMARY KEY ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   internship_apply_state INT NOT NULL DEFAULT 0,
   reason VARCHAR(500) ,
   change_fill_start_time DATETIME,
   change_fill_end_time DATETIME,
   apply_time DATETIME NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 CREATE TABLE internship_change_history(
-  internship_change_history_id VARCHAR(100) PRIMARY KEY ,
+  internship_change_history_id VARCHAR(64) PRIMARY KEY ,
   reason VARCHAR(500) ,
   change_fill_start_time DATETIME,
   change_fill_end_time DATETIME,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   apply_time DATETIME NOT NULL ,
   state INT NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
@@ -261,9 +269,9 @@ CREATE TABLE internship_change_history(
 );
 
 CREATE TABLE internship_change_company_history(
-  internship_change_company_history_id VARCHAR(100) PRIMARY KEY ,
+  internship_change_company_history_id VARCHAR(64) PRIMARY KEY ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   company_name VARCHAR(200),
   company_address  VARCHAR(500),
   company_contacts VARCHAR(10),
@@ -274,9 +282,9 @@ CREATE TABLE internship_change_company_history(
 );
 
 CREATE TABLE internship_college(
-  internship_college_id VARCHAR(100) PRIMARY KEY ,
+  internship_college_id VARCHAR(64) PRIMARY KEY ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   student_name VARCHAR(15) NOT NULL ,
   college_class VARCHAR(50) NOT NULL ,
   student_sex VARCHAR(2) NOT NULL ,
@@ -302,11 +310,12 @@ CREATE TABLE internship_college(
   security_education_agreement BOOLEAN,
   parental_consent BOOLEAN,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 CREATE TABLE internship_company(
-  internship_company_id VARCHAR(100) PRIMARY KEY ,
+  internship_company_id VARCHAR(64) PRIMARY KEY ,
   student_name VARCHAR(15) NOT NULL ,
   college_class VARCHAR(50) NOT NULL ,
   student_sex VARCHAR(2) NOT NULL ,
@@ -332,29 +341,32 @@ CREATE TABLE internship_company(
   security_education_agreement BOOLEAN,
   parental_consent BOOLEAN,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 CREATE TABLE graduation_practice_college(
-  graduation_practice_college_id VARCHAR(100) PRIMARY KEY ,
+  graduation_practice_college_id VARCHAR(64) PRIMARY KEY ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL,
+  internship_release_id VARCHAR(64) NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 CREATE TABLE graduation_practice_unify(
-  graduation_practice_unify_id VARCHAR(100) PRIMARY KEY ,
+  graduation_practice_unify_id VARCHAR(64) PRIMARY KEY ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 CREATE TABLE graduation_practice_company(
-  graduation_practice_company_id VARCHAR(100) PRIMARY KEY ,
+  graduation_practice_company_id VARCHAR(64) PRIMARY KEY ,
   student_name VARCHAR(15) NOT NULL ,
   college_class VARCHAR(50) NOT NULL ,
   student_sex VARCHAR(2) NOT NULL ,
@@ -380,13 +392,14 @@ CREATE TABLE graduation_practice_company(
   security_education_agreement BOOLEAN,
   parental_consent BOOLEAN,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 CREATE TABLE internship_journal(
-  internship_journal_id VARCHAR(100) PRIMARY KEY ,
+  internship_journal_id VARCHAR(64) PRIMARY KEY ,
   student_name VARCHAR(10) NOT NULL ,
   student_number VARCHAR(20) NOT NULL ,
   organize VARCHAR(10) NOT NULL ,
@@ -396,14 +409,15 @@ CREATE TABLE internship_journal(
   internship_journal_date DATE NOT NULL ,
   create_date DATETIME NOT NULL ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   internship_journal_word VARCHAR(500) NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 CREATE TABLE internship_regulate(
-  internship_regulate_id VARCHAR(100) PRIMARY KEY ,
+  internship_regulate_id VARCHAR(64) PRIMARY KEY ,
   student_name VARCHAR(10) NOT NULL ,
   student_number VARCHAR(20) NOT NULL ,
   student_tel VARCHAR(15) NOT NULL ,
@@ -415,11 +429,12 @@ CREATE TABLE internship_regulate(
   tliy VARCHAR(200) NOT NULL ,
   create_date DATETIME NOT NULL ,
   student_id INT NOT NULL ,
-  internship_release_id VARCHAR(100) NOT NULL ,
+  internship_release_id VARCHAR(64) NOT NULL ,
   staff_id INT NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
-  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+  UNIQUE (student_id,internship_release_id)
 );
 
 INSERT INTO users_type(users_type_name) VALUES ('学生');

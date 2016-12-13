@@ -13,6 +13,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -33,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CollegeRole extends TableImpl<CollegeRoleRecord> {
 
-	private static final long serialVersionUID = 2051471825;
+	private static final long serialVersionUID = 1368856956;
 
 	/**
 	 * The reference instance of <code>isy.college_role</code>
@@ -78,6 +79,22 @@ public class CollegeRole extends TableImpl<CollegeRoleRecord> {
 
 	private CollegeRole(String alias, Table<CollegeRoleRecord> aliased, Field<?>[] parameters) {
 		super(alias, Isy.ISY, aliased, parameters, "");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UniqueKey<CollegeRoleRecord> getPrimaryKey() {
+		return Keys.KEY_COLLEGE_ROLE_PRIMARY;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UniqueKey<CollegeRoleRecord>> getKeys() {
+		return Arrays.<UniqueKey<CollegeRoleRecord>>asList(Keys.KEY_COLLEGE_ROLE_PRIMARY);
 	}
 
 	/**

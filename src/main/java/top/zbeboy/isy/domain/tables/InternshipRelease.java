@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
 
-	private static final long serialVersionUID = -359595168;
+	private static final long serialVersionUID = -1033603521;
 
 	/**
 	 * The reference instance of <code>isy.internship_release</code>
@@ -53,7 +53,7 @@ public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
 	/**
 	 * The column <code>isy.internship_release.internship_release_id</code>.
 	 */
-	public final TableField<InternshipReleaseRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipReleaseRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_release.internship_title</code>.
@@ -68,7 +68,7 @@ public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
 	/**
 	 * The column <code>isy.internship_release.username</code>.
 	 */
-	public final TableField<InternshipReleaseRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+	public final TableField<InternshipReleaseRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_release.allow_grade</code>.

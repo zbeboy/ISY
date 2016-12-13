@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipChangeHistory implements Serializable {
 
-	private static final long serialVersionUID = -781140734;
+	private static final long serialVersionUID = -1420752078;
 
 	private String    internshipChangeHistoryId;
 	private String    reason;
@@ -70,7 +70,7 @@ public class InternshipChangeHistory implements Serializable {
 	}
 
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipChangeHistoryId() {
 		return this.internshipChangeHistoryId;
 	}
@@ -114,7 +114,7 @@ public class InternshipChangeHistory implements Serializable {
 	}
 
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipReleaseId() {
 		return this.internshipReleaseId;
 	}

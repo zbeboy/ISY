@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationPracticeCompanyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeCompany extends TableImpl<GraduationPracticeCompanyRecord> {
 
-	private static final long serialVersionUID = -2113221882;
+	private static final long serialVersionUID = 1122505390;
 
 	/**
 	 * The reference instance of <code>isy.graduation_practice_company</code>
@@ -53,7 +53,7 @@ public class GraduationPracticeCompany extends TableImpl<GraduationPracticeCompa
 	/**
 	 * The column <code>isy.graduation_practice_company.graduation_practice_company_id</code>.
 	 */
-	public final TableField<GraduationPracticeCompanyRecord, String> GRADUATION_PRACTICE_COMPANY_ID = createField("graduation_practice_company_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<GraduationPracticeCompanyRecord, String> GRADUATION_PRACTICE_COMPANY_ID = createField("graduation_practice_company_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.graduation_practice_company.student_name</code>.
@@ -183,7 +183,7 @@ public class GraduationPracticeCompany extends TableImpl<GraduationPracticeCompa
 	/**
 	 * The column <code>isy.graduation_practice_company.internship_release_id</code>.
 	 */
-	public final TableField<GraduationPracticeCompanyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<GraduationPracticeCompanyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * Create a <code>isy.graduation_practice_company</code> table reference
@@ -220,7 +220,7 @@ public class GraduationPracticeCompany extends TableImpl<GraduationPracticeCompa
 	 */
 	@Override
 	public List<UniqueKey<GraduationPracticeCompanyRecord>> getKeys() {
-		return Arrays.<UniqueKey<GraduationPracticeCompanyRecord>>asList(Keys.KEY_GRADUATION_PRACTICE_COMPANY_PRIMARY);
+		return Arrays.<UniqueKey<GraduationPracticeCompanyRecord>>asList(Keys.KEY_GRADUATION_PRACTICE_COMPANY_PRIMARY, Keys.KEY_GRADUATION_PRACTICE_COMPANY_STUDENT_ID);
 	}
 
 	/**

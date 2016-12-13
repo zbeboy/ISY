@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.Student;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class StudentRecord extends UpdatableRecordImpl<StudentRecord> implements Record14<Integer, String, Date, String, String, String, Integer, Integer, String, String, String, String, Integer, String> {
 
-	private static final long serialVersionUID = 10911699;
+	private static final long serialVersionUID = 300199699;
 
 	/**
 	 * Setter for <code>isy.student.student_id</code>.
@@ -238,7 +238,7 @@ public class StudentRecord extends UpdatableRecordImpl<StudentRecord> implements
 	 * Getter for <code>isy.student.username</code>.
 	 */
 	@NotNull
-	@Size(max = 200)
+	@Size(max = 64)
 	public String getUsername() {
 		return (String) getValue(13);
 	}

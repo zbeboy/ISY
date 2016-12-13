@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.Staff;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class StaffRecord extends UpdatableRecordImpl<StaffRecord> implements Record11<Integer, String, Date, String, String, String, Integer, Integer, String, Integer, String> {
 
-	private static final long serialVersionUID = -1229680957;
+	private static final long serialVersionUID = -1128088087;
 
 	/**
 	 * Setter for <code>isy.staff.staff_id</code>.
@@ -193,7 +193,7 @@ public class StaffRecord extends UpdatableRecordImpl<StaffRecord> implements Rec
 	 * Getter for <code>isy.staff.username</code>.
 	 */
 	@NotNull
-	@Size(max = 200)
+	@Size(max = 64)
 	public String getUsername() {
 		return (String) getValue(10);
 	}

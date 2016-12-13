@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.InternshipChangeHistory;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipChangeHistoryRecord extends UpdatableRecordImpl<InternshipChangeHistoryRecord> implements Record8<String, String, Timestamp, Timestamp, Integer, String, Timestamp, Integer> {
 
-	private static final long serialVersionUID = -62359184;
+	private static final long serialVersionUID = 1361995218;
 
 	/**
 	 * Setter for <code>isy.internship_change_history.internship_change_history_id</code>.
@@ -45,7 +45,7 @@ public class InternshipChangeHistoryRecord extends UpdatableRecordImpl<Internshi
 	 * Getter for <code>isy.internship_change_history.internship_change_history_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipChangeHistoryId() {
 		return (String) getValue(0);
 	}
@@ -119,7 +119,7 @@ public class InternshipChangeHistoryRecord extends UpdatableRecordImpl<Internshi
 	 * Getter for <code>isy.internship_change_history.internship_release_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipReleaseId() {
 		return (String) getValue(5);
 	}

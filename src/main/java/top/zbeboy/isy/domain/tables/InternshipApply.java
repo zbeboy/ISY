@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipApplyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 
-	private static final long serialVersionUID = 2086575975;
+	private static final long serialVersionUID = -1328234102;
 
 	/**
 	 * The reference instance of <code>isy.internship_apply</code>
@@ -53,7 +53,7 @@ public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 	/**
 	 * The column <code>isy.internship_apply.internship_apply_id</code>.
 	 */
-	public final TableField<InternshipApplyRecord, String> INTERNSHIP_APPLY_ID = createField("internship_apply_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipApplyRecord, String> INTERNSHIP_APPLY_ID = createField("internship_apply_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_apply.student_id</code>.
@@ -63,7 +63,7 @@ public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 	/**
 	 * The column <code>isy.internship_apply.internship_release_id</code>.
 	 */
-	public final TableField<InternshipApplyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipApplyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_apply.internship_apply_state</code>.
@@ -125,7 +125,7 @@ public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 	 */
 	@Override
 	public List<UniqueKey<InternshipApplyRecord>> getKeys() {
-		return Arrays.<UniqueKey<InternshipApplyRecord>>asList(Keys.KEY_INTERNSHIP_APPLY_PRIMARY);
+		return Arrays.<UniqueKey<InternshipApplyRecord>>asList(Keys.KEY_INTERNSHIP_APPLY_PRIMARY, Keys.KEY_INTERNSHIP_APPLY_STUDENT_ID);
 	}
 
 	/**

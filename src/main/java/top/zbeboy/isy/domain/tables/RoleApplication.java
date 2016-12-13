@@ -13,6 +13,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -33,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleApplication extends TableImpl<RoleApplicationRecord> {
 
-	private static final long serialVersionUID = 1368179275;
+	private static final long serialVersionUID = 1578450235;
 
 	/**
 	 * The reference instance of <code>isy.role_application</code>
@@ -78,6 +79,22 @@ public class RoleApplication extends TableImpl<RoleApplicationRecord> {
 
 	private RoleApplication(String alias, Table<RoleApplicationRecord> aliased, Field<?>[] parameters) {
 		super(alias, Isy.ISY, aliased, parameters, "");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UniqueKey<RoleApplicationRecord> getPrimaryKey() {
+		return Keys.KEY_ROLE_APPLICATION_PRIMARY;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UniqueKey<RoleApplicationRecord>> getKeys() {
+		return Arrays.<UniqueKey<RoleApplicationRecord>>asList(Keys.KEY_ROLE_APPLICATION_PRIMARY);
 	}
 
 	/**

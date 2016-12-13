@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.SystemMailboxRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemMailbox extends TableImpl<SystemMailboxRecord> {
 
-	private static final long serialVersionUID = 599464665;
+	private static final long serialVersionUID = -914848136;
 
 	/**
 	 * The reference instance of <code>isy.system_mailbox</code>
@@ -52,7 +52,7 @@ public class SystemMailbox extends TableImpl<SystemMailboxRecord> {
 	/**
 	 * The column <code>isy.system_mailbox.system_mailbox_id</code>.
 	 */
-	public final TableField<SystemMailboxRecord, String> SYSTEM_MAILBOX_ID = createField("system_mailbox_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<SystemMailboxRecord, String> SYSTEM_MAILBOX_ID = createField("system_mailbox_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.system_mailbox.send_time</code>.

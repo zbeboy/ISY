@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 
-	private static final long serialVersionUID = -183265163;
+	private static final long serialVersionUID = -672602307;
 
 	/**
 	 * The reference instance of <code>isy.internship_journal</code>
@@ -54,7 +54,7 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 	/**
 	 * The column <code>isy.internship_journal.internship_journal_id</code>.
 	 */
-	public final TableField<InternshipJournalRecord, String> INTERNSHIP_JOURNAL_ID = createField("internship_journal_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipJournalRecord, String> INTERNSHIP_JOURNAL_ID = createField("internship_journal_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_journal.student_name</code>.
@@ -104,7 +104,7 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 	/**
 	 * The column <code>isy.internship_journal.internship_release_id</code>.
 	 */
-	public final TableField<InternshipJournalRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipJournalRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_journal.internship_journal_word</code>.
@@ -146,7 +146,7 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 	 */
 	@Override
 	public List<UniqueKey<InternshipJournalRecord>> getKeys() {
-		return Arrays.<UniqueKey<InternshipJournalRecord>>asList(Keys.KEY_INTERNSHIP_JOURNAL_PRIMARY);
+		return Arrays.<UniqueKey<InternshipJournalRecord>>asList(Keys.KEY_INTERNSHIP_JOURNAL_PRIMARY, Keys.KEY_INTERNSHIP_JOURNAL_STUDENT_ID);
 	}
 
 	/**

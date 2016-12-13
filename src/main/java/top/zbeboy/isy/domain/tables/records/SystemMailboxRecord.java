@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.SystemMailbox;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemMailboxRecord extends UpdatableRecordImpl<SystemMailboxRecord> implements Record3<String, Timestamp, String> {
 
-	private static final long serialVersionUID = 8801192;
+	private static final long serialVersionUID = 1923030595;
 
 	/**
 	 * Setter for <code>isy.system_mailbox.system_mailbox_id</code>.
@@ -45,7 +45,7 @@ public class SystemMailboxRecord extends UpdatableRecordImpl<SystemMailboxRecord
 	 * Getter for <code>isy.system_mailbox.system_mailbox_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getSystemMailboxId() {
 		return (String) getValue(0);
 	}

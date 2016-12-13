@@ -33,7 +33,7 @@ import top.zbeboy.isy.domain.tables.InternshipJournal;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournalRecord extends UpdatableRecordImpl<InternshipJournalRecord> implements Record12<String, String, String, String, String, String, String, Date, Timestamp, Integer, String, String> {
 
-	private static final long serialVersionUID = 1954764824;
+	private static final long serialVersionUID = 979842186;
 
 	/**
 	 * Setter for <code>isy.internship_journal.internship_journal_id</code>.
@@ -46,7 +46,7 @@ public class InternshipJournalRecord extends UpdatableRecordImpl<InternshipJourn
 	 * Getter for <code>isy.internship_journal.internship_journal_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipJournalId() {
 		return (String) getValue(0);
 	}
@@ -203,7 +203,7 @@ public class InternshipJournalRecord extends UpdatableRecordImpl<InternshipJourn
 	 * Getter for <code>isy.internship_journal.internship_release_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipReleaseId() {
 		return (String) getValue(10);
 	}

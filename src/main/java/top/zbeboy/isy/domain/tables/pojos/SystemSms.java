@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemSms implements Serializable {
 
-	private static final long serialVersionUID = -2072143521;
+	private static final long serialVersionUID = 1079241974;
 
 	private String    systemSmsId;
 	private Timestamp sendTime;
@@ -50,7 +50,7 @@ public class SystemSms implements Serializable {
 	}
 
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getSystemSmsId() {
 		return this.systemSmsId;
 	}

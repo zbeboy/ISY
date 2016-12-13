@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipRegulateRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipRegulate extends TableImpl<InternshipRegulateRecord> {
 
-	private static final long serialVersionUID = -1880590366;
+	private static final long serialVersionUID = -1283901876;
 
 	/**
 	 * The reference instance of <code>isy.internship_regulate</code>
@@ -54,7 +54,7 @@ public class InternshipRegulate extends TableImpl<InternshipRegulateRecord> {
 	/**
 	 * The column <code>isy.internship_regulate.internship_regulate_id</code>.
 	 */
-	public final TableField<InternshipRegulateRecord, String> INTERNSHIP_REGULATE_ID = createField("internship_regulate_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipRegulateRecord, String> INTERNSHIP_REGULATE_ID = createField("internship_regulate_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_regulate.student_name</code>.
@@ -114,7 +114,7 @@ public class InternshipRegulate extends TableImpl<InternshipRegulateRecord> {
 	/**
 	 * The column <code>isy.internship_regulate.internship_release_id</code>.
 	 */
-	public final TableField<InternshipRegulateRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipRegulateRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_regulate.staff_id</code>.
@@ -156,7 +156,7 @@ public class InternshipRegulate extends TableImpl<InternshipRegulateRecord> {
 	 */
 	@Override
 	public List<UniqueKey<InternshipRegulateRecord>> getKeys() {
-		return Arrays.<UniqueKey<InternshipRegulateRecord>>asList(Keys.KEY_INTERNSHIP_REGULATE_PRIMARY);
+		return Arrays.<UniqueKey<InternshipRegulateRecord>>asList(Keys.KEY_INTERNSHIP_REGULATE_PRIMARY, Keys.KEY_INTERNSHIP_REGULATE_STUDENT_ID);
 	}
 
 	/**

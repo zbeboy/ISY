@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<GraduationPracticeCollegeRecord> implements Record3<String, Integer, String> {
 
-	private static final long serialVersionUID = 1437494130;
+	private static final long serialVersionUID = -1776134614;
 
 	/**
 	 * Setter for <code>isy.graduation_practice_college.graduation_practice_college_id</code>.
@@ -43,7 +43,7 @@ public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<Graduat
 	 * Getter for <code>isy.graduation_practice_college.graduation_practice_college_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getGraduationPracticeCollegeId() {
 		return (String) getValue(0);
 	}
@@ -74,7 +74,7 @@ public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<Graduat
 	 * Getter for <code>isy.graduation_practice_college.internship_release_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipReleaseId() {
 		return (String) getValue(2);
 	}

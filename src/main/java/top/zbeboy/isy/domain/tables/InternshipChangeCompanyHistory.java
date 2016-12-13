@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipChangeCompanyHistoryRecord
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipChangeCompanyHistory extends TableImpl<InternshipChangeCompanyHistoryRecord> {
 
-	private static final long serialVersionUID = 1769852519;
+	private static final long serialVersionUID = 361749905;
 
 	/**
 	 * The reference instance of <code>isy.internship_change_company_history</code>
@@ -53,7 +53,7 @@ public class InternshipChangeCompanyHistory extends TableImpl<InternshipChangeCo
 	/**
 	 * The column <code>isy.internship_change_company_history.internship_change_company_history_id</code>.
 	 */
-	public final TableField<InternshipChangeCompanyHistoryRecord, String> INTERNSHIP_CHANGE_COMPANY_HISTORY_ID = createField("internship_change_company_history_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipChangeCompanyHistoryRecord, String> INTERNSHIP_CHANGE_COMPANY_HISTORY_ID = createField("internship_change_company_history_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_change_company_history.student_id</code>.
@@ -63,7 +63,7 @@ public class InternshipChangeCompanyHistory extends TableImpl<InternshipChangeCo
 	/**
 	 * The column <code>isy.internship_change_company_history.internship_release_id</code>.
 	 */
-	public final TableField<InternshipChangeCompanyHistoryRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipChangeCompanyHistoryRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_change_company_history.company_name</code>.

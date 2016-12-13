@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemMailbox implements Serializable {
 
-	private static final long serialVersionUID = -1665119001;
+	private static final long serialVersionUID = 1439605780;
 
 	private String    systemMailboxId;
 	private Timestamp sendTime;
@@ -50,7 +50,7 @@ public class SystemMailbox implements Serializable {
 	}
 
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getSystemMailboxId() {
 		return this.systemMailboxId;
 	}

@@ -31,7 +31,7 @@ public class TestUtil extends TestCase{
         System.out.println("::" + getUUID());
         String[] ss = getUUID(10);
         for (String s : ss) {
-            System.out.println(s);
+            System.out.println(s.length());
         }
     }
 }

@@ -13,6 +13,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -33,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipReleaseScience extends TableImpl<InternshipReleaseScienceRecord> {
 
-	private static final long serialVersionUID = 750973362;
+	private static final long serialVersionUID = 1216928286;
 
 	/**
 	 * The reference instance of <code>isy.internship_release_science</code>
@@ -51,7 +52,7 @@ public class InternshipReleaseScience extends TableImpl<InternshipReleaseScience
 	/**
 	 * The column <code>isy.internship_release_science.internship_release_id</code>.
 	 */
-	public final TableField<InternshipReleaseScienceRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipReleaseScienceRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_release_science.science_id</code>.
@@ -78,6 +79,22 @@ public class InternshipReleaseScience extends TableImpl<InternshipReleaseScience
 
 	private InternshipReleaseScience(String alias, Table<InternshipReleaseScienceRecord> aliased, Field<?>[] parameters) {
 		super(alias, Isy.ISY, aliased, parameters, "");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UniqueKey<InternshipReleaseScienceRecord> getPrimaryKey() {
+		return Keys.KEY_INTERNSHIP_RELEASE_SCIENCE_PRIMARY;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UniqueKey<InternshipReleaseScienceRecord>> getKeys() {
+		return Arrays.<UniqueKey<InternshipReleaseScienceRecord>>asList(Keys.KEY_INTERNSHIP_RELEASE_SCIENCE_PRIMARY);
 	}
 
 	/**

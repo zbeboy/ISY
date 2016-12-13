@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.Files;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class FilesRecord extends UpdatableRecordImpl<FilesRecord> implements Record6<String, String, String, String, String, String> {
 
-	private static final long serialVersionUID = -2085456809;
+	private static final long serialVersionUID = -1540969812;
 
 	/**
 	 * Setter for <code>isy.files.file_id</code>.
@@ -43,7 +43,7 @@ public class FilesRecord extends UpdatableRecordImpl<FilesRecord> implements Rec
 	 * Getter for <code>isy.files.file_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getFileId() {
 		return (String) getValue(0);
 	}

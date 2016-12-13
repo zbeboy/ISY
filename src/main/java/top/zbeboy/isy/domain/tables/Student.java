@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.StudentRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Student extends TableImpl<StudentRecord> {
 
-	private static final long serialVersionUID = 412432346;
+	private static final long serialVersionUID = 212507208;
 
 	/**
 	 * The reference instance of <code>isy.student</code>
@@ -119,7 +119,7 @@ public class Student extends TableImpl<StudentRecord> {
 	/**
 	 * The column <code>isy.student.username</code>.
 	 */
-	public final TableField<StudentRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+	public final TableField<StudentRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * Create a <code>isy.student</code> table reference

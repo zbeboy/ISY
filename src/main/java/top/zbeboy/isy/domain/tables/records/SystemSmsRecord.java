@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.SystemSms;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemSmsRecord extends UpdatableRecordImpl<SystemSmsRecord> implements Record3<String, Timestamp, String> {
 
-	private static final long serialVersionUID = -862657715;
+	private static final long serialVersionUID = 1990959208;
 
 	/**
 	 * Setter for <code>isy.system_sms.system_sms_id</code>.
@@ -45,7 +45,7 @@ public class SystemSmsRecord extends UpdatableRecordImpl<SystemSmsRecord> implem
 	 * Getter for <code>isy.system_sms.system_sms_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getSystemSmsId() {
 		return (String) getValue(0);
 	}

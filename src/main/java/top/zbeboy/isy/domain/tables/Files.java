@@ -33,7 +33,7 @@ import top.zbeboy.isy.domain.tables.records.FilesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Files extends TableImpl<FilesRecord> {
 
-	private static final long serialVersionUID = 1543609831;
+	private static final long serialVersionUID = 731179818;
 
 	/**
 	 * The reference instance of <code>isy.files</code>
@@ -51,7 +51,7 @@ public class Files extends TableImpl<FilesRecord> {
 	/**
 	 * The column <code>isy.files.file_id</code>.
 	 */
-	public final TableField<FilesRecord, String> FILE_ID = createField("file_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<FilesRecord, String> FILE_ID = createField("file_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.files.size</code>.

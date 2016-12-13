@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<GraduationPracticeUnifyRecord> implements Record3<String, Integer, String> {
 
-	private static final long serialVersionUID = 600320418;
+	private static final long serialVersionUID = 1882188610;
 
 	/**
 	 * Setter for <code>isy.graduation_practice_unify.graduation_practice_unify_id</code>.
@@ -43,7 +43,7 @@ public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<Graduatio
 	 * Getter for <code>isy.graduation_practice_unify.graduation_practice_unify_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getGraduationPracticeUnifyId() {
 		return (String) getValue(0);
 	}
@@ -74,7 +74,7 @@ public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<Graduatio
 	 * Getter for <code>isy.graduation_practice_unify.internship_release_id</code>.
 	 */
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getInternshipReleaseId() {
 		return (String) getValue(2);
 	}

@@ -13,6 +13,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -33,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Authorities extends TableImpl<AuthoritiesRecord> {
 
-	private static final long serialVersionUID = -1268950677;
+	private static final long serialVersionUID = 633315478;
 
 	/**
 	 * The reference instance of <code>isy.authorities</code>
@@ -51,7 +52,7 @@ public class Authorities extends TableImpl<AuthoritiesRecord> {
 	/**
 	 * The column <code>isy.authorities.username</code>.
 	 */
-	public final TableField<AuthoritiesRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+	public final TableField<AuthoritiesRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.authorities.authority</code>.
@@ -78,6 +79,22 @@ public class Authorities extends TableImpl<AuthoritiesRecord> {
 
 	private Authorities(String alias, Table<AuthoritiesRecord> aliased, Field<?>[] parameters) {
 		super(alias, Isy.ISY, aliased, parameters, "");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UniqueKey<AuthoritiesRecord> getPrimaryKey() {
+		return Keys.KEY_AUTHORITIES_PRIMARY;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UniqueKey<AuthoritiesRecord>> getKeys() {
+		return Arrays.<UniqueKey<AuthoritiesRecord>>asList(Keys.KEY_AUTHORITIES_PRIMARY);
 	}
 
 	/**

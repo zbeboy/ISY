@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-	private static final long serialVersionUID = 51327448;
+	private static final long serialVersionUID = -32998529;
 
 	/**
 	 * The reference instance of <code>isy.users</code>
@@ -54,12 +54,12 @@ public class Users extends TableImpl<UsersRecord> {
 	/**
 	 * The column <code>isy.users.username</code>.
 	 */
-	public final TableField<UsersRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+	public final TableField<UsersRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.users.password</code>.
 	 */
-	public final TableField<UsersRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(800).nullable(false), this, "");
+	public final TableField<UsersRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(300).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.users.enabled</code>.

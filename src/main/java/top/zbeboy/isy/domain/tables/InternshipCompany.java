@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipCompanyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCompany extends TableImpl<InternshipCompanyRecord> {
 
-	private static final long serialVersionUID = -418565785;
+	private static final long serialVersionUID = -51803567;
 
 	/**
 	 * The reference instance of <code>isy.internship_company</code>
@@ -53,7 +53,7 @@ public class InternshipCompany extends TableImpl<InternshipCompanyRecord> {
 	/**
 	 * The column <code>isy.internship_company.internship_company_id</code>.
 	 */
-	public final TableField<InternshipCompanyRecord, String> INTERNSHIP_COMPANY_ID = createField("internship_company_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipCompanyRecord, String> INTERNSHIP_COMPANY_ID = createField("internship_company_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_company.student_name</code>.
@@ -183,7 +183,7 @@ public class InternshipCompany extends TableImpl<InternshipCompanyRecord> {
 	/**
 	 * The column <code>isy.internship_company.internship_release_id</code>.
 	 */
-	public final TableField<InternshipCompanyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipCompanyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * Create a <code>isy.internship_company</code> table reference
@@ -220,7 +220,7 @@ public class InternshipCompany extends TableImpl<InternshipCompanyRecord> {
 	 */
 	@Override
 	public List<UniqueKey<InternshipCompanyRecord>> getKeys() {
-		return Arrays.<UniqueKey<InternshipCompanyRecord>>asList(Keys.KEY_INTERNSHIP_COMPANY_PRIMARY);
+		return Arrays.<UniqueKey<InternshipCompanyRecord>>asList(Keys.KEY_INTERNSHIP_COMPANY_PRIMARY, Keys.KEY_INTERNSHIP_COMPANY_STUDENT_ID);
 	}
 
 	/**

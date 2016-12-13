@@ -13,6 +13,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -33,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CollegeApplication extends TableImpl<CollegeApplicationRecord> {
 
-	private static final long serialVersionUID = -1874196719;
+	private static final long serialVersionUID = 1352298432;
 
 	/**
 	 * The reference instance of <code>isy.college_application</code>
@@ -78,6 +79,22 @@ public class CollegeApplication extends TableImpl<CollegeApplicationRecord> {
 
 	private CollegeApplication(String alias, Table<CollegeApplicationRecord> aliased, Field<?>[] parameters) {
 		super(alias, Isy.ISY, aliased, parameters, "");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UniqueKey<CollegeApplicationRecord> getPrimaryKey() {
+		return Keys.KEY_COLLEGE_APPLICATION_PRIMARY;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UniqueKey<CollegeApplicationRecord>> getKeys() {
+		return Arrays.<UniqueKey<CollegeApplicationRecord>>asList(Keys.KEY_COLLEGE_APPLICATION_PRIMARY);
 	}
 
 	/**

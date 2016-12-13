@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.SystemLogRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemLog extends TableImpl<SystemLogRecord> {
 
-	private static final long serialVersionUID = -688567381;
+	private static final long serialVersionUID = 710263058;
 
 	/**
 	 * The reference instance of <code>isy.system_log</code>
@@ -52,7 +52,7 @@ public class SystemLog extends TableImpl<SystemLogRecord> {
 	/**
 	 * The column <code>isy.system_log.system_log_id</code>.
 	 */
-	public final TableField<SystemLogRecord, String> SYSTEM_LOG_ID = createField("system_log_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<SystemLogRecord, String> SYSTEM_LOG_ID = createField("system_log_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.system_log.behavior</code>.
@@ -67,7 +67,7 @@ public class SystemLog extends TableImpl<SystemLogRecord> {
 	/**
 	 * The column <code>isy.system_log.username</code>.
 	 */
-	public final TableField<SystemLogRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+	public final TableField<SystemLogRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.system_log.ip_address</code>.

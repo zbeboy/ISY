@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.PersistentLoginsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class PersistentLogins extends TableImpl<PersistentLoginsRecord> {
 
-	private static final long serialVersionUID = 2121507257;
+	private static final long serialVersionUID = -168461873;
 
 	/**
 	 * The reference instance of <code>isy.persistent_logins</code>
@@ -52,7 +52,7 @@ public class PersistentLogins extends TableImpl<PersistentLoginsRecord> {
 	/**
 	 * The column <code>isy.persistent_logins.username</code>.
 	 */
-	public final TableField<PersistentLoginsRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+	public final TableField<PersistentLoginsRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.persistent_logins.series</code>.

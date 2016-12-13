@@ -126,20 +126,34 @@ public class Keys {
 	// -------------------------------------------------------------------------
 
 	public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = UniqueKeys0.KEY_APPLICATION_PRIMARY;
+	public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = UniqueKeys0.KEY_AUTHORITIES_PRIMARY;
 	public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = UniqueKeys0.KEY_COLLEGE_PRIMARY;
+	public static final UniqueKey<CollegeApplicationRecord> KEY_COLLEGE_APPLICATION_PRIMARY = UniqueKeys0.KEY_COLLEGE_APPLICATION_PRIMARY;
+	public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = UniqueKeys0.KEY_COLLEGE_ROLE_PRIMARY;
 	public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
 	public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
 	public static final UniqueKey<GraduationPracticeCollegeRecord> KEY_GRADUATION_PRACTICE_COLLEGE_PRIMARY = UniqueKeys0.KEY_GRADUATION_PRACTICE_COLLEGE_PRIMARY;
+	public static final UniqueKey<GraduationPracticeCollegeRecord> KEY_GRADUATION_PRACTICE_COLLEGE_STUDENT_ID = UniqueKeys0.KEY_GRADUATION_PRACTICE_COLLEGE_STUDENT_ID;
 	public static final UniqueKey<GraduationPracticeCompanyRecord> KEY_GRADUATION_PRACTICE_COMPANY_PRIMARY = UniqueKeys0.KEY_GRADUATION_PRACTICE_COMPANY_PRIMARY;
+	public static final UniqueKey<GraduationPracticeCompanyRecord> KEY_GRADUATION_PRACTICE_COMPANY_STUDENT_ID = UniqueKeys0.KEY_GRADUATION_PRACTICE_COMPANY_STUDENT_ID;
 	public static final UniqueKey<GraduationPracticeUnifyRecord> KEY_GRADUATION_PRACTICE_UNIFY_PRIMARY = UniqueKeys0.KEY_GRADUATION_PRACTICE_UNIFY_PRIMARY;
+	public static final UniqueKey<GraduationPracticeUnifyRecord> KEY_GRADUATION_PRACTICE_UNIFY_STUDENT_ID = UniqueKeys0.KEY_GRADUATION_PRACTICE_UNIFY_STUDENT_ID;
 	public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_APPLY_PRIMARY;
+	public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_STUDENT_ID = UniqueKeys0.KEY_INTERNSHIP_APPLY_STUDENT_ID;
 	public static final UniqueKey<InternshipChangeCompanyHistoryRecord> KEY_INTERNSHIP_CHANGE_COMPANY_HISTORY_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_CHANGE_COMPANY_HISTORY_PRIMARY;
 	public static final UniqueKey<InternshipChangeHistoryRecord> KEY_INTERNSHIP_CHANGE_HISTORY_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_CHANGE_HISTORY_PRIMARY;
 	public static final UniqueKey<InternshipCollegeRecord> KEY_INTERNSHIP_COLLEGE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_COLLEGE_PRIMARY;
+	public static final UniqueKey<InternshipCollegeRecord> KEY_INTERNSHIP_COLLEGE_STUDENT_ID = UniqueKeys0.KEY_INTERNSHIP_COLLEGE_STUDENT_ID;
 	public static final UniqueKey<InternshipCompanyRecord> KEY_INTERNSHIP_COMPANY_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_COMPANY_PRIMARY;
+	public static final UniqueKey<InternshipCompanyRecord> KEY_INTERNSHIP_COMPANY_STUDENT_ID = UniqueKeys0.KEY_INTERNSHIP_COMPANY_STUDENT_ID;
+	public static final UniqueKey<InternshipFileRecord> KEY_INTERNSHIP_FILE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_FILE_PRIMARY;
 	public static final UniqueKey<InternshipJournalRecord> KEY_INTERNSHIP_JOURNAL_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_JOURNAL_PRIMARY;
+	public static final UniqueKey<InternshipJournalRecord> KEY_INTERNSHIP_JOURNAL_STUDENT_ID = UniqueKeys0.KEY_INTERNSHIP_JOURNAL_STUDENT_ID;
 	public static final UniqueKey<InternshipRegulateRecord> KEY_INTERNSHIP_REGULATE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_REGULATE_PRIMARY;
+	public static final UniqueKey<InternshipRegulateRecord> KEY_INTERNSHIP_REGULATE_STUDENT_ID = UniqueKeys0.KEY_INTERNSHIP_REGULATE_STUDENT_ID;
 	public static final UniqueKey<InternshipReleaseRecord> KEY_INTERNSHIP_RELEASE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_RELEASE_PRIMARY;
+	public static final UniqueKey<InternshipReleaseScienceRecord> KEY_INTERNSHIP_RELEASE_SCIENCE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_RELEASE_SCIENCE_PRIMARY;
+	public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY;
 	public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TYPE_PRIMARY;
 	public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = UniqueKeys0.KEY_NATION_PRIMARY;
 	public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = UniqueKeys0.KEY_NATION_NATION_NAME;
@@ -148,6 +162,7 @@ public class Keys {
 	public static final UniqueKey<PoliticalLandscapeRecord> KEY_POLITICAL_LANDSCAPE_PRIMARY = UniqueKeys0.KEY_POLITICAL_LANDSCAPE_PRIMARY;
 	public static final UniqueKey<RoleRecord> KEY_ROLE_PRIMARY = UniqueKeys0.KEY_ROLE_PRIMARY;
 	public static final UniqueKey<RoleRecord> KEY_ROLE_ROLE_EN_NAME = UniqueKeys0.KEY_ROLE_ROLE_EN_NAME;
+	public static final UniqueKey<RoleApplicationRecord> KEY_ROLE_APPLICATION_PRIMARY = UniqueKeys0.KEY_ROLE_APPLICATION_PRIMARY;
 	public static final UniqueKey<SchemaVersionRecord> KEY_SCHEMA_VERSION_PRIMARY = UniqueKeys0.KEY_SCHEMA_VERSION_PRIMARY;
 	public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = UniqueKeys0.KEY_SCHOOL_PRIMARY;
 	public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = UniqueKeys0.KEY_SCIENCE_PRIMARY;
@@ -239,20 +254,34 @@ public class Keys {
 
 	private static class UniqueKeys0 extends AbstractKeys {
 		public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = createUniqueKey(Application.APPLICATION, Application.APPLICATION.APPLICATION_ID);
+		public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = createUniqueKey(Authorities.AUTHORITIES, Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY);
 		public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = createUniqueKey(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
+		public static final UniqueKey<CollegeApplicationRecord> KEY_COLLEGE_APPLICATION_PRIMARY = createUniqueKey(CollegeApplication.COLLEGE_APPLICATION, CollegeApplication.COLLEGE_APPLICATION.APPLICATION_ID, CollegeApplication.COLLEGE_APPLICATION.COLLEGE_ID);
+		public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = createUniqueKey(CollegeRole.COLLEGE_ROLE, CollegeRole.COLLEGE_ROLE.ROLE_ID, CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
 		public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = createUniqueKey(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
 		public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = createUniqueKey(Files.FILES, Files.FILES.FILE_ID);
 		public static final UniqueKey<GraduationPracticeCollegeRecord> KEY_GRADUATION_PRACTICE_COLLEGE_PRIMARY = createUniqueKey(GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE, GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_ID);
+		public static final UniqueKey<GraduationPracticeCollegeRecord> KEY_GRADUATION_PRACTICE_COLLEGE_STUDENT_ID = createUniqueKey(GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE, GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE.STUDENT_ID, GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<GraduationPracticeCompanyRecord> KEY_GRADUATION_PRACTICE_COMPANY_PRIMARY = createUniqueKey(GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY, GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ID);
+		public static final UniqueKey<GraduationPracticeCompanyRecord> KEY_GRADUATION_PRACTICE_COMPANY_STUDENT_ID = createUniqueKey(GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY, GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY.STUDENT_ID, GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<GraduationPracticeUnifyRecord> KEY_GRADUATION_PRACTICE_UNIFY_PRIMARY = createUniqueKey(GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY, GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_ID);
+		public static final UniqueKey<GraduationPracticeUnifyRecord> KEY_GRADUATION_PRACTICE_UNIFY_STUDENT_ID = createUniqueKey(GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY, GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY.STUDENT_ID, GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_PRIMARY = createUniqueKey(InternshipApply.INTERNSHIP_APPLY, InternshipApply.INTERNSHIP_APPLY.INTERNSHIP_APPLY_ID);
+		public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_STUDENT_ID = createUniqueKey(InternshipApply.INTERNSHIP_APPLY, InternshipApply.INTERNSHIP_APPLY.STUDENT_ID, InternshipApply.INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<InternshipChangeCompanyHistoryRecord> KEY_INTERNSHIP_CHANGE_COMPANY_HISTORY_PRIMARY = createUniqueKey(InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY, InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY.INTERNSHIP_CHANGE_COMPANY_HISTORY_ID);
 		public static final UniqueKey<InternshipChangeHistoryRecord> KEY_INTERNSHIP_CHANGE_HISTORY_PRIMARY = createUniqueKey(InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY, InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_CHANGE_HISTORY_ID);
 		public static final UniqueKey<InternshipCollegeRecord> KEY_INTERNSHIP_COLLEGE_PRIMARY = createUniqueKey(InternshipCollege.INTERNSHIP_COLLEGE, InternshipCollege.INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_ID);
+		public static final UniqueKey<InternshipCollegeRecord> KEY_INTERNSHIP_COLLEGE_STUDENT_ID = createUniqueKey(InternshipCollege.INTERNSHIP_COLLEGE, InternshipCollege.INTERNSHIP_COLLEGE.STUDENT_ID, InternshipCollege.INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<InternshipCompanyRecord> KEY_INTERNSHIP_COMPANY_PRIMARY = createUniqueKey(InternshipCompany.INTERNSHIP_COMPANY, InternshipCompany.INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_ID);
+		public static final UniqueKey<InternshipCompanyRecord> KEY_INTERNSHIP_COMPANY_STUDENT_ID = createUniqueKey(InternshipCompany.INTERNSHIP_COMPANY, InternshipCompany.INTERNSHIP_COMPANY.STUDENT_ID, InternshipCompany.INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID);
+		public static final UniqueKey<InternshipFileRecord> KEY_INTERNSHIP_FILE_PRIMARY = createUniqueKey(InternshipFile.INTERNSHIP_FILE, InternshipFile.INTERNSHIP_FILE.INTERNSHIP_RELEASE_ID, InternshipFile.INTERNSHIP_FILE.FILE_ID);
 		public static final UniqueKey<InternshipJournalRecord> KEY_INTERNSHIP_JOURNAL_PRIMARY = createUniqueKey(InternshipJournal.INTERNSHIP_JOURNAL, InternshipJournal.INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID);
+		public static final UniqueKey<InternshipJournalRecord> KEY_INTERNSHIP_JOURNAL_STUDENT_ID = createUniqueKey(InternshipJournal.INTERNSHIP_JOURNAL, InternshipJournal.INTERNSHIP_JOURNAL.STUDENT_ID, InternshipJournal.INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<InternshipRegulateRecord> KEY_INTERNSHIP_REGULATE_PRIMARY = createUniqueKey(InternshipRegulate.INTERNSHIP_REGULATE, InternshipRegulate.INTERNSHIP_REGULATE.INTERNSHIP_REGULATE_ID);
+		public static final UniqueKey<InternshipRegulateRecord> KEY_INTERNSHIP_REGULATE_STUDENT_ID = createUniqueKey(InternshipRegulate.INTERNSHIP_REGULATE, InternshipRegulate.INTERNSHIP_REGULATE.STUDENT_ID, InternshipRegulate.INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<InternshipReleaseRecord> KEY_INTERNSHIP_RELEASE_PRIMARY = createUniqueKey(InternshipRelease.INTERNSHIP_RELEASE, InternshipRelease.INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID);
+		public static final UniqueKey<InternshipReleaseScienceRecord> KEY_INTERNSHIP_RELEASE_SCIENCE_PRIMARY = createUniqueKey(InternshipReleaseScience.INTERNSHIP_RELEASE_SCIENCE, InternshipReleaseScience.INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID, InternshipReleaseScience.INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID);
+		public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = createUniqueKey(InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID);
 		public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = createUniqueKey(InternshipType.INTERNSHIP_TYPE, InternshipType.INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID);
 		public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = createUniqueKey(Nation.NATION, Nation.NATION.NATION_ID);
 		public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = createUniqueKey(Nation.NATION, Nation.NATION.NATION_NAME);
@@ -261,6 +290,7 @@ public class Keys {
 		public static final UniqueKey<PoliticalLandscapeRecord> KEY_POLITICAL_LANDSCAPE_PRIMARY = createUniqueKey(PoliticalLandscape.POLITICAL_LANDSCAPE, PoliticalLandscape.POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID);
 		public static final UniqueKey<RoleRecord> KEY_ROLE_PRIMARY = createUniqueKey(Role.ROLE, Role.ROLE.ROLE_ID);
 		public static final UniqueKey<RoleRecord> KEY_ROLE_ROLE_EN_NAME = createUniqueKey(Role.ROLE, Role.ROLE.ROLE_EN_NAME);
+		public static final UniqueKey<RoleApplicationRecord> KEY_ROLE_APPLICATION_PRIMARY = createUniqueKey(RoleApplication.ROLE_APPLICATION, RoleApplication.ROLE_APPLICATION.ROLE_ID, RoleApplication.ROLE_APPLICATION.APPLICATION_ID);
 		public static final UniqueKey<SchemaVersionRecord> KEY_SCHEMA_VERSION_PRIMARY = createUniqueKey(SchemaVersion.SCHEMA_VERSION, SchemaVersion.SCHEMA_VERSION.VERSION);
 		public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = createUniqueKey(School.SCHOOL, School.SCHOOL.SCHOOL_ID);
 		public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = createUniqueKey(Science.SCIENCE, Science.SCIENCE.SCIENCE_ID);

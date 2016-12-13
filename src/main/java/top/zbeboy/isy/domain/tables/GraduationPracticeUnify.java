@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationPracticeUnifyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRecord> {
 
-	private static final long serialVersionUID = -1182663512;
+	private static final long serialVersionUID = 1794359390;
 
 	/**
 	 * The reference instance of <code>isy.graduation_practice_unify</code>
@@ -52,7 +52,7 @@ public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRe
 	/**
 	 * The column <code>isy.graduation_practice_unify.graduation_practice_unify_id</code>.
 	 */
-	public final TableField<GraduationPracticeUnifyRecord, String> GRADUATION_PRACTICE_UNIFY_ID = createField("graduation_practice_unify_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<GraduationPracticeUnifyRecord, String> GRADUATION_PRACTICE_UNIFY_ID = createField("graduation_practice_unify_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.graduation_practice_unify.student_id</code>.
@@ -62,7 +62,7 @@ public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRe
 	/**
 	 * The column <code>isy.graduation_practice_unify.internship_release_id</code>.
 	 */
-	public final TableField<GraduationPracticeUnifyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<GraduationPracticeUnifyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * Create a <code>isy.graduation_practice_unify</code> table reference
@@ -99,7 +99,7 @@ public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRe
 	 */
 	@Override
 	public List<UniqueKey<GraduationPracticeUnifyRecord>> getKeys() {
-		return Arrays.<UniqueKey<GraduationPracticeUnifyRecord>>asList(Keys.KEY_GRADUATION_PRACTICE_UNIFY_PRIMARY);
+		return Arrays.<UniqueKey<GraduationPracticeUnifyRecord>>asList(Keys.KEY_GRADUATION_PRACTICE_UNIFY_PRIMARY, Keys.KEY_GRADUATION_PRACTICE_UNIFY_STUDENT_ID);
 	}
 
 	/**

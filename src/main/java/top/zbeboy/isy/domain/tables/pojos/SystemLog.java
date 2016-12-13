@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemLog implements Serializable {
 
-	private static final long serialVersionUID = 952984617;
+	private static final long serialVersionUID = -1145373908;
 
 	private String    systemLogId;
 	private String    behavior;
@@ -58,7 +58,7 @@ public class SystemLog implements Serializable {
 	}
 
 	@NotNull
-	@Size(max = 100)
+	@Size(max = 64)
 	public String getSystemLogId() {
 		return this.systemLogId;
 	}
@@ -87,7 +87,7 @@ public class SystemLog implements Serializable {
 	}
 
 	@NotNull
-	@Size(max = 200)
+	@Size(max = 64)
 	public String getUsername() {
 		return this.username;
 	}

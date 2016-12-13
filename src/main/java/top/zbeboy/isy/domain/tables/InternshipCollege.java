@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipCollegeRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCollege extends TableImpl<InternshipCollegeRecord> {
 
-	private static final long serialVersionUID = -441304267;
+	private static final long serialVersionUID = -999348767;
 
 	/**
 	 * The reference instance of <code>isy.internship_college</code>
@@ -53,7 +53,7 @@ public class InternshipCollege extends TableImpl<InternshipCollegeRecord> {
 	/**
 	 * The column <code>isy.internship_college.internship_college_id</code>.
 	 */
-	public final TableField<InternshipCollegeRecord, String> INTERNSHIP_COLLEGE_ID = createField("internship_college_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipCollegeRecord, String> INTERNSHIP_COLLEGE_ID = createField("internship_college_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_college.student_id</code>.
@@ -63,7 +63,7 @@ public class InternshipCollege extends TableImpl<InternshipCollegeRecord> {
 	/**
 	 * The column <code>isy.internship_college.internship_release_id</code>.
 	 */
-	public final TableField<InternshipCollegeRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+	public final TableField<InternshipCollegeRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
 	/**
 	 * The column <code>isy.internship_college.student_name</code>.
@@ -220,7 +220,7 @@ public class InternshipCollege extends TableImpl<InternshipCollegeRecord> {
 	 */
 	@Override
 	public List<UniqueKey<InternshipCollegeRecord>> getKeys() {
-		return Arrays.<UniqueKey<InternshipCollegeRecord>>asList(Keys.KEY_INTERNSHIP_COLLEGE_PRIMARY);
+		return Arrays.<UniqueKey<InternshipCollegeRecord>>asList(Keys.KEY_INTERNSHIP_COLLEGE_PRIMARY, Keys.KEY_INTERNSHIP_COLLEGE_STUDENT_ID);
 	}
 
 	/**
