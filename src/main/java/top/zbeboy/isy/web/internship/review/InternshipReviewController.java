@@ -80,6 +80,12 @@ public class InternshipReviewController {
     @Resource
     private InternshipChangeHistoryService internshipChangeHistoryService;
 
+    @Resource
+    private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
+
+    @Resource
+    private InternshipTeacherDistributionService internshipTeacherDistributionService;
+
     /**
      * 实习审核
      *
@@ -104,14 +110,14 @@ public class InternshipReviewController {
         commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        internshipReleaseBeens.forEach(r->{
-            r.setWaitTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),1));
-            r.setPassTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),2));
-            r.setFailTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),3));
-            r.setBasicApplyTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),4));
-            r.setCompanyApplyTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),6));
-            r.setBasicFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),5));
-            r.setCompanyFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(),7));
+        internshipReleaseBeens.forEach(r -> {
+            r.setWaitTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 1));
+            r.setPassTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 2));
+            r.setFailTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 3));
+            r.setBasicApplyTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 4));
+            r.setCompanyApplyTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 6));
+            r.setBasicFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 5));
+            r.setCompanyFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 7));
         });
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
@@ -710,6 +716,31 @@ public class InternshipReviewController {
             internshipChangeHistoryService.save(internshipChangeHistory);
         } else {
             ajaxUtils.fail().msg("未查询到相关申请信息");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 删除申请记录
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/review/audit/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils auditDelete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        if (!ObjectUtils.isEmpty(internshipRelease)) {
+            commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(), internshipReleaseId, studentId);
+            internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            ajaxUtils.success().msg("删除申请成功");
+        } else {
+            ajaxUtils.fail().msg("未查询到相关实习信息");
         }
         return ajaxUtils;
     }

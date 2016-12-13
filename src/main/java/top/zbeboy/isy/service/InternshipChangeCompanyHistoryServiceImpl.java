@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.InternshipChangeCompanyHistoryDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipChangeCompanyHistory;
 
-import java.util.Optional;
-
 import static top.zbeboy.isy.domain.Tables.*;
 
 /**
@@ -40,6 +38,13 @@ public class InternshipChangeCompanyHistoryServiceImpl implements InternshipChan
     @Override
     public void save(InternshipChangeCompanyHistory internshipChangeCompanyHistory) {
         internshipChangeCompanyHistoryDao.insert(internshipChangeCompanyHistory);
+    }
+
+    @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(INTERNSHIP_CHANGE_COMPANY_HISTORY)
+                .where(INTERNSHIP_CHANGE_COMPANY_HISTORY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_CHANGE_COMPANY_HISTORY.STUDENT_ID.eq(studentId)))
+                .execute();
     }
 
     @Override

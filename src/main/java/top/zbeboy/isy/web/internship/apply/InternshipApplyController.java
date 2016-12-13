@@ -91,6 +91,9 @@ public class InternshipApplyController {
     @Resource
     private InternshipChangeHistoryService internshipChangeHistoryService;
 
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
     /**
      * 实习申请
      *
@@ -947,27 +950,13 @@ public class InternshipApplyController {
             // 处于 0：未提交申请 1：申请中 允许撤消 该状态下的撤消将会删除所有相关实习信息
             if (internshipApply.getInternshipApplyState() == 1 || internshipApply.getInternshipApplyState() == 0) {
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-                InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
-                switch (internshipType.getInternshipTypeName()) {
-                    case Workbook.INTERNSHIP_COLLEGE_TYPE:
-                        internshipCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                        break;
-                    case Workbook.INTERNSHIP_COMPANY_TYPE:
-                        internshipCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                        break;
-                    case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
-                        graduationPracticeCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                        break;
-                    case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
-                        graduationPracticeUnifyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                        break;
-                    case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
-                        graduationPracticeCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                        break;
-                }
+                commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(),internshipReleaseId,studentId);
                 internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
+                internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
+                internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
                 ajaxUtils.success().msg("撤消申请成功");
-                isCancel = true;
+
 
             }
             // 处于4：基本信息变更申请中 6：单位信息变更申请中 在这两个状态下将返回已通过状态
@@ -981,7 +970,12 @@ public class InternshipApplyController {
             if (isCancel) {
                 InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
                 internshipChangeHistory.setState(-1);
-                internshipChangeHistory.setReason("撤消申请");
+                if(internshipApply.getInternshipApplyState() == 4){
+                    internshipChangeHistory.setReason("撤消基本信息变更申请");
+                }
+                if(internshipApply.getInternshipApplyState() == 6){
+                    internshipChangeHistory.setReason("撤消单位信息变更申请");
+                }
                 internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
                 internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
                 internshipChangeHistory.setStudentId(studentId);

@@ -11,13 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.InternshipChangeHistoryDao;
-import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory;
 
-import java.util.Optional;
-
 import static top.zbeboy.isy.domain.Tables.*;
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE;
 
 /**
  * Created by lenovo on 2016-12-12.
@@ -42,6 +38,13 @@ public class InternshipChangeHistoryServiceImpl implements InternshipChangeHisto
     @Override
     public void save(InternshipChangeHistory internshipChangeHistory) {
         internshipChangeHistoryDao.insert(internshipChangeHistory);
+    }
+
+    @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(INTERNSHIP_CHANGE_HISTORY)
+                .where(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_CHANGE_HISTORY.STUDENT_ID.eq(studentId)))
+                .execute();
     }
 
     @Override

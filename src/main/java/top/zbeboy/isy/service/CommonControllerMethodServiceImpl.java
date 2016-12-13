@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.InternshipType;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 
@@ -29,11 +30,24 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     @Resource
     private RoleService roleService;
 
-    /**
-     * 页面参数
-     *
-     * @param modelMap
-     */
+    @Resource
+    private InternshipTypeService internshipTypeService;
+
+    @Resource
+    private InternshipCollegeService internshipCollegeService;
+
+    @Resource
+    private InternshipCompanyService internshipCompanyService;
+
+    @Resource
+    private GraduationPracticeCollegeService graduationPracticeCollegeService;
+
+    @Resource
+    private GraduationPracticeCompanyService graduationPracticeCompanyService;
+
+    @Resource
+    private GraduationPracticeUnifyService graduationPracticeUnifyService;
+
     public void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap) {
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
@@ -60,6 +74,28 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int collegeId = roleService.getRoleCollegeId(record);
             internshipReleaseBean.setCollegeId(collegeId);
+        }
+    }
+
+    @Override
+    public void deleteInternshipApplyRecord(int internshipTypeId,String internshipReleaseId, int studentId) {
+        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipTypeId);
+        switch (internshipType.getInternshipTypeName()) {
+            case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                internshipCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.INTERNSHIP_COMPANY_TYPE:
+                internshipCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                graduationPracticeCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                graduationPracticeUnifyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                graduationPracticeCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
         }
     }
 }
