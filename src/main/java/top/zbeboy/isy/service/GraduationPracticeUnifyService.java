@@ -5,6 +5,7 @@ import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeUnifyVo;
 
 import java.util.Optional;
 
@@ -45,6 +46,13 @@ public interface GraduationPracticeUnifyService {
      * @param graduationPracticeUnify 毕业实习(学校统一组织校外实习)
      */
     void save(GraduationPracticeUnify graduationPracticeUnify);
+
+    /**
+     * 开启事务保存
+     *
+     * @param graduationPracticeUnifyVo 毕业实习(学校统一组织校外实习)
+     */
+    void saveWithTransaction(GraduationPracticeUnifyVo graduationPracticeUnifyVo);
 
     /**
      * 更新

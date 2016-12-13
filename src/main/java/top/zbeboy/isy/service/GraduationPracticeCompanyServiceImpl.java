@@ -2,6 +2,7 @@ package top.zbeboy.isy.service;
 
 import com.alibaba.fastjson.JSONObject;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,18 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.GraduationPracticeCompanyDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeCompanyVo;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.GRADUATION_PRACTICE_COMPANY;
+import static top.zbeboy.isy.domain.Tables.INTERNSHIP_APPLY;
+import static top.zbeboy.isy.domain.Tables.INTERNSHIP_CHANGE_HISTORY;
 
 /**
  * Created by lenovo on 2016-11-27.
@@ -56,6 +63,66 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
     @Override
     public void save(GraduationPracticeCompany graduationPracticeCompany) {
         graduationPracticeCompanyDao.insert(graduationPracticeCompany);
+    }
+
+    @Override
+    public void saveWithTransaction(GraduationPracticeCompanyVo graduationPracticeCompanyVo) {
+        create.transaction(configuration -> {
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            int state = 0;
+            DSL.using(configuration)
+                    .insertInto(INTERNSHIP_APPLY)
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_ID, UUIDUtils.getUUID())
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID, graduationPracticeCompanyVo.getInternshipReleaseId())
+                    .set(INTERNSHIP_APPLY.STUDENT_ID, graduationPracticeCompanyVo.getStudentId())
+                    .set(INTERNSHIP_APPLY.APPLY_TIME, now)
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, state)
+                    .execute();
+
+            String[] headmasterArr = graduationPracticeCompanyVo.getHeadmaster().split(" ");
+            if (headmasterArr.length >= 2) {
+                graduationPracticeCompanyVo.setHeadmaster(headmasterArr[0]);
+                graduationPracticeCompanyVo.setHeadmasterContact(headmasterArr[1]);
+            }
+            String[] schoolGuidanceTeacherArr = graduationPracticeCompanyVo.getSchoolGuidanceTeacher().split(" ");
+            if (schoolGuidanceTeacherArr.length >= 2) {
+                graduationPracticeCompanyVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                graduationPracticeCompanyVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+            }
+
+            DSL.using(configuration)
+                    .insertInto(GRADUATION_PRACTICE_COMPANY)
+                    .set(GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ID, UUIDUtils.getUUID())
+                    .set(GRADUATION_PRACTICE_COMPANY.STUDENT_ID, graduationPracticeCompanyVo.getStudentId())
+                    .set(GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID, graduationPracticeCompanyVo.getInternshipReleaseId())
+                    .set(GRADUATION_PRACTICE_COMPANY.STUDENT_NAME, graduationPracticeCompanyVo.getStudentName())
+                    .set(GRADUATION_PRACTICE_COMPANY.COLLEGE_CLASS, graduationPracticeCompanyVo.getCollegeClass())
+                    .set(GRADUATION_PRACTICE_COMPANY.STUDENT_SEX, graduationPracticeCompanyVo.getStudentSex())
+                    .set(GRADUATION_PRACTICE_COMPANY.STUDENT_NUMBER, graduationPracticeCompanyVo.getStudentNumber())
+                    .set(GRADUATION_PRACTICE_COMPANY.PHONE_NUMBER, graduationPracticeCompanyVo.getPhoneNumber())
+                    .set(GRADUATION_PRACTICE_COMPANY.QQ_MAILBOX, graduationPracticeCompanyVo.getQqMailbox())
+                    .set(GRADUATION_PRACTICE_COMPANY.PARENTAL_CONTACT, graduationPracticeCompanyVo.getParentalContact())
+                    .set(GRADUATION_PRACTICE_COMPANY.HEADMASTER, graduationPracticeCompanyVo.getHeadmaster())
+                    .set(GRADUATION_PRACTICE_COMPANY.HEADMASTER_CONTACT, graduationPracticeCompanyVo.getHeadmasterContact())
+                    .set(GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_NAME, graduationPracticeCompanyVo.getGraduationPracticeCompanyName())
+                    .set(GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ADDRESS, graduationPracticeCompanyVo.getGraduationPracticeCompanyAddress())
+                    .set(GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_CONTACTS, graduationPracticeCompanyVo.getGraduationPracticeCompanyContacts())
+                    .set(GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_TEL, graduationPracticeCompanyVo.getGraduationPracticeCompanyTel())
+                    .set(GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER, graduationPracticeCompanyVo.getSchoolGuidanceTeacher())
+                    .set(GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL, graduationPracticeCompanyVo.getSchoolGuidanceTeacherTel())
+                    .set(GRADUATION_PRACTICE_COMPANY.START_TIME, DateTimeUtils.formatDate(graduationPracticeCompanyVo.getStartTime()))
+                    .set(GRADUATION_PRACTICE_COMPANY.END_TIME, DateTimeUtils.formatDate(graduationPracticeCompanyVo.getEndTime()))
+                    .execute();
+
+            DSL.using(configuration)
+                    .insertInto(INTERNSHIP_CHANGE_HISTORY)
+                    .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_CHANGE_HISTORY_ID, UUIDUtils.getUUID())
+                    .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID, graduationPracticeCompanyVo.getInternshipReleaseId())
+                    .set(INTERNSHIP_CHANGE_HISTORY.STUDENT_ID, graduationPracticeCompanyVo.getStudentId())
+                    .set(INTERNSHIP_CHANGE_HISTORY.STATE, state)
+                    .set(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, now)
+                    .execute();
+        });
     }
 
     @Override

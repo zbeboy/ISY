@@ -2,6 +2,7 @@ package top.zbeboy.isy.service;
 
 import com.alibaba.fastjson.JSONObject;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,12 @@ import top.zbeboy.isy.domain.tables.daos.GraduationPracticeUnifyDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeUnifyVo;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -71,6 +75,38 @@ public class GraduationPracticeUnifyServiceImpl extends DataTablesPlugin<Graduat
     @Override
     public void save(GraduationPracticeUnify graduationPracticeUnify) {
         graduationPracticeUnifyDao.insert(graduationPracticeUnify);
+    }
+
+    @Override
+    public void saveWithTransaction(GraduationPracticeUnifyVo graduationPracticeUnifyVo) {
+        create.transaction(configuration -> {
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            int state = 0;
+            DSL.using(configuration)
+                    .insertInto(INTERNSHIP_APPLY)
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_ID, UUIDUtils.getUUID())
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID, graduationPracticeUnifyVo.getInternshipReleaseId())
+                    .set(INTERNSHIP_APPLY.STUDENT_ID, graduationPracticeUnifyVo.getStudentId())
+                    .set(INTERNSHIP_APPLY.APPLY_TIME, now)
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, state)
+                    .execute();
+
+            DSL.using(configuration)
+                    .insertInto(GRADUATION_PRACTICE_UNIFY)
+                    .set(GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_ID, UUIDUtils.getUUID())
+                    .set(GRADUATION_PRACTICE_UNIFY.STUDENT_ID, graduationPracticeUnifyVo.getStudentId())
+                    .set(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID, graduationPracticeUnifyVo.getInternshipReleaseId())
+                    .execute();
+
+            DSL.using(configuration)
+                    .insertInto(INTERNSHIP_CHANGE_HISTORY)
+                    .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_CHANGE_HISTORY_ID, UUIDUtils.getUUID())
+                    .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID, graduationPracticeUnifyVo.getInternshipReleaseId())
+                    .set(INTERNSHIP_CHANGE_HISTORY.STUDENT_ID, graduationPracticeUnifyVo.getStudentId())
+                    .set(INTERNSHIP_CHANGE_HISTORY.STATE, state)
+                    .set(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, now)
+                    .execute();
+        });
     }
 
     @Override

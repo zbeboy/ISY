@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeCompanyVo;
 
 import java.util.Optional;
 
@@ -35,6 +36,13 @@ public interface GraduationPracticeCompanyService {
      * @param graduationPracticeCompany 毕业实习(校外)
      */
     void save(GraduationPracticeCompany graduationPracticeCompany);
+
+    /**
+     * 开启事务保存
+     *
+     * @param graduationPracticeCompanyVo 毕业实习(校外)
+     */
+    void saveWithTransaction(GraduationPracticeCompanyVo graduationPracticeCompanyVo);
 
     /**
      * 更新

@@ -5,6 +5,7 @@ import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCollege;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeCollegeVo;
 
 import java.util.Optional;
 
@@ -45,6 +46,13 @@ public interface GraduationPracticeCollegeService {
      * @param graduationPracticeCollege 毕业实习(校内)
      */
     void save(GraduationPracticeCollege graduationPracticeCollege);
+
+    /**
+     * 开启事务保存
+     *
+     * @param graduationPracticeCollegeVo 毕业实习(校内)
+     */
+    void saveWithTransaction(GraduationPracticeCollegeVo graduationPracticeCollegeVo);
 
     /**
      * 更新

@@ -2,6 +2,7 @@ package top.zbeboy.isy.service;
 
 import com.alibaba.fastjson.JSONObject;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
+import top.zbeboy.isy.domain.tables.pojos.InternshipApply;
+import top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
+import top.zbeboy.isy.domain.tables.records.InternshipApplyRecord;
+import top.zbeboy.isy.domain.tables.records.InternshipCollegeRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.vo.internship.apply.InternshipCollegeVo;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
+import static top.zbeboy.isy.domain.Tables.INTERNSHIP_APPLY;
+import static top.zbeboy.isy.domain.Tables.INTERNSHIP_CHANGE_HISTORY;
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COLLEGE;
 
 /**
@@ -56,6 +67,66 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
     @Override
     public void save(InternshipCollege internshipCollege) {
         internshipCollegeDao.insert(internshipCollege);
+    }
+
+    @Override
+    public void saveWithTransaction(InternshipCollegeVo internshipCollegeVo) {
+        create.transaction(configuration -> {
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            int state = 0;
+            DSL.using(configuration)
+                    .insertInto(INTERNSHIP_APPLY)
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_ID, UUIDUtils.getUUID())
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID, internshipCollegeVo.getInternshipReleaseId())
+                    .set(INTERNSHIP_APPLY.STUDENT_ID, internshipCollegeVo.getStudentId())
+                    .set(INTERNSHIP_APPLY.APPLY_TIME, now)
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, state)
+                    .execute();
+
+            String[] headmasterArr = internshipCollegeVo.getHeadmaster().split(" ");
+            if (headmasterArr.length >= 2) {
+                internshipCollegeVo.setHeadmaster(headmasterArr[0]);
+                internshipCollegeVo.setHeadmasterContact(headmasterArr[1]);
+            }
+            String[] schoolGuidanceTeacherArr = internshipCollegeVo.getSchoolGuidanceTeacher().split(" ");
+            if (schoolGuidanceTeacherArr.length >= 2) {
+                internshipCollegeVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                internshipCollegeVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+            }
+
+            DSL.using(configuration)
+                    .insertInto(INTERNSHIP_COLLEGE)
+                    .set(INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_ID, UUIDUtils.getUUID())
+                    .set(INTERNSHIP_COLLEGE.STUDENT_ID, internshipCollegeVo.getStudentId())
+                    .set(INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID, internshipCollegeVo.getInternshipReleaseId())
+                    .set(INTERNSHIP_COLLEGE.STUDENT_NAME, internshipCollegeVo.getStudentName())
+                    .set(INTERNSHIP_COLLEGE.COLLEGE_CLASS, internshipCollegeVo.getCollegeClass())
+                    .set(INTERNSHIP_COLLEGE.STUDENT_SEX, internshipCollegeVo.getStudentSex())
+                    .set(INTERNSHIP_COLLEGE.STUDENT_NUMBER, internshipCollegeVo.getStudentNumber())
+                    .set(INTERNSHIP_COLLEGE.PHONE_NUMBER, internshipCollegeVo.getPhoneNumber())
+                    .set(INTERNSHIP_COLLEGE.QQ_MAILBOX, internshipCollegeVo.getQqMailbox())
+                    .set(INTERNSHIP_COLLEGE.PARENTAL_CONTACT, internshipCollegeVo.getParentalContact())
+                    .set(INTERNSHIP_COLLEGE.HEADMASTER, internshipCollegeVo.getHeadmaster())
+                    .set(INTERNSHIP_COLLEGE.HEADMASTER_CONTACT, internshipCollegeVo.getHeadmasterContact())
+                    .set(INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_NAME, internshipCollegeVo.getInternshipCollegeName())
+                    .set(INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_ADDRESS, internshipCollegeVo.getInternshipCollegeAddress())
+                    .set(INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_CONTACTS, internshipCollegeVo.getInternshipCollegeContacts())
+                    .set(INTERNSHIP_COLLEGE.INTERNSHIP_COLLEGE_TEL, internshipCollegeVo.getInternshipCollegeTel())
+                    .set(INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER, internshipCollegeVo.getSchoolGuidanceTeacher())
+                    .set(INTERNSHIP_COLLEGE.SCHOOL_GUIDANCE_TEACHER_TEL, internshipCollegeVo.getSchoolGuidanceTeacherTel())
+                    .set(INTERNSHIP_COLLEGE.START_TIME, DateTimeUtils.formatDate(internshipCollegeVo.getStartTime()))
+                    .set(INTERNSHIP_COLLEGE.END_TIME, DateTimeUtils.formatDate(internshipCollegeVo.getEndTime()))
+                    .execute();
+
+            DSL.using(configuration)
+                    .insertInto(INTERNSHIP_CHANGE_HISTORY)
+                    .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_CHANGE_HISTORY_ID, UUIDUtils.getUUID())
+                    .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID, internshipCollegeVo.getInternshipReleaseId())
+                    .set(INTERNSHIP_CHANGE_HISTORY.STUDENT_ID, internshipCollegeVo.getStudentId())
+                    .set(INTERNSHIP_CHANGE_HISTORY.STATE, state)
+                    .set(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, now)
+                    .execute();
+        });
     }
 
     @Override
