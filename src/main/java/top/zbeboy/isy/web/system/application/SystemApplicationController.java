@@ -400,16 +400,4 @@ public class SystemApplicationController {
         }
         return new AjaxUtils().fail().msg("删除应用失败");
     }
-
-    /**
-     * 数据json
-     *
-     * @return json
-     */
-    @RequestMapping(value = "/special/channel/system/application/json", method = RequestMethod.GET)
-    @ResponseBody
-    public AjaxUtils<TreeBean> applicationJson() {
-        List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
-        return new AjaxUtils<TreeBean>().success().listData(treeBeens);
-    }
 }

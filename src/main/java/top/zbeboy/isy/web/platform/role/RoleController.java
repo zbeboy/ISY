@@ -22,6 +22,7 @@ import top.zbeboy.isy.domain.tables.records.RoleRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.RandomUtils;
 import top.zbeboy.isy.web.bean.platform.role.RoleBean;
+import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -56,6 +57,12 @@ public class RoleController {
 
     @Resource
     private CollegeRoleService collegeRoleService;
+
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private ApplicationService applicationService;
 
     /**
      * 平台角色页面
@@ -113,11 +120,7 @@ public class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/add", method = RequestMethod.GET)
     public String roleAdd(ModelMap modelMap) {
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
-        }
+        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/platform/role/role_add::#page-wrapper";
     }
 
@@ -141,11 +144,7 @@ public class RoleController {
             roleBean.setSchoolName(temp.getValue(SCHOOL.SCHOOL_NAME));
         }
         modelMap.addAttribute("role", roleBean);
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
-        }
+        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/platform/role/role_edit::#page-wrapper";
     }
 
@@ -329,5 +328,17 @@ public class RoleController {
             roleApplications = roleApplicationRecords.into(RoleApplication.class);
         }
         return new AjaxUtils<RoleApplication>().success().listData(roleApplications);
+    }
+
+    /**
+     * 数据json
+     *
+     * @return json
+     */
+    @RequestMapping(value = "/web/platform/role/application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<TreeBean> applicationJson(@RequestParam("collegeId") int collegeId) {
+        List<TreeBean> treeBeens = applicationService.getApplicationJsonByCollegeId(0,collegeId);
+        return new AjaxUtils<TreeBean>().success().listData(treeBeens);
     }
 }

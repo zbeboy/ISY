@@ -17,9 +17,11 @@ import top.zbeboy.isy.domain.tables.pojos.College;
 import top.zbeboy.isy.domain.tables.pojos.CollegeApplication;
 import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeRecord;
+import top.zbeboy.isy.service.ApplicationService;
 import top.zbeboy.isy.service.CollegeApplicationService;
 import top.zbeboy.isy.service.CollegeService;
 import top.zbeboy.isy.web.bean.data.college.CollegeBean;
+import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -45,6 +47,9 @@ public class CollegeController {
 
     @Resource
     private CollegeApplicationService collegeApplicationService;
+
+    @Resource
+    private ApplicationService applicationService;
 
     /**
      * 通过学校id获取全部院
@@ -293,5 +298,17 @@ public class CollegeController {
             }
         }
         return new AjaxUtils().success().msg("更新成功");
+    }
+
+    /**
+     * 数据json
+     *
+     * @return json
+     */
+    @RequestMapping(value = "/web/data/college/application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<TreeBean> applicationJson() {
+        List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
+        return new AjaxUtils<TreeBean>().success().listData(treeBeens);
     }
 }

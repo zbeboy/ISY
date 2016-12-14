@@ -1,6 +1,7 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
+//# sourceURL=role_add.js
 require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address"
 ], function ($, Handlebars, constants, nav_active) {
 
@@ -10,7 +11,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     var ajax_url = {
         school_data_url: '/user/schools',
         college_data_url: '/user/colleges',
-        application_json_data: '/special/channel/system/application/json',
+        application_json_data: '/web/platform/role/application/json',
         save: '/web/platform/role/save',
         valid: '/web/platform/role/save/valid',
         back: '/web/menu/platform/role'
@@ -95,6 +96,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         param.applicationIds = getAllCheckedData();
     }
 
+    var treeviewId = $('#treeview-checkable');
+
     /*
      初始化数据
      */
@@ -128,8 +131,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     function init() {
         if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
             initSchoolData();
+            treeViewData([]);
         }
-        initTreeView();
+
+        if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+            initTreeView(init_page_param.collegeId);
+        }
     }
 
     function initSchoolData() {
@@ -158,7 +165,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     $(paramId.collegeId).change(function () {
         initParam();
         var college = param.collegeId;
-
+        treeviewId.treeview('remove');
+        initTreeView(college);
         if (Number(college) > 0) {
             validSuccessDom(validId.collegeId, errorMsgId.collegeId);
         } else {
@@ -363,18 +371,17 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         });
     }
 
-    var treeviewId = $('#treeview-checkable');
-
     /**
      * 初始化tree view
      */
-    function initTreeView() {
-        $.get(web_path + ajax_url.application_json_data, function (data) {
-            if (data.listResult.length > 0) {
-                treeViewData(data.listResult);
-            }
-        });
-
+    function initTreeView(collegeId) {
+        if(collegeId>0){
+            $.get(web_path + ajax_url.application_json_data,{collegeId:collegeId}, function (data) {
+                if (data.listResult != null) {
+                    treeViewData(data.listResult);
+                }
+            });
+        }
     }
 
     function treeViewData(data) {

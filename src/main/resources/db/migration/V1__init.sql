@@ -24,7 +24,8 @@ CREATE TABLE users(
 CREATE TABLE role(
   role_id INT AUTO_INCREMENT PRIMARY KEY ,
   role_name VARCHAR(50) NOT NULL ,
-  role_en_name VARCHAR(64) UNIQUE NOT NULL
+  role_en_name VARCHAR(64) UNIQUE NOT NULL,
+  role_type INT NOT NULL
 );
 
 CREATE TABLE authorities(
@@ -447,8 +448,8 @@ INSERT INTO users(username, password, enabled, users_type_id, real_name, mobile,
                   password_reset_key_valid, lang_key, join_date)
 VALUES ('863052317@qq.com','$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2',1,3,'赵银','13987614709','/images/avatar.jpg',1,'','',NULL ,NULL ,'zh-CN','2016-08-18');
 
-INSERT INTO role(role_name, role_en_name) VALUES ('系统','ROLE_SYSTEM');
-INSERT INTO role(role_name, role_en_name) VALUES ('管理员','ROLE_ADMIN');
+INSERT INTO role(role_name, role_en_name,role_type) VALUES ('系统','ROLE_SYSTEM',1);
+INSERT INTO role(role_name, role_en_name,role_type) VALUES ('管理员','ROLE_ADMIN',1);
 
 INSERT INTO authorities(username, authority) VALUES ('863052317@qq.com','ROLE_SYSTEM');
 
@@ -551,15 +552,19 @@ VALUES ('系统应用',1001,4,'/web/menu/system/application','system_application
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统日志',1002,4,'/web/menu/system/log','system_log','system_log','','/web/system/log');
+VALUES ('系统角色',1002,4,'/web/menu/system/role','system_application','system_role','','/web/system/role');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统短信',1003,4,'/web/menu/system/sms','system_sms','system_sms','','/web/system/sms');
+VALUES ('系统日志',1003,4,'/web/menu/system/log','system_log','system_log','','/web/system/log');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统邮件',1004,4,'/web/menu/system/mailbox','system_mailbox','system_mailbox','','/web/system/mailbox');
+VALUES ('系统短信',1004,4,'/web/menu/system/sms','system_sms','system_sms','','/web/system/sms');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('系统邮件',1005,4,'/web/menu/system/mailbox','system_mailbox','system_mailbox','','/web/system/mailbox');
 
 INSERT INTO internship_type(internship_type_name) VALUES ('顶岗实习(留学院)');
 INSERT INTO internship_type(internship_type_name) VALUES ('校外自主实习(去单位)');
@@ -593,6 +598,7 @@ INSERT INTO role_application(role_id, application_id) VALUES (1,23);
 INSERT INTO role_application(role_id, application_id) VALUES (1,24);
 INSERT INTO role_application(role_id, application_id) VALUES (1,25);
 INSERT INTO role_application(role_id, application_id) VALUES (1,26);
+INSERT INTO role_application(role_id, application_id) VALUES (1,27);
 
 INSERT INTO role_application(role_id, application_id) VALUES (2,1);
 INSERT INTO role_application(role_id, application_id) VALUES (2,2);

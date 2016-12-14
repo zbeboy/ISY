@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-treeview"
          ajax url.
          */
         var ajax_url = {
-            application_json_data: '/special/channel/system/application/json',
+            application_json_data: '/web/data/college/application/json',
             college_application_data: '/web/data/college/application/data',
             update: '/web/data/college/update/mount',
             back: '/web/menu/data/college'
@@ -40,6 +40,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-treeview"
             param.collegeId = $(paramId.collegeId).val();
             param.applicationIds = getAllCheckedData();
         }
+
+        var treeviewId = $('#treeview-checkable');
 
         /*
          初始化数据
@@ -127,14 +129,12 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-treeview"
             });
         }
 
-        var treeviewId = $('#treeview-checkable');
-
         /**
          * 初始化tree view
          */
         function initTreeView() {
             $.get(web_path + ajax_url.application_json_data, function (data) {
-                if (data.listResult.length > 0) {
+                if (data.listResult != null) {
                     treeViewData(data.listResult);
                 }
             });

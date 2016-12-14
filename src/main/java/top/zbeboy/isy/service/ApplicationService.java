@@ -215,4 +215,12 @@ public interface ApplicationService {
      * @return list json
      */
     List<TreeBean> getApplicationJson(int pid);
+
+    /**
+     * 通过父id与院id获取所有子类组成的List
+     *
+     * @param pid 父id
+     * @return list json
+     */
+    List<TreeBean> getApplicationJsonByCollegeId(int pid,int collegeId);
 }

@@ -322,6 +322,11 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         return bindingDataToJson(pid);
     }
 
+    @Override
+    public List<TreeBean> getApplicationJsonByCollegeId(int pid, int collegeId) {
+        return bindingDataToJson(pid, collegeId);
+    }
+
     /**
      * 绑定数据到treeBean
      *
@@ -329,24 +334,34 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      * @return list treeBean
      */
     private List<TreeBean> bindingDataToJson(int id) {
-        List<Application> applications = null;
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            applications = findByPid(id);
-        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = roleService.getRoleCollegeId(record);
-            applications = findByPidAndCollegeId(id, collegeId);
-        }
+        List<Application> applications = findByPid(id);
         List<TreeBean> treeBeens = new ArrayList<>();
         if (ObjectUtils.isEmpty(applications)) {
             treeBeens = null;
         } else {
             for (Application application : applications) { // pid = 0
-                TreeBean treeBean = new TreeBean();
-                treeBean.setText(application.getApplicationName());
-                treeBean.setDataId(application.getApplicationId());
-                treeBean.setNodes(bindingDataToJson(application.getApplicationId()));
+                TreeBean treeBean = new TreeBean(application.getApplicationName(),bindingDataToJson(application.getApplicationId()),application.getApplicationId());
+                treeBeens.add(treeBean);
+            }
+        }
+        return treeBeens;
+    }
+
+    /**
+     * 绑定数据到treeBean
+     *
+     * @param id        父id
+     * @param collegeId 院id
+     * @return list treeBean
+     */
+    private List<TreeBean> bindingDataToJson(int id, int collegeId) {
+        List<Application> applications = findByPidAndCollegeId(id, collegeId);
+        List<TreeBean> treeBeens = new ArrayList<>();
+        if (ObjectUtils.isEmpty(applications)) {
+            treeBeens = null;
+        } else {
+            for (Application application : applications) { // pid = 0
+                TreeBean treeBean = new TreeBean(application.getApplicationName(),bindingDataToJson(application.getApplicationId(),collegeId),application.getApplicationId());
                 treeBeens.add(treeBean);
             }
         }

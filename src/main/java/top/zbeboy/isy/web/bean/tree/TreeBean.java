@@ -10,6 +10,15 @@ public class TreeBean {
     private int dataId;
     private List<TreeBean> nodes;
 
+    public TreeBean() {
+    }
+
+    public TreeBean(String text, List<TreeBean> nodes, int dataId) {
+        this.text = text;
+        this.nodes = nodes;
+        this.dataId = dataId;
+    }
+
     public String getText() {
         return text;
     }
