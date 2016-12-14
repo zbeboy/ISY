@@ -22,14 +22,14 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <form role="form" id="edit_form">
-                    <div th:if="${role.collegeId != null}" class="form-group" id="valid_school" sec:authorize="hasRole('ROLE_SYSTEM')">
+                    <div class="form-group" id="valid_school" sec:authorize="hasRole('ROLE_SYSTEM')">
                         <select class="form-control" name="schoolId" id="select_school">
                             <option value="0">请选择学校</option>
                         </select>
                         <p class="text-danger hidden" id="school_error_msg"></p>
                         <input type="hidden" id="schoolId" th:value="${role.schoolId}"/>
                     </div>
-                    <div th:if="${role.collegeId != null}" class="form-group" id="valid_college" sec:authorize="hasRole('ROLE_SYSTEM')">
+                    <div class="form-group" id="valid_college" sec:authorize="hasRole('ROLE_SYSTEM')">
                         <select class="form-control" name="collegeId" id="select_college">
                             <option value="0">请选择院</option>
                         </select>
