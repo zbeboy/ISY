@@ -329,13 +329,13 @@ public class InternshipApplyController {
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             InternshipChangeCompanyHistory internshipChangeCompanyHistory = new InternshipChangeCompanyHistory();
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
-                            internshipChangeCompanyHistory.setInternshipReleaseId(internshipCollegeVo.getInternshipReleaseId());
-                            internshipChangeCompanyHistory.setStudentId(internshipCollegeVo.getStudentId());
+                            internshipChangeCompanyHistory.setInternshipReleaseId(internshipCollege.getInternshipReleaseId());
+                            internshipChangeCompanyHistory.setStudentId(internshipCollege.getStudentId());
                             internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
-                            internshipChangeCompanyHistory.setCompanyName(internshipCollegeVo.getInternshipCollegeName());
-                            internshipChangeCompanyHistory.setCompanyAddress(internshipCollegeVo.getInternshipCollegeAddress());
-                            internshipChangeCompanyHistory.setCompanyContacts(internshipCollegeVo.getInternshipCollegeContacts());
-                            internshipChangeCompanyHistory.setCompanyTel(internshipCollegeVo.getInternshipCollegeTel());
+                            internshipChangeCompanyHistory.setCompanyName(internshipCollege.getInternshipCollegeName());
+                            internshipChangeCompanyHistory.setCompanyAddress(internshipCollege.getInternshipCollegeAddress());
+                            internshipChangeCompanyHistory.setCompanyContacts(internshipCollege.getInternshipCollegeContacts());
+                            internshipChangeCompanyHistory.setCompanyTel(internshipCollege.getInternshipCollegeTel());
                             internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
                         }
 
@@ -357,6 +357,10 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setCompanyTel(internshipCollegeVo.getInternshipCollegeTel());
                         internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
                     } else {
+                        if (internshipApply.getInternshipApplyState() == 3) { // 未通过
+                            internshipApply.setInternshipApplyState(1); // 更新为申请中
+                            internshipApplyService.update(internshipApply);
+                        }
                         internshipCollege.setStudentName(internshipCollegeVo.getStudentName());
                         internshipCollege.setCollegeClass(internshipCollegeVo.getCollegeClass());
                         internshipCollege.setStudentSex(internshipCollegeVo.getStudentSex());
@@ -464,13 +468,13 @@ public class InternshipApplyController {
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             InternshipChangeCompanyHistory internshipChangeCompanyHistory = new InternshipChangeCompanyHistory();
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
-                            internshipChangeCompanyHistory.setInternshipReleaseId(internshipCompanyVo.getInternshipReleaseId());
-                            internshipChangeCompanyHistory.setStudentId(internshipCompanyVo.getStudentId());
+                            internshipChangeCompanyHistory.setInternshipReleaseId(internshipCompany.getInternshipReleaseId());
+                            internshipChangeCompanyHistory.setStudentId(internshipCompany.getStudentId());
                             internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
-                            internshipChangeCompanyHistory.setCompanyName(internshipCompanyVo.getInternshipCompanyName());
-                            internshipChangeCompanyHistory.setCompanyAddress(internshipCompanyVo.getInternshipCompanyAddress());
-                            internshipChangeCompanyHistory.setCompanyContacts(internshipCompanyVo.getInternshipCompanyContacts());
-                            internshipChangeCompanyHistory.setCompanyTel(internshipCompanyVo.getInternshipCompanyTel());
+                            internshipChangeCompanyHistory.setCompanyName(internshipCompany.getInternshipCompanyName());
+                            internshipChangeCompanyHistory.setCompanyAddress(internshipCompany.getInternshipCompanyAddress());
+                            internshipChangeCompanyHistory.setCompanyContacts(internshipCompany.getInternshipCompanyContacts());
+                            internshipChangeCompanyHistory.setCompanyTel(internshipCompany.getInternshipCompanyTel());
                             internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
                         }
 
@@ -492,6 +496,10 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setCompanyTel(internshipCompanyVo.getInternshipCompanyTel());
                         internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
                     } else {
+                        if (internshipApply.getInternshipApplyState() == 3) { // 未通过
+                            internshipApply.setInternshipApplyState(1); // 更新为申请中
+                            internshipApplyService.update(internshipApply);
+                        }
                         internshipCompany.setStudentName(internshipCompanyVo.getStudentName());
                         internshipCompany.setCollegeClass(internshipCompanyVo.getCollegeClass());
                         internshipCompany.setStudentSex(internshipCompanyVo.getStudentSex());
@@ -565,6 +573,11 @@ public class InternshipApplyController {
             ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeCollegeVo.getInternshipReleaseId(), graduationPracticeCollegeVo.getStudentId());
             if (!errorBean.isHasError()) {
                 // 目前不存在更新
+                InternshipApply internshipApply = (InternshipApply) errorBean.getMapData().get("internshipApply");
+                if (internshipApply.getInternshipApplyState() == 3) { // 未通过
+                    internshipApply.setInternshipApplyState(1); // 更新为申请中
+                    internshipApplyService.update(internshipApply);
+                }
                 ajaxUtils.success().msg("更新成功");
             } else {
                 ajaxUtils.fail().msg("不符合实习条件，无法进行数据操作");
@@ -615,6 +628,11 @@ public class InternshipApplyController {
             ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeUnifyVo.getInternshipReleaseId(), graduationPracticeUnifyVo.getStudentId());
             if (!errorBean.isHasError()) {
                 // 目前不存在更新
+                InternshipApply internshipApply = (InternshipApply) errorBean.getMapData().get("internshipApply");
+                if (internshipApply.getInternshipApplyState() == 3) { // 未通过
+                    internshipApply.setInternshipApplyState(1); // 更新为申请中
+                    internshipApplyService.update(internshipApply);
+                }
                 ajaxUtils.success().msg("更新成功");
             } else {
                 ajaxUtils.fail().msg("不符合实习条件，无法进行数据操作");
@@ -699,13 +717,13 @@ public class InternshipApplyController {
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             InternshipChangeCompanyHistory internshipChangeCompanyHistory = new InternshipChangeCompanyHistory();
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
-                            internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeCompanyVo.getInternshipReleaseId());
-                            internshipChangeCompanyHistory.setStudentId(graduationPracticeCompanyVo.getStudentId());
+                            internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeCompany.getInternshipReleaseId());
+                            internshipChangeCompanyHistory.setStudentId(graduationPracticeCompany.getStudentId());
                             internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
-                            internshipChangeCompanyHistory.setCompanyName(graduationPracticeCompanyVo.getGraduationPracticeCompanyName());
-                            internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeCompanyVo.getGraduationPracticeCompanyAddress());
-                            internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeCompanyVo.getGraduationPracticeCompanyContacts());
-                            internshipChangeCompanyHistory.setCompanyTel(graduationPracticeCompanyVo.getGraduationPracticeCompanyTel());
+                            internshipChangeCompanyHistory.setCompanyName(graduationPracticeCompany.getGraduationPracticeCompanyName());
+                            internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeCompany.getGraduationPracticeCompanyAddress());
+                            internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeCompany.getGraduationPracticeCompanyContacts());
+                            internshipChangeCompanyHistory.setCompanyTel(graduationPracticeCompany.getGraduationPracticeCompanyTel());
                             internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
                         }
                         graduationPracticeCompany.setGraduationPracticeCompanyName(graduationPracticeCompanyVo.getGraduationPracticeCompanyName());
@@ -726,6 +744,10 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setCompanyTel(graduationPracticeCompanyVo.getGraduationPracticeCompanyTel());
                         internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
                     } else {
+                        if (internshipApply.getInternshipApplyState() == 3) { // 未通过
+                            internshipApply.setInternshipApplyState(1); // 更新为申请中
+                            internshipApplyService.update(internshipApply);
+                        }
                         graduationPracticeCompany.setStudentName(graduationPracticeCompanyVo.getStudentName());
                         graduationPracticeCompany.setCollegeClass(graduationPracticeCompanyVo.getCollegeClass());
                         graduationPracticeCompany.setStudentSex(graduationPracticeCompanyVo.getStudentSex());
@@ -950,11 +972,11 @@ public class InternshipApplyController {
             // 处于 0：未提交申请 1：申请中 允许撤消 该状态下的撤消将会删除所有相关实习信息
             if (internshipApply.getInternshipApplyState() == 1 || internshipApply.getInternshipApplyState() == 0) {
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-                commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(),internshipReleaseId,studentId);
+                commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(), internshipReleaseId, studentId);
                 internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
-                internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
-                internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
+                internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                 ajaxUtils.success().msg("撤消申请成功");
 
 
@@ -970,10 +992,10 @@ public class InternshipApplyController {
             if (isCancel) {
                 InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
                 internshipChangeHistory.setState(-1);
-                if(internshipApply.getInternshipApplyState() == 4){
+                if (internshipApply.getInternshipApplyState() == 4) {
                     internshipChangeHistory.setReason("撤消基本信息变更申请");
                 }
-                if(internshipApply.getInternshipApplyState() == 6){
+                if (internshipApply.getInternshipApplyState() == 6) {
                     internshipChangeHistory.setReason("撤消单位信息变更申请");
                 }
                 internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());

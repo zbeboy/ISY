@@ -55,6 +55,17 @@ public class DateTimeUtils {
     }
 
     /**
+     * 格式化Timestamp
+     *
+     * @param timestamp 日期
+     * @return 格式化后的时间
+     */
+    public static String formatDate(java.sql.Timestamp timestamp) {
+        String format = "yyyy-MM-dd HH:mm:ss";
+        return new SimpleDateFormat(format).format(timestamp);
+    }
+
+    /**
      * 格式化成sql date
      *
      * @param date 日期

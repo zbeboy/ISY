@@ -10,6 +10,7 @@ public class InternshipChangeHistoryBean extends InternshipChangeHistory {
     private String realName;
     private String studentNumber;
     private String organizeName;
+    private String applyTimeStr;
 
     public String getInternshipTitle() {
         return internshipTitle;
@@ -41,5 +42,13 @@ public class InternshipChangeHistoryBean extends InternshipChangeHistory {
 
     public void setOrganizeName(String organizeName) {
         this.organizeName = organizeName;
+    }
+
+    public String getApplyTimeStr() {
+        return applyTimeStr;
+    }
+
+    public void setApplyTimeStr(String applyTimeStr) {
+        this.applyTimeStr = applyTimeStr;
     }
 }

@@ -17,7 +17,7 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
          返回
          */
         $('#page_back').click(function () {
-            $.address.value(ajax_url.submitted_url + "?id=" + init_page_param.internshipReleaseId);
+            $.address.value(ajax_url.back + "?id=" + init_page_param.internshipReleaseId);
         });
 
         function startLoading() {
@@ -37,6 +37,7 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
         function listData(data) {
             var source = $("#timeline-template").html();
             var template = Handlebars.compile(source);
+            var count = 0;
 
             Handlebars.registerHelper('timeline_state_css', function () {
                 var value = Handlebars.escapeExpression(badgeCss(this.state));
@@ -54,7 +55,7 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
             });
 
             Handlebars.registerHelper('time', function () {
-                var value = Handlebars.escapeExpression(this.applyTime);
+                var value = Handlebars.escapeExpression(this.applyTimeStr);
                 return new Handlebars.SafeString(value);
             });
 
@@ -70,6 +71,17 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
 
             Handlebars.registerHelper('state', function () {
                 var value = Handlebars.escapeExpression(internshipApplyStateCode(this.state));
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('inverted', function () {
+                var value = '';
+                if (count % 2 == 0) {
+                    value = Handlebars.escapeExpression('timeline-inverted');
+                } else {
+                    value = Handlebars.escapeExpression('');
+                }
+                count++;
                 return new Handlebars.SafeString(value);
             });
 

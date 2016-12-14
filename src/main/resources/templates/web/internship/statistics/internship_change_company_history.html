@@ -1,10 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8"/>
 </head>
 <body>
-
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习统计 -
+                    <small>单位变更记录</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12" >
+                <ul class="timeline" id="timeData">
+                </ul>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /*页面参数*/
+            var init_page_param = {
+                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ '',
+                'studentId':/*[[${studentId}]]*/ ''
+            };
+            /*]]>*/
+        </script>
+        <script id="timeline-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <li class="{{inverted}}">
+                <div class="timeline-badge {{timeline_state_css}}"><i class="{{icon}}"></i>
+                </div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">{{internship_title}}</h4>
+                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> {{time}}</small>
+                        </p>
+                    </div>
+                    <div class="timeline-body">
+                        <span>{{real_name}}  {{studentNumber}}</span><br/>
+                        <span>班级: </span><span>{{organize_name}}</span><br/>
+                        <span>单位: </span><span>{{company_name}}</span><br/>
+                        <span>单位地址: </span><span>{{company_address}}</span><br/>
+                        <span>单位联系人: </span><span>{{company_contacts}}</span>
+                        <span>联系方式: </span><span>{{company_tel}}</span>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/internship/statistics/internship_change_company_history.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
 </body>
+
 </html>

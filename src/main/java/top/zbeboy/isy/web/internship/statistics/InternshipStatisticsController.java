@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
@@ -227,13 +228,14 @@ public class InternshipStatisticsController {
      * @param studentId           学生id
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/statistical/record/apply/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/statistical/record/apply/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipChangeHistoryBean> changeHistoryDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
         List<InternshipChangeHistoryBean> internshipChangeHistoryBeans = new ArrayList<>();
         Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeHistoryBeans = records.into(InternshipChangeHistoryBean.class);
+            internshipChangeHistoryBeans.forEach(i->i.setApplyTimeStr(DateTimeUtils.formatDate(i.getApplyTime())));
         }
         return new AjaxUtils<InternshipChangeHistoryBean>().success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
     }
@@ -245,13 +247,14 @@ public class InternshipStatisticsController {
      * @param studentId           学生id
      * @return 数据
      */
-    @RequestMapping(value = "/web/internship/statistical/record/company/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/statistical/record/company/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipChangeCompanyHistoryBean> changeCompanyDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
         List<InternshipChangeCompanyHistoryBean> internshipChangeCompanyHistoryBeans = new ArrayList<>();
         Result<Record> records = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeCompanyHistoryBeans = records.into(InternshipChangeCompanyHistoryBean.class);
+            internshipChangeCompanyHistoryBeans.forEach(i->i.setChangeTimeStr(DateTimeUtils.formatDate(i.getChangeTime())));
         }
         return new AjaxUtils<InternshipChangeCompanyHistoryBean>().success().msg("获取数据成功").listData(internshipChangeCompanyHistoryBeans);
     }

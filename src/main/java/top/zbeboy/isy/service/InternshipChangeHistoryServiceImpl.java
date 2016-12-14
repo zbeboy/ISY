@@ -60,6 +60,7 @@ public class InternshipChangeHistoryServiceImpl implements InternshipChangeHisto
                 .join(INTERNSHIP_RELEASE)
                 .on(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
                 .where(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_CHANGE_HISTORY.STUDENT_ID.eq(studentId)))
+                .orderBy(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME.desc())
                 .fetch();
     }
 }
