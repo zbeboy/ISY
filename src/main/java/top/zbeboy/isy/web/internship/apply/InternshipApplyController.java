@@ -101,7 +101,7 @@ public class InternshipApplyController {
      */
     @RequestMapping(value = "/web/menu/internship/apply", method = RequestMethod.GET)
     public String internshipApply() {
-        return "/web/internship/apply/internship_apply::#page-wrapper";
+        return "web/internship/apply/internship_apply::#page-wrapper";
     }
 
     /**
@@ -172,7 +172,7 @@ public class InternshipApplyController {
      */
     @RequestMapping(value = "/web/internship/apply/access", method = RequestMethod.GET)
     public String applyAccess(@RequestParam("id") String internshipReleaseId, int studentId, ModelMap modelMap) {
-        String page = "/web/internship/apply/internship_apply::#page-wrapper";
+        String page = "web/internship/apply/internship_apply::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
@@ -184,11 +184,11 @@ public class InternshipApplyController {
                         InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
                         modelMap.addAttribute("internshipData", internshipCollege);
                         modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
-                        page = "/web/internship/apply/internship_college_edit::#page-wrapper";
+                        page = "web/internship/apply/internship_college_edit::#page-wrapper";
                     } else {
                         internshipCollegePageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                        page = "/web/internship/apply/internship_college_add::#page-wrapper";
+                        page = "web/internship/apply/internship_college_add::#page-wrapper";
                     }
                     break;
                 case Workbook.INTERNSHIP_COMPANY_TYPE:
@@ -197,11 +197,11 @@ public class InternshipApplyController {
                         InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
                         modelMap.addAttribute("internshipData", internshipCompany);
                         modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
-                        page = "/web/internship/apply/internship_company_edit::#page-wrapper";
+                        page = "web/internship/apply/internship_company_edit::#page-wrapper";
                     } else {
                         internshipCompanyPageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                        page = "/web/internship/apply/internship_company_add::#page-wrapper";
+                        page = "web/internship/apply/internship_company_add::#page-wrapper";
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
@@ -212,11 +212,11 @@ public class InternshipApplyController {
                         GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
                         modelMap.addAttribute("internshipData", graduationPracticeCollege);
                         modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
-                        page = "/web/internship/apply/graduation_practice_college_edit::#page-wrapper";
+                        page = "web/internship/apply/graduation_practice_college_edit::#page-wrapper";
                     } else {
                         graduationPracticeCollegePageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                        page = "/web/internship/apply/graduation_practice_college_add::#page-wrapper";
+                        page = "web/internship/apply/graduation_practice_college_add::#page-wrapper";
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
@@ -227,11 +227,11 @@ public class InternshipApplyController {
                         GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
                         modelMap.addAttribute("internshipData", graduationPracticeUnify);
                         modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
-                        page = "/web/internship/apply/graduation_practice_unify_edit::#page-wrapper";
+                        page = "web/internship/apply/graduation_practice_unify_edit::#page-wrapper";
                     } else {
                         graduationPracticeUnifyPageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                        page = "/web/internship/apply/graduation_practice_unify_add::#page-wrapper";
+                        page = "web/internship/apply/graduation_practice_unify_add::#page-wrapper";
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
@@ -240,15 +240,15 @@ public class InternshipApplyController {
                         GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
                         modelMap.addAttribute("internshipData", graduationPracticeCompany);
                         modelMap.addAttribute("internshipApply", errorBean.getMapData().get("internshipApply"));
-                        page = "/web/internship/apply/graduation_practice_company_edit::#page-wrapper";
+                        page = "web/internship/apply/graduation_practice_company_edit::#page-wrapper";
                     } else {
                         graduationPracticeCompanyPageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                        page = "/web/internship/apply/graduation_practice_company_add::#page-wrapper";
+                        page = "web/internship/apply/graduation_practice_company_add::#page-wrapper";
                     }
                     break;
                 default:
-                    page = "/web/internship/apply/internship_apply::#page-wrapper";
+                    page = "web/internship/apply/internship_apply::#page-wrapper";
             }
         }
         return page;

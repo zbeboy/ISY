@@ -78,7 +78,7 @@ public class InternshipStatisticsController {
      */
     @RequestMapping(value = "/web/menu/internship/statistical", method = RequestMethod.GET)
     public String internshipStatistical() {
-        return "/web/internship/statistics/internship_statistics::#page-wrapper";
+        return "web/internship/statistics/internship_statistics::#page-wrapper";
     }
 
     /**
@@ -89,7 +89,7 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/submitted", method = RequestMethod.GET)
     public String statisticalSubmitted(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-        return "/web/internship/statistics/internship_submitted::#page-wrapper";
+        return "web/internship/statistics/internship_submitted::#page-wrapper";
     }
 
     /**
@@ -101,7 +101,7 @@ public class InternshipStatisticsController {
     public String changeHistory(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         modelMap.addAttribute("studentId", studentId);
-        return "/web/internship/statistics/internship_change_history::#page-wrapper";
+        return "web/internship/statistics/internship_change_history::#page-wrapper";
     }
 
     /**
@@ -113,7 +113,7 @@ public class InternshipStatisticsController {
     public String changeCompanyHistory(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         modelMap.addAttribute("studentId", studentId);
-        return "/web/internship/statistics/internship_change_company_history::#page-wrapper";
+        return "web/internship/statistics/internship_change_company_history::#page-wrapper";
     }
 
     /**
@@ -124,7 +124,7 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/unsubmitted", method = RequestMethod.GET)
     public String statisticalUnSubmitted(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-        return "/web/internship/statistics/internship_unsubmitted::#page-wrapper";
+        return "web/internship/statistics/internship_unsubmitted::#page-wrapper";
     }
 
     /**
@@ -134,26 +134,26 @@ public class InternshipStatisticsController {
      */
     @RequestMapping(value = "/web/internship/statistical/data_list", method = RequestMethod.GET)
     public String statisticalDataList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/statistics/internship_statistics::#page-wrapper";
+        String page = "web/internship/statistics/internship_statistics::#page-wrapper";
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (!ObjectUtils.isEmpty(internshipRelease)) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
             switch (internshipType.getInternshipTypeName()) {
                 case Workbook.INTERNSHIP_COLLEGE_TYPE:
-                    page = "/web/internship/statistics/internship_college_data::#page-wrapper";
+                    page = "web/internship/statistics/internship_college_data::#page-wrapper";
                     break;
                 case Workbook.INTERNSHIP_COMPANY_TYPE:
-                    page = "/web/internship/statistics/internship_company_data::#page-wrapper";
+                    page = "web/internship/statistics/internship_company_data::#page-wrapper";
                     break;
                 case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
-                    page = "/web/internship/statistics/graduation_practice_college_data::#page-wrapper";
+                    page = "web/internship/statistics/graduation_practice_college_data::#page-wrapper";
                     break;
                 case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
-                    page = "/web/internship/statistics/graduation_practice_unify_data::#page-wrapper";
+                    page = "web/internship/statistics/graduation_practice_unify_data::#page-wrapper";
                     break;
                 case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
-                    page = "/web/internship/statistics/graduation_practice_company_data::#page-wrapper";
+                    page = "web/internship/statistics/graduation_practice_company_data::#page-wrapper";
                     break;
             }
         }

@@ -93,7 +93,7 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/menu/internship/review", method = RequestMethod.GET)
     public String internshipReview() {
-        return "/web/internship/review/internship_review::#page-wrapper";
+        return "web/internship/review/internship_review::#page-wrapper";
     }
 
     /**
@@ -149,11 +149,11 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/audit", method = RequestMethod.GET)
     public String reviewAudit(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_review::#page-wrapper";
+        String page = "web/internship/review/internship_review::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            page = "/web/internship/review/internship_audit::#page-wrapper";
+            page = "web/internship/review/internship_audit::#page-wrapper";
         }
         return page;
     }
@@ -167,11 +167,11 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/pass", method = RequestMethod.GET)
     public String reviewPass(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_pass::#page-wrapper";
+        String page = "web/internship/review/internship_pass::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            page = "/web/internship/review/internship_pass::#page-wrapper";
+            page = "web/internship/review/internship_pass::#page-wrapper";
         }
         return page;
     }
@@ -185,11 +185,11 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/fail", method = RequestMethod.GET)
     public String reviewFail(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_fail::#page-wrapper";
+        String page = "web/internship/review/internship_fail::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            page = "/web/internship/review/internship_fail::#page-wrapper";
+            page = "web/internship/review/internship_fail::#page-wrapper";
         }
         return page;
     }
@@ -203,11 +203,11 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/base_info_apply", method = RequestMethod.GET)
     public String reviewBaseInfoApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_base_info_apply::#page-wrapper";
+        String page = "web/internship/review/internship_base_info_apply::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            page = "/web/internship/review/internship_base_info_apply::#page-wrapper";
+            page = "web/internship/review/internship_base_info_apply::#page-wrapper";
         }
         return page;
     }
@@ -221,11 +221,11 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/base_info_fill", method = RequestMethod.GET)
     public String reviewBaseInfoFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_base_info_fill::#page-wrapper";
+        String page = "web/internship/review/internship_base_info_fill::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            page = "/web/internship/review/internship_base_info_fill::#page-wrapper";
+            page = "web/internship/review/internship_base_info_fill::#page-wrapper";
         }
         return page;
     }
@@ -239,11 +239,11 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/company_apply", method = RequestMethod.GET)
     public String reviewCompanyApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_company_apply::#page-wrapper";
+        String page = "web/internship/review/internship_company_apply::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            page = "/web/internship/review/internship_company_apply::#page-wrapper";
+            page = "web/internship/review/internship_company_apply::#page-wrapper";
         }
         return page;
     }
@@ -257,11 +257,11 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/company_fill", method = RequestMethod.GET)
     public String reviewCompanyFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_company_fill::#page-wrapper";
+        String page = "web/internship/review/internship_company_fill::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-            page = "/web/internship/review/internship_company_fill::#page-wrapper";
+            page = "web/internship/review/internship_company_fill::#page-wrapper";
         }
         return page;
     }
@@ -276,7 +276,7 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/audit/detail", method = RequestMethod.GET)
     public String auditDetail(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
-        String page = "/web/internship/review/internship_review::#page-wrapper";
+        String page = "web/internship/review/internship_review::#page-wrapper";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
@@ -287,7 +287,7 @@ public class InternshipReviewController {
                     if (internshipCollegeRecord.isPresent()) {
                         InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
                         modelMap.addAttribute("internshipData", internshipCollege);
-                        page = "/web/internship/review/internship_college_detail::#page-wrapper";
+                        page = "web/internship/review/internship_college_detail::#page-wrapper";
                     }
                     break;
                 case Workbook.INTERNSHIP_COMPANY_TYPE:
@@ -295,7 +295,7 @@ public class InternshipReviewController {
                     if (internshipCompanyRecord.isPresent()) {
                         InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
                         modelMap.addAttribute("internshipData", internshipCompany);
-                        page = "/web/internship/review/internship_company_detail::#page-wrapper";
+                        page = "web/internship/review/internship_company_detail::#page-wrapper";
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
@@ -303,7 +303,7 @@ public class InternshipReviewController {
                     if (graduationPracticeCollegeRecord.isPresent()) {
                         GraduationPracticeCollegeBean graduationPracticeCollegeBean = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollegeBean.class);
                         modelMap.addAttribute("internshipData", graduationPracticeCollegeBean);
-                        page = "/web/internship/review/graduation_practice_college_detail::#page-wrapper";
+                        page = "web/internship/review/graduation_practice_college_detail::#page-wrapper";
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
@@ -311,7 +311,7 @@ public class InternshipReviewController {
                     if (graduationPracticeUnifyRecord.isPresent()) {
                         GraduationPracticeUnifyBean graduationPracticeUnifyBean = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnifyBean.class);
                         modelMap.addAttribute("internshipData", graduationPracticeUnifyBean);
-                        page = "/web/internship/review/graduation_practice_unify_detail::#page-wrapper";
+                        page = "web/internship/review/graduation_practice_unify_detail::#page-wrapper";
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
@@ -319,7 +319,7 @@ public class InternshipReviewController {
                     if (graduationPracticeCompanyRecord.isPresent()) {
                         GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
                         modelMap.addAttribute("internshipData", graduationPracticeCompany);
-                        page = "/web/internship/review/graduation_practice_company_detail::#page-wrapper";
+                        page = "web/internship/review/graduation_practice_company_detail::#page-wrapper";
                     }
                     break;
             }

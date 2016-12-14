@@ -61,7 +61,7 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/menu/internship/journal", method = RequestMethod.GET)
     public String internshipJournal() {
-        return "/web/internship/journal/internship_journal::#page-wrapper";
+        return "web/internship/journal/internship_journal::#page-wrapper";
     }
 
     /**
@@ -73,11 +73,11 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/list/edit", method = RequestMethod.POST)
     public String journalListEdit(@RequestParam("id") String id, ModelMap modelMap) {
-        String page = "/web/internship/journal/internship_journal::#page-wrapper";
+        String page = "web/internship/journal/internship_journal::#page-wrapper";
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
             modelMap.addAttribute("journal", internshipJournal);
-            page = "/web/internship/journal/internship_journal_edit::#page-wrapper";
+            page = "web/internship/journal/internship_journal_edit::#page-wrapper";
         }
         return page;
     }
@@ -91,11 +91,11 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/list/look", method = RequestMethod.POST)
     public String journalListLook(@RequestParam("id") String id, ModelMap modelMap) {
-        String page = "/web/internship/journal/internship_journal::#page-wrapper";
+        String page = "web/internship/journal/internship_journal::#page-wrapper";
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
             modelMap.addAttribute("journal", internshipJournal);
-            page = "/web/internship/journal/internship_journal_look::#page-wrapper";
+            page = "web/internship/journal/internship_journal_look::#page-wrapper";
         }
         return page;
     }

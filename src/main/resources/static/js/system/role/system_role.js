@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "messenger"],
     function ($, Handlebars) {
 
         /*
@@ -41,9 +41,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             },
             drawCallback: function (oSettings) {
                 responsiveHelper.respond();
-                $('#checkall').prop('checked', false);
-                // 调用全选插件
-                $.fn.check({checkall_name: "checkall", checkbox_name: "check"});
             },
             searching: false,
             "processing": true, // 打开数据加载时的等待效果

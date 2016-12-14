@@ -91,7 +91,7 @@ public class InternshipReleaseController {
      */
     @RequestMapping(value = "/web/menu/internship/release", method = RequestMethod.GET)
     public String releaseData() {
-        return "/web/internship/release/internship_release::#page-wrapper";
+        return "web/internship/release/internship_release::#page-wrapper";
     }
 
     /**
@@ -148,7 +148,7 @@ public class InternshipReleaseController {
         }
         modelMap.addAttribute("departmentId", departmentId);
         modelMap.addAttribute("collegeId", collegeId);
-        return "/web/internship/release/internship_release_add::#page-wrapper";
+        return "web/internship/release/internship_release_add::#page-wrapper";
     }
 
     /**
@@ -170,7 +170,7 @@ public class InternshipReleaseController {
         }
         modelMap.addAttribute("internshipRelease", internshipRelease);
         modelMap.addAttribute("sciences", sciences);
-        return "/web/internship/release/internship_release_edit::#page-wrapper";
+        return "web/internship/release/internship_release_edit::#page-wrapper";
     }
 
     /**
