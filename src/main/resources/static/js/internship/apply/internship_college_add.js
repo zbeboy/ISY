@@ -270,7 +270,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
          */
         $('#fileShow').delegate('.downloadfile', "click", function () {
             var id = $(this).attr('data-file-id');
-            window.location.href = ajax_url.download_file + '?fileId=' + id;
+            window.location.href = web_path + ajax_url.download_file + '?fileId=' + id;
         });
 
         /**
