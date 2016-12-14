@@ -228,7 +228,6 @@ public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCom
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        sortString = INTERNSHIP_COMPANY.STUDENT_NUMBER.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

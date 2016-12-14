@@ -63,6 +63,22 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
+    public Result<Record> findByRoleNameAndRoleType(String roleName, int roleType) {
+        return create.select()
+                .from(ROLE)
+                .where(ROLE.ROLE_NAME.eq(roleName).and(ROLE.ROLE_TYPE.eq(roleType)))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, int roleId) {
+        return create.select()
+                .from(ROLE)
+                .where(ROLE.ROLE_NAME.eq(roleName).and(ROLE.ROLE_TYPE.eq(roleType)).and(ROLE.ROLE_ID.ne(roleId)))
+                .fetch();
+    }
+
+    @Override
     public Role findById(int id) {
         return roleDao.findById(id);
     }
@@ -113,6 +129,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         RoleRecord roleRecord = create.insertInto(ROLE)
                 .set(ROLE.ROLE_NAME, role.getRoleName())
                 .set(ROLE.ROLE_EN_NAME, role.getRoleEnName())
+                .set(ROLE.ROLE_TYPE,role.getRoleType())
                 .returning(ROLE.ROLE_ID)
                 .fetchOne();
         return roleRecord.getRoleId();
@@ -136,7 +153,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils) {
+    public Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils,RoleBean roleBean) {
         Result<Record> records = null;
         List<String> defaultRoles = getDefaultRoles();
         Condition a = searchCondition(dataTablesUtils);
@@ -151,7 +168,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .leftJoin(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles));
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
@@ -167,7 +184,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .leftJoin(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(COLLEGE.COLLEGE_ID.eq(collegeId));
+                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
@@ -183,7 +200,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .leftJoin(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a));
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
@@ -199,7 +216,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .leftJoin(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a));
+                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
@@ -209,13 +226,13 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public int countAll() {
+    public int countAll(RoleBean roleBean) {
         // 分权限显示用户数据
         if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             List<String> defaultRoles = getDefaultRoles();
             Record1<Integer> count = create.selectCount()
                     .from(ROLE)
-                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles))
+                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())))
                     .fetchOne();
             return count.value1();
         } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
@@ -226,7 +243,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                     .from(ROLE)
                     .leftJoin(COLLEGE_ROLE)
                     .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                    .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId))
+                    .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())))
                     .fetchOne();
             return count.value1();
         }
@@ -234,7 +251,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public int countByCondition(DataTablesUtils<RoleBean> dataTablesUtils) {
+    public int countByCondition(DataTablesUtils<RoleBean> dataTablesUtils,RoleBean roleBean) {
         Record1<Integer> count = null;
         Condition a = searchCondition(dataTablesUtils);
         List<String> defaultRoles = getDefaultRoles();
@@ -243,7 +260,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
             if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                         .from(ROLE)
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles));
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 count = selectConditionStep.fetchOne();
             } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
@@ -253,7 +270,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .from(ROLE)
                         .leftJoin(COLLEGE_ROLE)
                         .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId));
+                        .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 count = selectConditionStep.fetchOne();
             }
         } else {
@@ -267,7 +284,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .leftJoin(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a));
+                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 count = selectConditionStep.fetchOne();
             } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
@@ -281,7 +298,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
                         .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .leftJoin(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a));
+                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.getRoleType())));
                 count = selectConditionStep.fetchOne();
             }
         }
@@ -426,7 +443,6 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        sortInteger = ROLE.ROLE_ID.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("role_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

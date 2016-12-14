@@ -552,7 +552,7 @@ VALUES ('系统应用',1001,4,'/web/menu/system/application','system_application
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统角色',1002,4,'/web/menu/system/role','system_application','system_role','','/web/system/role');
+VALUES ('系统角色',1002,4,'/web/menu/system/role','system_role','system_role','','/web/system/role');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)

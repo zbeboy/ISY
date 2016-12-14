@@ -115,7 +115,6 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        sortTimestamp = SYSTEM_LOG.OPERATING_TIME.desc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_log_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

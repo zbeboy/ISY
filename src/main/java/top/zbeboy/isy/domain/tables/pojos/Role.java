@@ -24,11 +24,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Role implements Serializable {
 
-	private static final long serialVersionUID = 1676662713;
+	private static final long serialVersionUID = 39404955;
 
 	private Integer roleId;
 	private String  roleName;
 	private String  roleEnName;
+	private Integer roleType;
 
 	public Role() {}
 
@@ -36,16 +37,19 @@ public class Role implements Serializable {
 		this.roleId = value.roleId;
 		this.roleName = value.roleName;
 		this.roleEnName = value.roleEnName;
+		this.roleType = value.roleType;
 	}
 
 	public Role(
 		Integer roleId,
 		String  roleName,
-		String  roleEnName
+		String  roleEnName,
+		Integer roleType
 	) {
 		this.roleId = roleId;
 		this.roleName = roleName;
 		this.roleEnName = roleEnName;
+		this.roleType = roleType;
 	}
 
 	@NotNull
@@ -77,6 +81,15 @@ public class Role implements Serializable {
 		this.roleEnName = roleEnName;
 	}
 
+	@NotNull
+	public Integer getRoleType() {
+		return this.roleType;
+	}
+
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Role (");
@@ -84,6 +97,7 @@ public class Role implements Serializable {
 		sb.append(roleId);
 		sb.append(", ").append(roleName);
 		sb.append(", ").append(roleEnName);
+		sb.append(", ").append(roleType);
 
 		sb.append(")");
 		return sb.toString();

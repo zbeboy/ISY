@@ -84,4 +84,11 @@ public class RoleDao extends DAOImpl<RoleRecord, top.zbeboy.isy.domain.tables.po
 	public top.zbeboy.isy.domain.tables.pojos.Role fetchOneByRoleEnName(String value) {
 		return fetchOne(Role.ROLE.ROLE_EN_NAME, value);
 	}
+
+	/**
+	 * Fetch records that have <code>role_type IN (values)</code>
+	 */
+	public List<top.zbeboy.isy.domain.tables.pojos.Role> fetchByRoleType(Integer... values) {
+		return fetch(Role.ROLE.ROLE_TYPE, values);
+	}
 }

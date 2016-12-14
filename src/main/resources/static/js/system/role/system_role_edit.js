@@ -1,7 +1,6 @@
 /**
- * Created by lenovo on 2016-10-16.
+ * Created by lenovo on 2016-10-19.
  */
-//# sourceURL=system_role_add.js
 require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address"
 ], function ($, Handlebars, constants, nav_active) {
 
@@ -9,12 +8,11 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      ajax url.
      */
     var ajax_url = {
-        school_data_url: '/user/schools',
-        college_data_url: '/user/colleges',
-        application_json_data: '/web/platform/role/application/json',
-        save: '/web/platform/role/save',
-        valid: '/web/platform/role/save/valid',
-        back: '/web/menu/platform/role'
+        application_json_data: '/web/system/role/application/json',
+        role_application_data: '/web/system/role/application/data',
+        update: '/web/system/role/update',
+        valid: '/web/system/role/update/valid',
+        back: '/web/menu/system/role'
     };
 
     // 刷新时选中菜单
@@ -24,27 +22,23 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      参数id
      */
     var paramId = {
-        schoolId: '#select_school',
-        collegeId: '#select_college',
-        roleName: '#roleName'
+        roleName: '#roleName',
+        roleId: '#roleId'
     };
 
     /*
      参数
      */
     var param = {
-        schoolId: $(paramId.schoolId).val(),
-        collegeId: $(paramId.collegeId).val(),
         roleName: $(paramId.roleName).val(),
-        applicationIds: ''
+        applicationIds: '',
+        roleId: $(paramId.roleId).val()
     };
 
     /*
      检验id
      */
     var validId = {
-        schoolId: '#valid_school',
-        collegeId: '#valid_college',
         roleName: '#valid_role_name'
     };
 
@@ -52,8 +46,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      错误消息id
      */
     var errorMsgId = {
-        schoolId: '#school_error_msg',
-        collegeId: '#college_error_msg',
         roleName: '#role_name_error_msg'
     };
 
@@ -90,9 +82,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      * 初始化参数
      */
     function initParam() {
-        param.schoolId = $(paramId.schoolId).val();
-        param.collegeId = $(paramId.collegeId).val();
         param.roleName = $(paramId.roleName).val();
+        param.roleId = $(paramId.roleId).val();
         param.applicationIds = getAllCheckedData();
     }
 
@@ -104,123 +95,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     init();
 
     /**
-     * 学校数据展现
-     * @param data json数据
-     */
-    function schoolData(data) {
-        var source = $("#school-template").html();
-        var template = Handlebars.compile(source);
-
-        Handlebars.registerHelper('school_value', function () {
-            var value = Handlebars.escapeExpression(this.schoolId);
-            return new Handlebars.SafeString(value);
-        });
-
-        Handlebars.registerHelper('school_name', function () {
-            var name = Handlebars.escapeExpression(this.schoolName);
-            return new Handlebars.SafeString(name);
-        });
-
-        var html = template(data);
-        $(paramId.schoolId).html(html);
-    }
-
-    /**
      * 初始化界面
      */
     function init() {
-        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
-            initSchoolData();
-            treeViewData([]);
-        }
-
-        if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-            initTreeView(init_page_param.collegeId);
-        }
-    }
-
-    function initSchoolData() {
-        $.get(web_path + ajax_url.school_data_url, function (data) {
-            schoolData(data);
-        });
-    }
-
-    // 当改变学校时，变换学院数据.
-    $(paramId.schoolId).change(function () {
-        initParam();
-        var school = param.schoolId;
-        changeCollege(school);// 根据学校重新加载院数据
-
-        // 改变选项时，检验
-        if (Number(school) > 0) {
-            validSuccessDom(validId.schoolId, errorMsgId.schoolId);
-        } else {
-            validErrorDom(validId.schoolId, errorMsgId.schoolId, '请选择学校');
-        }
-
-        validCleanDom(validId.collegeId, errorMsgId.collegeId);
-    });
-
-    // 当改变学院时，变换系数据.
-    $(paramId.collegeId).change(function () {
-        initParam();
-        var college = param.collegeId;
-        treeviewId.treeview('remove');
-        initTreeView(college);
-        if (Number(college) > 0) {
-            validSuccessDom(validId.collegeId, errorMsgId.collegeId);
-        } else {
-            validErrorDom(validId.collegeId, errorMsgId.collegeId, '请选择院');
-        }
-    });
-
-    /**
-     * 改变学院选项
-     * @param school_id 学校id
-     */
-    function changeCollege(school_id) {
-        if (Number(school_id) == 0) {
-            var source = $("#college-template").html();
-            var template = Handlebars.compile(source);
-
-            var context = {
-                listResult: [
-                    {name: "请选择院", value: ""}
-                ]
-            };
-
-            Handlebars.registerHelper('college_value', function () {
-                var value = Handlebars.escapeExpression(this.value);
-                return new Handlebars.SafeString(value);
-            });
-
-            Handlebars.registerHelper('college_name', function () {
-                var name = Handlebars.escapeExpression(this.name);
-                return new Handlebars.SafeString(name);
-            });
-
-            var html = template(context);
-            $(paramId.collegeId).html(html);
-        } else {
-            // 根据学校id查询院数据
-            $.post(web_path + ajax_url.college_data_url, {schoolId: school_id}, function (data) {
-                var source = $("#college-template").html();
-                var template = Handlebars.compile(source);
-
-                Handlebars.registerHelper('college_value', function () {
-                    var value = Handlebars.escapeExpression(this.collegeId);
-                    return new Handlebars.SafeString(value);
-                });
-
-                Handlebars.registerHelper('college_name', function () {
-                    var name = Handlebars.escapeExpression(this.collegeName);
-                    return new Handlebars.SafeString(name);
-                });
-
-                var html = template(data);
-                $(paramId.collegeId).html(html);
-            });
-        }
+        initTreeView();
     }
 
     /*
@@ -348,7 +226,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
             errorMessage: '保存数据失败',
             progressMessage: '正在保存数据....'
         }, {
-            url: web_path + ajax_url.save,
+            url: web_path + ajax_url.update,
             type: 'post',
             data: param,
             success: function (data) {
@@ -374,14 +252,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     /**
      * 初始化tree view
      */
-    function initTreeView(collegeId) {
-        if(collegeId>0){
-            $.get(web_path + ajax_url.application_json_data,{collegeId:collegeId}, function (data) {
-                if (data.listResult != null) {
-                    treeViewData(data.listResult);
-                }
-            });
-        }
+    function initTreeView() {
+        $.get(web_path + ajax_url.application_json_data, function (data) {
+            if (data.listResult != null) {
+                treeViewData(data.listResult);
+            }
+        });
     }
 
     function treeViewData(data) {
@@ -396,6 +272,30 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
             onNodeUnchecked: function (event, node) {
                 uncheckAllChildrenNode(node);
                 getAllParent(node);// 若任何子节点选中则取消选中该父节点
+            }
+        });
+
+        selectedApplication();
+    }
+
+    /**
+     * 选中应用
+     */
+    function selectedApplication() {
+        initParam();
+        var roleId = param.roleId;
+        $.post(web_path + ajax_url.role_application_data, {roleId: roleId}, function (data) {
+            var list = data.listResult;
+            if (list.length > 0) {
+                var unCheckeds = treeviewId.treeview('getUnchecked');
+                for (var i = 0; i < list.length; i++) {
+                    for (var j = 0; j < unCheckeds.length; j++) {
+                        if (list[i].applicationId == unCheckeds[j].dataId) {
+                            treeviewId.treeview('checkNode', [unCheckeds[j], {silent: true}]);
+                            break;
+                        }
+                    }
+                }
             }
         });
     }

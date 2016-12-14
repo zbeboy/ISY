@@ -396,7 +396,6 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        sortInteger = ORGANIZE.ORGANIZE_ID.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("organize_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

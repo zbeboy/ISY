@@ -97,7 +97,6 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        sortTimestamp =  SYSTEM_SMS.SEND_TIME.desc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_sms_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

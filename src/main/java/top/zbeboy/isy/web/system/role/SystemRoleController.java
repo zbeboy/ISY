@@ -1,4 +1,4 @@
-package top.zbeboy.isy.web.platform.role;
+package top.zbeboy.isy.web.system.role;
 
 import org.jooq.Record;
 import org.jooq.Result;
@@ -39,9 +39,9 @@ import static top.zbeboy.isy.domain.Tables.*;
  * Created by lenovo on 2016-10-16.
  */
 @Controller
-public class RoleController {
+public class SystemRoleController {
 
-    private final Logger log = LoggerFactory.getLogger(RoleController.class);
+    private final Logger log = LoggerFactory.getLogger(SystemRoleController.class);
 
     @Resource
     private RoleService roleService;
@@ -65,13 +65,13 @@ public class RoleController {
     private ApplicationService applicationService;
 
     /**
-     * 平台角色页面
+     * 系统角色页面
      *
      * @return 页面
      */
-    @RequestMapping(value = "/web/menu/platform/role", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/menu/system/role", method = RequestMethod.GET)
     public String platformRole() {
-        return "web/platform/role/role_data::#page-wrapper";
+        return "web/system/role/system_role::#page-wrapper";
     }
 
     /**
@@ -80,19 +80,17 @@ public class RoleController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/web/platform/role/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/system/role/data", method = RequestMethod.GET)
     @ResponseBody
     public DataTablesUtils<RoleBean> roleDatas(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         ArrayList<String> headers = new ArrayList<>();
         headers.add("select");
         headers.add("role_name");
-        headers.add("school_name");
-        headers.add("college_name");
         headers.add("role_en_name");
         headers.add("operator");
         RoleBean otherCondition = new RoleBean();
-        otherCondition.setRoleType(2);
+        otherCondition.setRoleType(1);
         DataTablesUtils<RoleBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         Result<Record> records = roleService.findAllByPage(dataTablesUtils,otherCondition);
         List<RoleBean> roleBeens = new ArrayList<>();
@@ -102,10 +100,6 @@ public class RoleController {
                 roleBean.setRoleId(record.getValue(ROLE.ROLE_ID));
                 roleBean.setRoleName(record.getValue(ROLE.ROLE_NAME));
                 roleBean.setRoleEnName(record.getValue(ROLE.ROLE_EN_NAME));
-                roleBean.setCollegeId(record.getValue(COLLEGE.COLLEGE_ID));
-                roleBean.setCollegeName(record.getValue(COLLEGE.COLLEGE_NAME));
-                roleBean.setSchoolId(record.getValue(SCHOOL.SCHOOL_ID));
-                roleBean.setSchoolName(record.getValue(SCHOOL.SCHOOL_NAME));
                 roleBeens.add(roleBean);
             }
         }
@@ -120,10 +114,9 @@ public class RoleController {
      *
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/platform/role/add", method = RequestMethod.GET)
-    public String roleAdd(ModelMap modelMap) {
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
-        return "web/platform/role/role_add::#page-wrapper";
+    @RequestMapping(value = "/web/system/role/add", method = RequestMethod.GET)
+    public String roleAdd() {
+        return "web/system/role/system_role_add::#page-wrapper";
     }
 
     /**
@@ -131,7 +124,7 @@ public class RoleController {
      *
      * @return 编辑页面
      */
-    @RequestMapping(value = "/web/platform/role/edit", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/system/role/edit", method = RequestMethod.GET)
     public String roleEdit(@RequestParam("id") int roleId, ModelMap modelMap) {
         Optional<Record> record = roleService.findByRoleIdRelation(roleId);
         RoleBean roleBean = new RoleBean();
@@ -140,47 +133,27 @@ public class RoleController {
             roleBean.setRoleId(temp.getValue(ROLE.ROLE_ID));
             roleBean.setRoleName(temp.getValue(ROLE.ROLE_NAME));
             roleBean.setRoleEnName(temp.getValue(ROLE.ROLE_EN_NAME));
-            roleBean.setCollegeId(temp.getValue(COLLEGE.COLLEGE_ID));
-            roleBean.setCollegeName(temp.getValue(COLLEGE.COLLEGE_NAME));
-            roleBean.setSchoolId(temp.getValue(SCHOOL.SCHOOL_ID));
-            roleBean.setSchoolName(temp.getValue(SCHOOL.SCHOOL_NAME));
         }
         modelMap.addAttribute("role", roleBean);
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
-        return "web/platform/role/role_edit::#page-wrapper";
+        return "web/system/role/system_role_edit::#page-wrapper";
     }
 
     /**
      * 保存时检验角色是否重复
      *
      * @param name      角色名
-     * @param collegeId 院id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/platform/role/save/valid", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/role/save/valid", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils saveValid(@RequestParam("roleName") String name, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId) {
+    public AjaxUtils saveValid(@RequestParam("roleName") String name) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
-            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                Users users = usersService.getUserFromSession();
-                Optional<Record> record = usersService.findUserSchoolInfo(users);
-                collegeId = roleService.getRoleCollegeId(record);
-            }
-            if (collegeId > 0) {
-                Result<Record> records = roleService.findByRoleNameAndCollegeId(roleName, collegeId);
-                if (records.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
-                } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
-                }
+            Result<Record> records = roleService.findByRoleNameAndRoleType(name,1);
+            if(records.isEmpty()){
+                return new AjaxUtils().success().msg("角色名不重复");
             } else {
-                Result<RoleRecord> roleRecords = roleService.findByRoleNameNotExistsCollegeRole(roleName);
-                if (roleRecords.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
-                } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
-                }
+                return new AjaxUtils().fail().msg("角色名重复");
             }
         }
         return new AjaxUtils().fail().msg("角色名不能为空");
@@ -190,35 +163,19 @@ public class RoleController {
      * 更新时检验角色名
      *
      * @param name      角色名
-     * @param collegeId 院id
      * @param roleId    角色id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/platform/role/update/valid", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/role/update/valid", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValid(@RequestParam("roleName") String name, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId,
-                                 @RequestParam("roleId") int roleId) {
+    public AjaxUtils updateValid(@RequestParam("roleName") String name, @RequestParam("roleId") int roleId) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
-            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                Users users = usersService.getUserFromSession();
-                Optional<Record> record = usersService.findUserSchoolInfo(users);
-                collegeId = roleService.getRoleCollegeId(record);
-            }
-            if (collegeId > 0) {
-                Result<Record> records = roleService.findByRoleNameAndCollegeIdNeRoleId(roleName, collegeId, roleId);
-                if (records.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
-                } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
-                }
+            Result<Record> records = roleService.findByRoleNameAndRoleTypeNeRoleId(name,1,roleId);
+            if(records.isEmpty()){
+                return new AjaxUtils().success().msg("角色名不重复");
             } else {
-                Result<RoleRecord> roleRecords = roleService.findByRoleNameNotExistsCollegeRoleNeRoleId(roleName, roleId);
-                if (roleRecords.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
-                } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
-                }
+                return new AjaxUtils().fail().msg("角色名重复");
             }
         }
         return new AjaxUtils().fail().msg("角色名不能为空");
@@ -227,21 +184,20 @@ public class RoleController {
     /**
      * 保存角色
      *
-     * @param collegeId      院id
      * @param roleName       角色名
      * @param applicationIds 应用ids
      * @return true 保存成功 false 保存失败
      */
-    @RequestMapping(value = "/web/platform/role/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/role/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleSave(@RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
+    public AjaxUtils roleSave( @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = new Role();
         role.setRoleName(roleName);
         role.setRoleEnName("ROLE_" + RandomUtils.generateRoleEnName().toUpperCase());
-        role.setRoleType(2);
+        role.setRoleType(1);
         int roleId = roleService.saveAndReturnId(role);
         if (roleId > 0) {
-            saveOrUpdate(collegeId, applicationIds, roleId);
+            saveOrUpdate(applicationIds, roleId);
             return new AjaxUtils().success().msg("保存成功");
         }
         return new AjaxUtils().fail().msg("保存失败");
@@ -251,21 +207,19 @@ public class RoleController {
      * 更新角色
      *
      * @param roleId         角色id
-     * @param collegeId      院id
      * @param roleName       角色名
      * @param applicationIds 应用ids
      * @return true 保存成功 false 保存失败
      */
-    @RequestMapping(value = "/web/platform/role/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/role/update", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
+    public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId,@RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
         role.setRoleName(roleName);
         roleService.update(role);
         if (roleId > 0) {
             roleApplicationService.deleteByRoleId(roleId);
-            collegeRoleService.deleteByRoleId(roleId);
-            saveOrUpdate(collegeId, applicationIds, roleId);
+            saveOrUpdate(applicationIds, roleId);
             return new AjaxUtils().success().msg("更新成功");
         }
         return new AjaxUtils().fail().msg("更新失败");
@@ -274,26 +228,16 @@ public class RoleController {
     /**
      * 保存或更新与角色相关的表
      *
-     * @param collegeId      院id
      * @param applicationIds 应用ids
      * @param roleId         角色id
      */
-    private void saveOrUpdate(int collegeId, String applicationIds, int roleId) {
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = roleService.getRoleCollegeId(record);
-        }
+    private void saveOrUpdate(String applicationIds, int roleId) {
         if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
             List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
             ids.forEach(id -> {
                 RoleApplication roleApplication = new RoleApplication(roleId, id);
                 roleApplicationService.save(roleApplication);
             });
-        }
-        if (collegeId > 0) {
-            CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
-            collegeRoleService.save(collegeRole);
         }
     }
 
@@ -303,12 +247,11 @@ public class RoleController {
      * @param roleId 角色id
      * @return true成功
      */
-    @RequestMapping(value = "/web/platform/role/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/role/delete", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils roleDelete(@RequestParam("roleId") int roleId) {
         Role role = roleService.findById(roleId);
         if (!ObjectUtils.isEmpty(role)) {
-            collegeRoleService.deleteByRoleId(roleId);
             roleApplicationService.deleteByRoleId(roleId);
             authoritiesService.deleteByAuthorities(role.getRoleEnName());
             roleService.deleteById(roleId);
@@ -322,7 +265,7 @@ public class RoleController {
      * @param roleId 角色id
      * @return 应用
      */
-    @RequestMapping(value = "/web/platform/role/application/data", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/system/role/application/data", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<RoleApplication> roleApplicationData(@RequestParam("roleId") int roleId) {
         Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findByRoleId(roleId);
@@ -338,10 +281,10 @@ public class RoleController {
      *
      * @return json
      */
-    @RequestMapping(value = "/web/platform/role/application/json", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/system/role/application/json", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<TreeBean> applicationJson(@RequestParam("collegeId") int collegeId) {
-        List<TreeBean> treeBeens = applicationService.getApplicationJsonByCollegeId(0,collegeId);
+    public AjaxUtils<TreeBean> applicationJson() {
+        List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
         return new AjaxUtils<TreeBean>().success().listData(treeBeens);
     }
 }

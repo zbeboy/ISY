@@ -232,7 +232,6 @@ public class GraduationPracticeUnifyServiceImpl extends DataTablesPlugin<Graduat
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        sortString = STUDENT.STUDENT_NUMBER.asc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

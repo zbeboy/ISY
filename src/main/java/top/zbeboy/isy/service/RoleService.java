@@ -24,6 +24,25 @@ public interface RoleService {
     Role findByRoleName(String roleName);
 
     /**
+     * 通过角色名与角色类型查询
+     *
+     * @param roleName 角色名
+     * @param roleType 角色类型
+     * @return 数据
+     */
+    Result<Record> findByRoleNameAndRoleType(String roleName, int roleType);
+
+    /**
+     * 通过角色名与角色类型查询 注：不等于角色id
+     *
+     * @param roleName 角色名
+     * @param roleType 角色类型
+     * @param roleId   角色id
+     * @return 数据
+     */
+    Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, int roleId);
+
+    /**
      * 通过主键查询
      *
      * @param id 主键
@@ -101,21 +120,21 @@ public interface RoleService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils);
+    Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils, RoleBean roleBean);
 
     /**
      * 角色总数
      *
      * @return 总数
      */
-    int countAll();
+    int countAll(RoleBean roleBean);
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<RoleBean> dataTablesUtils);
+    int countByCondition(DataTablesUtils<RoleBean> dataTablesUtils, RoleBean roleBean);
 
     /**
      * 查询不在院与角色关联表中的角色

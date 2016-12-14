@@ -297,7 +297,6 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        sortInteger = DEPARTMENT.DEPARTMENT_ID.desc();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("department_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

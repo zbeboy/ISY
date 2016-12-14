@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users implements Serializable {
 
-	private static final long serialVersionUID = -832237080;
+	private static final long serialVersionUID = 994608435;
 
 	private String    username;
 	private String    password;
