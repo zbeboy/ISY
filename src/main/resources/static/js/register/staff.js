@@ -410,18 +410,31 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         initParam();
         var phoneVerifyCode = param.phoneVerifyCode;
         var mobile = param.mobile;
-        if (!valid_regex.phone_verify_code_valid_regex.test(phoneVerifyCode)) {
-            validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, msg.phone_verify_code_error_msg);
+
+        if (!valid_regex.mobile_valid_regex.test(mobile)) {
+            validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, msg.mobile_error_msg);
         } else {
-            // ajax 检验 参数：手机号，验证码 后台保存这两个参数，在提交时再次检验
-            $.post(web_path + ajax_url.valid_mobile_url, {
-                mobile: mobile,
-                phoneVerifyCode: phoneVerifyCode
-            }, function (data) {
+            // ajax 检验
+            $.post(web_path + ajax_url.valid_users_url, {mobile: mobile, validType: 2}, function (data) {
                 if (data.state) {
-                    validSuccessDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg);
+                    validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
+                    if (!valid_regex.phone_verify_code_valid_regex.test(phoneVerifyCode)) {
+                        validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, msg.phone_verify_code_error_msg);
+                    } else {
+                        // ajax 检验 参数：手机号，验证码 后台保存这两个参数，在提交时再次检验
+                        $.post(web_path + ajax_url.valid_mobile_url, {
+                            mobile: mobile,
+                            phoneVerifyCode: phoneVerifyCode
+                        }, function (data) {
+                            if (data.state) {
+                                validSuccessDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg);
+                            } else {
+                                validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
+                            }
+                        });
+                    }
                 } else {
-                    validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
+                    validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, data.msg);
                 }
             });
         }
@@ -465,19 +478,24 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         var mobile = param.mobile;
         if (valid_regex.mobile_valid_regex.test(mobile)) {
 
-            validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
-
-            curCount = count;
-            //设置button效果，开始计时
-            $(btnId).attr("disabled", "true");
-            $(btnId).val(curCount + "秒后重新获取验证码");
-            InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
-
-            $.get(web_path + ajax_url.mobile_code_url, {mobile: mobile}, function (data) {
+            $.post(web_path + ajax_url.valid_users_url, {mobile: mobile, validType: 2}, function (data) {
                 if (data.state) {
-                    $(errorMsgId.phone_verify_code_error_msg).removeClass('hidden').text(data.msg);
+                    validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
+                    curCount = count;
+                    //设置button效果，开始计时
+                    $(btnId).attr("disabled", "true");
+                    $(btnId).val(curCount + "秒后重新获取验证码");
+                    InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+
+                    $.get(web_path + ajax_url.mobile_code_url, {mobile: mobile}, function (data) {
+                        if (data.state) {
+                            $(errorMsgId.phone_verify_code_error_msg).removeClass('hidden').text(data.msg);
+                        } else {
+                            validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
+                        }
+                    });
                 } else {
-                    validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
+                    validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, msg.mobile_error_msg);
                 }
             });
         } else {
@@ -502,8 +520,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      * 表单提交时检验
      */
     $('#register').click(function () {
-        // 显示遮罩
-        $('#loading_region').showLoading();
         startLoading();
         initParam();
         var school = param.school;
@@ -511,27 +527,27 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         var department = param.department;
 
         if (Number(school) <= 0) {
-            validErrorDom(validId.valid_school, errorMsgId.school_error_msg, '请选择学校');
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_school, errorMsgId.school_error_msg, '请选择学校');
             return;
         } else {
             validSuccessDom(validId.valid_school, errorMsgId.school_error_msg);
         }
 
         if (Number(college) <= 0) {
-            validErrorDom(validId.valid_college, errorMsgId.college_error_msg, '请选择院');
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_college, errorMsgId.college_error_msg, '请选择院');
             return;
         } else {
             validSuccessDom(validId.valid_college, errorMsgId.college_error_msg);
         }
 
         if (Number(department) <= 0) {
-            validErrorDom(validId.valid_department, errorMsgId.department_error_msg, '请选择系');
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_department, errorMsgId.department_error_msg, '请选择系');
             return;
         } else {
             validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
@@ -548,9 +564,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         initParam();
         var staffNumber = param.staffNumber;
         if (!valid_regex.staff_number_valid_regex.test(staffNumber)) {
-            validErrorDom(validId.valid_staff_number, errorMsgId.staff_number_error_msg, msg.staff_number_error_msg);
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_staff_number, errorMsgId.staff_number_error_msg, msg.staff_number_error_msg);
         } else {
             // ajax 检验
             $.post(web_path + ajax_url.valid_staff_url, {staffNumber: staffNumber}, function (data) {
@@ -558,9 +574,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
                     validSuccessDom(validId.valid_staff_number, errorMsgId.staff_number_error_msg);
                     validEmail();
                 } else {
-                    validErrorDom(validId.valid_staff_number, errorMsgId.staff_number_error_msg, '该工号已被注册');
                     // 去除遮罩
                     endLoading();
+                    validErrorDom(validId.valid_staff_number, errorMsgId.staff_number_error_msg, '该工号已被注册');
                 }
             });
         }
@@ -570,9 +586,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         initParam();
         var email = param.email;
         if (!valid_regex.email_valid_regex.test(email)) {
-            validErrorDom(validId.valid_email, errorMsgId.email_error_msg, msg.email_error_msg);
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_email, errorMsgId.email_error_msg, msg.email_error_msg);
         } else {
             // ajax 检验
             $.post(web_path + ajax_url.valid_users_url, {username: email, validType: 1}, function (data) {
@@ -580,9 +596,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
                     validSuccessDom(validId.valid_email, errorMsgId.email_error_msg);
                     validMobile();
                 } else {
-                    validErrorDom(validId.valid_email, errorMsgId.email_error_msg, data.msg);
                     // 去除遮罩
                     endLoading();
+                    validErrorDom(validId.valid_email, errorMsgId.email_error_msg, data.msg);
                 }
             });
         }
@@ -592,9 +608,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         initParam();
         var mobile = param.mobile;
         if (!valid_regex.mobile_valid_regex.test(mobile)) {
-            validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, msg.mobile_error_msg);
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, msg.mobile_error_msg);
         } else {
             // ajax 检验
             $.post(web_path + ajax_url.valid_users_url, {mobile: mobile, validType: 2}, function (data) {
@@ -602,9 +618,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
                     validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
                     validPhoneVerifyCode();
                 } else {
-                    validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, data.msg);
                     // 去除遮罩
                     endLoading();
+                    validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, data.msg);
                 }
             });
         }
@@ -615,9 +631,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         var phoneVerifyCode = param.phoneVerifyCode;
         var mobile = param.mobile;
         if (!valid_regex.phone_verify_code_valid_regex.test(phoneVerifyCode)) {
-            validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, msg.phone_verify_code_error_msg);
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, msg.phone_verify_code_error_msg);
         } else {
             // ajax 检验 参数：手机号，验证码 后台保存这两个参数，在提交时再次检验
             $.post(web_path + ajax_url.valid_mobile_url, {
@@ -628,9 +644,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
                     validSuccessDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg);
                     validPassword();
                 } else {
-                    validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
                     // 去除遮罩
                     endLoading();
+                    validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
                 }
             });
         }
@@ -641,24 +657,24 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         var password = param.password;
         var confirmPassword = param.confirmPassword;
         if (!valid_regex.password_valid_regex.test(password)) {
-            validErrorDom(validId.valid_password, errorMsgId.password_error_msg, msg.password_error_msg);
             // 去除遮罩
             endLoading();
+            validErrorDom(validId.valid_password, errorMsgId.password_error_msg, msg.password_error_msg);
         } else {
             validSuccessDom(validId.valid_password, errorMsgId.password_error_msg);
             if (confirmPassword !== password) {
-                validErrorDom(validId.valid_confirm_password, errorMsgId.confirm_password_error_msg, msg.confirm_password_error_msg);
                 // 去除遮罩
                 endLoading();
+                validErrorDom(validId.valid_confirm_password, errorMsgId.confirm_password_error_msg, msg.confirm_password_error_msg);
             } else {
                 validSuccessDom(validId.valid_confirm_password, errorMsgId.confirm_password_error_msg);
                 $.post(web_path + ajax_url.register_staff_url, $('#staff_register_form').serialize(), function (data) {
                     if (data.state) {
                         window.location.href = web_path + ajax_url.finish;
                     } else {
-                        $('#error_msg').removeClass('hidden').text(data.msg);
                         // 去除遮罩
                         endLoading();
+                        $('#error_msg').removeClass('hidden').text(data.msg);
                     }
                 });
             }

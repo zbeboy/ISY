@@ -285,17 +285,22 @@ public class UsersController {
     public AjaxUtils mobileCode(@RequestParam("mobile") String mobile, HttpSession session) {
         String regex = "1[0-9]{10}";
         if (mobile.matches(regex)) {
-            DateTime dateTime = DateTime.now();
-            dateTime = dateTime.plusMinutes(30);
-            String mobileKey = RandomUtils.generateMobileKey();
-            session.setAttribute("mobile", mobile);
-            session.setAttribute("mobileExpiry", dateTime.toDate());
-            session.setAttribute("mobileCode", mobileKey);
-            mobileService.sendValidMobileShortMessage(mobile, mobileKey);
-            if (isyProperties.getMobile().isOpen()) {
-                return new AjaxUtils().success().msg("短信已发送，请您稍等");
+            List<Users> tempUsers = usersService.findByMobile(StringUtils.trimWhitespace(mobile));
+            if (ObjectUtils.isEmpty(tempUsers)) {
+                DateTime dateTime = DateTime.now();
+                dateTime = dateTime.plusMinutes(30);
+                String mobileKey = RandomUtils.generateMobileKey();
+                session.setAttribute("mobile", mobile);
+                session.setAttribute("mobileExpiry", dateTime.toDate());
+                session.setAttribute("mobileCode", mobileKey);
+                mobileService.sendValidMobileShortMessage(mobile, mobileKey);
+                if (isyProperties.getMobile().isOpen()) {
+                    return new AjaxUtils().success().msg("短信已发送，请您稍等");
+                } else {
+                    return new AjaxUtils().fail().msg("短信发送已被管理员关闭");
+                }
             } else {
-                return new AjaxUtils().fail().msg("短信发送已被管理员关闭");
+                return new AjaxUtils().fail().msg("该手机号已被注册");
             }
         } else {
             return new AjaxUtils().fail().msg("手机号格式不正确");
