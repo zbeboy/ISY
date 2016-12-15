@@ -332,7 +332,7 @@ public class InternshipTeacherDistributionController {
             InternshipRelease internshipRelease = errorBean.getData();
             if (!ObjectUtils.isEmpty(internshipRelease)) {
                 int departmentId = internshipRelease.getDepartmentId();
-                Result<Record> staffRecords = staffService.findByDepartmentIdRelation(departmentId);
+                Result<Record> staffRecords = staffService.findByDepartmentIdRelationExistsAuthorities(departmentId);
                 if (staffRecords.isNotEmpty()) {
                     staffs = staffRecords.into(StaffBean.class);
                 }

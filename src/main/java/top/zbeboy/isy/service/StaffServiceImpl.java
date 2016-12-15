@@ -69,12 +69,15 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Result<Record> findByDepartmentIdRelation(int departmentId) {
+    public Result<Record> findByDepartmentIdRelationExistsAuthorities(int departmentId) {
+        Select<AuthoritiesRecord> authoritiesRecordSelect =
+                create.selectFrom(AUTHORITIES)
+                        .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
         return create.select()
                 .from(STAFF)
                 .join(USERS)
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                .where(STAFF.DEPARTMENT_ID.eq(departmentId))
+                .where(STAFF.DEPARTMENT_ID.eq(departmentId)).andExists(authoritiesRecordSelect)
                 .fetch();
 
     }

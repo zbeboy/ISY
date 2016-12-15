@@ -938,7 +938,7 @@ public class InternshipApplyController {
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
             List<StaffBean> staffs = new ArrayList<>();
-            Result<Record> staffRecord = staffService.findByDepartmentIdRelation(internshipRelease.getDepartmentId());
+            Result<Record> staffRecord = staffService.findByDepartmentIdRelationExistsAuthorities(internshipRelease.getDepartmentId());
             if (staffRecord.isNotEmpty()) {
                 staffs = staffRecord.into(StaffBean.class);
             }
