@@ -285,22 +285,17 @@ public class UsersController {
     public AjaxUtils mobileCode(@RequestParam("mobile") String mobile, HttpSession session) {
         String regex = "1[0-9]{10}";
         if (mobile.matches(regex)) {
-            List<Users> tempUsers = usersService.findByMobile(StringUtils.trimWhitespace(mobile));
-            if (ObjectUtils.isEmpty(tempUsers)) {
-                DateTime dateTime = DateTime.now();
-                dateTime = dateTime.plusMinutes(30);
-                String mobileKey = RandomUtils.generateMobileKey();
-                session.setAttribute("mobile", mobile);
-                session.setAttribute("mobileExpiry", dateTime.toDate());
-                session.setAttribute("mobileCode", mobileKey);
-                mobileService.sendValidMobileShortMessage(mobile, mobileKey);
-                if (isyProperties.getMobile().isOpen()) {
-                    return new AjaxUtils().success().msg("短信已发送，请您稍等");
-                } else {
-                    return new AjaxUtils().fail().msg("短信发送已被管理员关闭");
-                }
+            DateTime dateTime = DateTime.now();
+            dateTime = dateTime.plusMinutes(30);
+            String mobileKey = RandomUtils.generateMobileKey();
+            session.setAttribute("mobile", mobile);
+            session.setAttribute("mobileExpiry", dateTime.toDate());
+            session.setAttribute("mobileCode", mobileKey);
+            mobileService.sendValidMobileShortMessage(mobile, mobileKey);
+            if (isyProperties.getMobile().isOpen()) {
+                return new AjaxUtils().success().msg("短信已发送，请您稍等");
             } else {
-                return new AjaxUtils().fail().msg("该手机号已被注册");
+                return new AjaxUtils().fail().msg("短信发送已被管理员关闭");
             }
         } else {
             return new AjaxUtils().fail().msg("手机号格式不正确");
@@ -396,7 +391,7 @@ public class UsersController {
         AjaxUtils ajaxUtils = new AjaxUtils();
         Users users = usersService.findByUsername(email);
         if (!ObjectUtils.isEmpty(users)) {
-            if(users.getVerifyMailbox() == 1){
+            if (users.getVerifyMailbox() == 1) {
                 ajaxUtils.success().msg("邮箱正常");
             } else {
                 ajaxUtils.fail().msg("该邮箱未激活");
@@ -428,7 +423,7 @@ public class UsersController {
                 users.setPasswordResetKeyValid(new Timestamp(dateTime.toDate().getTime()));
                 usersService.update(users);
                 if (isyProperties.getMail().isOpen()) {
-                    mailService.sendPasswordResetMail(users, new RequestUtils().getBaseUrl(request));
+                    mailService.sendPasswordResetMail(users, requestUtils.getBaseUrl(request));
                     return new AjaxUtils().success().msg("密码重置邮件已发送至您的邮箱");
                 } else {
                     msg = "邮件推送已被管理员关闭";
@@ -783,6 +778,7 @@ public class UsersController {
         Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
         if (student.isPresent()) {
             StudentBean studentBean = student.get().into(StudentBean.class);
+            modelMap.addAttribute("avatarForSaveOrUpdate",studentBean.getAvatar());
             studentBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + studentBean.getAvatar());
             modelMap.addAttribute("user", studentBean);
         }
@@ -798,6 +794,7 @@ public class UsersController {
         Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
         if (staff.isPresent()) {
             StaffBean staffBean = staff.get().into(StaffBean.class);
+            modelMap.addAttribute("avatarForSaveOrUpdate",staffBean.getAvatar());
             staffBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + staffBean.getAvatar());
             modelMap.addAttribute("user", staffBean);
         }
@@ -811,6 +808,7 @@ public class UsersController {
      */
     private void profileSystem(Users users, ModelMap modelMap, HttpServletRequest request) {
         Users newUsers = usersService.findByUsername(users.getUsername());
+        modelMap.addAttribute("avatarForSaveOrUpdate",newUsers.getAvatar());
         newUsers.setAvatar(requestUtils.getBaseUrl(request) + "/" + newUsers.getAvatar());
         modelMap.addAttribute("user", newUsers);
     }
@@ -920,6 +918,7 @@ public class UsersController {
                             } else {
                                 Users users = usersService.findByUsername(username);
                                 if (!ObjectUtils.isEmpty(users)) {
+                                    users.setMobile(newMobile);
                                     usersService.update(users);
                                     //清空session
                                     session.removeAttribute("mobileExpiry");

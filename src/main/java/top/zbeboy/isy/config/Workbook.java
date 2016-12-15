@@ -89,7 +89,7 @@ public final class Workbook {
     /*
     用户默认头像
      */
-    public static final String USERS_AVATAR = "/images/avatar.jpg";
+    public static final String USERS_AVATAR = "images/avatar.jpg";
 
     /*
     用户档案袋路径

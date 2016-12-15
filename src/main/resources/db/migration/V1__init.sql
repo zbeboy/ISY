@@ -446,7 +446,7 @@ INSERT INTO users(username, password, enabled, users_type_id, real_name, mobile,
                    verify_mailbox, mailbox_verify_code,
                   password_reset_key, mailbox_verify_valid,
                   password_reset_key_valid, lang_key, join_date)
-VALUES ('863052317@qq.com','$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2',1,3,'赵银','13987614709','/images/avatar.jpg',1,'','',NULL ,NULL ,'zh-CN','2016-08-18');
+VALUES ('863052317@qq.com','$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2',1,3,'赵银','13987614709','images/avatar.jpg',1,'','',NULL ,NULL ,'zh-CN','2016-08-18');
 
 INSERT INTO role(role_name, role_en_name,role_type) VALUES ('系统','ROLE_SYSTEM',1);
 INSERT INTO role(role_name, role_en_name,role_type) VALUES ('管理员','ROLE_ADMIN',1);

@@ -44,7 +44,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
     var valid_regex = {
         staff_number_valid_regex: /^\d{8,}$/,
         email_valid_regex: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
-        mobile_valid_regex: /^1[0-9]{10}/,
+        mobile_valid_regex: /^1[0-9]{10}$/,
         phone_verify_code_valid_regex: /^\w+$/,
         password_valid_regex: /^[a-zA-Z0-9]\w{5,17}$/
     };
@@ -495,7 +495,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
                         }
                     });
                 } else {
-                    validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, msg.mobile_error_msg);
+                    validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, data.msg);
                 }
             });
         } else {

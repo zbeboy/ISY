@@ -19,7 +19,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
          正则
          */
         var valid_regex = {
-            mobile_valid_regex: /^1[0-9]{10}/,
+            mobile_valid_regex: /^1[0-9]{10}$/,
             phone_verify_code_valid_regex: /^\w+$/,
             password_valid_regex: /^[a-zA-Z0-9]\w{5,17}$/
         };
@@ -191,21 +191,28 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
             var mobile = param.mobile;
             if (valid_regex.mobile_valid_regex.test(mobile)) {
                 if(mobile !== $('#mobile').val()){
-                    validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
 
-                    curCount = count;
-                    //设置button效果，开始计时
-                    $(btnId).attr("disabled", "true");
-                    $(btnId).val(curCount + "秒后重新获取验证码");
-                    InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
-
-                    $.get(web_path + ajax_url.mobile_code_url, {mobile: mobile}, function (data) {
+                    $.post(web_path + ajax_url.valid_users_url, {username:param.username,mobile: mobile, validType: 2}, function (data) {
                         if (data.state) {
-                            $(errorMsgId.phone_verify_code_error_msg).removeClass('hidden').text(data.msg);
+                            validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
+                            curCount = count;
+                            //设置button效果，开始计时
+                            $(btnId).attr("disabled", "true");
+                            $(btnId).val(curCount + "秒后重新获取验证码");
+                            InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+
+                            $.get(web_path + ajax_url.mobile_code_url, {mobile: mobile}, function (data) {
+                                if (data.state) {
+                                    $(errorMsgId.phone_verify_code_error_msg).removeClass('hidden').text(data.msg);
+                                } else {
+                                    validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
+                                }
+                            });
                         } else {
-                            validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, data.msg);
+                            validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, data.msg);
                         }
                     });
+
                 } else {
                     validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, '检测到您未更改手机号');
                 }

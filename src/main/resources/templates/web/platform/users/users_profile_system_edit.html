@@ -27,7 +27,7 @@
                         <p class="text-danger hidden" id="real_name_error_msg"></p>
                         <input type="hidden" id="username" name="username" th:value="${user.username}"/>
                     </div>
-                    <input type="hidden" name="avatar" th:value="${user.avatar}" id="form_avatar"/>
+                    <input type="hidden" name="avatar" th:value="${avatarForSaveOrUpdate}" id="form_avatar"/>
                 </form>
             </div>
             <div class="col-lg-4">
