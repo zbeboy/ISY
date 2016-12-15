@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             internship_journal_data_url: '/anyone/internship/data',
-            journal_url: '',
+            journal_url: '/web/internship/journal/list',
             write_journal_url:'',
             access_condition_url:'/web/internship/journal/condition'
         };
@@ -132,18 +132,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.journal_list', "click", function () {
             var id = $(this).attr('data-id');
-            // 进入条件判断
-            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
-                if(data.state){
-                    $.address.value(ajax_url.journal_url + "?id=" + id);
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
+            $.address.value(ajax_url.journal_url + "?id=" + id);
         });
 
         /*

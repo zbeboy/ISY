@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.internship.journal;
 
 import org.jooq.Record;
+import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,15 +19,13 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by zbeboy on 2016/12/14.
@@ -52,6 +51,9 @@ public class InternshipJournalController {
     private UsersService usersService;
 
     @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
     private StudentService studentService;
 
     /**
@@ -62,6 +64,64 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/menu/internship/journal", method = RequestMethod.GET)
     public String internshipJournal() {
         return "web/internship/journal/internship_journal::#page-wrapper";
+    }
+
+    /**
+     * 实习日志列表页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/journal/list", method = RequestMethod.GET)
+    public String journalList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        Users users = usersService.getUserFromSession();
+        Optional<Record> record = usersService.findUserSchoolInfo(users);
+        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = record.get().into(Student.class);
+            modelMap.addAttribute("studentId", student.getStudentId());
+        }
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        return "web/internship/journal/internship_journal_list::#page-wrapper";
+    }
+
+    /**
+     * 日志列表数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/journal/list/data", method = RequestMethod.GET)
+    @ResponseBody
+    public DataTablesUtils<InternshipJournal> listData(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("select");
+        headers.add("student_name");
+        headers.add("student_number");
+        headers.add("organize");
+        headers.add("school_guidance_teacher");
+        headers.add("create_date");
+        headers.add("operator");
+        DataTablesUtils<InternshipJournal> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        InternshipJournal otherCondition = new InternshipJournal();
+        String internshipReleaseId = request.getParameter("internshipReleaseId");
+        if (!ObjectUtils.isEmpty(internshipReleaseId)) {
+            otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            Result<Record> records = internshipJournalService.findAllByPage(dataTablesUtils, otherCondition);
+            List<InternshipJournal> internshipJournals = new ArrayList<>();
+            if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                internshipJournals = records.into(InternshipJournal.class);
+            }
+            dataTablesUtils.setData(internshipJournals);
+            dataTablesUtils.setiTotalRecords(internshipJournalService.countAll(otherCondition));
+            dataTablesUtils.setiTotalDisplayRecords(internshipJournalService.countByCondition(dataTablesUtils, otherCondition));
+        } else {
+            dataTablesUtils.setData(null);
+            dataTablesUtils.setiTotalRecords(0);
+            dataTablesUtils.setiTotalDisplayRecords(0);
+        }
+        return dataTablesUtils;
     }
 
     /**
@@ -143,6 +203,25 @@ public class InternshipJournalController {
             return new AjaxUtils().success().msg("删除日志成功");
         }
         return new AjaxUtils().fail().msg("删除日志失败");
+    }
+
+    /**
+     * 实习日志进入条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/journal/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId, int studentId) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("在条件范围，允许使用");
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
     }
 
     /**

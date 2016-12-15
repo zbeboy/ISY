@@ -14,9 +14,17 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
-                downloads: '/web/internship/journal/list/downloads'
+                downloads: '/web/internship/journal/list/downloads',
+                back:'/web/menu/internship/journal'
             };
         }
+
+        /*
+         返回
+         */
+        $('#page_back').click(function () {
+            $.address.value(getAjaxUrl().back);
+        });
 
         var operator_button = $("#operator_button").html();
         // 预编译模板
@@ -82,10 +90,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     orderable: false,
                     render: function (a, b, c, d) {
 
-                        var context = null;
-
-                        if (c.studentId == init_page_param.studentId) {
-                            context =
+                        var context =
                             {
                                 func: [
                                     {
@@ -114,25 +119,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                                     }
                                 ]
                             };
-                        } else {
-                            context =
-                            {
-                                func: [
-                                    {
-                                        "name": "查看",
-                                        "css": "look",
-                                        "type": "info",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "下载",
-                                        "css": "download",
-                                        "type": "default",
-                                        "id": c.internshipJournalId
-                                    }
-                                ]
-                            };
-                        }
 
                         var html = template(context);
                         return html;
@@ -206,6 +192,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          参数
          */
         var param = {
+            studentId:init_page_param.studentId,
             studentName: '',
             studentNumber: '',
             organize: '',

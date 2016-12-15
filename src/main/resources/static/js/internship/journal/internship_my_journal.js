@@ -16,9 +16,17 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
                 downloads: '/web/internship/journal/list/downloads',
-                download_all_url: '/web/internship/journal/list/download_all'
+                download_all_url: '/web/internship/journal/list/download_all',
+                back:'/web/menu/internship/journal'
             };
         }
+
+        /*
+         返回
+         */
+        $('#page_back').click(function () {
+            $.address.value(getAjaxUrl().back);
+        });
 
         var operator_button = $("#operator_button").html();
         // 预编译模板

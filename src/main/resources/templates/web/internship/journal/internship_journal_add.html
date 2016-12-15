@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8"/>
 </head>
 <body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习日志 -
+                    <small>添加</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="add_form">
+                    <div class="form-group" id="valid_student_name">
+                        <label>学生姓名</label>
+                        <input class="form-control" name="studentName" id="studentName" placeholder="学生姓名"/>
+                        <p class="text-danger hidden" id="student_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_number">
+                        <label>学生学号</label>
+                        <input class="form-control" name="studentNumber" id="studentNumber" placeholder="学生学号"/>
+                        <p class="text-danger hidden" id="student_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_organize">
+                        <label>班级</label>
+                        <input class="form-control" name="organize" id="organize" placeholder="班级"/>
+                        <p class="text-danger hidden" id="organize_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_school_guidance_teacher">
+                        <label>校内指导教师</label>
+                        <input class="form-control" name="schoolGuidanceTeacher" id="schoolGuidanceTeacher" placeholder="校内指导教师"/>
+                        <p class="text-danger hidden" id="school_guidance_teacher_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_company_name">
+                        <label>实习单位名称</label>
+                        <input class="form-control" name="graduationPracticeCompanyName" id="graduationPracticeCompanyName" placeholder="实习单位名称"/>
+                        <p class="text-danger hidden" id="graduation_practice_company_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_journal_content">
+                        <label>内容与感想</label>
+                        <input class="form-control" name="internshipJournalContent" id="internshipJournalContent" placeholder="内容与感想"/>
+                        <p class="text-danger hidden" id="internship_journal_content_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_journal_date">
+                        <label>日志日期</label>
+                        <input class="form-control" name="internshipJournalDate" id="internshipJournalDate" placeholder="日志日期"/>
+                        <p class="text-danger hidden" id="internship_journal_date_error_msg"></p>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="school-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{school_value}}">{{school_name}}</option>
+            {{/each}}
+        </script>
 
+        <script id="college-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{college_value}}">{{college_name}}</option>
+            {{/each}}
+        </script>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /*页面参数*/
+            var init_page_param = {
+                'currentUserRoleName': /*[[${currentUserRoleName}]]*/ ''
+            };
+            /*]]>*/
+        </script>
+        <input type="hidden" class="dy_script" value="/js/data/department/department_add.js" />
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
 </body>
+
 </html>
