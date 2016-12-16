@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             internship_journal_data_url: '/anyone/internship/data',
             journal_url: '/web/internship/journal/list',
+            my_journal:'/web/internship/journal/my/list',
             write_journal_url:'',
             access_condition_url:'/web/internship/journal/condition'
         };
@@ -133,6 +134,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(tableData).delegate('.journal_list', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(ajax_url.journal_url + "?id=" + id);
+        });
+
+        /*
+         我的日志
+         */
+        $(tableData).delegate('.my_journal', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.my_journal + "?id=" + id);
         });
 
         /*

@@ -1,6 +1,9 @@
 package top.zbeboy.isy.config;
 
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.service.util.IPTimeStamp;
+
+import java.text.SimpleDateFormat;
 
 /**
  * Application constants.
@@ -57,6 +60,12 @@ public final class Workbook {
     public static final String GRADUATION_PRACTICE_COMPANY_TYPE = "毕业实习(学生校外自主实习)";
 
     /*
+    文件类型
+     */
+    public static final String DOC_FILE = "doc";
+    public static final String DOCX_FILE = "docx";
+
+    /*
     系统角色
      */
     public static final String SYSTEM_ROLE_NAME = "系统";
@@ -87,6 +96,11 @@ public final class Workbook {
     public static final String URL_MAPPING_FILE_PATH = SETTINGS_PATH + "url-mapping.txt";
 
     /*
+   实习日志模板
+    */
+    public static final String INTERNSHIP_JOURNAL_FILE_PATH = SETTINGS_PATH + "internshipJournalTemplate.doc";
+
+    /*
     用户默认头像
      */
     public static final String USERS_AVATAR = "images/avatar.jpg";
@@ -112,6 +126,16 @@ public final class Workbook {
      */
     public static String avatarPath(Users users) {
         return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "avatar/";
+    }
+
+    /**
+     * 保存实习日志路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String internshipJournalPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "internship/journal/" ;
     }
 
     /**

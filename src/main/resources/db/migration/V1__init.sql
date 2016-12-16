@@ -413,8 +413,7 @@ CREATE TABLE internship_journal(
   internship_release_id VARCHAR(64) NOT NULL ,
   internship_journal_word VARCHAR(500) NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
-  UNIQUE (student_id,internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
 );
 
 CREATE TABLE internship_regulate(
@@ -434,8 +433,7 @@ CREATE TABLE internship_regulate(
   staff_id INT NOT NULL ,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
-  FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
-  UNIQUE (student_id,internship_release_id)
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
 
 INSERT INTO users_type(users_type_name) VALUES ('学生');

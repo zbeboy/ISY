@@ -33,6 +33,15 @@ public interface InternshipTeacherDistributionService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
+     * 通过实习发布id 和学生id查询 指导教师
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return 数据
+     */
+    Optional<Record> findByInternshipReleaseIdAndStudentIdForStaff(String internshipReleaseId, int studentId);
+
+    /**
      * 保存
      *
      * @param internshipTeacherDistribution 教师分配

@@ -56,6 +56,18 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                 .fetchOptional();
     }
 
+    @Override
+    public Optional<Record> findByInternshipReleaseIdAndStudentIdForStaff(String internshipReleaseId, int studentId) {
+        return create.select()
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .join(STAFF)
+                .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                .fetchOptional();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(InternshipTeacherDistribution internshipTeacherDistribution) {

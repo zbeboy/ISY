@@ -12,15 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipJournalDao;
-import top.zbeboy.isy.domain.tables.daos.InternshipReleaseDao;
-import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import javax.annotation.Resource;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_JOURNAL;
 
@@ -46,6 +46,25 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
     @Override
     public InternshipJournal findById(String id) {
         return internshipJournalDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        return create.select()
+                .from(INTERNSHIP_JOURNAL)
+                .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(studentId)))
+                .fetchOptional();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(InternshipJournal internshipJournal) {
+        internshipJournalDao.insert(internshipJournal);
+    }
+
+    @Override
+    public void update(InternshipJournal internshipJournal) {
+        internshipJournalDao.update(internshipJournal);
     }
 
     @Override
@@ -91,6 +110,7 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
             String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
             String organize = StringUtils.trimWhitespace(search.getString("organize"));
             String guidanceTeacher = StringUtils.trimWhitespace(search.getString("guidanceTeacher"));
+            String createDate = StringUtils.trimWhitespace(search.getString("createDate"));
 
             if (StringUtils.hasLength(studentName)) {
                 a = INTERNSHIP_JOURNAL.STUDENT_NAME.like(SQLQueryUtils.likeAllParam(studentName));
@@ -131,6 +151,23 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
                 } else {
                     a = a.and(INTERNSHIP_JOURNAL.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(guidanceTeacher)));
                 }
+            }
+
+            if (StringUtils.hasLength(createDate)) {
+                String format = "yyyy-MM-dd HH:mm:ss";
+                String[] createDateArr = createDate.split("至");
+                if (!ObjectUtils.isEmpty(createDateArr) && createDateArr.length >= 2) {
+                    try {
+                        if (ObjectUtils.isEmpty(a)) {
+                            a = INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format));
+                        } else {
+                            a = a.and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
+                        }
+                    } catch (ParseException e) {
+                        log.error("Format time error, error is {}", e);
+                    }
+                }
+
             }
         }
         return a;

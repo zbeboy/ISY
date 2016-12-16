@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,15 +17,20 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
+import top.zbeboy.isy.web.vo.internship.journal.InternshipJournalVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -45,6 +51,12 @@ public class InternshipJournalController {
     private InternshipJournalService internshipJournalService;
 
     @Resource
+    private InternshipTeacherDistributionService internshipTeacherDistributionService;
+
+    @Resource
+    private InternshipTypeService internshipTypeService;
+
+    @Resource
     private UploadService uploadService;
 
     @Resource
@@ -55,6 +67,24 @@ public class InternshipJournalController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private InternshipCollegeService internshipCollegeService;
+
+    @Resource
+    private InternshipCompanyService internshipCompanyService;
+
+    @Resource
+    private GraduationPracticeCollegeService graduationPracticeCollegeService;
+
+    @Resource
+    private GraduationPracticeCompanyService graduationPracticeCompanyService;
+
+    @Resource
+    private GraduationPracticeUnifyService graduationPracticeUnifyService;
+
+    @Resource
+    private FilesService filesService;
 
     /**
      * 实习日志
@@ -83,6 +113,32 @@ public class InternshipJournalController {
         }
         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         return "web/internship/journal/internship_journal_list::#page-wrapper";
+    }
+
+    /**
+     * 我的日志列表页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/journal/my/list", method = RequestMethod.GET)
+    public String myJournalList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "web/internship/journal/internship_journal::#page-wrapper";
+        boolean canUse = false;
+        Users users = usersService.getUserFromSession();
+        Optional<Record> record = usersService.findUserSchoolInfo(users);
+        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = record.get().into(Student.class);
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
+            canUse = !errorBean.isHasError();
+            modelMap.addAttribute("studentId", student.getStudentId());
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        }
+        if (canUse) {
+            page = "web/internship/journal/internship_my_journal::#page-wrapper";
+        }
+        return page;
     }
 
     /**
@@ -122,6 +178,64 @@ public class InternshipJournalController {
             dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 实习日志添加
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/journal/list/add", method = RequestMethod.GET)
+    public String journalListAdd(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
+        InternshipJournal internshipJournal = new InternshipJournal();
+        Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+        if (studentRecord.isPresent()) {
+            StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+            internshipJournal.setStudentId(studentId);
+            internshipJournal.setInternshipReleaseId(internshipReleaseId);
+            internshipJournal.setStudentName(studentBean.getRealName());
+            internshipJournal.setOrganize(studentBean.getOrganizeName());
+            internshipJournal.setStudentNumber(studentBean.getStudentNumber());
+        }
+        Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentIdForStaff(internshipReleaseId, studentId);
+        if (internshipTeacherDistributionRecord.isPresent()) {
+            InternshipTeacherDistributionBean internshipTeacherDistributionBean = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistributionBean.class);
+            internshipJournal.setSchoolGuidanceTeacher(internshipTeacherDistributionBean.getRealName());
+        }
+        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
+        switch (internshipType.getInternshipTypeName()) {
+            case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipCollegeRecord.isPresent()) {
+                    InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
+                    internshipJournal.setGraduationPracticeCompanyName(internshipCollege.getInternshipCollegeName());
+                }
+                break;
+            case Workbook.INTERNSHIP_COMPANY_TYPE:
+                Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipCompanyRecord.isPresent()) {
+                    InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
+                    internshipJournal.setGraduationPracticeCompanyName(internshipCompany.getInternshipCompanyName());
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                break;
+            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                break;
+            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (graduationPracticeCompanyRecord.isPresent()) {
+                    GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
+                    internshipJournal.setGraduationPracticeCompanyName(graduationPracticeCompany.getGraduationPracticeCompanyName());
+                }
+                break;
+        }
+        modelMap.addAttribute("internshipJournal", internshipJournal);
+        return "web/internship/journal/internship_journal_add::#page-wrapper";
     }
 
     /**
@@ -220,6 +334,52 @@ public class InternshipJournalController {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 保存实习日志
+     *
+     * @param internshipJournalVo 实习日志
+     * @param bindingResult       检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/journal/my/save", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils journalSave(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        if (!bindingResult.hasErrors()) {
+            InternshipJournal internshipJournal = new InternshipJournal();
+            internshipJournal.setInternshipJournalId(UUIDUtils.getUUID());
+            internshipJournal.setStudentName(internshipJournalVo.getStudentName());
+            internshipJournal.setStudentNumber(internshipJournalVo.getStudentNumber());
+            internshipJournal.setOrganize(internshipJournalVo.getOrganize());
+            internshipJournal.setSchoolGuidanceTeacher(internshipJournalVo.getSchoolGuidanceTeacher());
+            internshipJournal.setGraduationPracticeCompanyName(internshipJournalVo.getGraduationPracticeCompanyName());
+            internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
+            internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
+            internshipJournal.setCreateDate(new Timestamp(System.currentTimeMillis()));
+            internshipJournal.setStudentId(internshipJournalVo.getStudentId());
+            internshipJournal.setInternshipReleaseId(internshipJournalVo.getInternshipReleaseId());
+
+            Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
+            if(studentRecord.isPresent()){
+                Users users = studentRecord.get().into(Users.class);
+                String outputPath = filesService.saveInternshipJournal(internshipJournal,users);
+                if(StringUtils.hasLength(outputPath)){
+                    internshipJournal.setInternshipJournalWord(outputPath);
+                    internshipJournalService.save(internshipJournal);
+                    ajaxUtils.success().msg("保存成功");
+                } else {
+                    ajaxUtils.fail().msg("保存文件失败");
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到相关学生信息");
+            }
+
+        } else {
+            ajaxUtils.fail().msg("保存失败，参数错误");
         }
         return ajaxUtils;
     }

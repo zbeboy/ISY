@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016/12/14.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
+    function ($, Handlebars,moment) {
 
         /*
          ajax url
@@ -174,8 +174,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             }
         });
 
-        var global_button = '<button type="button" id="department_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-            '  <button type="button" id="department_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+        var global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+            '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
             '  <button type="button" id="journal_downloads" class="btn btn-outline btn-default btn-sm"><i class="fa fa-trash-o"></i>批量下载</button>' +
             '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-trash-o"></i>全部下载</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
@@ -211,6 +211,29 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.createDate = $(getParamId().createDate).val();
         }
 
+        // 创建日期
+        $(getParamId().createDate).daterangepicker({
+            "startDate": moment().subtract(2, "days"),
+            "endDate": moment(),
+            "timePicker": true,
+            "timePicker24Hour": true,
+            "timePickerIncrement": 30,
+            "locale": {
+                format: 'YYYY-MM-DD HH:mm:ss',
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                fromLabel: '起始时间',
+                toLabel: '结束时间',
+                customRangeLabel: '自定义',
+                separator: ' 至 ',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月']
+            }
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
+        });
+
         /*
          清空参数
          */
@@ -231,6 +254,25 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
+        });
+
+        /*
+         添加
+         */
+        $('#journal_add').click(function () {
+            $.address.value(getAjaxUrl().add + '?id=' + init_page_param.internshipReleaseId + '&studentId=' + init_page_param.studentId);
+        });
+
+        /*
+         批量删除
+         */
+        $('#journal_dels').click(function () {
+            var journalIds = [];
+            var ids = $('input[name="check"]:checked');
+            for (var i = 0; i < ids.length; i++) {
+                journalIds.push($(ids[i]).val());
+            }
+            // TODO:等待完成
         });
 
         /*

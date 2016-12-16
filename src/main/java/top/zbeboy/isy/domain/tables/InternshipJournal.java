@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 
-	private static final long serialVersionUID = -672602307;
+	private static final long serialVersionUID = -433540849;
 
 	/**
 	 * The reference instance of <code>isy.internship_journal</code>
@@ -146,7 +146,7 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 	 */
 	@Override
 	public List<UniqueKey<InternshipJournalRecord>> getKeys() {
-		return Arrays.<UniqueKey<InternshipJournalRecord>>asList(Keys.KEY_INTERNSHIP_JOURNAL_PRIMARY, Keys.KEY_INTERNSHIP_JOURNAL_STUDENT_ID);
+		return Arrays.<UniqueKey<InternshipJournalRecord>>asList(Keys.KEY_INTERNSHIP_JOURNAL_PRIMARY);
 	}
 
 	/**
