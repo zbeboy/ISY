@@ -3,6 +3,7 @@ package top.zbeboy.isy.service;
 import org.apache.poi.POIDocument;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.xwpf.usermodel.*;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ import top.zbeboy.isy.domain.tables.pojos.Users;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by lenovo on 2016-11-13.
@@ -58,21 +59,67 @@ public class FilesServiceImpl implements FilesService {
 
     @Override
     public String saveInternshipJournal(InternshipJournal internshipJournal,Users users) {
-        String outputPath = Workbook.internshipJournalPath(users)+ new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + ".doc";
+        String outputPath = "";
         try{
             String templatePath = Workbook.INTERNSHIP_JOURNAL_FILE_PATH;
             InputStream is = new FileInputStream(templatePath);
-            HWPFDocument doc = new HWPFDocument(is);
-            Range range = doc.getRange();
-            range.replaceText("${studentName}", internshipJournal.getStudentName());
-            range.replaceText("${studentNumber}", internshipJournal.getStudentNumber());
-            range.replaceText("${organize}", internshipJournal.getOrganize());
-            range.replaceText("${schoolGuidanceTeacher}", internshipJournal.getSchoolGuidanceTeacher());
-            range.replaceText("${graduationPracticeCompanyName}", internshipJournal.getGraduationPracticeCompanyName());
-            range.replaceText("${internshipJournalContent}", internshipJournal.getInternshipJournalContent());
-            range.replaceText("${internshipJournalDate}", new SimpleDateFormat("yyyy-MM-dd").format(internshipJournal.getInternshipJournalDate()));
+            Map<String, String> cellMap = new HashMap<String, String>();
+            cellMap.put("${studentName}", internshipJournal.getStudentName());
+            cellMap.put("${studentNumber}", internshipJournal.getStudentNumber());
+            cellMap.put("${organize}", internshipJournal.getOrganize());
+            cellMap.put("${schoolGuidanceTeacher}", internshipJournal.getSchoolGuidanceTeacher());
+            cellMap.put("${graduationPracticeCompanyName}", internshipJournal.getGraduationPracticeCompanyName());
+
+            Map<String, String> paraMap = new HashMap<String, String>();
+            paraMap.put("${internshipJournalContent}", internshipJournal.getInternshipJournalContent());
+            paraMap.put("${internshipJournalDate}", new SimpleDateFormat("yyyy-MM-dd").format(internshipJournal.getInternshipJournalDate()));
+
+            XWPFDocument doc = new XWPFDocument(is);
+
+            Iterator<XWPFTable> itTable = doc.getTablesIterator();
+            while (itTable.hasNext()) {
+                XWPFTable table = itTable.next();
+                int rcount = table.getNumberOfRows();
+                for (int i = 0; i < rcount; i++) {
+                    XWPFTableRow row = table.getRow(i);
+                    List<XWPFTableCell> cells = row.getTableCells();
+                    for (XWPFTableCell cell : cells) {
+                        List<XWPFParagraph> itParas = cell.getParagraphs();
+                        for (XWPFParagraph itPara : itParas) {
+
+                            List<XWPFRun> runs = itPara.getRuns();
+                            for (XWPFRun run : runs) {
+                                String oneparaString = run.getText(
+                                        run.getTextPosition());
+
+                                for (Map.Entry<String, String> entry : paraMap
+                                        .entrySet()) {
+                                    oneparaString = oneparaString.replace(
+                                            entry.getKey(), entry.getValue());
+                                }
+
+                                run.setText(oneparaString, 0);
+                            }
+                        }
+
+                        String cellTextString = cell.getText();
+                        for (Map.Entry<String, String> e : cellMap.entrySet()) {
+                            if (cellTextString.contains(e.getKey())) {
+
+                                cellTextString = cellTextString.replace(e.getKey(),
+                                        e.getValue());
+                                cell.removeParagraph(0);
+                                cell.setText(cellTextString);
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
             String path = Workbook.internshipJournalPath(users);
-            String filename = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + ".doc";
+            String filename = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
                 saveFile.mkdirs();
@@ -86,7 +133,7 @@ public class FilesServiceImpl implements FilesService {
             log.info("Save internship journal finish, the path is {}",outputPath);
         } catch (IOException e) {
             log.error("Save internship journal error,error is {}",e);
-            return null;
+            return outputPath;
         }
         return outputPath;
     }

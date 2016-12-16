@@ -98,7 +98,7 @@ public final class Workbook {
     /*
    实习日志模板
     */
-    public static final String INTERNSHIP_JOURNAL_FILE_PATH = SETTINGS_PATH + "internshipJournalTemplate.doc";
+    public static final String INTERNSHIP_JOURNAL_FILE_PATH = SETTINGS_PATH + "internshipJournalTemplate.docx";
 
     /*
     用户默认头像
