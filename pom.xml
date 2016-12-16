@@ -20,6 +20,9 @@
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
         <HikariCP.version>2.5.1</HikariCP.version>
         <commons-codec.version>1.9</commons-codec.version>
+        <org.dom4j.version>2.0.0</org.dom4j.version>
+        <org.apache.poi.version>3.15-beta1</org.apache.poi.version>
+        <xmlbeans.version>2.3.0</xmlbeans.version>
 
         <!-- webjars properties -->
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
@@ -234,6 +237,51 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec.version}</version>
+        </dependency>
+
+        <!-- dom4j -->
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>${org.dom4j.version}</version>
+        </dependency>
+
+        <!-- poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-excelant</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <!-- xmlbeans -->
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>${xmlbeans.version}</version>
         </dependency>
 
         <!-- webjars bootstrap -->
