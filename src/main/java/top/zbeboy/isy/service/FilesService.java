@@ -6,6 +6,8 @@ import top.zbeboy.isy.domain.tables.pojos.Files;
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by lenovo on 2016-11-13.
  */
@@ -40,6 +42,6 @@ public interface FilesService {
      * @param users             用户信息
      * @return 是否保存成功
      */
-    String saveInternshipJournal(InternshipJournal internshipJournal, Users users);
+    String saveInternshipJournal(InternshipJournal internshipJournal, Users users, HttpServletRequest request);
 
 }

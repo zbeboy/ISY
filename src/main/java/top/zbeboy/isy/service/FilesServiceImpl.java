@@ -17,7 +17,9 @@ import top.zbeboy.isy.domain.tables.daos.FilesDao;
 import top.zbeboy.isy.domain.tables.pojos.Files;
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.service.util.RequestUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -58,7 +60,7 @@ public class FilesServiceImpl implements FilesService {
     }
 
     @Override
-    public String saveInternshipJournal(InternshipJournal internshipJournal,Users users) {
+    public String saveInternshipJournal(InternshipJournal internshipJournal, Users users, HttpServletRequest request) {
         String outputPath = "";
         try{
             String templatePath = Workbook.INTERNSHIP_JOURNAL_FILE_PATH;
@@ -72,7 +74,7 @@ public class FilesServiceImpl implements FilesService {
 
             Map<String, String> paraMap = new HashMap<String, String>();
             paraMap.put("${internshipJournalContent}", internshipJournal.getInternshipJournalContent());
-            paraMap.put("${internshipJournalDate}", new SimpleDateFormat("yyyy-MM-dd").format(internshipJournal.getInternshipJournalDate()));
+            paraMap.put("${date}", new SimpleDateFormat("yyyy年MM月dd日").format(internshipJournal.getInternshipJournalDate()));
 
             XWPFDocument doc = new XWPFDocument(is);
 
@@ -118,7 +120,7 @@ public class FilesServiceImpl implements FilesService {
                 }
             }
 
-            String path = Workbook.internshipJournalPath(users);
+            String path = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users);
             String filename = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
@@ -127,7 +129,8 @@ public class FilesServiceImpl implements FilesService {
             OutputStream os = new FileOutputStream(path + filename);
             //把doc输出到输出流中
             doc.write(os);
-            outputPath = path + filename;
+            log.info("Save journal path {}",path);
+            outputPath = Workbook.internshipJournalPath(users) + filename;
             this.closeStream(os);
             this.closeStream(is);
             log.info("Save internship journal finish, the path is {}",outputPath);

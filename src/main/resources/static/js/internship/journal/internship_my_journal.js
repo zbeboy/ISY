@@ -76,7 +76,7 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
                 {"data": "studentNumber"},
                 {"data": "organize"},
                 {"data": "schoolGuidanceTeacher"},
-                {"data": "createDate"},
+                {"data": "createDateStr"},
                 {"data": null}
             ],
             columnDefs: [
@@ -176,8 +176,8 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
 
         var global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
             '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
-            '  <button type="button" id="journal_downloads" class="btn btn-outline btn-default btn-sm"><i class="fa fa-trash-o"></i>批量下载</button>' +
-            '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-trash-o"></i>全部下载</button>' +
+            '  <button type="button" id="journal_downloads" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>批量下载</button>' +
+            '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>全部下载</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -272,7 +272,7 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
             for (var i = 0; i < ids.length; i++) {
                 journalIds.push($(ids[i]).val());
             }
-            // TODO:等待完成
+            journal_dels(journalIds);
         });
 
         /*
@@ -336,8 +336,38 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
             });
         }
 
+        /*
+         批量删除
+         */
+        function journal_dels(journalIds) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定删除选中日志吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            dels(journalIds);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
         function del(journalId) {
             sendDelAjax(journalId, '删除');
+        }
+
+        function dels(journalIds) {
+            sendDelAjax(journalIds.join(','), '批量删除');
         }
 
         /**

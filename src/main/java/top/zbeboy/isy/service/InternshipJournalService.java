@@ -3,6 +3,7 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.List;
@@ -50,21 +51,21 @@ public interface InternshipJournalService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<InternshipJournal> dataTablesUtils, InternshipJournal internshipJournal);
+    Result<Record> findAllByPage(DataTablesUtils<InternshipJournalBean> dataTablesUtils, InternshipJournalBean internshipJournalBean);
 
     /**
      * 数据 总数
      *
      * @return 总数
      */
-    int countAll(InternshipJournal internshipJournal);
+    int countAll(InternshipJournalBean internshipJournalBean);
 
     /**
      * 根据条件查询总数 数据
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<InternshipJournal> dataTablesUtils, InternshipJournal internshipJournal);
+    int countByCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils,InternshipJournalBean internshipJournalBean);
 
     /**
      * 通过id查询

@@ -16,6 +16,7 @@ import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.text.ParseException;
@@ -29,7 +30,7 @@ import static top.zbeboy.isy.domain.Tables.INTERNSHIP_JOURNAL;
  */
 @Service("internshipJournalService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJournal> implements InternshipJournalService {
+public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJournalBean> implements InternshipJournalService {
 
     private final Logger log = LoggerFactory.getLogger(InternshipJournalServiceImpl.class);
 
@@ -68,18 +69,18 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
     }
 
     @Override
-    public Result<Record> findAllByPage(DataTablesUtils<InternshipJournal> dataTablesUtils, InternshipJournal internshipJournal) {
-        return dataPagingQueryAllWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournal.getInternshipReleaseId()));
+    public Result<Record> findAllByPage(DataTablesUtils<InternshipJournalBean> dataTablesUtils, InternshipJournalBean internshipJournalBean) {
+        return dataPagingQueryAllWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournalBean.getInternshipReleaseId()));
     }
 
     @Override
-    public int countAll(InternshipJournal internshipJournal) {
-        return statisticsAllWithCondition(create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournal.getInternshipReleaseId()));
+    public int countAll(InternshipJournalBean internshipJournalBean) {
+        return statisticsAllWithCondition(create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournalBean.getInternshipReleaseId()));
     }
 
     @Override
-    public int countByCondition(DataTablesUtils<InternshipJournal> dataTablesUtils, InternshipJournal internshipJournal) {
-        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournal.getInternshipReleaseId()));
+    public int countByCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils, InternshipJournalBean internshipJournalBean) {
+        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournalBean.getInternshipReleaseId()));
     }
 
     @Override
@@ -101,7 +102,7 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
      * @return 搜索条件
      */
     @Override
-    public Condition searchCondition(DataTablesUtils<InternshipJournal> dataTablesUtils) {
+    public Condition searchCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils) {
         Condition a = null;
         JSONObject search = dataTablesUtils.getSearch();
         if (!ObjectUtils.isEmpty(search)) {
@@ -180,7 +181,7 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
      * @param selectConditionStep
      */
     @Override
-    public void sortCondition(DataTablesUtils<InternshipJournal> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
+    public void sortCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);

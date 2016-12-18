@@ -17,10 +17,13 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.FilesUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
+import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -30,6 +33,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -149,7 +153,7 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/list/data", method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesUtils<InternshipJournal> listData(HttpServletRequest request) {
+    public DataTablesUtils<InternshipJournalBean> listData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("select");
@@ -159,17 +163,18 @@ public class InternshipJournalController {
         headers.add("school_guidance_teacher");
         headers.add("create_date");
         headers.add("operator");
-        DataTablesUtils<InternshipJournal> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        InternshipJournal otherCondition = new InternshipJournal();
+        DataTablesUtils<InternshipJournalBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        InternshipJournalBean otherCondition = new InternshipJournalBean();
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
             otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
             Result<Record> records = internshipJournalService.findAllByPage(dataTablesUtils, otherCondition);
-            List<InternshipJournal> internshipJournals = new ArrayList<>();
+            List<InternshipJournalBean> internshipJournalBeans = new ArrayList<>();
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-                internshipJournals = records.into(InternshipJournal.class);
+                internshipJournalBeans = records.into(InternshipJournalBean.class);
+                internshipJournalBeans.forEach(i -> i.setCreateDateStr(DateTimeUtils.formatDate(i.getCreateDate())));
             }
-            dataTablesUtils.setData(internshipJournals);
+            dataTablesUtils.setData(internshipJournalBeans);
             dataTablesUtils.setiTotalRecords(internshipJournalService.countAll(otherCondition));
             dataTablesUtils.setiTotalDisplayRecords(internshipJournalService.countByCondition(dataTablesUtils, otherCondition));
         } else {
@@ -245,12 +250,12 @@ public class InternshipJournalController {
      * @param modelMap 页面对象
      * @return 页面
      */
-    @RequestMapping(value = "/web/internship/journal/list/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/journal/list/edit", method = RequestMethod.GET)
     public String journalListEdit(@RequestParam("id") String id, ModelMap modelMap) {
         String page = "web/internship/journal/internship_journal::#page-wrapper";
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
-            modelMap.addAttribute("journal", internshipJournal);
+            modelMap.addAttribute("internshipJournal", internshipJournal);
             page = "web/internship/journal/internship_journal_edit::#page-wrapper";
         }
         return page;
@@ -263,12 +268,13 @@ public class InternshipJournalController {
      * @param modelMap 页面对象
      * @return 页面
      */
-    @RequestMapping(value = "/web/internship/journal/list/look", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/journal/list/look", method = RequestMethod.GET)
     public String journalListLook(@RequestParam("id") String id, ModelMap modelMap) {
         String page = "web/internship/journal/internship_journal::#page-wrapper";
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
-            modelMap.addAttribute("journal", internshipJournal);
+            modelMap.addAttribute("internshipJournalDate",DateTimeUtils.formatDate(internshipJournal.getInternshipJournalDate(),"yyyy年MM月dd日"));
+            modelMap.addAttribute("internshipJournal", internshipJournal);
             page = "web/internship/journal/internship_journal_look::#page-wrapper";
         }
         return page;
@@ -279,7 +285,7 @@ public class InternshipJournalController {
      *
      * @param id 实习日志id
      */
-    @RequestMapping(value = "/web/internship/journal/list/download", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/journal/list/download", method = RequestMethod.GET)
     public void journalListDownload(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
@@ -292,7 +298,7 @@ public class InternshipJournalController {
      *
      * @param ids 实习日志ids
      */
-    @RequestMapping(value = "/web/internship/journal/list/downloads", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/internship/journal/list/downloads", method = RequestMethod.GET)
     public void journalListDownloads(String ids, HttpServletRequest request, HttpServletResponse response) {
         if (StringUtils.hasLength(ids)) {
             List<InternshipJournal> internshipJournals = internshipJournalService.findInIds(ids);
@@ -311,11 +317,23 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/list/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils departmentUpdateDel(String journalIds) {
+    public AjaxUtils departmentUpdateDel(String journalIds, HttpServletRequest request) {
         if (StringUtils.hasLength(journalIds)) {
-            internshipJournalService.batchDelete(SmallPropsUtils.StringIdsToStringList(journalIds));
+            List<String> ids = SmallPropsUtils.StringIdsToStringList(journalIds);
+            ids.forEach(id -> {
+                InternshipJournal internshipJournal = internshipJournalService.findById(id);
+                try {
+                    if (!ObjectUtils.isEmpty(internshipJournal)) {
+                        FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                    }
+                } catch (IOException e) {
+                    log.error("Not found journal file , error is {}", e);
+                }
+            });
+            internshipJournalService.batchDelete(ids);
             return new AjaxUtils().success().msg("删除日志成功");
         }
+
         return new AjaxUtils().fail().msg("删除日志失败");
     }
 
@@ -347,7 +365,7 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/my/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils journalSave(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult) {
+    public AjaxUtils journalSave(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (!bindingResult.hasErrors()) {
             InternshipJournal internshipJournal = new InternshipJournal();
@@ -364,10 +382,10 @@ public class InternshipJournalController {
             internshipJournal.setInternshipReleaseId(internshipJournalVo.getInternshipReleaseId());
 
             Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
-            if(studentRecord.isPresent()){
+            if (studentRecord.isPresent()) {
                 Users users = studentRecord.get().into(Users.class);
-                String outputPath = filesService.saveInternshipJournal(internshipJournal,users);
-                if(StringUtils.hasLength(outputPath)){
+                String outputPath = filesService.saveInternshipJournal(internshipJournal, users, request);
+                if (StringUtils.hasLength(outputPath)) {
                     internshipJournal.setInternshipJournalWord(outputPath);
                     internshipJournalService.save(internshipJournal);
                     ajaxUtils.success().msg("保存成功");
@@ -381,6 +399,53 @@ public class InternshipJournalController {
         } else {
             ajaxUtils.fail().msg("保存失败，参数错误");
         }
+        return ajaxUtils;
+    }
+
+    /**
+     * 实习日志编辑
+     *
+     * @param internshipJournalVo 实习日志
+     * @param bindingResult       检验
+     * @param request             请求
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/journal/my/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils journalUpdate(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult, HttpServletRequest request) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        try {
+            if (!bindingResult.hasErrors() && StringUtils.hasLength(internshipJournalVo.getInternshipJournalId())) {
+                InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalVo.getInternshipJournalId());
+                internshipJournal.setStudentName(internshipJournalVo.getStudentName());
+                internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
+                internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
+                log.debug(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord())) {
+                    Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
+                    if (studentRecord.isPresent()) {
+                        Users users = studentRecord.get().into(Users.class);
+                        String outputPath = filesService.saveInternshipJournal(internshipJournal, users, request);
+                        if (StringUtils.hasLength(outputPath)) {
+                            internshipJournal.setInternshipJournalWord(outputPath);
+                            internshipJournalService.update(internshipJournal);
+                            ajaxUtils.success().msg("更新成功");
+                        } else {
+                            ajaxUtils.fail().msg("保存文件失败");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未查询到相关学生信息");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("未找到相关实习日志文件");
+                }
+            } else {
+                ajaxUtils.fail().msg("更新失败，参数错误");
+            }
+        } catch (IOException e) {
+            log.error("Delete dist journal error , error is {} ", e);
+        }
+
         return ajaxUtils;
     }
 
