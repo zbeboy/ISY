@@ -22,6 +22,7 @@
         <commons-codec.version>1.9</commons-codec.version>
         <org.dom4j.version>2.0.0</org.dom4j.version>
         <org.apache.poi.version>3.15</org.apache.poi.version>
+        <org.apache.commons.compress>1.12</org.apache.commons.compress>
         <xmlbeans.version>2.3.0</xmlbeans.version>
 
         <!-- webjars properties -->
@@ -284,6 +285,13 @@
             <version>${xmlbeans.version}</version>
         </dependency>
 
+        <!-- compress -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${org.apache.commons.compress}</version>
+        </dependency>
+
         <!-- webjars bootstrap -->
         <dependency>
             <groupId>org.webjars</groupId>
@@ -393,6 +401,12 @@
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator</artifactId>
             <version>${webjars-locator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-compress</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
