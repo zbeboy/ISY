@@ -6,10 +6,12 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.service.util.compress.ZipInputStream;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -63,7 +65,7 @@ public class FilesUtils {
     }
 
     /**
-     * 压缩成zip
+     * 单个文件压缩成zip
      *
      * @param fileName 文件名 带后缀
      * @param zipPath  输出zip路径
@@ -76,6 +78,27 @@ public class FilesUtils {
         entry.setMethod(ZipMethod.STORED.getCode());
         scatterSample.addEntry(entry, new ZipInputStream(filePath));
         scatterSample.writeTo(zipArchiveOutputStream);
+        zipArchiveOutputStream.close();
+    }
+
+    /**
+     * 多个文件压缩成zip
+     *
+     * @param fileName 文件名 带后缀
+     * @param zipPath  输出zip路径
+     * @param filePath 文件路径，带文件名 + 后缀
+     */
+    public static void compressZipMulti(List<String> fileName, String zipPath, List<String> filePath) throws Exception {
+        ScatterSample scatterSample = new ScatterSample();
+        ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
+        if(!ObjectUtils.isEmpty(fileName)&&!ObjectUtils.isEmpty(filePath)){
+            for(int i = 0;i<fileName.size();i++){
+                ZipArchiveEntry entry = new ZipArchiveEntry(fileName.get(i));
+                entry.setMethod(ZipMethod.STORED.getCode());
+                scatterSample.addEntry(entry, new ZipInputStream(filePath.get(i)));
+                scatterSample.writeTo(zipArchiveOutputStream);
+            }
+        }
         zipArchiveOutputStream.close();
     }
 }
