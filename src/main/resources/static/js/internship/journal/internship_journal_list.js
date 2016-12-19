@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016/12/14.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars","constants", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars,constants) {
 
         /*
          ajax url
@@ -14,7 +14,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
-                downloads: '/web/internship/journal/list/downloads',
                 back:'/web/menu/internship/journal'
             };
         }
@@ -90,7 +89,11 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     orderable: false,
                     render: function (a, b, c, d) {
 
-                        var context =
+                        var context = [];
+
+                        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+                            init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                            context =
                             {
                                 func: [
                                     {
@@ -119,6 +122,39 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                                     }
                                 ]
                             };
+                        } else {
+                            if(c.studentId == init_page_param.studentId && init_page_param.studentId != 0){
+                                context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "查看",
+                                            "css": "look",
+                                            "type": "info",
+                                            "id": c.internshipJournalId
+                                        },
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.internshipJournalId
+                                        },
+                                        {
+                                            "name": "删除",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.internshipJournalId
+                                        },
+                                        {
+                                            "name": "下载",
+                                            "css": "download",
+                                            "type": "default",
+                                            "id": c.internshipJournalId
+                                        }
+                                    ]
+                                };
+                            }
+                        }
 
                         var html = template(context);
                         return html;
@@ -172,8 +208,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             }
         });
 
-        var global_button = '<button type="button" id="journal_downloads" class="btn btn-outline btn-default btn-sm"><i class="fa fa-trash-o"></i>批量下载</button>' +
-            '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+            init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+            var temp = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+             '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+            global_button = temp + global_button;
+        }
         $('#global_button').append(global_button);
 
         /*
@@ -192,7 +233,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          参数
          */
         var param = {
-            studentId:init_page_param.studentId,
             studentName: '',
             studentNumber: '',
             organize: '',
@@ -267,20 +307,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
-        });
-
-        /*
-         批量下载
-         */
-        $('#journal_downloads').click(function () {
-            var journalIds = [];
-            var ids = $('input[name="check"]:checked');
-            for (var i = 0; i < ids.length; i++) {
-                journalIds.push($(ids[i]).val());
-            }
-            if (journalIds.length > 0) {
-                window.location.href = web_path + getAjaxUrl().downloads + '?ids=' + journalIds.join(",");
-            }
         });
 
         /*

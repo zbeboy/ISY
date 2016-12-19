@@ -16,7 +16,6 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
                 downloads: '/web/internship/journal/list/downloads',
-                download_all_url: '/web/internship/journal/list/download_all',
                 back:'/web/menu/internship/journal'
             };
         }
@@ -176,8 +175,7 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
 
         var global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
             '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
-            '  <button type="button" id="journal_downloads" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>批量下载</button>' +
-            '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>全部下载</button>' +
+            '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>下载全部</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -194,6 +192,7 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
          参数
          */
         var param = {
+            studentId:init_page_param.studentId,
             createDate: ''
         };
 
@@ -264,6 +263,13 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
         });
 
         /*
+         下载 全部
+         */
+        $('#journal_download_all').click(function () {
+            window.location.href = web_path + getAjaxUrl().downloads + '?id=' + init_page_param.internshipReleaseId + '&studentId=' + init_page_param.studentId;
+        });
+
+        /*
          批量删除
          */
         $('#journal_dels').click(function () {
@@ -273,20 +279,6 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
                 journalIds.push($(ids[i]).val());
             }
             journal_dels(journalIds);
-        });
-
-        /*
-         批量下载
-         */
-        $('#journal_downloads').click(function () {
-            var journalIds = [];
-            var ids = $('input[name="check"]:checked');
-            for (var i = 0; i < ids.length; i++) {
-                journalIds.push($(ids[i]).val());
-            }
-            if (journalIds.length > 0) {
-                window.location.href = web_path + getAjaxUrl().downloads + '?ids=' + journalIds.join(",");
-            }
         });
 
         /*
