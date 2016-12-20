@@ -89,10 +89,10 @@ public class FilesUtils {
      * @param filePath 文件路径，带文件名 + 后缀
      */
     public static void compressZipMulti(List<String> fileName, String zipPath, List<String> filePath) throws Exception {
-        ScatterSample scatterSample = new ScatterSample();
         ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
-        if(!ObjectUtils.isEmpty(fileName)&&!ObjectUtils.isEmpty(filePath)){
-            for(int i = 0;i<fileName.size();i++){
+        if (!ObjectUtils.isEmpty(fileName) && !ObjectUtils.isEmpty(filePath) && fileName.size() == filePath.size()) {
+            for (int i = 0; i < fileName.size(); i++) {
+                ScatterSample scatterSample = new ScatterSample();
                 ZipArchiveEntry entry = new ZipArchiveEntry(fileName.get(i));
                 entry.setMethod(ZipMethod.STORED.getCode());
                 scatterSample.addEntry(entry, new ZipInputStream(filePath.get(i)));
