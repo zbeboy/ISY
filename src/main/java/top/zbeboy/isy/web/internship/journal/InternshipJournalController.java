@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.FilesUtils;
@@ -281,7 +282,7 @@ public class InternshipJournalController {
         String page = "web/internship/journal/internship_journal::#page-wrapper";
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
-            modelMap.addAttribute("internshipJournalDate",DateTimeUtils.formatDate(internshipJournal.getInternshipJournalDate(),"yyyy年MM月dd日"));
+            modelMap.addAttribute("internshipJournalDate", DateTimeUtils.formatDate(internshipJournal.getInternshipJournalDate(), "yyyy年MM月dd日"));
             modelMap.addAttribute("internshipJournal", internshipJournal);
             page = "web/internship/journal/internship_journal_look::#page-wrapper";
         }
@@ -302,18 +303,37 @@ public class InternshipJournalController {
     }
 
     /**
-     * 批量下载实习日志
+     * 下载某位学生全部实习日志
      *
-     * @param ids 实习日志ids
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @param request             请求
+     * @param response            响应
      */
     @RequestMapping(value = "/web/internship/journal/list/downloads", method = RequestMethod.GET)
-    public void journalListDownloads(String ids, HttpServletRequest request, HttpServletResponse response) {
-        if (StringUtils.hasLength(ids)) {
-            List<InternshipJournal> internshipJournals = internshipJournalService.findInIds(ids);
-            internshipJournals.forEach(i -> {
-                // TODO:打成ZIP
-            });
-            uploadService.download("实习日志", "/" + "{{path}}", response, request);
+    public void journalListDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (records.isNotEmpty()) {
+                List<String> fileName = new ArrayList<>();
+                List<String> filePath = new ArrayList<>();
+                records.forEach(r -> {
+                    filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
+                    fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf("/") + 1));
+                });
+                Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+                if (studentRecord.isPresent()) {
+                    Users users = studentRecord.get().into(Users.class);
+                    String downloadFileName = StringUtils.hasLength(users.getRealName()) ? users.getRealName() : "实习日志";
+                    String zipName = downloadFileName + ".zip";
+                    String downloadFilePath = Workbook.internshipJournalPath(users) + zipName;
+                    String zipPath = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users) + zipName;
+                    FilesUtils.compressZipMulti(fileName, zipPath, filePath);
+                    uploadService.download(downloadFileName, "/" + downloadFilePath, response, request);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Compress zip error , error is {}", e);
         }
     }
 
@@ -454,6 +474,37 @@ public class InternshipJournalController {
             log.error("Delete dist journal error , error is {} ", e);
         }
 
+        return ajaxUtils;
+    }
+
+    /**
+     * 检验学生
+     *
+     * @param info 学生信息
+     * @param type 检验类型
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/journal/valid/student", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validStudent(@RequestParam("student") String info, @RequestParam("internshipReleaseId") String internshipReleaseId, int type) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        Student student = null;
+        if (type == 0) {
+            student = studentService.findByUsername(info);
+        } else if (type == 1) {
+            student = studentService.findByStudentNumber(info);
+        }
+        if (!ObjectUtils.isEmpty(student)) {
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
+            if (!errorBean.isHasError()) {
+                ajaxUtils.success().msg("查询学生数据成功").obj(student.getStudentId());
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+
+        } else {
+            ajaxUtils.fail().msg("查询学生数据失败");
+        }
         return ajaxUtils;
     }
 

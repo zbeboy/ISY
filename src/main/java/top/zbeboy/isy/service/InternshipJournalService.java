@@ -3,6 +3,7 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -29,7 +30,7 @@ public interface InternshipJournalService {
      * @param studentId           学生id
      * @return 数据
      */
-    Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+    Result<InternshipJournalRecord> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
      * 保存

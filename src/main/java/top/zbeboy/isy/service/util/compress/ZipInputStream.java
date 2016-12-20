@@ -12,17 +12,17 @@ import java.io.InputStream;
  */
 public class ZipInputStream implements InputStreamSupplier {
 
-    private String filePath;
+    private File file;
 
-    public ZipInputStream(String filePath){
-        this.filePath = filePath;
+    public ZipInputStream(File file){
+        this.file = file;
     }
 
     @Override
     public InputStream get() {
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(filePath));
+            inputStream = new FileInputStream(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

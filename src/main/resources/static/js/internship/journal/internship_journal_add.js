@@ -9,8 +9,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
          */
         var ajax_url = {
             save: '/web/internship/journal/my/save',
-            nav:'/web/menu/internship/journal',
-            back:'/web/internship/journal/my/list'
+            nav:'/web/menu/internship/journal'
         };
 
         // 刷新时选中菜单
@@ -134,7 +133,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
          返回
          */
         $('#page_back').click(function () {
-            $.address.value(ajax_url.back + '?id=' + $('#internshipReleaseId').val());
+            window.history.go(-1);
         });
 
         /*
@@ -218,7 +217,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
                 data: $('#add_form').serialize(),
                 success: function (data) {
                     if (data.state) {
-                        $.address.value(ajax_url.back + '?id=' + $('#internshipReleaseId').val());
+                        window.history.go(-1);
                     } else {
                         Messenger().post({
                             message: data.msg,

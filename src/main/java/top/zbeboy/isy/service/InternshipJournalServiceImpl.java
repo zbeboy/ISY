@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipJournalDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -50,11 +51,10 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
     }
 
     @Override
-    public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
-        return create.select()
-                .from(INTERNSHIP_JOURNAL)
+    public Result<InternshipJournalRecord> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        return create.selectFrom(INTERNSHIP_JOURNAL)
                 .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(studentId)))
-                .fetchOptional();
+                .fetch();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -130,9 +130,9 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
                     int tempStudentId = NumberUtils.toInt(studentId);
                     if (tempStudentId > 0) {
                         if (ObjectUtils.isEmpty(a)) {
-                            a = INTERNSHIP_JOURNAL.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
+                            a = INTERNSHIP_JOURNAL.STUDENT_ID.eq(tempStudentId);
                         } else {
-                            a = a.and(INTERNSHIP_JOURNAL.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
+                            a = a.and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(tempStudentId));
                         }
                     }
                 }

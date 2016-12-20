@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016/12/14.
  */
-require(["jquery", "handlebars","constants", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars,constants) {
+require(["jquery", "handlebars","constants","nav_active","datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars,constants,nav_active) {
 
         /*
          ajax url
@@ -14,8 +14,39 @@ require(["jquery", "handlebars","constants", "datatables.responsive", "check.all
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
+                nav:'/web/menu/internship/journal',
+                valid_is_student: '/anyone/valid/cur/is/student',
+                valid_student:'/web/internship/journal/valid/student',
                 back:'/web/menu/internship/journal'
             };
+        }
+
+        // 刷新时选中菜单
+        nav_active(getAjaxUrl().nav);
+
+        /*
+         检验id
+         */
+        var validId = {
+            student: '#valid_student'
+        };
+
+        /*
+         错误消息id
+         */
+        var errorMsgId = {
+            student: '#student_error_msg'
+        };
+
+        /**
+         * 检验失败
+         * @param validId
+         * @param errorMsgId
+         * @param msg
+         */
+        function validErrorDom(validId, errorMsgId, msg) {
+            $(validId).addClass('has-error').removeClass('has-success');
+            $(errorMsgId).removeClass('hidden').text(msg);
         }
 
         /*
@@ -73,7 +104,7 @@ require(["jquery", "handlebars","constants", "datatables.responsive", "check.all
                 {"data": "studentNumber"},
                 {"data": "organize"},
                 {"data": "schoolGuidanceTeacher"},
-                {"data": "createDate"},
+                {"data": "createDateStr"},
                 {"data": null}
             ],
             columnDefs: [
@@ -143,6 +174,24 @@ require(["jquery", "handlebars","constants", "datatables.responsive", "check.all
                                             "name": "删除",
                                             "css": "del",
                                             "type": "danger",
+                                            "id": c.internshipJournalId
+                                        },
+                                        {
+                                            "name": "下载",
+                                            "css": "download",
+                                            "type": "default",
+                                            "id": c.internshipJournalId
+                                        }
+                                    ]
+                                };
+                            } else {
+                                context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "查看",
+                                            "css": "look",
+                                            "type": "info",
                                             "id": c.internshipJournalId
                                         },
                                         {
@@ -310,6 +359,110 @@ require(["jquery", "handlebars","constants", "datatables.responsive", "check.all
         });
 
         /*
+         添加
+         */
+        $('#journal_add').click(function () {
+            var id = $(this).attr('data-id');
+            // 如果用户类型不是学生，则这里需要一个弹窗，填写学生账号或学生学号以获取学生id
+            $.get(web_path + getAjaxUrl().valid_is_student, function (data) {
+                if (data.state) {
+                    accessAdd(id, data.objectResult);
+                } else {
+                    $('#studentInfoInternshipReleaseId').val(id);
+                    $('#studentModal').modal('show');
+                }
+            });
+
+        });
+
+        /*
+         学生 form 确定
+         */
+        $('#studentInfo').click(function () {
+            validStudent();
+        });
+
+        // 用于可以去添加页
+        var to_add = false;
+        var to_add_data = '';
+
+        $('#studentModal').on('hidden.bs.modal', function (e) {
+            // do something...
+            if (to_add) {
+                to_add = false;
+                accessAdd($('#studentInfoInternshipReleaseId').val(), to_add_data);
+            }
+        });
+
+        /**
+         * 检验学生信息
+         */
+        function validStudent() {
+            var studentUsername = $(paramId.studentUsername).val();
+            var studentNumber = $(paramId.studentNumber).val();
+            if (studentUsername.length <= 0 && studentNumber.length <= 0) {
+                validErrorDom(validId.student, errorMsgId.student, '请至少填写一项学生信息');
+            } else {
+                var student = "";
+                var type = -1;
+                if (studentUsername.length > 0) {
+                    student = studentUsername;
+                    type = 0;
+                }
+
+                if (studentNumber.length > 0) {
+                    student = studentNumber;
+                    type = 1;
+                }
+
+                // 检验学生信息
+                Messenger().run({
+                    errorMessage: '请求失败'
+                }, {
+                    url: web_path + getAjaxUrl().valid_student,
+                    type: 'post',
+                    data: {student: student,internshipReleaseId:init_page_param.internshipReleaseId, type: type},
+                    success: function (data) {
+                        if (data.state) {
+                            to_add_data = data.objectResult;
+                            to_add = true;
+                            $('#studentModal').modal('hide');
+                        } else {
+                            validErrorDom(validId.student, errorMsgId.student, data.msg);
+                        }
+                    },
+                    error: function (xhr) {
+                        if ((xhr != null ? xhr.status : void 0) === 404) {
+                            return "请求失败";
+                        }
+                        return true;
+                    }
+                });
+            }
+        }
+
+        /*
+         批量删除
+         */
+        $('#journal_dels').click(function () {
+            var journalIds = [];
+            var ids = $('input[name="check"]:checked');
+            for (var i = 0; i < ids.length; i++) {
+                journalIds.push($(ids[i]).val());
+            }
+            journal_dels(journalIds);
+        });
+
+        /**
+         * 进入添加
+         * @param internshipReleaseId
+         * @param studentId
+         */
+        function accessAdd(internshipReleaseId,studentId){
+            $.address.value(getAjaxUrl().add + '?id=' + internshipReleaseId + '&studentId=' + studentId);
+        }
+
+        /*
          查看页面
          */
         function look(journalId) {
@@ -356,8 +509,38 @@ require(["jquery", "handlebars","constants", "datatables.responsive", "check.all
             });
         }
 
+        /*
+         批量删除
+         */
+        function journal_dels(journalIds) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定删除选中日志吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            dels(journalIds);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
         function del(journalId) {
             sendDelAjax(journalId, '删除');
+        }
+
+        function dels(journalIds) {
+            sendDelAjax(journalIds.join(','), '批量删除');
         }
 
         /**

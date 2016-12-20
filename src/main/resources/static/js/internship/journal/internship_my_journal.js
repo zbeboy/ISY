@@ -1,8 +1,9 @@
 /**
  * Created by lenovo on 2016/12/14.
  */
-require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
-    function ($, Handlebars,moment) {
+//# sourceURL=internship_my_journal.js
+require(["jquery", "handlebars", "nav_active","moment","datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
+    function ($, Handlebars,nav_active,moment) {
 
         /*
          ajax url
@@ -16,8 +17,36 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
                 downloads: '/web/internship/journal/list/downloads',
+                nav:'/web/menu/internship/journal',
                 back:'/web/menu/internship/journal'
             };
+        }
+
+        // 刷新时选中菜单
+        nav_active(getAjaxUrl().nav);
+
+        /*
+         参数id
+         */
+        function getParamId() {
+            return {
+                createDate: '#search_create_date'
+            };
+        }
+
+        /*
+         参数
+         */
+        var param = {
+            studentId:init_page_param.studentId,
+            createDate: ''
+        };
+
+        /*
+         得到参数
+         */
+        function getParam() {
+            return param;
         }
 
         /*
@@ -178,30 +207,6 @@ require(["jquery", "handlebars", "moment","datatables.responsive", "check.all", 
             '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>下载全部</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
-
-        /*
-         参数id
-         */
-        function getParamId() {
-            return {
-                createDate: '#search_create_date'
-            };
-        }
-
-        /*
-         参数
-         */
-        var param = {
-            studentId:init_page_param.studentId,
-            createDate: ''
-        };
-
-        /*
-         得到参数
-         */
-        function getParam() {
-            return param;
-        }
 
         /*
          初始化参数

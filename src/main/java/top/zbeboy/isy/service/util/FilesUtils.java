@@ -71,14 +71,19 @@ public class FilesUtils {
      * @param zipPath  输出zip路径
      * @param filePath 文件路径，带文件名 + 后缀
      */
-    public static void compressZip(String fileName, String zipPath, String filePath) throws Exception {
-        ScatterSample scatterSample = new ScatterSample();
-        ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
-        ZipArchiveEntry entry = new ZipArchiveEntry(fileName);
-        entry.setMethod(ZipMethod.STORED.getCode());
-        scatterSample.addEntry(entry, new ZipInputStream(filePath));
-        scatterSample.writeTo(zipArchiveOutputStream);
-        zipArchiveOutputStream.close();
+    public static boolean compressZip(String fileName, String zipPath, String filePath) throws Exception {
+        File file = new File(filePath);
+        if(file.exists()){
+            ScatterSample scatterSample = new ScatterSample();
+            ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
+            ZipArchiveEntry entry = new ZipArchiveEntry(fileName);
+            entry.setMethod(ZipMethod.STORED.getCode());
+            scatterSample.addEntry(entry, new ZipInputStream(file));
+            scatterSample.writeTo(zipArchiveOutputStream);
+            zipArchiveOutputStream.close();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -92,11 +97,14 @@ public class FilesUtils {
         ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
         if (!ObjectUtils.isEmpty(fileName) && !ObjectUtils.isEmpty(filePath) && fileName.size() == filePath.size()) {
             for (int i = 0; i < fileName.size(); i++) {
-                ScatterSample scatterSample = new ScatterSample();
-                ZipArchiveEntry entry = new ZipArchiveEntry(fileName.get(i));
-                entry.setMethod(ZipMethod.STORED.getCode());
-                scatterSample.addEntry(entry, new ZipInputStream(filePath.get(i)));
-                scatterSample.writeTo(zipArchiveOutputStream);
+                File file = new File(filePath.get(i));
+                if(file.exists()){
+                    ScatterSample scatterSample = new ScatterSample();
+                    ZipArchiveEntry entry = new ZipArchiveEntry(fileName.get(i));
+                    entry.setMethod(ZipMethod.STORED.getCode());
+                    scatterSample.addEntry(entry, new ZipInputStream(file));
+                    scatterSample.writeTo(zipArchiveOutputStream);
+                }
             }
         }
         zipArchiveOutputStream.close();

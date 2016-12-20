@@ -8,8 +8,7 @@ require(["jquery", "handlebars", "nav_active",, "jquery.address"],
          ajax url.
          */
         var ajax_url = {
-            nav:'/web/menu/internship/journal',
-            back:'/web/internship/journal/my/list'
+            nav:'/web/menu/internship/journal'
         };
 
         // 刷新时选中菜单
@@ -19,7 +18,7 @@ require(["jquery", "handlebars", "nav_active",, "jquery.address"],
          返回
          */
         $('#page_back').click(function () {
-            $.address.value(ajax_url.back + '?id=' + $('#internshipReleaseId').val());
+            window.history.go(-1);
         });
 
     });
