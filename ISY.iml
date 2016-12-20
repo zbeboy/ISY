@@ -146,6 +146,7 @@
     <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlbeans:xmlbeans:2.3.0" level="project" />
     <orderEntry type="library" name="Maven: stax:stax-api:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.12" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:bootstrap:3.3.7" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:jquery:1.11.1" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:font-awesome:4.6.3" level="project" />
@@ -163,7 +164,6 @@
     <orderEntry type="library" name="Maven: org.webjars:handlebars:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:webjars-locator:0.30" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:webjars-locator-core:0.30" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
   </component>
 </module>

@@ -12,7 +12,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             internship_journal_data_url: '/anyone/internship/data',
             journal_url: '/web/internship/journal/list',
             my_journal:'/web/internship/journal/my/list',
-            write_journal_url:'',
+            add: '/web/internship/journal/list/add',
+            valid_is_student: '/anyone/valid/cur/is/student',
+            valid_student:'/web/internship/journal/valid/student',
             access_condition_url:'/web/internship/journal/condition'
         };
 
@@ -32,6 +34,31 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             pageSize: 2,
             displayedPages: 3
         };
+
+        /*
+         检验id
+         */
+        var validId = {
+            student: '#valid_student'
+        };
+
+        /*
+         错误消息id
+         */
+        var errorMsgId = {
+            student: '#student_error_msg'
+        };
+
+        /**
+         * 检验失败
+         * @param validId
+         * @param errorMsgId
+         * @param msg
+         */
+        function validErrorDom(validId, errorMsgId, msg) {
+            $(validId).addClass('has-error').removeClass('has-success');
+            $(errorMsgId).removeClass('hidden').text(msg);
+        }
 
         var tableData = '#tableData';
 
@@ -149,19 +176,91 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.write_journal', "click", function () {
             var id = $(this).attr('data-id');
-            // 进入条件判断
-            $.post(web_path + ajax_url.access_condition_url,{id:id},function(data){
-                if(data.state){
-                    $.address.value(ajax_url.write_journal_url + "?id=" + id);
+            // 如果用户类型不是学生，则这里需要一个弹窗，填写学生账号或学生学号以获取学生id
+            $.get(web_path + ajax_url.valid_is_student, function (data) {
+                if (data.state) {
+                    accessAdd(id, data.objectResult);
                 } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
+                    $('#studentInfoInternshipReleaseId').val(id);
+                    $('#studentModal').modal('show');
                 }
             });
         });
+
+        /*
+         学生 form 确定
+         */
+        $('#studentInfo').click(function () {
+            validStudent($('#studentInfoInternshipReleaseId').val());
+        });
+
+        // 用于可以去添加页
+        var to_add = false;
+        var to_add_data = '';
+
+        $('#studentModal').on('hidden.bs.modal', function (e) {
+            // do something...
+            if (to_add) {
+                to_add = false;
+                accessAdd($('#studentInfoInternshipReleaseId').val(), to_add_data);
+            }
+        });
+
+        /**
+         * 检验学生信息
+         */
+        function validStudent(id) {
+            var studentUsername = $('#studentUsername').val();
+            var studentNumber = $('#studentNumber').val();
+            if (studentUsername.length <= 0 && studentNumber.length <= 0) {
+                validErrorDom(validId.student, errorMsgId.student, '请至少填写一项学生信息');
+            } else {
+                var student = "";
+                var type = -1;
+                if (studentUsername.length > 0) {
+                    student = studentUsername;
+                    type = 0;
+                }
+
+                if (studentNumber.length > 0) {
+                    student = studentNumber;
+                    type = 1;
+                }
+
+                // 检验学生信息
+                Messenger().run({
+                    errorMessage: '请求失败'
+                }, {
+                    url: web_path + ajax_url.valid_student,
+                    type: 'post',
+                    data: {student: student,internshipReleaseId:id, type: type},
+                    success: function (data) {
+                        if (data.state) {
+                            to_add_data = data.objectResult;
+                            to_add = true;
+                            $('#studentModal').modal('hide');
+                        } else {
+                            validErrorDom(validId.student, errorMsgId.student, data.msg);
+                        }
+                    },
+                    error: function (xhr) {
+                        if ((xhr != null ? xhr.status : void 0) === 404) {
+                            return "请求失败";
+                        }
+                        return true;
+                    }
+                });
+            }
+        }
+
+        /**
+         * 进入添加
+         * @param internshipReleaseId
+         * @param studentId
+         */
+        function accessAdd(internshipReleaseId,studentId){
+            $.address.value(ajax_url.add + '?id=' + internshipReleaseId + '&studentId=' + studentId);
+        }
 
         init();
 

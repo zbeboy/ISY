@@ -1,6 +1,7 @@
 /**
  * Created by lenovo on 2016/12/14.
  */
+//# sourceURL=internship_journal_list.js
 require(["jquery", "handlebars","constants","nav_active","datatables.responsive", "check.all", "jquery.address", "messenger"],
     function ($, Handlebars,constants,nav_active) {
 
@@ -15,6 +16,7 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
                 nav:'/web/menu/internship/journal',
+                add: '/web/internship/journal/list/add',
                 valid_is_student: '/anyone/valid/cur/is/student',
                 valid_student:'/web/internship/journal/valid/student',
                 back:'/web/menu/internship/journal'
@@ -260,7 +262,7 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
         var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
             init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-            var temp = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+            var temp = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-trash-plus"></i>添加</button>'+
              '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp + global_button;
         }
@@ -362,7 +364,7 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
          添加
          */
         $('#journal_add').click(function () {
-            var id = $(this).attr('data-id');
+            var id = init_page_param.internshipReleaseId;
             // 如果用户类型不是学生，则这里需要一个弹窗，填写学生账号或学生学号以获取学生id
             $.get(web_path + getAjaxUrl().valid_is_student, function (data) {
                 if (data.state) {
@@ -372,7 +374,6 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
                     $('#studentModal').modal('show');
                 }
             });
-
         });
 
         /*
@@ -398,8 +399,8 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
          * 检验学生信息
          */
         function validStudent() {
-            var studentUsername = $(paramId.studentUsername).val();
-            var studentNumber = $(paramId.studentNumber).val();
+            var studentUsername = $('#studentUsername').val();
+            var studentNumber = $('#studentNumber').val();
             if (studentUsername.length <= 0 && studentNumber.length <= 0) {
                 validErrorDom(validId.student, errorMsgId.student, '请至少填写一项学生信息');
             } else {
@@ -450,7 +451,11 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
             for (var i = 0; i < ids.length; i++) {
                 journalIds.push($(ids[i]).val());
             }
-            journal_dels(journalIds);
+            if (journalIds.length > 0) {
+                journal_dels(journalIds);
+            } else {
+                Messenger().post("未发现有选中的系!");
+            }
         });
 
         /**
