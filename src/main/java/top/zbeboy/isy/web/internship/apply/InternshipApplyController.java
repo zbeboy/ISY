@@ -172,7 +172,7 @@ public class InternshipApplyController {
      */
     @RequestMapping(value = "/web/internship/apply/access", method = RequestMethod.GET)
     public String applyAccess(@RequestParam("id") String internshipReleaseId, int studentId, ModelMap modelMap) {
-        String page = "web/internship/apply/internship_apply::#page-wrapper";
+        String page;
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
@@ -248,8 +248,10 @@ public class InternshipApplyController {
                     }
                     break;
                 default:
-                    page = "web/internship/apply/internship_apply::#page-wrapper";
+                    page = commonControllerMethodService.showTip(modelMap, "未找到相关实习类型页面");
             }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }

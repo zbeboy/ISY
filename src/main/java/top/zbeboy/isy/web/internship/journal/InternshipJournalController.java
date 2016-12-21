@@ -94,6 +94,9 @@ public class InternshipJournalController {
     @Resource
     private RoleService roleService;
 
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
     /**
      * 实习日志
      *
@@ -137,7 +140,7 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/my/list", method = RequestMethod.GET)
     public String myJournalList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "web/internship/journal/internship_journal::#page-wrapper";
+        String page;
         boolean canUse = false;
         Users users = usersService.getUserFromSession();
         Optional<Record> record = usersService.findUserSchoolInfo(users);
@@ -150,6 +153,8 @@ public class InternshipJournalController {
         }
         if (canUse) {
             page = "web/internship/journal/internship_my_journal::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -261,11 +266,13 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/list/edit", method = RequestMethod.GET)
     public String journalListEdit(@RequestParam("id") String id, ModelMap modelMap) {
-        String page = "web/internship/journal/internship_journal::#page-wrapper";
+        String page;
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
             modelMap.addAttribute("internshipJournal", internshipJournal);
             page = "web/internship/journal/internship_journal_edit::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
         }
         return page;
     }
@@ -279,12 +286,14 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/list/look", method = RequestMethod.GET)
     public String journalListLook(@RequestParam("id") String id, ModelMap modelMap) {
-        String page = "web/internship/journal/internship_journal::#page-wrapper";
+        String page;
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
             modelMap.addAttribute("internshipJournalDate", DateTimeUtils.formatDate(internshipJournal.getInternshipJournalDate(), "yyyy年MM月dd日"));
             modelMap.addAttribute("internshipJournal", internshipJournal);
             page = "web/internship/journal/internship_journal_look::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
         }
         return page;
     }

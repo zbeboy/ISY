@@ -59,6 +59,9 @@ public class InternshipTeacherDistributionController {
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
     /**
      * 实习教师分配
      *
@@ -96,11 +99,13 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping("/web/internship/teacher_distribution/distribution/condition")
     public String distributionCondition(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        String page = "";
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_distribution_condition::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
         }
         return page;
     }
@@ -181,11 +186,13 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/add", method = RequestMethod.GET)
     public String addDistribution(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        String page;
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_add_distribution::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
         }
         return page;
     }
@@ -200,7 +207,7 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/edit", method = RequestMethod.GET)
     public String editDistribution(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
-        String page = "web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        String page;
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipTeacherDistribution internshipTeacherDistribution;
@@ -217,6 +224,8 @@ public class InternshipTeacherDistributionController {
             }
             modelMap.addAttribute("student", studentBean);
             page = "web/internship/distribution/internship_edit_distribution::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
         }
         return page;
     }
@@ -230,11 +239,13 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution", method = RequestMethod.GET)
     public String batchDistribution(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+        String page ;
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_batch_distribution::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
         }
         return page;
     }

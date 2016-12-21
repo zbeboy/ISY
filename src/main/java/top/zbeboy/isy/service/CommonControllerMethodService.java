@@ -24,9 +24,18 @@ public interface CommonControllerMethodService {
 
     /**
      * 删除实习相关记录
-     * @param internshipTypeId 实习类型id
+     *
+     * @param internshipTypeId    实习类型id
      * @param internshipReleaseId 实习发布id
-     * @param studentId 学生id
+     * @param studentId           学生id
      */
-    void deleteInternshipApplyRecord(int internshipTypeId,String internshipReleaseId, int studentId);
+    void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId);
+
+    /**
+     * 组装提示信息
+     *
+     * @param modelMap 页面对象
+     * @param tip      提示内容
+     */
+    String showTip(ModelMap modelMap, String tip);
 }

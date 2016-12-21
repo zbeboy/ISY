@@ -115,6 +115,11 @@ public final class Workbook {
    */
     public static final String FILES_PORTFOLIOS = "files/";
 
+    /*
+    提示页面
+     */
+    public static final String TIP_PAGE = "tip::#page-wrapper";
+
     private Workbook() {
     }
 

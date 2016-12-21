@@ -98,4 +98,13 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
                 break;
         }
     }
+
+    @Override
+    public String showTip(ModelMap modelMap, String tip) {
+        modelMap.addAttribute("showTip",true);
+        modelMap.addAttribute("tip",tip);
+        modelMap.addAttribute("showButton",true);
+        modelMap.addAttribute("buttonText","返回上一页");
+        return Workbook.TIP_PAGE;
+    }
 }

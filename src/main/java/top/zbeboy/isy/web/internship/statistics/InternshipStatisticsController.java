@@ -134,7 +134,7 @@ public class InternshipStatisticsController {
      */
     @RequestMapping(value = "/web/internship/statistical/data_list", method = RequestMethod.GET)
     public String statisticalDataList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "web/internship/statistics/internship_statistics::#page-wrapper";
+        String page;
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (!ObjectUtils.isEmpty(internshipRelease)) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
@@ -155,7 +155,11 @@ public class InternshipStatisticsController {
                 case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
                     page = "web/internship/statistics/graduation_practice_company_data::#page-wrapper";
                     break;
+                default:
+                    page = commonControllerMethodService.showTip(modelMap,"未找到相关实习类型页面");
             }
+        }else {
+            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
         }
         return page;
     }
