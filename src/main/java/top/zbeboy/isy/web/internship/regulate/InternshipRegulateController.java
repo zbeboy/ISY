@@ -179,6 +179,10 @@ public class InternshipRegulateController {
      */
     @RequestMapping(value = "/web/internship/regulate/list/add", method = RequestMethod.GET)
     public String regulateListAdd(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
+        InternshipRegulate internshipRegulate = new InternshipRegulate();
+        internshipRegulate.setInternshipReleaseId(internshipReleaseId);
+        internshipRegulate.setStaffId(staffId);
+        modelMap.addAttribute("internshipRegulate", internshipRegulate);
         return "web/internship/regulate/internship_regulate_add::#page-wrapper";
     }
 
@@ -191,7 +195,7 @@ public class InternshipRegulateController {
      */
     @RequestMapping(value = "/web/internship/regulate/students", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<StudentBean> regulateStudents(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId) {
+    public AjaxUtils<StudentBean> regulateStudents(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("staffId") int staffId) {
         AjaxUtils<StudentBean> ajaxUtils = new AjaxUtils<>();
         List<StudentBean> studentBeens = new ArrayList<>();
         Result<Record> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffIdForStudent(internshipReleaseId, staffId);

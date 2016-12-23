@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016/12/23.
  */
-require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.address","bootstrap-daterangepicker","bootstrap-select-zh-CN"],
+require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker", "bootstrap-select-zh-CN"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -9,8 +9,8 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
          */
         var ajax_url = {
             save: '/web/internship/regulate/my/save',
-            student_data_url:'/web/internship/regulate/students',
-            nav:'/web/menu/internship/regulate'
+            student_data_url: '/web/internship/regulate/students',
+            nav: '/web/menu/internship/regulate'
         };
 
         // 刷新时选中菜单
@@ -20,29 +20,29 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
          参数id
          */
         var paramId = {
-            studentId:'#select_student'
+            studentId: '#select_student',
+            staffId: '#staffId',
+            internshipReleaseId: '#internshipReleaseId'
         };
 
         /*
          参数
          */
         var param = {
-
+            studentId: '',
+            staffId: '',
+            internshipReleaseId: ''
         };
 
         /*
          检验id
          */
-        var validId = {
-
-        };
+        var validId = {};
 
         /*
          错误消息id
          */
-        var errorMsgId = {
-
-        };
+        var errorMsgId = {};
 
         /**
          * 检验成功
@@ -77,13 +77,16 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
          * 初始化参数
          */
         function initParam() {
-
+            param.studentId = $(paramId.studentId).val();
+            param.staffId = $(paramId.staffId).val();
+            param.internshipReleaseId = $(paramId.internshipReleaseId).val();
         }
 
         init();
 
-        function init(){
-            $.get(web_path + ajax_url.student_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
+        function init() {
+            initParam();
+            $.get(web_path + ajax_url.student_data_url, param, function (data) {
                 studentData(data);
             });
         }
@@ -111,7 +114,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
             initStudentSelect();
         }
 
-        function initStudentSelect(){
+        function initStudentSelect() {
             $(paramId.studentId).selectpicker({
                 liveSearch: true,
                 maxOptions: 1
@@ -139,7 +142,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
             initParam();
             var msg;
             msg = Messenger().post({
-                message: "确定保存日志吗?",
+                message: "确定保存监管记录吗?",
                 actions: {
                     retry: {
                         label: '确定',

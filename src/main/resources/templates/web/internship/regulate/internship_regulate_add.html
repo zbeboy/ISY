@@ -25,6 +25,9 @@
                         <select  id="select_student" class="form-control selectpicker show-tick" title="请选择学生">
                         </select>
                         <p class="text-danger hidden" id="student_error_msg"></p>
+                        <input type="hidden" name="staffId" id="staffId" th:value="${internshipRegulate.staffId}"/>
+                        <input type="hidden" name="internshipReleaseId" id="internshipReleaseId"
+                               th:value="${internshipRegulate.internshipReleaseId}"/>
                     </div>
                     <div class="text-center">
                         <button type="button" id="save" class="btn btn-default">保存</button>
