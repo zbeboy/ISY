@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -57,6 +58,18 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     @Override
+    public Result<Record> findByInternshipReleaseIdAndStaffIdForStudent(String internshipReleaseId, int staffId) {
+        return create.select()
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .join(STUDENT)
+                .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(staffId)))
+                .fetch();
+    }
+
+    @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentIdForStaff(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(INTERNSHIP_TEACHER_DISTRIBUTION)
@@ -66,6 +79,13 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
+    }
+
+    @Override
+    public Result<InternshipTeacherDistributionRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId) {
+        return create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(staffId)))
+                .fetch();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

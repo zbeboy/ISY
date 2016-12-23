@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -33,6 +34,15 @@ public interface InternshipTeacherDistributionService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
+     * 通过实习发布id 和学生id查询 学生信息
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId           指导教师id
+     * @return 数据
+     */
+    Result<Record> findByInternshipReleaseIdAndStaffIdForStudent(String internshipReleaseId, int staffId);
+
+    /**
      * 通过实习发布id 和学生id查询 指导教师
      *
      * @param internshipReleaseId 实习发布id
@@ -40,6 +50,15 @@ public interface InternshipTeacherDistributionService {
      * @return 数据
      */
     Optional<Record> findByInternshipReleaseIdAndStudentIdForStaff(String internshipReleaseId, int studentId);
+
+    /**
+     * 通过实习发布id 和教职工id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId           教职工id
+     * @return 数据
+     */
+    Result<InternshipTeacherDistributionRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId);
 
     /**
      * 保存
