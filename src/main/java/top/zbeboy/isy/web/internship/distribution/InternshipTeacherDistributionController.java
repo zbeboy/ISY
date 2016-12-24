@@ -481,7 +481,7 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils collegeUpdateDel(String studentIds, @RequestParam("id") String internshipReleaseId) {
+    public AjaxUtils del(String studentIds, @RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {

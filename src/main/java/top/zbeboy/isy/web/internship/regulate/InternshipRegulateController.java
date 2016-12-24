@@ -193,15 +193,15 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/list/add", method = RequestMethod.GET)
     public String regulateListAdd(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,staffId);
-        if(!errorBean.isHasError()){
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staffId);
+        if (!errorBean.isHasError()) {
             InternshipRegulate internshipRegulate = new InternshipRegulate();
             internshipRegulate.setInternshipReleaseId(internshipReleaseId);
             internshipRegulate.setStaffId(staffId);
             modelMap.addAttribute("internshipRegulate", internshipRegulate);
             page = "web/internship/regulate/internship_regulate_add::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -217,8 +217,8 @@ public class InternshipRegulateController {
     public String regulateListEdit(@RequestParam("id") String internshipRegulateId, ModelMap modelMap) {
         String page;
         InternshipRegulate internshipRegulate = internshipRegulateService.findById(internshipRegulateId);
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulate.getInternshipReleaseId(),internshipRegulate.getStaffId());
-        if(!errorBean.isHasError()){
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulate.getInternshipReleaseId(), internshipRegulate.getStaffId());
+        if (!errorBean.isHasError()) {
             if (!ObjectUtils.isEmpty(internshipRegulate)) {
                 modelMap.addAttribute("internshipRegulate", internshipRegulate);
                 page = "web/internship/regulate/internship_regulate_edit::#page-wrapper";
@@ -226,7 +226,7 @@ public class InternshipRegulateController {
                 page = commonControllerMethodService.showTip(modelMap, "未查询到相关监管信息");
             }
         } else {
-            page =  commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -260,13 +260,30 @@ public class InternshipRegulateController {
      */
     @RequestMapping(value = "/web/internship/regulate/list/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils regulateListDel(String regulateIds) {
+    public AjaxUtils regulateListDel(String regulateIds,@RequestParam("staffId") int staffId) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        // 强制身份判断
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Staff staff = staffService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(staff) && staff.getStaffId() != staffId) {
+                    ajaxUtils.fail().msg("您的个人信息可能有误");
+                    return ajaxUtils;
+                }
+            }
+
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                ajaxUtils.fail().msg("您的注册类型不能删除此记录");
+                return ajaxUtils;
+            }
+        }
         if (StringUtils.hasLength(regulateIds)) {
             List<String> ids = SmallPropsUtils.StringIdsToStringList(regulateIds);
             internshipRegulateService.batchDelete(ids);
-            return new AjaxUtils().success().msg("删除监管记录成功");
+            return ajaxUtils.success().msg("删除监管记录成功");
         }
-        return new AjaxUtils().fail().msg("删除监管记录失败");
+        return ajaxUtils.fail().msg("删除监管记录失败");
     }
 
     /**
@@ -280,12 +297,19 @@ public class InternshipRegulateController {
     @ResponseBody
     public AjaxUtils<StudentBean> regulateStudents(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("staffId") int staffId) {
         AjaxUtils<StudentBean> ajaxUtils = new AjaxUtils<>();
-        List<StudentBean> studentBeens = new ArrayList<>();
-        Result<Record> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffIdForStudent(internshipReleaseId, staffId);
-        if (records.isNotEmpty()) {
-            studentBeens = records.into(StudentBean.class);
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staffId);
+        if (!errorBean.isHasError()) {
+            List<StudentBean> studentBeens = new ArrayList<>();
+            Result<Record> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffIdForStudent(internshipReleaseId, staffId);
+            if (records.isNotEmpty()) {
+                studentBeens = records.into(StudentBean.class);
+            }
+            ajaxUtils.success().msg("获取学生数据成功").listData(studentBeens);
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
-        return ajaxUtils.success().msg("获取学生数据成功").listData(studentBeens);
+
+        return ajaxUtils;
     }
 
     /**
@@ -323,29 +347,34 @@ public class InternshipRegulateController {
     public AjaxUtils regulateSave(@Valid InternshipRegulateVo internshipRegulateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (!bindingResult.hasErrors()) {
-            Optional<Record> studentRecord = studentService.findByIdRelationForUsers(internshipRegulateVo.getStudentId());
-            Optional<Record> staffRecord = staffService.findByIdRelationForUsers(internshipRegulateVo.getStaffId());
-            if (studentRecord.isPresent() && staffRecord.isPresent()) {
-                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
-                StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                InternshipRegulate internshipRegulate = new InternshipRegulate();
-                internshipRegulate.setInternshipRegulateId(UUIDUtils.getUUID());
-                internshipRegulate.setStudentName(studentBean.getRealName());
-                internshipRegulate.setStudentNumber(studentBean.getStudentNumber());
-                internshipRegulate.setStudentTel(studentBean.getMobile());
-                internshipRegulate.setInternshipContent(internshipRegulateVo.getInternshipContent());
-                internshipRegulate.setInternshipProgress(internshipRegulateVo.getInternshipProgress());
-                internshipRegulate.setReportWay(internshipRegulateVo.getReportWay());
-                internshipRegulate.setReportDate(internshipRegulateVo.getReportDate());
-                internshipRegulate.setSchoolGuidanceTeacher(staffBean.getRealName());
-                internshipRegulate.setTliy(internshipRegulateVo.getTliy());
-                internshipRegulate.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                internshipRegulate.setStudentId(internshipRegulateVo.getStudentId());
-                internshipRegulate.setInternshipReleaseId(internshipRegulateVo.getInternshipReleaseId());
-                internshipRegulate.setStaffId(internshipRegulateVo.getStaffId());
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulateVo.getInternshipReleaseId(), internshipRegulateVo.getStaffId());
+            if (!errorBean.isHasError()) {
+                Optional<Record> studentRecord = studentService.findByIdRelationForUsers(internshipRegulateVo.getStudentId());
+                Optional<Record> staffRecord = staffService.findByIdRelationForUsers(internshipRegulateVo.getStaffId());
+                if (studentRecord.isPresent() && staffRecord.isPresent()) {
+                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                    StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                    InternshipRegulate internshipRegulate = new InternshipRegulate();
+                    internshipRegulate.setInternshipRegulateId(UUIDUtils.getUUID());
+                    internshipRegulate.setStudentName(studentBean.getRealName());
+                    internshipRegulate.setStudentNumber(studentBean.getStudentNumber());
+                    internshipRegulate.setStudentTel(studentBean.getMobile());
+                    internshipRegulate.setInternshipContent(internshipRegulateVo.getInternshipContent());
+                    internshipRegulate.setInternshipProgress(internshipRegulateVo.getInternshipProgress());
+                    internshipRegulate.setReportWay(internshipRegulateVo.getReportWay());
+                    internshipRegulate.setReportDate(internshipRegulateVo.getReportDate());
+                    internshipRegulate.setSchoolGuidanceTeacher(staffBean.getRealName());
+                    internshipRegulate.setTliy(internshipRegulateVo.getTliy());
+                    internshipRegulate.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    internshipRegulate.setStudentId(internshipRegulateVo.getStudentId());
+                    internshipRegulate.setInternshipReleaseId(internshipRegulateVo.getInternshipReleaseId());
+                    internshipRegulate.setStaffId(internshipRegulateVo.getStaffId());
 
-                internshipRegulateService.save(internshipRegulate);
-                ajaxUtils.success().msg("保存成功");
+                    internshipRegulateService.save(internshipRegulate);
+                    ajaxUtils.success().msg("保存成功");
+                } else {
+                    ajaxUtils.fail().msg(errorBean.getErrorMsg());
+                }
             } else {
                 ajaxUtils.fail().msg("未查询到相关用户信息");
             }
@@ -367,14 +396,19 @@ public class InternshipRegulateController {
     public AjaxUtils regulateUpdate(@Valid InternshipRegulateVo internshipRegulateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipRegulateVo.getInternshipRegulateId())) {
-            InternshipRegulate internshipRegulate = internshipRegulateService.findById(internshipRegulateVo.getInternshipRegulateId());
-            internshipRegulate.setInternshipContent(internshipRegulateVo.getInternshipContent());
-            internshipRegulate.setInternshipProgress(internshipRegulateVo.getInternshipProgress());
-            internshipRegulate.setReportWay(internshipRegulateVo.getReportWay());
-            internshipRegulate.setReportDate(internshipRegulateVo.getReportDate());
-            internshipRegulate.setTliy(internshipRegulateVo.getTliy());
-            internshipRegulateService.update(internshipRegulate);
-            ajaxUtils.success().msg("更新成功");
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulateVo.getInternshipReleaseId(), internshipRegulateVo.getStaffId());
+            if (!errorBean.isHasError()) {
+                InternshipRegulate internshipRegulate = internshipRegulateService.findById(internshipRegulateVo.getInternshipRegulateId());
+                internshipRegulate.setInternshipContent(internshipRegulateVo.getInternshipContent());
+                internshipRegulate.setInternshipProgress(internshipRegulateVo.getInternshipProgress());
+                internshipRegulate.setReportWay(internshipRegulateVo.getReportWay());
+                internshipRegulate.setReportDate(internshipRegulateVo.getReportDate());
+                internshipRegulate.setTliy(internshipRegulateVo.getTliy());
+                internshipRegulateService.update(internshipRegulate);
+                ajaxUtils.success().msg("更新成功");
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
         } else {
             ajaxUtils.fail().msg("参数异常");
         }
@@ -420,6 +454,24 @@ public class InternshipRegulateController {
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int staffId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        // 强制身份判断
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Staff staff = staffService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(staff) && staff.getStaffId() != staffId) {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("您的个人信息有误");
+                    return errorBean;
+                }
+            }
+
+            if(usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)){
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("您的注册类型不适用于监管");
+                return errorBean;
+            }
+        }
         Map<String, Object> mapData = new HashMap<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (ObjectUtils.isEmpty(internshipRelease)) {

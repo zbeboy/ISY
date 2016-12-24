@@ -2,8 +2,8 @@
  * Created by lenovo on 2016/12/14.
  */
 //# sourceURL=internship_journal_list.js
-require(["jquery", "handlebars","constants","nav_active","datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars,constants,nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, constants, nav_active) {
 
         /*
          ajax url
@@ -15,11 +15,11 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
-                nav:'/web/menu/internship/journal',
+                nav: '/web/menu/internship/journal',
                 add: '/web/internship/journal/list/add',
                 valid_is_student: '/anyone/valid/cur/is/student',
-                valid_student:'/web/internship/journal/valid/student',
-                back:'/web/menu/internship/journal'
+                valid_student: '/web/internship/journal/valid/student',
+                back: '/web/menu/internship/journal'
             };
         }
 
@@ -156,7 +156,7 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
                                 ]
                             };
                         } else {
-                            if(c.studentId == init_page_param.studentId && init_page_param.studentId != 0){
+                            if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
                                 context =
                                 {
                                     func: [
@@ -262,8 +262,8 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
         var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
             init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-            var temp = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-trash-plus"></i>添加</button>'+
-             '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+            var temp = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-trash-plus"></i>添加</button>' +
+                '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp + global_button;
         }
         $('#global_button').append(global_button);
@@ -422,7 +422,7 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
                 }, {
                     url: web_path + getAjaxUrl().valid_student,
                     type: 'post',
-                    data: {student: student,internshipReleaseId:init_page_param.internshipReleaseId, type: type},
+                    data: {student: student, internshipReleaseId: init_page_param.internshipReleaseId, type: type},
                     success: function (data) {
                         if (data.state) {
                             to_add_data = data.objectResult;
@@ -463,7 +463,7 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
          * @param internshipReleaseId
          * @param studentId
          */
-        function accessAdd(internshipReleaseId,studentId){
+        function accessAdd(internshipReleaseId, studentId) {
             $.address.value(getAjaxUrl().add + '?id=' + internshipReleaseId + '&studentId=' + studentId);
         }
 
@@ -561,7 +561,7 @@ require(["jquery", "handlebars","constants","nav_active","datatables.responsive"
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {journalIds: journalId},
+                data: {journalIds: journalId, studentId: init_page_param.studentId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

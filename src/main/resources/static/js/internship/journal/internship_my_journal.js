@@ -380,7 +380,7 @@ require(["jquery", "handlebars", "nav_active","moment","datatables.responsive", 
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {journalIds: journalId},
+                data: {journalIds: journalId, studentId: init_page_param.studentId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

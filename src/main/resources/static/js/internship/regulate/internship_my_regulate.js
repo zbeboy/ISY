@@ -348,7 +348,7 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {regulateIds: regulateId},
+                data: {regulateIds: regulateId,staffId:init_page_param.staffId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

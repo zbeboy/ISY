@@ -211,7 +211,7 @@ public class InternshipJournalController {
     public String journalListAdd(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         String page;
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
-        if(!errorBean.isHasError()){
+        if (!errorBean.isHasError()) {
             InternshipJournal internshipJournal = new InternshipJournal();
             Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
             if (studentRecord.isPresent()) {
@@ -259,9 +259,9 @@ public class InternshipJournalController {
             modelMap.addAttribute("internshipJournal", internshipJournal);
             page = "web/internship/journal/internship_journal_add::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
-        return "web/internship/journal/internship_journal_add::#page-wrapper";
+        return page;
     }
 
     /**
@@ -275,8 +275,8 @@ public class InternshipJournalController {
     public String journalListEdit(@RequestParam("id") String id, ModelMap modelMap) {
         String page;
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournal.getInternshipReleaseId(),internshipJournal.getStudentId());
-        if(!errorBean.isHasError()){
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournal.getInternshipReleaseId(), internshipJournal.getStudentId());
+        if (!errorBean.isHasError()) {
             if (!ObjectUtils.isEmpty(internshipJournal)) {
                 modelMap.addAttribute("internshipJournal", internshipJournal);
                 page = "web/internship/journal/internship_journal_edit::#page-wrapper";
@@ -335,7 +335,7 @@ public class InternshipJournalController {
     public void journalListDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request, HttpServletResponse response) {
         try {
             ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
-            if(!errorBean.isHasError()){
+            if (!errorBean.isHasError()) {
                 Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                 if (records.isNotEmpty()) {
                     List<String> fileName = new ArrayList<>();
@@ -365,11 +365,24 @@ public class InternshipJournalController {
      * 批量删除日志
      *
      * @param journalIds ids
+     * @param studentId  学生id
      * @return true 删除成功
      */
     @RequestMapping(value = "/web/internship/journal/list/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils journalListDel(String journalIds, HttpServletRequest request) {
+    public AjaxUtils journalListDel(String journalIds, @RequestParam("studentId") int studentId, HttpServletRequest request) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        // 强制身份判断
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Student student = studentService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
+                    ajaxUtils.fail().msg("您的个人信息可能有误");
+                    return ajaxUtils;
+                }
+            }
+        }
         if (StringUtils.hasLength(journalIds)) {
             List<String> ids = SmallPropsUtils.StringIdsToStringList(journalIds);
             ids.forEach(id -> {
@@ -383,10 +396,10 @@ public class InternshipJournalController {
                 }
             });
             internshipJournalService.batchDelete(ids);
-            return new AjaxUtils().success().msg("删除日志成功");
+            return ajaxUtils.success().msg("删除日志成功");
         }
 
-        return new AjaxUtils().fail().msg("删除日志失败");
+        return ajaxUtils.fail().msg("删除日志失败");
     }
 
     /**
@@ -420,32 +433,37 @@ public class InternshipJournalController {
     public AjaxUtils journalSave(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (!bindingResult.hasErrors()) {
-            InternshipJournal internshipJournal = new InternshipJournal();
-            internshipJournal.setInternshipJournalId(UUIDUtils.getUUID());
-            internshipJournal.setStudentName(internshipJournalVo.getStudentName());
-            internshipJournal.setStudentNumber(internshipJournalVo.getStudentNumber());
-            internshipJournal.setOrganize(internshipJournalVo.getOrganize());
-            internshipJournal.setSchoolGuidanceTeacher(internshipJournalVo.getSchoolGuidanceTeacher());
-            internshipJournal.setGraduationPracticeCompanyName(internshipJournalVo.getGraduationPracticeCompanyName());
-            internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
-            internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
-            internshipJournal.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            internshipJournal.setStudentId(internshipJournalVo.getStudentId());
-            internshipJournal.setInternshipReleaseId(internshipJournalVo.getInternshipReleaseId());
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournalVo.getInternshipReleaseId(), internshipJournalVo.getStudentId());
+            if (!errorBean.isHasError()) {
+                InternshipJournal internshipJournal = new InternshipJournal();
+                internshipJournal.setInternshipJournalId(UUIDUtils.getUUID());
+                internshipJournal.setStudentName(internshipJournalVo.getStudentName());
+                internshipJournal.setStudentNumber(internshipJournalVo.getStudentNumber());
+                internshipJournal.setOrganize(internshipJournalVo.getOrganize());
+                internshipJournal.setSchoolGuidanceTeacher(internshipJournalVo.getSchoolGuidanceTeacher());
+                internshipJournal.setGraduationPracticeCompanyName(internshipJournalVo.getGraduationPracticeCompanyName());
+                internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
+                internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
+                internshipJournal.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                internshipJournal.setStudentId(internshipJournalVo.getStudentId());
+                internshipJournal.setInternshipReleaseId(internshipJournalVo.getInternshipReleaseId());
 
-            Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
-            if (studentRecord.isPresent()) {
-                Users users = studentRecord.get().into(Users.class);
-                String outputPath = filesService.saveInternshipJournal(internshipJournal, users, request);
-                if (StringUtils.hasLength(outputPath)) {
-                    internshipJournal.setInternshipJournalWord(outputPath);
-                    internshipJournalService.save(internshipJournal);
-                    ajaxUtils.success().msg("保存成功");
+                Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
+                if (studentRecord.isPresent()) {
+                    Users users = studentRecord.get().into(Users.class);
+                    String outputPath = filesService.saveInternshipJournal(internshipJournal, users, request);
+                    if (StringUtils.hasLength(outputPath)) {
+                        internshipJournal.setInternshipJournalWord(outputPath);
+                        internshipJournalService.save(internshipJournal);
+                        ajaxUtils.success().msg("保存成功");
+                    } else {
+                        ajaxUtils.fail().msg("保存文件失败");
+                    }
                 } else {
-                    ajaxUtils.fail().msg("保存文件失败");
+                    ajaxUtils.fail().msg("未查询到相关学生信息");
                 }
             } else {
-                ajaxUtils.fail().msg("未查询到相关学生信息");
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
             }
 
         } else {
@@ -468,28 +486,33 @@ public class InternshipJournalController {
         AjaxUtils ajaxUtils = new AjaxUtils();
         try {
             if (!bindingResult.hasErrors() && StringUtils.hasLength(internshipJournalVo.getInternshipJournalId())) {
-                InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalVo.getInternshipJournalId());
-                internshipJournal.setStudentName(internshipJournalVo.getStudentName());
-                internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
-                internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
-                log.debug(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
-                if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord())) {
-                    Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
-                    if (studentRecord.isPresent()) {
-                        Users users = studentRecord.get().into(Users.class);
-                        String outputPath = filesService.saveInternshipJournal(internshipJournal, users, request);
-                        if (StringUtils.hasLength(outputPath)) {
-                            internshipJournal.setInternshipJournalWord(outputPath);
-                            internshipJournalService.update(internshipJournal);
-                            ajaxUtils.success().msg("更新成功");
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournalVo.getInternshipReleaseId(), internshipJournalVo.getStudentId());
+                if (!errorBean.isHasError()) {
+                    InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalVo.getInternshipJournalId());
+                    internshipJournal.setStudentName(internshipJournalVo.getStudentName());
+                    internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
+                    internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
+                    log.debug(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                    if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord())) {
+                        Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
+                        if (studentRecord.isPresent()) {
+                            Users users = studentRecord.get().into(Users.class);
+                            String outputPath = filesService.saveInternshipJournal(internshipJournal, users, request);
+                            if (StringUtils.hasLength(outputPath)) {
+                                internshipJournal.setInternshipJournalWord(outputPath);
+                                internshipJournalService.update(internshipJournal);
+                                ajaxUtils.success().msg("更新成功");
+                            } else {
+                                ajaxUtils.fail().msg("保存文件失败");
+                            }
                         } else {
-                            ajaxUtils.fail().msg("保存文件失败");
+                            ajaxUtils.fail().msg("未查询到相关学生信息");
                         }
                     } else {
-                        ajaxUtils.fail().msg("未查询到相关学生信息");
+                        ajaxUtils.fail().msg("未找到相关实习日志文件");
                     }
                 } else {
-                    ajaxUtils.fail().msg("未找到相关实习日志文件");
+                    ajaxUtils.fail().msg(errorBean.getErrorMsg());
                 }
             } else {
                 ajaxUtils.fail().msg("更新失败，参数错误");
@@ -540,6 +563,18 @@ public class InternshipJournalController {
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        // 强制身份判断
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Student student = studentService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("您的个人信息有误");
+                    return errorBean;
+                }
+            }
+        }
         Map<String, Object> mapData = new HashMap<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (ObjectUtils.isEmpty(internshipRelease)) {
