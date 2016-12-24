@@ -53,7 +53,7 @@
 
     <script>
         var _hmt = _hmt || [];
-        (function() {
+        (function () {
             var hm = document.createElement("script");
             hm.src = "https://hm.baidu.com/hm.js?928b161cc08f12ef1a91a5e3a9a2ac9a";
             var s = document.getElementsByTagName("script")[0];
@@ -61,7 +61,7 @@
         })();
 
         /* push link to baidu */
-        (function(){
+        (function () {
             var bp = document.createElement('script');
             var curProtocol = window.location.protocol.split(':')[0];
             if (curProtocol === 'https') {
@@ -135,13 +135,7 @@
                     <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-alerts">
-                    <li>
-                        <a href="#">
-                            <div>
-                                敬请期待
-                            </div>
-                        </a>
-                    </li>
+
                 </ul>
                 <!-- /.dropdown-alerts -->
             </li>
@@ -289,7 +283,35 @@
 
 </div>
 <!-- /#wrapper -->
-
+<script id="message-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <li>
+        <a href="javascript:;">
+            <div>
+                <strong>John Smith</strong>
+                <span class="text-muted" style="padding-left: 120px;">
+                    <em>Yesterday</em>
+                </span>
+            </div>
+            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+        </a>
+    </li>
+    <li class="divider"></li>
+    {{/each}}
+</script>
+<script id="alert-template" type="text/x-handlebars-template">
+    {{#each listResult}}
+    <li>
+        <a href="javascript:;">
+            <div>
+                <i class="{{icon}}"></i> {{alertContent}}
+                <span class="text-muted small" style="padding-left: 120px;">{{date}}</span>
+            </div>
+        </a>
+    </li>
+    <li class="divider"></li>
+    {{/each}}
+</script>
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
         data-main="/backstage"></script>

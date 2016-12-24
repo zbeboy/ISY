@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service;
 
 
+import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.daos.AuthoritiesDao;
 import top.zbeboy.isy.domain.tables.pojos.Authorities;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
@@ -26,9 +28,12 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 
     private final DSLContext create;
 
+    private AuthoritiesDao authoritiesDao;
+
     @Autowired
-    public AuthoritiesServiceImpl(DSLContext dslContext) {
+    public AuthoritiesServiceImpl(DSLContext dslContext, Configuration configuration) {
         this.create = dslContext;
+        this.authoritiesDao = new AuthoritiesDao(configuration);
     }
 
     @Override

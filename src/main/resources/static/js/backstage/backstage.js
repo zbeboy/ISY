@@ -33,7 +33,9 @@ requirejs.config({
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
         "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
         "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate",
-        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination"
+        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination",
+        "sockjs":web_path + "/plugin/websocket/sockjs.min",
+        "stomp":web_path + "/plugin/websocket/stomp.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -63,10 +65,10 @@ requirejs.config({
             deps: ["css!" + web_path + "/plugin/bootstrap-daterangepicker/daterangepicker"]
         },
         "bootstrap-select-zh-CN": {
-            deps: ["bootstrap-select","css!" + web_path + "/plugin/bootstrap-select/css/bootstrap-select.min"]
+            deps: ["bootstrap-select", "css!" + web_path + "/plugin/bootstrap-select/css/bootstrap-select.min"]
         },
-        "bootstrap-duallistbox":{
-            deps: ["jquery","css!" + web_path + "/plugin/bootstrap-duallistbox/bootstrap-duallistbox.min"]
+        "bootstrap-duallistbox": {
+            deps: ["jquery", "css!" + web_path + "/plugin/bootstrap-duallistbox/bootstrap-duallistbox.min"]
         },
         "jquery-ui/widget": {
             deps: ["jquery"]
@@ -80,7 +82,7 @@ requirejs.config({
         "jquery.fileupload-validate": {
             deps: ["jquery.fileupload", "jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload"]
         },
-        "jquery.simple-pagination":{
+        "jquery.simple-pagination": {
             deps: ["jquery"]
         }
     }
@@ -97,8 +99,8 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "ajax_loading_view", "requirejs-domready", "csrf", "com", "jquery.address", "nav"],
-    function ($, loadingView, domready) {
+require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs","moment","stomp", "csrf", "com", "jquery.address", "nav"],
+    function ($, loadingView, domready, Handlebars,SockJS,moment) {
         domready(function () {
             //This function is called once the DOM is ready.
             //It will be safe to query the DOM and manipulate
@@ -159,5 +161,59 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "csrf", "com", "jq
                 parent.addClass('active');
             }
 
+        }
+
+
+        initAlert();
+
+        /**
+         * 初始化提醒
+         */
+        function initAlert() {
+            var stompClient = null;
+            var socket = new SockJS(web_path + '/alert');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/alerts', function (data) {
+                    showAlerts(JSON.parse(data.body));
+                });
+                stompClient.send("/app/alert",{}, frame.headers['user-name']);
+                window.setInterval(function(){
+                    stompClient.send("/app/alert",{}, frame.headers['user-name']);
+                },180000);
+            });
+        }
+
+        /**
+         * 展示数据alert数据
+         * @param data
+         */
+        function showAlerts(data) {
+            var source = $("#alert-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper('date', function () {
+                var value = Handlebars.escapeExpression(moment(this.alertDateStr, "YYYYMMDDhmmss").fromNow());
+                return new Handlebars.SafeString(value);
+            });
+
+            var html = template(data);
+            var alerts = $('#alerts');
+            alerts.html(html);
+            alerts.append(lastTagLi());
+        }
+
+        /**
+         * 最后的更多html
+         * @returns {string}
+         */
+        function lastTagLi() {
+            return "<li>" +
+                "<a class='text-center' href='#'>" +
+                "<strong>查看更多</strong>" +
+                "<i class='fa fa-angle-right'></i>" +
+                "</a>" +
+                "</li>";
         }
     });
