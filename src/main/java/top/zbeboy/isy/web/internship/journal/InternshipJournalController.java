@@ -209,51 +209,58 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/list/add", method = RequestMethod.GET)
     public String journalListAdd(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
-        InternshipJournal internshipJournal = new InternshipJournal();
-        Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
-        if (studentRecord.isPresent()) {
-            StudentBean studentBean = studentRecord.get().into(StudentBean.class);
-            internshipJournal.setStudentId(studentId);
-            internshipJournal.setInternshipReleaseId(internshipReleaseId);
-            internshipJournal.setStudentName(studentBean.getRealName());
-            internshipJournal.setOrganize(studentBean.getOrganizeName());
-            internshipJournal.setStudentNumber(studentBean.getStudentNumber());
+        String page;
+        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        if(!errorBean.isHasError()){
+            InternshipJournal internshipJournal = new InternshipJournal();
+            Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+            if (studentRecord.isPresent()) {
+                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                internshipJournal.setStudentId(studentId);
+                internshipJournal.setInternshipReleaseId(internshipReleaseId);
+                internshipJournal.setStudentName(studentBean.getRealName());
+                internshipJournal.setOrganize(studentBean.getOrganizeName());
+                internshipJournal.setStudentNumber(studentBean.getStudentNumber());
+            }
+            Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentIdForStaff(internshipReleaseId, studentId);
+            if (internshipTeacherDistributionRecord.isPresent()) {
+                InternshipTeacherDistributionBean internshipTeacherDistributionBean = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistributionBean.class);
+                internshipJournal.setSchoolGuidanceTeacher(internshipTeacherDistributionBean.getRealName());
+            }
+            InternshipRelease internshipRelease = errorBean.getData();
+            InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
+            switch (internshipType.getInternshipTypeName()) {
+                case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                    Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (internshipCollegeRecord.isPresent()) {
+                        InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
+                        internshipJournal.setGraduationPracticeCompanyName(internshipCollege.getInternshipCollegeName());
+                    }
+                    break;
+                case Workbook.INTERNSHIP_COMPANY_TYPE:
+                    Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (internshipCompanyRecord.isPresent()) {
+                        InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
+                        internshipJournal.setGraduationPracticeCompanyName(internshipCompany.getInternshipCompanyName());
+                    }
+                    break;
+                case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                    break;
+                case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                    break;
+                case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                    Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    if (graduationPracticeCompanyRecord.isPresent()) {
+                        GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
+                        internshipJournal.setGraduationPracticeCompanyName(graduationPracticeCompany.getGraduationPracticeCompanyName());
+                    }
+                    break;
+            }
+            modelMap.addAttribute("internshipJournal", internshipJournal);
+            page = "web/internship/journal/internship_journal_add::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
         }
-        Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentIdForStaff(internshipReleaseId, studentId);
-        if (internshipTeacherDistributionRecord.isPresent()) {
-            InternshipTeacherDistributionBean internshipTeacherDistributionBean = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistributionBean.class);
-            internshipJournal.setSchoolGuidanceTeacher(internshipTeacherDistributionBean.getRealName());
-        }
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
-        switch (internshipType.getInternshipTypeName()) {
-            case Workbook.INTERNSHIP_COLLEGE_TYPE:
-                Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                if (internshipCollegeRecord.isPresent()) {
-                    InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
-                    internshipJournal.setGraduationPracticeCompanyName(internshipCollege.getInternshipCollegeName());
-                }
-                break;
-            case Workbook.INTERNSHIP_COMPANY_TYPE:
-                Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                if (internshipCompanyRecord.isPresent()) {
-                    InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
-                    internshipJournal.setGraduationPracticeCompanyName(internshipCompany.getInternshipCompanyName());
-                }
-                break;
-            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
-                break;
-            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
-                break;
-            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
-                Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                if (graduationPracticeCompanyRecord.isPresent()) {
-                    GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
-                    internshipJournal.setGraduationPracticeCompanyName(graduationPracticeCompany.getGraduationPracticeCompanyName());
-                }
-                break;
-        }
-        modelMap.addAttribute("internshipJournal", internshipJournal);
         return "web/internship/journal/internship_journal_add::#page-wrapper";
     }
 
@@ -268,11 +275,16 @@ public class InternshipJournalController {
     public String journalListEdit(@RequestParam("id") String id, ModelMap modelMap) {
         String page;
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
-        if (!ObjectUtils.isEmpty(internshipJournal)) {
-            modelMap.addAttribute("internshipJournal", internshipJournal);
-            page = "web/internship/journal/internship_journal_edit::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournal.getInternshipReleaseId(),internshipJournal.getStudentId());
+        if(!errorBean.isHasError()){
+            if (!ObjectUtils.isEmpty(internshipJournal)) {
+                modelMap.addAttribute("internshipJournal", internshipJournal);
+                page = "web/internship/journal/internship_journal_edit::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+            }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -322,23 +334,26 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/list/downloads", method = RequestMethod.GET)
     public void journalListDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request, HttpServletResponse response) {
         try {
-            Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-            if (records.isNotEmpty()) {
-                List<String> fileName = new ArrayList<>();
-                List<String> filePath = new ArrayList<>();
-                records.forEach(r -> {
-                    filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
-                    fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf("/") + 1));
-                });
-                Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
-                if (studentRecord.isPresent()) {
-                    Users users = studentRecord.get().into(Users.class);
-                    String downloadFileName = StringUtils.hasLength(users.getRealName()) ? users.getRealName() : "实习日志";
-                    String zipName = downloadFileName + ".zip";
-                    String downloadFilePath = Workbook.internshipJournalPath(users) + zipName;
-                    String zipPath = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users) + zipName;
-                    FilesUtils.compressZipMulti(fileName, zipPath, filePath);
-                    uploadService.download(downloadFileName, "/" + downloadFilePath, response, request);
+            ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+            if(!errorBean.isHasError()){
+                Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (records.isNotEmpty()) {
+                    List<String> fileName = new ArrayList<>();
+                    List<String> filePath = new ArrayList<>();
+                    records.forEach(r -> {
+                        filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
+                        fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf("/") + 1));
+                    });
+                    Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+                    if (studentRecord.isPresent()) {
+                        Users users = studentRecord.get().into(Users.class);
+                        String downloadFileName = StringUtils.hasLength(users.getRealName()) ? users.getRealName() : "实习日志";
+                        String zipName = downloadFileName + ".zip";
+                        String downloadFilePath = Workbook.internshipJournalPath(users) + zipName;
+                        String zipPath = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users) + zipName;
+                        FilesUtils.compressZipMulti(fileName, zipPath, filePath);
+                        uploadService.download(downloadFileName, "/" + downloadFilePath, response, request);
+                    }
                 }
             }
         } catch (Exception e) {

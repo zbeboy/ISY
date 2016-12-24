@@ -196,7 +196,7 @@ public class UsersController {
     @RequestMapping(value = "/anyone/valid/cur/is/staff", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils validIsStaff() {
-        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
             Users users = usersService.getUserFromSession();
             Staff staff = staffService.findByUsername(users.getUsername());
             return new AjaxUtils().success().msg("教职工用户").obj(staff.getStaffId());

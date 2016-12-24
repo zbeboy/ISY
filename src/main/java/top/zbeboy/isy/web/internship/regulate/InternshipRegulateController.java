@@ -192,11 +192,18 @@ public class InternshipRegulateController {
      */
     @RequestMapping(value = "/web/internship/regulate/list/add", method = RequestMethod.GET)
     public String regulateListAdd(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
-        InternshipRegulate internshipRegulate = new InternshipRegulate();
-        internshipRegulate.setInternshipReleaseId(internshipReleaseId);
-        internshipRegulate.setStaffId(staffId);
-        modelMap.addAttribute("internshipRegulate", internshipRegulate);
-        return "web/internship/regulate/internship_regulate_add::#page-wrapper";
+        String page;
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,staffId);
+        if(!errorBean.isHasError()){
+            InternshipRegulate internshipRegulate = new InternshipRegulate();
+            internshipRegulate.setInternshipReleaseId(internshipReleaseId);
+            internshipRegulate.setStaffId(staffId);
+            modelMap.addAttribute("internshipRegulate", internshipRegulate);
+            page = "web/internship/regulate/internship_regulate_add::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+        }
+        return page;
     }
 
     /**
@@ -210,11 +217,16 @@ public class InternshipRegulateController {
     public String regulateListEdit(@RequestParam("id") String internshipRegulateId, ModelMap modelMap) {
         String page;
         InternshipRegulate internshipRegulate = internshipRegulateService.findById(internshipRegulateId);
-        if (!ObjectUtils.isEmpty(internshipRegulate)) {
-            modelMap.addAttribute("internshipRegulate", internshipRegulate);
-            page = "web/internship/regulate/internship_regulate_edit::#page-wrapper";
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulate.getInternshipReleaseId(),internshipRegulate.getStaffId());
+        if(!errorBean.isHasError()){
+            if (!ObjectUtils.isEmpty(internshipRegulate)) {
+                modelMap.addAttribute("internshipRegulate", internshipRegulate);
+                page = "web/internship/regulate/internship_regulate_edit::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "未查询到相关监管信息");
+            }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到相关监管信息");
+            page =  commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
         }
         return page;
     }
@@ -365,6 +377,37 @@ public class InternshipRegulateController {
             ajaxUtils.success().msg("更新成功");
         } else {
             ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 检验教职工
+     *
+     * @param info 教职工信息
+     * @param type 检验类型
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/regulate/valid/staff", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validStaff(@RequestParam("staff") String info, @RequestParam("internshipReleaseId") String internshipReleaseId, int type) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        Staff staff = null;
+        if (type == 0) {
+            staff = staffService.findByUsername(info);
+        } else if (type == 1) {
+            staff = staffService.findByStaffNumber(info);
+        }
+        if (!ObjectUtils.isEmpty(staff)) {
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staff.getStaffId());
+            if (!errorBean.isHasError()) {
+                ajaxUtils.success().msg("查询教职工数据成功").obj(staff.getStaffId());
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+
+        } else {
+            ajaxUtils.fail().msg("查询教职工数据失败");
         }
         return ajaxUtils;
     }

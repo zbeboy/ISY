@@ -171,7 +171,7 @@ public class InternshipApplyController {
      * @return 申请页
      */
     @RequestMapping(value = "/web/internship/apply/access", method = RequestMethod.GET)
-    public String applyAccess(@RequestParam("id") String internshipReleaseId, int studentId, ModelMap modelMap) {
+    public String applyAccess(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         String page;
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
