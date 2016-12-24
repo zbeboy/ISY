@@ -44,8 +44,11 @@ import top.zbeboy.isy.domain.tables.School;
 import top.zbeboy.isy.domain.tables.Science;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
+import top.zbeboy.isy.domain.tables.SystemAlert;
+import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemLog;
 import top.zbeboy.isy.domain.tables.SystemMailbox;
+import top.zbeboy.isy.domain.tables.SystemMessage;
 import top.zbeboy.isy.domain.tables.SystemSms;
 import top.zbeboy.isy.domain.tables.Users;
 import top.zbeboy.isy.domain.tables.UsersType;
@@ -82,8 +85,11 @@ import top.zbeboy.isy.domain.tables.records.SchoolRecord;
 import top.zbeboy.isy.domain.tables.records.ScienceRecord;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.domain.tables.records.SystemAlertRecord;
+import top.zbeboy.isy.domain.tables.records.SystemAlertTypeRecord;
 import top.zbeboy.isy.domain.tables.records.SystemLogRecord;
 import top.zbeboy.isy.domain.tables.records.SystemMailboxRecord;
+import top.zbeboy.isy.domain.tables.records.SystemMessageRecord;
 import top.zbeboy.isy.domain.tables.records.SystemSmsRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.domain.tables.records.UsersTypeRecord;
@@ -119,6 +125,7 @@ public class Keys {
 	public static final Identity<ScienceRecord, Integer> IDENTITY_SCIENCE = Identities0.IDENTITY_SCIENCE;
 	public static final Identity<StaffRecord, Integer> IDENTITY_STAFF = Identities0.IDENTITY_STAFF;
 	public static final Identity<StudentRecord, Integer> IDENTITY_STUDENT = Identities0.IDENTITY_STUDENT;
+	public static final Identity<SystemAlertTypeRecord, Integer> IDENTITY_SYSTEM_ALERT_TYPE = Identities0.IDENTITY_SYSTEM_ALERT_TYPE;
 	public static final Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = Identities0.IDENTITY_USERS_TYPE;
 
 	// -------------------------------------------------------------------------
@@ -170,8 +177,11 @@ public class Keys {
 	public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = UniqueKeys0.KEY_STUDENT_PRIMARY;
 	public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = UniqueKeys0.KEY_STUDENT_STUDENT_NUMBER;
 	public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = UniqueKeys0.KEY_STUDENT_ID_CARD;
+	public static final UniqueKey<SystemAlertRecord> KEY_SYSTEM_ALERT_PRIMARY = UniqueKeys0.KEY_SYSTEM_ALERT_PRIMARY;
+	public static final UniqueKey<SystemAlertTypeRecord> KEY_SYSTEM_ALERT_TYPE_PRIMARY = UniqueKeys0.KEY_SYSTEM_ALERT_TYPE_PRIMARY;
 	public static final UniqueKey<SystemLogRecord> KEY_SYSTEM_LOG_PRIMARY = UniqueKeys0.KEY_SYSTEM_LOG_PRIMARY;
 	public static final UniqueKey<SystemMailboxRecord> KEY_SYSTEM_MAILBOX_PRIMARY = UniqueKeys0.KEY_SYSTEM_MAILBOX_PRIMARY;
+	public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = UniqueKeys0.KEY_SYSTEM_MESSAGE_PRIMARY;
 	public static final UniqueKey<SystemSmsRecord> KEY_SYSTEM_SMS_PRIMARY = UniqueKeys0.KEY_SYSTEM_SMS_PRIMARY;
 	public static final UniqueKey<UsersRecord> KEY_USERS_PRIMARY = UniqueKeys0.KEY_USERS_PRIMARY;
 	public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = UniqueKeys0.KEY_USERS_MOBILE;
@@ -228,6 +238,7 @@ public class Keys {
 	public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = ForeignKeys0.STAFF_IBFK_2;
 	public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = ForeignKeys0.STUDENT_IBFK_1;
 	public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = ForeignKeys0.STUDENT_IBFK_2;
+	public static final ForeignKey<SystemAlertRecord, SystemAlertTypeRecord> SYSTEM_ALERT_IBFK_1 = ForeignKeys0.SYSTEM_ALERT_IBFK_1;
 	public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = ForeignKeys0.USERS_IBFK_1;
 
 	// -------------------------------------------------------------------------
@@ -247,6 +258,7 @@ public class Keys {
 		public static Identity<ScienceRecord, Integer> IDENTITY_SCIENCE = createIdentity(Science.SCIENCE, Science.SCIENCE.SCIENCE_ID);
 		public static Identity<StaffRecord, Integer> IDENTITY_STAFF = createIdentity(Staff.STAFF, Staff.STAFF.STAFF_ID);
 		public static Identity<StudentRecord, Integer> IDENTITY_STUDENT = createIdentity(Student.STUDENT, Student.STUDENT.STUDENT_ID);
+		public static Identity<SystemAlertTypeRecord, Integer> IDENTITY_SYSTEM_ALERT_TYPE = createIdentity(SystemAlertType.SYSTEM_ALERT_TYPE, SystemAlertType.SYSTEM_ALERT_TYPE.SYSTEM_ALERT_TYPE_ID);
 		public static Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = createIdentity(UsersType.USERS_TYPE, UsersType.USERS_TYPE.USERS_TYPE_ID);
 	}
 
@@ -296,8 +308,11 @@ public class Keys {
 		public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = createUniqueKey(Student.STUDENT, Student.STUDENT.STUDENT_ID);
 		public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = createUniqueKey(Student.STUDENT, Student.STUDENT.STUDENT_NUMBER);
 		public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = createUniqueKey(Student.STUDENT, Student.STUDENT.ID_CARD);
+		public static final UniqueKey<SystemAlertRecord> KEY_SYSTEM_ALERT_PRIMARY = createUniqueKey(SystemAlert.SYSTEM_ALERT, SystemAlert.SYSTEM_ALERT.SYSTEM_ALERT_ID);
+		public static final UniqueKey<SystemAlertTypeRecord> KEY_SYSTEM_ALERT_TYPE_PRIMARY = createUniqueKey(SystemAlertType.SYSTEM_ALERT_TYPE, SystemAlertType.SYSTEM_ALERT_TYPE.SYSTEM_ALERT_TYPE_ID);
 		public static final UniqueKey<SystemLogRecord> KEY_SYSTEM_LOG_PRIMARY = createUniqueKey(SystemLog.SYSTEM_LOG, SystemLog.SYSTEM_LOG.SYSTEM_LOG_ID);
 		public static final UniqueKey<SystemMailboxRecord> KEY_SYSTEM_MAILBOX_PRIMARY = createUniqueKey(SystemMailbox.SYSTEM_MAILBOX, SystemMailbox.SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID);
+		public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = createUniqueKey(SystemMessage.SYSTEM_MESSAGE, SystemMessage.SYSTEM_MESSAGE.SYSTEM_MESSAGE_ID);
 		public static final UniqueKey<SystemSmsRecord> KEY_SYSTEM_SMS_PRIMARY = createUniqueKey(SystemSms.SYSTEM_SMS, SystemSms.SYSTEM_SMS.SYSTEM_SMS_ID);
 		public static final UniqueKey<UsersRecord> KEY_USERS_PRIMARY = createUniqueKey(Users.USERS, Users.USERS.USERNAME);
 		public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = createUniqueKey(Users.USERS, Users.USERS.MOBILE);
@@ -352,6 +367,7 @@ public class Keys {
 		public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, Staff.STAFF, Staff.STAFF.USERNAME);
 		public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_ORGANIZE_PRIMARY, Student.STUDENT, Student.STUDENT.ORGANIZE_ID);
 		public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, Student.STUDENT, Student.STUDENT.USERNAME);
+		public static final ForeignKey<SystemAlertRecord, SystemAlertTypeRecord> SYSTEM_ALERT_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_SYSTEM_ALERT_TYPE_PRIMARY, SystemAlert.SYSTEM_ALERT, SystemAlert.SYSTEM_ALERT.SYSTEM_ALERT_TYPE_ID);
 		public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, Users.USERS.USERS_TYPE_ID);
 	}
 }

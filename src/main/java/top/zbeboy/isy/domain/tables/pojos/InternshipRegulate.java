@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipRegulate implements Serializable {
 
-	private static final long serialVersionUID = 1159110248;
+	private static final long serialVersionUID = 310960271;
 
 	private String    internshipRegulateId;
 	private String    studentName;
@@ -183,7 +183,6 @@ public class InternshipRegulate implements Serializable {
 		this.schoolGuidanceTeacher = schoolGuidanceTeacher;
 	}
 
-	@NotNull
 	@Size(max = 200)
 	public String getTliy() {
 		return this.tliy;

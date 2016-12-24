@@ -39,8 +39,11 @@ import top.zbeboy.isy.domain.tables.School;
 import top.zbeboy.isy.domain.tables.Science;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
+import top.zbeboy.isy.domain.tables.SystemAlert;
+import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemLog;
 import top.zbeboy.isy.domain.tables.SystemMailbox;
+import top.zbeboy.isy.domain.tables.SystemMessage;
 import top.zbeboy.isy.domain.tables.SystemSms;
 import top.zbeboy.isy.domain.tables.Users;
 import top.zbeboy.isy.domain.tables.UsersType;
@@ -225,6 +228,16 @@ public class Tables {
 	public static final Student STUDENT = top.zbeboy.isy.domain.tables.Student.STUDENT;
 
 	/**
+	 * The table isy.system_alert
+	 */
+	public static final SystemAlert SYSTEM_ALERT = top.zbeboy.isy.domain.tables.SystemAlert.SYSTEM_ALERT;
+
+	/**
+	 * The table isy.system_alert_type
+	 */
+	public static final SystemAlertType SYSTEM_ALERT_TYPE = top.zbeboy.isy.domain.tables.SystemAlertType.SYSTEM_ALERT_TYPE;
+
+	/**
 	 * The table isy.system_log
 	 */
 	public static final SystemLog SYSTEM_LOG = top.zbeboy.isy.domain.tables.SystemLog.SYSTEM_LOG;
@@ -233,6 +246,11 @@ public class Tables {
 	 * The table isy.system_mailbox
 	 */
 	public static final SystemMailbox SYSTEM_MAILBOX = top.zbeboy.isy.domain.tables.SystemMailbox.SYSTEM_MAILBOX;
+
+	/**
+	 * The table isy.system_message
+	 */
+	public static final SystemMessage SYSTEM_MESSAGE = top.zbeboy.isy.domain.tables.SystemMessage.SYSTEM_MESSAGE;
 
 	/**
 	 * The table isy.system_sms

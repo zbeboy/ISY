@@ -46,8 +46,11 @@ import top.zbeboy.isy.domain.tables.School;
 import top.zbeboy.isy.domain.tables.Science;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
+import top.zbeboy.isy.domain.tables.SystemAlert;
+import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemLog;
 import top.zbeboy.isy.domain.tables.SystemMailbox;
+import top.zbeboy.isy.domain.tables.SystemMessage;
 import top.zbeboy.isy.domain.tables.SystemSms;
 import top.zbeboy.isy.domain.tables.Users;
 import top.zbeboy.isy.domain.tables.UsersType;
@@ -66,7 +69,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-	private static final long serialVersionUID = 931447217;
+	private static final long serialVersionUID = -518407230;
 
 	/**
 	 * The reference instance of <code>isy</code>
@@ -122,8 +125,11 @@ public class Isy extends SchemaImpl {
 			Science.SCIENCE,
 			Staff.STAFF,
 			Student.STUDENT,
+			SystemAlert.SYSTEM_ALERT,
+			SystemAlertType.SYSTEM_ALERT_TYPE,
 			SystemLog.SYSTEM_LOG,
 			SystemMailbox.SYSTEM_MAILBOX,
+			SystemMessage.SYSTEM_MESSAGE,
 			SystemSms.SYSTEM_SMS,
 			Users.USERS,
 			UsersType.USERS_TYPE);

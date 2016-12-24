@@ -426,7 +426,7 @@ CREATE TABLE internship_regulate(
   report_way VARCHAR(20) NOT NULL ,
   report_date DATE NOT NULL ,
   school_guidance_teacher VARCHAR(10) NOT NULL ,
-  tliy VARCHAR(200) NOT NULL ,
+  tliy VARCHAR(200) ,
   create_date DATETIME NOT NULL ,
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(64) NOT NULL ,
@@ -434,6 +434,33 @@ CREATE TABLE internship_regulate(
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
   FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
+
+CREATE TABLE system_alert_type(
+  system_alert_type_id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(10) NOT NULL ,
+  icon VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE system_alert(
+  system_alert_id VARCHAR(64) PRIMARY KEY ,
+  alert_content VARCHAR(10) NOT NULL ,
+  alert_date DATETIME NOT NULL ,
+  link_id VARCHAR(64),
+  is_see BOOLEAN,
+  username VARCHAR(64) NOT NULL ,
+  system_alert_type_id INT NOT NULL,
+  FOREIGN KEY (system_alert_type_id) REFERENCES system_alert_type(system_alert_type_id)
+);
+
+CREATE TABLE system_message(
+  system_message_id VARCHAR(64) PRIMARY KEY ,
+  message_title VARCHAR(50) NOT NULL ,
+  message_content VARCHAR(800) NOT NULL ,
+  message_date DATETIME NOT NULL ,
+  send_users VARCHAR(64) NOT NULL ,
+  accept_users VARCHAR(64) NOT NULL ,
+  is_see BOOLEAN
 );
 
 INSERT INTO users_type(users_type_name) VALUES ('学生');
@@ -687,3 +714,5 @@ INSERT INTO nation(nation_name) VALUES('赫哲族');
 INSERT INTO nation(nation_name) VALUES('门巴族');
 INSERT INTO nation(nation_name) VALUES('珞巴族');
 INSERT INTO nation(nation_name) VALUES('基诺族');
+
+INSERT INTO system_alert_type(name, icon) VALUES ('消息','fa fa-envelope fa-fw');
