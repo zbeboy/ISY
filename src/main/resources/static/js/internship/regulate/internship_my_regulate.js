@@ -15,8 +15,6 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
                 edit: '/web/internship/regulate/list/edit',
                 add: '/web/internship/regulate/list/add',
                 look: '/web/internship/regulate/list/look',
-                download: '/web/internship/regulate/list/download',
-                downloads: '/web/internship/regulate/list/downloads',
                 nav:'/web/menu/internship/regulate',
                 back:'/web/menu/internship/regulate'
             };
@@ -228,6 +226,20 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
+        });
+
+        $(getParamId().studentName).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().studentNumber).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
         });
 
         /*

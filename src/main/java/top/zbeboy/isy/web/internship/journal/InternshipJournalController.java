@@ -349,12 +349,12 @@ public class InternshipJournalController {
     /**
      * 批量删除日志
      *
-     * @param journalIds 系ids
+     * @param journalIds ids
      * @return true 删除成功
      */
     @RequestMapping(value = "/web/internship/journal/list/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils departmentUpdateDel(String journalIds, HttpServletRequest request) {
+    public AjaxUtils journalListDel(String journalIds, HttpServletRequest request) {
         if (StringUtils.hasLength(journalIds)) {
             List<String> ids = SmallPropsUtils.StringIdsToStringList(journalIds);
             ids.forEach(id -> {

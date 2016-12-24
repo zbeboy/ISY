@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,8 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.FilesUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
@@ -26,11 +29,13 @@ import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.internship.journal.InternshipJournalController;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.internship.regulate.InternshipRegulateVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -212,6 +217,44 @@ public class InternshipRegulateController {
             page = commonControllerMethodService.showTip(modelMap, "未查询到相关监管信息");
         }
         return page;
+    }
+
+    /**
+     * 查看实习监管页面
+     *
+     * @param id       实习监管id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/regulate/list/look", method = RequestMethod.GET)
+    public String regulateListLook(@RequestParam("id") String id, ModelMap modelMap) {
+        String page;
+        InternshipRegulate internshipRegulate = internshipRegulateService.findById(id);
+        if (!ObjectUtils.isEmpty(internshipRegulate)) {
+            modelMap.addAttribute("internshipRegulateDate", DateTimeUtils.formatDate(internshipRegulate.getReportDate(), "yyyy年MM月dd日"));
+            modelMap.addAttribute("internshipRegulate", internshipRegulate);
+            page = "web/internship/regulate/internship_regulate_look::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "未查询到相关监管信息");
+        }
+        return page;
+    }
+
+    /**
+     * 批量删除监管记录
+     *
+     * @param regulateIds ids
+     * @return true 删除成功
+     */
+    @RequestMapping(value = "/web/internship/regulate/list/del", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils regulateListDel(String regulateIds) {
+        if (StringUtils.hasLength(regulateIds)) {
+            List<String> ids = SmallPropsUtils.StringIdsToStringList(regulateIds);
+            internshipRegulateService.batchDelete(ids);
+            return new AjaxUtils().success().msg("删除监管记录成功");
+        }
+        return new AjaxUtils().fail().msg("删除监管记录失败");
     }
 
     /**

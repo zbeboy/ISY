@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习监管 -
+                    <small>查看</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="row">
+                    <div class="col-md-3">学生姓名</div>
+                    <div class="col-md-3" th:text="${internshipRegulate.studentName}"></div>
+                    <div class="col-md-3">学生学号</div>
+                    <div class="col-md-3" th:text="${internshipRegulate.studentNumber}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">学生联系方式</div>
+                    <div class="col-md-3" th:text="${internshipRegulate.studentTel}"></div>
+                    <div class="col-md-3">指导教师</div>
+                    <div class="col-md-3" th:text="${internshipRegulate.schoolGuidanceTeacher}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">实习内容</div>
+                    <div class="col-md-6" th:text="${internshipRegulate.internshipContent}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">实习进展</div>
+                    <div class="col-md-6" th:text="${internshipRegulate.internshipProgress}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">汇报途径</div>
+                    <div class="col-md-3" th:text="${internshipRegulate.reportWay}"></div>
+                    <div class="col-md-3">汇报日期</div>
+                    <div class="col-md-3" th:text="${internshipRegulateDate}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">备注</div>
+                    <div class="col-md-6" th:text="${internshipRegulate.tliy}"></div>
+                </div>
+                <input type="hidden" name="internshipReleaseId" id="internshipReleaseId"
+                       th:value="${internshipRegulate.internshipReleaseId}"/>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <input type="hidden" class="dy_script" value="/js/internship/regulate/internship_regulate_look.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

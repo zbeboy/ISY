@@ -22,6 +22,7 @@ import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.text.ParseException;
+import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_JOURNAL;
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_REGULATE;
@@ -59,6 +60,11 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
     @Override
     public void update(InternshipRegulate internshipRegulate) {
         internshipRegulateDao.update(internshipRegulate);
+    }
+
+    @Override
+    public void batchDelete(List<String> ids) {
+        internshipRegulateDao.deleteById(ids);
     }
 
     @Override

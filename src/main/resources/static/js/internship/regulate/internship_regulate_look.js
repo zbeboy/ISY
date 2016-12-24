@@ -1,5 +1,5 @@
 /**
- * Created by lenovo on 2016-12-18.
+ * Created by lenovo on 2016-12-24.
  */
 require(["jquery", "handlebars", "nav_active","jquery.address"],
     function ($, Handlebars, nav_active) {
@@ -8,7 +8,7 @@ require(["jquery", "handlebars", "nav_active","jquery.address"],
          ajax url.
          */
         var ajax_url = {
-            nav:'/web/menu/internship/journal'
+            nav:'/web/menu/internship/regulate'
         };
 
         // 刷新时选中菜单

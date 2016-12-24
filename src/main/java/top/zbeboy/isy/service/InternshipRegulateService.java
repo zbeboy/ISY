@@ -7,6 +7,8 @@ import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.util.List;
+
 /**
  * Created by zbeboy on 2016/12/23.
  */
@@ -33,6 +35,13 @@ public interface InternshipRegulateService {
      * @param internshipRegulate 数据
      */
     void update(InternshipRegulate internshipRegulate);
+
+    /**
+     * 批量删除
+     *
+     * @param ids ids
+     */
+    void batchDelete(List<String> ids);
 
     /**
      * 分页查询 数据

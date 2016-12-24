@@ -90,9 +90,7 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
 
     @Override
     public void batchDelete(List<String> ids) {
-        create.deleteFrom(INTERNSHIP_JOURNAL)
-                .where(INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.in(ids))
-                .execute();
+        internshipJournalDao.deleteById(ids);
     }
 
     /**
