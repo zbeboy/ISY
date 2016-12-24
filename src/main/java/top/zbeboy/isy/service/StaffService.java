@@ -24,6 +24,14 @@ public interface StaffService {
     Optional<Record> findByIdRelation(int id);
 
     /**
+     * 通过id关联查询(注：只关联users表)
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelationForUsers(int id);
+
+    /**
      * 根据工号查询
      *
      * @param staffNumber 工号

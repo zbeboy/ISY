@@ -1,17 +1,18 @@
 /**
+ * Created by lenovo on 2016-12-24.
+ */
+/**
  * Created by lenovo on 2016/12/23.
  */
 //# sourceURL=internship_regulate_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker", "bootstrap-select-zh-CN"],
+require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker"],
     function ($, Handlebars, nav_active) {
 
         /*
          ajax url.
          */
         var ajax_url = {
-            save: '/web/internship/regulate/my/save',
-            student_data_url: '/web/internship/regulate/students',
-            student_info_url: '/web/internship/regulate/student/info',
+            update: '/web/internship/regulate/my/update',
             nav: '/web/menu/internship/regulate'
         };
 
@@ -110,64 +111,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             param.reportWay = $(paramId.reportWay).val();
         }
 
-        init();
-
-        function init() {
-            initParam();
-            $.get(web_path + ajax_url.student_data_url, param, function (data) {
-                studentData(data);
-            });
-        }
-
-        /**
-         * 学生数据
-         * @param data
-         */
-        function studentData(data) {
-            var source = $("#student-template").html();
-            var template = Handlebars.compile(source);
-
-            Handlebars.registerHelper('student_value', function () {
-                var value = Handlebars.escapeExpression(this.studentId);
-                return new Handlebars.SafeString(value);
-            });
-
-            Handlebars.registerHelper('student_name', function () {
-                var name = Handlebars.escapeExpression(this.realName + ' ' + this.studentNumber);
-                return new Handlebars.SafeString(name);
-            });
-
-            var html = template(data);
-            $(paramId.studentId).html(html);
-            initStudentSelect();
-        }
-
-        function initStudentSelect() {
-            $(paramId.studentId).selectpicker({
-                liveSearch: true,
-                maxOptions: 1
-            });
-        }
-
-        $(paramId.studentId).on('changed.bs.select', function (e) {
-            // do something...
-            $.post(web_path + ajax_url.student_info_url, {studentId: e.currentTarget.value}, function (data) {
-                if (data.state) {
-                    $(paramId.studentName).val(data.objectResult.realName);
-                    $(paramId.studentNumber).val(data.objectResult.studentNumber);
-                    $(paramId.studentTel).val(data.objectResult.mobile);
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
-        });
-
         // 汇报日期
         $('#reportDate').daterangepicker({
+            "startDate": $('#regulateDate').val(),
             "singleDatePicker": true,
             "locale": {
                 format: 'YYYY-MM-DD',
@@ -236,14 +182,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             initParam();
             var msg;
             msg = Messenger().post({
-                message: "确定保存监管记录吗?",
+                message: "确定更新监管记录吗?",
                 actions: {
                     retry: {
                         label: '确定',
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            validStudentId();
+                            validInternshipContent();
                         }
                     },
                     cancel: {
@@ -254,32 +200,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
                     }
                 }
             });
-        }
-
-        /**
-         * 检验学生id
-         */
-        function validStudentId(){
-            var studentId = param.studentId;
-            if (studentId === '' || Number(studentId) <= 0) {
-                Messenger().post({
-                    message: '请选择一位学生',
-                    type: 'error',
-                    showCloseButton: true
-                });
-            } else {
-                $.post(web_path + ajax_url.student_info_url,{studentId:studentId},function(data){
-                   if(data.state){
-                       validInternshipContent();
-                   }  else {
-                       Messenger().post({
-                           message: data.msg,
-                           type: 'error',
-                           showCloseButton: true
-                       });
-                   }
-                });
-            }
         }
 
         /**
@@ -339,9 +259,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
                 errorMessage: '保存数据失败',
                 progressMessage: '正在保存数据....'
             }, {
-                url: web_path + ajax_url.save,
+                url: web_path + ajax_url.update,
                 type: 'post',
-                data: $('#add_form').serialize(),
+                data: $('#edit_form').serialize(),
                 success: function (data) {
                     if (data.state) {
                         window.history.go(-1);

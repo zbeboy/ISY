@@ -114,7 +114,7 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
                     targets: 0,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        return '<input type="checkbox" value="' + c.internshipJournalId + '" name="check"/>';
+                        return '<input type="checkbox" value="' + c.internshipRegulateId + '" name="check"/>';
                     }
                 },
                 {
@@ -129,19 +129,19 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
                                     "name": "查看",
                                     "css": "look",
                                     "type": "info",
-                                    "id": c.internshipJournalId
+                                    "id": c.internshipRegulateId
                                 },
                                 {
                                     "name": "编辑",
                                     "css": "edit",
                                     "type": "primary",
-                                    "id": c.internshipJournalId
+                                    "id": c.internshipRegulateId
                                 },
                                 {
                                     "name": "删除",
                                     "css": "del",
                                     "type": "danger",
-                                    "id": c.internshipJournalId
+                                    "id": c.internshipRegulateId
                                 }
                             ]
                         };

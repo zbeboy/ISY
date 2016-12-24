@@ -68,6 +68,16 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Optional<Record> findByIdRelationForUsers(int id) {
+        return create.select()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(STUDENT.STUDENT_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public Student findByStudentNumber(String studentNumber) {
         return studentDao.fetchOneByStudentNumber(studentNumber);
     }

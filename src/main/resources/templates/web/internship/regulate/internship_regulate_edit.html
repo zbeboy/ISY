@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">实习监管 -
-                    <small>添加</small>
+                    <small>编辑</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -20,57 +20,55 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                <form role="form" id="add_form">
-                    <div class="form-group" id="valid_student">
-                        <select  id="select_student" name="studentId" class="form-control selectpicker show-tick" title="请选择学生">
-                        </select>
-                        <p class="text-danger hidden" id="student_error_msg"></p>
+                <form role="form" id="edit_form">
+                    <div class="form-group" id="valid_student_name">
+                        <label>学生姓名</label>
+                        <input class="form-control" name="studentName" id="studentName" th:value="${internshipRegulate.studentName}" placeholder="学生姓名" readonly="readonly"/>
+                        <p class="text-danger hidden" id="student_name_error_msg"></p>
+                        <input type="hidden" name="internshipRegulateId" id="internshipRegulateId" th:value="${internshipRegulate.internshipRegulateId}"/>
+                        <input type="hidden" name="studentId" id="studentId" th:value="${internshipRegulate.studentId}"/>
                         <input type="hidden" name="staffId" id="staffId" th:value="${internshipRegulate.staffId}"/>
                         <input type="hidden" name="internshipReleaseId" id="internshipReleaseId"
                                th:value="${internshipRegulate.internshipReleaseId}"/>
                     </div>
-                    <div class="form-group" id="valid_student_name">
-                        <label>学生姓名</label>
-                        <input class="form-control" name="studentName" id="studentName" placeholder="学生姓名" readonly="readonly"/>
-                        <p class="text-danger hidden" id="student_name_error_msg"></p>
-                    </div>
                     <div class="form-group" id="valid_student_number">
                         <label>学生学号</label>
-                        <input class="form-control" name="studentNumber" id="studentNumber" placeholder="学生学号" readonly="readonly"/>
+                        <input class="form-control" name="studentNumber" id="studentNumber" th:value="${internshipRegulate.studentNumber}" placeholder="学生学号" readonly="readonly"/>
                         <p class="text-danger hidden" id="student_number_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_student_tel">
                         <label>学生联系方式</label>
-                        <input class="form-control" name="studentTel" id="studentTel" placeholder="学生联系方式" readonly="readonly"/>
+                        <input class="form-control" name="studentTel" id="studentTel" th:value="${internshipRegulate.studentTel}" placeholder="学生联系方式" readonly="readonly"/>
                         <p class="text-danger hidden" id="student_tel_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_content">
                         <label>实习内容</label>
                         <textarea class="form-control" rows="3" name="internshipContent"
-                                  id="internshipContent" placeholder="200字以内"></textarea>
+                                  id="internshipContent" placeholder="200字以内" th:text="${internshipRegulate.internshipContent}" ></textarea>
                         <p class="text-danger hidden" id="internship_content_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_progress">
                         <label>实习进展</label>
                         <textarea class="form-control" rows="3" name="internshipProgress"
-                                  id="internshipProgress" placeholder="200字以内"></textarea>
+                                  id="internshipProgress" placeholder="200字以内" th:text="${internshipRegulate.internshipProgress}"></textarea>
                         <p class="text-danger hidden" id="internship_progress_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_report_way">
                         <label>汇报途径</label>
-                        <input class="form-control"  name="reportWay" id="reportWay" placeholder="汇报途径 电话、QQ、邮箱、见面沟通等"/>
+                        <input class="form-control"  name="reportWay" id="reportWay" th:value="${internshipRegulate.reportWay}" placeholder="汇报途径 电话、QQ、邮箱、见面沟通等"/>
                         <p class="text-danger hidden" id="report_way_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_report_date">
                         <label>汇报日期</label>
                         <input class="form-control" name="reportDate" id="reportDate"
                                placeholder="汇报日期"/>
+                        <input type="hidden" id="regulateDate" th:value="${internshipRegulate.reportDate}"/>
                         <p class="text-danger hidden" id="report_date_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_tliy">
                         <label>备注</label>
                         <textarea class="form-control" rows="3" name="tliy"
-                                  id="tliy" placeholder="200字以内"></textarea>
+                                  id="tliy" placeholder="200字以内"  th:text="${internshipRegulate.tliy}"></textarea>
                         <p class="text-danger hidden" id="tliy_error_msg"></p>
                     </div>
                     <div class="text-center">
@@ -85,12 +83,7 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
-        <script id="student-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{student_value}}">{{student_name}}</option>
-            {{/each}}
-        </script>
-        <input type="hidden" class="dy_script" value="/js/internship/regulate/internship_regulate_add.js"/>
+        <input type="hidden" class="dy_script" value="/js/internship/regulate/internship_regulate_edit.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

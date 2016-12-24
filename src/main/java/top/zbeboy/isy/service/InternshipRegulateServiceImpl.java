@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipJournalDao;
 import top.zbeboy.isy.domain.tables.daos.InternshipRegulateDao;
+import top.zbeboy.isy.domain.tables.pojos.InternshipRegulate;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -42,6 +43,22 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
     public InternshipRegulateServiceImpl(DSLContext dslContext, Configuration configuration) {
         this.create = dslContext;
         this.internshipRegulateDao = new InternshipRegulateDao(configuration);
+    }
+
+    @Override
+    public InternshipRegulate findById(String id) {
+        return internshipRegulateDao.findById(id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(InternshipRegulate internshipRegulate) {
+        internshipRegulateDao.insert(internshipRegulate);
+    }
+
+    @Override
+    public void update(InternshipRegulate internshipRegulate) {
+        internshipRegulateDao.update(internshipRegulate);
     }
 
     @Override

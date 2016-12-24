@@ -2,6 +2,7 @@ package top.zbeboy.isy.service;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.isy.domain.tables.pojos.InternshipRegulate;
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -10,6 +11,28 @@ import top.zbeboy.isy.web.util.DataTablesUtils;
  * Created by zbeboy on 2016/12/23.
  */
 public interface InternshipRegulateService {
+
+    /**
+     * 通过id查询
+     *
+     * @param id 主键
+     * @return 监管记录
+     */
+    InternshipRegulate findById(String id);
+
+    /**
+     * 保存实习监管
+     *
+     * @param internshipRegulate 数据
+     */
+    void save(InternshipRegulate internshipRegulate);
+
+    /**
+     * 更新实习监管
+     *
+     * @param internshipRegulate 数据
+     */
+    void update(InternshipRegulate internshipRegulate);
 
     /**
      * 分页查询 数据
@@ -31,5 +54,5 @@ public interface InternshipRegulateService {
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<InternshipRegulateBean> dataTablesUtils,InternshipRegulateBean internshipRegulateBean);
+    int countByCondition(DataTablesUtils<InternshipRegulateBean> dataTablesUtils, InternshipRegulateBean internshipRegulateBean);
 }

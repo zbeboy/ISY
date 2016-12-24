@@ -174,7 +174,6 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
          * 检验姓名
          */
         function validStudentName() {
-            initParam();
             var studentName = param.studentName;
             if (studentName.length <= 0 || studentName.length > 10) {
                 Messenger().post({

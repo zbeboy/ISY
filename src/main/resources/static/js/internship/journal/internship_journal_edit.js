@@ -151,7 +151,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
             initParam();
             var msg;
             msg = Messenger().post({
-                message: "确定日志吗?",
+                message: "确定更新日志吗?",
                 actions: {
                     retry: {
                         label: '确定',
