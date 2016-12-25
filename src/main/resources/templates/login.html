@@ -154,7 +154,7 @@
         data-main="/login"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+    var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
     require.config({
         baseUrl: web_path + "/js/login",
         waitSeconds: 0

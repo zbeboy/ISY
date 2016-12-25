@@ -19,6 +19,7 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
         config.setApplicationDestinationPrefixes("/app");
     }
 
+    @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/remind").withSockJS();
     }

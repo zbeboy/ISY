@@ -1,6 +1,7 @@
 /**
  * Created by lenovo on 2016-08-19.
  */
+//# sourceURL=backstage.js
 requirejs.config({
     map: {
         '*': {
@@ -100,8 +101,8 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs","moment-with-locales","stomp", "csrf", "com", "jquery.address", "nav"],
-    function ($, loadingView, domready, Handlebars,SockJS,moment) {
+require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs","moment-with-locales","csrf", "stomp", "com", "jquery.address", "nav"],
+    function ($, loadingView, domready, Handlebars,SockJS,moment,csrf) {
         domready(function () {
             //This function is called once the DOM is ready.
             //It will be safe to query the DOM and manipulate
@@ -174,7 +175,9 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
             var stompClient = null;
             var socket = new SockJS(web_path + '/remind');
             stompClient = Stomp.over(socket);
-            stompClient.connect({}, function (frame) {
+            var headers = {};
+            headers['headerName'] = csrf.token;
+            stompClient.connect(headers, function (frame) {
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/reminds', function (data) {
                     showAlerts(JSON.parse(data.body));

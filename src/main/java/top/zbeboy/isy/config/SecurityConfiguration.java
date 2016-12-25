@@ -66,6 +66,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf()
+                .ignoringAntMatchers("/topic/reminds/*")
+                .and()
+                .headers().frameOptions().sameOrigin()
+                .and()
                 .authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**", "/plugin/**", "/files/**", "/webjars/**", "/webjarsjs/**").permitAll()
                 .and().formLogin().loginPage("/login")
                 .successHandler(ajaxAuthenticationSuccessHandler)
