@@ -191,6 +191,12 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
          * @param data
          */
         function showAlerts(data) {
+            var count = data.mapResult.alertsCount;
+            if(count>0){
+                var alertsCount =  $('#alertsCount');
+                alertsCount.removeClass('hidden');
+                alertsCount.text(count);
+            }
             moment.locale('zh-cn');
             var source = $("#alert-template").html();
             var template = Handlebars.compile(source);

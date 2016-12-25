@@ -49,6 +49,7 @@ public class MessageController {
             });
         }
         data.put("alerts",systemAlertBeens);
+        data.put("alertsCount",systemAlertService.countAllForShow(username,false));
         return new AjaxUtils().success().msg("获取数据成功").mapData(data);
     }
 }
