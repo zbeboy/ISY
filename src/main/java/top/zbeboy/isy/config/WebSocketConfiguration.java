@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
  */
 @Configuration
 @EnableWebSocketMessageBroker
-class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config){
@@ -20,6 +20,6 @@ class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     }
 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/alert","/message").withSockJS();
+        registry.addEndpoint("/remind").withSockJS();
     }
 }

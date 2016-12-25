@@ -11,13 +11,16 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.SystemAlertService;
 import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lenovo on 2016-12-24.
@@ -28,25 +31,24 @@ public class MessageController {
     private final Logger log = LoggerFactory.getLogger(MessageController.class);
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
     private SystemAlertService systemAlertService;
 
-    @MessageMapping("/alert")
-    @SendTo("/topic/alerts")
-    public AjaxUtils<SystemAlertBean> alerts(String username) throws InterruptedException {
+    @MessageMapping("/remind")
+    @SendTo("/topic/reminds")
+    public AjaxUtils reminds(String username) throws InterruptedException {
         Thread.sleep(3000);
-        List<SystemAlertBean> systemAlertBeans = new ArrayList<>();
-        PaginationUtils paginationUtils = new PaginationUtils();
-        if(StringUtils.hasLength(username)){
-            SystemAlertBean otherCondition = new SystemAlertBean();
-            otherCondition.setUsername(username);
-            paginationUtils.setPageNum(0);
-            paginationUtils.setPageSize(5);
-            Result<Record> records = systemAlertService.findAllByPage(paginationUtils, otherCondition);
-            systemAlertBeans = systemAlertService.dealData(paginationUtils, records, otherCondition);
+        Map<String,Object> data = new HashMap<>();
+        int pageNum = 1;
+        int pageSize = 5;
+        List<SystemAlertBean> systemAlertBeens = new ArrayList<>();
+        Result<Record> systemAlertRecord = systemAlertService.findAllByPageForShow(pageNum,pageSize,username,false);
+        if(systemAlertRecord.isNotEmpty()){
+            systemAlertBeens = systemAlertRecord.into(SystemAlertBean.class);
+            systemAlertBeens.forEach(i->{
+                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(),"yyyyMMddhhmmss"));
+            });
         }
-        return new AjaxUtils<SystemAlertBean>().success().msg("获取数据成功").listData(systemAlertBeans).paginationUtils(paginationUtils);
+        data.put("alerts",systemAlertBeens);
+        return new AjaxUtils().success().msg("获取数据成功").mapData(data);
     }
 }

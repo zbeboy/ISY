@@ -13,6 +13,26 @@ import java.util.List;
 public interface SystemAlertService {
 
     /**
+     * 系统导航栏提醒显示用
+     *
+     * @param pageNum  当前页
+     * @param pageSize 多少条
+     * @param username 用户账号
+     * @param isSee    是否已阅
+     * @return 数据
+     */
+    Result<Record> findAllByPageForShow(int pageNum, int pageSize, String username, boolean isSee);
+
+    /**
+     * 系统导航栏提醒显示数据
+     *
+     * @param username 用户账号
+     * @param isSee    是否已阅
+     * @return 数据
+     */
+    int countAllForShow(String username, boolean isSee);
+
+    /**
      * 分页查询全部
      *
      * @param paginationUtils 分页工具

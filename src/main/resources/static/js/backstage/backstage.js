@@ -28,6 +28,7 @@ requirejs.config({
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min",
         "bootstrap-duallistbox": web_path + "/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
         "moment": web_path + "/plugin/moment/moment.min",
+        "moment-with-locales": web_path + "/plugin/moment/moment-with-locales",
         "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",
         "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
@@ -99,7 +100,7 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs","moment","stomp", "csrf", "com", "jquery.address", "nav"],
+require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs","moment-with-locales","stomp", "csrf", "com", "jquery.address", "nav"],
     function ($, loadingView, domready, Handlebars,SockJS,moment) {
         domready(function () {
             //This function is called once the DOM is ready.
@@ -164,23 +165,23 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
         }
 
 
-        initAlert();
+        initRemind();
 
         /**
-         * 初始化提醒
+         * 初始化导航消息
          */
-        function initAlert() {
+        function initRemind() {
             var stompClient = null;
-            var socket = new SockJS(web_path + '/alert');
+            var socket = new SockJS(web_path + '/remind');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/alerts', function (data) {
+                stompClient.subscribe('/topic/reminds', function (data) {
                     showAlerts(JSON.parse(data.body));
                 });
-                stompClient.send("/app/alert",{}, frame.headers['user-name']);
+                stompClient.send("/app/remind",{}, frame.headers['user-name']);
                 window.setInterval(function(){
-                    stompClient.send("/app/alert",{}, frame.headers['user-name']);
+                    stompClient.send("/app/remind",{}, frame.headers['user-name']);
                 },180000);
             });
         }
@@ -190,6 +191,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
          * @param data
          */
         function showAlerts(data) {
+            moment.locale('zh-cn');
             var source = $("#alert-template").html();
             var template = Handlebars.compile(source);
 
@@ -198,20 +200,20 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
                 return new Handlebars.SafeString(value);
             });
 
-            var html = template(data);
+            var html = template(data.mapResult);
             var alerts = $('#alerts');
             alerts.html(html);
-            alerts.append(lastTagLi());
+            alerts.append(lastTagLi('更多提醒'));
         }
 
         /**
          * 最后的更多html
          * @returns {string}
          */
-        function lastTagLi() {
+        function lastTagLi(msg) {
             return "<li>" +
                 "<a class='text-center' href='#'>" +
-                "<strong>查看更多</strong>" +
+                "<strong>"+msg+"</strong>" +
                 "<i class='fa fa-angle-right'></i>" +
                 "</a>" +
                 "</li>";
