@@ -16,9 +16,9 @@ public class InternshipReviewBean {
     private String organizeName;
     private String reason;
     private int internshipApplyState;
-    private Timestamp changeFillStartTime;
-    private Timestamp changeFillEndTime;
-    private Timestamp applyTime;
+    private String changeFillStartTime;
+    private String changeFillEndTime;
+    private String applyTime;
     private Boolean hasController;
     private Byte commitmentBook;
     private Byte safetyResponsibilityBook;
@@ -110,27 +110,27 @@ public class InternshipReviewBean {
         this.internshipApplyState = internshipApplyState;
     }
 
-    public Timestamp getChangeFillStartTime() {
+    public String getChangeFillStartTime() {
         return changeFillStartTime;
     }
 
-    public void setChangeFillStartTime(Timestamp changeFillStartTime) {
+    public void setChangeFillStartTime(String changeFillStartTime) {
         this.changeFillStartTime = changeFillStartTime;
     }
 
-    public Timestamp getChangeFillEndTime() {
+    public String getChangeFillEndTime() {
         return changeFillEndTime;
     }
 
-    public void setChangeFillEndTime(Timestamp changeFillEndTime) {
+    public void setChangeFillEndTime(String changeFillEndTime) {
         this.changeFillEndTime = changeFillEndTime;
     }
 
-    public Timestamp getApplyTime() {
+    public String getApplyTime() {
         return applyTime;
     }
 
-    public void setApplyTime(Timestamp applyTime) {
+    public void setApplyTime(String applyTime) {
         this.applyTime = applyTime;
     }
 

@@ -139,46 +139,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             $.address.value(ajax_url.back);
         });
 
-        // 实习开始时间
-        $(paramId.startTime).daterangepicker({
-            "singleDatePicker": true,
-            "startDate": init_page_param.startTime,
-            "locale": {
-                format: 'YYYY-MM-DD',
-                applyLabel: '确定',
-                cancelLabel: '取消',
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
-                customRangeLabel: '自定义',
-                separator: ' 至 ',
-                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月']
-            }
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-        });
-
-        // 实习结束时间
-        $(paramId.endTime).daterangepicker({
-            "singleDatePicker": true,
-            "startDate": init_page_param.endTime,
-            "locale": {
-                format: 'YYYY-MM-DD',
-                applyLabel: '确定',
-                cancelLabel: '取消',
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
-                customRangeLabel: '自定义',
-                separator: ' 至 ',
-                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月']
-            }
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-        });
-
         init();
 
         function init() {
@@ -209,17 +169,67 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
                     $(paramId.internshipCompanyAddress).attr("readonly", true);
                     $(paramId.internshipCompanyContacts).attr("readonly", true);
                     $(paramId.internshipCompanyTel).attr("readonly", true);
-                }
-
-                if(internshipApplyState == 7){// 单位信息修改状态，不允许修改基本信息
+                    initInternshipTime();// 初始化时间选择
+                } else if(internshipApplyState == 7){// 单位信息修改状态，不允许修改基本信息
                     $(paramId.studentName).attr("readonly", true);
                     $(paramId.qqMailbox).attr("readonly", true);
                     $(paramId.parentalContact).attr("readonly", true);
-                    $(paramId.headmaster).attr("readonly", true);
                     $(paramId.startTime).attr("readonly", true);
                     $(paramId.endTime).attr("readonly", true);
+                    $(paramId.startTime).val(moment().format('YYYY-MM-DD',init_page_param.startTime));
+                    $(paramId.endTime).val(moment().format('YYYY-MM-DD',init_page_param.endTime));
+                    $('#man').attr("disabled", true);
+                    $('#woman').attr("disabled", true);
+                    $(paramId.headmaster).attr("disabled", true);
+                } else {
+                    initInternshipTime();// 初始化时间选择
                 }
             }
+        }
+
+        /**
+         * 初始化实习时间
+         */
+        function initInternshipTime() {
+            // 实习开始时间
+            $(paramId.startTime).daterangepicker({
+                "singleDatePicker": true,
+                "startDate": init_page_param.startTime,
+                "locale": {
+                    format: 'YYYY-MM-DD',
+                    applyLabel: '确定',
+                    cancelLabel: '取消',
+                    fromLabel: '起始时间',
+                    toLabel: '结束时间',
+                    customRangeLabel: '自定义',
+                    separator: ' 至 ',
+                    daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                        '七月', '八月', '九月', '十月', '十一月', '十二月']
+                }
+            }, function (start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
+
+            // 实习结束时间
+            $(paramId.endTime).daterangepicker({
+                "singleDatePicker": true,
+                "startDate": init_page_param.endTime,
+                "locale": {
+                    format: 'YYYY-MM-DD',
+                    applyLabel: '确定',
+                    cancelLabel: '取消',
+                    fromLabel: '起始时间',
+                    toLabel: '结束时间',
+                    customRangeLabel: '自定义',
+                    separator: ' 至 ',
+                    daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                        '七月', '八月', '九月', '十月', '十一月', '十二月']
+                }
+            }, function (start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
         }
 
         /**
@@ -583,6 +593,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
          * 发送数据到后台
          */
         function sendAjax() {
+            $('#man').attr("disabled", false);
+            $('#woman').attr("disabled", false);
+            $(paramId.headmaster).attr("disabled", false);
             Messenger().run({
                 successMessage: '保存数据成功',
                 errorMessage: '保存数据失败',

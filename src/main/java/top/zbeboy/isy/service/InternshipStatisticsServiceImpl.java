@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
+import top.zbeboy.isy.domain.tables.records.InternshipApplyRecord;
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -120,10 +121,10 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
      *
      * @return select
      */
-    public Select<InternshipTeacherDistributionRecord> existsInternshipTeacherDistributionSelect(InternshipStatisticsBean internshipStatisticsBean) {
-        return create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
-                .where(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .and(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()));
+    public Select<InternshipApplyRecord> existsInternshipApplySelect(InternshipStatisticsBean internshipStatisticsBean) {
+        return create.selectFrom(INTERNSHIP_APPLY)
+                .where(INTERNSHIP_APPLY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .and(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()));
     }
 
     @Override
@@ -142,7 +143,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
-                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean));
+                    .andNotExists(existsInternshipApplySelect(internshipStatisticsBean));
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             records = selectConditionStep.fetch();
@@ -158,7 +159,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
-                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean)).and(a);
+                    .andNotExists(existsInternshipApplySelect(internshipStatisticsBean)).and(a);
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             records = selectConditionStep.fetch();
@@ -179,7 +180,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
                 .join(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
-                .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean))
+                .andNotExists(existsInternshipApplySelect(internshipStatisticsBean))
                 .fetchOne();
         return count.value1();
     }
@@ -200,7 +201,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
-                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean));
+                    .andNotExists(existsInternshipApplySelect(internshipStatisticsBean));
             count = selectConditionStep.fetchOne();
         } else {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
@@ -214,7 +215,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
                     .join(USERS)
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()))
-                    .andNotExists(existsInternshipTeacherDistributionSelect(internshipStatisticsBean)).and(a);
+                    .andNotExists(existsInternshipApplySelect(internshipStatisticsBean)).and(a);
             count = selectConditionStep.fetchOne();
         }
         if (!ObjectUtils.isEmpty(count)) {

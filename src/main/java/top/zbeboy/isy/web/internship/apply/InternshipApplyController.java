@@ -962,57 +962,49 @@ public class InternshipApplyController {
     @ResponseBody
     public AjaxUtils applyRecall(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,studentId);
-        if(!errorBean.isHasError()){
-            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-            if (internshipApplyRecord.isPresent()) {
-                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-                // 处于以下状态不允许撤消 2：已通过；5：基本信息变更填写中；7：单位信息变更填写中
-                if (internshipApply.getInternshipApplyState() == 2 || internshipApply.getInternshipApplyState() == 5 ||
-                        internshipApply.getInternshipApplyState() == 7) {
-                    ajaxUtils.fail().msg("您当前状态下，不允许进行撤消操作");
-                }
-                boolean isCancel = false;
-                // 处于 0：未提交申请 1：申请中 允许撤消 该状态下的撤消将会删除所有相关实习信息
-                if (internshipApply.getInternshipApplyState() == 1 || internshipApply.getInternshipApplyState() == 0) {
-                    InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-                    commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(), internshipReleaseId, studentId);
-                    internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                    internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                    internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                    internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                    ajaxUtils.success().msg("撤消申请成功");
+        Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+        if (internshipApplyRecord.isPresent()) {
+            InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+            // 处于以下状态不允许撤消 2：已通过；5：基本信息变更填写中；7：单位信息变更填写中
+            if (internshipApply.getInternshipApplyState() == 2 || internshipApply.getInternshipApplyState() == 5 ||
+                    internshipApply.getInternshipApplyState() == 7) {
+                ajaxUtils.fail().msg("您当前状态下，不允许进行撤消操作");
+            }
+            boolean isCancel = false;
+            // 处于 0：未提交申请 1：申请中 允许撤消 该状态下的撤消将会删除所有相关实习信息
+            if (internshipApply.getInternshipApplyState() == 1 || internshipApply.getInternshipApplyState() == 0) {
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(), internshipReleaseId, studentId);
+                internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                ajaxUtils.success().msg("撤消申请成功");
+            }
+            // 处于4：基本信息变更申请中 6：单位信息变更申请中 在这两个状态下将返回已通过状态
+            if (internshipApply.getInternshipApplyState() == 4 || internshipApply.getInternshipApplyState() == 6) {
+                internshipApply.setInternshipApplyState(2);
+                internshipApplyService.update(internshipApply);
+                ajaxUtils.success().msg("撤消申请成功");
+                isCancel = true;
+            }
 
-
+            if (isCancel) {
+                InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                internshipChangeHistory.setState(-1);
+                if (internshipApply.getInternshipApplyState() == 4) {
+                    internshipChangeHistory.setReason("撤消基本信息变更申请");
                 }
-                // 处于4：基本信息变更申请中 6：单位信息变更申请中 在这两个状态下将返回已通过状态
-                if (internshipApply.getInternshipApplyState() == 4 || internshipApply.getInternshipApplyState() == 6) {
-                    internshipApply.setInternshipApplyState(2);
-                    internshipApplyService.update(internshipApply);
-                    ajaxUtils.success().msg("撤消申请成功");
-                    isCancel = true;
+                if (internshipApply.getInternshipApplyState() == 6) {
+                    internshipChangeHistory.setReason("撤消单位信息变更申请");
                 }
-
-                if (isCancel) {
-                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
-                    internshipChangeHistory.setState(-1);
-                    if (internshipApply.getInternshipApplyState() == 4) {
-                        internshipChangeHistory.setReason("撤消基本信息变更申请");
-                    }
-                    if (internshipApply.getInternshipApplyState() == 6) {
-                        internshipChangeHistory.setReason("撤消单位信息变更申请");
-                    }
-                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
-                    internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
-                    internshipChangeHistory.setStudentId(studentId);
-                    internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
-                    internshipChangeHistoryService.save(internshipChangeHistory);
-                }
-            } else {
-                ajaxUtils.fail().msg("未查询到相关申请信息");
+                internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
+                internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+                internshipChangeHistory.setStudentId(studentId);
+                internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                internshipChangeHistoryService.save(internshipChangeHistory);
             }
         } else {
-            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            ajaxUtils.fail().msg("未查询到相关申请信息");
         }
         return ajaxUtils;
     }
@@ -1031,36 +1023,41 @@ public class InternshipApplyController {
     public AjaxUtils applyState(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
                                 @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,studentId);
-        if(!errorBean.isHasError()){
-            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-            if (internshipApplyRecord.isPresent()) {
-                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-                // 处于 2：已通过 才可变更申请
-                if (internshipApply.getInternshipApplyState() == 2) {
-                    Timestamp now = new Timestamp(System.currentTimeMillis());
-                    internshipApply.setInternshipApplyState(internshipApplyState);
-                    internshipApply.setReason(reason);
-                    internshipApply.setApplyTime(now);
-                    internshipApplyService.update(internshipApply);
-                    ajaxUtils.success().msg("申请成功");
-
-                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
-                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
-                    internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
-                    internshipChangeHistory.setStudentId(studentId);
-                    internshipChangeHistory.setState(internshipApplyState);
-                    internshipChangeHistory.setApplyTime(now);
-                    internshipChangeHistoryService.save(internshipChangeHistory);
-
-                } else {
-                    ajaxUtils.fail().msg("您当前状态，无法变更申请");
+        // 强制身份判断
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Student student = studentService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
+                    return ajaxUtils.fail().msg("您的个人信息有误");
                 }
+            }
+        }
+        Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+        if (internshipApplyRecord.isPresent()) {
+            InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+            // 处于 2：已通过 才可变更申请
+            if (internshipApply.getInternshipApplyState() == 2) {
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                internshipApply.setInternshipApplyState(internshipApplyState);
+                internshipApply.setReason(reason);
+                internshipApply.setApplyTime(now);
+                internshipApplyService.update(internshipApply);
+                ajaxUtils.success().msg("申请成功");
+
+                InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
+                internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+                internshipChangeHistory.setStudentId(studentId);
+                internshipChangeHistory.setState(internshipApplyState);
+                internshipChangeHistory.setApplyTime(now);
+                internshipChangeHistoryService.save(internshipChangeHistory);
+
             } else {
-                ajaxUtils.fail().msg("未查询到相关申请信息");
+                ajaxUtils.fail().msg("您当前状态，无法变更申请");
             }
         } else {
-            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            ajaxUtils.fail().msg("未查询到相关申请信息");
         }
         return ajaxUtils;
     }
@@ -1074,11 +1071,11 @@ public class InternshipApplyController {
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
         // 强制身份判断
-        if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)){
-            if(usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)){
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 Users users = usersService.getUserFromSession();
                 Student student = studentService.findByUsername(users.getUsername());
-                if(!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId){
+                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
                     errorBean.setHasError(true);
                     errorBean.setErrorMsg("您的个人信息有误");
                     return errorBean;

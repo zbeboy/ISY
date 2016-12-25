@@ -344,7 +344,11 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
                 data: $('#add_form').serialize(),
                 success: function (data) {
                     if (data.state) {
-                        window.history.go(-1);
+                        Messenger().post({
+                            message: data.msg,
+                            type: 'success',
+                            showCloseButton: true
+                        });
                     } else {
                         Messenger().post({
                             message: data.msg,

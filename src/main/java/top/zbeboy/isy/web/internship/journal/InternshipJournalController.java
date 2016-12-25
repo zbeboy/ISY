@@ -210,7 +210,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/list/add", method = RequestMethod.GET)
     public String journalListAdd(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,studentId);
         if (!errorBean.isHasError()) {
             InternshipJournal internshipJournal = new InternshipJournal();
             Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
@@ -334,7 +334,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/list/downloads", method = RequestMethod.GET)
     public void journalListDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request, HttpServletResponse response) {
         try {
-            ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId,studentId);
             if (!errorBean.isHasError()) {
                 Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                 if (records.isNotEmpty()) {

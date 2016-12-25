@@ -139,46 +139,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             $.address.value(ajax_url.back);
         });
 
-        // 实习开始时间
-        $(paramId.startTime).daterangepicker({
-            "singleDatePicker": true,
-            "startDate": init_page_param.startTime,
-            "locale": {
-                format: 'YYYY-MM-DD',
-                applyLabel: '确定',
-                cancelLabel: '取消',
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
-                customRangeLabel: '自定义',
-                separator: ' 至 ',
-                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月']
-            }
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-        });
-
-        // 实习结束时间
-        $(paramId.endTime).daterangepicker({
-            "singleDatePicker": true,
-            "startDate": init_page_param.endTime,
-            "locale": {
-                format: 'YYYY-MM-DD',
-                applyLabel: '确定',
-                cancelLabel: '取消',
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
-                customRangeLabel: '自定义',
-                separator: ' 至 ',
-                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月']
-            }
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-        });
-
         init();
 
         function init() {
@@ -201,25 +161,75 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         /**
          * 初始化input
          */
-        function initInputState(){
+        function initInputState() {
             var internshipApplyState = init_page_param.internshipApplyState;
-            if(internshipApplyState !== ''){
-                if(internshipApplyState == 5){ // 基本信息修改状态，不允许修改单位信息
+            if (internshipApplyState !== '') {
+                if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息
                     $(paramId.internshipCollegeName).attr("readonly", true);
                     $(paramId.internshipCollegeAddress).attr("readonly", true);
                     $(paramId.internshipCollegeContacts).attr("readonly", true);
                     $(paramId.internshipCollegeTel).attr("readonly", true);
-                }
-
-                if(internshipApplyState == 7){// 单位信息修改状态，不允许修改基本信息
+                    initInternshipTime();// 初始化时间选择
+                } else if (internshipApplyState == 7) {// 单位信息修改状态，不允许修改基本信息
                     $(paramId.studentName).attr("readonly", true);
                     $(paramId.qqMailbox).attr("readonly", true);
                     $(paramId.parentalContact).attr("readonly", true);
-                    $(paramId.headmaster).attr("readonly", true);
                     $(paramId.startTime).attr("readonly", true);
                     $(paramId.endTime).attr("readonly", true);
+                    $(paramId.startTime).val(moment().format('YYYY-MM-DD',init_page_param.startTime));
+                    $(paramId.endTime).val(moment().format('YYYY-MM-DD',init_page_param.endTime));
+                    $('#man').attr("disabled", true);
+                    $('#woman').attr("disabled", true);
+                    $(paramId.headmaster).attr("disabled", true);
+                } else {
+                    initInternshipTime();// 初始化时间选择
                 }
             }
+        }
+
+        /**
+         * 初始化实习时间
+         */
+        function initInternshipTime() {
+            // 实习开始时间
+            $(paramId.startTime).daterangepicker({
+                "singleDatePicker": true,
+                "startDate": init_page_param.startTime,
+                "locale": {
+                    format: 'YYYY-MM-DD',
+                    applyLabel: '确定',
+                    cancelLabel: '取消',
+                    fromLabel: '起始时间',
+                    toLabel: '结束时间',
+                    customRangeLabel: '自定义',
+                    separator: ' 至 ',
+                    daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                        '七月', '八月', '九月', '十月', '十一月', '十二月']
+                }
+            }, function (start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
+
+            // 实习结束时间
+            $(paramId.endTime).daterangepicker({
+                "singleDatePicker": true,
+                "startDate": init_page_param.endTime,
+                "locale": {
+                    format: 'YYYY-MM-DD',
+                    applyLabel: '确定',
+                    cancelLabel: '取消',
+                    fromLabel: '起始时间',
+                    toLabel: '结束时间',
+                    customRangeLabel: '自定义',
+                    separator: ' 至 ',
+                    daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                        '七月', '八月', '九月', '十月', '十一月', '十二月']
+                }
+            }, function (start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
         }
 
         /**
@@ -334,7 +344,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         });
 
-        function selectedHeadmaster(){
+        function selectedHeadmaster() {
             var realHeadmaster = $('#headmaster').val() + ' ' + $('#headmasterContact').val();
             var headmasterChildrens = $(paramId.headmaster).children();
             for (var i = 0; i < headmasterChildrens.length; i++) {
@@ -465,7 +475,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             });
         }
 
-        function validStudentName(){
+        function validStudentName() {
             var studentName = param.studentName;
             if (studentName.length <= 0 || studentName.length > 15) {
                 Messenger().post({
@@ -478,7 +488,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validQqMailbox(){
+        function validQqMailbox() {
             var qqMailbox = param.qqMailbox;
             if (qqMailbox.length <= 0 || qqMailbox.length > 100) {
                 Messenger().post({
@@ -499,7 +509,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validParentalContact(){
+        function validParentalContact() {
             var parentalContact = param.parentalContact;
             var regex = /^1[0-9]{10}/;
             if (!regex.test(parentalContact)) {
@@ -513,7 +523,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validHeadmaster(){
+        function validHeadmaster() {
             var headmaster = param.headmaster;
             if (headmaster.length <= 0) {
                 Messenger().post({
@@ -526,7 +536,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeName(){
+        function validInternshipCollegeName() {
             var internshipCollegeName = param.internshipCollegeName;
             if (internshipCollegeName.length <= 0 || internshipCollegeName.length > 200) {
                 Messenger().post({
@@ -539,7 +549,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeAddress(){
+        function validInternshipCollegeAddress() {
             var internshipCollegeAddress = param.internshipCollegeAddress;
             if (internshipCollegeAddress.length <= 0 || internshipCollegeAddress.length > 500) {
                 Messenger().post({
@@ -552,7 +562,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeContacts(){
+        function validInternshipCollegeContacts() {
             var internshipCollegeContacts = param.internshipCollegeContacts;
             if (internshipCollegeContacts.length <= 0 || internshipCollegeContacts.length > 10) {
                 Messenger().post({
@@ -565,7 +575,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCollegeTel(){
+        function validInternshipCollegeTel() {
             var internshipCollegeTel = param.internshipCollegeTel;
             var regex = /^1[0-9]{10}/;
             if (!regex.test(internshipCollegeTel)) {
@@ -583,6 +593,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
          * 发送数据到后台
          */
         function sendAjax() {
+            $('#man').attr("disabled", false);
+            $('#woman').attr("disabled", false);
+            $(paramId.headmaster).attr("disabled", false);
             Messenger().run({
                 successMessage: '保存数据成功',
                 errorMessage: '保存数据失败',
