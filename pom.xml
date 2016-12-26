@@ -38,6 +38,8 @@
         <webjars.requirejs-css.version>0.1.8</webjars.requirejs-css.version>
         <webjars.handlebars.version>4.0.5</webjars.handlebars.version>
         <webjars.messenger.version>1.5.0</webjars.messenger.version>
+        <webjars.sockjs-client.version>1.1.1</webjars.sockjs-client.version>
+        <webjars.stomp-websocket.version>2.3.3</webjars.stomp-websocket.version>
         <webjars.lato.version>0.3.0</webjars.lato.version>
         <webjars.lodash.version>4.15.0</webjars.lodash.version>
         <webjars-locator.version>0.30</webjars-locator.version>
@@ -89,11 +91,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-messaging</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity4</artifactId>
         </dependency>
@@ -127,6 +124,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -312,6 +319,19 @@
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
             <version>${webjars.bootstrap.version}</version>
+        </dependency>
+
+        <!-- webjars websocket -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>sockjs-client</artifactId>
+            <version>${webjars.sockjs-client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>stomp-websocket</artifactId>
+            <version>${webjars.stomp-websocket.version}</version>
         </dependency>
 
         <!-- font-awesome -->

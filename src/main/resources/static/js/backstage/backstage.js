@@ -35,9 +35,7 @@ requirejs.config({
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
         "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
         "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate",
-        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination",
-        "sockjs":web_path + "/plugin/websocket/sockjs.min",
-        "stomp":web_path + "/plugin/websocket/stomp.min"
+        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -101,7 +99,7 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs","moment-with-locales","csrf", "stomp", "com", "jquery.address", "nav"],
+require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs-client","moment-with-locales","csrf", "stomp-websocket", "com", "jquery.address", "nav"],
     function ($, loadingView, domready, Handlebars,SockJS,moment,csrf) {
         domready(function () {
             //This function is called once the DOM is ready.
@@ -179,7 +177,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
             headers['headerName'] = csrf.token;
             stompClient.connect(headers, function (frame) {
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/reminds', function (data) {
+                stompClient.subscribe('/user/topic/reminds', function (data) {
                     showAlerts(JSON.parse(data.body));
                 });
                 stompClient.send("/app/remind",{}, frame.headers['user-name']);

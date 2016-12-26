@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,23 +36,30 @@ public class MessageController {
     @Resource
     private SystemAlertService systemAlertService;
 
+    /**
+     * 推送到一个用户 的系统信息
+     *
+     * @param username 用户账号
+     * @return 消息
+     * @throws InterruptedException 异常
+     */
     @MessageMapping("/remind")
-    @SendTo("/topic/reminds")
+    @SendToUser(destinations = "/topic/reminds", broadcast = false)
     public AjaxUtils reminds(String username) throws InterruptedException {
         Thread.sleep(3000);
-        Map<String,Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         int pageNum = 1;
         int pageSize = 5;
         List<SystemAlertBean> systemAlertBeens = new ArrayList<>();
-        Result<Record> systemAlertRecord = systemAlertService.findAllByPageForShow(pageNum,pageSize,username,false);
-        if(systemAlertRecord.isNotEmpty()){
+        Result<Record> systemAlertRecord = systemAlertService.findAllByPageForShow(pageNum, pageSize, username, false);
+        if (systemAlertRecord.isNotEmpty()) {
             systemAlertBeens = systemAlertRecord.into(SystemAlertBean.class);
-            systemAlertBeens.forEach(i->{
-                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(),"yyyyMMddhhmmss"));
+            systemAlertBeens.forEach(i -> {
+                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyyMMddhhmmss"));
             });
         }
-        data.put("alerts",systemAlertBeens);
-        data.put("alertsCount",systemAlertService.countAllForShow(username,false));
+        data.put("alerts", systemAlertBeens);
+        data.put("alertsCount", systemAlertService.countAllForShow(username, false));
         return new AjaxUtils().success().msg("获取数据成功").mapData(data);
     }
 }
