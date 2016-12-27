@@ -17,6 +17,7 @@ import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.mailbox.SystemMailboxBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 
 import static top.zbeboy.isy.domain.Tables.SYSTEM_MAILBOX;
@@ -32,12 +33,12 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
 
     private final DSLContext create;
 
+    @Resource
     private SystemMailboxDao systemMailboxDao;
 
     @Autowired
-    public SystemMailboxServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public SystemMailboxServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.systemMailboxDao = new SystemMailboxDao(configuration);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

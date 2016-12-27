@@ -24,6 +24,7 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.internship.apply.InternshipCollegeVo;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -42,12 +43,12 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
 
     private final DSLContext create;
 
+    @Resource
     private InternshipCollegeDao internshipCollegeDao;
 
     @Autowired
-    public InternshipCollegeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipCollegeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipCollegeDao = new InternshipCollegeDao(configuration);
     }
 
     @Override

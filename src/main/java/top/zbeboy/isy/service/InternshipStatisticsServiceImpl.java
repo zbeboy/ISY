@@ -19,6 +19,8 @@ import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
+
 import static top.zbeboy.isy.domain.Tables.*;
 
 /**
@@ -32,12 +34,9 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
 
     private final DSLContext create;
 
-    private InternshipApplyDao internshipApplyDao;
-
     @Autowired
-    public InternshipStatisticsServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipStatisticsServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipApplyDao = new InternshipApplyDao(configuration);
     }
 
     @Override

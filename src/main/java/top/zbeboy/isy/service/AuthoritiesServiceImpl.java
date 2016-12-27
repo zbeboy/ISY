@@ -13,6 +13,7 @@ import top.zbeboy.isy.domain.tables.daos.AuthoritiesDao;
 import top.zbeboy.isy.domain.tables.pojos.Authorities;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.AUTHORITIES;
@@ -28,12 +29,9 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 
     private final DSLContext create;
 
-    private AuthoritiesDao authoritiesDao;
-
     @Autowired
-    public AuthoritiesServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public AuthoritiesServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.authoritiesDao = new AuthoritiesDao(configuration);
     }
 
     @Override

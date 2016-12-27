@@ -20,6 +20,7 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.internship.apply.InternshipCompanyVo;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -38,12 +39,12 @@ public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCom
 
     private final DSLContext create;
 
+    @Resource
     private InternshipCompanyDao internshipCompanyDao;
 
     @Autowired
-    public InternshipCompanyServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipCompanyServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipCompanyDao = new InternshipCompanyDao(configuration);
     }
 
     @Override

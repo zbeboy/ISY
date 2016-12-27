@@ -17,6 +17,7 @@ import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.sms.SystemSmsBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 
 import static top.zbeboy.isy.domain.Tables.SYSTEM_SMS;
@@ -32,12 +33,12 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
 
     private final DSLContext create;
 
+    @Resource
     private SystemSmsDao systemSmsDao;
 
     @Autowired
-    public SystemSmsServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public SystemSmsServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.systemSmsDao = new SystemSmsDao(configuration);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

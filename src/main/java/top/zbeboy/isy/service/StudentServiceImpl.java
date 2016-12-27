@@ -37,6 +37,7 @@ public class StudentServiceImpl implements StudentService {
 
     private final DSLContext create;
 
+    @Resource
     private StudentDao studentDao;
 
     @Resource
@@ -46,9 +47,8 @@ public class StudentServiceImpl implements StudentService {
     private RoleService roleService;
 
     @Autowired
-    public StudentServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public StudentServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.studentDao = new StudentDao(configuration);
     }
 
     @Override

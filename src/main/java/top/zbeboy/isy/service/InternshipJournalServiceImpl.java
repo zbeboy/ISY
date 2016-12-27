@@ -20,6 +20,7 @@ import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -37,12 +38,12 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
 
     private final DSLContext create;
 
+    @Resource
     private InternshipJournalDao internshipJournalDao;
 
     @Autowired
-    public InternshipJournalServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipJournalServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipJournalDao = new InternshipJournalDao(configuration);
     }
 
     @Override

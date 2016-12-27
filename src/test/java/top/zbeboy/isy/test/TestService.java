@@ -3,9 +3,8 @@ package top.zbeboy.isy.test;
 import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import top.zbeboy.isy.Application;
 import top.zbeboy.isy.service.ApplicationService;
 import top.zbeboy.isy.web.bean.tree.TreeBean;
@@ -16,9 +15,8 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-10-18.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(Application.class)
-@WebIntegrationTest(randomPort = true)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = Application.class)
 public class TestService {
 
     @Resource

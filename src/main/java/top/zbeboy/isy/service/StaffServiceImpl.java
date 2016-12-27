@@ -37,6 +37,7 @@ public class StaffServiceImpl implements StaffService {
 
     private final DSLContext create;
 
+    @Resource
     private StaffDao staffDao;
 
     @Resource
@@ -46,9 +47,8 @@ public class StaffServiceImpl implements StaffService {
     private RoleService roleService;
 
     @Autowired
-    public StaffServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public StaffServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.staffDao = new StaffDao(configuration);
     }
 
     @Override

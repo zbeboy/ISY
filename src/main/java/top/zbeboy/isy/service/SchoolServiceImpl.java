@@ -17,6 +17,7 @@ import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.SCHOOL;
@@ -32,12 +33,12 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
 
     private final DSLContext create;
 
+    @Resource
     private SchoolDao schoolDao;
 
     @Autowired
-    public SchoolServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public SchoolServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.schoolDao = new SchoolDao(configuration);
     }
 
     @Override

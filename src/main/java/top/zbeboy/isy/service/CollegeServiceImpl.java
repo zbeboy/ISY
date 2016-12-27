@@ -18,6 +18,7 @@ import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.college.CollegeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,12 +36,12 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
 
     private final DSLContext create;
 
+    @Resource
     private CollegeDao collegeDao;
 
     @Autowired
-    public CollegeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public CollegeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.collegeDao = new CollegeDao(configuration);
     }
 
     @Override
@@ -150,7 +151,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     /**
      * 院数据全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatable工具类
      * @return 搜索条件
      */
     @Override
@@ -180,8 +181,8 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     /**
      * 院数据排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatable工具类
+     * @param selectConditionStep 条件
      */
     @Override
     public void sortCondition(DataTablesUtils<CollegeBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {

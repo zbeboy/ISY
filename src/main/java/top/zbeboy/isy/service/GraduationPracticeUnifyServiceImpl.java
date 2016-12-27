@@ -20,6 +20,7 @@ import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeUnifyVo;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -36,12 +37,12 @@ public class GraduationPracticeUnifyServiceImpl extends DataTablesPlugin<Graduat
 
     private final DSLContext create;
 
+    @Resource
     private GraduationPracticeUnifyDao graduationPracticeUnifyDao;
 
     @Autowired
-    public GraduationPracticeUnifyServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public GraduationPracticeUnifyServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.graduationPracticeUnifyDao = new GraduationPracticeUnifyDao(configuration);
     }
 
     @Override

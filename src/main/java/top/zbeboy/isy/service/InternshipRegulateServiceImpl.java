@@ -21,6 +21,7 @@ import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.List;
 
@@ -38,12 +39,12 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
 
     private final DSLContext create;
 
+    @Resource
     private InternshipRegulateDao internshipRegulateDao;
 
     @Autowired
-    public InternshipRegulateServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipRegulateServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipRegulateDao = new InternshipRegulateDao(configuration);
     }
 
     @Override

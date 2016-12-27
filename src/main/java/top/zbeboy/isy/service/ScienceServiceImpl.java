@@ -36,6 +36,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
 
     private final DSLContext create;
 
+    @Resource
     private ScienceDao scienceDao;
 
     @Resource
@@ -45,9 +46,8 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     private UsersService usersService;
 
     @Autowired
-    public ScienceServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public ScienceServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.scienceDao = new ScienceDao(configuration);
     }
 
     @Override

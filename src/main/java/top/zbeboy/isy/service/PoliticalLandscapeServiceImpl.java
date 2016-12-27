@@ -17,6 +17,7 @@ import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.POLITICAL_LANDSCAPE;
@@ -32,12 +33,12 @@ public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLan
 
     private final DSLContext create;
 
+    @Resource
     private PoliticalLandscapeDao politicalLandscapeDao;
 
     @Autowired
-    public PoliticalLandscapeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public PoliticalLandscapeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.politicalLandscapeDao = new PoliticalLandscapeDao(configuration);
     }
 
     @Override

@@ -47,21 +47,16 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     private final DSLContext create;
 
+    @Resource
     private ApplicationDao applicationDao;
 
     @Resource
     private RoleApplicationService roleApplicationService;
 
-    @Resource
-    private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
-
     @Autowired
-    public ApplicationServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public ApplicationServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.applicationDao = new ApplicationDao(configuration);
+
     }
 
     @Override
@@ -180,7 +175,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     /**
      * 得到web path
      *
-     * @param applicationUrl
+     * @param applicationUrl 应用链接
      * @return web path
      */
     private String getWebPath(String applicationUrl) {
@@ -372,7 +367,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     /**
      * 应用数据全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatable工具类
      * @return 搜索条件
      */
     @Override
@@ -411,8 +406,8 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     /**
      * 应用数据排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatable工具类
+     * @param selectConditionStep 条件
      */
     @Override
     public void sortCondition(DataTablesUtils<ApplicationBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
@@ -492,7 +487,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      * 从文本文件中获取所有url
      *
      * @return urls
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException 文件未找到异常
      */
     public List<String> getUrlMappingFromTxt() throws FileNotFoundException {
         List<String> urlMapping = new ArrayList<>();

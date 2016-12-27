@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import top.zbeboy.isy.domain.tables.daos.SystemAlertTypeDao;
 import top.zbeboy.isy.domain.tables.daos.SystemLogDao;
 
+import javax.annotation.Resource;
+
 /**
  * Created by lenovo on 2016-12-24.
  */
@@ -17,11 +19,11 @@ public class SystemAlertTypeServiceImpl implements SystemAlertTypeService {
 
     private final DSLContext create;
 
+    @Resource
     private SystemAlertTypeDao systemAlertTypeDao;
 
     @Autowired
-    public SystemAlertTypeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public SystemAlertTypeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.systemAlertTypeDao = new SystemAlertTypeDao(configuration);
     }
 }

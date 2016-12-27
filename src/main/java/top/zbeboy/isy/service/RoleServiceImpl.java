@@ -43,6 +43,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
 
     private final DSLContext create;
 
+    @Resource
     private RoleDao roleDao;
 
     @Resource
@@ -52,9 +53,8 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     private AuthoritiesService authoritiesService;
 
     @Autowired
-    public RoleServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public RoleServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.roleDao = new RoleDao(configuration);
     }
 
     @Override

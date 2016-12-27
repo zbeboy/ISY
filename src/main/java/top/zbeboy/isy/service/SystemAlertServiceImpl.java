@@ -21,6 +21,7 @@ import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +39,12 @@ public class SystemAlertServiceImpl implements SystemAlertService {
 
     private final DSLContext create;
 
+    @Resource
     private SystemAlertDao systemAlertDao;
 
     @Autowired
-    public SystemAlertServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public SystemAlertServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.systemAlertDao = new SystemAlertDao(configuration);
     }
 
     @Override

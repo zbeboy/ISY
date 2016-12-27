@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.InternshipChangeHistoryDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory;
 
+import javax.annotation.Resource;
+
 import static top.zbeboy.isy.domain.Tables.*;
 
 /**
@@ -26,12 +28,12 @@ public class InternshipChangeHistoryServiceImpl implements InternshipChangeHisto
 
     private final DSLContext create;
 
+    @Resource
     private InternshipChangeHistoryDao internshipChangeHistoryDao;
 
     @Autowired
-    public InternshipChangeHistoryServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipChangeHistoryServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipChangeHistoryDao = new InternshipChangeHistoryDao(configuration);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

@@ -45,6 +45,7 @@ public class UsersServiceImpl implements UsersService {
 
     private final DSLContext create;
 
+    @Resource
     private UsersDao usersDao;
 
     @Resource
@@ -60,9 +61,8 @@ public class UsersServiceImpl implements UsersService {
     private RoleService roleService;
 
     @Autowired
-    public UsersServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public UsersServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.usersDao = new UsersDao(configuration);
     }
 
     @Override

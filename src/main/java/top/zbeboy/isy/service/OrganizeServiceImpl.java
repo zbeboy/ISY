@@ -37,6 +37,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
 
     private final DSLContext create;
 
+    @Resource
     private OrganizeDao organizeDao;
 
     @Resource
@@ -46,9 +47,8 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     private UsersService usersService;
 
     @Autowired
-    public OrganizeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public OrganizeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.organizeDao = new OrganizeDao(configuration);
     }
 
     @Override

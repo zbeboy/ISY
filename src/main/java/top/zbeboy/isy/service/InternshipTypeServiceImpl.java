@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.InternshipTypeDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipType;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -24,12 +25,12 @@ public class InternshipTypeServiceImpl implements InternshipTypeService {
 
     private final DSLContext create;
 
+    @Resource
     private InternshipTypeDao internshipTypeDao;
 
     @Autowired
-    public InternshipTypeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipTypeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipTypeDao = new InternshipTypeDao(configuration);
     }
 
     @Override

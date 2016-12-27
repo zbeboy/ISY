@@ -29,15 +29,15 @@ public class UsersTypeServiceImpl implements UsersTypeService {
 
     private final DSLContext create;
 
+    @Resource
     private UsersTypeDao usersTypeDao;
 
     @Resource
     private UsersService usersService;
 
     @Autowired
-    public UsersTypeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public UsersTypeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.usersTypeDao = new UsersTypeDao(configuration);
     }
 
 

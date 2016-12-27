@@ -17,6 +17,7 @@ import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.log.SystemLogBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 
 import static top.zbeboy.isy.domain.Tables.SYSTEM_LOG;
@@ -32,12 +33,12 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
 
     private final DSLContext create;
 
+    @Resource
     private SystemLogDao systemLogDao;
 
     @Autowired
-    public SystemLogServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public SystemLogServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.systemLogDao = new SystemLogDao(configuration);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

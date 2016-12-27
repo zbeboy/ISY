@@ -38,15 +38,15 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
 
     private final DSLContext create;
 
+    @Resource
     private InternshipApplyDao internshipApplyDao;
 
     @Resource
     private InternshipReleaseScienceService internshipReleaseScienceService;
 
     @Autowired
-    public InternshipApplyServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipApplyServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipApplyDao = new InternshipApplyDao(configuration);
     }
 
     @Override

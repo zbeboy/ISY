@@ -19,6 +19,7 @@ import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +36,9 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
 
     private final DSLContext create;
 
-    private InternshipApplyDao internshipApplyDao;
-
     @Autowired
-    public InternshipReviewServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public InternshipReviewServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.internshipApplyDao = new InternshipApplyDao(configuration);
     }
 
     @Override

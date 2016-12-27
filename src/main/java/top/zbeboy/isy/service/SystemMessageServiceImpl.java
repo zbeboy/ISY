@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.SystemLogDao;
 import top.zbeboy.isy.domain.tables.daos.SystemMessageDao;
 
+import javax.annotation.Resource;
+
 /**
  * Created by lenovo on 2016-12-24.
  */
@@ -22,11 +24,11 @@ public class SystemMessageServiceImpl implements SystemMessageService {
 
     private final DSLContext create;
 
+    @Resource
     private SystemMessageDao systemMessageDao;
 
     @Autowired
-    public SystemMessageServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public SystemMessageServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.systemMessageDao = new SystemMessageDao(configuration);
     }
 }

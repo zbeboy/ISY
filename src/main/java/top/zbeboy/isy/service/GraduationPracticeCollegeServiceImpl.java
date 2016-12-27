@@ -21,6 +21,7 @@ import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeCollegeVo;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -37,12 +38,12 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
 
     private final DSLContext create;
 
+    @Resource
     private GraduationPracticeCollegeDao graduationPracticeCollegeDao;
 
     @Autowired
-    public GraduationPracticeCollegeServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public GraduationPracticeCollegeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.graduationPracticeCollegeDao = new GraduationPracticeCollegeDao(configuration);
     }
 
     @Override

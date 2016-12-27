@@ -19,6 +19,7 @@ import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.util.RequestUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -35,12 +36,12 @@ public class FilesServiceImpl implements FilesService {
 
     private final DSLContext create;
 
+    @Resource
     private FilesDao filesDao;
 
     @Autowired
-    public FilesServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public FilesServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.filesDao = new FilesDao(configuration);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

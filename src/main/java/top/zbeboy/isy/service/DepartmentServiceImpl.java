@@ -37,6 +37,7 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
 
     private final DSLContext create;
 
+    @Resource
     private DepartmentDao departmentDao;
 
     @Resource
@@ -46,9 +47,8 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     private UsersService usersService;
 
     @Autowired
-    public DepartmentServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public DepartmentServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.departmentDao = new DepartmentDao(configuration);
     }
 
     @Override

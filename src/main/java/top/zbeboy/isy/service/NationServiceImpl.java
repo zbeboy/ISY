@@ -17,6 +17,7 @@ import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.NATION;
@@ -32,12 +33,12 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
 
     private final DSLContext create;
 
+    @Resource
     private NationDao nationDao;
 
     @Autowired
-    public NationServiceImpl(DSLContext dslContext, Configuration configuration) {
+    public NationServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-        this.nationDao = new NationDao(configuration);
     }
 
     @Override
