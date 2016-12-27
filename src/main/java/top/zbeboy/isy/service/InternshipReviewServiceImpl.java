@@ -78,8 +78,12 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
             internshipReviewBean.setOrganizeName(r.getValue(ORGANIZE.ORGANIZE_NAME));
             internshipReviewBean.setReason(r.getValue(INTERNSHIP_APPLY.REASON));
             internshipReviewBean.setInternshipApplyState(r.getValue(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE));
-            internshipReviewBean.setChangeFillStartTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_START_TIME)));
-            internshipReviewBean.setChangeFillEndTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME)));
+            if(!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_START_TIME))){
+                internshipReviewBean.setChangeFillStartTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_START_TIME)));
+            }
+            if(!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME))){
+                internshipReviewBean.setChangeFillEndTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME)));
+            }
             internshipReviewBean.setApplyTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.APPLY_TIME)));
             internshipReviewBeens.add(internshipReviewBean);
         });

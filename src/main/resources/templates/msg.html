@@ -30,6 +30,18 @@
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
           th:href="@{/webjars/font-awesome/css/font-awesome.min.css}"/>
 
+    <style>
+        /* Main marketing message and sign up button */
+        .jumbotron {
+            text-align: center;
+            background-color: transparent;
+        }
+        .jumbotron .btn {
+            padding: 14px 24px;
+            font-size: 21px;
+        }
+    </style>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -64,13 +76,10 @@
 <body>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4" style="margin-top:10%;">
-            <h2 th:utext="${msg}"></h2>
-            <p class="text-center">
-                <button type="button" id="back" class="btn btn-outline btn-link">返回首页</button>
-            </p>
-        </div>
+    <!-- Jumbotron -->
+    <div class="jumbotron">
+        <p class="lead" th:utext="${msg}"></p>
+        <p><a href="javascript:;" id="back" class="btn btn-outline btn-link">返回首页</a></p>
     </div>
     <footer class="footer" th:include="footer::footer">
         <p class="text-muted">&copy; Company 2016</p>

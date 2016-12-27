@@ -1,6 +1,7 @@
 /**
  * Created by lenovo on 2016/12/16.
  */
+//# sourceURL=internship_journal_add.js
 require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.address","bootstrap-daterangepicker"],
     function ($, Handlebars, nav_active) {
 
@@ -122,7 +123,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
         $(paramId.internshipJournalContent).blur(function () {
             initParam();
             var internshipJournalContent = param.internshipJournalContent;
-            if (internshipJournalContent.length <= 0 || internshipJournalContent.length > 10) {
+            if (internshipJournalContent.length <= 0) {
                 validErrorDom(validId.internshipJournalContent, errorMsgId.internshipJournalContent, '内容与感想不能为空');
             } else {
                 validSuccessDom(validId.internshipJournalContent, errorMsgId.internshipJournalContent);

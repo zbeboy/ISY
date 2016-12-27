@@ -20,32 +20,37 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                <div class="row">
-                    <div class="col-md-3">姓名</div>
-                    <div class="col-md-3" th:text="${internshipJournal.studentName}"></div>
-                    <div class="col-md-3">学号</div>
-                    <div class="col-md-3" th:text="${internshipJournal.studentNumber}"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">班级</div>
-                    <div class="col-md-3" th:text="${internshipJournal.organize}"></div>
-                    <div class="col-md-3">指导教师</div>
-                    <div class="col-md-3" th:text="${internshipJournal.schoolGuidanceTeacher}"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">实习单位</div>
-                    <div class="col-md-6" th:text="${internshipJournal.graduationPracticeCompanyName}"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">实习内容及感想:</div>
-                    <p class="col-md-12" th:text="${internshipJournal.internshipJournalContent}"></p>
-                </div>
-                <div class="text-right">
-                    <span>日期：</span><span th:text="${internshipJournalDate}"></span>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td><strong>姓名</strong></td>
+                            <td th:text="${internshipJournal.studentName}"></td>
+                            <td><strong>学号</strong></td>
+                            <td th:text="${internshipJournal.studentNumber}"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>班级</strong></td>
+                            <td th:text="${internshipJournal.organize}"></td>
+                            <td><strong>指导教师</strong></td>
+                            <td th:text="${internshipJournal.schoolGuidanceTeacher}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>实习单位</strong></td>
+                            <td colspan="2" th:text="${internshipJournal.graduationPracticeCompanyName}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" rowspan="4"><span><strong>实习内容及感想:</strong></span><br/>
+                                <p th:text="${internshipJournal.internshipJournalContent}"></p>
+                                <div class="text-right">
+                                    <span><strong>日期:</strong></span><span th:text="${internshipJournalDate}"></span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <p>备注：顶岗实习、校外自主实习需要提交实习日志；毕业实习需要提交实习周志。</p>
-                <input type="hidden" name="internshipReleaseId" id="internshipReleaseId"
-                       th:value="${internshipJournal.internshipReleaseId}"/>
             </div>
         </div>
         <!-- /.row -->
