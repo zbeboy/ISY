@@ -284,16 +284,16 @@
 </div>
 <!-- /#wrapper -->
 <script id="message-template" type="text/x-handlebars-template">
-    {{#each listResult}}
+    {{#each messages}}
     <li>
         <a href="javascript:;">
             <div>
-                <strong>John Smith</strong>
+                <strong>{{real_name}}</strong>
                 <span class="text-muted" style="padding-left: 120px;">
-                    <em>Yesterday</em>
+                    <em>{{date}}</em>
                 </span>
             </div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+            <div>{{message_content}}</div>
         </a>
     </li>
     <li class="divider"></li>

@@ -99,8 +99,8 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sockjs-client","moment-with-locales","csrf", "stomp-websocket", "com", "jquery.address", "nav"],
-    function ($, loadingView, domready, Handlebars,SockJS,moment,csrf) {
+require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "sockjs-client", "moment-with-locales", "csrf", "stomp-websocket", "com", "jquery.address", "nav"],
+    function ($, loadingView, domready, Handlebars, SockJS, moment, csrf) {
         domready(function () {
             //This function is called once the DOM is ready.
             //It will be safe to query the DOM and manipulate
@@ -178,12 +178,14 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
             stompClient.connect(headers, function (frame) {
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/user/topic/reminds', function (data) {
-                    showAlerts(JSON.parse(data.body));
+                    var json = JSON.parse(data.body);
+                    showAlerts(json);// 提醒
+                    showMessages(json);// 消息
                 });
-                stompClient.send("/app/remind",{}, frame.headers['user-name']);
-                window.setInterval(function(){
-                    stompClient.send("/app/remind",{}, frame.headers['user-name']);
-                },180000);
+                stompClient.send("/app/remind", {}, frame.headers['user-name']);
+                window.setInterval(function () {
+                    stompClient.send("/app/remind", {}, frame.headers['user-name']);
+                }, 180000);
             });
         }
 
@@ -193,8 +195,8 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
          */
         function showAlerts(data) {
             var count = data.mapResult.alertsCount;
-            if(count>0){
-                var alertsCount =  $('#alertsCount');
+            if (count > 0) {
+                var alertsCount = $('#alertsCount');
                 alertsCount.removeClass('hidden');
                 alertsCount.text(count);
             }
@@ -214,14 +216,50 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars","sock
         }
 
         /**
+         * 展示数据messages数据
+         * @param data
+         */
+        function showMessages(data) {
+            var count = data.mapResult.messagesCount;
+            if (count > 0) {
+                var messagesCount = $('#messagesCount');
+                messagesCount.removeClass('hidden');
+                messagesCount.text(count);
+            }
+            moment.locale('zh-cn');
+            var source = $("#message-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper('real_name', function () {
+                var value = Handlebars.escapeExpression(this.realName);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('date', function () {
+                var value = Handlebars.escapeExpression(moment(this.messageDateStr, "YYYYMMDDhmmss").fromNow());
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('message_content', function () {
+                var value = Handlebars.escapeExpression(this.messageContent.substring(0,50)+"...");
+                return new Handlebars.SafeString(value);
+            });
+
+            var html = template(data.mapResult);
+            var alerts = $('#messages');
+            alerts.html(html);
+            alerts.append(lastTagLi('更多消息'));
+        }
+
+        /**
          * 最后的更多html
          * @returns {string}
          */
         function lastTagLi(msg) {
             return "<li>" +
                 "<a class='text-center' href='#'>" +
-                "<strong>"+msg+"</strong>" +
-                "<i class='fa fa-angle-right'></i>" +
+                "<strong>" + msg + "</strong>" +
+                "  <i class='fa fa-angle-right'></i>" +
                 "</a>" +
                 "</li>";
         }

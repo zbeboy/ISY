@@ -12,9 +12,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.SystemAlertService;
+import top.zbeboy.isy.service.SystemMessageService;
 import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
+import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -36,6 +38,9 @@ public class MessageController {
     @Resource
     private SystemAlertService systemAlertService;
 
+    @Resource
+    private SystemMessageService systemMessageService;
+
     /**
      * 推送到一个用户 的系统信息
      *
@@ -50,16 +55,30 @@ public class MessageController {
         Map<String, Object> data = new HashMap<>();
         int pageNum = 1;
         int pageSize = 5;
+
+        // 提醒
         List<SystemAlertBean> systemAlertBeens = new ArrayList<>();
         Result<Record> systemAlertRecord = systemAlertService.findAllByPageForShow(pageNum, pageSize, username, false);
         if (systemAlertRecord.isNotEmpty()) {
             systemAlertBeens = systemAlertRecord.into(SystemAlertBean.class);
-            systemAlertBeens.forEach(i -> {
-                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyyMMddhhmmss"));
-            });
+            systemAlertBeens.forEach(i ->
+                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyyMMddhhmmss"))
+            );
         }
         data.put("alerts", systemAlertBeens);
         data.put("alertsCount", systemAlertService.countAllForShow(username, false));
+
+        // 消息
+        List<SystemMessageBean> systemMessageBeens = new ArrayList<>();
+        Result<Record> systemMessageRecord = systemMessageService.findAllByPageForShow(pageNum,pageSize,username,false);
+        if(systemMessageRecord.isNotEmpty()){
+            systemMessageBeens = systemMessageRecord.into(SystemMessageBean.class);
+            systemMessageBeens.forEach(i->
+                i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(),"yyyyMMddhhmmss"))
+            );
+        }
+        data.put("messages", systemMessageBeens);
+        data.put("messagesCount", systemMessageService.countAllForShow(username, false));
         return new AjaxUtils().success().msg("获取数据成功").mapData(data);
     }
 }
