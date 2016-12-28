@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipApply implements Serializable {
 
-    private static final long serialVersionUID = -1885989840;
+    private static final long serialVersionUID = 616165774;
 
     private String    internshipApplyId;
     private Integer   studentId;
@@ -35,6 +35,7 @@ public class InternshipApply implements Serializable {
     private Timestamp changeFillStartTime;
     private Timestamp changeFillEndTime;
     private Timestamp applyTime;
+    private String    internshipFileId;
 
     public InternshipApply() {}
 
@@ -47,6 +48,7 @@ public class InternshipApply implements Serializable {
         this.changeFillStartTime = value.changeFillStartTime;
         this.changeFillEndTime = value.changeFillEndTime;
         this.applyTime = value.applyTime;
+        this.internshipFileId = value.internshipFileId;
     }
 
     public InternshipApply(
@@ -57,7 +59,8 @@ public class InternshipApply implements Serializable {
         String    reason,
         Timestamp changeFillStartTime,
         Timestamp changeFillEndTime,
-        Timestamp applyTime
+        Timestamp applyTime,
+        String    internshipFileId
     ) {
         this.internshipApplyId = internshipApplyId;
         this.studentId = studentId;
@@ -67,6 +70,7 @@ public class InternshipApply implements Serializable {
         this.changeFillStartTime = changeFillStartTime;
         this.changeFillEndTime = changeFillEndTime;
         this.applyTime = applyTime;
+        this.internshipFileId = internshipFileId;
     }
 
     @NotNull
@@ -140,6 +144,15 @@ public class InternshipApply implements Serializable {
         this.applyTime = applyTime;
     }
 
+    @Size(max = 64)
+    public String getInternshipFileId() {
+        return this.internshipFileId;
+    }
+
+    public void setInternshipFileId(String internshipFileId) {
+        this.internshipFileId = internshipFileId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("InternshipApply (");
@@ -152,6 +165,7 @@ public class InternshipApply implements Serializable {
         sb.append(", ").append(changeFillStartTime);
         sb.append(", ").append(changeFillEndTime);
         sb.append(", ").append(applyTime);
+        sb.append(", ").append(internshipFileId);
 
         sb.append(")");
         return sb.toString();

@@ -62,6 +62,8 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
                 .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
                 .join(USERS)
                 .on(INTERNSHIP_RELEASE.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(FILES)
+                .on(INTERNSHIP_APPLY.INTERNSHIP_FILE_ID.eq(FILES.FILE_ID))
                 .where(a)
                 .orderBy(INTERNSHIP_APPLY.APPLY_TIME.desc())
                 .limit((pageNum - 1) * pageSize, pageSize)
@@ -84,7 +86,13 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
             if(!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME))){
                 internshipReviewBean.setChangeFillEndTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME)));
             }
-            internshipReviewBean.setApplyTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.APPLY_TIME)));
+            if(!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.APPLY_TIME))){
+                internshipReviewBean.setApplyTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.APPLY_TIME)));
+            }
+
+            internshipReviewBean.setFileId(r.getValue(FILES.FILE_ID));
+            internshipReviewBean.setOriginalFileName(r.getValue(FILES.ORIGINAL_FILE_NAME));
+            internshipReviewBean.setExt(r.getValue(FILES.EXT));
             internshipReviewBeens.add(internshipReviewBean);
         });
         paginationUtils.setTotalDatas(countByCondition(paginationUtils, internshipApplyBean));

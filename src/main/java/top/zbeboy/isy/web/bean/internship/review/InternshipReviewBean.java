@@ -27,6 +27,9 @@ public class InternshipReviewBean {
     private Byte practiceReceiving;
     private Byte securityEducationAgreement;
     private Byte parentalConsent;
+    private String fileId;
+    private String originalFileName;
+    private String  ext;;
 
     private String fillTime;
 
@@ -204,5 +207,29 @@ public class InternshipReviewBean {
 
     public void setFillTime(String fillTime) {
         this.fillTime = fillTime;
+    }
+
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
+    public String getOriginalFileName() {
+        return originalFileName;
+    }
+
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
     }
 }

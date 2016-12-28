@@ -17,7 +17,8 @@ require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "
             audit_delete_url:'/web/internship/review/audit/delete',
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
-            back: '/web/menu/internship/review'
+            back: '/web/menu/internship/review',
+            download_file:'/anyone/users/download/file'
         };
 
         // 刷新时选中菜单
@@ -235,6 +236,14 @@ require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "
             }
             return msg;
         }
+
+        /*
+         下载电子资料
+         */
+        $(tableData).delegate('.downloadFile', "click", function () {
+            var id = $(this).attr('data-id');
+            window.location.href = web_path + ajax_url.download_file + '?fileId=' + id ;
+        });
 
         /*
          查看详情

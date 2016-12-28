@@ -134,13 +134,23 @@ public final class Workbook {
     }
 
     /**
+     * 保存实习资料路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String internshipApplyPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "internship/apply/";
+    }
+
+    /**
      * 保存实习日志路径
      *
      * @param users 用户
      * @return 路径
      */
     public static String internshipJournalPath(Users users) {
-        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "internship/journal/" ;
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "internship/journal/";
     }
 
     /**
@@ -152,6 +162,6 @@ public final class Workbook {
      * @return 路径
      */
     public static String internshipPath(String schoolName, String collegeName, String departmentName) {
-        return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "internship/" ;
+        return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "internship/";
     }
 }

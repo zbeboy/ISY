@@ -875,14 +875,14 @@ public class UsersController {
     @RequestMapping(value = "/anyone/users/upload/avatar")
     @ResponseBody
     public AjaxUtils<FileBean> usersUploadAvatar(MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
-        AjaxUtils<FileBean> data = new AjaxUtils<FileBean>();
+        AjaxUtils<FileBean> data = new AjaxUtils<>();
         try {
             Users users = usersService.getUserFromSession();
             List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
                     RequestUtils.getRealPath(request) + Workbook.avatarPath(users), request.getRemoteAddr());
             data.success().listData(fileBeen).obj(Workbook.avatarPath(users));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Upload avatar error, error is {}",e);
         }
         return data;
     }

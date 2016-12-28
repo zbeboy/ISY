@@ -117,4 +117,11 @@ public class InternshipApplyDao extends DAOImpl<InternshipApplyRecord, top.zbebo
     public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByApplyTime(Timestamp... values) {
         return fetch(InternshipApply.INTERNSHIP_APPLY.APPLY_TIME, values);
     }
+
+    /**
+     * Fetch records that have <code>internship_file_id IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.InternshipApply> fetchByInternshipFileId(String... values) {
+        return fetch(InternshipApply.INTERNSHIP_APPLY.INTERNSHIP_FILE_ID, values);
+    }
 }

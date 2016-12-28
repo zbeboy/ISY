@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipApplyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipApply extends TableImpl<InternshipApplyRecord> {
 
-    private static final long serialVersionUID = -1972516294;
+    private static final long serialVersionUID = -1697709044;
 
     /**
      * The reference instance of <code>isy.internship_apply</code>
@@ -90,6 +90,11 @@ public class InternshipApply extends TableImpl<InternshipApplyRecord> {
      * The column <code>isy.internship_apply.apply_time</code>.
      */
     public final TableField<InternshipApplyRecord, Timestamp> APPLY_TIME = createField("apply_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.internship_apply.internship_file_id</code>.
+     */
+    public final TableField<InternshipApplyRecord, String> INTERNSHIP_FILE_ID = createField("internship_file_id", org.jooq.impl.SQLDataType.VARCHAR.length(64), this, "");
 
     /**
      * Create a <code>isy.internship_apply</code> table reference

@@ -212,6 +212,14 @@
                         <input type="hidden" name="studentId" value="{{studentId}}"/>
                     </form>
                     {{/if}}
+                    {{#if originalFileName}}
+                    <div>
+                        <span>电子资料:</span>
+                        <span>{{originalFileName}}.{{ext}}</span>
+                        <button type="button" class="btn btn-default downloadFile" data-id="{{fileId}}">
+                            下载</button>
+                    </div>
+                    {{/if}}
                 </div>
                 <div class="panel-footer">
                     <div class="btn-group">

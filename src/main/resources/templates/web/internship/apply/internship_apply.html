@@ -148,6 +148,43 @@
                 </div>
             </div>
         </div>
+        <!-- 添加电子资料上传Modal -->
+        <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="uploadModalLabel">添加电子资料</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <div id="addFile" class="row">
+                                <div class="col-md-6"><span>文件：</span><span id="fileName"></span></div>
+                                <div class="col-md-6"><span>大小：</span><span id="fileSize"></span></div>
+                            </div>
+                            <!-- The global progress bar -->
+                            <div id="progress" class="progress" style="padding-top: 20px;">
+                                <div class="progress-bar progress-bar-success"></div>
+                            </div>
+                            <p>
+                            <span class="btn btn-primary fileinput-button">
+                                <span>添加附件</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files[]" />
+                            </span>
+                            </p>
+                            <small>注:只能上传一个文件，建议上传zip,rar等压缩文件。</small>
+                        </div>
+                        <input type="hidden" id="uploadInternshipReleaseId"/>
+                        <input type="hidden" id="uploadStudentId"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="confirmUpload">确定上传</button>
+                        <button type="button" class="btn btn-default" id="cancelUpload">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="internship-release-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <div class="panel panel-default">
@@ -236,6 +273,14 @@
                         <small><em><span>发布人：</span><span>{{real_name}}</span> <span>{{releaseTimeStr}}</span></em>
                         </small>
                     </div>
+                    {{#if originalFileName}}
+                    <div>
+                        <span>电子资料:</span>
+                        <span>{{originalFileName}}.{{ext}}</span>
+                        <button type="button" class="btn btn-default downloadFile" data-id="{{fileId}}">
+                            下载</button>
+                    </div>
+                    {{/if}}
                 </div>
                 <div class="panel-footer">
                     <div class="btn-group">
@@ -247,6 +292,8 @@
                             基础信息变更申请</button>
                         <button type="button" class="btn btn-default firmApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
                             单位信息变更申请</button>
+                        <button type="button" class="btn btn-default uploadFile" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
+                            上传电子资料</button>
                     </div>
                 </div>
             </div>

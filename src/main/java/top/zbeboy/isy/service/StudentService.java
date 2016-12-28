@@ -16,6 +16,14 @@ import java.util.Optional;
 public interface StudentService {
 
     /**
+     * 通过id查询
+     *
+     * @param id 主键
+     * @return 学生
+     */
+    Student findById(int id);
+
+    /**
      * 通过id关联查询
      *
      * @param id 主键

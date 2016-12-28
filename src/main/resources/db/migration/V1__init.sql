@@ -251,6 +251,7 @@ CREATE TABLE internship_apply(
   change_fill_start_time DATETIME,
   change_fill_end_time DATETIME,
   apply_time DATETIME NOT NULL ,
+  internship_file_id VARCHAR(64),
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
   UNIQUE (student_id,internship_release_id)

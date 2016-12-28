@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/11/25.
  */
 //# sourceURL=internship_apply.js
-require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading", "bootstrap"],
+require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading", "bootstrap", "jquery.fileupload-validate"],
     function ($, Handlebars) {
 
         /*
@@ -12,11 +12,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             internship_apply_data_url: '/web/internship/apply/data',
             my_internship_apply_data_url: '/web/internship/apply/my/data',
             recall_apply_url: '/web/internship/apply/recall',
-            change_state_url:'/web/internship/apply/state',
+            change_state_url: '/web/internship/apply/state',
             access_url: '/web/internship/apply/access',
             valid_is_student: '/anyone/valid/cur/is/student',
             valid_student: '/web/internship/apply/valid/student',
-            access_condition_url: '/web/internship/apply/condition'
+            access_condition_url: '/web/internship/apply/condition',
+            file_upload_url: '/web/internship/apply/upload',
+            download_file:'/anyone/users/download/file'
         };
 
         /*
@@ -359,7 +361,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(myTableData).delegate('.basisApply', "click", function () {
             var id = $(this).attr('data-id');
             var studentId = $(this).attr('data-student');
-            showStateModal(4,id,studentId,'基础信息变更申请');
+            showStateModal(4, id, studentId, '基础信息变更申请');
         });
 
         /*
@@ -368,8 +370,47 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(myTableData).delegate('.firmApply', "click", function () {
             var id = $(this).attr('data-id');
             var studentId = $(this).attr('data-student');
-            showStateModal(6,id,studentId,'单位信息变更申请');
+            showStateModal(6, id, studentId, '单位信息变更申请');
         });
+
+        /*
+         上传电子资料
+         */
+        $(myTableData).delegate('.uploadFile', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            showUploadModal(id, studentId);
+        });
+
+        /*
+         下载电子资料
+         */
+        $(myTableData).delegate('.downloadFile', "click", function () {
+            var id = $(this).attr('data-id');
+            window.location.href = web_path + ajax_url.download_file + '?fileId=' + id ;
+        });
+
+        /**
+         * 展开上传文件modal
+         * @param id
+         * @param studentId
+         */
+        function showUploadModal(id, studentId) {
+            $('#uploadInternshipReleaseId').val(id);
+            $('#uploadStudentId').val(studentId);
+            $('#uploadModal').modal('show');
+        }
+
+        /**
+         * 关闭文件上传modal
+         */
+        function closeUploadModal() {
+            $('#uploadInternshipReleaseId').val('');
+            $('#uploadStudentId').val('');
+            $('#fileName').text('');
+            $('#fileSize').text('');
+            $('#uploadModal').modal('hide');
+        }
 
         /**
          * 撤消询问
@@ -425,7 +466,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param studentId
          * @param title
          */
-        function showStateModal(state,internshipReleaseId,studentId,title){
+        function showStateModal(state, internshipReleaseId, studentId, title) {
             $('#applyState').val(state);
             $('#applyInternshipReleaseId').val(internshipReleaseId);
             $('#applyStudentId').val(studentId);
@@ -434,11 +475,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-        检验原因字数
+         检验原因字数
          */
-        $('#reason').blur(function(){
+        $('#reason').blur(function () {
             var reason = $('#reason').val();
-            if(reason.length<=0 || reason.length > 500){
+            if (reason.length <= 0 || reason.length > 500) {
                 validErrorDom('#valid_reason', '#reason_error_msg', '原因500个字符以内');
             } else {
                 validSuccessDom('#valid_reason', '#reason_error_msg');
@@ -448,7 +489,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 隐藏变更模态框
          */
-        function hideStateModal(){
+        function hideStateModal() {
             $('#applyState').val('');
             $('#applyInternshipReleaseId').val('');
             $('#applyStudentId').val('');
@@ -459,23 +500,23 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-        提交变更申请
+         提交变更申请
          */
-        $('#stateOk').click(function(){
+        $('#stateOk').click(function () {
             stateAdd();
         });
 
         /*
-        取消变更申请
+         取消变更申请
          */
-        $('#stateCancel').click(function(){
+        $('#stateCancel').click(function () {
             hideStateModal();
         });
 
         /*
-        状态申请提交询问
+         状态申请提交询问
          */
-        function stateAdd(){
+        function stateAdd() {
             var msg;
             msg = Messenger().post({
                 message: '确定申请吗?',
@@ -498,9 +539,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             });
         }
 
-        function validReason(){
+        function validReason() {
             var reason = $('#reason').val();
-            if(reason.length<=0 || reason.length > 500){
+            if (reason.length <= 0 || reason.length > 500) {
                 validErrorDom('#valid_reason', '#reason_error_msg', '原因500个字符以内');
             } else {
                 sendStateAjax();
@@ -510,8 +551,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 发送状态申请
          */
-        function sendStateAjax(){
-            $.post(web_path + ajax_url.change_state_url,$('#state_form').serialize(),function(data){
+        function sendStateAjax() {
+            $.post(web_path + ajax_url.change_state_url, $('#state_form').serialize(), function (data) {
                 if (data.state) {
                     hideStateModal();
                     initMyData();
@@ -721,5 +762,80 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 myListData(data);
             });
         }
+
+        var startUpload = null; // 开始上传
+
+        // 上传组件
+        $('#fileupload').fileupload({
+            url: web_path + ajax_url.file_upload_url,
+            dataType: 'json',
+            maxFileSize: 100000000,// 100MB
+            formAcceptCharset: 'utf-8',
+            autoUpload: false,// 关闭自动上传
+            maxNumberOfFiles: 1,
+            add: function (e, data) {
+                $('#fileName').text(data.files[0].name);
+                $('#fileSize').text(data.files[0].size);
+                startUpload = data;
+            },
+            submit: function (e, data) {
+                if (validUpload()) {
+                    var internshipReleaseId = $('#uploadInternshipReleaseId').val();
+                    var studentId = $('#uploadStudentId').val();
+                    data.formData = {
+                        'internshipReleaseId': internshipReleaseId,
+                        'studentId': studentId
+                    };
+                }
+            },
+            done: function (e, data) {
+                initMyData();// 刷新我的申请
+                closeUploadModal();// 清空信息
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress').find('.progress-bar').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+        });
+
+        function validUpload() {
+            var internshipReleaseId = $('#uploadInternshipReleaseId').val();
+            var studentId = $('#uploadStudentId').val();
+            var fileName = $('#fileName').text();
+            if (internshipReleaseId !== '' && Number(studentId) > 0) {
+                if (fileName !== '') {
+                    return true;
+                } else {
+                    Messenger().post({
+                        message: '请选择文件',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    return false;
+                }
+            } else {
+                Messenger().post({
+                    message: '缺失重要参数不能上传',
+                    type: 'error',
+                    showCloseButton: true
+                });
+                return false;
+            }
+        }
+
+        // 确认上传
+        $('#confirmUpload').click(function () {
+            if (validUpload()) {
+                startUpload.submit();
+            }
+        });
+
+        // 取消上传
+        $('#cancelUpload').click(function () {
+            closeUploadModal();// 清空信息
+        });
 
     });

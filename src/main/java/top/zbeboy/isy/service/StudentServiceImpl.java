@@ -52,6 +52,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Student findById(int id) {
+        return studentDao.findById(id);
+    }
+
+    @Override
     public Optional<Record> findByIdRelation(int id) {
         return create.select()
                 .from(STUDENT)

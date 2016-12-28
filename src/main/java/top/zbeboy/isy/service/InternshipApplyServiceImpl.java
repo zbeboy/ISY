@@ -118,6 +118,8 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID))
+                .leftJoin(FILES)
+                .on(INTERNSHIP_APPLY.INTERNSHIP_FILE_ID.eq(FILES.FILE_ID))
                 .where(a)
                 .orderBy(INTERNSHIP_APPLY.APPLY_TIME.desc())
                 .limit((pageNum - 1) * pageSize, pageSize)

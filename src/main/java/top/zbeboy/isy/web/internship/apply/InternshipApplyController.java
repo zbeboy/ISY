@@ -7,19 +7,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.FilesUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -27,7 +32,9 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.internship.apply.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.*;
@@ -93,6 +100,12 @@ public class InternshipApplyController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private UploadService uploadService;
+
+    @Resource
+    private FilesService filesService;
 
     /**
      * 实习申请
@@ -1060,6 +1073,75 @@ public class InternshipApplyController {
             ajaxUtils.fail().msg("未查询到相关申请信息");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 保存实习申请资料
+     *
+     * @param internshipReleaseId         实习发布id
+     * @param studentId                   学生id
+     * @param multipartHttpServletRequest 文件
+     * @param request                     请求
+     * @return true or false
+     */
+    @RequestMapping("/web/internship/apply/upload")
+    @ResponseBody
+    public AjaxUtils<FileBean> usersUploadAvatar(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,
+                                                 MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
+        AjaxUtils<FileBean> data = new AjaxUtils<>();
+        // 强制身份判断
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Student student = studentService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
+                    return data.fail().msg("您的个人信息有误");
+                }
+            }
+        }
+        try {
+            Student student = studentService.findById(studentId);
+            if (!ObjectUtils.isEmpty(student)) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
+                if(internshipApplyRecord.isPresent()){
+                    Users users = usersService.findByUsername(student.getUsername());
+                    String path = Workbook.internshipApplyPath(users);
+                    List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                            RequestUtils.getRealPath(request) + path, request.getRemoteAddr());
+                    fileBeen.forEach(fileBean -> {
+                        String fileId = UUIDUtils.getUUID();
+                        InternshipApply internshipApply = null;
+                        internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                        if(StringUtils.hasLength(internshipApply.getInternshipFileId())){
+                            Files oldFile = filesService.findById(internshipApply.getInternshipFileId());
+                            try {
+                                FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Files files = new Files();
+                        files.setFileId(fileId);
+                        files.setExt(fileBean.getExt());
+                        files.setNewName(fileBean.getNewName());
+                        files.setOriginalFileName(fileBean.getOriginalFileName());
+                        files.setSize(String.valueOf(fileBean.getSize()));
+                        files.setRelativePath(path + fileBean.getNewName());
+                        filesService.save(files);
+                        internshipApply.setInternshipFileId(fileId);
+                        internshipApplyService.update(internshipApply);
+
+                    });
+                }
+                data.success().msg("保存成功");
+            } else {
+                data.fail().msg("保存失败");
+            }
+        } catch (Exception e) {
+            log.error("Upload apply error, error is {}", e);
+            data.fail().msg("保存文件异常");
+        }
+        return data;
     }
 
     /**
