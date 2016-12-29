@@ -163,6 +163,15 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
 
         }
 
+        function getAjaxUrl() {
+            return {
+                socke_js_url: '/remind',
+                stomp_client_sub_url: '/user/topic/reminds',
+                stomp_send_url: '/app/remind',
+                more_message_url: '/anyone/message',
+                message_detail_url: '/anyone/message/detail'
+            };
+        }
 
         initRemind();
 
@@ -171,20 +180,20 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          */
         function initRemind() {
             var stompClient = null;
-            var socket = new SockJS(web_path + '/remind');
+            var socket = new SockJS(web_path + getAjaxUrl().socke_js_url);
             stompClient = Stomp.over(socket);
             var headers = {};
             headers['headerName'] = csrf.token;
             stompClient.connect(headers, function (frame) {
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/user/topic/reminds', function (data) {
+                stompClient.subscribe(getAjaxUrl().stomp_client_sub_url, function (data) {
                     var json = JSON.parse(data.body);
                     showAlerts(json);// 提醒
                     showMessages(json);// 消息
                 });
-                stompClient.send("/app/remind", {}, frame.headers['user-name']);
+                stompClient.send(getAjaxUrl().stomp_send_url, {}, frame.headers['user-name']);
                 window.setInterval(function () {
-                    stompClient.send("/app/remind", {}, frame.headers['user-name']);
+                    stompClient.send(getAjaxUrl().stomp_send_url, {}, frame.headers['user-name']);
                 }, 180000);
             });
         }
@@ -212,7 +221,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             var html = template(data.mapResult);
             var alerts = $('#alerts');
             alerts.html(html);
-            alerts.append(lastTagLi('更多提醒'));
+            alerts.append(lastTagLi('更多提醒', 'more_alert'));
         }
 
         /**
@@ -241,23 +250,41 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             });
 
             Handlebars.registerHelper('message_content', function () {
-                var value = Handlebars.escapeExpression(this.messageContent.substring(0,50)+"...");
+                var value = Handlebars.escapeExpression(this.messageContent.substring(0, 50) + "...");
                 return new Handlebars.SafeString(value);
             });
 
             var html = template(data.mapResult);
             var alerts = $('#messages');
             alerts.html(html);
-            alerts.append(lastTagLi('更多消息'));
+            alerts.append(lastTagLi('更多消息', 'more_message'));
         }
+
+        /*
+         更多消息
+         */
+        $('#messages').delegate('.more_message', "click", function () {
+            $.address.value(getAjaxUrl().more_message_url);
+        });
+
+        /*
+         消息详情
+         */
+        $('#wrapper').delegate('.message_detail', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(getAjaxUrl().message_detail_url + '?id=' + id);
+        });
+
 
         /**
          * 最后的更多html
+         * @param msg 文字
+         * @param id 识别id
          * @returns {string}
          */
-        function lastTagLi(msg) {
+        function lastTagLi(msg, id) {
             return "<li>" +
-                "<a class='text-center' href='#'>" +
+                "<a class='text-center " + id + "' href='javascript:;'>" +
                 "<strong>" + msg + "</strong>" +
                 "  <i class='fa fa-angle-right'></i>" +
                 "</a>" +
