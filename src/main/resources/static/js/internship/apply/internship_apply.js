@@ -791,13 +791,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             done: function (e, data) {
                 initMyData();// 刷新我的申请
                 closeUploadModal();// 清空信息
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress').find('.progress-bar').css(
-                    'width',
-                    progress + '%'
-                );
             }
         });
 

@@ -87,19 +87,20 @@ public class OrganizeController {
     }
 
     /**
-     * 通过年级获取全部班级
+     * 通过年级和专业id获取全部班级
      *
-     * @param grade 年级
+     * @param grade     年级
+     * @param scienceId 专业id
      * @return 年级下全部班级
      */
     @RequestMapping(value = "/user/organizes", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<Organize> organizes(@RequestParam("grade") String grade) {
+    public AjaxUtils<Organize> organizes(@RequestParam("grade") String grade, @RequestParam("scienceId") int scienceId) {
         List<Organize> organizes = new ArrayList<>();
         Byte isDel = 0;
         Organize organize = new Organize(0, "请选择班级", isDel, 0, "");
         organizes.add(organize);
-        Result<OrganizeRecord> organizeRecords = organizeService.findByGrade(StringUtils.trimWhitespace(grade));
+        Result<OrganizeRecord> organizeRecords = organizeService.findByGradeAndScienceId(StringUtils.trimWhitespace(grade), scienceId);
         for (OrganizeRecord r : organizeRecords) {
             Organize tempOrganize = new Organize(r.getOrganizeId(), r.getOrganizeName(), r.getOrganizeIsDel(), r.getScienceId(), r.getGrade());
             organizes.add(tempOrganize);

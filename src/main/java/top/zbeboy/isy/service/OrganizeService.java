@@ -62,10 +62,11 @@ public interface OrganizeService {
     /**
      * 根据年级查询全部班级
      *
-     * @param grade 年级
+     * @param grade     年级
+     * @param scienceId 专业id
      * @return 年级下全部班级
      */
-    Result<OrganizeRecord> findByGrade(String grade);
+    Result<OrganizeRecord> findByGradeAndScienceId(String grade, int scienceId);
 
     /**
      * 保存
