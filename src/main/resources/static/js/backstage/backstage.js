@@ -169,7 +169,9 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
                 stomp_client_sub_url: '/user/topic/reminds',
                 stomp_send_url: '/app/remind',
                 more_message_url: '/anyone/message',
-                message_detail_url: '/anyone/message/detail'
+                more_alert_url: '/anyone/alert',
+                message_detail_url: '/anyone/message/detail',
+                alert_detail_url: '/anyone/alert/detail'
             };
         }
 
@@ -261,6 +263,13 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
         }
 
         /*
+         更多提醒
+         */
+        $('#alerts').delegate('.more_alert', "click", function () {
+            $.address.value(getAjaxUrl().more_alert_url);
+        });
+
+        /*
          更多消息
          */
         $('#messages').delegate('.more_message', "click", function () {
@@ -273,6 +282,15 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
         $('#wrapper').delegate('.message_detail', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(getAjaxUrl().message_detail_url + '?id=' + id);
+        });
+
+        /*
+         提醒详情
+         */
+        $('#wrapper').delegate('.alert_detail', "click", function () {
+            var id = $(this).attr('data-id');
+            var type = $(this).attr('data-type');
+            $.address.value(getAjaxUrl().alert_detail_url + '?id=' + id + '&type=' + type);
         });
 
 

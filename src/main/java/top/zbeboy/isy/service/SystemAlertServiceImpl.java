@@ -98,7 +98,7 @@ public class SystemAlertServiceImpl implements SystemAlertService {
         if (records.isNotEmpty()) {
             systemAlertBeens = records.into(SystemAlertBean.class);
             systemAlertBeens.forEach(i->{
-                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(),"yyyyMMddhhmmss"));
+                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(),"yyyy年MM月dd日 hh:mm:ss"));
             });
             paginationUtils.setTotalDatas(countByCondition(paginationUtils, systemAlertBean));
         }

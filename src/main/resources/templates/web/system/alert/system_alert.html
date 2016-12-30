@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">系统提醒</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="well">
+                    <div class="row" style="margin-top:2px;">
+                        <div class="col-md-12">
+                            <input type="text" id="search_alert_content" class="form-control input-sm" placeholder="提醒内容"/>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top:4px;">
+                        <button type="button" id="search" class="btn btn-outline btn-default"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline btn-default"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="text-right" style="margin-bottom: 10px;">
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
+                </div>
+                <div id="tableData" class="list-group">
+                </div>
+                <div id="pagination" class="text-center">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="alert-more-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <a href="javascript:;" data-id="{{linkId}}" data-type="{{systemAlertTypeId}}" class="list-group-item row alert_detail">
+                <div class="col-md-6">{{alertContent}}</div>
+                <div class="col-md-6 text-right">{{alertDateStr}}</div>
+            </a>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/system/alert/system_alert.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

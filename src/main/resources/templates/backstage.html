@@ -314,7 +314,7 @@
 <script id="alert-template" type="text/x-handlebars-template">
     {{#each alerts}}
     <li>
-        <a href="javascript:;">
+        <a href="javascript:;" class="alert_detail" data-id="{{linkId}}" data-type="{{systemAlertTypeId}}">
             <div>
                 <i class="{{icon}}"></i> {{alertContent}}
                 <span class="text-muted small" style="padding-left: 120px;">{{date}}</span>

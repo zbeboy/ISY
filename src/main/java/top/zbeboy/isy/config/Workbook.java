@@ -120,6 +120,11 @@ public final class Workbook {
      */
     public static final String TIP_PAGE = "tip::#page-wrapper";
 
+    /*
+    提醒类型
+     */
+    public static final String ALERT_MESSAGE_TYPE = "消息";
+
     private Workbook() {
     }
 
