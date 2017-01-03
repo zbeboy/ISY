@@ -252,7 +252,11 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             });
 
             Handlebars.registerHelper('message_content', function () {
-                var value = Handlebars.escapeExpression(this.messageContent.substring(0, 50) + "...");
+                var content = this.messageContent;
+                if (content != null && content > 20) {
+                    content = content.substring(0, 20) + "...";
+                }
+                var value = Handlebars.escapeExpression(content);
                 return new Handlebars.SafeString(value);
             });
 

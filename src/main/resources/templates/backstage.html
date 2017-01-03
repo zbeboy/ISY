@@ -301,11 +301,13 @@
     <li>
         <a href="javascript:;" class="message_detail" data-id="{{systemMessageId}}">
             <div>
-                <strong>{{real_name}}</strong>
-                <span class="text-muted" style="padding-left: 120px;">
-                    <em>{{date}}</em>
-                </span>
-            </div>
+                <div class="pull-left"><strong>{{real_name}}</strong></div>
+                <div class="pull-right">
+                    <span class=" text-muted">
+                        <em>{{date}}</em>
+                    </span>
+                </div>
+            </div><br/>
             <div>{{message_content}}</div>
         </a>
     </li>
@@ -318,7 +320,7 @@
         <a href="javascript:;" class="alert_detail" data-id="{{linkId}}" data-type="{{systemAlertTypeId}}">
             <div>
                 <i class="{{icon}}"></i> {{alertContent}}
-                <span class="text-muted small" style="padding-left: 120px;">{{date}}</span>
+                <div class="pull-right"><span class="text-muted small">{{date}}</span></div>
             </div>
         </a>
     </li>

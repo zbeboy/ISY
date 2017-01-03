@@ -98,7 +98,7 @@ public class ScheduledConfiguration {
     /**
      * 每年清理消息
      */
-    @Scheduled(cron = "0 0 0 1 1 ? *")// 每年 1月1号
+    @Scheduled(cron = "0 0 0 1 1 ?")// 每年 1月1号
     public void cleanSystem() {
         // 清理系统消息，提醒
         DateTime dateTime = DateTime.now();

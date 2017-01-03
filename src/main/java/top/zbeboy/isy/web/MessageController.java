@@ -55,7 +55,7 @@ public class MessageController {
         if (systemAlertRecord.isNotEmpty()) {
             systemAlertBeens = systemAlertRecord.into(SystemAlertBean.class);
             systemAlertBeens.forEach(i ->
-                    i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyyMMddhhmmss"))
+                    i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyyMMddHHmmss"))
             );
         }
         data.put("alerts", systemAlertBeens);
@@ -67,7 +67,7 @@ public class MessageController {
         if (systemMessageRecord.isNotEmpty()) {
             systemMessageBeens = systemMessageRecord.into(SystemMessageBean.class);
             systemMessageBeens.forEach(i ->
-                    i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(), "yyyyMMddhhmmss"))
+                    i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(), "yyyyMMddHHmmss"))
             );
         }
         data.put("messages", systemMessageBeens);
