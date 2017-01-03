@@ -19,6 +19,7 @@ import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,6 +127,11 @@ public class SystemAlertServiceImpl implements SystemAlertService {
     @Override
     public void save(SystemAlert systemAlert) {
         systemAlertDao.insert(systemAlert);
+    }
+
+    @Override
+    public void deleteByAlertDate(Timestamp timestamp) {
+        create.deleteFrom(SYSTEM_ALERT).where(SYSTEM_ALERT.ALERT_DATE.le(timestamp)).execute();
     }
 
     /**

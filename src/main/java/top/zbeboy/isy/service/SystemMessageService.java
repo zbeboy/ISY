@@ -6,6 +6,7 @@ import top.zbeboy.isy.domain.tables.pojos.SystemMessage;
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,4 +77,11 @@ public interface SystemMessageService {
      * @param systemMessage 消息
      */
     void save(SystemMessage systemMessage);
+
+    /**
+     * 通过时间删除
+     *
+     * @param timestamp 时间
+     */
+    void deleteByMessageDate(Timestamp timestamp);
 }

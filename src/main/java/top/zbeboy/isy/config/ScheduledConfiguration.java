@@ -59,6 +59,12 @@ public class ScheduledConfiguration {
     @Resource
     private InternshipApplyService internshipApplyService;
 
+    @Resource
+    private SystemAlertService systemAlertService;
+
+    @Resource
+    private SystemMessageService systemMessageService;
+
     /**
      * 清理信息
      */
@@ -82,10 +88,24 @@ public class ScheduledConfiguration {
         // 更改实习提交状态
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Result<InternshipReleaseRecord> internshipReleaseRecords = internshipReleaseService.findByEndTime(now);
-        for(InternshipReleaseRecord r:internshipReleaseRecords){
-            internshipApplyService.updateStateWithInternshipReleaseIdAndState(r.getInternshipReleaseId(),0,1);
+        for (InternshipReleaseRecord r : internshipReleaseRecords) {
+            internshipApplyService.updateStateWithInternshipReleaseIdAndState(r.getInternshipReleaseId(), 0, 1);
         }
-        internshipApplyService.updateStateByChangeFillEndTime(now,5,1);
-        internshipApplyService.updateStateByChangeFillEndTime(now,7,1);
+        internshipApplyService.updateStateByChangeFillEndTime(now, 5, 1);
+        internshipApplyService.updateStateByChangeFillEndTime(now, 7, 1);
+    }
+
+    /**
+     * 每年清理消息
+     */
+    @Scheduled(cron = "0 0 0 1 1 ? *")// 每年 1月1号
+    public void cleanSystem() {
+        // 清理系统消息，提醒
+        DateTime dateTime = DateTime.now();
+        DateTime oldTime = dateTime.minusYears(1);
+        Timestamp ts = new Timestamp(oldTime.getMillis());
+        systemAlertService.deleteByAlertDate(ts);
+        systemMessageService.deleteByMessageDate(ts);
+        log.info(">>>>>>>>>>>>> scheduled ... alert , message ");
     }
 }

@@ -19,6 +19,7 @@ import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -137,6 +138,11 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     @Override
     public void save(SystemMessage systemMessage) {
         systemMessageDao.insert(systemMessage);
+    }
+
+    @Override
+    public void deleteByMessageDate(Timestamp timestamp) {
+        create.deleteFrom(SYSTEM_MESSAGE).where(SYSTEM_MESSAGE.MESSAGE_DATE.le(timestamp)).execute();
     }
 
     /**

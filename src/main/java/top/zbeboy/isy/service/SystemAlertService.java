@@ -6,6 +6,7 @@ import top.zbeboy.isy.domain.tables.pojos.SystemAlert;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -67,4 +68,11 @@ public interface SystemAlertService {
      * @param systemAlert 提醒
      */
     void save(SystemAlert systemAlert);
+
+    /**
+     * 通过时间删除
+     *
+     * @param timestamp 时间
+     */
+    void deleteByAlertDate(Timestamp timestamp);
 }
