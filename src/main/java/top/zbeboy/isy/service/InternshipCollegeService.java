@@ -80,4 +80,12 @@ public interface InternshipCollegeService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
+
+    /**
+     * 查询
+     *
+     * @param dataTablesUtils datatables工具类
+     * @return 导出数据
+     */
+    Result<Record> exportData(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
 }

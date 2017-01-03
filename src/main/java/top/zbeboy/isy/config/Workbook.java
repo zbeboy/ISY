@@ -61,6 +61,8 @@ public final class Workbook {
      */
     public static final String DOC_FILE = "doc";
     public static final String DOCX_FILE = "docx";
+    public static final String XLS_FILE = "xls";
+    public static final String XLSX_FILE = "xlsx";
 
     /*
     系统角色

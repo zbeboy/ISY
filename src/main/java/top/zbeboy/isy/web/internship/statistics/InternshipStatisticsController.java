@@ -1,5 +1,7 @@
 package top.zbeboy.isy.web.internship.statistics;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -14,7 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.service.export.InternshipCollegeExport;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
+import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
@@ -27,8 +33,12 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-12-10.
@@ -70,6 +80,12 @@ public class InternshipStatisticsController {
 
     @Resource
     private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
+
+    @Resource
+    private DepartmentService departmentService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 实习统计
@@ -354,6 +370,55 @@ public class InternshipStatisticsController {
             dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 导出 顶岗实习(留学院) 数据
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = "/web/internship/statistical/college/data/export", method = RequestMethod.GET)
+    public void collegeDataExport(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String fileName = "顶岗实习(留学院)";
+            String ext = Workbook.XLSX_FILE;
+            ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
+
+            String extraSearchParam = request.getParameter("extra_search");
+            DataTablesUtils<InternshipCollege> dataTablesUtils = new DataTablesUtils<>();
+            if (StringUtils.isNotBlank(extraSearchParam)) {
+                dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
+            }
+            InternshipCollege internshipCollege = new InternshipCollege();
+            String internshipReleaseId = request.getParameter("internshipReleaseId");
+            if (!ObjectUtils.isEmpty(internshipReleaseId)) {
+                internshipCollege.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+                Result<Record> records = internshipCollegeService.exportData(dataTablesUtils, internshipCollege);
+                List<InternshipCollege> internshipColleges = new ArrayList<>();
+                if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                    internshipColleges = records.into(InternshipCollege.class);
+                }
+                if (StringUtils.isNotBlank(exportBean.getFileName())) {
+                    fileName = exportBean.getFileName();
+                }
+                if (StringUtils.isNotBlank(exportBean.getExt())) {
+                    ext = exportBean.getExt();
+                }
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                if (!ObjectUtils.isEmpty(internshipRelease)) {
+                    Optional<Record> record = departmentService.findByIdRelation(internshipRelease.getDepartmentId());
+                    if (record.isPresent()) {
+                        DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+                        InternshipCollegeExport export = new InternshipCollegeExport(internshipColleges);
+                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        uploadService.download(fileName, "/" + path, response, request);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("Export file error, error is {}", e);
+        }
     }
 
     /**

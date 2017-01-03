@@ -10,6 +10,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         function getAjaxUrl() {
             return {
                 college_data_url: '/web/internship/statistical/college/data',
+                export_data_url: '/web/internship/statistical/college/data/export',
                 back: '/web/menu/internship/statistical'
             };
         }
@@ -280,6 +281,28 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
+        });
+
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
         });
 
         /*

@@ -151,6 +151,11 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
         return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_COLLEGE, INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
     }
 
+    @Override
+    public Result<Record> exportData(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege) {
+        return dataPagingQueryAllWithConditionNoPage(dataTablesUtils, create, INTERNSHIP_COLLEGE, INTERNSHIP_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipCollege.getInternshipReleaseId()));
+    }
+
     /**
      * 全局搜索条件
      *

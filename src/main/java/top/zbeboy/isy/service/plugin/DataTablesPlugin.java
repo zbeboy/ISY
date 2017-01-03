@@ -85,6 +85,32 @@ public class DataTablesPlugin<T> {
     }
 
     /**
+     * 查询全部数据 with 额外条件
+     *
+     * @param dataTablesUtils datatables工具类
+     * @param create          jooq create.
+     * @param table           jooq table.
+     * @param extraCondition  额外条件
+     * @return 全部数据
+     */
+    public Result<Record> dataPagingQueryAllWithConditionNoPage(DataTablesUtils<T> dataTablesUtils, final DSLContext create, TableLike<?> table, Condition extraCondition) {
+        Result<Record> records;
+        Condition a = searchCondition(dataTablesUtils);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(table)
+                    .where(extraCondition);
+            records = selectConditionStep.fetch();
+        } else {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(table)
+                    .where(extraCondition.and(a));
+            records = selectConditionStep.fetch();
+        }
+        return records;
+    }
+
+    /**
      * 统计全部
      *
      * @param create jooq create.
