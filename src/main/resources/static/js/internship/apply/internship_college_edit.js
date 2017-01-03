@@ -176,8 +176,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
                     $(paramId.parentalContact).attr("readonly", true);
                     $(paramId.startTime).attr("readonly", true);
                     $(paramId.endTime).attr("readonly", true);
-                    $(paramId.startTime).val(moment().format('YYYY-MM-DD',init_page_param.startTime));
-                    $(paramId.endTime).val(moment().format('YYYY-MM-DD',init_page_param.endTime));
+                    $(paramId.startTime).val(moment().format('YYYY-MM-DD', init_page_param.startTime));
+                    $(paramId.endTime).val(moment().format('YYYY-MM-DD', init_page_param.endTime));
                     $('#man').attr("disabled", true);
                     $('#woman').attr("disabled", true);
                     $(paramId.headmaster).attr("disabled", true);

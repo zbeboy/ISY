@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 /**

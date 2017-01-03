@@ -93,7 +93,7 @@ public class RoleController {
         RoleBean otherCondition = new RoleBean();
         otherCondition.setRoleType(2);
         DataTablesUtils<RoleBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = roleService.findAllByPage(dataTablesUtils,otherCondition);
+        Result<Record> records = roleService.findAllByPage(dataTablesUtils, otherCondition);
         List<RoleBean> roleBeens = new ArrayList<>();
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             for (Record record : records) {
@@ -110,7 +110,7 @@ public class RoleController {
         }
         dataTablesUtils.setData(roleBeens);
         dataTablesUtils.setiTotalRecords(roleService.countAll(otherCondition));
-        dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils,otherCondition));
+        dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils, otherCondition));
         return dataTablesUtils;
     }
 
@@ -340,7 +340,7 @@ public class RoleController {
     @RequestMapping(value = "/web/platform/role/application/json", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson(@RequestParam("collegeId") int collegeId) {
-        List<TreeBean> treeBeens = applicationService.getApplicationJsonByCollegeId(0,collegeId);
+        List<TreeBean> treeBeens = applicationService.getApplicationJsonByCollegeId(0, collegeId);
         return new AjaxUtils<TreeBean>().success().listData(treeBeens);
     }
 }

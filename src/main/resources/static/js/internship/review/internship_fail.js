@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/12/6.
  */
 //# sourceURL=internship_audit.js
-require(["jquery", "handlebars", "nav_active",,"messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -10,10 +10,10 @@ require(["jquery", "handlebars", "nav_active",,"messenger", "jquery.address", "j
          */
         var ajax_url = {
             fail_data_url: '/web/internship/review/fail/data',
-            audit_detail_url:'/web/internship/review/audit/detail',
+            audit_detail_url: '/web/internship/review/audit/detail',
             save: '/web/internship/review/audit/save',
             audit_pass_url: '/web/internship/review/audit/pass',
-            audit_delete_url:'/web/internship/review/audit/delete',
+            audit_delete_url: '/web/internship/review/audit/delete',
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
             back: '/web/menu/internship/review'
@@ -284,7 +284,7 @@ require(["jquery", "handlebars", "nav_active",,"messenger", "jquery.address", "j
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            sendDeleteAjax(id,studentId);
+                            sendDeleteAjax(id, studentId);
                         }
                     },
                     cancel: {
@@ -372,8 +372,11 @@ require(["jquery", "handlebars", "nav_active",,"messenger", "jquery.address", "j
          * @param internshipReleaseId
          * @param studentId
          */
-        function sendDeleteAjax(internshipReleaseId,studentId){
-            $.post(web_path + ajax_url.audit_delete_url, {internshipReleaseId:internshipReleaseId,studentId:studentId}, function (data) {
+        function sendDeleteAjax(internshipReleaseId, studentId) {
+            $.post(web_path + ajax_url.audit_delete_url, {
+                internshipReleaseId: internshipReleaseId,
+                studentId: studentId
+            }, function (data) {
                 if (data.state) {
                     Messenger().post({
                         message: data.msg,

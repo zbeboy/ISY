@@ -11,11 +11,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             internship_journal_data_url: '/anyone/internship/data',
             journal_url: '/web/internship/journal/list',
-            my_journal:'/web/internship/journal/my/list',
+            my_journal: '/web/internship/journal/my/list',
             add: '/web/internship/journal/list/add',
             valid_is_student: '/anyone/valid/cur/is/student',
-            valid_student:'/web/internship/journal/valid/student',
-            access_condition_url:'/web/internship/journal/condition'
+            valid_student: '/web/internship/journal/valid/student',
+            access_condition_url: '/web/internship/journal/condition'
         };
 
         /*
@@ -233,7 +233,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 }, {
                     url: web_path + ajax_url.valid_student,
                     type: 'post',
-                    data: {student: student,internshipReleaseId:id, type: type},
+                    data: {student: student, internshipReleaseId: id, type: type},
                     success: function (data) {
                         if (data.state) {
                             to_add_data = data.objectResult;
@@ -258,7 +258,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param internshipReleaseId
          * @param studentId
          */
-        function accessAdd(internshipReleaseId,studentId){
+        function accessAdd(internshipReleaseId, studentId) {
             $.address.value(ajax_url.add + '?id=' + internshipReleaseId + '&studentId=' + studentId);
         }
 

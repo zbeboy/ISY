@@ -82,7 +82,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
             initStaffSelect();
         }
 
-        function initStaffSelect(){
+        function initStaffSelect() {
             $(paramId.staffId).selectpicker({
                 liveSearch: true,
                 maxOptions: 1

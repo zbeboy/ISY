@@ -23,7 +23,6 @@ import top.zbeboy.isy.web.util.DataTablesUtils;
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_JOURNAL;
 

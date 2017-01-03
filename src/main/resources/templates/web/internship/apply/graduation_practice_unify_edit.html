@@ -23,20 +23,24 @@
                 <form role="form" id="edit_form">
                     <div class="form-group" id="valid_student_name">
                         <label>学生姓名</label>
-                        <input class="form-control" th:value="${student.realName}" name="studentName" id="studentName" placeholder="学生姓名" readonly="readonly" />
+                        <input class="form-control" th:value="${student.realName}" name="studentName" id="studentName"
+                               placeholder="学生姓名" readonly="readonly"/>
                         <p class="text-danger hidden" id="student_name_error_msg"></p>
-                        <input type="hidden" th:value="${student.studentId}" name="studentId" id="studentId" />
-                        <input type="hidden" th:value="${internshipReleaseId}" name="internshipReleaseId" />
-                        <input type="hidden" th:value="${internshipData.graduationPracticeUnifyId}" name="graduationPracticeUnifyId" />
+                        <input type="hidden" th:value="${student.studentId}" name="studentId" id="studentId"/>
+                        <input type="hidden" th:value="${internshipReleaseId}" name="internshipReleaseId"/>
+                        <input type="hidden" th:value="${internshipData.graduationPracticeUnifyId}"
+                               name="graduationPracticeUnifyId"/>
                     </div>
                     <div class="form-group" id="valid_college_class">
                         <label>专业班级</label>
-                        <input class="form-control" th:value="${student.organizeName}" name="collegeClass" id="collegeClass" placeholder="专业班级" readonly="readonly" />
+                        <input class="form-control" th:value="${student.organizeName}" name="collegeClass"
+                               id="collegeClass" placeholder="专业班级" readonly="readonly"/>
                         <p class="text-danger hidden" id="college_class_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_student_number">
                         <label>学生学号</label>
-                        <input class="form-control" th:value="${student.studentNumber}" name="studentNumber" id="studentNumber" placeholder="学生学号" readonly="readonly" />
+                        <input class="form-control" th:value="${student.studentNumber}" name="studentNumber"
+                               id="studentNumber" placeholder="学生学号" readonly="readonly"/>
                         <p class="text-danger hidden" id="student_number_error_msg"></p>
                     </div>
                     <div class="form-group">
@@ -59,7 +63,8 @@
         <!-- /.footer -->
         <script id="file-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                 data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
                 <div class="col-lg-6">
                     {{original_file_name}}
                 </div>
@@ -67,7 +72,9 @@
                     {{size}}
                 </div>
                 <div class="col-lg-2 text-center">
-                    <a class="downloadfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-file-id="{{fileId}}" href="javascript:;">下载</a>
+                    <a class="downloadfile" data-file-path="{{lastPath}}"
+                       data-original-file-name="{{original_file_name}}" data-file-id="{{fileId}}"
+                       href="javascript:;">下载</a>
                 </div>
             </div>
             {{/each}}

@@ -5,7 +5,11 @@ import org.jooq.Converter;
 import java.util.Date;
 
 /**
- * Created by lenovo on 2016-08-18.
+ * jooq sql date to util date 转换.
+ *
+ * @author zbeboy
+ * @version 1.0
+ * @since 1.0
  */
 public class DateConverter implements Converter<java.sql.Date, Date> {
     @Override

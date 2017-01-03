@@ -222,5 +222,5 @@ public interface ApplicationService {
      * @param pid 父id
      * @return list json
      */
-    List<TreeBean> getApplicationJsonByCollegeId(int pid,int collegeId);
+    List<TreeBean> getApplicationJsonByCollegeId(int pid, int collegeId);
 }

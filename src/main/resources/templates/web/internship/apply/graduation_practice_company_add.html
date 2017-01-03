@@ -23,17 +23,20 @@
                 <form role="form" id="add_form">
                     <div class="form-group" id="valid_student_name">
                         <label>学生姓名</label>
-                        <input class="form-control" th:value="${student.realName}" name="studentName" id="studentName" placeholder="学生姓名"/>
+                        <input class="form-control" th:value="${student.realName}" name="studentName" id="studentName"
+                               placeholder="学生姓名"/>
                         <p class="text-danger hidden" id="student_name_error_msg"></p>
-                        <input type="hidden" th:value="${student.studentId}" name="studentId" id="studentId" />
-                        <input type="hidden" th:value="${internshipReleaseId}" name="internshipReleaseId" />
+                        <input type="hidden" th:value="${student.studentId}" name="studentId" id="studentId"/>
+                        <input type="hidden" th:value="${internshipReleaseId}" name="internshipReleaseId"/>
                     </div>
                     <div class="form-group" id="valid_college_class">
                         <label>专业班级</label>
-                        <input class="form-control" th:value="${student.organizeName}" name="collegeClass" id="collegeClass" placeholder="专业班级" readonly="readonly" />
+                        <input class="form-control" th:value="${student.organizeName}" name="collegeClass"
+                               id="collegeClass" placeholder="专业班级" readonly="readonly"/>
                         <p class="text-danger hidden" id="college_class_error_msg"></p>
                     </div>
-                    <div class="form-group" id="valid_student_sex" th:if="${student.sex==null || student.sex == '' || student.sex == '男'}">
+                    <div class="form-group" id="valid_student_sex"
+                         th:if="${student.sex==null || student.sex == '' || student.sex == '男'}">
                         <label>学生性别</label>
                         <label class="radio-inline">
                             <input type="radio" name="studentSex" id="man" value="男" checked="checked"/>男
@@ -55,53 +58,63 @@
                     </div>
                     <div class="form-group" id="valid_student_number">
                         <label>学生学号</label>
-                        <input class="form-control" th:value="${student.studentNumber}" name="studentNumber" id="studentNumber" placeholder="学生学号" readonly="readonly" />
+                        <input class="form-control" th:value="${student.studentNumber}" name="studentNumber"
+                               id="studentNumber" placeholder="学生学号" readonly="readonly"/>
                         <p class="text-danger hidden" id="student_number_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_phone_number">
                         <label>电话号码</label>
-                        <input class="form-control" th:value="${student.mobile}" name="phoneNumber" id="phoneNumber" placeholder="电话号码" readonly="readonly" />
+                        <input class="form-control" th:value="${student.mobile}" name="phoneNumber" id="phoneNumber"
+                               placeholder="电话号码" readonly="readonly"/>
                         <p class="text-danger hidden" id="phone_number_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_qq_mailbox">
                         <label>QQ邮箱</label>
-                        <input class="form-control" name="qqMailbox" th:value="${qqMail}" id="qqMailbox" placeholder="QQ邮箱"/>
+                        <input class="form-control" name="qqMailbox" th:value="${qqMail}" id="qqMailbox"
+                               placeholder="QQ邮箱"/>
                         <p class="text-danger hidden" id="qq_mailbox_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_parental_contact">
                         <label>父母联系方式</label>
-                        <input class="form-control" th:value="${student.parentContactPhone}" name="parentalContact" id="parentalContact" placeholder="父母联系方式"/>
+                        <input class="form-control" th:value="${student.parentContactPhone}" name="parentalContact"
+                               id="parentalContact" placeholder="父母联系方式"/>
                         <p class="text-danger hidden" id="parental_contact_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_headmaster">
                         <label>班主任</label>
-                        <select name="headmaster" id="select_headmaster" class="form-control selectpicker show-tick" title="请选择班主任">
+                        <select name="headmaster" id="select_headmaster" class="form-control selectpicker show-tick"
+                                title="请选择班主任">
                         </select>
                         <p class="text-danger hidden" id="headmaster_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_graduation_practice_company_name">
                         <label>实习单位名称</label>
-                        <input class="form-control" name="graduationPracticeCompanyName" id="graduationPracticeCompanyName" placeholder="实习单位名称"/>
+                        <input class="form-control" name="graduationPracticeCompanyName"
+                               id="graduationPracticeCompanyName" placeholder="实习单位名称"/>
                         <p class="text-danger hidden" id="graduation_practice_company_name_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_graduation_practice_company_address">
                         <label>实习单位地址</label>
-                        <input class="form-control" name="graduationPracticeCompanyAddress" id="graduationPracticeCompanyAddress" placeholder="实习单位地址"/>
+                        <input class="form-control" name="graduationPracticeCompanyAddress"
+                               id="graduationPracticeCompanyAddress" placeholder="实习单位地址"/>
                         <p class="text-danger hidden" id="graduation_practice_company_address_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_graduation_practice_company_contacts">
                         <label>实习单位联系人</label>
-                        <input class="form-control" name="graduationPracticeCompanyContacts" id="graduationPracticeCompanyContacts" placeholder="实习单位联系人"/>
+                        <input class="form-control" name="graduationPracticeCompanyContacts"
+                               id="graduationPracticeCompanyContacts" placeholder="实习单位联系人"/>
                         <p class="text-danger hidden" id="graduation_practice_company_contacts_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_graduation_practice_company_tel">
                         <label>实习单位联系人联系方式</label>
-                        <input class="form-control" name="graduationPracticeCompanyTel" id="graduationPracticeCompanyTel" placeholder="实习单位联系人联系方式"/>
+                        <input class="form-control" name="graduationPracticeCompanyTel"
+                               id="graduationPracticeCompanyTel" placeholder="实习单位联系人联系方式"/>
                         <p class="text-danger hidden" id="graduation_practice_company_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_school_guidance_teacher">
                         <label>校内指导教师</label>
-                        <input class="form-control" name="schoolGuidanceTeacher" th:value="${internshipTeacher}" id="schoolGuidanceTeacher" placeholder="校内指导教师" readonly="readonly" />
+                        <input class="form-control" name="schoolGuidanceTeacher" th:value="${internshipTeacher}"
+                               id="schoolGuidanceTeacher" placeholder="校内指导教师" readonly="readonly"/>
                         <p class="text-danger hidden" id="school_guidance_teacher_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_start_time">
@@ -139,7 +152,8 @@
         </script>
         <script id="file-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                 data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
                 <div class="col-lg-6">
                     {{original_file_name}}
                 </div>
@@ -147,7 +161,9 @@
                     {{size}}
                 </div>
                 <div class="col-lg-2 text-center">
-                    <a class="downloadfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-file-id="{{fileId}}" href="javascript:;">下载</a>
+                    <a class="downloadfile" data-file-path="{{lastPath}}"
+                       data-original-file-name="{{original_file_name}}" data-file-id="{{fileId}}"
+                       href="javascript:;">下载</a>
                 </div>
             </div>
             {{/each}}

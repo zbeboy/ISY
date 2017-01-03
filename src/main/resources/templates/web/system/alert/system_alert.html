@@ -18,7 +18,8 @@
                 <div class="well">
                     <div class="row" style="margin-top:2px;">
                         <div class="col-md-12">
-                            <input type="text" id="search_alert_content" class="form-control input-sm" placeholder="提醒内容"/>
+                            <input type="text" id="search_alert_content" class="form-control input-sm"
+                                   placeholder="提醒内容"/>
                         </div>
                     </div>
                     <div class="text-center" style="margin-top:4px;">
@@ -31,7 +32,8 @@
                     </div>
                 </div>
                 <div class="text-right" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
+                    </button>
                 </div>
                 <div id="tableData" class="list-group">
                 </div>
@@ -47,7 +49,8 @@
         <!-- /.footer -->
         <script id="alert-more-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <a href="javascript:;" data-id="{{linkId}}" data-type="{{systemAlertTypeId}}" class="list-group-item row alert_detail">
+            <a href="javascript:;" data-id="{{linkId}}" data-type="{{systemAlertTypeId}}"
+               class="list-group-item row alert_detail">
                 <div class="col-md-6">{{alertContent}}</div>
                 <div class="col-md-6 text-right">{{alertDateStr}}</div>
             </a>

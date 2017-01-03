@@ -11,15 +11,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
 import top.zbeboy.isy.domain.tables.records.InternshipApplyRecord;
-import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import javax.annotation.Resource;
 
 import static top.zbeboy.isy.domain.Tables.*;
 

@@ -2,8 +2,8 @@
  * Created by lenovo on 2016/12/14.
  */
 //# sourceURL=internship_my_regulate.js
-require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars,nav_active) {
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, nav_active) {
 
         /*
          ajax url
@@ -15,8 +15,8 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
                 edit: '/web/internship/regulate/list/edit',
                 add: '/web/internship/regulate/list/add',
                 look: '/web/internship/regulate/list/look',
-                nav:'/web/menu/internship/regulate',
-                back:'/web/menu/internship/regulate'
+                nav: '/web/menu/internship/regulate',
+                back: '/web/menu/internship/regulate'
             };
         }
 
@@ -28,8 +28,8 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
          */
         function getParamId() {
             return {
-                studentName:'#search_student_name',
-                studentNumber:'#search_student_number'
+                studentName: '#search_student_name',
+                studentNumber: '#search_student_number'
             };
         }
 
@@ -37,9 +37,9 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
          参数
          */
         var param = {
-            staffId:init_page_param.staffId,
-            studentName:'',
-            studentNumber:''
+            staffId: init_page_param.staffId,
+            studentName: '',
+            studentNumber: ''
         };
 
         /*
@@ -348,7 +348,7 @@ require(["jquery", "handlebars", "nav_active","datatables.responsive", "check.al
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {regulateIds: regulateId,staffId:init_page_param.staffId},
+                data: {regulateIds: regulateId, staffId: init_page_param.staffId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

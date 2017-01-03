@@ -23,11 +23,13 @@
                 <form role="form" id="add_form">
                     <div class="form-group" id="valid_school_name">
                         <label>学校</label>
-                        <input class="form-control" name="schoolName" id="schoolName" th:value="${college.schoolName}" readonly="readonly"/>
+                        <input class="form-control" name="schoolName" id="schoolName" th:value="${college.schoolName}"
+                               readonly="readonly"/>
                     </div>
                     <div class="form-group" id="valid_college_name">
                         <label>院</label>
-                        <input class="form-control" name="collegeName" id="collegeName" th:value="${college.collegeName}" readonly="readonly"/>
+                        <input class="form-control" name="collegeName" id="collegeName"
+                               th:value="${college.collegeName}" readonly="readonly"/>
                         <input type="hidden" th:value="${college.collegeId}" name="collegeId" id="collegeId"/>
                     </div>
                     <div class="row">
@@ -60,7 +62,7 @@
             <option value="{{college_value}}">{{college_name}}</option>
             {{/each}}
         </script>
-        <input type="hidden" class="dy_script" value="/js/data/college/college_mount.js" />
+        <input type="hidden" class="dy_script" value="/js/data/college/college_mount.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

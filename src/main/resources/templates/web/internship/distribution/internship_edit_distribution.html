@@ -23,20 +23,21 @@
                 <form role="form" id="edit_form">
                     <div class="form-group">
                         <label>姓名</label>
-                        <input th:value="${student.realName}"  class="form-control" readonly="readonly"  />
+                        <input th:value="${student.realName}" class="form-control" readonly="readonly"/>
                         <input type="hidden" id="studentId" th:value="${student.studentId}"/>
                     </div>
                     <div class="form-group">
                         <label>学号</label>
-                        <input th:value="${student.studentNumber}" class="form-control" readonly="readonly"  />
+                        <input th:value="${student.studentNumber}" class="form-control" readonly="readonly"/>
                     </div>
                     <div class="form-group">
                         <label>班级</label>
-                        <input th:value="${student.organizeName}" class="form-control" readonly="readonly"  />
+                        <input th:value="${student.organizeName}" class="form-control" readonly="readonly"/>
                     </div>
                     <div class="form-group" id="valid_staff">
                         <label>指导教师</label>
-                        <select name="teacher" id="select_teacher" class="form-control selectpicker show-tick" title="请选择教师">
+                        <select name="teacher" id="select_teacher" class="form-control selectpicker show-tick"
+                                title="请选择教师">
                         </select>
                         <p class="text-danger hidden" id="staff_error_msg"></p>
                     </div>
@@ -62,7 +63,7 @@
             /*页面参数*/
             var init_page_param = {
                 'internshipReleaseId': /*[[${internshipReleaseId}]]*/ '',
-                'staffId':/*[[${staffId}]]*/ ''
+                'staffId': /*[[${staffId}]]*/ ''
             };
             /*]]>*/
         </script>

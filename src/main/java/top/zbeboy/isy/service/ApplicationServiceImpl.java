@@ -17,7 +17,6 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.ApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
-import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -30,7 +29,6 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static top.zbeboy.isy.domain.Tables.APPLICATION;
@@ -335,7 +333,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             treeBeens = null;
         } else {
             for (Application application : applications) { // pid = 0
-                TreeBean treeBean = new TreeBean(application.getApplicationName(),bindingDataToJson(application.getApplicationId()),application.getApplicationId());
+                TreeBean treeBean = new TreeBean(application.getApplicationName(), bindingDataToJson(application.getApplicationId()), application.getApplicationId());
                 treeBeens.add(treeBean);
             }
         }
@@ -356,7 +354,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             treeBeens = null;
         } else {
             for (Application application : applications) { // pid = 0
-                TreeBean treeBean = new TreeBean(application.getApplicationName(),bindingDataToJson(application.getApplicationId(),collegeId),application.getApplicationId());
+                TreeBean treeBean = new TreeBean(application.getApplicationName(), bindingDataToJson(application.getApplicationId(), collegeId), application.getApplicationId());
                 treeBeens.add(treeBean);
             }
         }
@@ -406,7 +404,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     /**
      * 应用数据排序
      *
-     * @param dataTablesUtils datatable工具类
+     * @param dataTablesUtils     datatable工具类
      * @param selectConditionStep 条件
      */
     @Override

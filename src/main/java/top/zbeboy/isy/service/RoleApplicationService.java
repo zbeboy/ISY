@@ -9,7 +9,7 @@ import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import java.util.List;
 
 /**
- * Created by 杨逸云 on 2016/9/29.
+ * Created by lenovo on 2016/9/29.
  */
 @CacheConfig(cacheNames = "role_application")
 public interface RoleApplicationService {

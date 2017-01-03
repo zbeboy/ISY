@@ -200,7 +200,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         changeDepartment(0);// 清空系数据
         changeScience(0);// 清空专业数据
         changeGrade(0);// 清空年级数据
-        changeOrganize(0,0);// 清空班级数据
+        changeOrganize(0, 0);// 清空班级数据
 
         // 改变选项时，检验
         if (Number(school) > 0) {
@@ -227,7 +227,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         changeDepartment(college);// 根据院重新加载系数据
         changeScience(0);// 清空专业数据
         changeGrade(0);// 清空年级数据
-        changeOrganize(0,0);// 清空班级数据
+        changeOrganize(0, 0);// 清空班级数据
 
         if (Number(college) > 0) {
             validSuccessDom(validId.valid_college, errorMsgId.college_error_msg);
@@ -250,7 +250,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         var department = param.department;
         changeScience(department);// 根据系重新加载专业数据
         changeGrade(0);// 清空年级数据
-        changeOrganize(0,0);// 清空班级数据
+        changeOrganize(0, 0);// 清空班级数据
 
         if (Number(department) > 0) {
             validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
@@ -270,7 +270,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         initParam();
         var science = param.science;
         changeGrade(science);// 根据专业重新加载年级
-        changeOrganize(0,0);// 清空班级数据
+        changeOrganize(0, 0);// 清空班级数据
 
         if (Number(science) > 0) {
             validSuccessDom(validId.valid_science, errorMsgId.science_error_msg);
@@ -288,7 +288,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         initParam();
         var grade = param.grade;
         var science = param.science;
-        changeOrganize(grade,science);// 根据年级重新加载班级数据
+        changeOrganize(grade, science);// 根据年级重新加载班级数据
 
         if (Number(grade) > 0) {
             validSuccessDom(validId.valid_grade, errorMsgId.grade_error_msg);
@@ -555,7 +555,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      * @param grade 年级
      * @param scienceId 专业id
      */
-    function changeOrganize(grade,scienceId) {
+    function changeOrganize(grade, scienceId) {
 
         if (grade == 0 || grade === '' || scienceId <= 0) {
             var source = $("#organize-template").html();
@@ -583,7 +583,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
             // 根据年级查询全部班级
             // 显示遮罩
             startLoading();
-            $.post(web_path + ajax_url.organize_data_url, {grade: grade,scienceId:scienceId}, function (data) {
+            $.post(web_path + ajax_url.organize_data_url, {grade: grade, scienceId: scienceId}, function (data) {
                 var source = $("#organize-template").html();
                 var template = Handlebars.compile(source);
 
@@ -858,7 +858,8 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
                 } else {
                     // 去除遮罩
                     endLoading();
-                    validErrorDom(validId.valid_student_number, errorMsgId.student_number_error_msg, '该学号已被注册');;
+                    validErrorDom(validId.valid_student_number, errorMsgId.student_number_error_msg, '该学号已被注册');
+                    ;
                 }
             });
         }

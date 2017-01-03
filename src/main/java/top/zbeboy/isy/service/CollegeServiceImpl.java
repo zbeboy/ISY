@@ -181,7 +181,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     /**
      * 院数据排序
      *
-     * @param dataTablesUtils datatable工具类
+     * @param dataTablesUtils     datatable工具类
      * @param selectConditionStep 条件
      */
     @Override

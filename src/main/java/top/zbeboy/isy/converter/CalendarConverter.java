@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
- * Created by Administrator on 2016/7/21.
  * jooq timestamp to date 转换.
  *
  * @author zbeboy

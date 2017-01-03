@@ -8,7 +8,6 @@ import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by zbeboy on 2016/12/14.
@@ -66,7 +65,7 @@ public interface InternshipJournalService {
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils,InternshipJournalBean internshipJournalBean);
+    int countByCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils, InternshipJournalBean internshipJournalBean);
 
     /**
      * 通过id查询

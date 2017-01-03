@@ -161,23 +161,23 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         /**
          * 初始化input
          */
-        function initInputState(){
+        function initInputState() {
             var internshipApplyState = init_page_param.internshipApplyState;
-            if(internshipApplyState !== ''){
-                if(internshipApplyState == 5){ // 基本信息修改状态，不允许修改单位信息
+            if (internshipApplyState !== '') {
+                if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息
                     $(paramId.internshipCompanyName).attr("readonly", true);
                     $(paramId.internshipCompanyAddress).attr("readonly", true);
                     $(paramId.internshipCompanyContacts).attr("readonly", true);
                     $(paramId.internshipCompanyTel).attr("readonly", true);
                     initInternshipTime();// 初始化时间选择
-                } else if(internshipApplyState == 7){// 单位信息修改状态，不允许修改基本信息
+                } else if (internshipApplyState == 7) {// 单位信息修改状态，不允许修改基本信息
                     $(paramId.studentName).attr("readonly", true);
                     $(paramId.qqMailbox).attr("readonly", true);
                     $(paramId.parentalContact).attr("readonly", true);
                     $(paramId.startTime).attr("readonly", true);
                     $(paramId.endTime).attr("readonly", true);
-                    $(paramId.startTime).val(moment().format('YYYY-MM-DD',init_page_param.startTime));
-                    $(paramId.endTime).val(moment().format('YYYY-MM-DD',init_page_param.endTime));
+                    $(paramId.startTime).val(moment().format('YYYY-MM-DD', init_page_param.startTime));
+                    $(paramId.endTime).val(moment().format('YYYY-MM-DD', init_page_param.endTime));
                     $('#man').attr("disabled", true);
                     $('#woman').attr("disabled", true);
                     $(paramId.headmaster).attr("disabled", true);
@@ -344,7 +344,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         });
 
-        function selectedHeadmaster(){
+        function selectedHeadmaster() {
             var realHeadmaster = $('#headmaster').val() + ' ' + $('#headmasterContact').val();
             var headmasterChildrens = $(paramId.headmaster).children();
             for (var i = 0; i < headmasterChildrens.length; i++) {
@@ -475,7 +475,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             });
         }
 
-        function validStudentName(){
+        function validStudentName() {
             var studentName = param.studentName;
             if (studentName.length <= 0 || studentName.length > 15) {
                 Messenger().post({
@@ -488,7 +488,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validQqMailbox(){
+        function validQqMailbox() {
             var qqMailbox = param.qqMailbox;
             if (qqMailbox.length <= 0 || qqMailbox.length > 100) {
                 Messenger().post({
@@ -509,7 +509,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validParentalContact(){
+        function validParentalContact() {
             var parentalContact = param.parentalContact;
             var regex = /^1[0-9]{10}/;
             if (!regex.test(parentalContact)) {
@@ -523,7 +523,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validHeadmaster(){
+        function validHeadmaster() {
             var headmaster = param.headmaster;
             if (headmaster.length <= 0) {
                 Messenger().post({
@@ -536,7 +536,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyName(){
+        function validInternshipCompanyName() {
             var internshipCompanyName = param.internshipCompanyName;
             if (internshipCompanyName.length <= 0 || internshipCompanyName.length > 200) {
                 Messenger().post({
@@ -549,7 +549,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyAddress(){
+        function validInternshipCompanyAddress() {
             var internshipCompanyAddress = param.internshipCompanyAddress;
             if (internshipCompanyAddress.length <= 0 || internshipCompanyAddress.length > 500) {
                 Messenger().post({
@@ -562,7 +562,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyContacts(){
+        function validInternshipCompanyContacts() {
             var internshipCompanyContacts = param.internshipCompanyContacts;
             if (internshipCompanyContacts.length <= 0 || internshipCompanyContacts.length > 10) {
                 Messenger().post({
@@ -575,7 +575,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyTel(){
+        function validInternshipCompanyTel() {
             var internshipCompanyTel = param.internshipCompanyTel;
             var regex = /^1[0-9]{10}/;
             if (!regex.test(internshipCompanyTel)) {

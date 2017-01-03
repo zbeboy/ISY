@@ -1,7 +1,6 @@
 package top.zbeboy.isy.service;
 
 
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.isy.domain.tables.daos.AuthoritiesDao;
 import top.zbeboy.isy.domain.tables.pojos.Authorities;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.AUTHORITIES;

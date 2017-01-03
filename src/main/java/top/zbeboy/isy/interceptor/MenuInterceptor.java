@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by lenovo on 2016-09-28.
+ * 菜单权限配置
  */
 public class MenuInterceptor implements HandlerInterceptor {
 

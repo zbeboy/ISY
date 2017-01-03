@@ -9,12 +9,13 @@ import java.io.InputStream;
 
 /**
  * Created by zbeboy on 2016/12/19.
+ * compress zip builder.
  */
 public class ZipInputStream implements InputStreamSupplier {
 
     private File file;
 
-    public ZipInputStream(File file){
+    public ZipInputStream(File file) {
         this.file = file;
     }
 

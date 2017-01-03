@@ -13,7 +13,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             valid: '/web/internship/release/update/valid',
             file_upload_url: '/anyone/users/upload/internship',
             delete_file_url: '/anyone/users/delete/file/internship',
-            internship_files_url:'/user/internship/files',
+            internship_files_url: '/user/internship/files',
             update: '/web/internship/release/update',
             back: '/web/menu/internship/release'
         };
@@ -25,10 +25,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          参数id
          */
         var paramId = {
-            internshipReleaseId:'#internshipReleaseId',
-            schoolId:'#schoolId',
-            collegeId:'#collegeId',
-            departmentId:'#departmentId',
+            internshipReleaseId: '#internshipReleaseId',
+            schoolId: '#schoolId',
+            collegeId: '#collegeId',
+            departmentId: '#departmentId',
             releaseTitle: '#releaseTitle',
             teacherDistributionTime: '#teacherDistributionTime',
             time: '#time',
@@ -39,10 +39,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          参数
          */
         var param = {
-            schoolId:$(paramId.schoolId).val(),
-            collegeId:$(paramId.collegeId).val(),
-            departmentId:$(paramId.departmentId).val(),
-            internshipReleaseId:$(paramId.internshipReleaseId).val(),
+            schoolId: $(paramId.schoolId).val(),
+            collegeId: $(paramId.collegeId).val(),
+            departmentId: $(paramId.departmentId).val(),
+            internshipReleaseId: $(paramId.internshipReleaseId).val(),
             releaseTitle: $(paramId.releaseTitle).val().trim(),
             teacherDistributionTime: $(paramId.teacherDistributionTime).val(),
             time: $(paramId.time).val(),
@@ -99,9 +99,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
 
         init();
 
-        function init(){
+        function init() {
             initParam();
-            $.get(web_path + ajax_url.internship_files_url,{internshipReleaseId:param.internshipReleaseId}, function (data) {
+            $.get(web_path + ajax_url.internship_files_url, {internshipReleaseId: param.internshipReleaseId}, function (data) {
                 initFileShow(data);
             });
         }
@@ -125,7 +125,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             var p = [];
             for (var i = 0; i < f.length; i++) {
                 p.push(new fileObj($(f[i]).attr('data-original-file-name'),
-                    $(f[i]).attr('data-new-name') ,
+                    $(f[i]).attr('data-new-name'),
                     $(f[i]).attr('data-file-path'),
                     $(f[i]).attr('data-ext'),
                     $(f[i]).attr('data-size')
@@ -261,7 +261,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * @param ext 后缀
          * @param size 尺寸
          */
-        function fileObj(originalFileName, newName, relativePath, ext,size) {
+        function fileObj(originalFileName, newName, relativePath, ext, size) {
             this.originalFileName = originalFileName;
             this.newName = newName;
             this.relativePath = relativePath;
@@ -372,7 +372,11 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            $.post(web_path + ajax_url.delete_file_url, {filePath: path,fileId:fileId,internshipReleaseId:internshipReleaseId}, function (data) {
+                            $.post(web_path + ajax_url.delete_file_url, {
+                                filePath: path,
+                                fileId: fileId,
+                                internshipReleaseId: internshipReleaseId
+                            }, function (data) {
                                 if (data.state) {
                                     Messenger().post({
                                         message: data.msg,

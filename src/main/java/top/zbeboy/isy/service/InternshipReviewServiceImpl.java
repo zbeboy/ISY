@@ -12,14 +12,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,13 +78,13 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
             internshipReviewBean.setOrganizeName(r.getValue(ORGANIZE.ORGANIZE_NAME));
             internshipReviewBean.setReason(r.getValue(INTERNSHIP_APPLY.REASON));
             internshipReviewBean.setInternshipApplyState(r.getValue(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE));
-            if(!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_START_TIME))){
+            if (!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_START_TIME))) {
                 internshipReviewBean.setChangeFillStartTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_START_TIME)));
             }
-            if(!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME))){
+            if (!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME))) {
                 internshipReviewBean.setChangeFillEndTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME)));
             }
-            if(!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.APPLY_TIME))){
+            if (!ObjectUtils.isEmpty(r.getValue(INTERNSHIP_APPLY.APPLY_TIME))) {
                 internshipReviewBean.setApplyTime(DateTimeUtils.formatDate(r.getValue(INTERNSHIP_APPLY.APPLY_TIME)));
             }
 

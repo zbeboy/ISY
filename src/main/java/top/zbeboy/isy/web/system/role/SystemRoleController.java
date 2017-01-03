@@ -12,13 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.CollegeRole;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
-import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
-import top.zbeboy.isy.domain.tables.records.RoleRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.RandomUtils;
 import top.zbeboy.isy.web.bean.platform.role.RoleBean;
@@ -33,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.*;
+import static top.zbeboy.isy.domain.Tables.ROLE;
 
 /**
  * Created by lenovo on 2016-10-16.
@@ -91,7 +87,7 @@ public class SystemRoleController {
         RoleBean otherCondition = new RoleBean();
         otherCondition.setRoleType(1);
         DataTablesUtils<RoleBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = roleService.findAllByPage(dataTablesUtils,otherCondition);
+        Result<Record> records = roleService.findAllByPage(dataTablesUtils, otherCondition);
         List<RoleBean> roleBeens = new ArrayList<>();
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             for (Record record : records) {
@@ -104,7 +100,7 @@ public class SystemRoleController {
         }
         dataTablesUtils.setData(roleBeens);
         dataTablesUtils.setiTotalRecords(roleService.countAll(otherCondition));
-        dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils,otherCondition));
+        dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils, otherCondition));
         return dataTablesUtils;
     }
 
@@ -140,7 +136,7 @@ public class SystemRoleController {
     /**
      * 保存时检验角色是否重复
      *
-     * @param name      角色名
+     * @param name 角色名
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = "/web/system/role/save/valid", method = RequestMethod.POST)
@@ -148,8 +144,8 @@ public class SystemRoleController {
     public AjaxUtils saveValid(@RequestParam("roleName") String name) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
-            Result<Record> records = roleService.findByRoleNameAndRoleType(name,1);
-            if(records.isEmpty()){
+            Result<Record> records = roleService.findByRoleNameAndRoleType(name, 1);
+            if (records.isEmpty()) {
                 return new AjaxUtils().success().msg("角色名不重复");
             } else {
                 return new AjaxUtils().fail().msg("角色名重复");
@@ -161,8 +157,8 @@ public class SystemRoleController {
     /**
      * 更新时检验角色名
      *
-     * @param name      角色名
-     * @param roleId    角色id
+     * @param name   角色名
+     * @param roleId 角色id
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = "/web/system/role/update/valid", method = RequestMethod.POST)
@@ -170,8 +166,8 @@ public class SystemRoleController {
     public AjaxUtils updateValid(@RequestParam("roleName") String name, @RequestParam("roleId") int roleId) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
-            Result<Record> records = roleService.findByRoleNameAndRoleTypeNeRoleId(name,1,roleId);
-            if(records.isEmpty()){
+            Result<Record> records = roleService.findByRoleNameAndRoleTypeNeRoleId(name, 1, roleId);
+            if (records.isEmpty()) {
                 return new AjaxUtils().success().msg("角色名不重复");
             } else {
                 return new AjaxUtils().fail().msg("角色名重复");
@@ -189,7 +185,7 @@ public class SystemRoleController {
      */
     @RequestMapping(value = "/web/system/role/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleSave( @RequestParam("roleName") String roleName, String applicationIds) {
+    public AjaxUtils roleSave(@RequestParam("roleName") String roleName, String applicationIds) {
         Role role = new Role();
         role.setRoleName(roleName);
         role.setRoleEnName("ROLE_" + RandomUtils.generateRoleEnName().toUpperCase());
@@ -212,7 +208,7 @@ public class SystemRoleController {
      */
     @RequestMapping(value = "/web/system/role/update", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId,@RequestParam("roleName") String roleName, String applicationIds) {
+    public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
         role.setRoleName(roleName);
         roleService.update(role);

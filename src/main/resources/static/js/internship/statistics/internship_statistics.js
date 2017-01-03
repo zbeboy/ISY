@@ -11,8 +11,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             internship_statistics_data_url: '/web/internship/statistical/data',
             submitted_url: '/web/internship/statistical/submitted',
-            unsubmitted_url:'/web/internship/statistical/unsubmitted',
-            data_url:'/web/internship/statistical/data_list'
+            unsubmitted_url: '/web/internship/statistical/unsubmitted',
+            data_url: '/web/internship/statistical/data_list'
         };
 
         /*

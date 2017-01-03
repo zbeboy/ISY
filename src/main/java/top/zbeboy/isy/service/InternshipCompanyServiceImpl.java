@@ -24,9 +24,7 @@ import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_APPLY;
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_CHANGE_HISTORY;
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COMPANY;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-11-27.

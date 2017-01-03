@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/12/6.
  */
 //# sourceURL=internship_pass.js
-require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -10,14 +10,14 @@ require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "
          */
         var ajax_url = {
             pass_data_url: '/web/internship/review/pass/data',
-            audit_detail_url:'/web/internship/review/audit/detail',
+            audit_detail_url: '/web/internship/review/audit/detail',
             save: '/web/internship/review/audit/save',
             audit_fail_url: '/web/internship/review/audit/fail',
-            audit_delete_url:'/web/internship/review/audit/delete',
+            audit_delete_url: '/web/internship/review/audit/delete',
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
             back: '/web/menu/internship/review',
-            download_file:'/anyone/users/download/file'
+            download_file: '/anyone/users/download/file'
         };
 
         // 刷新时选中菜单
@@ -241,7 +241,7 @@ require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "
          */
         $(tableData).delegate('.downloadFile', "click", function () {
             var id = $(this).attr('data-id');
-            window.location.href = web_path + ajax_url.download_file + '?fileId=' + id ;
+            window.location.href = web_path + ajax_url.download_file + '?fileId=' + id;
         });
 
         /*
@@ -292,7 +292,7 @@ require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            sendDeleteAjax(id,studentId);
+                            sendDeleteAjax(id, studentId);
                         }
                     },
                     cancel: {
@@ -487,8 +487,11 @@ require(["jquery", "handlebars", "nav_active",, "messenger", "jquery.address", "
          * @param internshipReleaseId
          * @param studentId
          */
-        function sendDeleteAjax(internshipReleaseId,studentId){
-            $.post(web_path + ajax_url.audit_delete_url, {internshipReleaseId:internshipReleaseId,studentId:studentId}, function (data) {
+        function sendDeleteAjax(internshipReleaseId, studentId) {
+            $.post(web_path + ajax_url.audit_delete_url, {
+                internshipReleaseId: internshipReleaseId,
+                studentId: studentId
+            }, function (data) {
                 if (data.state) {
                     Messenger().post({
                         message: data.msg,

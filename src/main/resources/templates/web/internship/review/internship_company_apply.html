@@ -92,7 +92,8 @@
                                 {{#if commitmentBook}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="commitmentBook" disabled="disabled"/>
+                                        <input type="checkbox" value="1" checked="checked" name="commitmentBook"
+                                               disabled="disabled"/>
                                         承诺书
                                     </label>
                                 </div>
@@ -116,7 +117,8 @@
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="safetyResponsibilityBook" disabled="disabled"/>
+                                        <input type="checkbox" value="1" name="safetyResponsibilityBook"
+                                               disabled="disabled"/>
                                         安全责任书
                                     </label>
                                 </div>
@@ -125,7 +127,8 @@
                                 {{#if practiceAgreement}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="practiceAgreement" disabled="disabled"/>
+                                        <input type="checkbox" value="1" checked="checked" name="practiceAgreement"
+                                               disabled="disabled"/>
                                         实践协议书
                                     </label>
                                 </div>
@@ -150,7 +153,8 @@
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="internshipApplication" disabled="disabled"/>
+                                        <input type="checkbox" value="1" name="internshipApplication"
+                                               disabled="disabled"/>
                                         实习申请书
                                     </label>
                                 </div>
@@ -159,7 +163,8 @@
                                 {{#if practiceReceiving}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="practiceReceiving" disabled="disabled"/>
+                                        <input type="checkbox" value="1" checked="checked" name="practiceReceiving"
+                                               disabled="disabled"/>
                                         实习接收
                                     </label>
                                 </div>
@@ -183,7 +188,8 @@
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="securityEducationAgreement" disabled="disabled"/>
+                                        <input type="checkbox" value="1" name="securityEducationAgreement"
+                                               disabled="disabled"/>
                                         安全教育协议
                                     </label>
                                 </div>
@@ -194,7 +200,8 @@
                                 {{#if parentalConsent}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="parentalConsent" disabled="disabled"/>
+                                        <input type="checkbox" value="1" checked="checked" name="parentalConsent"
+                                               disabled="disabled"/>
                                         父母同意书
                                     </label>
                                 </div>
@@ -217,10 +224,12 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default agree_apply" data-id="{{internshipReleaseId}}"
                                 data-student="{{studentId}}" data-name="{{student_name}}">
-                            同意</button>
+                            同意
+                        </button>
                         <button type="button" class="btn btn-default disagree_apply" data-id="{{internshipReleaseId}}"
                                 data-student="{{studentId}}" data-name="{{student_name}}">
-                            拒绝</button>
+                            拒绝
+                        </button>
                     </div>
                 </div>
             </div>
@@ -245,11 +254,13 @@
             /*]]>*/
         </script>
         <!-- 状态修改Modal -->
-        <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="stateModalLabel" aria-hidden="true">
+        <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="stateModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="stateModalLabel"></h4>
                     </div>
                     <div class="modal-body">
@@ -258,9 +269,9 @@
                                 <label for="reason">原因</label>
                                 <textarea class="form-control" name="reason" id="reason" rows="3"></textarea>
                                 <p id="reason_error_msg" class="hidden"></p>
-                                <input type="hidden" id="applyState" name="internshipApplyState" />
-                                <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId" />
-                                <input type="hidden" id="applyStudentId" name="studentId" />
+                                <input type="hidden" id="applyState" name="internshipApplyState"/>
+                                <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId"/>
+                                <input type="hidden" id="applyStudentId" name="studentId"/>
                             </div>
                         </form>
                     </div>
@@ -272,11 +283,13 @@
             </div>
         </div>
         <!-- 填写时间Modal -->
-        <div class="modal fade" id="fillTimeModal" tabindex="-1" role="dialog" aria-labelledby="fillTimeModalLabel" aria-hidden="true">
+        <div class="modal fade" id="fillTimeModal" tabindex="-1" role="dialog" aria-labelledby="fillTimeModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="fillTimeModalLabel"></h4>
                     </div>
                     <div class="modal-body">
@@ -287,9 +300,9 @@
                                 <p class="help-block">在该时间范围内可修改基本信息</p>
                                 <p class="text-danger hidden" id="fill_time_error_msg"></p>
                             </div>
-                            <input type="hidden" id="fillTimeState" name="internshipApplyState" />
-                            <input type="hidden" id="fillTimeInternshipReleaseId" name="internshipReleaseId" />
-                            <input type="hidden" id="fillTimeStudentId" name="studentId" />
+                            <input type="hidden" id="fillTimeState" name="internshipApplyState"/>
+                            <input type="hidden" id="fillTimeInternshipReleaseId" name="internshipReleaseId"/>
+                            <input type="hidden" id="fillTimeStudentId" name="studentId"/>
                         </form>
                     </div>
                     <div class="modal-footer">

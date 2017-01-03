@@ -189,9 +189,9 @@ public class DataTablesPlugin<T> {
     /**
      * 排序辅助
      *
-     * @param selectConditionStep  条件1
-     * @param selectJoinStep       条件2
-     * @param type                 类型
+     * @param selectConditionStep 条件1
+     * @param selectJoinStep      条件2
+     * @param type                类型
      */
     public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         if (!ObjectUtils.isEmpty(sortInteger)) {

@@ -23,7 +23,6 @@ import top.zbeboy.isy.service.CollegeApplicationService;
 import top.zbeboy.isy.service.RoleApplicationService;
 import top.zbeboy.isy.service.RoleService;
 import top.zbeboy.isy.web.bean.system.application.ApplicationBean;
-import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;

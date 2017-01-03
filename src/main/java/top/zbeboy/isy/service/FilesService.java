@@ -1,7 +1,5 @@
 package top.zbeboy.isy.service;
 
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import top.zbeboy.isy.domain.tables.pojos.Files;
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.isy.domain.tables.pojos.Users;

@@ -1,37 +1,34 @@
 package top.zbeboy.isy.config;
 
 
-import io.undertow.Handlers;
-import io.undertow.server.handlers.PathHandler;
 import io.undertow.servlet.api.SecurityConstraint;
 import io.undertow.servlet.api.SecurityInfo;
 import io.undertow.servlet.api.TransportGuaranteeType;
 import io.undertow.servlet.api.WebResourceCollection;
 import org.apache.commons.lang3.CharEncoding;
-import org.jooq.util.derby.sys.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring4.view.AjaxThymeleafView;
-import org.thymeleaf.spring4.view.ThymeleafView;
 import org.thymeleaf.standard.fragment.StandardDOMSelectorFragmentSpec;
 import top.zbeboy.isy.interceptor.MenuInterceptor;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.nio.file.Path;
 
 /**
- * Created by Administrator on 2016/7/22.
+ * Spring boot web init.
+ *
+ * @author zbeboy
+ * @version 1.0
+ * @since 1.0
  */
 @Configuration
 public class WebConfiguration extends WebMvcConfigurerAdapter {

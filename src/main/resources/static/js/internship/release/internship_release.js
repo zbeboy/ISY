@@ -12,7 +12,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             internship_release_data_url: '/web/internship/release/data',
             add: '/web/internship/release/add',
             edit: '/web/internship/release/edit',
-            updateDel:'/web/internship/release/update/del'
+            updateDel: '/web/internship/release/update/del'
         };
 
         /*
@@ -145,14 +145,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          注销
          */
         $(tableData).delegate('.del', "click", function () {
-            internshipReleaseDel($(this).attr('data-id'),$(this).attr('data-name'));
+            internshipReleaseDel($(this).attr('data-id'), $(this).attr('data-name'));
         });
 
         /*
          恢复
          */
         $(tableData).delegate('.recovery', "click", function () {
-            internshipReleaseRecovery($(this).attr('data-id'),$(this).attr('data-name'));
+            internshipReleaseRecovery($(this).attr('data-id'), $(this).attr('data-name'));
         });
 
         /**
@@ -160,7 +160,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param id 实习发布id
          * @param name 标题
          */
-        function internshipReleaseDel(id,name){
+        function internshipReleaseDel(id, name) {
             var msg;
             msg = Messenger().post({
                 message: "确定注销实习发布 '" + name + "' 吗?",
@@ -188,7 +188,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param id 实习发布id
          * @param name 标题
          */
-        function internshipReleaseRecovery(id,name){
+        function internshipReleaseRecovery(id, name) {
             var msg;
             msg = Messenger().post({
                 message: "确定恢复实习发布 '" + name + "' 吗?",
@@ -215,16 +215,16 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 注销
          * @param id
          */
-        function del(id){
-            sendUpdateDelAjax(id,"注销",1);
+        function del(id) {
+            sendUpdateDelAjax(id, "注销", 1);
         }
 
         /**
          * 恢复
          * @param id
          */
-        function recovery(id){
-            sendUpdateDelAjax(id,"恢复",0);
+        function recovery(id) {
+            sendUpdateDelAjax(id, "恢复", 0);
         }
 
         /**

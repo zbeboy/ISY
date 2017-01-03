@@ -475,7 +475,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyName(){
+        function validInternshipCompanyName() {
             var internshipCompanyName = param.internshipCompanyName;
             if (internshipCompanyName.length <= 0 || internshipCompanyName.length > 200) {
                 Messenger().post({
@@ -488,7 +488,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyAddress(){
+        function validInternshipCompanyAddress() {
             var internshipCompanyAddress = param.internshipCompanyAddress;
             if (internshipCompanyAddress.length <= 0 || internshipCompanyAddress.length > 500) {
                 Messenger().post({
@@ -501,7 +501,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyContacts(){
+        function validInternshipCompanyContacts() {
             var internshipCompanyContacts = param.internshipCompanyContacts;
             if (internshipCompanyContacts.length <= 0 || internshipCompanyContacts.length > 10) {
                 Messenger().post({
@@ -514,7 +514,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             }
         }
 
-        function validInternshipCompanyTel(){
+        function validInternshipCompanyTel() {
             var internshipCompanyTel = param.internshipCompanyTel;
             var regex = /^1[0-9]{10}/;
             if (!regex.test(internshipCompanyTel)) {

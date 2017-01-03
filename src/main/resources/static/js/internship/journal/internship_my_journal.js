@@ -2,8 +2,8 @@
  * Created by lenovo on 2016/12/14.
  */
 //# sourceURL=internship_my_journal.js
-require(["jquery", "handlebars", "nav_active","moment","datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
-    function ($, Handlebars,nav_active,moment) {
+require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
+    function ($, Handlebars, nav_active, moment) {
 
         /*
          ajax url
@@ -17,8 +17,8 @@ require(["jquery", "handlebars", "nav_active","moment","datatables.responsive", 
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
                 downloads: '/web/internship/journal/list/downloads',
-                nav:'/web/menu/internship/journal',
-                back:'/web/menu/internship/journal'
+                nav: '/web/menu/internship/journal',
+                back: '/web/menu/internship/journal'
             };
         }
 
@@ -38,7 +38,7 @@ require(["jquery", "handlebars", "nav_active","moment","datatables.responsive", 
          参数
          */
         var param = {
-            studentId:init_page_param.studentId,
+            studentId: init_page_param.studentId,
             createDate: ''
         };
 
@@ -121,34 +121,34 @@ require(["jquery", "handlebars", "nav_active","moment","datatables.responsive", 
                     render: function (a, b, c, d) {
 
                         var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "查看",
-                                        "css": "look",
-                                        "type": "info",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "下载",
-                                        "css": "download",
-                                        "type": "default",
-                                        "id": c.internshipJournalId
-                                    }
-                                ]
-                            };
+                        {
+                            func: [
+                                {
+                                    "name": "查看",
+                                    "css": "look",
+                                    "type": "info",
+                                    "id": c.internshipJournalId
+                                },
+                                {
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.internshipJournalId
+                                },
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.internshipJournalId
+                                },
+                                {
+                                    "name": "下载",
+                                    "css": "download",
+                                    "type": "default",
+                                    "id": c.internshipJournalId
+                                }
+                            ]
+                        };
 
                         var html = template(context);
                         return html;

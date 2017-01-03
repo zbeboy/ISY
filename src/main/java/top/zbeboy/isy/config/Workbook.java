@@ -1,9 +1,6 @@
 package top.zbeboy.isy.config;
 
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.util.IPTimeStamp;
-
-import java.text.SimpleDateFormat;
 
 /**
  * Application constants.

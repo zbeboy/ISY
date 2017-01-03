@@ -11,13 +11,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.domain.tables.daos.InternshipJournalDao;
 import top.zbeboy.isy.domain.tables.daos.InternshipRegulateDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRegulate;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -25,7 +23,6 @@ import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.List;
 
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_JOURNAL;
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_REGULATE;
 
 /**

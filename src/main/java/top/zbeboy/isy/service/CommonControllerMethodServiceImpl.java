@@ -14,7 +14,6 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
-import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

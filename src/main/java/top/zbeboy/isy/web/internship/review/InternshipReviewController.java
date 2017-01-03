@@ -776,7 +776,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/fail", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditFail(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
-                               @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,HttpServletRequest request) {
+                               @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
@@ -815,7 +815,7 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/audit/delete", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils auditDelete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,HttpServletRequest request) {
+    public AjaxUtils auditDelete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (!ObjectUtils.isEmpty(internshipRelease)) {

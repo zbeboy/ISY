@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 
 /**
  * Created by lenovo on 2016-09-03.
+ * 安全登录配置
  */
 public class SecurityLoginFilter implements Filter {
 

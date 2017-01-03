@@ -3,7 +3,11 @@ package top.zbeboy.isy.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Created by Administrator on 2016/7/21.
+ * Spring boot 配置属性加载.
+ *
+ * @author zbeboy
+ * @version 1.0
+ * @since 1.0
  */
 @ConfigurationProperties(prefix = "isy", ignoreUnknownFields = false)
 public class ISYProperties {

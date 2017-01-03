@@ -18,13 +18,10 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
-import top.zbeboy.isy.service.util.FilesUtils;
-import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
-import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.internship.journal.InternshipJournalController;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -35,7 +32,6 @@ import top.zbeboy.isy.web.vo.internship.regulate.InternshipRegulateVo;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -260,7 +256,7 @@ public class InternshipRegulateController {
      */
     @RequestMapping(value = "/web/internship/regulate/list/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils regulateListDel(String regulateIds,@RequestParam("staffId") int staffId) {
+    public AjaxUtils regulateListDel(String regulateIds, @RequestParam("staffId") int staffId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         // 强制身份判断
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
@@ -466,7 +462,7 @@ public class InternshipRegulateController {
                 }
             }
 
-            if(usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)){
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 errorBean.setHasError(true);
                 errorBean.setErrorMsg("您的注册类型不适用于监管");
                 return errorBean;

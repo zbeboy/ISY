@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-12-11.
  */
-require(["jquery", "handlebars", "datatables.responsive","jquery.address", "messenger"],
+require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "messenger"],
     function ($, Handlebars) {
 
         /*
@@ -12,20 +12,20 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
                 unsubmitted_data_url: '/web/internship/statistical/unsubmitted/data',
                 science_data_url: '/anyone/internship/sciences',
                 organize_data_url: '/anyone/internship/organizes',
-                back:'/web/menu/internship/statistical'
+                back: '/web/menu/internship/statistical'
             };
         }
 
         init();
 
-        function init(){
+        function init() {
             initSearchSciences();
         }
 
         /**
          * 初始化专业数据
          */
-        function initSearchSciences(){
+        function initSearchSciences() {
             $.post(web_path + getAjaxUrl().science_data_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
                 var source = $("#science-template").html();
                 var template = Handlebars.compile(source);

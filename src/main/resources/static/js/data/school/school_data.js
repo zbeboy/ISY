@@ -200,16 +200,16 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-        参数
+         参数
          */
         var param = {
-            schoolName:''
+            schoolName: ''
         };
 
         /*
-        得到参数
+         得到参数
          */
-        function getParam(){
+        function getParam() {
             return param;
         }
 

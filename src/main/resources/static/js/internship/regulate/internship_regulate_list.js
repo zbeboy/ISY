@@ -2,8 +2,8 @@
  * Created by lenovo on 2016-12-24.
  */
 //# sourceURL=internship_regulate_list.js
-require(["jquery", "handlebars", "constants","nav_active","datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars,constants,nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, constants, nav_active) {
 
         /*
          ajax url
@@ -16,9 +16,9 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
                 add: '/web/internship/regulate/list/add',
                 look: '/web/internship/regulate/list/look',
                 valid_is_staff: '/anyone/valid/cur/is/staff',
-                valid_staff:'/web/internship/regulate/valid/staff',
-                nav:'/web/menu/internship/regulate',
-                back:'/web/menu/internship/regulate'
+                valid_staff: '/web/internship/regulate/valid/staff',
+                nav: '/web/menu/internship/regulate',
+                back: '/web/menu/internship/regulate'
             };
         }
 
@@ -30,8 +30,8 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
          */
         function getParamId() {
             return {
-                studentName:'#search_student_name',
-                studentNumber:'#search_student_number'
+                studentName: '#search_student_name',
+                studentNumber: '#search_student_number'
             };
         }
 
@@ -39,8 +39,8 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
          参数
          */
         var param = {
-            studentName:'',
-            studentNumber:''
+            studentName: '',
+            studentNumber: ''
         };
 
         /*
@@ -172,7 +172,7 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
                                 ]
                             };
                         } else {
-                            if(c.staffId == init_page_param.staffId && init_page_param.staffId != 0){
+                            if (c.staffId == init_page_param.staffId && init_page_param.staffId != 0) {
                                 context =
                                 {
                                     func: [
@@ -261,7 +261,7 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
         var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
             init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-            var temp = '<button type="button" id="regulate_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>'+
+            var temp = '<button type="button" id="regulate_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
                 '  <button type="button" id="regulate_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp + global_button;
         }
@@ -373,7 +373,7 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
                 }, {
                     url: web_path + getAjaxUrl().valid_staff,
                     type: 'post',
-                    data: {staff: staff,internshipReleaseId:init_page_param.internshipReleaseId, type: type},
+                    data: {staff: staff, internshipReleaseId: init_page_param.internshipReleaseId, type: type},
                     success: function (data) {
                         if (data.state) {
                             to_add_data = data.objectResult;
@@ -398,7 +398,7 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
          * @param internshipReleaseId
          * @param staffId
          */
-        function accessAdd(internshipReleaseId,staffId){
+        function accessAdd(internshipReleaseId, staffId) {
             $.address.value(getAjaxUrl().add + '?id=' + internshipReleaseId + '&staffId=' + staffId);
         }
 
@@ -501,7 +501,7 @@ require(["jquery", "handlebars", "constants","nav_active","datatables.responsive
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {regulateIds: regulateId,staffId:init_page_param.staffId},
+                data: {regulateIds: regulateId, staffId: init_page_param.staffId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

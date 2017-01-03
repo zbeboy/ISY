@@ -2,6 +2,7 @@ package top.zbeboy.isy.security;
 
 /**
  * Created by lenovo on 2016-09-04.
+ * 安全登录错误码
  */
 public class AjaxAuthenticationCode {
 

@@ -1,10 +1,6 @@
 package top.zbeboy.isy.service;
 
-import org.apache.poi.POIDocument;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.xwpf.usermodel.*;
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +59,7 @@ public class FilesServiceImpl implements FilesService {
     @Override
     public String saveInternshipJournal(InternshipJournal internshipJournal, Users users, HttpServletRequest request) {
         String outputPath = "";
-        try{
+        try {
             String templatePath = Workbook.INTERNSHIP_JOURNAL_FILE_PATH;
             InputStream is = new FileInputStream(templatePath);
             Map<String, String> cellMap = new HashMap<>();
@@ -130,13 +126,13 @@ public class FilesServiceImpl implements FilesService {
             OutputStream os = new FileOutputStream(path + filename);
             //把doc输出到输出流中
             doc.write(os);
-            log.info("Save journal path {}",path);
+            log.info("Save journal path {}", path);
             outputPath = Workbook.internshipJournalPath(users) + filename;
             this.closeStream(os);
             this.closeStream(is);
-            log.info("Save internship journal finish, the path is {}",outputPath);
+            log.info("Save internship journal finish, the path is {}", outputPath);
         } catch (IOException e) {
-            log.error("Save internship journal error,error is {}",e);
+            log.error("Save internship journal error,error is {}", e);
             return outputPath;
         }
         return outputPath;
@@ -144,6 +140,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * 关闭输入流
+     *
      * @param is 流
      */
     private void closeStream(InputStream is) {
@@ -158,6 +155,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * 关闭输出流
+     *
      * @param os 流
      */
     private void closeStream(OutputStream os) {

@@ -2,7 +2,6 @@ package top.zbeboy.isy.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.SystemAlertDao;
-import top.zbeboy.isy.domain.tables.daos.SystemLogDao;
 import top.zbeboy.isy.domain.tables.pojos.SystemAlert;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -50,7 +47,7 @@ public class SystemAlertServiceImpl implements SystemAlertService {
     @Override
     public Result<Record> findAllByPageForShow(int pageNum, int pageSize, String username, boolean isSee) {
         Byte b = 0;
-        if(isSee){
+        if (isSee) {
             b = 1;
         }
         return create.select()
@@ -66,7 +63,7 @@ public class SystemAlertServiceImpl implements SystemAlertService {
     @Override
     public int countAllForShow(String username, boolean isSee) {
         Byte b = 0;
-        if(isSee){
+        if (isSee) {
             b = 1;
         }
         Record1<Integer> record = create.selectCount()
@@ -97,8 +94,8 @@ public class SystemAlertServiceImpl implements SystemAlertService {
         List<SystemAlertBean> systemAlertBeens = new ArrayList<>();
         if (records.isNotEmpty()) {
             systemAlertBeens = records.into(SystemAlertBean.class);
-            systemAlertBeens.forEach(i->{
-                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(),"yyyy年MM月dd日 hh:mm:ss"));
+            systemAlertBeens.forEach(i -> {
+                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyy年MM月dd日 hh:mm:ss"));
             });
             paginationUtils.setTotalDatas(countByCondition(paginationUtils, systemAlertBean));
         }
@@ -152,11 +149,11 @@ public class SystemAlertServiceImpl implements SystemAlertService {
     /**
      * 其它条件参数
      *
-     * @param a                     搜索条件
+     * @param a               搜索条件
      * @param systemAlertBean 额外参数
      * @return 条件
      */
-    private Condition otherCondition(Condition a,  SystemAlertBean systemAlertBean) {
+    private Condition otherCondition(Condition a, SystemAlertBean systemAlertBean) {
         if (!ObjectUtils.isEmpty(systemAlertBean)) {
             if (StringUtils.hasLength(systemAlertBean.getUsername())) {
                 if (!ObjectUtils.isEmpty(a)) {

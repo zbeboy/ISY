@@ -41,6 +41,6 @@ public class SystemAlertTypeServiceImpl implements SystemAlertTypeService {
 
     @Override
     public SystemAlertType findByType(String type) {
-        return systemAlertTypeDao.fetchOne(SYSTEM_ALERT_TYPE.NAME,type);
+        return systemAlertTypeDao.fetchOne(SYSTEM_ALERT_TYPE.NAME, type);
     }
 }

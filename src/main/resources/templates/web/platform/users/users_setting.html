@@ -70,7 +70,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="password_submit" >确定</button>
+                        <button type="button" class="btn btn-primary" id="password_submit">确定</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -91,7 +91,8 @@
                         <form role="form" id="mobile_form">
                             <fieldset>
                                 <div class="form-group" id="valid_mobile">
-                                    <input class="form-control" placeholder="手机号" name="newMobile" id="newMobile" type="text"/>
+                                    <input class="form-control" placeholder="手机号" name="newMobile" id="newMobile"
+                                           type="text"/>
                                     <p class="text-danger hidden" id="mobile_error_msg"></p>
                                     <input type="hidden" th:value="${user.username}" name="username"/>
                                     <input type="hidden" th:value="${user.mobile}" id="mobile"/>
@@ -100,7 +101,7 @@
                                     <div class="input-group">
                                         <input class="form-control" placeholder="手机验证码" name="phoneVerifyCode"
                                                id="phoneVerifyCode" type="text"/>
-                                    <span class="input-group-btn">
+                                        <span class="input-group-btn">
 
                                             <input type="button" class="btn btn-default" id="get_verification_code"
                                                    value="获取验证码"/>
@@ -112,7 +113,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="mobile_submit" >确定</button>
+                        <button type="button" class="btn btn-primary" id="mobile_submit">确定</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -120,7 +121,7 @@
         </div>
 
         <input type="hidden" th:value="${user.username}" name="username" id="username"/>
-        <input type="hidden" class="dy_script" value="/js/platform/users/users_setting.js" />
+        <input type="hidden" class="dy_script" value="/js/platform/users/users_setting.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

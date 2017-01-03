@@ -127,13 +127,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             param.teacherDistributionTime = $(paramId.teacherDistributionTime).val();
             param.time = $(paramId.time).val();
             param.schoolId = $(paramId.schoolId).val();
-            if(init_page_param.collegeId != -1){
+            if (init_page_param.collegeId != -1) {
                 param.collegeId = init_page_param.collegeId;
                 param.schoolId = 0;
             } else {
                 param.collegeId = $(paramId.collegeId).val();
             }
-            if(init_page_param.departmentId != -1){
+            if (init_page_param.departmentId != -1) {
                 param.departmentId = init_page_param.departmentId;
                 param.schoolId = 0;
                 param.collegeId = 0;
@@ -150,7 +150,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             var p = [];
             for (var i = 0; i < f.length; i++) {
                 p.push(new fileObj($(f[i]).attr('data-original-file-name'),
-                    $(f[i]).attr('data-new-name') ,
+                    $(f[i]).attr('data-new-name'),
                     $(f[i]).attr('data-file-path'),
                     $(f[i]).attr('data-ext'),
                     $(f[i]).attr('data-size')
@@ -230,9 +230,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 internshipTypeData(data);
             });
 
-            if(init_page_param.departmentId != -1){
+            if (init_page_param.departmentId != -1) {
                 changeGrade(init_page_param.departmentId);
-            } else if(init_page_param.collegeId != -1) {
+            } else if (init_page_param.collegeId != -1) {
                 changeDepartment(init_page_param.collegeId);
             } else {
                 $.get(web_path + ajax_url.school_data_url, function (data) {
@@ -396,7 +396,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             initParam();
             var grade = param.grade;
             var department = param.departmentId;
-            changeScience(grade,department);// 根据系重新加载专业数据
+            changeScience(grade, department);// 根据系重新加载专业数据
 
             if (Number(grade) > 0) {
                 validSuccessDom(validId.grade, errorMsgId.grade);
@@ -559,14 +559,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * @param grade 年级
          * @param department 系
          */
-        function changeScience(grade,department) {
+        function changeScience(grade, department) {
 
             if (Number(grade) == 0) {
                 $(paramId.scienceId).html('');
                 $(paramId.scienceId).selectpicker('refresh');
             } else {
                 // 根据年级查询全部专业
-                $.post(web_path + ajax_url.science_data_url, {grade: grade,departmentId:department}, function (data) {
+                $.post(web_path + ajax_url.science_data_url, {grade: grade, departmentId: department}, function (data) {
                     var source = $("#science-template").html();
                     var template = Handlebars.compile(source);
 
@@ -653,7 +653,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * @param ext 后缀
          * @param size 尺寸
          */
-        function fileObj(originalFileName, newName, relativePath, ext,size) {
+        function fileObj(originalFileName, newName, relativePath, ext, size) {
             this.originalFileName = originalFileName;
             this.newName = newName;
             this.relativePath = relativePath;
@@ -827,7 +827,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             var internshipTypeId = param.internshipTypeId;
             // 改变选项时，检验
             if (Number(internshipTypeId) > 0) {
-                if(init_page_param.departmentId != -1 || init_page_param.collegeId != -1){
+                if (init_page_param.departmentId != -1 || init_page_param.collegeId != -1) {
                     validGrade();
                 } else {
                     console.log('hahah');

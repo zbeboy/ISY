@@ -2,8 +2,6 @@ package top.zbeboy.isy;
 /*
  * Copyright 2016 the original isy team.
  */
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

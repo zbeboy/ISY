@@ -337,7 +337,7 @@ public class StudentController {
                 student.setSex(studentVo.getSex());
                 student.setNationId(studentVo.getNationId());
                 student.setPoliticalLandscapeId(studentVo.getPoliticalLandscapeId());
-                if(StringUtils.hasLength(studentVo.getBirthday())){
+                if (StringUtils.hasLength(studentVo.getBirthday())) {
                     student.setBirthday(DateTimeUtils.formatDate(studentVo.getBirthday()));
                 }
                 student.setDormitoryNumber(studentVo.getDormitoryNumber());

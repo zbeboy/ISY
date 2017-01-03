@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by lenovo on 2016-04-30.
  * spring security userdetails实现类.
  *
  * @author zbeboy

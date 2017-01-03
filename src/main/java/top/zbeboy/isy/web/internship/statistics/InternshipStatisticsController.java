@@ -156,10 +156,10 @@ public class InternshipStatisticsController {
                     page = "web/internship/statistics/graduation_practice_company_data::#page-wrapper";
                     break;
                 default:
-                    page = commonControllerMethodService.showTip(modelMap,"未找到相关实习类型页面");
+                    page = commonControllerMethodService.showTip(modelMap, "未找到相关实习类型页面");
             }
-        }else {
-            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -239,7 +239,7 @@ public class InternshipStatisticsController {
         Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeHistoryBeans = records.into(InternshipChangeHistoryBean.class);
-            internshipChangeHistoryBeans.forEach(i->i.setApplyTimeStr(DateTimeUtils.formatDate(i.getApplyTime())));
+            internshipChangeHistoryBeans.forEach(i -> i.setApplyTimeStr(DateTimeUtils.formatDate(i.getApplyTime())));
         }
         return new AjaxUtils<InternshipChangeHistoryBean>().success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
     }
@@ -258,7 +258,7 @@ public class InternshipStatisticsController {
         Result<Record> records = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeCompanyHistoryBeans = records.into(InternshipChangeCompanyHistoryBean.class);
-            internshipChangeCompanyHistoryBeans.forEach(i->i.setChangeTimeStr(DateTimeUtils.formatDate(i.getChangeTime())));
+            internshipChangeCompanyHistoryBeans.forEach(i -> i.setChangeTimeStr(DateTimeUtils.formatDate(i.getChangeTime())));
         }
         return new AjaxUtils<InternshipChangeCompanyHistoryBean>().success().msg("获取数据成功").listData(internshipChangeCompanyHistoryBeans);
     }

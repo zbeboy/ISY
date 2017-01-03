@@ -5,23 +5,16 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.SystemAlertService;
 import top.zbeboy.isy.service.SystemMessageService;
-import top.zbeboy.isy.service.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
-import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +55,7 @@ public class MessageController {
         if (systemAlertRecord.isNotEmpty()) {
             systemAlertBeens = systemAlertRecord.into(SystemAlertBean.class);
             systemAlertBeens.forEach(i ->
-                i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyyMMddhhmmss"))
+                    i.setAlertDateStr(DateTimeUtils.formatDate(i.getAlertDate(), "yyyyMMddhhmmss"))
             );
         }
         data.put("alerts", systemAlertBeens);
@@ -70,11 +63,11 @@ public class MessageController {
 
         // 消息
         List<SystemMessageBean> systemMessageBeens = new ArrayList<>();
-        Result<Record> systemMessageRecord = systemMessageService.findAllByPageForShow(pageNum,pageSize,username,false);
-        if(systemMessageRecord.isNotEmpty()){
+        Result<Record> systemMessageRecord = systemMessageService.findAllByPageForShow(pageNum, pageSize, username, false);
+        if (systemMessageRecord.isNotEmpty()) {
             systemMessageBeens = systemMessageRecord.into(SystemMessageBean.class);
-            systemMessageBeens.forEach(i->
-                i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(),"yyyyMMddhhmmss"))
+            systemMessageBeens.forEach(i ->
+                    i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(), "yyyyMMddhhmmss"))
             );
         }
         data.put("messages", systemMessageBeens);

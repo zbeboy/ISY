@@ -11,9 +11,9 @@ import static top.zbeboy.isy.service.util.UUIDUtils.getUUID;
 /**
  * Created by lenovo on 2016-11-06.
  */
-public class TestUtil extends TestCase{
+public class TestUtil extends TestCase {
 
-    public void testBCryptUtils(){
+    public void testBCryptUtils() {
         BCryptUtils.bCryptPassword("123456");
     }
 
@@ -27,7 +27,7 @@ public class TestUtil extends TestCase{
         MD5Utils.md5_SystemWideSaltSource("1234"); // 使用MD5再加全局加密盐加密的方式加密
     }
 
-    public void testUUIDUtils(){
+    public void testUUIDUtils() {
         System.out.println("::" + getUUID());
         String[] ss = getUUID(10);
         for (String s : ss) {

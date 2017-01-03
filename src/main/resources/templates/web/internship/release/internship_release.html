@@ -18,7 +18,8 @@
                 <div class="well">
                     <div class="row" style="margin-top:2px;">
                         <div class="col-md-12">
-                            <input type="text" id="search_internship_title" class="form-control input-sm" placeholder="标题"/>
+                            <input type="text" id="search_internship_title" class="form-control input-sm"
+                                   placeholder="标题"/>
                         </div>
                     </div>
                     <div class="text-center" style="margin-top:4px;">
@@ -33,7 +34,8 @@
                 <div class="text-right" style="margin-bottom: 10px;">
                     <button type="button" class="btn btn-outline btn-primary" id="release">发布<i class="fa fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
+                    </button>
                 </div>
                 <div id="tableData">
                 </div>
@@ -94,9 +96,13 @@
                 <div class="panel-footer text-right">
                     <button type="button" class="btn btn-primary edit" data-id="{{internshipReleaseId}}">编辑</button>
                     {{#if internshipReleaseIsDel}}
-                    <button type="button" class="btn btn-outline btn-warning recovery" data-id="{{internshipReleaseId}}" data-name="{{internship_title}}">恢复</button>
+                    <button type="button" class="btn btn-outline btn-warning recovery" data-id="{{internshipReleaseId}}"
+                            data-name="{{internship_title}}">恢复
+                    </button>
                     {{else}}
-                    <button type="button" class="btn btn-outline btn-danger del" data-id="{{internshipReleaseId}}" data-name="{{internship_title}}">注销</button>
+                    <button type="button" class="btn btn-outline btn-danger del" data-id="{{internshipReleaseId}}"
+                            data-name="{{internship_title}}">注销
+                    </button>
                     {{/if}}
                 </div>
             </div>

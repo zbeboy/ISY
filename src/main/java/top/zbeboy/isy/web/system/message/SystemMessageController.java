@@ -59,7 +59,7 @@ public class SystemMessageController {
         Optional<Record> record = systemMessageService.findByIdRelation(messageId);
         if (record.isPresent()) {
             systemMessageBean = record.get().into(SystemMessageBean.class);
-            systemMessageBean.setMessageDateStr(DateTimeUtils.formatDate(systemMessageBean.getMessageDate(),"yyyy年MM月dd日 hh:mm:ss"));
+            systemMessageBean.setMessageDateStr(DateTimeUtils.formatDate(systemMessageBean.getMessageDate(), "yyyy年MM月dd日 hh:mm:ss"));
         }
         modelMap.addAttribute("message", systemMessageBean);
         return "web/system/message/system_message_look::#page-wrapper";

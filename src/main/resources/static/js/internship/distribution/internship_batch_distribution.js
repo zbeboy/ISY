@@ -2,18 +2,18 @@
  * Created by lenovo on 2016/11/23.
  */
 //# sourceURL=internship_batch_distribution.js
-require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.address", "jquery.showLoading","bootstrap-duallistbox"],
-    function ($, Handlebars,nav_active,D) {
+require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.address", "jquery.showLoading", "bootstrap-duallistbox"],
+    function ($, Handlebars, nav_active, D) {
 
         /*
          ajax url.
          */
         var ajax_url = {
             organize_data_url: '/web/internship/teacher_distribution/batch/distribution/organizes',
-            teacher_data_url:'/web/internship/teacher_distribution/batch/distribution/teachers',
-            nav:'/web/menu/internship/teacher_distribution',
-            save:'/web/internship/teacher_distribution/batch/distribution/save',
-            back:'/web/internship/teacher_distribution/distribution/condition'
+            teacher_data_url: '/web/internship/teacher_distribution/batch/distribution/teachers',
+            nav: '/web/menu/internship/teacher_distribution',
+            save: '/web/internship/teacher_distribution/batch/distribution/save',
+            back: '/web/internship/teacher_distribution/distribution/condition'
         };
 
         // 刷新时选中菜单
@@ -33,13 +33,13 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
         var param = {
             organizeId: $(paramId.organizeId).val(),
             staffId: $(paramId.staffId).val(),
-            internshipReleaseId:init_page_param.internshipReleaseId
+            internshipReleaseId: init_page_param.internshipReleaseId
         };
 
         /**
          * 初始化参数
          */
-        function initParam(){
+        function initParam() {
             param.organizeId = $(paramId.organizeId).val();
             param.staffId = $(paramId.staffId).val();
             param.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -50,12 +50,12 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
         /**
          * 初始化数据
          */
-        function init(){
-            $.get(web_path + ajax_url.organize_data_url,{id:init_page_param.internshipReleaseId},function(data){
+        function init() {
+            $.get(web_path + ajax_url.organize_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
                 organizeData(data);
             });
 
-            $.get(web_path + ajax_url.teacher_data_url,{id:init_page_param.internshipReleaseId},function(data){
+            $.get(web_path + ajax_url.teacher_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
                 staffData(data);
             });
         }
@@ -64,7 +64,7 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
          * 班级数据
          * @param data
          */
-        function organizeData(data){
+        function organizeData(data) {
             var source = $("#organize-template").html();
             var template = Handlebars.compile(source);
 
@@ -75,7 +75,7 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
 
             Handlebars.registerHelper('organize_name', function () {
                 var name = '';
-                if(D.includes(data.mapResult.hasOrganizes, this.organizeId)){
+                if (D.includes(data.mapResult.hasOrganizes, this.organizeId)) {
                     name = Handlebars.escapeExpression(this.organizeName + '  已分配');
                 } else {
                     name = Handlebars.escapeExpression(this.organizeName);
@@ -92,7 +92,7 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
          * 教职工数据
          * @param data
          */
-        function staffData(data){
+        function staffData(data) {
             var source = $("#teacher-template").html();
             var template = Handlebars.compile(source);
 
@@ -114,14 +114,14 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
         /**
          * 初始化班级双列表
          */
-        function initOrganizeDualListbox(){
+        function initOrganizeDualListbox() {
             $(paramId.organizeId).bootstrapDualListbox();
         }
 
         /**
          * 初始化教职工双列表
          */
-        function initStaffDualListbox(){
+        function initStaffDualListbox() {
             $(paramId.staffId).bootstrapDualListbox();
         }
 
@@ -133,9 +133,9 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
         });
 
         /*
-        保存
+         保存
          */
-        $('#save').click(function(){
+        $('#save').click(function () {
             add();
         });
 
@@ -169,7 +169,7 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
         /**
          * 检验班级id
          */
-        function validOrganizeId(){
+        function validOrganizeId() {
             initParam();
             var organizeId = param.organizeId;
             if (organizeId.length <= 0) {
@@ -186,7 +186,7 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
         /**
          * 检验
          */
-        function validStaffId(){
+        function validStaffId() {
             initParam();
             var staffId = param.staffId;
             if (staffId.length <= 0) {
@@ -199,6 +199,7 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
                 sendAjax();
             }
         }
+
         /**
          * 发送数据到后台
          */
@@ -210,7 +211,11 @@ require(["jquery", "handlebars", "nav_active","lodash","messenger", "jquery.addr
             }, {
                 url: web_path + ajax_url.save,
                 type: 'post',
-                data: {id:param.internshipReleaseId,organizeId:param.organizeId.join(','),staffId:param.staffId.join(',')},
+                data: {
+                    id: param.internshipReleaseId,
+                    organizeId: param.organizeId.join(','),
+                    staffId: param.staffId.join(',')
+                },
                 success: function (data) {
                     if (data.state) {
                         $.address.value(ajax_url.back + '?id=' + param.internshipReleaseId);

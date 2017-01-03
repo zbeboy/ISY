@@ -2,8 +2,8 @@
  * Created by lenovo on 2016/11/21.
  */
 //# sourceURL=internship_distribution_condition.js
-require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars,nav_active) {
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, nav_active) {
 
         /*
          ajax url
@@ -14,8 +14,8 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
                 del: '/web/internship/teacher_distribution/distribution/condition/del',
                 add: '/web/internship/teacher_distribution/distribution/condition/add',
                 edit: '/web/internship/teacher_distribution/distribution/condition/edit',
-                batch_distribution_url:'/web/internship/teacher_distribution/batch/distribution',
-                back:'/web/menu/internship/teacher_distribution'
+                batch_distribution_url: '/web/internship/teacher_distribution/batch/distribution',
+                back: '/web/menu/internship/teacher_distribution'
             };
         }
 
@@ -94,22 +94,22 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
                     render: function (a, b, c, d) {
 
                         var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.studentId
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.studentId
-                                    }
-                                ]
-                            };
+                        {
+                            func: [
+                                {
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.studentId
+                                },
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.studentId
+                                }
+                            ]
+                        };
 
 
                         var html = template(context);
@@ -147,11 +147,11 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.edit', "click", function () {
-                    edit($(this).attr('data-id'),init_page_param.internshipReleaseId);
+                    edit($(this).attr('data-id'), init_page_param.internshipReleaseId);
                 });
 
                 tableElement.delegate('.del', "click", function () {
-                    student_del($(this).attr('data-id'),init_page_param.internshipReleaseId);
+                    student_del($(this).attr('data-id'), init_page_param.internshipReleaseId);
                 });
             }
         });
@@ -185,7 +185,7 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
             studentNumber: '',
             staffNumber: '',
             username: '',
-            realName:''
+            realName: ''
         };
 
         /*
@@ -310,7 +310,7 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
                             phrase: 'Retrying TIME',
                             action: function () {
                                 msg.cancel();
-                                dels(studentIds,init_page_param.internshipReleaseId);
+                                dels(studentIds, init_page_param.internshipReleaseId);
                             }
                         },
                         cancel: {
@@ -339,7 +339,7 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            del(studentId,internshipReleaseId);
+                            del(studentId, internshipReleaseId);
                         }
                     },
                     cancel: {
@@ -364,16 +364,16 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
          * @param studentId
          * @param internshipReleaseId
          */
-        function edit(studentId,internshipReleaseId){
+        function edit(studentId, internshipReleaseId) {
             $.address.value(getAjaxUrl().edit + "?id=" + internshipReleaseId + '&studentId=' + studentId);
         }
 
-        function del(studentId,internshipReleaseId) {
-            sendDelAjax(studentId,internshipReleaseId, '删除');
+        function del(studentId, internshipReleaseId) {
+            sendDelAjax(studentId, internshipReleaseId, '删除');
         }
 
-        function dels(studentIds,internshipReleaseId) {
-            sendDelAjax(studentIds.join(","),internshipReleaseId, '批量删除');
+        function dels(studentIds, internshipReleaseId) {
+            sendDelAjax(studentIds.join(","), internshipReleaseId, '批量删除');
         }
 
         /**
@@ -382,7 +382,7 @@ require(["jquery", "handlebars","nav_active", "datatables.responsive", "check.al
          * @param internshipReleaseId
          * @param message
          */
-        function sendDelAjax(studentId,internshipReleaseId, message) {
+        function sendDelAjax(studentId, internshipReleaseId, message) {
             Messenger().run({
                 successMessage: message + '学生成功',
                 errorMessage: message + '学生失败',

@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/12/16.
  */
 //# sourceURL=internship_journal_add.js
-require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.address","bootstrap-daterangepicker"],
+require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "nav_active","moment", "messenger", "jquery.add
          */
         var ajax_url = {
             save: '/web/internship/journal/my/save',
-            nav:'/web/menu/internship/journal'
+            nav: '/web/menu/internship/journal'
         };
 
         // 刷新时选中菜单

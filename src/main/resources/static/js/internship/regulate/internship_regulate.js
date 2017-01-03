@@ -11,11 +11,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             internship_regulate_data_url: '/anyone/internship/data',
             regulate_url: '/web/internship/regulate/list',
-            my_regulate:'/web/internship/regulate/my/list',
+            my_regulate: '/web/internship/regulate/my/list',
             add: '/web/internship/regulate/list/add',
             valid_is_staff: '/anyone/valid/cur/is/staff',
-            valid_staff:'/web/internship/regulate/valid/staff',
-            access_condition_url:'/web/internship/regulate/condition'
+            valid_staff: '/web/internship/regulate/valid/staff',
+            access_condition_url: '/web/internship/regulate/condition'
         };
 
         /*
@@ -233,7 +233,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 }, {
                     url: web_path + ajax_url.valid_staff,
                     type: 'post',
-                    data: {staff: staff,internshipReleaseId:id, type: type},
+                    data: {staff: staff, internshipReleaseId: id, type: type},
                     success: function (data) {
                         if (data.state) {
                             to_add_data = data.objectResult;
@@ -258,7 +258,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param internshipReleaseId
          * @param staffId
          */
-        function accessAdd(internshipReleaseId,staffId){
+        function accessAdd(internshipReleaseId, staffId) {
             $.address.value(ajax_url.add + '?id=' + internshipReleaseId + '&staffId=' + staffId);
         }
 

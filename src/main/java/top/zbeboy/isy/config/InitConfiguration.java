@@ -57,7 +57,7 @@ public class InitConfiguration implements CommandLineRunner {
             if (!file.exists()) {
                 mkdirsSuccess = file.mkdirs();
             }
-            if(mkdirsSuccess){
+            if (mkdirsSuccess) {
                 PrintWriter printWriter = new PrintWriter(filePath);
                 final String[] url = {""};
                 Map<RequestMappingInfo, HandlerMethod> map = this.handlerMapping.getHandlerMethods();

@@ -4,8 +4,6 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory;
 
-import java.util.Optional;
-
 /**
  * Created by lenovo on 2016-12-12.
  */

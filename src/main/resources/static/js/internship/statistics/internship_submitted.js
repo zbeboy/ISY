@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-12-10.
  */
-require(["jquery", "handlebars", "datatables.responsive","jquery.address", "messenger"],
+require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "messenger"],
     function ($, Handlebars) {
 
         /*
@@ -12,22 +12,22 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
                 submitted_data_url: '/web/internship/statistical/submitted/data',
                 science_data_url: '/anyone/internship/sciences',
                 organize_data_url: '/anyone/internship/organizes',
-                change_history_url:'/web/internship/statistical/record/apply',
-                change_company_url:'/web/internship/statistical/record/company',
-                back:'/web/menu/internship/statistical'
+                change_history_url: '/web/internship/statistical/record/apply',
+                change_company_url: '/web/internship/statistical/record/company',
+                back: '/web/menu/internship/statistical'
             };
         }
 
         init();
 
-        function init(){
+        function init() {
             initSearchSciences();
         }
 
         /**
          * 初始化专业数据
          */
-        function initSearchSciences(){
+        function initSearchSciences() {
             $.post(web_path + getAjaxUrl().science_data_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
                 var source = $("#science-template").html();
                 var template = Handlebars.compile(source);
@@ -186,24 +186,24 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
                     orderable: false,
                     render: function (a, b, c, d) {
                         var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "申请记录",
-                                        "css": "apply_record",
-                                        "type": "primary",
-                                        "studentId": c.studentId,
-                                        "internshipReleaseId": c.internshipReleaseId
-                                    },
-                                    {
-                                        "name": "变更记录",
-                                        "css": "change_record",
-                                        "type": "primary",
-                                        "studentId": c.studentId,
-                                        "internshipReleaseId": c.internshipReleaseId
-                                    }
-                                ]
-                            };
+                        {
+                            func: [
+                                {
+                                    "name": "申请记录",
+                                    "css": "apply_record",
+                                    "type": "primary",
+                                    "studentId": c.studentId,
+                                    "internshipReleaseId": c.internshipReleaseId
+                                },
+                                {
+                                    "name": "变更记录",
+                                    "css": "change_record",
+                                    "type": "primary",
+                                    "studentId": c.studentId,
+                                    "internshipReleaseId": c.internshipReleaseId
+                                }
+                            ]
+                        };
                         return template(context);
                     }
                 },
@@ -244,11 +244,11 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.apply_record', "click", function () {
-                    changeHistory($(this).attr('data-internshipReleaseId'),$(this).attr('data-studentId'));
+                    changeHistory($(this).attr('data-internshipReleaseId'), $(this).attr('data-studentId'));
                 });
 
                 tableElement.delegate('.change_record', "click", function () {
-                    changeCompanyHistory($(this).attr('data-internshipReleaseId'),$(this).attr('data-studentId'));
+                    changeCompanyHistory($(this).attr('data-internshipReleaseId'), $(this).attr('data-studentId'));
                 });
             }
         });
@@ -265,7 +265,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
                 studentNumber: '#search_student_number',
                 scienceName: '#search_science_name',
                 organizeName: '#search_organize_name',
-                internshipApplyState:'#select_internship_apply_state'
+                internshipApplyState: '#select_internship_apply_state'
             };
         }
 
@@ -277,7 +277,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             studentNumber: '',
             scienceName: '',
             organizeName: '',
-            internshipApplyState:''
+            internshipApplyState: ''
         };
 
         /*
@@ -362,11 +362,11 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
             $.address.value(getAjaxUrl().back);
         });
 
-        function changeHistory(internshipReleaseId,studentId){
-            $.address.value(getAjaxUrl().change_history_url + '?id='+internshipReleaseId+'&studentId='+studentId);
+        function changeHistory(internshipReleaseId, studentId) {
+            $.address.value(getAjaxUrl().change_history_url + '?id=' + internshipReleaseId + '&studentId=' + studentId);
         }
 
-        function changeCompanyHistory(internshipReleaseId,studentId){
-            $.address.value(getAjaxUrl().change_company_url + '?id='+internshipReleaseId+'&studentId='+studentId);
+        function changeCompanyHistory(internshipReleaseId, studentId) {
+            $.address.value(getAjaxUrl().change_company_url + '?id=' + internshipReleaseId + '&studentId=' + studentId);
         }
     });

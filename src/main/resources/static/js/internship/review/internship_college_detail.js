@@ -68,7 +68,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         });
 
         /*
-        通过
+         通过
          */
         $('#pass').click(function () {
             var id = $('#internshipReleaseId').val();

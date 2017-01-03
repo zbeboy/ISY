@@ -7,6 +7,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
 import top.zbeboy.isy.aop.logging.LoggingAspect;
 
+/**
+ * 日志切面环境配置.
+ *
+ * @author zbeboy
+ * @version 1.0
+ * @since 1.0
+ */
 @Configuration
 @EnableAspectJAutoProxy
 public class LoggingAspectConfiguration {

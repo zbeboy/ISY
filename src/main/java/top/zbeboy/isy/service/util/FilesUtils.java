@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by lenovo on 2015/9/11.
  * 文件操作工具类
  *
  * @author zbeboy
@@ -73,7 +72,7 @@ public class FilesUtils {
      */
     public static boolean compressZip(String fileName, String zipPath, String filePath) throws Exception {
         File file = new File(filePath);
-        if(file.exists()){
+        if (file.exists()) {
             ScatterSample scatterSample = new ScatterSample();
             ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
             ZipArchiveEntry entry = new ZipArchiveEntry(fileName);
@@ -98,7 +97,7 @@ public class FilesUtils {
         if (!ObjectUtils.isEmpty(fileName) && !ObjectUtils.isEmpty(filePath) && fileName.size() == filePath.size()) {
             for (int i = 0; i < fileName.size(); i++) {
                 File file = new File(filePath.get(i));
-                if(file.exists()){
+                if (file.exists()) {
                     ScatterSample scatterSample = new ScatterSample();
                     ZipArchiveEntry entry = new ZipArchiveEntry(fileName.get(i));
                     entry.setMethod(ZipMethod.STORED.getCode());

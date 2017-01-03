@@ -105,7 +105,8 @@
                     </div>
                     <div class="form-group" id="valid_family_residence">
                         <label>家庭居住地</label>
-                        <input class="form-control" name="familyResidence" id="familyResidence" th:value="${user.familyResidence}"
+                        <input class="form-control" name="familyResidence" id="familyResidence"
+                               th:value="${user.familyResidence}"
                                placeholder="家庭居住地"/>
                         <p class="text-danger hidden" id="family_residence_error_msg"></p>
                     </div>
@@ -124,7 +125,7 @@
                             <span class="btn btn-primary fileinput-button">
                                 <span>上传头像</span>
                                 <!-- The file input field used as target for the file upload widget -->
-                                <input id="fileupload" type="file" name="files" />
+                                <input id="fileupload" type="file" name="files"/>
                             </span>
                             <a href="javascript:;" id="cleanAvatar" class="btn btn-default" role="button">清除</a>
                         </p>

@@ -8,7 +8,6 @@ import org.webjars.RequireJS;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by Administrator on 2016/7/22.
  * 配置webjars与requireJS
  *
  * @author zbeboy

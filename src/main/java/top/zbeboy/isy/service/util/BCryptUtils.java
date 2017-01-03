@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * Created by lenovo on 2016-07-24.
  * BCrypt加密工具类
  *
  * @author zbeboy

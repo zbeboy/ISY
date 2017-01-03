@@ -105,7 +105,7 @@ public class InternshipTeacherDistributionController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_distribution_condition::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -192,7 +192,7 @@ public class InternshipTeacherDistributionController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_add_distribution::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -225,7 +225,7 @@ public class InternshipTeacherDistributionController {
             modelMap.addAttribute("student", studentBean);
             page = "web/internship/distribution/internship_edit_distribution::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -239,13 +239,13 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution", method = RequestMethod.GET)
     public String batchDistribution(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page ;
+        String page;
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_batch_distribution::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap,"您不符合进入条件");
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }

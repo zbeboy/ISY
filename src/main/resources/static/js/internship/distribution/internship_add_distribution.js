@@ -34,7 +34,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
         var param = {
             studentUsername: $(paramId.studentUsername).val(),
             studentNumber: $(paramId.studentNumber).val(),
-            staffId:$(paramId.staffId).val()
+            staffId: $(paramId.staffId).val()
         };
 
         /*
@@ -115,7 +115,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
             initStaffSelect();
         }
 
-        function initStaffSelect(){
+        function initStaffSelect() {
             $(paramId.staffId).selectpicker({
                 liveSearch: true,
                 maxOptions: 1
@@ -235,10 +235,10 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
                 type = 1;
             }
             var params = {
-                student:student,
-                staffId:param.staffId,
-                type:type,
-                id:init_page_param.internshipReleaseId
+                student: student,
+                staffId: param.staffId,
+                type: type,
+                id: init_page_param.internshipReleaseId
             };
             Messenger().run({
                 successMessage: '保存数据成功',

@@ -45,7 +45,8 @@
         <!-- /.footer -->
 
         <!-- add政治面貌Modal -->
-        <div class="modal fade" id="addPoliticsModal" tabindex="-1" role="dialog" aria-labelledby="addPoliticsModalLabel"
+        <div class="modal fade" id="addPoliticsModal" tabindex="-1" role="dialog"
+             aria-labelledby="addPoliticsModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -58,7 +59,8 @@
                         <form role="form" id="add_form">
                             <fieldset>
                                 <div class="form-group" id="valid_add_political_landscape">
-                                    <input class="form-control" name="politicalLandscapeName" id="addPoliticalLandscapeName"
+                                    <input class="form-control" name="politicalLandscapeName"
+                                           id="addPoliticalLandscapeName"
                                            placeholder="政治面貌"/>
                                     <p class="text-danger hidden" id="add_political_landscape_name_error_msg"></p>
                                 </div>
@@ -66,7 +68,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="add_politics" >保存</button>
+                        <button type="button" class="btn btn-primary" id="add_politics">保存</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -74,7 +76,8 @@
         </div>
 
         <!-- update政治面貌Modal -->
-        <div class="modal fade" id="updatePoliticalLandscapeNameModal" tabindex="-1" role="dialog" aria-labelledby="updatePoliticalLandscapeNameModalLabel"
+        <div class="modal fade" id="updatePoliticalLandscapeNameModal" tabindex="-1" role="dialog"
+             aria-labelledby="updatePoliticalLandscapeNameModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -87,16 +90,17 @@
                         <form role="form" id="update_form">
                             <fieldset>
                                 <div class="form-group" id="valid_update_political_landscape">
-                                    <input class="form-control" name="politicalLandscapeName" id="updatePoliticalLandscapeName"
+                                    <input class="form-control" name="politicalLandscapeName"
+                                           id="updatePoliticalLandscapeName"
                                            placeholder="政治面貌"/>
                                     <p class="text-danger hidden" id="update_political_landscape_name_error_msg"></p>
-                                    <input type="hidden" id="updatePoliticalLandscapeId" name="politicalLandscapeId" />
+                                    <input type="hidden" id="updatePoliticalLandscapeId" name="politicalLandscapeId"/>
                                 </div>
                             </fieldset>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="update_politics" >保存</button>
+                        <button type="button" class="btn btn-primary" id="update_politics">保存</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -111,7 +115,7 @@
             </button>
             {{/each}}
         </script>
-        <input type="hidden" class="dy_script" value="/js/data/politics/politics_data.js" />
+        <input type="hidden" class="dy_script" value="/js/data/politics/politics_data.js"/>
     </div>
     <!-- /#page-wrapper -->
 

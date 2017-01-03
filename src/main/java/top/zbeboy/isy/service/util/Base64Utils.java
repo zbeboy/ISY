@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by lenovo on 2015/9/3.
  * Base64加密工具类
  *
  * @author zbeboy

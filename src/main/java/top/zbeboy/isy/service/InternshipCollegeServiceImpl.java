@@ -12,11 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.InternshipCollegeDao;
-import top.zbeboy.isy.domain.tables.pojos.InternshipApply;
-import top.zbeboy.isy.domain.tables.pojos.InternshipChangeHistory;
 import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
-import top.zbeboy.isy.domain.tables.records.InternshipApplyRecord;
-import top.zbeboy.isy.domain.tables.records.InternshipCollegeRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -28,9 +24,7 @@ import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_APPLY;
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_CHANGE_HISTORY;
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_COLLEGE;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-11-27.

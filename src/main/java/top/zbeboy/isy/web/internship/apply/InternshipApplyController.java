@@ -1102,8 +1102,8 @@ public class InternshipApplyController {
         try {
             Student student = studentService.findById(studentId);
             if (!ObjectUtils.isEmpty(student)) {
-                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId,studentId);
-                if(internshipApplyRecord.isPresent()){
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipApplyRecord.isPresent()) {
                     Users users = usersService.findByUsername(student.getUsername());
                     String path = Workbook.internshipApplyPath(users);
                     List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
@@ -1112,7 +1112,7 @@ public class InternshipApplyController {
                         String fileId = UUIDUtils.getUUID();
                         InternshipApply internshipApply = null;
                         internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-                        if(StringUtils.hasLength(internshipApply.getInternshipFileId())){
+                        if (StringUtils.hasLength(internshipApply.getInternshipFileId())) {
                             Files oldFile = filesService.findById(internshipApply.getInternshipFileId());
                             try {
                                 FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());

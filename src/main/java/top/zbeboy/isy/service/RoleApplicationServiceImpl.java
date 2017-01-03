@@ -16,7 +16,7 @@ import java.util.List;
 import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
 
 /**
- * Created by 杨逸云 on 2016/9/29.
+ * Created by lenovo on 2016/9/29.
  */
 @Service("roleApplicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

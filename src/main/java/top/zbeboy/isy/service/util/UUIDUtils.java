@@ -3,7 +3,6 @@ package top.zbeboy.isy.service.util;
 import java.util.UUID;
 
 /**
- * Created by lenovo on 2016-06-03.
  * 生成uuid工具类
  *
  * @author zbeboy

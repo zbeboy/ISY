@@ -129,7 +129,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         RoleRecord roleRecord = create.insertInto(ROLE)
                 .set(ROLE.ROLE_NAME, role.getRoleName())
                 .set(ROLE.ROLE_EN_NAME, role.getRoleEnName())
-                .set(ROLE.ROLE_TYPE,role.getRoleType())
+                .set(ROLE.ROLE_TYPE, role.getRoleType())
                 .returning(ROLE.ROLE_ID)
                 .fetchOne();
         return roleRecord.getRoleId();
@@ -153,7 +153,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils,RoleBean roleBean) {
+    public Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils, RoleBean roleBean) {
         Result<Record> records = null;
         List<String> defaultRoles = getDefaultRoles();
         Condition a = searchCondition(dataTablesUtils);
@@ -251,7 +251,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public int countByCondition(DataTablesUtils<RoleBean> dataTablesUtils,RoleBean roleBean) {
+    public int countByCondition(DataTablesUtils<RoleBean> dataTablesUtils, RoleBean roleBean) {
         Record1<Integer> count = null;
         Condition a = searchCondition(dataTablesUtils);
         List<String> defaultRoles = getDefaultRoles();

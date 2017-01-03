@@ -1,6 +1,5 @@
 package top.zbeboy.isy.test;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -25,8 +24,8 @@ import java.util.Arrays;
 public class TestSimple {
 
     @Test
-    public void testWeixinCheck(){
-        String[] arr = new String[]{"23","1","34"};
+    public void testWeixinCheck() {
+        String[] arr = new String[]{"23", "1", "34"};
         Arrays.sort(arr);
         System.out.println(arr[0] + arr[1] + arr[2]);
         String newArr = MD5Utils.sha_1(arr[0] + arr[1] + arr[2]);

@@ -1,7 +1,4 @@
 /**
- * Created by lenovo on 2016-12-24.
- */
-/**
  * Created by lenovo on 2016/12/23.
  */
 //# sourceURL=internship_regulate_add.js
@@ -138,7 +135,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             window.history.go(-1);
         });
 
-        $(paramId.internshipContent).blur(function(){
+        $(paramId.internshipContent).blur(function () {
             initParam();
             var internshipContent = param.internshipContent;
             if (internshipContent.length <= 0 || internshipContent.length > 200) {
@@ -148,7 +145,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             }
         });
 
-        $(paramId.internshipProgress).blur(function(){
+        $(paramId.internshipProgress).blur(function () {
             initParam();
             var internshipProgress = param.internshipProgress;
             if (internshipProgress.length <= 0 || internshipProgress.length > 200) {
@@ -158,7 +155,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             }
         });
 
-        $(paramId.reportWay).blur(function(){
+        $(paramId.reportWay).blur(function () {
             initParam();
             var reportWay = param.reportWay;
             if (reportWay.length <= 0 || reportWay.length > 200) {
@@ -205,7 +202,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
         /**
          * 检验实习内容
          */
-        function validInternshipContent(){
+        function validInternshipContent() {
             var internshipContent = param.internshipContent;
             if (internshipContent.length <= 0 || internshipContent.length > 200) {
                 Messenger().post({
@@ -221,7 +218,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
         /**
          * 检验实习进展
          */
-        function validInternshipProgress(){
+        function validInternshipProgress() {
             var internshipProgress = param.internshipProgress;
             if (internshipProgress.length <= 0 || internshipProgress.length > 200) {
                 Messenger().post({
@@ -237,7 +234,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
         /**
          * 检验汇报途径
          */
-        function validReportWay(){
+        function validReportWay() {
             var reportWay = param.reportWay;
             if (reportWay.length <= 0 || reportWay.length > 200) {
                 Messenger().post({

@@ -18,7 +18,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             valid_student: '/web/internship/apply/valid/student',
             access_condition_url: '/web/internship/apply/condition',
             file_upload_url: '/web/internship/apply/upload',
-            download_file:'/anyone/users/download/file'
+            download_file: '/anyone/users/download/file'
         };
 
         /*
@@ -387,7 +387,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.downloadFile', "click", function () {
             var id = $(this).attr('data-id');
-            window.location.href = web_path + ajax_url.download_file + '?fileId=' + id ;
+            window.location.href = web_path + ajax_url.download_file + '?fileId=' + id;
         });
 
         /**

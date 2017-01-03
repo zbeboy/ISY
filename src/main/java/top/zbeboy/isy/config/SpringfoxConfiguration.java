@@ -24,6 +24,13 @@ import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.ant;
 import static springfox.documentation.builders.PathSelectors.regex;
 
+/**
+ * Spring fox api 配置.
+ *
+ * @author zbeboy
+ * @version 1.0
+ * @since 1.0
+ */
 @SpringBootApplication
 @EnableSwagger2 //Enable swagger 2.0 spec
 @ComponentScan(basePackageClasses = {

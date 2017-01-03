@@ -422,8 +422,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      * 初始化tree view
      */
     function initTreeView(collegeId) {
-        if(collegeId>0){
-            $.get(web_path + ajax_url.application_json_data,{collegeId:collegeId}, function (data) {
+        if (collegeId > 0) {
+            $.get(web_path + ajax_url.application_json_data, {collegeId: collegeId}, function (data) {
                 if (data.listResult != null) {
                     treeViewData(data.listResult);
                 }

@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service;
 
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

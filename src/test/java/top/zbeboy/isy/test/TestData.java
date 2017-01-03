@@ -9,7 +9,9 @@ import org.jooq.tools.jdbc.MockDataProvider;
 import org.junit.Before;
 import org.junit.Test;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
-import static top.zbeboy.isy.domain.Tables.*;
+
+import static top.zbeboy.isy.domain.Tables.USERS;
+
 /**
  * Created by zbeboy on 2016/11/7.
  */
@@ -18,7 +20,7 @@ public class TestData {
     DSLContext create;
 
     @Before
-    public void init(){
+    public void init() {
         // Initialise your data provider (implementation further down):
         MockDataProvider provider = new MyProvider();
         MockConnection connection = new MockConnection(provider);
@@ -27,9 +29,9 @@ public class TestData {
     }
 
     @Test
-    public void testUsers(){
+    public void testUsers() {
         Result<UsersRecord> result = create.selectFrom(USERS).where(USERS.USERNAME.equal("863052317@qq.com")).fetch();
-        for(UsersRecord u:result){
+        for (UsersRecord u : result) {
             System.out.println(u.getUsername());
         }
     }

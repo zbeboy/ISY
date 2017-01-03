@@ -2,8 +2,8 @@
  * Created by lenovo on 2016-12-10.
  */
 //# sourceURL=internship_base_info_apply.js
-require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker","messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
-    function ($, Handlebars, nav_active,moment) {
+require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
+    function ($, Handlebars, nav_active, moment) {
 
         /*
          ajax url.
@@ -487,7 +487,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         /**
          * 初始化填写时间
          */
-        function initFillTime(){
+        function initFillTime() {
             $('#fill_time').daterangepicker({
                 "startDate": moment().add(1, "days"),
                 "endDate": moment().add(2, "days"),

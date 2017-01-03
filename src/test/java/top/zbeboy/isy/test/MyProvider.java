@@ -11,7 +11,7 @@ import top.zbeboy.isy.domain.tables.records.UsersRecord;
 
 import java.sql.SQLException;
 
-import static top.zbeboy.isy.domain.Tables.*;
+import static top.zbeboy.isy.domain.Tables.USERS;
 
 /**
  * Created by zbeboy on 2016/11/7.

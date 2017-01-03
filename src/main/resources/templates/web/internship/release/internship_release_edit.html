@@ -24,48 +24,57 @@
                 <form role="form" id="add_form">
                     <div class="form-group" id="valid_release_title">
                         <label>标题</label>
-                        <input class="form-control" name="releaseTitle" th:value="${internshipRelease.internshipTitle}" id="releaseTitle" placeholder="标题"/>
+                        <input class="form-control" name="releaseTitle" th:value="${internshipRelease.internshipTitle}"
+                               id="releaseTitle" placeholder="标题"/>
                         <p class="text-danger hidden" id="release_title_error_msg"></p>
-                        <input type="hidden" th:value="${internshipRelease.internshipReleaseId}" id="internshipReleaseId" name="internshipReleaseId"/>
+                        <input type="hidden" th:value="${internshipRelease.internshipReleaseId}"
+                               id="internshipReleaseId" name="internshipReleaseId"/>
                         <input type="hidden" th:value="${internshipRelease.schoolId}" id="schoolId"/>
                         <input type="hidden" th:value="${internshipRelease.collegeId}" id="collegeId"/>
                         <input type="hidden" th:value="${internshipRelease.departmentId}" id="departmentId"/>
                     </div>
                     <div class="form-group">
                         <label>实习类型</label>
-                        <input class="form-control" name="internshipTypeName" th:value="${internshipRelease.internshipTypeName}" readonly="readonly"/>
+                        <input class="form-control" name="internshipTypeName"
+                               th:value="${internshipRelease.internshipTypeName}" readonly="readonly"/>
                     </div>
                     <div class="form-group" id="valid_teacher_distribution_time">
                         <label>指导教师分配时间</label>
                         <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime"
                                placeholder="指导教师分配时间"/>
                         <p class="text-danger hidden" id="teacher_distribution_time_error_msg"></p>
-                        <input type="hidden" th:value="${internshipRelease.teacherDistributionStartTime}" id="teacherDistributionStartTime" />
-                        <input type="hidden" th:value="${internshipRelease.teacherDistributionEndTime}" id="teacherDistributionEndTime" />
+                        <input type="hidden" th:value="${internshipRelease.teacherDistributionStartTime}"
+                               id="teacherDistributionStartTime"/>
+                        <input type="hidden" th:value="${internshipRelease.teacherDistributionEndTime}"
+                               id="teacherDistributionEndTime"/>
                     </div>
                     <div class="form-group" id="valid_time">
                         <label>实习时间</label>
                         <input class="form-control" name="time" id="time" placeholder="实习开始时间"/>
                         <p class="help-block">建议：实习时间晚于指导教师分配时间</p>
                         <p class="text-danger hidden" id="time_error_msg"></p>
-                        <input type="hidden" th:value="${internshipRelease.startTime}" id="startTime" />
-                        <input type="hidden" th:value="${internshipRelease.endTime}" id="endTime" />
+                        <input type="hidden" th:value="${internshipRelease.startTime}" id="startTime"/>
+                        <input type="hidden" th:value="${internshipRelease.endTime}" id="endTime"/>
                     </div>
                     <div class="form-group">
                         <label>学校</label>
-                        <input class="form-control" name="schoolName" th:value="${internshipRelease.schoolName}" readonly="readonly"/>
+                        <input class="form-control" name="schoolName" th:value="${internshipRelease.schoolName}"
+                               readonly="readonly"/>
                     </div>
                     <div class="form-group">
                         <label>院</label>
-                        <input class="form-control" name="collegeName" th:value="${internshipRelease.collegeName}" readonly="readonly"/>
+                        <input class="form-control" name="collegeName" th:value="${internshipRelease.collegeName}"
+                               readonly="readonly"/>
                     </div>
                     <div class="form-group">
                         <label>系</label>
-                        <input class="form-control" name="departmentName" th:value="${internshipRelease.departmentName}" readonly="readonly"/>
+                        <input class="form-control" name="departmentName" th:value="${internshipRelease.departmentName}"
+                               readonly="readonly"/>
                     </div>
                     <div class="form-group">
                         <label>年级</label>
-                        <input class="form-control" name="allowGrade" th:value="${internshipRelease.allowGrade}" readonly="readonly"/>
+                        <input class="form-control" name="allowGrade" th:value="${internshipRelease.allowGrade}"
+                               readonly="readonly"/>
                     </div>
                     <div class="form-group">
                         <label>专业</label>
@@ -75,10 +84,12 @@
                         <label>状态</label>
                         <div class="checkbox">
                             <label th:if="${internshipRelease.internshipReleaseIsDel == 0 || internshipRelease.internshipReleaseIsDel == null}">
-                                <input type="checkbox" name="internshipReleaseIsDel" id="internshipReleaseIsDel" value="1"/>注销
+                                <input type="checkbox" name="internshipReleaseIsDel" id="internshipReleaseIsDel"
+                                       value="1"/>注销
                             </label>
                             <label th:if="${internshipRelease.internshipReleaseIsDel == 1}">
-                                <input type="checkbox" name="internshipReleaseIsDel" id="internshipReleaseIsDel" checked="checked" value="1"/>注销
+                                <input type="checkbox" name="internshipReleaseIsDel" id="internshipReleaseIsDel"
+                                       checked="checked" value="1"/>注销
                             </label>
                         </div>
                     </div>
@@ -96,7 +107,7 @@
                             <span class="btn btn-primary fileinput-button">
                                 <span>添加附件</span>
                                 <!-- The file input field used as target for the file upload widget -->
-                                <input id="fileupload" type="file" name="files[]" multiple="multiple" />
+                                <input id="fileupload" type="file" name="files[]" multiple="multiple"/>
                             </span>
                             </p>
                         </div>
@@ -115,7 +126,8 @@
         <!-- /.footer -->
         <script id="file-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                 data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
                 <div class="col-lg-6">
                     {{original_file_name}}
                 </div>
@@ -123,7 +135,8 @@
                     {{size}}
                 </div>
                 <div class="col-lg-2 text-center">
-                    <a class="clearfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}" data-file-id="{{fileId}}" href="javascript:;">删除</a>
+                    <a class="clearfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                       data-file-id="{{fileId}}" href="javascript:;">删除</a>
                 </div>
             </div>
             {{/each}}

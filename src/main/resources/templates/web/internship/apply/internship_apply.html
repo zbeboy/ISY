@@ -49,22 +49,23 @@
                         <div id="pagination" class="text-center">
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="my"><div class="well">
-                        <div class="row" style="margin-top:2px;">
-                            <div class="col-md-12">
-                                <input type="text" id="my_search_internship_title" class="form-control input-sm"
-                                       placeholder="标题"/>
+                    <div class="tab-pane fade" id="my">
+                        <div class="well">
+                            <div class="row" style="margin-top:2px;">
+                                <div class="col-md-12">
+                                    <input type="text" id="my_search_internship_title" class="form-control input-sm"
+                                           placeholder="标题"/>
+                                </div>
+                            </div>
+                            <div class="text-center" style="margin-top:4px;">
+                                <button type="button" id="my_search" class="btn btn-outline btn-default"><i
+                                        class="fa fa-search"></i>搜索
+                                </button>
+                                <button type="button" id="my_reset_search" class="btn btn-outline btn-default"><i
+                                        class="fa fa-repeat"></i>重置
+                                </button>
                             </div>
                         </div>
-                        <div class="text-center" style="margin-top:4px;">
-                            <button type="button" id="my_search" class="btn btn-outline btn-default"><i
-                                    class="fa fa-search"></i>搜索
-                            </button>
-                            <button type="button" id="my_reset_search" class="btn btn-outline btn-default"><i
-                                    class="fa fa-repeat"></i>重置
-                            </button>
-                        </div>
-                    </div>
                         <div class="text-right" style="margin-bottom: 10px;">
                             <button type="button" class="btn btn-outline btn-default" id="my_refresh"><i
                                     class="fa fa-refresh"></i>刷新
@@ -122,11 +123,13 @@
             </div>
         </div>
         <!-- 状态修改Modal -->
-        <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="stateModalLabel" aria-hidden="true">
+        <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="stateModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="stateModalLabel"></h4>
                     </div>
                     <div class="modal-body">
@@ -135,9 +138,9 @@
                                 <label for="reason">原因</label>
                                 <textarea class="form-control" name="reason" id="reason" rows="3"></textarea>
                                 <p id="reason_error_msg" class="hidden"></p>
-                                <input type="hidden" id="applyState" name="internshipApplyState" />
-                                <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId" />
-                                <input type="hidden" id="applyStudentId" name="studentId" />
+                                <input type="hidden" id="applyState" name="internshipApplyState"/>
+                                <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId"/>
+                                <input type="hidden" id="applyStudentId" name="studentId"/>
                             </div>
                         </form>
                     </div>
@@ -149,11 +152,13 @@
             </div>
         </div>
         <!-- 添加电子资料上传Modal -->
-        <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="uploadModalLabel">添加电子资料</h4>
                     </div>
                     <div class="modal-body">
@@ -166,7 +171,7 @@
                             <span class="btn btn-success fileinput-button">
                                 <span>添加附件</span>
                                 <!-- The file input field used as target for the file upload widget -->
-                                <input id="fileupload" type="file" name="files[]" />
+                                <input id="fileupload" type="file" name="files[]"/>
                             </span>
                             </p>
                             <small>注:只能上传一个文件，建议上传zip,rar等压缩文件。</small>
@@ -220,7 +225,8 @@
                 <div class="panel-footer">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default apply" data-id="{{internshipReleaseId}}">
-                            进行申请</button>
+                            进行申请
+                        </button>
                     </div>
                 </div>
             </div>
@@ -274,22 +280,33 @@
                         <span>电子资料:</span>
                         <span>{{originalFileName}}.{{ext}}</span>
                         <button type="button" class="btn btn-default downloadFile" data-id="{{fileId}}">
-                            下载</button>
+                            下载
+                        </button>
                     </div>
                     {{/if}}
                 </div>
                 <div class="panel-footer">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default myApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
-                            编辑</button>
-                        <button type="button" class="btn btn-default recallApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
-                            撤消申请</button>
-                        <button type="button" class="btn btn-default basisApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
-                            基础信息变更申请</button>
-                        <button type="button" class="btn btn-default firmApply" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
-                            单位信息变更申请</button>
-                        <button type="button" class="btn btn-default uploadFile" data-id="{{internshipReleaseId}}" data-student="{{studentId}}">
-                            上传电子资料</button>
+                        <button type="button" class="btn btn-default myApply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            编辑
+                        </button>
+                        <button type="button" class="btn btn-default recallApply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            撤消申请
+                        </button>
+                        <button type="button" class="btn btn-default basisApply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            基础信息变更申请
+                        </button>
+                        <button type="button" class="btn btn-default firmApply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            单位信息变更申请
+                        </button>
+                        <button type="button" class="btn btn-default uploadFile" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            上传电子资料
+                        </button>
                     </div>
                 </div>
             </div>

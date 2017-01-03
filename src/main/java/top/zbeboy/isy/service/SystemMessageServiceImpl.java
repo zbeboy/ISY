@@ -11,22 +11,20 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.domain.tables.daos.SystemLogDao;
 import top.zbeboy.isy.domain.tables.daos.SystemMessageDao;
 import top.zbeboy.isy.domain.tables.pojos.SystemMessage;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.*;
+import static top.zbeboy.isy.domain.Tables.SYSTEM_MESSAGE;
+import static top.zbeboy.isy.domain.Tables.USERS;
 
 /**
  * Created by lenovo on 2016-12-24.
@@ -60,7 +58,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     @Override
     public Result<Record> findAllByPageForShow(int pageNum, int pageSize, String username, boolean isSee) {
         Byte b = 0;
-        if(isSee){
+        if (isSee) {
             b = 1;
         }
         return create.select()
@@ -76,7 +74,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     @Override
     public int countAllForShow(String username, boolean isSee) {
         Byte b = 0;
-        if(isSee){
+        if (isSee) {
             b = 1;
         }
         Record1<Integer> record = create.selectCount()
@@ -107,8 +105,8 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         List<SystemMessageBean> systemMessageBeens = new ArrayList<>();
         if (records.isNotEmpty()) {
             systemMessageBeens = records.into(SystemMessageBean.class);
-            systemMessageBeens.forEach(i->{
-                i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(),"yyyy年MM月dd日 hh:mm:ss"));
+            systemMessageBeens.forEach(i -> {
+                i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(), "yyyy年MM月dd日 hh:mm:ss"));
             });
             paginationUtils.setTotalDatas(countByCondition(paginationUtils, systemMessageBean));
         }
@@ -158,14 +156,15 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         }
         return a;
     }
+
     /**
      * 其它条件参数
      *
-     * @param a                     搜索条件
+     * @param a                 搜索条件
      * @param systemMessageBean 额外参数
      * @return 条件
      */
-    private Condition otherCondition(Condition a,  SystemMessageBean systemMessageBean) {
+    private Condition otherCondition(Condition a, SystemMessageBean systemMessageBean) {
         if (!ObjectUtils.isEmpty(systemMessageBean)) {
             if (StringUtils.hasLength(systemMessageBean.getAcceptUsers())) {
                 if (!ObjectUtils.isEmpty(a)) {

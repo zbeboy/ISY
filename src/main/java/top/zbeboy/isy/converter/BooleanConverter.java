@@ -3,7 +3,11 @@ package top.zbeboy.isy.converter;
 import org.jooq.Converter;
 
 /**
- * Created by lenovo on 2016-08-16.
+ * jooq boolean to byte 转换.
+ *
+ * @author zbeboy
+ * @version 1.0
+ * @since 1.0
  */
 public class BooleanConverter implements Converter<Byte, Boolean> {
     @Override

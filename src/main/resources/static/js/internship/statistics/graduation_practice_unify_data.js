@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-12-11.
  */
-require(["jquery", "handlebars", "datatables.responsive","jquery.address", "messenger"],
+require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "messenger"],
     function ($, Handlebars) {
 
         /*
@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
         function getAjaxUrl() {
             return {
                 graduation_practice_unify_data_url: '/web/internship/statistical/graduation_practice_unify/data',
-                back:'/web/menu/internship/statistical'
+                back: '/web/menu/internship/statistical'
             };
         }
 
@@ -19,8 +19,8 @@ require(["jquery", "handlebars", "datatables.responsive","jquery.address", "mess
          * @param byte
          * @returns {*}
          */
-        function byteToBoolean(byte){
-            if(byte == 1){
+        function byteToBoolean(byte) {
+            if (byte == 1) {
                 return '已交';
             } else {
                 return '未交';

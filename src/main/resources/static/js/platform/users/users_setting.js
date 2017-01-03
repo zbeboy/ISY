@@ -10,9 +10,9 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
         var ajax_url = {
             valid_mobile_url: '/user/register/valid/mobile',
             mobile_code_url: '/user/register/mobile/code',
-            valid_users_url:'/anyone/valid/users',
-            update_mobile_url:'/anyone/user/mobile/update',
-            update_password_url:'/anyone/user/password/update'
+            valid_users_url: '/anyone/valid/users',
+            update_mobile_url: '/anyone/user/mobile/update',
+            update_password_url: '/anyone/user/password/update'
         };
 
         /*
@@ -62,7 +62,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
          参数id
          */
         var paramId = {
-            username:'#username',
+            username: '#username',
             mobile: '#newMobile',
             phoneVerifyCode: '#phoneVerifyCode',
             password: '#newPassword',
@@ -73,7 +73,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
          参数
          */
         var param = {
-            username:$(paramId.username).val().trim(),
+            username: $(paramId.username).val().trim(),
             mobile: $(paramId.mobile).val().trim(),
             phoneVerifyCode: $(paramId.phoneVerifyCode).val().trim(),
             password: $(paramId.password).val().trim(),
@@ -118,7 +118,11 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
                 validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, msg.mobile_error_msg);
             } else {
                 // ajax 检验
-                $.post(web_path + ajax_url.valid_users_url, {username:param.username,mobile: mobile, validType: 2}, function (data) {
+                $.post(web_path + ajax_url.valid_users_url, {
+                    username: param.username,
+                    mobile: mobile,
+                    validType: 2
+                }, function (data) {
                     if (data.state) {
                         validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
                     } else {
@@ -135,7 +139,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
             if (!valid_regex.phone_verify_code_valid_regex.test(phoneVerifyCode)) {
                 validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, msg.phone_verify_code_error_msg);
             } else {
-                if(mobile !== $('#mobile').val()){
+                if (mobile !== $('#mobile').val()) {
                     // ajax 检验 参数：手机号，验证码 后台保存这两个参数，在提交时再次检验
                     $.post(web_path + ajax_url.valid_mobile_url, {
                         mobile: mobile,
@@ -190,9 +194,13 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
             initParam();
             var mobile = param.mobile;
             if (valid_regex.mobile_valid_regex.test(mobile)) {
-                if(mobile !== $('#mobile').val()){
+                if (mobile !== $('#mobile').val()) {
 
-                    $.post(web_path + ajax_url.valid_users_url, {username:param.username,mobile: mobile, validType: 2}, function (data) {
+                    $.post(web_path + ajax_url.valid_users_url, {
+                        username: param.username,
+                        mobile: mobile,
+                        validType: 2
+                    }, function (data) {
                         if (data.state) {
                             validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
                             curCount = count;
@@ -236,13 +244,13 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
         }
 
         // 打开修改手机号模态框
-        $('#mobileUpdate').click(function(){
+        $('#mobileUpdate').click(function () {
             $(paramId.mobile).val($('#mobile').val());
             $('#mobileModal').modal('show');
         });
 
         // 提交手机号
-        $('#mobile_submit').click(function(){
+        $('#mobile_submit').click(function () {
             validMobile();
         });
 
@@ -253,7 +261,11 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
                 validErrorDom(validId.valid_mobile, errorMsgId.mobile_error_msg, msg.mobile_error_msg);
             } else {
                 // ajax 检验
-                $.post(web_path + ajax_url.valid_users_url, {username:param.username,mobile: mobile, validType: 2}, function (data) {
+                $.post(web_path + ajax_url.valid_users_url, {
+                    username: param.username,
+                    mobile: mobile,
+                    validType: 2
+                }, function (data) {
                     if (data.state) {
                         validSuccessDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
                         validPhoneVerifyCode();
@@ -271,7 +283,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
             if (!valid_regex.phone_verify_code_valid_regex.test(phoneVerifyCode)) {
                 validErrorDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg, msg.phone_verify_code_error_msg);
             } else {
-                if(mobile !== $('#mobile').val()){
+                if (mobile !== $('#mobile').val()) {
                     // ajax 检验 参数：手机号，验证码 后台保存这两个参数，在提交时再次检验
                     $.post(web_path + ajax_url.valid_mobile_url, {
                         mobile: mobile,
@@ -293,7 +305,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
         /**
          * 发送手机号
          */
-        function sendMobile(){
+        function sendMobile() {
             $.post(web_path + ajax_url.update_mobile_url, $('#mobile_form').serialize(), function (data) {
                 if (data.state) {
                     var msg = Messenger().post({
@@ -304,13 +316,13 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
                                 phrase: '即将退出',
                                 auto: true,
                                 delay: 5,
-                                action: function() {
+                                action: function () {
                                     $('#logout').submit();
                                 }
                             },
                             cancel: {
                                 label: '取消',
-                                action: function() {
+                                action: function () {
                                     validCleanDom(validId.valid_mobile, errorMsgId.mobile_error_msg);
                                     validCleanDom(validId.valid_phone_verify_code, errorMsgId.phone_verify_code_error_msg);
                                     $('#mobileModal').modal('hide');
@@ -330,12 +342,12 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
         }
 
         // 打开修改密码模态框
-        $('#passwordUpdate').click(function(){
+        $('#passwordUpdate').click(function () {
             $('#passwordModal').modal('show');
         });
 
         // 提交密码
-        $('#password_submit').click(function(){
+        $('#password_submit').click(function () {
             validPassword();
         });
 
@@ -359,7 +371,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
         /**
          * 发送密码
          */
-        function sendPassword(){
+        function sendPassword() {
             $.post(web_path + ajax_url.update_password_url, $('#password_form').serialize(), function (data) {
                 if (data.state) {
                     var msg = Messenger().post({
@@ -370,13 +382,13 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
                                 phrase: '即将退出',
                                 auto: true,
                                 delay: 5,
-                                action: function() {
+                                action: function () {
                                     $('#logout').submit();
                                 }
                             },
                             cancel: {
                                 label: '取消',
-                                action: function() {
+                                action: function () {
                                     validCleanDom(validId.valid_password, errorMsgId.password_error_msg);
                                     validCleanDom(validId.valid_confirm_password, errorMsgId.confirm_password_error_msg);
                                     $(paramId.password).val('');

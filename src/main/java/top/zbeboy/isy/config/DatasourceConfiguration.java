@@ -8,13 +8,16 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * Created by zbeboy on 2016/11/11.
  * 配置高性能数据库链接池
+ *
+ * @author zbeboy
+ * @version 1.0
+ * @since 1.0
  */
 @Configuration
 public class DatasourceConfiguration {
     @Bean
-    @ConfigurationProperties(prefix="datasource.mine")
+    @ConfigurationProperties(prefix = "datasource.mine")
     public DataSource dataSource() {
         return new HikariDataSource();
     }

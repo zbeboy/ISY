@@ -1,14 +1,14 @@
 /**
  * Created by lenovo on 2016-12-24.
  */
-require(["jquery", "handlebars", "nav_active","jquery.address"],
+require(["jquery", "handlebars", "nav_active", "jquery.address"],
     function ($, Handlebars, nav_active) {
 
         /*
          ajax url.
          */
         var ajax_url = {
-            nav:'/web/menu/internship/regulate'
+            nav: '/web/menu/internship/regulate'
         };
 
         // 刷新时选中菜单
