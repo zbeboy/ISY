@@ -662,7 +662,7 @@ public class StudentServiceImpl implements StudentService {
     /**
      * 全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
     public Condition searchCondition(DataTablesUtils<StudentBean> dataTablesUtils) {
@@ -780,8 +780,8 @@ public class StudentServiceImpl implements StudentService {
     /**
      * 数据排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatables工具类
+     * @param selectConditionStep 条件
      */
     public void sortCondition(DataTablesUtils<StudentBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();

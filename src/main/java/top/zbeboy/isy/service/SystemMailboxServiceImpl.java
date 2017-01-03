@@ -70,7 +70,7 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
     /**
      * 系统邮件全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
     @Override
@@ -90,8 +90,8 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
     /**
      * 系统邮件排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatables工具类
+     * @param selectConditionStep 条件
      */
     @Override
     public void sortCondition(DataTablesUtils<SystemMailboxBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {

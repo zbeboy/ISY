@@ -154,7 +154,7 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
     /**
      * 全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
     @Override
@@ -219,8 +219,8 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
     /**
      * 数据排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatables工具类
+     * @param selectConditionStep 条件
      */
     @Override
     public void sortCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {

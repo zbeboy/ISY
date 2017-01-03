@@ -386,7 +386,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     /**
      * 获取系统默认角色
      *
-     * @return
+     * @return 默认角色
      */
     private List<String> getDefaultRoles() {
         List<String> defaultRoles = new ArrayList<>();
@@ -397,7 +397,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     /**
      * 全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
     @Override
@@ -435,8 +435,8 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     /**
      * 数据排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatables工具类
+     * @param selectConditionStep 条件
      */
     @Override
     public void sortCondition(DataTablesUtils<RoleBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {

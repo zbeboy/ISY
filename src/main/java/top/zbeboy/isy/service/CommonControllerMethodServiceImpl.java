@@ -71,6 +71,7 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     @Resource
     private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
+    @Override
     public void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap) {
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);

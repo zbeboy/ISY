@@ -92,7 +92,7 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
     /**
      * 全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
     @Override
@@ -111,8 +111,8 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
     /**
      * 数据排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatables工具类
+     * @param selectConditionStep 条件
      */
     @Override
     public void sortCondition(DataTablesUtils<Nation> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {

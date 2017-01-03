@@ -154,7 +154,7 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
     /**
      * 全局搜索条件
      *
-     * @param dataTablesUtils
+     * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
     public Condition searchCondition(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils) {
@@ -217,8 +217,8 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
     /**
      * 数据排序
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils datatables工具类
+     * @param selectConditionStep 条件
      */
     @Override
     public void sortCondition(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
