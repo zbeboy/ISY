@@ -27,6 +27,7 @@ import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -85,6 +86,12 @@ public class InternshipReviewController {
 
     @Resource
     private InternshipTeacherDistributionService internshipTeacherDistributionService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private UsersService usersService;
 
     /**
      * 实习审核
@@ -552,7 +559,7 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/audit/pass", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils auditPass(InternshipReviewBean internshipReviewBean) {
+    public AjaxUtils auditPass(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
@@ -574,6 +581,14 @@ public class InternshipReviewController {
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
                     internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
                     internshipChangeHistoryService.save(internshipChangeHistory);
+
+                    Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
+                    if (userRecord.isPresent()) {
+                        Users users = userRecord.get().into(Users.class);
+                        Users curUsers = usersService.getUserFromSession();
+                        String notify = "您的自主实习 " + internshipRelease.getInternshipTitle() + " 申请已通过。";
+                        commonControllerMethodService.sendNotify(users, curUsers, internshipRelease.getInternshipTitle(), notify, request);
+                    }
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习信息");
                 }
@@ -651,7 +666,7 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/audit/agree", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils auditAgree(InternshipReviewBean internshipReviewBean) {
+    public AjaxUtils auditAgree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         try {
             if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
@@ -686,6 +701,14 @@ public class InternshipReviewController {
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
                     internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
                     internshipChangeHistoryService.save(internshipChangeHistory);
+
+                    Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
+                    if (userRecord.isPresent()) {
+                        Users users = userRecord.get().into(Users.class);
+                        Users curUsers = usersService.getUserFromSession();
+                        String notify = "您的实习变更申请已通过，请尽快在填写时间内完成。";
+                        commonControllerMethodService.sendNotify(users, curUsers, "实习变更通过", notify, request);
+                    }
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习申请信息");
                 }
@@ -707,7 +730,7 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/audit/disagree", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils auditDisagree(InternshipReviewBean internshipReviewBean) {
+    public AjaxUtils auditDisagree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
@@ -724,6 +747,14 @@ public class InternshipReviewController {
                 internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
                 internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
                 internshipChangeHistoryService.save(internshipChangeHistory);
+
+                Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
+                if (userRecord.isPresent()) {
+                    Users users = userRecord.get().into(Users.class);
+                    Users curUsers = usersService.getUserFromSession();
+                    String notify = "您的实习变更申请未通过。";
+                    commonControllerMethodService.sendNotify(users, curUsers, "实习变更未通过", notify, request);
+                }
             } else {
                 ajaxUtils.fail().msg("未查询到相关实习申请信息");
             }
@@ -745,7 +776,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/fail", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditFail(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
-                               @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+                               @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
@@ -761,6 +792,14 @@ public class InternshipReviewController {
             internshipChangeHistory.setState(internshipApplyState);
             internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
             internshipChangeHistoryService.save(internshipChangeHistory);
+
+            Optional<Record> userRecord = studentService.findByIdRelation(studentId);
+            if (userRecord.isPresent()) {
+                Users users = userRecord.get().into(Users.class);
+                Users curUsers = usersService.getUserFromSession();
+                String notify = "您的自主实习申请未通过，具体原因：" + reason;
+                commonControllerMethodService.sendNotify(users, curUsers, "实习未通过", notify, request);
+            }
         } else {
             ajaxUtils.fail().msg("未查询到相关申请信息");
         }
@@ -776,7 +815,7 @@ public class InternshipReviewController {
      */
     @RequestMapping(value = "/web/internship/review/audit/delete", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils auditDelete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+    public AjaxUtils auditDelete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (!ObjectUtils.isEmpty(internshipRelease)) {
@@ -785,6 +824,14 @@ public class InternshipReviewController {
             internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
             internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
             internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+
+            Optional<Record> userRecord = studentService.findByIdRelation(studentId);
+            if (userRecord.isPresent()) {
+                Users users = userRecord.get().into(Users.class);
+                Users curUsers = usersService.getUserFromSession();
+                String notify = "您的自主实习可能存在问题，已被管理员删除此次申请，若您有任何疑问，请联系管理员";
+                commonControllerMethodService.sendNotify(users, curUsers, "清除实习记录", notify, request);
+            }
             ajaxUtils.success().msg("删除申请成功");
         } else {
             ajaxUtils.fail().msg("未查询到相关实习信息");

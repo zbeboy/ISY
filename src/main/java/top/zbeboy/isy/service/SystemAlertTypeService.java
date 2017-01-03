@@ -14,4 +14,12 @@ public interface SystemAlertTypeService {
      * @return 消息类型
      */
     SystemAlertType findById(int id);
+
+    /**
+     * 通过类型名查询
+     *
+     * @param type 类型名
+     * @return 消息类型
+     */
+    SystemAlertType findByType(String type);
 }

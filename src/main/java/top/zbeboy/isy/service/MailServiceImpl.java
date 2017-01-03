@@ -143,6 +143,21 @@ public class MailServiceImpl implements MailService {
 
     @Async
     @Override
+    public void sendNotifyMail(Users users, String baseUrl, String notify) {
+        log.debug("Sending notify e-mail to '{}'", users.getUsername());
+        Locale locale = Locale.forLanguageTag(users.getLangKey());
+        Context data = new Context();
+        data.setLocale(locale);
+        data.setVariable("user", users);
+        data.setVariable("notifyLink", baseUrl + "/login");
+        data.setVariable("notify", notify);
+        String subject = messageSource.getMessage("email.notify.title", null, locale);
+        String content = springTemplateEngine.process("mails/notifyemail", data);
+        sendEmail(users.getUsername(), subject, content, false, true);
+    }
+
+    @Async
+    @Override
     public void sendAliDMMail(String userMail, String subject, String content) {
         try {
             // 配置发送邮件的环境属性

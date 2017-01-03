@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service;
 
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.SystemAlertTypeDao;
-import top.zbeboy.isy.domain.tables.daos.SystemLogDao;
 import top.zbeboy.isy.domain.tables.pojos.SystemAlertType;
 
 import javax.annotation.Resource;
+
+import static top.zbeboy.isy.domain.Tables.SYSTEM_ALERT_TYPE;
+
 
 /**
  * Created by lenovo on 2016-12-24.
@@ -36,5 +37,10 @@ public class SystemAlertTypeServiceImpl implements SystemAlertTypeService {
     @Override
     public SystemAlertType findById(int id) {
         return systemAlertTypeDao.findById(id);
+    }
+
+    @Override
+    public SystemAlertType findByType(String type) {
+        return systemAlertTypeDao.fetchOne(SYSTEM_ALERT_TYPE.NAME,type);
     }
 }

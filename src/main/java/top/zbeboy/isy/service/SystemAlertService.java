@@ -2,6 +2,7 @@ package top.zbeboy.isy.service;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.isy.domain.tables.pojos.SystemAlert;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -59,4 +60,11 @@ public interface SystemAlertService {
      * @return 统计
      */
     int countByCondition(PaginationUtils paginationUtils, SystemAlertBean systemAlertBean);
+
+    /**
+     * 保存提醒
+     *
+     * @param systemAlert 提醒
+     */
+    void save(SystemAlert systemAlert);
 }

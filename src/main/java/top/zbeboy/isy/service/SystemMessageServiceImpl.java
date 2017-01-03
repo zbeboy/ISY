@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.SystemLogDao;
 import top.zbeboy.isy.domain.tables.daos.SystemMessageDao;
+import top.zbeboy.isy.domain.tables.pojos.SystemMessage;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
@@ -132,6 +133,12 @@ public class SystemMessageServiceImpl implements SystemMessageService {
             count = selectConditionStep.fetchOne();
         }
         return count.value1();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(SystemMessage systemMessage) {
+        systemMessageDao.insert(systemMessage);
     }
 
     /**

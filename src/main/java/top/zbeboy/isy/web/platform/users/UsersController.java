@@ -117,6 +117,9 @@ public class UsersController {
     @Autowired
     private RequestUtils requestUtils;
 
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
     /**
      * 检验注册表单
      *
@@ -559,13 +562,17 @@ public class UsersController {
      */
     @RequestMapping(value = "/special/channel/users/role/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles) {
+    public AjaxUtils roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles, HttpServletRequest request) {
         if (StringUtils.hasLength(roles)) {
             List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
             authoritiesService.deleteByUsername(username);
             roleList.forEach(role -> {
                 Authorities authorities = new Authorities(username, role);
                 authoritiesService.save(authorities);
+                Users users = usersService.findByUsername(username);
+                Users curUsers = usersService.getUserFromSession();
+                String notify = "您的权限已变更。";
+                commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
             });
             return new AjaxUtils().success().msg("更改用户角色成功");
         }
@@ -778,7 +785,7 @@ public class UsersController {
         Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
         if (student.isPresent()) {
             StudentBean studentBean = student.get().into(StudentBean.class);
-            modelMap.addAttribute("avatarForSaveOrUpdate",studentBean.getAvatar());
+            modelMap.addAttribute("avatarForSaveOrUpdate", studentBean.getAvatar());
             studentBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + studentBean.getAvatar());
             modelMap.addAttribute("user", studentBean);
         }
@@ -794,7 +801,7 @@ public class UsersController {
         Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
         if (staff.isPresent()) {
             StaffBean staffBean = staff.get().into(StaffBean.class);
-            modelMap.addAttribute("avatarForSaveOrUpdate",staffBean.getAvatar());
+            modelMap.addAttribute("avatarForSaveOrUpdate", staffBean.getAvatar());
             staffBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + staffBean.getAvatar());
             modelMap.addAttribute("user", staffBean);
         }
@@ -808,7 +815,7 @@ public class UsersController {
      */
     private void profileSystem(Users users, ModelMap modelMap, HttpServletRequest request) {
         Users newUsers = usersService.findByUsername(users.getUsername());
-        modelMap.addAttribute("avatarForSaveOrUpdate",newUsers.getAvatar());
+        modelMap.addAttribute("avatarForSaveOrUpdate", newUsers.getAvatar());
         newUsers.setAvatar(requestUtils.getBaseUrl(request) + "/" + newUsers.getAvatar());
         modelMap.addAttribute("user", newUsers);
     }
@@ -882,7 +889,7 @@ public class UsersController {
                     RequestUtils.getRealPath(request) + Workbook.avatarPath(users), request.getRemoteAddr());
             data.success().listData(fileBeen).obj(Workbook.avatarPath(users));
         } catch (Exception e) {
-            log.error("Upload avatar error, error is {}",e);
+            log.error("Upload avatar error, error is {}", e);
         }
         return data;
     }

@@ -52,6 +52,15 @@ public interface MailService {
     void sendValidEmailMail(Users users, String baseUrl);
 
     /**
+     * 发送通知邮件
+     *
+     * @param users   用户
+     * @param baseUrl 服务路径
+     * @param notify  通知内容
+     */
+    void sendNotifyMail(Users users, String baseUrl, String notify);
+
+    /**
      * 阿里云邮箱服务
      *
      * @param userMail 用户邮箱

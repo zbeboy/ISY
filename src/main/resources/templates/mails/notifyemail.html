@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.notify.title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="#{email.notify.greeting(${user.username})}">
+
+</p>
+<p th:text="${notify}">
+
+</p>
+<p th:text="#{email.notify.text1}">
+
+</p>
+<p>
+    <a href="#" th:href="${notifyLink}">登录链接</a>
+</p>
+<p>
+    <span th:text="#{email.notify.text2}"> </span>
+    <br/>
+    <em th:text="#{email.signature}"></em>
+</p>
+</body>
+</html>

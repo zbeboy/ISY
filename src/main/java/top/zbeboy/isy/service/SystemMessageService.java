@@ -2,6 +2,7 @@ package top.zbeboy.isy.service;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.isy.domain.tables.pojos.SystemMessage;
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -68,4 +69,11 @@ public interface SystemMessageService {
      * @return 统计
      */
     int countByCondition(PaginationUtils paginationUtils, SystemMessageBean systemMessageBean);
+
+    /**
+     * 保存
+     *
+     * @param systemMessage 消息
+     */
+    void save(SystemMessage systemMessage);
 }

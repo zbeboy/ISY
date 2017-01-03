@@ -66,7 +66,7 @@ public class FilesServiceImpl implements FilesService {
         try{
             String templatePath = Workbook.INTERNSHIP_JOURNAL_FILE_PATH;
             InputStream is = new FileInputStream(templatePath);
-            Map<String, String> cellMap = new HashMap<String, String>();
+            Map<String, String> cellMap = new HashMap<>();
             cellMap.put("${studentName}", internshipJournal.getStudentName());
             cellMap.put("${studentNumber}", internshipJournal.getStudentNumber());
             cellMap.put("${organize}", internshipJournal.getOrganize());

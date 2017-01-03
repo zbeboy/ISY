@@ -125,6 +125,12 @@ public class SystemAlertServiceImpl implements SystemAlertService {
         return count.value1();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(SystemAlert systemAlert) {
+        systemAlertDao.insert(systemAlert);
+    }
+
     /**
      * 搜索条件
      *

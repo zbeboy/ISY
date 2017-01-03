@@ -3,16 +3,22 @@ package top.zbeboy.isy.service;
 import org.jooq.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.InternshipType;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.service.util.RequestUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 /**
@@ -24,11 +30,20 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
 
     private final Logger log = LoggerFactory.getLogger(CommonControllerMethodServiceImpl.class);
 
+    @Autowired
+    private ISYProperties isyProperties;
+
+    @Autowired
+    private RequestUtils requestUtils;
+
     @Resource
     private UsersService usersService;
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private MailService mailService;
 
     @Resource
     private InternshipTypeService internshipTypeService;
@@ -44,6 +59,15 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
 
     @Resource
     private GraduationPracticeCompanyService graduationPracticeCompanyService;
+
+    @Resource
+    private SystemAlertService systemAlertService;
+
+    @Resource
+    private SystemMessageService systemMessageService;
+
+    @Resource
+    private SystemAlertTypeService systemAlertTypeService;
 
     @Resource
     private GraduationPracticeUnifyService graduationPracticeUnifyService;
@@ -78,7 +102,7 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     }
 
     @Override
-    public void deleteInternshipApplyRecord(int internshipTypeId,String internshipReleaseId, int studentId) {
+    public void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId) {
         InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipTypeId);
         switch (internshipType.getInternshipTypeName()) {
             case Workbook.INTERNSHIP_COLLEGE_TYPE:
@@ -101,10 +125,43 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
 
     @Override
     public String showTip(ModelMap modelMap, String tip) {
-        modelMap.addAttribute("showTip",true);
-        modelMap.addAttribute("tip",tip);
-        modelMap.addAttribute("showButton",true);
-        modelMap.addAttribute("buttonText","返回上一页");
+        modelMap.addAttribute("showTip", true);
+        modelMap.addAttribute("tip", tip);
+        modelMap.addAttribute("showButton", true);
+        modelMap.addAttribute("buttonText", "返回上一页");
         return Workbook.TIP_PAGE;
+    }
+
+    @Override
+    public void sendNotify(Users users, Users curUsers, String messageTitle, String notify, HttpServletRequest request) {
+        //发送验证邮件
+        if (isyProperties.getMail().isOpen()) {
+            mailService.sendNotifyMail(users, requestUtils.getBaseUrl(request), notify);
+        }
+
+        // 保存消息
+        SystemMessage systemMessage = new SystemMessage();
+        String messageId = UUIDUtils.getUUID();
+        Byte isSee = 0;
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        systemMessage.setSystemMessageId(messageId);
+        systemMessage.setAcceptUsers(users.getUsername());
+        systemMessage.setIsSee(isSee);
+        systemMessage.setSendUsers(curUsers.getUsername());
+        systemMessage.setMessageTitle(messageTitle);
+        systemMessage.setMessageContent(notify);
+        systemMessage.setMessageDate(now);
+        systemMessageService.save(systemMessage);
+        // 保存提醒
+        SystemAlert systemAlert = new SystemAlert();
+        SystemAlertType systemAlertType = systemAlertTypeService.findByType(Workbook.ALERT_MESSAGE_TYPE);
+        systemAlert.setSystemAlertId(UUIDUtils.getUUID());
+        systemAlert.setIsSee(isSee);
+        systemAlert.setAlertContent("新消息");
+        systemAlert.setLinkId(messageId);
+        systemAlert.setSystemAlertTypeId(systemAlertType.getSystemAlertTypeId());
+        systemAlert.setUsername(users.getUsername());
+        systemAlert.setAlertDate(now);
+        systemAlertService.save(systemAlert);
     }
 }
