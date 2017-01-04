@@ -130,7 +130,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             }
         });
 
-        var global_button = '<button type="button" id="school_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+        var global_button = /*'<button type="button" id="school_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +*/
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
