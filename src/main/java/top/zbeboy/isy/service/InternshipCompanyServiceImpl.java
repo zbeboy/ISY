@@ -151,6 +151,11 @@ public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCom
         return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_COMPANY, INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipCompany.getInternshipReleaseId()));
     }
 
+    @Override
+    public Result<Record> exportData(DataTablesUtils<InternshipCompany> dataTablesUtils, InternshipCompany internshipCompany) {
+        return dataPagingQueryAllWithConditionNoPage(dataTablesUtils, create, INTERNSHIP_COMPANY, INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID.eq(internshipCompany.getInternshipReleaseId()));
+    }
+
 
     /**
      * 全局搜索条件
@@ -219,7 +224,7 @@ public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCom
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override

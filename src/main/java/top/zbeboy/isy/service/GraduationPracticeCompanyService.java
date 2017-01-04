@@ -80,4 +80,13 @@ public interface GraduationPracticeCompanyService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils, GraduationPracticeCompany graduationPracticeCompany);
+
+    /**
+     * 查询
+     *
+     * @param dataTablesUtils           datatables工具类
+     * @param graduationPracticeCompany 毕业实习(校外)
+     * @return 导出数据
+     */
+    Result<Record> exportData(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils, GraduationPracticeCompany graduationPracticeCompany);
 }

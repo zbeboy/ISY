@@ -151,6 +151,11 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
         return statisticsWithCondition(dataTablesUtils, create, GRADUATION_PRACTICE_COMPANY, GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCompany.getInternshipReleaseId()));
     }
 
+    @Override
+    public Result<Record> exportData(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils, GraduationPracticeCompany graduationPracticeCompany) {
+        return dataPagingQueryAllWithConditionNoPage(dataTablesUtils, create, GRADUATION_PRACTICE_COMPANY, GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCompany.getInternshipReleaseId()));
+    }
+
     /**
      * 全局搜索条件
      *
@@ -217,7 +222,7 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override

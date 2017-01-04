@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.service.export.GraduationPracticeCompanyExport;
 import top.zbeboy.isy.service.export.InternshipCollegeExport;
+import top.zbeboy.isy.service.export.InternshipCompanyExport;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
@@ -34,7 +36,6 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -478,6 +479,55 @@ public class InternshipStatisticsController {
     }
 
     /**
+     * 导出 校外自主实习(去单位) 数据
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = "/web/internship/statistical/company/data/export", method = RequestMethod.GET)
+    public void companyDataExport(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String fileName = "校外自主实习(去单位)";
+            String ext = Workbook.XLSX_FILE;
+            ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
+
+            String extraSearchParam = request.getParameter("extra_search");
+            DataTablesUtils<InternshipCompany> dataTablesUtils = new DataTablesUtils<>();
+            if (StringUtils.isNotBlank(extraSearchParam)) {
+                dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
+            }
+            InternshipCompany internshipCompany = new InternshipCompany();
+            String internshipReleaseId = request.getParameter("internshipReleaseId");
+            if (!ObjectUtils.isEmpty(internshipReleaseId)) {
+                internshipCompany.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+                Result<Record> records = internshipCompanyService.exportData(dataTablesUtils, internshipCompany);
+                List<InternshipCompany> internshipCompanies = new ArrayList<>();
+                if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                    internshipCompanies = records.into(InternshipCompany.class);
+                }
+                if (StringUtils.isNotBlank(exportBean.getFileName())) {
+                    fileName = exportBean.getFileName();
+                }
+                if (StringUtils.isNotBlank(exportBean.getExt())) {
+                    ext = exportBean.getExt();
+                }
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                if (!ObjectUtils.isEmpty(internshipRelease)) {
+                    Optional<Record> record = departmentService.findByIdRelation(internshipRelease.getDepartmentId());
+                    if (record.isPresent()) {
+                        DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+                        InternshipCompanyExport export = new InternshipCompanyExport(internshipCompanies);
+                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        uploadService.download(fileName, "/" + path, response, request);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("Export file error, error is {}", e);
+        }
+    }
+
+    /**
      * 数据列表 毕业实习(校外) 数据
      *
      * @param request 请求
@@ -531,6 +581,55 @@ public class InternshipStatisticsController {
             dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 导出 毕业实习(校外) 数据
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = "/web/internship/statistical/graduation_practice_company/data/export", method = RequestMethod.GET)
+    public void graduationPracticeCompanyDataExport(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String fileName = "毕业实习(校外)";
+            String ext = Workbook.XLSX_FILE;
+            ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
+
+            String extraSearchParam = request.getParameter("extra_search");
+            DataTablesUtils<GraduationPracticeCompany> dataTablesUtils = new DataTablesUtils<>();
+            if (StringUtils.isNotBlank(extraSearchParam)) {
+                dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
+            }
+            GraduationPracticeCompany graduationPracticeCompany = new GraduationPracticeCompany();
+            String internshipReleaseId = request.getParameter("internshipReleaseId");
+            if (!ObjectUtils.isEmpty(internshipReleaseId)) {
+                graduationPracticeCompany.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+                Result<Record> records = graduationPracticeCompanyService.exportData(dataTablesUtils, graduationPracticeCompany);
+                List<GraduationPracticeCompany> graduationPracticeCompanies = new ArrayList<>();
+                if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                    graduationPracticeCompanies = records.into(GraduationPracticeCompany.class);
+                }
+                if (StringUtils.isNotBlank(exportBean.getFileName())) {
+                    fileName = exportBean.getFileName();
+                }
+                if (StringUtils.isNotBlank(exportBean.getExt())) {
+                    ext = exportBean.getExt();
+                }
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                if (!ObjectUtils.isEmpty(internshipRelease)) {
+                    Optional<Record> record = departmentService.findByIdRelation(internshipRelease.getDepartmentId());
+                    if (record.isPresent()) {
+                        DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+                        GraduationPracticeCompanyExport export = new GraduationPracticeCompanyExport(graduationPracticeCompanies);
+                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        uploadService.download(fileName, "/" + path, response, request);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("Export file error, error is {}", e);
+        }
     }
 
     /**

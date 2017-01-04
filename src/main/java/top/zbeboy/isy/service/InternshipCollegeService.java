@@ -84,7 +84,8 @@ public interface InternshipCollegeService {
     /**
      * 查询
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils   datatables工具类
+     * @param internshipCollege 校外自主实习(去单位)
      * @return 导出数据
      */
     Result<Record> exportData(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);

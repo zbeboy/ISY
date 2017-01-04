@@ -224,7 +224,7 @@ public class InternshipCollegeServiceImpl extends DataTablesPlugin<InternshipCol
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override

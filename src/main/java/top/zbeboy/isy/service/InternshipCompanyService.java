@@ -80,4 +80,13 @@ public interface InternshipCompanyService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<InternshipCompany> dataTablesUtils, InternshipCompany internshipCompany);
+
+    /**
+     * 查询
+     *
+     * @param dataTablesUtils   datatables工具类
+     * @param internshipCompany 校外自主实习(去单位)
+     * @return 导出数据
+     */
+    Result<Record> exportData(DataTablesUtils<InternshipCompany> dataTablesUtils, InternshipCompany internshipCompany);
 }
