@@ -114,6 +114,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
     /**
      * 组装exists条件
      *
+     * @param internshipStatisticsBean 实习统计
      * @return select
      */
     public Select<InternshipApplyRecord> existsInternshipApplySelect(InternshipStatisticsBean internshipStatisticsBean) {
@@ -287,7 +288,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override

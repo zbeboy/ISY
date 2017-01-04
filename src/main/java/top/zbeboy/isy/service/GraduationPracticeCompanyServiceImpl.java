@@ -162,6 +162,7 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
      * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
+    @Override
     public Condition searchCondition(DataTablesUtils<GraduationPracticeCompany> dataTablesUtils) {
         Condition a = null;
         JSONObject search = dataTablesUtils.getSearch();

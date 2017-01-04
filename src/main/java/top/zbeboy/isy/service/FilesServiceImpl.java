@@ -30,15 +30,8 @@ public class FilesServiceImpl implements FilesService {
 
     private final Logger log = LoggerFactory.getLogger(FilesServiceImpl.class);
 
-    private final DSLContext create;
-
     @Resource
     private FilesDao filesDao;
-
-    @Autowired
-    public FilesServiceImpl(DSLContext dslContext) {
-        this.create = dslContext;
-    }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
@@ -69,7 +62,7 @@ public class FilesServiceImpl implements FilesService {
             cellMap.put("${schoolGuidanceTeacher}", internshipJournal.getSchoolGuidanceTeacher());
             cellMap.put("${graduationPracticeCompanyName}", internshipJournal.getGraduationPracticeCompanyName());
 
-            Map<String, String> paraMap = new HashMap<String, String>();
+            Map<String, String> paraMap = new HashMap<>();
             paraMap.put("${internshipJournalContent}", internshipJournal.getInternshipJournalContent());
             paraMap.put("${date}", new SimpleDateFormat("yyyy年MM月dd日").format(internshipJournal.getInternshipJournalDate()));
 
@@ -148,7 +141,7 @@ public class FilesServiceImpl implements FilesService {
             try {
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Close file is error, error {}",e);
             }
         }
     }
@@ -163,7 +156,7 @@ public class FilesServiceImpl implements FilesService {
             try {
                 os.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Close file is error, error {}",e);
             }
         }
     }

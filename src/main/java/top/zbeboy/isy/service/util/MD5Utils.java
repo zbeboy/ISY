@@ -25,6 +25,12 @@ public class MD5Utils {
 
     private final Logger log = LoggerFactory.getLogger(MD5Utils.class);
 
+    /**
+     * md5加密
+     *
+     * @param password 密码
+     * @return 加密后
+     */
     public static String md5(String password) {
         Md5PasswordEncoder md5 = new Md5PasswordEncoder();
         // false 表示：生成32位的Hex版, 这也是encodeHashAsBase64的, Acegi 默认配置; true  表示：生成24位的Base64版
@@ -32,20 +38,37 @@ public class MD5Utils {
         return md5.encodePassword(password, null);
     }
 
+    /**
+     * sha 256 encode
+     *
+     * @param password 密码
+     * @return 加密后
+     * @throws NoSuchAlgorithmException
+     */
     public static String sha_256(String password) throws NoSuchAlgorithmException {
         ShaPasswordEncoder sha = new ShaPasswordEncoder(256);
         sha.setEncodeHashAsBase64(true);
         return sha.encodePassword(password, null);
     }
 
-
+    /**
+     * sha 256
+     *
+     * @param password 密码
+     * @return 加密后
+     */
     public static String sha_SHA_256(String password) {
         ShaPasswordEncoder sha = new ShaPasswordEncoder();
         sha.setEncodeHashAsBase64(false);
         return sha.encodePassword(password, null);
     }
 
-
+    /**
+     * 加盐加密
+     *
+     * @param password 密码
+     * @return 加密后
+     */
     public static String md5_SystemWideSaltSource(String password) {
         Md5PasswordEncoder md5 = new Md5PasswordEncoder();
         md5.setEncodeHashAsBase64(false);
@@ -54,6 +77,12 @@ public class MD5Utils {
         return md5.encodePassword(password, "acegisalt");
     }
 
+    /**
+     * sha 1 加密
+     *
+     * @param decript 字符串
+     * @return 加密后
+     */
     public static String sha_1(String decript) {
         try {
             MessageDigest digest = java.security.MessageDigest

@@ -39,6 +39,11 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     @Inject
     private Environment env;
 
+    /**
+     * 切换语言
+     *
+     * @return 语言环境
+     */
     @Bean
     public LocaleResolver localeResolver() {
         return new SessionLocaleResolver();
@@ -64,8 +69,8 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public EmbeddedServletContainerFactory undertow() {
         UndertowEmbeddedServletContainerFactory undertow = new UndertowEmbeddedServletContainerFactory();
-        undertow.addBuilderCustomizers(builder -> builder.addHttpListener(isyProperties.getConstants().getServerHttpPort(), "0.0.0.0"));
-        undertow.addDeploymentInfoCustomizers(deploymentInfo -> {
+        undertow.addBuilderCustomizers(builder -> builder.addHttpListener(isyProperties.getConstants().getServerHttpPort(), isyProperties.getConstants().getUndertowListenerIp()));
+        undertow.addDeploymentInfoCustomizers(deploymentInfo ->
             deploymentInfo.addSecurityConstraint(new SecurityConstraint()
                     .addWebResourceCollection(new WebResourceCollection()
                             .addUrlPattern("/*"))
@@ -73,8 +78,8 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
                     .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
                     .setDefaultEncoding(CharEncoding.UTF_8)
                     .setUrlEncoding(CharEncoding.UTF_8)
-                    .setConfidentialPortManager(exchange -> isyProperties.getConstants().getServerHttpsPort());
-        });
+                    .setConfidentialPortManager(exchange -> isyProperties.getConstants().getServerHttpsPort())
+        );
         if (env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION)) {
             File documentRoot = new File(System.getProperty("user.dir") + "/" + isyProperties.getConstants().getTempDir());
             if (!documentRoot.exists()) {

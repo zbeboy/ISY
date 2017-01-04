@@ -117,6 +117,7 @@ public class RoleController {
     /**
      * 角色数据添加
      *
+     * @param modelMap 页面对象
      * @return 添加页面
      */
     @RequestMapping(value = "/web/platform/role/add", method = RequestMethod.GET)
@@ -128,6 +129,8 @@ public class RoleController {
     /**
      * 角色数据编辑
      *
+     * @param roleId   角色id
+     * @param modelMap 页面对象
      * @return 编辑页面
      */
     @RequestMapping(value = "/web/platform/role/edit", method = RequestMethod.GET)
@@ -335,6 +338,7 @@ public class RoleController {
     /**
      * 数据json
      *
+     * @param collegeId 院id
      * @return json
      */
     @RequestMapping(value = "/web/platform/role/application/json", method = RequestMethod.GET)

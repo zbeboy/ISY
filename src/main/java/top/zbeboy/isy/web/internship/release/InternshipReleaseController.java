@@ -97,6 +97,7 @@ public class InternshipReleaseController {
     /**
      * 获取实习发布数据
      *
+     * @param paginationUtils 分页工具
      * @return 数据
      */
     @RequestMapping(value = "/web/internship/release/data", method = RequestMethod.GET)
@@ -112,6 +113,7 @@ public class InternshipReleaseController {
     /**
      * 获取实习列表数据 用于实习教师分配等通用列表数据
      *
+     * @param paginationUtils 分页工具
      * @return 数据
      */
     @RequestMapping(value = "/anyone/internship/data", method = RequestMethod.GET)
@@ -129,6 +131,7 @@ public class InternshipReleaseController {
     /**
      * 实习发布添加页面
      *
+     * @param modelMap 页面对象
      * @return 实习发布添加页面
      */
     @RequestMapping(value = "/web/internship/release/add", method = RequestMethod.GET)
@@ -154,6 +157,8 @@ public class InternshipReleaseController {
     /**
      * 实习发布编辑页面
      *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            对面对象
      * @return 实习发布编辑页面
      */
     @RequestMapping(value = "/web/internship/release/edit", method = RequestMethod.GET)
@@ -191,6 +196,7 @@ public class InternshipReleaseController {
     /**
      * 获取实习附件数据
      *
+     * @param internshipReleaseId 实习发布id
      * @return 实习附件数据
      */
     @RequestMapping(value = "/user/internship/files", method = RequestMethod.GET)
@@ -435,7 +441,7 @@ public class InternshipReleaseController {
                 data.fail().msg("上传失败，未查询到学校信息");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Upload file exception,is {}", e);
         }
         return data;
     }
@@ -463,7 +469,7 @@ public class InternshipReleaseController {
                 ajaxUtils.fail().msg("删除文件失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Delete file exception, is {}", e);
         }
         return ajaxUtils;
     }

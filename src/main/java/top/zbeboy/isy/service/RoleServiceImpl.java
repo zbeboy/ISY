@@ -325,9 +325,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     public String findByUsernameToStringNoCache(String username) {
         Result<Record1<String>> record1s = usersService.findByUsernameWithRoleNoCache(username);
         StringBuilder stringBuilder = new StringBuilder();
-        record1s.forEach(r -> {
-            stringBuilder.append(r.getValue(0)).append(" ");
-        });
+        record1s.forEach(r -> stringBuilder.append(r.getValue(0)).append(" "));
         return stringBuilder.toString();
     }
 

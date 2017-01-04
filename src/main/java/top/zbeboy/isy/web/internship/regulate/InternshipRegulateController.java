@@ -252,6 +252,7 @@ public class InternshipRegulateController {
      * 批量删除监管记录
      *
      * @param regulateIds ids
+     * @param staffId     教职工id
      * @return true 删除成功
      */
     @RequestMapping(value = "/web/internship/regulate/list/del", method = RequestMethod.POST)
@@ -414,8 +415,9 @@ public class InternshipRegulateController {
     /**
      * 检验教职工
      *
-     * @param info 教职工信息
-     * @param type 检验类型
+     * @param info                教职工信息
+     * @param internshipReleaseId 实习发布id
+     * @param type                检验类型
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/regulate/valid/staff", method = RequestMethod.POST)

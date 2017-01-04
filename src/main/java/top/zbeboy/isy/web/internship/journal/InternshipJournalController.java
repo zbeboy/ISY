@@ -313,7 +313,9 @@ public class InternshipJournalController {
     /**
      * 下载实习日志
      *
-     * @param id 实习日志id
+     * @param id       实习日志id
+     * @param request  请求
+     * @param response 响应
      */
     @RequestMapping(value = "/web/internship/journal/list/download", method = RequestMethod.GET)
     public void journalListDownload(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
@@ -342,7 +344,7 @@ public class InternshipJournalController {
                     List<String> filePath = new ArrayList<>();
                     records.forEach(r -> {
                         filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
-                        fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf("/") + 1));
+                        fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf('/') + 1));
                     });
                     Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
                     if (studentRecord.isPresent()) {
@@ -366,6 +368,7 @@ public class InternshipJournalController {
      *
      * @param journalIds ids
      * @param studentId  学生id
+     * @param request    请求
      * @return true 删除成功
      */
     @RequestMapping(value = "/web/internship/journal/list/del", method = RequestMethod.POST)
@@ -406,6 +409,7 @@ public class InternshipJournalController {
      * 实习日志进入条件
      *
      * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/journal/condition", method = RequestMethod.POST)
@@ -426,6 +430,7 @@ public class InternshipJournalController {
      *
      * @param internshipJournalVo 实习日志
      * @param bindingResult       检验
+     * @param request             请求
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/journal/my/save", method = RequestMethod.POST)
@@ -527,8 +532,9 @@ public class InternshipJournalController {
     /**
      * 检验学生
      *
-     * @param info 学生信息
-     * @param type 检验类型
+     * @param info                学生信息
+     * @param internshipReleaseId 实习发布id
+     * @param type                检验类型
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/journal/valid/student", method = RequestMethod.POST)

@@ -107,9 +107,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public void deletes(List<Integer> ids) {
-        ids.forEach(id ->
-                applicationDao.deleteById(id)
-        );
+        ids.forEach(id -> applicationDao.deleteById(id));
     }
 
     // 一级菜单
@@ -137,7 +135,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     // 二级菜单
     private String secondLevelHtml(Result<ApplicationRecord> applicationRecords, List<Integer> applicationIds) {
-        String ul = "<ul class=\"nav nav-second-level\">";
+        StringBuilder stringBuilder = new StringBuilder("<ul class=\"nav nav-second-level\">");
         for (ApplicationRecord applicationRecord : applicationRecords) { // pid = 1级菜单id
             String li = "<li>";
             Result<ApplicationRecord> thirdLevelRecord = findInIdsAndPid(applicationIds, applicationRecord.getApplicationId());// 查询三级菜单
@@ -150,24 +148,24 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 li += thirdLevelHtml(thirdLevelRecord);
             }
             li += "</li>";
-            ul += li;
+            stringBuilder.append(li);
         }
-        ul += "</ul>";
-        return ul;
+        stringBuilder.append("</ul>");
+        return stringBuilder.toString();
     }
 
     // 三级菜单
     private String thirdLevelHtml(Result<ApplicationRecord> applicationRecords) {
-        String ul = "<ul class=\"nav nav-third-level\">";
+        StringBuilder stringBuilder = new StringBuilder("<ul class=\"nav nav-third-level\">");
         for (ApplicationRecord applicationRecord : applicationRecords) { // pid = 2级菜单id
             String url = getWebPath(applicationRecord.getApplicationUrl());
             String li = "<li>";
             li += "<a href=\"" + url + "\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
             li += "</li>";
-            ul += li;
+            stringBuilder.append(li);
         }
-        ul += "</ul>";
-        return ul;
+        stringBuilder.append("</ul>");
+        return stringBuilder.toString();
     }
 
     /**
@@ -242,7 +240,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 urlMappingFromText.stream().filter(url -> url.startsWith(applicationRecord.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
             }
         } catch (FileNotFoundException e) {
-            log.error("url-mapping.txt file not found.The exception is {}", e.getMessage());
+            log.error("url-mapping.txt file not found.The exception is {}", e);
         }
         return urlMapping;
     }
@@ -498,7 +496,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
             }
             reader.close();
         } catch (IOException e) {
-            log.error("Read url-mapping.txt error.The exception is {}.", e.getMessage());
+            log.error("Read url-mapping.txt error.The exception is {}.", e);
         }
         return urlMapping;
     }

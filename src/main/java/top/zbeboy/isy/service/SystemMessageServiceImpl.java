@@ -106,9 +106,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         List<SystemMessageBean> systemMessageBeens = new ArrayList<>();
         if (records.isNotEmpty()) {
             systemMessageBeens = records.into(SystemMessageBean.class);
-            systemMessageBeens.forEach(i -> {
-                i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(), "yyyy年MM月dd日 HH:mm:ss"));
-            });
+            systemMessageBeens.forEach(i -> i.setMessageDateStr(DateTimeUtils.formatDate(i.getMessageDate(), "yyyy年MM月dd日 HH:mm:ss")));
             paginationUtils.setTotalDatas(countByCondition(paginationUtils, systemMessageBean));
         }
         return systemMessageBeens;

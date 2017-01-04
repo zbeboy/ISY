@@ -64,22 +64,22 @@ public class UsersController {
     /*
     检验邮箱使用
      */
-    private final int VALID_EMAIL = 1;
+    private static final int VALID_EMAIL = 1;
 
     /*
     检验手机号使用
      */
-    private final int VALID_MOBILE = 2;
+    private static final int VALID_MOBILE = 2;
 
     /*
     验证码错误码
      */
-    private final int CAPTCHA_ERROR = 0;
+    private static final int CAPTCHA_ERROR = 0;
 
     /*
     无效的验证码
      */
-    private final int CAPTCHA_INVALID = 1;
+    private static final int CAPTCHA_INVALID = 1;
 
     @Resource
     private UsersService usersService;
@@ -315,7 +315,7 @@ public class UsersController {
      */
     @RequestMapping("/user/login/jcaptcha")
     public void jCaptcha(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        byte[] captchaChallengeAsJpeg = null;
+        byte[] captchaChallengeAsJpeg;
         // the output stream to render the captcha image as jpeg into
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
@@ -328,11 +328,11 @@ public class UsersController {
             ImageIO.write(challenge, "jpeg", jpegOutputStream);
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            log.error(" jcaptcha exception : {} ", e.getMessage());
+            log.error(" jcaptcha exception : {} ", e);
             return;
         } catch (CaptchaServiceException e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            log.error(" jcaptcha exception : {} ", e.getMessage());
+            log.error(" jcaptcha exception : {} ", e);
             return;
         }
 
@@ -377,7 +377,7 @@ public class UsersController {
         } catch (CaptchaServiceException e) {
             // should not happen,may be thrown if the id is not valid
             ajaxUtils.fail().msg("参数无效,请重新输入验证码").obj(CAPTCHA_INVALID);
-            log.error(" valid exception : {} ", e.getMessage());
+            log.error(" valid exception : {} ", e);
         }
         return ajaxUtils;
     }
@@ -408,7 +408,8 @@ public class UsersController {
     /**
      * 忘记密码邮件
      *
-     * @param email 账号
+     * @param email   账号
+     * @param request 请求
      * @return 是否发送成功
      */
     @RequestMapping("/user/login/password/forget/email")
@@ -448,7 +449,7 @@ public class UsersController {
     public String loginPasswordForgetReset(@RequestParam("key") String key, @RequestParam("username") String email, ModelMap modelMap) {
         String resetKey = StringUtils.trimWhitespace(key);
         String username = StringUtils.trimWhitespace(email);
-        String msg = "";
+        String msg;
         if (StringUtils.hasLength(resetKey) && StringUtils.hasLength(username)) {
             Users users = usersService.findByUsername(username);
             if (!ObjectUtils.isEmpty(users)) {
@@ -527,6 +528,7 @@ public class UsersController {
     /**
      * 用户角色数据
      *
+     * @param username 用户账号
      * @return 数据
      */
     @RequestMapping(value = "/special/channel/users/role/data", method = RequestMethod.POST)
@@ -558,6 +560,7 @@ public class UsersController {
      *
      * @param username 用户账号
      * @param roles    角色
+     * @param request  请求
      * @return true 成功 false 角色为空
      */
     @RequestMapping(value = "/special/channel/users/role/save", method = RequestMethod.POST)
@@ -615,9 +618,7 @@ public class UsersController {
         List<UsersBean> usersBeen = new ArrayList<>();
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             usersBeen = records.into(UsersBean.class);
-            usersBeen.forEach(user -> {
-                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
-            });
+            usersBeen.forEach(user -> user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername())));
         }
         dataTablesUtils.setData(usersBeen);
         dataTablesUtils.setiTotalRecords(usersService.countAllExistsAuthorities());
@@ -718,6 +719,8 @@ public class UsersController {
     /**
      * 用户资料页面
      *
+     * @param modelMap 页面对象
+     * @param request  请求
      * @return 资料页面
      */
     @RequestMapping("/anyone/users/profile")
@@ -748,6 +751,8 @@ public class UsersController {
     /**
      * 用户资料编辑页面
      *
+     * @param modelMap 页面对象
+     * @param request  请求
      * @return 资料编辑页面
      */
     @RequestMapping("/anyone/users/profile/edit")
@@ -780,6 +785,7 @@ public class UsersController {
      *
      * @param users    用户
      * @param modelMap 页面对象
+     * @param request  请求
      */
     private void profileStudent(Users users, ModelMap modelMap, HttpServletRequest request) {
         Optional<Record> student = studentService.findByUsernameRelation(users.getUsername());
@@ -796,6 +802,7 @@ public class UsersController {
      *
      * @param users    用户
      * @param modelMap 页面对象
+     * @param request  请求
      */
     private void profileStaff(Users users, ModelMap modelMap, HttpServletRequest request) {
         Optional<Record> staff = staffService.findByUsernameRelation(users.getUsername());
@@ -812,6 +819,7 @@ public class UsersController {
      *
      * @param users    用户
      * @param modelMap 页面对象
+     * @param request  请求
      */
     private void profileSystem(Users users, ModelMap modelMap, HttpServletRequest request) {
         Users newUsers = usersService.findByUsername(users.getUsername());

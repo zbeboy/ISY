@@ -165,6 +165,8 @@ public class ISYProperties {
 
         private String tempDir;
 
+        private String undertowListenerIp;
+
         public String getServerName() {
             return serverName;
         }
@@ -211,6 +213,14 @@ public class ISYProperties {
 
         public void setTempDir(String tempDir) {
             this.tempDir = tempDir;
+        }
+
+        public String getUndertowListenerIp() {
+            return undertowListenerIp;
+        }
+
+        public void setUndertowListenerIp(String undertowListenerIp) {
+            this.undertowListenerIp = undertowListenerIp;
         }
     }
 

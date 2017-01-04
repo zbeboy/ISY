@@ -149,22 +149,4 @@ public class StudentVo {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
-
-    @Override
-    public String toString() {
-        return "StudentVo{" +
-                "school=" + school +
-                ", college=" + college +
-                ", department=" + department +
-                ", science=" + science +
-                ", grade='" + grade + '\'' +
-                ", organize=" + organize +
-                ", studentNumber='" + studentNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", phoneVerifyCode='" + phoneVerifyCode + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' +
-                '}';
-    }
 }

@@ -29,7 +29,7 @@ public class UploadServiceImpl implements UploadService {
         List<FileBean> list = new ArrayList<>();
         //1. build an iterator.
         Iterator<String> iterator = request.getFileNames();
-        MultipartFile multipartFile = null;
+        MultipartFile multipartFile;
         //2. get each file
         while (iterator.hasNext()) {
             FileBean fileBean = new FileBean();
@@ -43,9 +43,9 @@ public class UploadServiceImpl implements UploadService {
                 String ext = words[words.length - 1].toLowerCase();
                 String filename = ipTimeStamp.getIPTimeRand() + "." + ext;
                 if (filename.contains(":")) {
-                    filename = filename.substring(filename.lastIndexOf(":") + 1, filename.length());
+                    filename = filename.substring(filename.lastIndexOf(':') + 1, filename.length());
                 }
-                fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf(".")));
+                fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf('.')));
                 fileBean.setExt(ext);
                 fileBean.setNewName(filename);
                 fileBean.setSize(multipartFile.getSize());
@@ -54,7 +54,7 @@ public class UploadServiceImpl implements UploadService {
             } else {
                 // no filename
                 String filename = ipTimeStamp.getIPTimeRand();
-                fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf(".")));
+                fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf('.')));
                 fileBean.setNewName(filename);
                 fileBean.setSize(multipartFile.getSize());
                 // copy file to local disk (make sure the path "e.g. D:/temp/files" exists)
@@ -65,7 +65,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     private String buildPath(String path, String filename, MultipartFile multipartFile) throws IOException {
-        String lastPath = null;
+        String lastPath;
         File saveFile = new File(path, filename);
         log.info(path);
         if (multipartFile.getSize() < new File(path.split(":")[0] + ":").getFreeSpace()) {// has space with disk
@@ -90,7 +90,7 @@ public class UploadServiceImpl implements UploadService {
                 list.add(fileBean);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Build File list exception, is {}", e);
         }
         return list;
     }
@@ -99,12 +99,12 @@ public class UploadServiceImpl implements UploadService {
     public void download(String fileName, String filePath, HttpServletResponse response, HttpServletRequest request) {
         try {
             response.setContentType("application/x-msdownload");
-            response.setHeader("Content-disposition", "attachment; filename=\"" + new String((fileName + filePath.substring(filePath.lastIndexOf("."))).getBytes("gb2312"), "ISO8859-1") + "\"");
+            response.setHeader("Content-disposition", "attachment; filename=\"" + new String((fileName + filePath.substring(filePath.lastIndexOf('.'))).getBytes("gb2312"), "ISO8859-1") + "\"");
             String realPath = request.getSession().getServletContext().getRealPath("/");
             InputStream inputStream = new FileInputStream(realPath + filePath);
             FileCopyUtils.copy(inputStream, response.getOutputStream());
         } catch (Exception e) {
-            log.error(" file is not found exception is {} ", e.getMessage());
+            log.error(" file is not found exception is {} ", e);
         }
     }
 }

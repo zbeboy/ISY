@@ -42,6 +42,11 @@ public class MainController {
     @Resource
     private FilesService filesService;
 
+    /**
+     * main page
+     *
+     * @return main page
+     */
     @RequestMapping("/")
     public String root() {
         return "index";
@@ -100,6 +105,7 @@ public class MainController {
     /**
      * 注册完成时，但并不是成功
      *
+     * @param modelMap 页面对象
      * @return 完成页面
      */
     @RequestMapping(value = "/register/finish", method = RequestMethod.GET)
@@ -121,6 +127,7 @@ public class MainController {
     /**
      * 忘记密码完成时，但并不是成功
      *
+     * @param modelMap 页面对象
      * @return 完成页面
      */
     @RequestMapping(value = "/user/login/password/forget/finish", method = RequestMethod.GET)
@@ -155,6 +162,7 @@ public class MainController {
      * 删除文件
      *
      * @param filePath 文件路径
+     * @param request  请求
      * @return true or false
      */
     @RequestMapping("/anyone/users/delete/file")

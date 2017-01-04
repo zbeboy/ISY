@@ -120,6 +120,7 @@ public class InternshipApplyController {
     /**
      * 获取实习申请数据
      *
+     * @param paginationUtils 分页工具
      * @return 数据
      */
     @RequestMapping(value = "/web/internship/apply/data", method = RequestMethod.GET)
@@ -157,6 +158,7 @@ public class InternshipApplyController {
     /**
      * 获取我的实习申请数据
      *
+     * @param paginationUtils 分页工具
      * @return 数据
      */
     @RequestMapping(value = "/web/internship/apply/my/data", method = RequestMethod.GET)
@@ -181,6 +183,7 @@ public class InternshipApplyController {
      * 进入申请页
      *
      * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
      * @return 申请页
      */
     @RequestMapping(value = "/web/internship/apply/access", method = RequestMethod.GET)
@@ -898,6 +901,7 @@ public class InternshipApplyController {
      * 进入实习申请页面判断条件
      *
      * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/apply/condition", method = RequestMethod.POST)
@@ -1117,7 +1121,7 @@ public class InternshipApplyController {
                             try {
                                 FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                log.error("Delete file error, error is {}", e);
                             }
                         }
                         Files files = new Files();

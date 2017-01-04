@@ -1,6 +1,8 @@
 package top.zbeboy.isy.service.util.compress;
 
 import org.apache.commons.compress.parallel.InputStreamSupplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +14,8 @@ import java.io.InputStream;
  * compress zip builder.
  */
 public class ZipInputStream implements InputStreamSupplier {
+
+    private final Logger log = LoggerFactory.getLogger(ZipInputStream.class);
 
     private File file;
 
@@ -25,7 +29,7 @@ public class ZipInputStream implements InputStreamSupplier {
         try {
             inputStream = new FileInputStream(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Read file error, is {}", e);
         }
         return inputStream;
     }

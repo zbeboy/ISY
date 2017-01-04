@@ -73,7 +73,7 @@ public class MailServiceImpl implements MailService {
                 javaMailSender.send(mimeMessage);
                 log.debug("Sent e-mail to User '{}'", to);
             } catch (Exception e) {
-                log.info("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
+                log.info("E-mail could not be sent to user '{}', exception is: {}", to, e);
             }
         } else {
             if (isyProperties.getMail().isOpen()) {
@@ -171,9 +171,9 @@ public class MailServiceImpl implements MailService {
             // props.put("mail.smtp.socketFactory.port", "465");
             // props.put("mail.smtp.port", "465");
 
-
+            String mailUser = "mail.user";
             // 发件人的账号
-            props.put("mail.user", isyProperties.getMail().getUser()); //是发信地址啊！！！
+            props.put(mailUser, isyProperties.getMail().getUser()); //是发信地址啊！！！
             // 访问SMTP服务时需要提供的密码
             props.put("mail.password", isyProperties.getMail().getPassword());
 
@@ -182,7 +182,7 @@ public class MailServiceImpl implements MailService {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     // 用户名、密码
-                    String userName = props.getProperty("mail.user");
+                    String userName = props.getProperty(mailUser);
                     String password = props.getProperty("mail.password");
                     return new PasswordAuthentication(userName, password);
                 }
@@ -193,7 +193,7 @@ public class MailServiceImpl implements MailService {
             MimeMessage message = new MimeMessage(mailSession);
             // 设置发件人
             InternetAddress form = new InternetAddress(
-                    props.getProperty("mail.user"));
+                    props.getProperty(mailUser));
             message.setFrom(form);
 
             // 设置收件人
@@ -208,7 +208,7 @@ public class MailServiceImpl implements MailService {
             // 发送邮件
             Transport.send(message);
         } catch (MessagingException e) {
-            log.info("E-mail could not be sent to user '{}', exception is: {}", userMail, e.getMessage());
+            log.info("E-mail could not be sent to user '{}', exception is: {}", userMail, e);
         }
     }
 

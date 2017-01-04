@@ -133,7 +133,6 @@ public class UsersServiceImpl implements UsersService {
     public boolean validSCDSOIsDel(Users users) {
         // 检验学校等信息是否已被注销
         UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
-        Byte isNotDel = 0;
         boolean isDel = true;
         if (!ObjectUtils.isEmpty(usersType)) {
             switch (usersType.getUsersTypeName()) {
@@ -349,6 +348,7 @@ public class UsersServiceImpl implements UsersService {
      *
      * @return select
      */
+    @Override
     public Select<AuthoritiesRecord> existsAuthoritiesSelect() {
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             return create.selectFrom(AUTHORITIES)

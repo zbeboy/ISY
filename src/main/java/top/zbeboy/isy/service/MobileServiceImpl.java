@@ -63,7 +63,7 @@ public class MobileServiceImpl implements MobileService {
             reader.close();
             result = sbf.toString();
         } catch (Exception e) {
-            log.info("Send sms to mobile {} is exception : {}", mobile, e.getMessage());
+            log.info("Send sms to mobile {} is exception : {}", mobile, e);
         }
         log.debug(" mobile result : {}", result);
         SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(System.currentTimeMillis()), mobile);
