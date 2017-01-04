@@ -49,17 +49,14 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     @Resource
     private UsersService usersService;
 
-    @Resource
-    private AuthoritiesService authoritiesService;
-
     @Autowired
     public RoleServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
     }
 
     @Override
-    public Role findByRoleName(String roleName) {
-        return roleDao.fetchOne(ROLE.ROLE_NAME, roleName);
+    public Role findByRoleEnName(String roleEnName) {
+        return roleDao.fetchOne(ROLE.ROLE_EN_NAME, roleEnName);
     }
 
     @Override

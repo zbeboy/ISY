@@ -345,7 +345,7 @@ public class SystemApplicationController {
             application.setIcon(applicationVo.getIcon());
             application.setApplicationDataUrlStartWith(applicationVo.getApplicationDataUrlStartWith());
             int applicationId = applicationService.saveAndReturnId(application);
-            Role role = roleService.findByRoleName(Workbook.SYSTEM_ROLE_NAME);
+            Role role = roleService.findByRoleEnName(Workbook.SYSTEM_AUTHORITIES);
             RoleApplication roleApplication = new RoleApplication(role.getRoleId(), applicationId);
             roleApplicationService.save(roleApplication);
             return new AjaxUtils().success().msg("保存成功");

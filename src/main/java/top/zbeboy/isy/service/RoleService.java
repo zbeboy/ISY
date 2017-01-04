@@ -18,10 +18,10 @@ public interface RoleService {
     /**
      * 通过角色名查询
      *
-     * @param roleName 角色名
+     * @param roleEnName 角色名
      * @return 角色
      */
-    Role findByRoleName(String roleName);
+    Role findByRoleEnName(String roleEnName);
 
     /**
      * 通过角色名与角色类型查询
