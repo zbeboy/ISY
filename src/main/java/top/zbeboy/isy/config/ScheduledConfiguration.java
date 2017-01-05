@@ -93,6 +93,7 @@ public class ScheduledConfiguration {
         }
         internshipApplyService.updateStateByChangeFillEndTime(now, 5, 1);
         internshipApplyService.updateStateByChangeFillEndTime(now, 7, 1);
+        log.info(">>>>>>>>>>>>> scheduled ... internshipApply state update. ");
     }
 
     /**
