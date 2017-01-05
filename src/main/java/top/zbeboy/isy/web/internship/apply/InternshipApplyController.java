@@ -222,6 +222,7 @@ public class InternshipApplyController {
                     break;
                 case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
                     Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    modelMap.addAttribute("internshipTeacher", getInternshipTeacherFromErrorBean(errorBean));
                     if (graduationPracticeCollegeRecord.isPresent()) {
                         graduationPracticeCollegePageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
@@ -237,6 +238,7 @@ public class InternshipApplyController {
                     break;
                 case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
                     Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                    modelMap.addAttribute("internshipTeacher", getInternshipTeacherFromErrorBean(errorBean));
                     if (graduationPracticeUnifyRecord.isPresent()) {
                         graduationPracticeUnifyPageParam(modelMap, errorBean);
                         modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
@@ -813,15 +815,7 @@ public class InternshipApplyController {
         }
         modelMap.addAttribute("qqMail", qqMail);
         modelMap.addAttribute("student", studentBean);
-        InternshipTeacherDistribution internshipTeacherDistribution = (InternshipTeacherDistribution) errorBean.getMapData().get("internshipTeacherDistribution");
-        int staffId = internshipTeacherDistribution.getStaffId();
-        Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
-        String internshipTeacher = "";
-        if (staffRecord.isPresent()) {
-            StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-            internshipTeacher = staffBean.getRealName() + " " + staffBean.getMobile();
-        }
-        modelMap.addAttribute("internshipTeacher", internshipTeacher);
+        modelMap.addAttribute("internshipTeacher", getInternshipTeacherFromErrorBean(errorBean));
     }
 
     /**
@@ -838,15 +832,7 @@ public class InternshipApplyController {
         }
         modelMap.addAttribute("qqMail", qqMail);
         modelMap.addAttribute("student", studentBean);
-        InternshipTeacherDistribution internshipTeacherDistribution = (InternshipTeacherDistribution) errorBean.getMapData().get("internshipTeacherDistribution");
-        int staffId = internshipTeacherDistribution.getStaffId();
-        Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
-        String internshipTeacher = "";
-        if (staffRecord.isPresent()) {
-            StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-            internshipTeacher = staffBean.getRealName() + " " + staffBean.getMobile();
-        }
-        modelMap.addAttribute("internshipTeacher", internshipTeacher);
+        modelMap.addAttribute("internshipTeacher", getInternshipTeacherFromErrorBean(errorBean));
     }
 
     /**
@@ -869,6 +855,24 @@ public class InternshipApplyController {
     private void graduationPracticeUnifyPageParam(ModelMap modelMap, ErrorBean<InternshipRelease> errorBean) {
         StudentBean studentBean = (StudentBean) errorBean.getMapData().get("student");
         modelMap.addAttribute("student", studentBean);
+    }
+
+    /**
+     * 从error bean中获取指导教师
+     *
+     * @param errorBean 判断条件
+     * @return 指导教师
+     */
+    private String getInternshipTeacherFromErrorBean(ErrorBean<InternshipRelease> errorBean) {
+        InternshipTeacherDistribution internshipTeacherDistribution = (InternshipTeacherDistribution) errorBean.getMapData().get("internshipTeacherDistribution");
+        int staffId = internshipTeacherDistribution.getStaffId();
+        Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
+        String internshipTeacher = "";
+        if (staffRecord.isPresent()) {
+            StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+            internshipTeacher = staffBean.getRealName() + " " + staffBean.getMobile();
+        }
+        return internshipTeacher;
     }
 
     /**
