@@ -108,12 +108,7 @@ public class SpringfoxConfiguration {
     }
 
     private Predicate<String> userOnlyEndpoints() {
-        return new Predicate<String>() {
-            @Override
-            public boolean apply(String input) {
-                return input.startsWith("/user");
-            }
-        };
+        return input -> input.startsWith("/user");
     }
 
     private Predicate<String> devOnlyEndpoints() {
