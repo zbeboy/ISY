@@ -322,8 +322,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             initParam();
             var parentalContact = param.parentalContact;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(parentalContact)) {
-                validErrorDom(validId.parentalContact, errorMsgId.parentalContact, '请填写正确的手机号');
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(parentalContact) || !isPhone.test(parentalContact)) {
+                validErrorDom(validId.parentalContact, errorMsgId.parentalContact, '请填写正确的联系方式');
             } else {
                 validSuccessDom(validId.parentalContact, errorMsgId.parentalContact);
             }
@@ -373,8 +374,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             initParam();
             var internshipCollegeTel = param.internshipCollegeTel;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(internshipCollegeTel)) {
-                validErrorDom(validId.internshipCollegeTel, errorMsgId.internshipCollegeTel, '请填写正确的手机号');
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(internshipCollegeTel) || !isPhone.test(internshipCollegeTel)) {
+                validErrorDom(validId.internshipCollegeTel, errorMsgId.internshipCollegeTel, '请填写正确的联系方式');
             } else {
                 validSuccessDom(validId.internshipCollegeTel, errorMsgId.internshipCollegeTel);
             }
@@ -451,7 +453,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         function validParentalContact() {
             var parentalContact = param.parentalContact;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(parentalContact)) {
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(parentalContact) || !isPhone.test(parentalContact)) {
                 Messenger().post({
                     message: '请正确填写父母联系方式',
                     type: 'error',
@@ -517,9 +520,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         function validInternshipCollegeTel() {
             var internshipCollegeTel = param.internshipCollegeTel;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(internshipCollegeTel)) {
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(internshipCollegeTel) || !isPhone.test(internshipCollegeTel)) {
                 Messenger().post({
-                    message: '请正确填写实习单位联系人手机号',
+                    message: '请正确填写实习单位联系人联系方式',
                     type: 'error',
                     showCloseButton: true
                 });

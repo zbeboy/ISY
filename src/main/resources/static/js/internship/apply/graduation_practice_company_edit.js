@@ -383,8 +383,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             initParam();
             var parentalContact = param.parentalContact;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(parentalContact)) {
-                validErrorDom(validId.parentalContact, errorMsgId.parentalContact, '请填写正确的手机号');
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(parentalContact) || !isPhone.test(parentalContact)) {
+                validErrorDom(validId.parentalContact, errorMsgId.parentalContact, '请填写正确的联系方式');
             } else {
                 validSuccessDom(validId.parentalContact, errorMsgId.parentalContact);
             }
@@ -434,8 +435,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             initParam();
             var graduationPracticeCompanyTel = param.graduationPracticeCompanyTel;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(graduationPracticeCompanyTel)) {
-                validErrorDom(validId.graduationPracticeCompanyTel, errorMsgId.graduationPracticeCompanyTel, '请填写正确的手机号');
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(graduationPracticeCompanyTel) || !isPhone.test(graduationPracticeCompanyTel)) {
+                validErrorDom(validId.graduationPracticeCompanyTel, errorMsgId.graduationPracticeCompanyTel, '请填写正确的联系方式');
             } else {
                 validSuccessDom(validId.graduationPracticeCompanyTel, errorMsgId.graduationPracticeCompanyTel);
             }
@@ -512,7 +514,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         function validParentalContact() {
             var parentalContact = param.parentalContact;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(parentalContact)) {
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(parentalContact) || !isPhone.test(parentalContact)) {
                 Messenger().post({
                     message: '请正确填写父母联系方式',
                     type: 'error',
@@ -578,9 +581,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         function validGraduationPracticeCompanyTel() {
             var graduationPracticeCompanyTel = param.graduationPracticeCompanyTel;
             var regex = /^1[0-9]{10}/;
-            if (!regex.test(graduationPracticeCompanyTel)) {
+            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+            if (!regex.test(graduationPracticeCompanyTel) || !isPhone.test(graduationPracticeCompanyTel)) {
                 Messenger().post({
-                    message: '请正确填写实习单位联系人手机号',
+                    message: '请正确填写实习单位联系人联系方式',
                     type: 'error',
                     showCloseButton: true
                 });
