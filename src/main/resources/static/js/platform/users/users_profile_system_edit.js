@@ -11,6 +11,7 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
          */
         var ajax_url = {
             file_upload_url: '/anyone/users/upload/avatar',
+            avatar_review_url: '/anyone/users/review/avatar',
             update: '/anyone/users/update',
             back: '/anyone/users/profile'
         };
@@ -91,7 +92,7 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
             done: function (e, data) {
                 initParam();
                 $.each(data.result.listResult, function (index, file) {
-                    $('#avatar').attr('src', web_path + '/' + data.result.objectResult + file.newName);
+                    $('#avatar').attr('src', web_path + ajax_url.avatar_review_url + '?path=' + data.result.objectResult + file.newName);
                     $('#form_avatar').val(data.result.objectResult + file.newName);
                 });
             },

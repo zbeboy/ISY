@@ -1,10 +1,12 @@
 package top.zbeboy.isy.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.web.bean.file.FileBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -30,4 +32,13 @@ public interface UploadService {
      * @param request  请求对象
      */
     void download(String fileName, String filePath, HttpServletResponse response, HttpServletRequest request);
+
+    /**
+     * 图片显示
+     *
+     * @param filePath 完整路径带文件名以及后缀
+     * @param request  请求
+     * @param response 响应
+     */
+    void reviewPic(String filePath, HttpServletRequest request, HttpServletResponse response);
 }

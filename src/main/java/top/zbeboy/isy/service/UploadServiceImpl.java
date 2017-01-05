@@ -2,6 +2,9 @@ package top.zbeboy.isy.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -106,5 +109,33 @@ public class UploadServiceImpl implements UploadService {
         } catch (Exception e) {
             log.error(" file is not found exception is {} ", e);
         }
+    }
+
+    @Override
+    public void reviewPic(String filePath, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String realPath = request.getSession().getServletContext().getRealPath("/");
+            File file = new File(realPath + filePath);
+            if (file.exists()) {
+                MediaType mediaType;
+                String ext = filePath.substring(filePath.lastIndexOf('.') + 1);
+                if (ext.equalsIgnoreCase("png")) {
+                    mediaType = MediaType.IMAGE_PNG;
+                } else if (ext.equalsIgnoreCase("gif")) {
+                    mediaType = MediaType.IMAGE_GIF;
+                } else if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")) {
+                    mediaType = MediaType.IMAGE_JPEG;
+                } else {
+                    mediaType = MediaType.APPLICATION_OCTET_STREAM;
+                }
+                response.setContentType(mediaType.toString());
+                response.setHeader("Content-disposition", "attachment; filename=\"" + file.getName() + "\"");
+                InputStream inputStream = new FileInputStream(file);
+                FileCopyUtils.copy(inputStream, response.getOutputStream());
+            }
+        } catch (Exception e) {
+            log.error(" file is not found exception is {} ", e);
+        }
+
     }
 }

@@ -7,6 +7,7 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -792,7 +794,8 @@ public class UsersController {
         if (student.isPresent()) {
             StudentBean studentBean = student.get().into(StudentBean.class);
             modelMap.addAttribute("avatarForSaveOrUpdate", studentBean.getAvatar());
-            studentBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + studentBean.getAvatar());
+            String showAvatar = getAvatar(studentBean.getAvatar(),request);
+            studentBean.setAvatar(showAvatar);
             modelMap.addAttribute("user", studentBean);
         }
     }
@@ -809,7 +812,8 @@ public class UsersController {
         if (staff.isPresent()) {
             StaffBean staffBean = staff.get().into(StaffBean.class);
             modelMap.addAttribute("avatarForSaveOrUpdate", staffBean.getAvatar());
-            staffBean.setAvatar(requestUtils.getBaseUrl(request) + "/" + staffBean.getAvatar());
+            String showAvatar = getAvatar(staffBean.getAvatar(),request);
+            staffBean.setAvatar(showAvatar);
             modelMap.addAttribute("user", staffBean);
         }
     }
@@ -824,8 +828,26 @@ public class UsersController {
     private void profileSystem(Users users, ModelMap modelMap, HttpServletRequest request) {
         Users newUsers = usersService.findByUsername(users.getUsername());
         modelMap.addAttribute("avatarForSaveOrUpdate", newUsers.getAvatar());
-        newUsers.setAvatar(requestUtils.getBaseUrl(request) + "/" + newUsers.getAvatar());
+        String showAvatar = getAvatar(newUsers.getAvatar(),request);
+        newUsers.setAvatar(showAvatar);
         modelMap.addAttribute("user", newUsers);
+    }
+
+    /**
+     * 得到处理过的用户头像
+     *
+     * @param avatar  头像
+     * @param request 请求
+     * @return 处理过的头像
+     */
+    private String getAvatar(String avatar, HttpServletRequest request) {
+        String showAvatar;
+        if (avatar.equals(Workbook.USERS_AVATAR)) {
+            showAvatar = requestUtils.getBaseUrl(request) + "/" + avatar;
+        } else {
+            showAvatar = requestUtils.getBaseUrl(request) + "/anyone/users/review/avatar?path=" + avatar;
+        }
+        return showAvatar;
     }
 
     /**
@@ -900,6 +922,16 @@ public class UsersController {
             log.error("Upload avatar error, error is {}", e);
         }
         return data;
+    }
+
+    /**
+     * 预览当前用户头像
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = "/anyone/users/review/avatar",method = RequestMethod.GET)
+    public void reviewAvatar(@RequestParam("path") String path, HttpServletRequest request, HttpServletResponse response) {
+        uploadService.reviewPic("/" + path, request, response);
     }
 
     /**
