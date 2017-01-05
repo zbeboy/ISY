@@ -24,7 +24,7 @@
                     <div class="form-group" id="valid_student_name">
                         <label>学生姓名</label>
                         <input class="form-control" th:value="${internshipData.studentName}" name="studentName"
-                               id="studentName" placeholder="学生姓名"/>
+                               id="studentName" placeholder="学生姓名" maxlength="15"/>
                         <p class="text-danger hidden" id="student_name_error_msg"></p>
                         <input type="hidden" th:value="${internshipData.graduationPracticeCompanyId}"
                                name="graduationPracticeCompanyId"/>
@@ -74,7 +74,7 @@
                     <div class="form-group" id="valid_qq_mailbox">
                         <label>QQ邮箱</label>
                         <input class="form-control" name="qqMailbox" th:value="${internshipData.qqMailbox}"
-                               id="qqMailbox" placeholder="QQ邮箱"/>
+                               id="qqMailbox" placeholder="QQ邮箱" maxlength="100"/>
                         <p class="text-danger hidden" id="qq_mailbox_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_parental_contact">
@@ -96,21 +96,21 @@
                         <label>实习单位名称</label>
                         <input class="form-control" name="graduationPracticeCompanyName"
                                th:value="${internshipData.graduationPracticeCompanyName}"
-                               id="graduationPracticeCompanyName" placeholder="实习单位名称"/>
+                               id="graduationPracticeCompanyName" placeholder="实习单位名称" maxlength="200"/>
                         <p class="text-danger hidden" id="graduation_practice_company_name_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_graduation_practice_company_address">
                         <label>实习单位地址</label>
                         <input class="form-control" name="graduationPracticeCompanyAddress"
                                th:value="${internshipData.graduationPracticeCompanyAddress}"
-                               id="graduationPracticeCompanyAddress" placeholder="实习单位地址"/>
+                               id="graduationPracticeCompanyAddress" placeholder="实习单位地址" maxlength="500"/>
                         <p class="text-danger hidden" id="graduation_practice_company_address_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_graduation_practice_company_contacts">
                         <label>实习单位联系人</label>
                         <input class="form-control" name="graduationPracticeCompanyContacts"
                                th:value="${internshipData.graduationPracticeCompanyContacts}"
-                               id="graduationPracticeCompanyContacts" placeholder="实习单位联系人"/>
+                               id="graduationPracticeCompanyContacts" placeholder="实习单位联系人" maxlength="10"/>
                         <p class="text-danger hidden" id="graduation_practice_company_contacts_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_graduation_practice_company_tel">

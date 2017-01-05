@@ -28,6 +28,7 @@ requirejs.config({
         "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min",
         "bootstrap-duallistbox": web_path + "/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
+        "bootstrap-maxlength": web_path + "/plugin/bootstrap-maxlength/bootstrap-maxlength",
         "moment": web_path + "/plugin/moment/moment.min",
         "moment-with-locales": web_path + "/plugin/moment/moment-with-locales",
         "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",

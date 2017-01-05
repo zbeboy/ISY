@@ -6,3 +6,6 @@
 application*.properties
 *.jks
 /.gitignore
+/src/main/resources/application-dev.properties
+/src/main/resources/application.properties
+/src/main/resources/application-prod.properties

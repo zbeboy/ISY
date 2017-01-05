@@ -60,7 +60,7 @@
                     <div class="form-group" id="valid_organize_name">
                         <label>班级</label>
                         <input class="form-control" name="organizeName" id="organizeName"
-                               th:value="${organize.organizeName}" placeholder="班级名"/>
+                               th:value="${organize.organizeName}" maxlength="200" placeholder="班级名"/>
                         <p class="text-danger hidden" id="organize_name_error_msg"></p>
                         <input type="hidden" id="organizeId" name="organizeId" th:value="${organize.organizeId}"/>
                     </div>

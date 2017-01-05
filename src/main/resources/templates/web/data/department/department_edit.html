@@ -39,7 +39,7 @@
                     <div class="form-group" id="valid_department_name">
                         <label>系</label>
                         <input class="form-control" name="departmentName" id="departmentName"
-                               th:value="${department.departmentName}" placeholder="系名"/>
+                               th:value="${department.departmentName}" maxlength="200" placeholder="系名"/>
                         <p class="text-danger hidden" id="department_name_error_msg"></p>
                         <input type="hidden" id="departmentId" name="departmentId"
                                th:value="${department.departmentId}"/>

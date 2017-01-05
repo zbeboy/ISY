@@ -192,7 +192,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
          */
         function validInternshipJournalContent() {
             var internshipJournalContent = param.internshipJournalContent;
-            if (internshipJournalContent.length <= 0 || internshipJournalContent.length > 10) {
+            if (internshipJournalContent.length <= 0) {
                 Messenger().post({
                     message: '内容与感想不能为空',
                     type: 'error',

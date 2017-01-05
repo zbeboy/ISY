@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-22.
  */
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"], function ($, Handlebars, nav_active) {
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength"], function ($, Handlebars, nav_active) {
 
     /*
      ajax url.
@@ -128,9 +128,30 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"], f
         }
     }
 
-    $.get(web_path + ajax_url.school_data_url, function (data) {
-        schoolData(data);
-    });
+    init();
+
+    /**
+     * 初始化
+     */
+    function init(){
+        $.get(web_path + ajax_url.school_data_url, function (data) {
+            schoolData(data);
+        });
+
+        initMaxLength();
+    }
+
+    /**
+     * 初始化Input max length
+     */
+    function initMaxLength(){
+        $(paramId.collegeName).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+    }
 
     // 当改变学校时，变换学院数据.
     $(paramId.schoolId).change(function () {

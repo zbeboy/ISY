@@ -31,7 +31,7 @@
                     <div class="form-group" id="valid_college_name">
                         <label>院</label>
                         <input class="form-control" name="collegeName" id="collegeName"
-                               th:value="${college.collegeName}" placeholder="院名"/>
+                               th:value="${college.collegeName}" maxlength="200" placeholder="院名"/>
                         <p class="text-danger hidden" id="college_name_error_msg"></p>
                         <input type="hidden" name="collegeId" th:value="${college.collegeId}" id="collegeId"/>
                     </div>

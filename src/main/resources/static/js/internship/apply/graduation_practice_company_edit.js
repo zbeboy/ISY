@@ -2,7 +2,8 @@
  * Created by lenovo on 2016-12-01.
  */
 //# sourceURL=graduation_practice_company_edit.js
-require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", "jquery.address", "bootstrap-select-zh-CN", "bootstrap-daterangepicker"],
+require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", "jquery.address",
+        "bootstrap-select-zh-CN", "bootstrap-daterangepicker", "bootstrap-maxlength"],
     function ($, Handlebars, nav_active, moment, D) {
         /*
          ajax url.
@@ -156,6 +157,87 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             });
 
             initInputState();
+            initMaxLength();
+        }
+
+        /**
+         * 初始化Input max length
+         */
+        function initMaxLength(){
+            var internshipApplyState = init_page_param.internshipApplyState;
+            if (internshipApplyState !== '') {
+                if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息
+                    $(paramId.studentName).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+
+                    $(paramId.qqMailbox).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+                } else if (internshipApplyState == 7) {// 单位信息修改状态，不允许修改基本信息
+                    $(paramId.graduationPracticeCompanyName).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+
+                    $(paramId.graduationPracticeCompanyAddress).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+
+                    $(paramId.graduationPracticeCompanyContacts).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+                } else {
+                    $(paramId.studentName).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+
+                    $(paramId.qqMailbox).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+
+                    $(paramId.graduationPracticeCompanyName).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+
+                    $(paramId.graduationPracticeCompanyAddress).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+
+                    $(paramId.graduationPracticeCompanyContacts).maxlength({
+                        alwaysShow: true,
+                        threshold: 10,
+                        warningClass: "label label-success",
+                        limitReachedClass: "label label-danger"
+                    });
+                }
+            }
         }
 
         /**

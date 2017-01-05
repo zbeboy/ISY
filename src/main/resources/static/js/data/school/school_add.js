@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-18.
  */
-require(["jquery", "nav_active", "messenger", "jquery.address"], function ($, nav_active) {
+require(["jquery", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength"], function ($, nav_active) {
 
     /*
      ajax url.
@@ -69,6 +69,24 @@ require(["jquery", "nav_active", "messenger", "jquery.address"], function ($, na
      */
     function initParam() {
         param.schoolName = $(paramId.schoolName).val().trim();
+    }
+
+    init();
+
+    function init(){
+        initMaxLength();
+    }
+
+    /**
+     * 初始化Input max length
+     */
+    function initMaxLength(){
+        $(paramId.schoolName).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
     }
 
     /*

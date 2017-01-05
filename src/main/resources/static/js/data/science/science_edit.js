@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-24.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address"],
+require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength"],
     function ($, Handlebars, constants, nav_active) {
         /*
          ajax url.
@@ -150,6 +150,20 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                 changeDepartment(init_page_param.collegeId);
             }
+
+            initMaxLength();
+        }
+
+        /**
+         * 初始化Input max length
+         */
+        function initMaxLength(){
+            $(paramId.scienceName).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
         }
 
         /**

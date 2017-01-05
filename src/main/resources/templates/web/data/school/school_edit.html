@@ -23,7 +23,7 @@
                 <form role="form" id="edit_form">
                     <div class="form-group" id="valid_school_name">
                         <label>学校</label>
-                        <input class="form-control" name="schoolName" id="schoolName" th:value="${school.schoolName}"
+                        <input class="form-control" name="schoolName" id="schoolName" maxlength="200" th:value="${school.schoolName}"
                                placeholder="学校名"/>
                         <p class="text-danger hidden" id="school_name_error_msg"></p>
                         <input type="hidden" name="schoolId" th:value="${school.schoolId}" id="schoolId"/>

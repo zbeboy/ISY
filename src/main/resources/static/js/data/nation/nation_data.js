@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-11-02.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "bootstrap", "messenger"],
+require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "bootstrap", "messenger", "bootstrap-maxlength"],
     function ($, Handlebars) {
 
         /*
@@ -239,6 +239,31 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 add_nation: '#add_nation_name_error_msg',
                 update_nation: '#update_nation_name_error_msg'
             };
+        }
+
+        init();
+
+        function init() {
+            initMaxLength();
+        }
+
+        /**
+         * 初始化Input max length
+         */
+        function initMaxLength() {
+            $(getParamId().addNation).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(getParamId().updateNation).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
         }
 
         /*

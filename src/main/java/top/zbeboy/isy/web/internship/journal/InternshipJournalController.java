@@ -607,6 +607,9 @@ public class InternshipJournalController {
                 errorBean.setHasError(true);
                 errorBean.setErrorMsg("检测到您未通过申请，不允许填写");
             }
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("检测到您未申请该实习");
         }
         errorBean.setMapData(mapData);
         return errorBean;

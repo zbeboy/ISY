@@ -2,7 +2,8 @@
  * Created by lenovo on 2016/11/25.
  */
 //# sourceURL=internship_college_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", "jquery.address", "bootstrap-select-zh-CN", "bootstrap-daterangepicker"],
+require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", "jquery.address",
+        "bootstrap-select-zh-CN", "bootstrap-daterangepicker", "bootstrap-maxlength"],
     function ($, Handlebars, nav_active, moment, D) {
         /*
          ajax url.
@@ -189,6 +190,48 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
 
             $.get(web_path + ajax_url.internship_files_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
                 initFileShow(data);
+            });
+
+            initMaxLength();
+        }
+
+        /**
+         * 初始化Input max length
+         */
+        function initMaxLength(){
+            $(paramId.studentName).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(paramId.qqMailbox).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(paramId.internshipCollegeName).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(paramId.internshipCollegeAddress).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(paramId.internshipCollegeContacts).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
             });
         }
 
