@@ -19,12 +19,12 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
 
         function startLoading() {
             // 显示遮罩
-            $('#loading_region').showLoading();
+            $('#page-wrapper').showLoading();
         }
 
         function endLoading() {
             // 去除遮罩
-            $('#loading_region').hideLoading();
+            $('#page-wrapper').hideLoading();
         }
 
         /*
@@ -122,7 +122,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var department = param.department;
             changeScience(department);// 根据系重新加载专业数据
             changeGrade(0);// 清空年级数据
-            changeOrganize(0);// 清空班级数据
+            changeOrganize(0, 0);// 清空班级数据
 
             if (Number(department) > 0) {
                 validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
@@ -142,7 +142,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             initParam();
             var science = param.science;
             changeGrade(science);// 根据专业重新加载年级
-            changeOrganize(0);// 清空班级数据
+            changeOrganize(0, 0);// 清空班级数据
 
             if (Number(science) > 0) {
                 validSuccessDom(validId.valid_science, errorMsgId.science_error_msg);
@@ -159,7 +159,8 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         $(paramId.select_grade).change(function () {
             initParam();
             var grade = param.grade;
-            changeOrganize(grade);// 根据年级重新加载班级数据
+            var science = param.science;
+            changeOrganize(grade, science);// 根据年级重新加载班级数据
 
             if (Number(grade) > 0) {
                 validSuccessDom(validId.valid_grade, errorMsgId.grade_error_msg);
@@ -246,11 +247,12 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          */
         function selectedGrade() {
             var realGrade = init_page_param.grade;
+            var scienceId = init_page_param.scienceId;
             var gradeChildrens = $('#select_grade').children();
             for (var i = 0; i < gradeChildrens.length; i++) {
                 if ($(gradeChildrens[i]).val() === realGrade) {
                     $(gradeChildrens[i]).prop('selected', true);
-                    changeOrganize($(gradeChildrens[i]).val());
+                    changeOrganize($(gradeChildrens[i]).val(), scienceId);
                     break;
                 }
             }
@@ -550,8 +552,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          * 表单提交时检验
          */
         $('#school_submit').click(function () {
-            // 显示遮罩
-            startLoading();
             initParam();
             var department = param.department;
             var science = param.science;
@@ -560,8 +560,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
 
             if (Number(department) <= 0) {
                 validErrorDom(validId.valid_department, errorMsgId.department_error_msg, '请选择系');
-                // 去除遮罩
-                endLoading();
                 return;
             } else {
                 validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
@@ -569,8 +567,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
 
             if (Number(science) <= 0) {
                 validErrorDom(validId.valid_science, errorMsgId.science_error_msg, '请选择专业');
-                // 去除遮罩
-                endLoading();
                 return;
             } else {
                 validSuccessDom(validId.valid_science, errorMsgId.science_error_msg);
@@ -578,8 +574,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
 
             if (Number(grade) <= 0) {
                 validErrorDom(validId.valid_grade, errorMsgId.grade_error_msg, '请选择年级');
-                // 去除遮罩
-                endLoading();
                 return;
             } else {
                 validSuccessDom(validId.valid_grade, errorMsgId.grade_error_msg);
@@ -587,13 +581,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
 
             if (Number(organize) <= 0) {
                 validErrorDom(validId.valid_organize, errorMsgId.organize_error_msg, '请选择班级');
-                // 去除遮罩
-                endLoading();
             } else {
                 validSuccessDom(validId.valid_organize, errorMsgId.organize_error_msg);
                 $.post(web_path + ajax_url.school_update, $('#school_form').serialize(), function (data) {
-                    // 去除遮罩
-                    endLoading();
                     if (data.state) {
                         $('#updateDepartment').text(getDepartment(param.department));
                         $('#updateScience').text(getScience(param.science));

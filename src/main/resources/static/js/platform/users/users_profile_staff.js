@@ -16,12 +16,12 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
 
         function startLoading() {
             // 显示遮罩
-            $('#loading_region').showLoading();
+            $('#page-wrapper').showLoading();
         }
 
         function endLoading() {
             // 去除遮罩
-            $('#loading_region').hideLoading();
+            $('#page-wrapper').hideLoading();
         }
 
         /*
@@ -207,20 +207,14 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          * 表单提交时检验
          */
         $('#school_submit').click(function () {
-            // 显示遮罩
-            startLoading();
             initParam();
             var department = param.department;
 
             if (Number(department) <= 0) {
                 validErrorDom(validId.valid_department, errorMsgId.department_error_msg, '请选择系');
-                // 去除遮罩
-                endLoading();
             } else {
                 validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
                 $.post(web_path + ajax_url.school_update, $('#school_form').serialize(), function (data) {
-                    // 去除遮罩
-                    endLoading();
                     if (data.state) {
                         $('#updateDepartment').text(getDepartment(param.department));
                         validCleanDom(validId.valid_department, errorMsgId.department_error_msg);
