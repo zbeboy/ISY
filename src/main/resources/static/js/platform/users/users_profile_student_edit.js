@@ -39,12 +39,12 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
 
         function startLoading() {
             // 显示遮罩
-            $('#loading_region').showLoading();
+            $('#page-wrapper').showLoading();
         }
 
         function endLoading() {
             // 去除遮罩
-            $('#loading_region').hideLoading();
+            $('#page-wrapper').hideLoading();
         }
 
         /*

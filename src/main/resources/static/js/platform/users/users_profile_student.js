@@ -489,10 +489,11 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         /**
          * 改变班级选项
          * @param grade 年级
+         * @param scienceId 专业id
          */
-        function changeOrganize(grade) {
+        function changeOrganize(grade, scienceId) {
 
-            if (grade === '') {
+            if (grade == 0 || grade === '' || scienceId <= 0) {
                 var source = $("#organize-template").html();
                 var template = Handlebars.compile(source);
 
@@ -518,7 +519,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                 // 根据年级查询全部班级
                 // 显示遮罩
                 startLoading();
-                $.post(web_path + ajax_url.organize_data_url, {grade: grade}, function (data) {
+                $.post(web_path + ajax_url.organize_data_url, {grade: grade, scienceId: scienceId}, function (data) {
                     var source = $("#organize-template").html();
                     var template = Handlebars.compile(source);
 
