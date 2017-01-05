@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/12/23.
  */
 //# sourceURL=internship_regulate_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker"],
+require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker", "bootstrap-maxlength"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -127,6 +127,38 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
+
+        init();
+
+        function init(){
+            initMaxLength();
+        }
+
+        /**
+         * 初始化Input max length
+         */
+        function initMaxLength(){
+            $(paramId.internshipContent).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(paramId.internshipProgress).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(paramId.reportWay).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+        }
 
         /*
          返回

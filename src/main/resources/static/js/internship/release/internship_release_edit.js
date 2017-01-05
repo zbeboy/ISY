@@ -3,7 +3,7 @@
  */
 //# sourceURL=internship_release_edit.js
 require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
-        "jquery.fileupload-validate"],
+        "jquery.fileupload-validate", "bootstrap-maxlength"],
     function ($, Handlebars, nav_active, moment) {
 
         /*
@@ -190,6 +190,24 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
+
+        init();
+
+        function init(){
+            initMaxLength();
+        }
+
+        /**
+         * 初始化Input max length
+         */
+        function initMaxLength(){
+            $(paramId.releaseTitle).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+        }
 
         // 检验实习标题
         $(paramId.releaseTitle).blur(function () {

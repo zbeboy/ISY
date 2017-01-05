@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-10-16.
  */
 //# sourceURL=system_role_add.js
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address"
+require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address", "bootstrap-maxlength"
 ], function ($, Handlebars, constants, nav_active) {
 
     /*
@@ -137,11 +137,25 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
             initTreeView(init_page_param.collegeId);
         }
+
+        initMaxLength();
     }
 
     function initSchoolData() {
         $.get(web_path + ajax_url.school_data_url, function (data) {
             schoolData(data);
+        });
+    }
+
+    /**
+     * 初始化Input max length
+     */
+    function initMaxLength(){
+        $(paramId.roleName).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
         });
     }
 

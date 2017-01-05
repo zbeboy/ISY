@@ -3,7 +3,7 @@
  */
 //# sourceURL=internship_release_add.js
 require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
-        "bootstrap-select-zh-CN", "jquery.fileupload-validate"],
+        "bootstrap-select-zh-CN", "jquery.fileupload-validate", "bootstrap-maxlength"],
     function ($, Handlebars, nav_active, moment) {
 
         /*
@@ -239,6 +239,20 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     schoolData(data);
                 });
             }
+
+            initMaxLength();
+        }
+
+        /**
+         * 初始化Input max length
+         */
+        function initMaxLength(){
+            $(paramId.releaseTitle).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
         }
 
         /**

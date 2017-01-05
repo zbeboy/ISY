@@ -39,7 +39,7 @@
                     <div class="form-group" id="valid_role_name">
                         <label>角色</label>
                         <input class="form-control" name="roleName" id="roleName" th:value="${role.roleName}"
-                               placeholder="角色"/>
+                               placeholder="角色" maxlength="50"/>
                         <p class="text-danger hidden" id="role_name_error_msg"></p>
                         <input type="hidden" id="roleId" name="roleId" th:value="${role.roleId}"/>
                     </div>

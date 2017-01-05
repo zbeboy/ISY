@@ -31,7 +31,7 @@
                     <div class="form-group" id="valid_application_name">
                         <label>应用(中文)名</label>
                         <input class="form-control" name="applicationName" id="applicationName"
-                               th:value="${sys_application.applicationName}" placeholder="应用名"/>
+                               th:value="${sys_application.applicationName}" placeholder="应用名" maxlength="30"/>
                         <p class="text-danger hidden" id="application_name_error_msg"></p>
                         <input type="hidden" name="applicationId" id="applicationId"
                                th:value="${sys_application.applicationId}"/>
@@ -39,13 +39,13 @@
                     <div class="form-group" id="valid_application_en_name">
                         <label>应用(英文)名</label>
                         <input class="form-control" name="applicationEnName" id="applicationEnName"
-                               th:value="${sys_application.applicationEnName}" placeholder="应用英文名"/>
+                               th:value="${sys_application.applicationEnName}" placeholder="应用英文名" maxlength="100"/>
                         <p class="text-danger hidden" id="application_en_name_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_application_url">
                         <label>应用链接</label>
                         <input class="form-control" name="applicationUrl" id="applicationUrl"
-                               th:value="${sys_application.applicationUrl}" placeholder="应用链接"/>
+                               th:value="${sys_application.applicationUrl}" placeholder="应用链接" maxlength="300"/>
                         <p class="text-danger hidden" id="application_url_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_application_data_url_start_with">
@@ -57,7 +57,7 @@
                     <div class="form-group" id="valid_application_code">
                         <label>应用识别码</label>
                         <input class="form-control" name="applicationCode" id="applicationCode"
-                               th:value="${sys_application.applicationCode}" placeholder="应用识别码"/>
+                               th:value="${sys_application.applicationCode}" placeholder="应用识别码" maxlength="100"/>
                         <p class="text-danger hidden" id="application_code_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_icon">

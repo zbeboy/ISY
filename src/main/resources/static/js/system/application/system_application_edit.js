@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-04.
  */
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"], function ($, Handlebars, nav_active) {
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength"], function ($, Handlebars, nav_active) {
 
     /*
      ajax url.
@@ -165,9 +165,47 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"], f
         }
     }
 
-    $.get(web_path + ajax_url.init_data_url, function (data) {
-        initData(data);
-    });
+    init();
+
+    function init(){
+        $.get(web_path + ajax_url.init_data_url, function (data) {
+            initData(data);
+        });
+        initMaxLength();
+    }
+
+    /**
+     * 初始化Input max length
+     */
+    function initMaxLength(){
+        $(paramId.applicationName).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+
+        $(paramId.applicationEnName).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+
+        $(paramId.applicationUrl).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+
+        $(paramId.applicationCode).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+    }
 
     /*
      返回
