@@ -199,7 +199,9 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          * 初始化
          */
         function init() {
+            startLoading();
             $.get(web_path + ajax_url.nation_data_url, function (data) {
+                endLoading();
                 nationData(data);
             });
 
@@ -234,8 +236,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                 selectedNation();
                 selectedNationCount = false;
             }
-            // 去除遮罩
-            endLoading();
         }
 
         /**
@@ -262,8 +262,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                 selectedPoliticalLandscape();
                 selectedPoliticalLandscapeCount = false;
             }
-            // 去除遮罩
-            endLoading();
         }
 
         /*

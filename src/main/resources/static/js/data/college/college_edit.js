@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-22.
  */
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength"], function ($, Handlebars, nav_active) {
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"], function ($, Handlebars, nav_active) {
 
     /*
      ajax url.
@@ -76,6 +76,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
         $(errorMsgId).removeClass('hidden').text(msg);
     }
 
+    function startLoading() {
+        // 显示遮罩
+        $('#page-wrapper').showLoading();
+    }
+
+    function endLoading() {
+        // 去除遮罩
+        $('#page-wrapper').hideLoading();
+    }
+
     /**
      * 初始化参数
      */
@@ -133,8 +143,10 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
     /**
      * 初始化
      */
-    function init(){
+    function init() {
+        startLoading();
         $.get(web_path + ajax_url.school_data_url, function (data) {
+            endLoading();
             schoolData(data);
         });
 
@@ -144,7 +156,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
     /**
      * 初始化Input max length
      */
-    function initMaxLength(){
+    function initMaxLength() {
         $(paramId.collegeName).maxlength({
             alwaysShow: true,
             threshold: 10,
@@ -227,7 +239,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
                     label: '确定',
                     phrase: 'Retrying TIME',
                     action: function () {
-                        validSchoolId(msg);
+                        msg.cancel();
+                        validSchoolId();
                     }
                 },
                 cancel: {
@@ -242,10 +255,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
 
     /**
      * 检验学校id
-     * @param msg
      */
-    function validSchoolId(msg) {
-        msg.cancel();
+    function validSchoolId() {
         initParam();
         var schoolId = param.schoolId;
         if (Number(schoolId) <= 0) {
@@ -261,7 +272,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
 
     /**
      * 添加时检验并提交数据
-     * @param msg
      */
     function validCollegeName() {
         initParam();

@@ -2,7 +2,8 @@
  * Created by lenovo on 2016/11/24.
  */
 //# sourceURL=internship_edit_distribution.js
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "bootstrap-select-zh-CN", "bootstrap-duallistbox"],
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address",
+        "bootstrap-select-zh-CN", "bootstrap-duallistbox", "jquery.showLoading"],
     function ($, Handlebars, nav_active) {
         /*
          ajax url.
@@ -34,6 +35,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
             id: init_page_param.internshipReleaseId
         };
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         /**
          * 初始化参数
          */
@@ -49,7 +60,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
          * 初始化数据
          */
         function init() {
+            startLoading();
             $.get(web_path + ajax_url.teacher_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
+                endLoading();
                 staffData(data);
             });
         }

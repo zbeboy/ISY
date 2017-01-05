@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-25.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength"],
+require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
     function ($, Handlebars, constants, nav_active) {
 
         /*
@@ -99,6 +99,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             $(errorId).addClass('hidden').text('');
         }
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         /*
          页面加载时初始化选中
          */
@@ -158,7 +168,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function init() {
             if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
+                startLoading();
                 $.get(web_path + ajax_url.school_data_url, function (data) {
+                    endLoading();
                     schoolData(data);
                 });
             } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
@@ -171,7 +183,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
         /**
          * 初始化Input max length
          */
-        function initMaxLength(){
+        function initMaxLength() {
             $(paramId.organizeName).maxlength({
                 alwaysShow: true,
                 threshold: 10,
@@ -365,7 +377,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                 $(paramId.collegeId).html(html);
             } else {
                 // 根据学校id查询院数据
+                startLoading();
                 $.post(web_path + ajax_url.college_data_url, {schoolId: school_id}, function (data) {
+                    endLoading();
                     var source = $("#college-template").html();
                     var template = Handlebars.compile(source);
 
@@ -420,7 +434,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                 $(paramId.departmentId).html(html);
             } else {
                 // 根据院id查询全部系
+                startLoading();
                 $.post(web_path + ajax_url.department_data_url, {collegeId: college_id}, function (data) {
+                    endLoading();
                     var source = $("#department-template").html();
                     var template = Handlebars.compile(source);
 
@@ -475,7 +491,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                 $(paramId.scienceId).html(html);
             } else {
                 // 根据系id查询全部专业
+                startLoading();
                 $.post(web_path + ajax_url.science_data_url, {departmentId: department_id}, function (data) {
+                    endLoading();
                     var source = $("#science-template").html();
                     var template = Handlebars.compile(source);
 
@@ -512,7 +530,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
 
         /**
          * 改变年级选项
-         * @param science_id 专业id
          */
         function changeGrade() {
             var source = $("#grade-template").html();

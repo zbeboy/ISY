@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-12-01.
  */
 //# sourceURL=graduation_practice_unify_edit.js
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "jquery.showLoading"],
     function ($, Handlebars, nav_active) {
         /*
          ajax url.
@@ -24,10 +24,22 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
             $.address.value(ajax_url.back);
         });
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         init();
 
         function init() {
+            startLoading();
             $.get(web_path + ajax_url.internship_files_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
+                endLoading();
                 initFileShow(data);
             });
         }

@@ -3,7 +3,7 @@
  */
 //# sourceURL=internship_release_edit.js
 require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
-        "jquery.fileupload-validate", "bootstrap-maxlength"],
+        "jquery.fileupload-validate", "bootstrap-maxlength", "jquery.showLoading"],
     function ($, Handlebars, nav_active, moment) {
 
         /*
@@ -97,13 +97,27 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             $(errorId).addClass('hidden').text('');
         }
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         init();
 
         function init() {
             initParam();
+            startLoading();
             $.get(web_path + ajax_url.internship_files_url, {internshipReleaseId: param.internshipReleaseId}, function (data) {
+                endLoading();
                 initFileShow(data);
             });
+
+            initMaxLength();
         }
 
         /**
@@ -191,16 +205,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
 
-        init();
-
-        function init(){
-            initMaxLength();
-        }
-
         /**
          * 初始化Input max length
          */
-        function initMaxLength(){
+        function initMaxLength() {
             $(paramId.releaseTitle).maxlength({
                 alwaysShow: true,
                 threshold: 10,

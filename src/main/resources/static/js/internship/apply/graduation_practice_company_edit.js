@@ -3,7 +3,7 @@
  */
 //# sourceURL=graduation_practice_company_edit.js
 require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", "jquery.address",
-        "bootstrap-select-zh-CN", "bootstrap-daterangepicker", "bootstrap-maxlength"],
+        "bootstrap-select-zh-CN", "bootstrap-daterangepicker", "bootstrap-maxlength", "jquery.showLoading"],
     function ($, Handlebars, nav_active, moment, D) {
         /*
          ajax url.
@@ -114,6 +114,16 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             $(errorId).addClass('hidden').text('');
         }
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         /**
          * 初始化参数
          */
@@ -145,10 +155,12 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         function init() {
             initParam();
             // 初始化班主任数据
+            startLoading();
             $.get(web_path + ajax_url.teacher_data_url, {
                 id: init_page_param.internshipReleaseId,
                 studentId: param.studentId
             }, function (data) {
+                endLoading();
                 headmasterData(data);
             });
 
@@ -163,7 +175,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         /**
          * 初始化Input max length
          */
-        function initMaxLength(){
+        function initMaxLength() {
             var internshipApplyState = init_page_param.internshipApplyState;
             if (internshipApplyState !== '') {
                 if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息

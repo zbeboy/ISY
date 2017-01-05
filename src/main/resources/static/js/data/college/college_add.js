@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/9/22.
  */
 //# sourceURL=college_add.js
-require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address","bootstrap-maxlength"], function ($, Handlebars, nav_active) {
+require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"], function ($, Handlebars, nav_active) {
 
     /*
      ajax url.
@@ -70,6 +70,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address","bo
         $(errorMsgId).removeClass('hidden').text(msg);
     }
 
+    function startLoading() {
+        // 显示遮罩
+        $('#page-wrapper').showLoading();
+    }
+
+    function endLoading() {
+        // 去除遮罩
+        $('#page-wrapper').hideLoading();
+    }
+
     /**
      * 初始化参数
      */
@@ -105,8 +115,10 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address","bo
     /**
      * 初始化
      */
-    function init(){
+    function init() {
+        startLoading();
         $.get(web_path + ajax_url.school_data_url, function (data) {
+            endLoading();
             schoolData(data);
         });
 
@@ -116,7 +128,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address","bo
     /**
      * 初始化Input max length
      */
-    function initMaxLength(){
+    function initMaxLength() {
         $(paramId.collegeName).maxlength({
             alwaysShow: true,
             threshold: 10,
@@ -199,7 +211,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address","bo
                     label: '确定',
                     phrase: 'Retrying TIME',
                     action: function () {
-                        validSchoolId(msg);
+                        msg.cancel();
+                        validSchoolId();
                     }
                 },
                 cancel: {
@@ -214,9 +227,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address","bo
 
     /**
      * 检验学校id
-     * @param msg
      */
-    function validSchoolId(msg) {
+    function validSchoolId() {
         msg.cancel();
         initParam();
         var schoolId = param.schoolId;

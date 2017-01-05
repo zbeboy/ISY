@@ -36,6 +36,16 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
             internshipReleaseId: init_page_param.internshipReleaseId
         };
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         /**
          * 初始化参数
          */
@@ -51,7 +61,9 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
          * 初始化数据
          */
         function init() {
+            startLoading();
             $.get(web_path + ajax_url.organize_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
+                endLoading();
                 organizeData(data);
             });
 

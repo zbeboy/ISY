@@ -3,7 +3,7 @@
  */
 //# sourceURL=internship_release_add.js
 require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
-        "bootstrap-select-zh-CN", "jquery.fileupload-validate", "bootstrap-maxlength"],
+        "bootstrap-select-zh-CN", "jquery.fileupload-validate", "bootstrap-maxlength", "jquery.showLoading"],
     function ($, Handlebars, nav_active, moment) {
 
         /*
@@ -118,6 +118,16 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             $(errorId).addClass('hidden').text('');
         }
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         /**
          * 初始化参数
          */
@@ -226,7 +236,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         init();
 
         function init() {
+            startLoading();
             $.get(web_path + ajax_url.internship_type_url, function (data) {
+                endLoading();
                 internshipTypeData(data);
             });
 
@@ -246,7 +258,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         /**
          * 初始化Input max length
          */
-        function initMaxLength(){
+        function initMaxLength() {
             $(paramId.releaseTitle).maxlength({
                 alwaysShow: true,
                 threshold: 10,
@@ -449,7 +461,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 $(paramId.collegeId).html(html);
             } else {
                 // 根据学校id查询院数据
+                startLoading();
                 $.post(web_path + ajax_url.college_data_url, {schoolId: school_id}, function (data) {
+                    endLoading();
                     var source = $("#college-template").html();
                     var template = Handlebars.compile(source);
 
@@ -499,7 +513,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 $(paramId.departmentId).html(html);
             } else {
                 // 根据院id查询全部系
+                startLoading();
                 $.post(web_path + ajax_url.department_data_url, {collegeId: college_id}, function (data) {
+                    endLoading();
                     var source = $("#department-template").html();
                     var template = Handlebars.compile(source);
 
@@ -548,7 +564,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 $(paramId.grade).html(html);
             } else {
                 // 根据系id查询全部年级
+                startLoading();
                 $.post(web_path + ajax_url.grade_data_url, {departmentId: department_id}, function (data) {
+                    endLoading();
                     var source = $("#grade-template").html();
                     var template = Handlebars.compile(source);
 

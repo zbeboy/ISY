@@ -3,7 +3,7 @@
  */
 //# sourceURL=internship_regulate_add.js
 require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address",
-        "bootstrap-daterangepicker", "bootstrap-select-zh-CN", "bootstrap-maxlength"],
+        "bootstrap-daterangepicker", "bootstrap-select-zh-CN", "bootstrap-maxlength", "jquery.showLoading"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -96,6 +96,16 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             $(errorId).addClass('hidden').text('');
         }
 
+        function startLoading() {
+            // 显示遮罩
+            $('#page-wrapper').showLoading();
+        }
+
+        function endLoading() {
+            // 去除遮罩
+            $('#page-wrapper').hideLoading();
+        }
+
         /**
          * 初始化参数
          */
@@ -115,7 +125,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
 
         function init() {
             initParam();
+            startLoading();
             $.get(web_path + ajax_url.student_data_url, param, function (data) {
+                endLoading();
                 studentData(data);
             });
             initMaxLength();
@@ -124,7 +136,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
         /**
          * 初始化Input max length
          */
-        function initMaxLength(){
+        function initMaxLength() {
             $(paramId.internshipContent).maxlength({
                 alwaysShow: true,
                 threshold: 10,
