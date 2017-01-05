@@ -114,7 +114,11 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
             });
 
             Handlebars.registerHelper('teacher_name', function () {
-                var name = Handlebars.escapeExpression(this.realName + ' ' + this.staffNumber);
+                var realName = this.realName;
+                if(realName == null){
+                    realName = '';
+                }
+                var name = Handlebars.escapeExpression(realName  + ' ' + this.staffNumber);
                 return new Handlebars.SafeString(name);
             });
 
