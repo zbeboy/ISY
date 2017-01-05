@@ -330,7 +330,9 @@ public class StaffController {
                 if (StringUtils.hasLength(staffVo.getBirthday())) {
                     staff.setBirthday(DateTimeUtils.formatDate(staffVo.getBirthday()));
                 }
-                staff.setIdCard(staffVo.getIdCard());
+                if(StringUtils.hasLength(staffVo.getIdCard())){
+                    staff.setIdCard(staffVo.getIdCard());
+                }
                 staff.setFamilyResidence(staffVo.getFamilyResidence());
                 staff.setPost(staffVo.getPost());
                 staffService.update(staff);

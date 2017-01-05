@@ -341,7 +341,9 @@ public class StudentController {
                     student.setBirthday(DateTimeUtils.formatDate(studentVo.getBirthday()));
                 }
                 student.setDormitoryNumber(studentVo.getDormitoryNumber());
-                student.setIdCard(studentVo.getIdCard());
+                if(StringUtils.hasLength(studentVo.getIdCard())){
+                    student.setIdCard(studentVo.getIdCard());
+                }
                 student.setFamilyResidence(studentVo.getFamilyResidence());
                 student.setParentName(studentVo.getParentName());
                 student.setParentContactPhone(studentVo.getParentContactPhone());
