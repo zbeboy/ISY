@@ -1044,15 +1044,8 @@ public class InternshipApplyController {
     public AjaxUtils applyState(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
                                 @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        // 强制身份判断
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                Users users = usersService.getUserFromSession();
-                Student student = studentService.findByUsername(users.getUsername());
-                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
-                    return ajaxUtils.fail().msg("您的个人信息有误");
-                }
-            }
+        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+            return ajaxUtils.fail().msg("您的个人信息有误");
         }
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
@@ -1097,15 +1090,8 @@ public class InternshipApplyController {
     public AjaxUtils<FileBean> usersUploadAvatar(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,
                                                  MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
         AjaxUtils<FileBean> data = new AjaxUtils<>();
-        // 强制身份判断
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                Users users = usersService.getUserFromSession();
-                Student student = studentService.findByUsername(users.getUsername());
-                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
-                    return data.fail().msg("您的个人信息有误");
-                }
-            }
+        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+            return data.fail().msg("您的个人信息有误");
         }
         try {
             Student student = studentService.findById(studentId);
@@ -1152,6 +1138,32 @@ public class InternshipApplyController {
         return data;
     }
 
+    @RequestMapping(value = "/web/internship/apply/delete/file", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils deleteFile(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
+        AjaxUtils data = new AjaxUtils();
+        try {
+            if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+                return data.fail().msg("您的个人信息有误");
+            }
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                Files files = filesService.findById(internshipApply.getInternshipFileId());
+                internshipApply.setInternshipFileId("");
+                internshipApplyService.update(internshipApply);
+                FilesUtils.deleteFile(RequestUtils.getRealPath(request) + files.getRelativePath());
+                data.success().msg("删除文件成功");
+            } else {
+                data.fail().msg("未发现申请信息");
+            }
+        } catch (IOException e) {
+            log.error(" delete file is exception.", e);
+            data.fail().msg("删除文件异常");
+        }
+        return data;
+    }
+
     /**
      * 进入实习申请入口条件
      *
@@ -1160,17 +1172,11 @@ public class InternshipApplyController {
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
-        // 强制身份判断
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                Users users = usersService.getUserFromSession();
-                Student student = studentService.findByUsername(users.getUsername());
-                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
-                    errorBean.setHasError(true);
-                    errorBean.setErrorMsg("您的个人信息有误");
-                    return errorBean;
-                }
-            }
+
+        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("您的个人信息有误");
+            return errorBean;
         }
 
         Map<String, Object> mapData = new HashMap<>();

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
@@ -37,6 +38,12 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private StudentService studentService;
 
     @Resource
     private RoleService roleService;
@@ -163,5 +170,20 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
         systemAlert.setUsername(users.getUsername());
         systemAlert.setAlertDate(now);
         systemAlertService.save(systemAlert);
+    }
+
+    @Override
+    public boolean limitCurrentUsers(int studentId) {
+        // 强制身份判断
+        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Student student = studentService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

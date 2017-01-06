@@ -375,16 +375,8 @@ public class InternshipJournalController {
     @ResponseBody
     public AjaxUtils journalListDel(String journalIds, @RequestParam("studentId") int studentId, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        // 强制身份判断
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                Users users = usersService.getUserFromSession();
-                Student student = studentService.findByUsername(users.getUsername());
-                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
-                    ajaxUtils.fail().msg("您的个人信息可能有误");
-                    return ajaxUtils;
-                }
-            }
+        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+            return ajaxUtils.fail().msg("您的个人信息可能有误");
         }
         if (StringUtils.hasLength(journalIds)) {
             List<String> ids = SmallPropsUtils.StringIdsToStringList(journalIds);
@@ -569,18 +561,12 @@ public class InternshipJournalController {
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
-        // 强制身份判断
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                Users users = usersService.getUserFromSession();
-                Student student = studentService.findByUsername(users.getUsername());
-                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
-                    errorBean.setHasError(true);
-                    errorBean.setErrorMsg("您的个人信息有误");
-                    return errorBean;
-                }
-            }
+        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("您的个人信息有误");
+            return errorBean;
         }
+
         Map<String, Object> mapData = new HashMap<>();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (ObjectUtils.isEmpty(internshipRelease)) {

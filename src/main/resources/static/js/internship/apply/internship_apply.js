@@ -18,7 +18,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             valid_student: '/web/internship/apply/valid/student',
             access_condition_url: '/web/internship/apply/condition',
             file_upload_url: '/web/internship/apply/upload',
-            download_file: '/anyone/users/download/file'
+            download_file: '/anyone/users/download/file',
+            delete_file: '/web/internship/apply/delete/file'
         };
 
         /*
@@ -388,6 +389,29 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(myTableData).delegate('.downloadFile', "click", function () {
             var id = $(this).attr('data-id');
             window.location.href = web_path + ajax_url.download_file + '?fileId=' + id;
+        });
+
+        /*
+         下载电子资料
+         */
+        $(myTableData).delegate('.deleteFile', "click", function () {
+            var id = $(this).attr('data-id');
+            var student = $(this).attr('data-student');
+            $.post(web_path + ajax_url.delete_file,{id:id,studentId:student},function(data){
+                if(data.state){
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         /**

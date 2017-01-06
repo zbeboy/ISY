@@ -51,4 +51,12 @@ public interface CommonControllerMethodService {
      * @param notify       通知内容
      */
     void sendNotify(Users users, Users curUsers, String messageTitle, String notify, HttpServletRequest request);
+
+    /**
+     * 限制当前学生用户操作行为
+     *
+     * @param studentId 学生id
+     * @return 是否可操作
+     */
+    boolean limitCurrentStudent(int studentId);
 }
