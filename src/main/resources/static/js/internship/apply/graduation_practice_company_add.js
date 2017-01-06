@@ -376,7 +376,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         $(paramId.parentalContact).blur(function () {
             initParam();
             var parentalContact = param.parentalContact;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(parentalContact)) {
                 if(!isPhone.test(parentalContact)){
@@ -432,7 +432,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         $(paramId.graduationPracticeCompanyTel).blur(function () {
             initParam();
             var graduationPracticeCompanyTel = param.graduationPracticeCompanyTel;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(graduationPracticeCompanyTel)) {
                 if(!isPhone.test(graduationPracticeCompanyTel)){
@@ -515,7 +515,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
 
         function validParentalContact() {
             var parentalContact = param.parentalContact;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(parentalContact)) {
                 if(!isPhone.test(parentalContact)){
@@ -586,7 +586,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
 
         function validGraduationPracticeCompanyTel() {
             var graduationPracticeCompanyTel = param.graduationPracticeCompanyTel;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(graduationPracticeCompanyTel)) {
                 if(!isPhone.test(graduationPracticeCompanyTel)){

@@ -476,7 +476,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         $(paramId.parentalContact).blur(function () {
             initParam();
             var parentalContact = param.parentalContact;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(parentalContact)) {
                 if (!isPhone.test(parentalContact)) {
@@ -532,7 +532,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
         $(paramId.internshipCompanyTel).blur(function () {
             initParam();
             var internshipCompanyTel = param.internshipCompanyTel;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(internshipCompanyTel)) {
                 if (!isPhone.test(internshipCompanyTel)) {
@@ -615,7 +615,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
 
         function validParentalContact() {
             var parentalContact = param.parentalContact;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(parentalContact)) {
                 if (!isPhone.test(parentalContact)) {
@@ -686,7 +686,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
 
         function validInternshipCompanyTel() {
             var internshipCompanyTel = param.internshipCompanyTel;
-            var regex = /^1[0-9]{10}/;
+            var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(internshipCompanyTel)) {
                 if (!isPhone.test(internshipCompanyTel)) {
