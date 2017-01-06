@@ -173,7 +173,7 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     }
 
     @Override
-    public boolean limitCurrentUsers(int studentId) {
+    public boolean limitCurrentStudent(int studentId) {
         // 强制身份判断
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
