@@ -629,7 +629,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function nextPage(pageNumber) {
             param.pageNum = pageNumber;
             startLoading();
-            $.get(web_path + ajax_url.audit_data_url, param, function (data) {
+            $.get(web_path + ajax_url.pass_data_url, param, function (data) {
                 endLoading();
                 listData(data);
             });

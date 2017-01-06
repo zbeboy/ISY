@@ -54,22 +54,14 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(GRADUATION_PRACTICE_COLLEGE)
-                .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(studentId)))
-                .fetchOptional();
-    }
-
-    @Override
-    public Result<Record> findByInternshipReleaseIdAndStudentIdRelation(String internshipReleaseId, int studentId) {
-        return create.select()
-                .from(GRADUATION_PRACTICE_COLLEGE)
                 .join(STUDENT)
                 .on(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .join(ORGANIZE)
-                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                 .join(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                 .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(studentId)))
-                .fetch();
+                .fetchOptional();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

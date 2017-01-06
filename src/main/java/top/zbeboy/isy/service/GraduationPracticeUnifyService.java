@@ -32,15 +32,6 @@ public interface GraduationPracticeUnifyService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
-     * 通过实习发布id与学生id查询
-     *
-     * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
-     * @return 数据
-     */
-    Result<Record> findByInternshipReleaseIdAndStudentIdRelation(String internshipReleaseId, int studentId);
-
-    /**
      * 保存
      *
      * @param graduationPracticeUnify 毕业实习(学校统一组织校外实习)

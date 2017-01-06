@@ -32,15 +32,6 @@ public interface GraduationPracticeCollegeService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
-     * 通过实习发布id与学生id 关联查询
-     *
-     * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
-     * @return 数据
-     */
-    Result<Record> findByInternshipReleaseIdAndStudentIdRelation(String internshipReleaseId, int studentId);
-
-    /**
      * 保存
      *
      * @param graduationPracticeCollege 毕业实习(校内)
