@@ -10,6 +10,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         function getAjaxUrl() {
             return {
                 graduation_practice_unify_data_url: '/web/internship/statistical/graduation_practice_unify/data',
+                export_data_url: '/web/internship/statistical/graduation_practice_unify/data/export',
                 back: '/web/menu/internship/statistical'
             };
         }
@@ -67,8 +68,74 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 }
             },
             "columns": [
-                {"data": "realName"},
-                {"data": "studentNumber"}
+                {"data": "studentName"},
+                {"data": "collegeClass"},
+                {"data": "studentSex"},
+                {"data": "studentNumber"},
+                {"data": "phoneNumber"},
+                {"data": "qqMailbox"},
+                {"data": "parentalContact"},
+                {"data": "headmaster"},
+                {"data": "headmasterContact"},
+                {"data": "graduationPracticeUnifyName"},
+                {"data": "graduationPracticeUnifyAddress"},
+                {"data": "graduationPracticeUnifyContacts"},
+                {"data": "graduationPracticeUnifyTel"},
+                {"data": "schoolGuidanceTeacher"},
+                {"data": "schoolGuidanceTeacherTel"},
+                {"data": "startTime"},
+                {"data": "endTime"},
+                {"data": "commitmentBook"},
+                {"data": "safetyResponsibilityBook"},
+                {"data": "practiceAgreement"},
+                {"data": "internshipApplication"},
+                {"data": "practiceReceiving"},
+                {"data": "securityEducationAgreement"},
+                {"data": "parentalConsent"}
+            ],
+            columnDefs: [
+                {
+                    targets: 17,
+                    render: function (a, b, c, d) {
+                        return byteToBoolean(c.commitmentBook);
+                    }
+                },
+                {
+                    targets: 18,
+                    render: function (a, b, c, d) {
+                        return byteToBoolean(c.safetyResponsibilityBook);
+                    }
+                },
+                {
+                    targets: 19,
+                    render: function (a, b, c, d) {
+                        return byteToBoolean(c.practiceAgreement);
+                    }
+                },
+                {
+                    targets: 20,
+                    render: function (a, b, c, d) {
+                        return byteToBoolean(c.internshipApplication);
+                    }
+                },
+                {
+                    targets: 21,
+                    render: function (a, b, c, d) {
+                        return byteToBoolean(c.practiceReceiving);
+                    }
+                },
+                {
+                    targets: 22,
+                    render: function (a, b, c, d) {
+                        return byteToBoolean(c.securityEducationAgreement);
+                    }
+                },
+                {
+                    targets: 23,
+                    render: function (a, b, c, d) {
+                        return byteToBoolean(c.parentalConsent);
+                    }
+                }
             ],
             "language": {
                 "sProcessing": "处理中...",
@@ -108,7 +175,11 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         function getParamId() {
             return {
                 studentName: '#search_student_name',
-                studentNumber: '#search_student_number'
+                studentNumber: '#search_student_number',
+                collegeClass: '#search_college_class',
+                phoneNumber: '#search_phone_number',
+                headmaster: '#search_headmaster',
+                schoolGuidanceTeacher: '#search_school_guidance_teacher'
             };
         }
 
@@ -117,7 +188,11 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
          */
         var param = {
             studentName: '',
-            studentNumber: ''
+            studentNumber: '',
+            collegeClass: '',
+            phoneNumber: '',
+            headmaster: '',
+            schoolGuidanceTeacher: ''
         };
 
         /*
@@ -133,6 +208,10 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         function initParam() {
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
+            param.collegeClass = $(getParamId().collegeClass).val();
+            param.phoneNumber = $(getParamId().phoneNumber).val();
+            param.headmaster = $(getParamId().headmaster).val();
+            param.schoolGuidanceTeacher = $(getParamId().schoolGuidanceTeacher).val();
         }
 
         /*
@@ -141,6 +220,10 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         function cleanParam() {
             $(getParamId().studentName).val('');
             $(getParamId().studentNumber).val('');
+            $(getParamId().collegeClass).val('');
+            $(getParamId().phoneNumber).val('');
+            $(getParamId().headmaster).val('');
+            $(getParamId().schoolGuidanceTeacher).val('');
         }
 
         $(getParamId().studentName).keyup(function (event) {
@@ -151,6 +234,35 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+
+        $(getParamId().collegeClass).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().phoneNumber).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().headmaster).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().schoolGuidanceTeacher).keyup(function (event) {
             if (event.keyCode == 13) {
                 initParam();
                 myTable.ajax.reload();
@@ -170,6 +282,28 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
+        });
+
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
         });
 
         /*

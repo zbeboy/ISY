@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.*;
-import top.zbeboy.isy.service.export.GraduationPracticeCompanyExport;
-import top.zbeboy.isy.service.export.InternshipCollegeExport;
-import top.zbeboy.isy.service.export.InternshipCompanyExport;
+import top.zbeboy.isy.service.export.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
@@ -640,30 +638,101 @@ public class InternshipStatisticsController {
      */
     @RequestMapping(value = "/web/internship/statistical/graduation_practice_college/data", method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesUtils<GraduationPracticeCollegeBean> graduationPracticeCollegeData(HttpServletRequest request) {
+    public DataTablesUtils<GraduationPracticeCollege> graduationPracticeCollegeData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("student_name");
+        headers.add("college_class");
+        headers.add("student_sex");
         headers.add("student_number");
-        DataTablesUtils<GraduationPracticeCollegeBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        GraduationPracticeCollegeBean graduationPracticeCollegeBean = new GraduationPracticeCollegeBean();
+        headers.add("phone_number");
+        headers.add("qq_mailbox");
+        headers.add("parental_contact");
+        headers.add("headmaster");
+        headers.add("headmaster_contact");
+        headers.add("graduation_practice_college_name");
+        headers.add("graduation_practice_college_address");
+        headers.add("graduation_practice_college_contacts");
+        headers.add("graduation_practice_college_tel");
+        headers.add("school_guidance_teacher");
+        headers.add("school_guidance_teacher_tel");
+        headers.add("start_time");
+        headers.add("end_time");
+        headers.add("commitment_book");
+        headers.add("safety_responsibility_book");
+        headers.add("practice_agreement");
+        headers.add("internship_application");
+        headers.add("practice_receiving");
+        headers.add("security_education_agreement");
+        headers.add("parental_consent");
+        DataTablesUtils<GraduationPracticeCollege> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        GraduationPracticeCollege graduationPracticeCollege = new GraduationPracticeCollege();
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
-            graduationPracticeCollegeBean.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
-            Result<Record> records = graduationPracticeCollegeService.findAllByPage(dataTablesUtils, graduationPracticeCollegeBean);
-            List<GraduationPracticeCollegeBean> graduationPracticeCollegeBeens = new ArrayList<>();
+            graduationPracticeCollege.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            Result<Record> records = graduationPracticeCollegeService.findAllByPage(dataTablesUtils, graduationPracticeCollege);
+            List<GraduationPracticeCollege> graduationPracticeColleges = new ArrayList<>();
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-                graduationPracticeCollegeBeens = records.into(GraduationPracticeCollegeBean.class);
+                graduationPracticeColleges = records.into(GraduationPracticeCollege.class);
             }
-            dataTablesUtils.setData(graduationPracticeCollegeBeens);
-            dataTablesUtils.setiTotalRecords(graduationPracticeCollegeService.countAll(graduationPracticeCollegeBean));
-            dataTablesUtils.setiTotalDisplayRecords(graduationPracticeCollegeService.countByCondition(dataTablesUtils, graduationPracticeCollegeBean));
+            dataTablesUtils.setData(graduationPracticeColleges);
+            dataTablesUtils.setiTotalRecords(graduationPracticeCollegeService.countAll(graduationPracticeCollege));
+            dataTablesUtils.setiTotalDisplayRecords(graduationPracticeCollegeService.countByCondition(dataTablesUtils, graduationPracticeCollege));
         } else {
             dataTablesUtils.setData(null);
             dataTablesUtils.setiTotalRecords(0);
             dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 导出 毕业实习(校内) 数据
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = "/web/internship/statistical/graduation_practice_college/data/export", method = RequestMethod.GET)
+    public void graduationPracticeCollegeDataExport(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String fileName = "毕业实习(校内)";
+            String ext = Workbook.XLSX_FILE;
+            ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
+
+            String extraSearchParam = request.getParameter("extra_search");
+            DataTablesUtils<GraduationPracticeCollege> dataTablesUtils = new DataTablesUtils<>();
+            if (StringUtils.isNotBlank(extraSearchParam)) {
+                dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
+            }
+            GraduationPracticeCollege graduationPracticeCollege = new GraduationPracticeCollege();
+            String internshipReleaseId = request.getParameter("internshipReleaseId");
+            if (!ObjectUtils.isEmpty(internshipReleaseId)) {
+                graduationPracticeCollege.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+                Result<Record> records = graduationPracticeCollegeService.exportData(dataTablesUtils, graduationPracticeCollege);
+                List<GraduationPracticeCollege> graduationPracticeColleges = new ArrayList<>();
+                if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                    graduationPracticeColleges = records.into(GraduationPracticeCollege.class);
+                }
+                if (StringUtils.isNotBlank(exportBean.getFileName())) {
+                    fileName = exportBean.getFileName();
+                }
+                if (StringUtils.isNotBlank(exportBean.getExt())) {
+                    ext = exportBean.getExt();
+                }
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                if (!ObjectUtils.isEmpty(internshipRelease)) {
+                    Optional<Record> record = departmentService.findByIdRelation(internshipRelease.getDepartmentId());
+                    if (record.isPresent()) {
+                        DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+                        GraduationPracticeCollegeExport export = new GraduationPracticeCollegeExport(graduationPracticeColleges);
+                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        uploadService.download(fileName, "/" + path, response, request);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("Export file error, error is {}", e);
+        }
     }
 
     /**
@@ -674,29 +743,100 @@ public class InternshipStatisticsController {
      */
     @RequestMapping(value = "/web/internship/statistical/graduation_practice_unify/data", method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesUtils<GraduationPracticeUnifyBean> graduationPracticeUnifyData(HttpServletRequest request) {
+    public DataTablesUtils<GraduationPracticeUnify> graduationPracticeUnifyData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("student_name");
+        headers.add("college_class");
+        headers.add("student_sex");
         headers.add("student_number");
-        DataTablesUtils<GraduationPracticeUnifyBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        GraduationPracticeUnifyBean graduationPracticeUnifyBean = new GraduationPracticeUnifyBean();
+        headers.add("phone_number");
+        headers.add("qq_mailbox");
+        headers.add("parental_contact");
+        headers.add("headmaster");
+        headers.add("headmaster_contact");
+        headers.add("graduation_practice_unify_name");
+        headers.add("graduation_practice_unify_address");
+        headers.add("graduation_practice_unify_contacts");
+        headers.add("graduation_practice_unify_tel");
+        headers.add("school_guidance_teacher");
+        headers.add("school_guidance_teacher_tel");
+        headers.add("start_time");
+        headers.add("end_time");
+        headers.add("commitment_book");
+        headers.add("safety_responsibility_book");
+        headers.add("practice_agreement");
+        headers.add("internship_application");
+        headers.add("practice_receiving");
+        headers.add("security_education_agreement");
+        headers.add("parental_consent");
+        DataTablesUtils<GraduationPracticeUnify> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        GraduationPracticeUnify graduationPracticeUnify = new GraduationPracticeUnify();
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
-            graduationPracticeUnifyBean.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
-            Result<Record> records = graduationPracticeUnifyService.findAllByPage(dataTablesUtils, graduationPracticeUnifyBean);
-            List<GraduationPracticeUnifyBean> graduationPracticeUnifyBeens = new ArrayList<>();
+            graduationPracticeUnify.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            Result<Record> records = graduationPracticeUnifyService.findAllByPage(dataTablesUtils, graduationPracticeUnify);
+            List<GraduationPracticeUnify> graduationPracticeUnifies = new ArrayList<>();
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-                graduationPracticeUnifyBeens = records.into(GraduationPracticeUnifyBean.class);
+                graduationPracticeUnifies = records.into(GraduationPracticeUnify.class);
             }
-            dataTablesUtils.setData(graduationPracticeUnifyBeens);
-            dataTablesUtils.setiTotalRecords(graduationPracticeUnifyService.countAll(graduationPracticeUnifyBean));
-            dataTablesUtils.setiTotalDisplayRecords(graduationPracticeUnifyService.countByCondition(dataTablesUtils, graduationPracticeUnifyBean));
+            dataTablesUtils.setData(graduationPracticeUnifies);
+            dataTablesUtils.setiTotalRecords(graduationPracticeUnifyService.countAll(graduationPracticeUnify));
+            dataTablesUtils.setiTotalDisplayRecords(graduationPracticeUnifyService.countByCondition(dataTablesUtils, graduationPracticeUnify));
         } else {
             dataTablesUtils.setData(null);
             dataTablesUtils.setiTotalRecords(0);
             dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 导出 毕业实习(学校统一组织校外实习) 数据
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = "/web/internship/statistical/graduation_practice_unify/data/export", method = RequestMethod.GET)
+    public void graduationPracticeUnifyDataExport(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String fileName = "毕业实习(学校统一组织校外实习)";
+            String ext = Workbook.XLSX_FILE;
+            ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
+
+            String extraSearchParam = request.getParameter("extra_search");
+            DataTablesUtils<GraduationPracticeUnify> dataTablesUtils = new DataTablesUtils<>();
+            if (StringUtils.isNotBlank(extraSearchParam)) {
+                dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
+            }
+            GraduationPracticeUnify graduationPracticeUnify = new GraduationPracticeUnify();
+            String internshipReleaseId = request.getParameter("internshipReleaseId");
+            if (!ObjectUtils.isEmpty(internshipReleaseId)) {
+                graduationPracticeUnify.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+                Result<Record> records = graduationPracticeUnifyService.exportData(dataTablesUtils, graduationPracticeUnify);
+                List<GraduationPracticeUnify> graduationPracticeUnifies = new ArrayList<>();
+                if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                    graduationPracticeUnifies = records.into(GraduationPracticeUnify.class);
+                }
+                if (StringUtils.isNotBlank(exportBean.getFileName())) {
+                    fileName = exportBean.getFileName();
+                }
+                if (StringUtils.isNotBlank(exportBean.getExt())) {
+                    ext = exportBean.getExt();
+                }
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                if (!ObjectUtils.isEmpty(internshipRelease)) {
+                    Optional<Record> record = departmentService.findByIdRelation(internshipRelease.getDepartmentId());
+                    if (record.isPresent()) {
+                        DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+                        GraduationPracticeUnifyExport export = new GraduationPracticeUnifyExport(graduationPracticeUnifies);
+                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        uploadService.download(fileName, "/" + path, response, request);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("Export file error, error is {}", e);
+        }
     }
 }

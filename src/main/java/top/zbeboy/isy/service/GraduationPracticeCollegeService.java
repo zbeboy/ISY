@@ -66,19 +66,29 @@ public interface GraduationPracticeCollegeService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<GraduationPracticeCollegeBean> dataTablesUtils, GraduationPracticeCollegeBean graduationPracticeCollegeBean);
+    Result<Record> findAllByPage(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils, GraduationPracticeCollege graduationPracticeCollege);
 
     /**
      * 系总数
      *
      * @return 总数
      */
-    int countAll(GraduationPracticeCollegeBean graduationPracticeCollegeBean);
+    int countAll(GraduationPracticeCollege graduationPracticeCollege);
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<GraduationPracticeCollegeBean> dataTablesUtils, GraduationPracticeCollegeBean graduationPracticeCollegeBean);
+    int countByCondition(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils, GraduationPracticeCollege graduationPracticeCollege);
+
+
+    /**
+     * 查询
+     *
+     * @param dataTablesUtils           datatables工具类
+     * @param graduationPracticeCollege 毕业实习(校内)
+     * @return 导出数据
+     */
+    Result<Record> exportData(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils, GraduationPracticeCollege graduationPracticeCollege);
 }

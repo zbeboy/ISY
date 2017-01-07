@@ -32,7 +32,7 @@ import static top.zbeboy.isy.domain.Tables.*;
  */
 @Service("graduationPracticeCollegeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<GraduationPracticeCollegeBean> implements GraduationPracticeCollegeService {
+public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<GraduationPracticeCollege> implements GraduationPracticeCollegeService {
 
     private final Logger log = LoggerFactory.getLogger(GraduationPracticeCollegeServiceImpl.class);
 
@@ -138,75 +138,23 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
     }
 
     @Override
-    public Result<Record> findAllByPage(DataTablesUtils<GraduationPracticeCollegeBean> dataTablesUtils, GraduationPracticeCollegeBean graduationPracticeCollegeBean) {
-        Result<Record> records;
-        Condition a = searchCondition(dataTablesUtils);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(GRADUATION_PRACTICE_COLLEGE)
-                    .join(STUDENT)
-                    .on(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(USERS)
-                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                    .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollegeBean.getInternshipReleaseId()));
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
-        } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(GRADUATION_PRACTICE_COLLEGE)
-                    .join(STUDENT)
-                    .on(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(USERS)
-                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                    .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollegeBean.getInternshipReleaseId())).and(a);
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
-        }
-        return records;
+    public Result<Record> findAllByPage(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils, GraduationPracticeCollege graduationPracticeCollege) {
+        return dataPagingQueryAllWithCondition(dataTablesUtils, create, GRADUATION_PRACTICE_COLLEGE, GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollege.getInternshipReleaseId()));
     }
 
     @Override
-    public int countAll(GraduationPracticeCollegeBean graduationPracticeCollegeBean) {
-        Record1<Integer> count = create.selectCount()
-                .from(GRADUATION_PRACTICE_COLLEGE)
-                .join(STUDENT)
-                .on(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .join(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollegeBean.getInternshipReleaseId()))
-                .fetchOne();
-        return count.value1();
+    public int countAll(GraduationPracticeCollege graduationPracticeCollege) {
+        return statisticsAllWithCondition(create, GRADUATION_PRACTICE_COLLEGE, GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollege.getInternshipReleaseId()));
     }
 
     @Override
-    public int countByCondition(DataTablesUtils<GraduationPracticeCollegeBean> dataTablesUtils, GraduationPracticeCollegeBean graduationPracticeCollegeBean) {
-        Record1<Integer> count;
-        Condition a = searchCondition(dataTablesUtils);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(GRADUATION_PRACTICE_COLLEGE)
-                    .join(STUDENT)
-                    .on(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(USERS)
-                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                    .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollegeBean.getInternshipReleaseId()));
-            count = selectConditionStep.fetchOne();
-        } else {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(GRADUATION_PRACTICE_COLLEGE)
-                    .join(STUDENT)
-                    .on(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(USERS)
-                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                    .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollegeBean.getInternshipReleaseId())).and(a);
-            count = selectConditionStep.fetchOne();
-        }
-        if (!ObjectUtils.isEmpty(count)) {
-            return count.value1();
-        }
-        return 0;
+    public int countByCondition(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils, GraduationPracticeCollege graduationPracticeCollege) {
+        return statisticsWithCondition(dataTablesUtils, create, GRADUATION_PRACTICE_COLLEGE, GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollege.getInternshipReleaseId()));
+    }
+
+    @Override
+    public Result<Record> exportData(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils, GraduationPracticeCollege graduationPracticeCollege) {
+        return dataPagingQueryAllWithConditionNoPage(dataTablesUtils, create, GRADUATION_PRACTICE_COLLEGE, GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(graduationPracticeCollege.getInternshipReleaseId()));
     }
 
     /**
@@ -216,21 +164,57 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
      * @return 搜索条件
      */
     @Override
-    public Condition searchCondition(DataTablesUtils<GraduationPracticeCollegeBean> dataTablesUtils) {
+    public Condition searchCondition(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils) {
         Condition a = null;
         JSONObject search = dataTablesUtils.getSearch();
         if (!ObjectUtils.isEmpty(search)) {
             String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
             String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
+            String collegeClass = StringUtils.trimWhitespace(search.getString("collegeClass"));
+            String phoneNumber = StringUtils.trimWhitespace(search.getString("phoneNumber"));
+            String headmaster = StringUtils.trimWhitespace(search.getString("headmaster"));
+            String schoolGuidanceTeacher = StringUtils.trimWhitespace(search.getString("schoolGuidanceTeacher"));
             if (StringUtils.hasLength(studentName)) {
-                a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
+                a = GRADUATION_PRACTICE_COLLEGE.STUDENT_NAME.like(SQLQueryUtils.likeAllParam(studentName));
             }
 
             if (StringUtils.hasLength(studentNumber)) {
                 if (ObjectUtils.isEmpty(a)) {
-                    a = STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
+                    a = GRADUATION_PRACTICE_COLLEGE.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
                 } else {
-                    a = a.and(STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
+                    a = a.and(GRADUATION_PRACTICE_COLLEGE.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
+                }
+            }
+
+            if (StringUtils.hasLength(collegeClass)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = GRADUATION_PRACTICE_COLLEGE.COLLEGE_CLASS.like(SQLQueryUtils.likeAllParam(collegeClass));
+                } else {
+                    a = a.and(GRADUATION_PRACTICE_COLLEGE.COLLEGE_CLASS.like(SQLQueryUtils.likeAllParam(collegeClass)));
+                }
+            }
+
+            if (StringUtils.hasLength(phoneNumber)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = GRADUATION_PRACTICE_COLLEGE.PHONE_NUMBER.like(SQLQueryUtils.likeAllParam(phoneNumber));
+                } else {
+                    a = a.and(GRADUATION_PRACTICE_COLLEGE.PHONE_NUMBER.like(SQLQueryUtils.likeAllParam(phoneNumber)));
+                }
+            }
+
+            if (StringUtils.hasLength(headmaster)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = GRADUATION_PRACTICE_COLLEGE.HEADMASTER.like(SQLQueryUtils.likeAllParam(headmaster));
+                } else {
+                    a = a.and(GRADUATION_PRACTICE_COLLEGE.HEADMASTER.like(SQLQueryUtils.likeAllParam(headmaster)));
+                }
+            }
+
+            if (StringUtils.hasLength(schoolGuidanceTeacher)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(schoolGuidanceTeacher));
+                } else {
+                    a = a.and(GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(schoolGuidanceTeacher)));
                 }
             }
         }
@@ -244,28 +228,204 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
      * @param selectConditionStep 条件
      */
     @Override
-    public void sortCondition(DataTablesUtils<GraduationPracticeCollegeBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
+    public void sortCondition(DataTablesUtils<GraduationPracticeCollege> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = USERS.REAL_NAME.asc();
+                    sortString = GRADUATION_PRACTICE_COLLEGE.STUDENT_NAME.asc();
                 } else {
-                    sortString = USERS.REAL_NAME.desc();
+                    sortString = GRADUATION_PRACTICE_COLLEGE.STUDENT_NAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = STUDENT.STUDENT_NUMBER.asc();
+                    sortString = GRADUATION_PRACTICE_COLLEGE.STUDENT_NUMBER.asc();
                 } else {
-                    sortString = STUDENT.STUDENT_NUMBER.desc();
+                    sortString = GRADUATION_PRACTICE_COLLEGE.STUDENT_NUMBER.desc();
                 }
             }
 
-            sortToFinish(selectConditionStep, selectJoinStep, type);
+            if ("college_class".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.COLLEGE_CLASS.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.COLLEGE_CLASS.desc();
+                }
+            }
+
+            if ("student_sex".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.STUDENT_SEX.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.STUDENT_SEX.desc();
+                }
+            }
+
+            if ("phone_number".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.PHONE_NUMBER.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.PHONE_NUMBER.desc();
+                }
+            }
+
+            if ("qq_mailbox".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.QQ_MAILBOX.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.QQ_MAILBOX.desc();
+                }
+            }
+
+            if ("parental_contact".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.PARENTAL_CONTACT.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.PARENTAL_CONTACT.desc();
+                }
+            }
+
+            if ("headmaster".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.HEADMASTER.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.HEADMASTER.desc();
+                }
+            }
+
+            if ("headmaster_contact".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.HEADMASTER_CONTACT.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.HEADMASTER_CONTACT.desc();
+                }
+            }
+
+            if ("graduation_practice_college_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_NAME.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_NAME.desc();
+                }
+            }
+
+            if ("graduation_practice_college_address".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_ADDRESS.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_ADDRESS.desc();
+                }
+            }
+
+            if ("graduation_practice_college_contacts".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_CONTACTS.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_CONTACTS.desc();
+                }
+            }
+
+            if ("graduation_practice_college_tel".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_TEL.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_TEL.desc();
+                }
+            }
+
+            if ("school_guidance_teacher".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER.desc();
+                }
+            }
+
+            if ("school_guidance_teacher_tel".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER_TEL.asc();
+                } else {
+                    sortString = GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER_TEL.desc();
+                }
+            }
+
+            if ("start_time".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortDate = GRADUATION_PRACTICE_COLLEGE.START_TIME.asc();
+                } else {
+                    sortDate = GRADUATION_PRACTICE_COLLEGE.START_TIME.desc();
+                }
+            }
+
+            if ("end_time".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortDate = GRADUATION_PRACTICE_COLLEGE.END_TIME.asc();
+                } else {
+                    sortDate = GRADUATION_PRACTICE_COLLEGE.END_TIME.desc();
+                }
+            }
+
+            if ("commitment_book".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.COMMITMENT_BOOK.asc();
+                } else {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.COMMITMENT_BOOK.desc();
+                }
+            }
+
+            if ("safety_responsibility_book".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.SAFETY_RESPONSIBILITY_BOOK.asc();
+                } else {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.SAFETY_RESPONSIBILITY_BOOK.desc();
+                }
+            }
+
+            if ("practice_agreement".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.PRACTICE_AGREEMENT.asc();
+                } else {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.PRACTICE_AGREEMENT.desc();
+                }
+            }
+
+            if ("internship_application".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_APPLICATION.asc();
+                } else {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_APPLICATION.desc();
+                }
+            }
+
+            if ("practice_receiving".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.PRACTICE_RECEIVING.asc();
+                } else {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.PRACTICE_RECEIVING.desc();
+                }
+            }
+
+            if ("security_education_agreement".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.SECURITY_EDUCATION_AGREEMENT.asc();
+                } else {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.SECURITY_EDUCATION_AGREEMENT.desc();
+                }
+            }
+
+            if ("parental_consent".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.PARENTAL_CONSENT.asc();
+                } else {
+                    sortByte = GRADUATION_PRACTICE_COLLEGE.PARENTAL_CONSENT.desc();
+                }
+            }
+
         }
+        sortToFinish(selectConditionStep, selectJoinStep, type);
     }
 }
