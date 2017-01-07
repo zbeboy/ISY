@@ -23,31 +23,119 @@
                 <form role="form" id="edit_form">
                     <div class="form-group" id="valid_student_name">
                         <label>学生姓名</label>
-                        <input class="form-control" th:value="${student.realName}" name="studentName" id="studentName"
-                               placeholder="学生姓名" readonly="readonly"/>
+                        <input class="form-control" th:value="${internshipData.studentName}" name="studentName"
+                               id="studentName" placeholder="学生姓名" maxlength="15"/>
                         <p class="text-danger hidden" id="student_name_error_msg"></p>
-                        <input type="hidden" th:value="${student.studentId}" name="studentId" id="studentId"/>
-                        <input type="hidden" th:value="${internshipReleaseId}" name="internshipReleaseId"/>
-                        <input type="hidden" th:value="${internshipData.graduationPracticeUnifyId}"
-                               name="graduationPracticeUnifyId"/>
+                        <input type="hidden" th:value="${internshipData.graduationPracticeCompanyId}"
+                               name="graduationPracticeCompanyId"/>
+                        <input type="hidden" th:value="${internshipData.studentId}" name="studentId" id="studentId"/>
+                        <input type="hidden" th:value="${internshipData.internshipReleaseId}"
+                               name="internshipReleaseId"/>
                     </div>
                     <div class="form-group" id="valid_college_class">
                         <label>专业班级</label>
-                        <input class="form-control" th:value="${student.organizeName}" name="collegeClass"
+                        <input class="form-control" th:value="${internshipData.collegeClass}" name="collegeClass"
                                id="collegeClass" placeholder="专业班级" readonly="readonly"/>
                         <p class="text-danger hidden" id="college_class_error_msg"></p>
                     </div>
+                    <div class="form-group" id="valid_student_sex"
+                         th:if="${internshipData.studentSex==null || internshipData.studentSex == '' || internshipData.studentSex == '男'}">
+                        <label>学生性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="man" value="男" checked="checked"/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="woman" value="女"/>女
+                        </label>
+                        <p class="text-danger hidden" id="student_sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_sex" th:if="${internshipData.studentSex == '女'}">
+                        <label>学生性别</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="man" value="男"/>男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="studentSex" id="woman" value="女" checked="checked"/>女
+                        </label>
+                        <p class="text-danger hidden" id="student_sex_error_msg"></p>
+                    </div>
                     <div class="form-group" id="valid_student_number">
                         <label>学生学号</label>
-                        <input class="form-control" th:value="${student.studentNumber}" name="studentNumber"
+                        <input class="form-control" th:value="${internshipData.studentNumber}" name="studentNumber"
                                id="studentNumber" placeholder="学生学号" readonly="readonly"/>
                         <p class="text-danger hidden" id="student_number_error_msg"></p>
                     </div>
+                    <div class="form-group" id="valid_phone_number">
+                        <label>电话号码</label>
+                        <input class="form-control" th:value="${internshipData.phoneNumber}" name="phoneNumber"
+                               id="phoneNumber" placeholder="电话号码" readonly="readonly"/>
+                        <p class="text-danger hidden" id="phone_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_qq_mailbox">
+                        <label>QQ邮箱</label>
+                        <input class="form-control" name="qqMailbox" th:value="${internshipData.qqMailbox}"
+                               id="qqMailbox" placeholder="QQ邮箱" maxlength="100"/>
+                        <p class="text-danger hidden" id="qq_mailbox_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_parental_contact">
+                        <label>父母联系方式</label>
+                        <input class="form-control" th:value="${internshipData.parentalContact}" name="parentalContact"
+                               id="parentalContact" placeholder="父母联系方式"/>
+                        <p class="text-danger hidden" id="parental_contact_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_headmaster">
+                        <label>班主任</label>
+                        <select name="headmaster" id="select_headmaster" class="form-control selectpicker show-tick"
+                                title="请选择班主任">
+                        </select>
+                        <p class="text-danger hidden" id="headmaster_error_msg"></p>
+                        <input type="hidden" th:value="${internshipData.headmaster}" id="headmaster"/>
+                        <input type="hidden" th:value="${internshipData.headmasterContact}" id="headmasterContact"/>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_name">
+                        <label>实习单位名称</label>
+                        <input class="form-control" name="graduationPracticeUnifyName"
+                               th:value="${internshipData.graduationPracticeUnifyName}"
+                               id="graduationPracticeUnifyName" placeholder="实习单位名称" maxlength="200"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_address">
+                        <label>实习单位地址</label>
+                        <input class="form-control" name="graduationPracticeUnifyAddress"
+                               th:value="${internshipData.graduationPracticeUnifyAddress}"
+                               id="graduationPracticeUnifyAddress" placeholder="实习单位地址" maxlength="500"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_address_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_contacts">
+                        <label>实习单位联系人</label>
+                        <input class="form-control" name="graduationPracticeUnifyContacts"
+                               th:value="${internshipData.graduationPracticeUnifyContacts}"
+                               id="graduationPracticeUnifyContacts" placeholder="实习单位联系人" maxlength="10"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_contacts_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_tel">
+                        <label>实习单位联系人联系方式</label>
+                        <input class="form-control" name="graduationPracticeUnifyTel"
+                               th:value="${internshipData.graduationPracticeUnifyTel}"
+                               id="graduationPracticeUnifyTel" placeholder="实习单位联系人联系方式"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_tel_error_msg"></p>
+                    </div>
                     <div class="form-group" id="valid_school_guidance_teacher">
                         <label>校内指导教师</label>
-                        <input class="form-control" name="schoolGuidanceTeacher" th:value="${internshipTeacher}"
+                        <input class="form-control" name="schoolGuidanceTeacher"
+                               th:value="${internshipData.schoolGuidanceTeacher + ' ' + internshipData.schoolGuidanceTeacherTel}"
                                id="schoolGuidanceTeacher" placeholder="校内指导教师" readonly="readonly"/>
                         <p class="text-danger hidden" id="school_guidance_teacher_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_start_time">
+                        <label>实习开始时间</label>
+                        <input class="form-control" name="startTime" id="startTime" placeholder="实习开始时间"/>
+                        <p class="text-danger hidden" id="start_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_end_time">
+                        <label>实习结束时间</label>
+                        <input class="form-control" name="endTime" id="endTime" placeholder="实习结束时间"/>
+                        <p class="text-danger hidden" id="end_time_error_msg"></p>
                     </div>
                     <div class="form-group">
                         <label>附件下载</label>
@@ -67,6 +155,11 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <script id="teacher-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{teacher_value}}">{{teacher_name}}</option>
+            {{/each}}
+        </script>
         <script id="file-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
@@ -89,7 +182,10 @@
             /*<![CDATA[*/
             /*页面参数*/
             var init_page_param = {
-                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ ''
+                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ '',
+                'startTime': /*[[${internshipData.startTime}]]*/ '',
+                'endTime': /*[[${internshipData.endTime}]]*/ '',
+                'internshipApplyState': /*[[${internshipApply.internshipApplyState}]]*/ ''
             };
             /*]]>*/
         </script>

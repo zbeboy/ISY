@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.GraduationPracticeUnifyDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
@@ -54,12 +55,6 @@ public class GraduationPracticeUnifyServiceImpl extends DataTablesPlugin<Graduat
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(GRADUATION_PRACTICE_UNIFY)
-                .join(STUDENT)
-                .on(GRADUATION_PRACTICE_UNIFY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .join(ORGANIZE)
-                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                .join(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_UNIFY.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
     }
@@ -84,11 +79,39 @@ public class GraduationPracticeUnifyServiceImpl extends DataTablesPlugin<Graduat
                     .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, state)
                     .execute();
 
+            String[] headmasterArr = graduationPracticeUnifyVo.getHeadmaster().split(" ");
+            if (headmasterArr.length >= 2) {
+                graduationPracticeUnifyVo.setHeadmaster(headmasterArr[0]);
+                graduationPracticeUnifyVo.setHeadmasterContact(headmasterArr[1]);
+            }
+            String[] schoolGuidanceTeacherArr = graduationPracticeUnifyVo.getSchoolGuidanceTeacher().split(" ");
+            if (schoolGuidanceTeacherArr.length >= 2) {
+                graduationPracticeUnifyVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                graduationPracticeUnifyVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+            }
+
             DSL.using(configuration)
                     .insertInto(GRADUATION_PRACTICE_UNIFY)
                     .set(GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_ID, UUIDUtils.getUUID())
                     .set(GRADUATION_PRACTICE_UNIFY.STUDENT_ID, graduationPracticeUnifyVo.getStudentId())
                     .set(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID, graduationPracticeUnifyVo.getInternshipReleaseId())
+                    .set(GRADUATION_PRACTICE_UNIFY.STUDENT_NAME, graduationPracticeUnifyVo.getStudentName())
+                    .set(GRADUATION_PRACTICE_UNIFY.COLLEGE_CLASS, graduationPracticeUnifyVo.getCollegeClass())
+                    .set(GRADUATION_PRACTICE_UNIFY.STUDENT_SEX, graduationPracticeUnifyVo.getStudentSex())
+                    .set(GRADUATION_PRACTICE_UNIFY.STUDENT_NUMBER, graduationPracticeUnifyVo.getStudentNumber())
+                    .set(GRADUATION_PRACTICE_UNIFY.PHONE_NUMBER, graduationPracticeUnifyVo.getPhoneNumber())
+                    .set(GRADUATION_PRACTICE_UNIFY.QQ_MAILBOX, graduationPracticeUnifyVo.getQqMailbox())
+                    .set(GRADUATION_PRACTICE_UNIFY.PARENTAL_CONTACT, graduationPracticeUnifyVo.getParentalContact())
+                    .set(GRADUATION_PRACTICE_UNIFY.HEADMASTER, graduationPracticeUnifyVo.getHeadmaster())
+                    .set(GRADUATION_PRACTICE_UNIFY.HEADMASTER_CONTACT, graduationPracticeUnifyVo.getHeadmasterContact())
+                    .set(GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_NAME, graduationPracticeUnifyVo.getGraduationPracticeUnifyName())
+                    .set(GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_ADDRESS, graduationPracticeUnifyVo.getGraduationPracticeUnifyAddress())
+                    .set(GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_CONTACTS, graduationPracticeUnifyVo.getGraduationPracticeUnifyContacts())
+                    .set(GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_TEL, graduationPracticeUnifyVo.getGraduationPracticeUnifyTel())
+                    .set(GRADUATION_PRACTICE_UNIFY.SCHOOL_GUIDANCE_TEACHER, graduationPracticeUnifyVo.getSchoolGuidanceTeacher())
+                    .set(GRADUATION_PRACTICE_UNIFY.SCHOOL_GUIDANCE_TEACHER_TEL, graduationPracticeUnifyVo.getSchoolGuidanceTeacherTel())
+                    .set(GRADUATION_PRACTICE_UNIFY.START_TIME, DateTimeUtils.formatDate(graduationPracticeUnifyVo.getStartTime()))
+                    .set(GRADUATION_PRACTICE_UNIFY.END_TIME, DateTimeUtils.formatDate(graduationPracticeUnifyVo.getEndTime()))
                     .execute();
 
             DSL.using(configuration)

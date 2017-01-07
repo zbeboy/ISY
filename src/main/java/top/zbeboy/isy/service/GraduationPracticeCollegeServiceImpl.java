@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.GraduationPracticeCollegeDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCollege;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
@@ -54,12 +55,6 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
                 .from(GRADUATION_PRACTICE_COLLEGE)
-                .join(STUDENT)
-                .on(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .join(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                .join(ORGANIZE)
-                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                 .where(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
     }
@@ -84,11 +79,39 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
                     .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, state)
                     .execute();
 
+            String[] headmasterArr = graduationPracticeCollegeVo.getHeadmaster().split(" ");
+            if (headmasterArr.length >= 2) {
+                graduationPracticeCollegeVo.setHeadmaster(headmasterArr[0]);
+                graduationPracticeCollegeVo.setHeadmasterContact(headmasterArr[1]);
+            }
+            String[] schoolGuidanceTeacherArr = graduationPracticeCollegeVo.getSchoolGuidanceTeacher().split(" ");
+            if (schoolGuidanceTeacherArr.length >= 2) {
+                graduationPracticeCollegeVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                graduationPracticeCollegeVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+            }
+
             DSL.using(configuration)
                     .insertInto(GRADUATION_PRACTICE_COLLEGE)
                     .set(GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_ID, UUIDUtils.getUUID())
                     .set(GRADUATION_PRACTICE_COLLEGE.STUDENT_ID, graduationPracticeCollegeVo.getStudentId())
                     .set(GRADUATION_PRACTICE_COLLEGE.INTERNSHIP_RELEASE_ID, graduationPracticeCollegeVo.getInternshipReleaseId())
+                    .set(GRADUATION_PRACTICE_COLLEGE.STUDENT_NAME, graduationPracticeCollegeVo.getStudentName())
+                    .set(GRADUATION_PRACTICE_COLLEGE.COLLEGE_CLASS, graduationPracticeCollegeVo.getCollegeClass())
+                    .set(GRADUATION_PRACTICE_COLLEGE.STUDENT_SEX, graduationPracticeCollegeVo.getStudentSex())
+                    .set(GRADUATION_PRACTICE_COLLEGE.STUDENT_NUMBER, graduationPracticeCollegeVo.getStudentNumber())
+                    .set(GRADUATION_PRACTICE_COLLEGE.PHONE_NUMBER, graduationPracticeCollegeVo.getPhoneNumber())
+                    .set(GRADUATION_PRACTICE_COLLEGE.QQ_MAILBOX, graduationPracticeCollegeVo.getQqMailbox())
+                    .set(GRADUATION_PRACTICE_COLLEGE.PARENTAL_CONTACT, graduationPracticeCollegeVo.getParentalContact())
+                    .set(GRADUATION_PRACTICE_COLLEGE.HEADMASTER, graduationPracticeCollegeVo.getHeadmaster())
+                    .set(GRADUATION_PRACTICE_COLLEGE.HEADMASTER_CONTACT, graduationPracticeCollegeVo.getHeadmasterContact())
+                    .set(GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_NAME, graduationPracticeCollegeVo.getGraduationPracticeCollegeName())
+                    .set(GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_ADDRESS, graduationPracticeCollegeVo.getGraduationPracticeCollegeAddress())
+                    .set(GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_CONTACTS, graduationPracticeCollegeVo.getGraduationPracticeCollegeContacts())
+                    .set(GRADUATION_PRACTICE_COLLEGE.GRADUATION_PRACTICE_COLLEGE_TEL, graduationPracticeCollegeVo.getGraduationPracticeCollegeTel())
+                    .set(GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER, graduationPracticeCollegeVo.getSchoolGuidanceTeacher())
+                    .set(GRADUATION_PRACTICE_COLLEGE.SCHOOL_GUIDANCE_TEACHER_TEL, graduationPracticeCollegeVo.getSchoolGuidanceTeacherTel())
+                    .set(GRADUATION_PRACTICE_COLLEGE.START_TIME, DateTimeUtils.formatDate(graduationPracticeCollegeVo.getStartTime()))
+                    .set(GRADUATION_PRACTICE_COLLEGE.END_TIME, DateTimeUtils.formatDate(graduationPracticeCollegeVo.getEndTime()))
                     .execute();
 
             DSL.using(configuration)
