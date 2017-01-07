@@ -321,6 +321,22 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             return msg;
         }
 
+        init();
+
+        /**
+         * 初始化数据
+         */
+        function init() {
+            startLoading();
+            $.get(web_path + ajax_url.internship_apply_data_url, param, function (data) {
+                endLoading();
+                if (data.listResult.length > 0) {
+                    createPage(data);
+                }
+                listData(data);
+            });
+        }
+
         /*
          进行申请
          */
@@ -686,22 +702,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 initMyData();
             }
         });
-
-        init();
-
-        /**
-         * 初始化数据
-         */
-        function init() {
-            startLoading();
-            $.get(web_path + ajax_url.internship_apply_data_url, param, function (data) {
-                endLoading();
-                if (data.listResult.length > 0) {
-                    createPage(data);
-                }
-                listData(data);
-            });
-        }
 
         /**
          * 初始化数据
