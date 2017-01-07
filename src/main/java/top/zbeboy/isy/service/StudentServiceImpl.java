@@ -88,8 +88,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findByOrganizeId(int organizeId) {
-        return studentDao.fetchByOrganizeId(organizeId);
+    public Result<StudentRecord> findInOrganizeIds(List<Integer> organizeIds) {
+        return create.selectFrom(STUDENT)
+                .where(STUDENT.ORGANIZE_ID.in(organizeIds))
+                .fetch();
     }
 
     @Override
@@ -780,7 +782,7 @@ public class StudentServiceImpl implements StudentService {
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     public void sortCondition(DataTablesUtils<StudentBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {

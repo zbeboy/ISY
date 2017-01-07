@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 
+import java.util.List;
 import java.util.Optional;
 
+import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE;
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE_SCIENCE;
 import static top.zbeboy.isy.domain.Tables.SCIENCE;
 
@@ -56,6 +58,16 @@ public class InternshipReleaseScienceServiceImpl implements InternshipReleaseSci
     public Result<InternshipReleaseScienceRecord> findByInternshipReleaseId(String internshipReleaseId) {
         return create.selectFrom(INTERNSHIP_RELEASE_SCIENCE)
                 .where(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findInScienceIdAndGradeNeInternshipReleaseId(String grade, List<Integer> scienceIds, String internshipReleaseId) {
+        return create.select()
+                .from(INTERNSHIP_RELEASE_SCIENCE)
+                .join(INTERNSHIP_RELEASE)
+                .on(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
+                .where(INTERNSHIP_RELEASE.ALLOW_GRADE.eq(grade).and(INTERNSHIP_RELEASE_SCIENCE.SCIENCE_ID.in(scienceIds)).and(INTERNSHIP_RELEASE_SCIENCE.INTERNSHIP_RELEASE_ID.ne(internshipReleaseId)))
                 .fetch();
     }
 

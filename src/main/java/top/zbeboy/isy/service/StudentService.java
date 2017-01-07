@@ -48,12 +48,12 @@ public interface StudentService {
     Student findByStudentNumber(String studentNumber);
 
     /**
-     * 根据班级id查询学生
+     * 根据班级id集合查询学生
      *
-     * @param organizeId 班级id
+     * @param organizeIds 班级ids
      * @return 学生们
      */
-    List<Student> findByOrganizeId(int organizeId);
+    Result<StudentRecord> findInOrganizeIds(List<Integer> organizeIds);
 
     /**
      * 通过账号与系id查询

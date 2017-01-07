@@ -12,9 +12,11 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             return {
                 datas: '/web/internship/teacher_distribution/distribution/condition/data',
                 del: '/web/internship/teacher_distribution/distribution/condition/del',
+                comparison_del: '/web/internship/teacher_distribution/distribution/condition/comparison_del',
                 add: '/web/internship/teacher_distribution/distribution/condition/add',
                 edit: '/web/internship/teacher_distribution/distribution/condition/edit',
                 batch_distribution_url: '/web/internship/teacher_distribution/batch/distribution',
+                exclude_internship_release_data_url: '/web/internship/teacher_distribution/batch/distribution/releases',
                 back: '/web/menu/internship/teacher_distribution'
             };
         }
@@ -112,8 +114,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                         };
 
 
-                        var html = template(context);
-                        return html;
+                        return template(context);
                     }
                 }
 
@@ -158,6 +159,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
 
         var global_button = '<button type="button" id="add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
             '  <button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+            '  <button type="button" id="comparison_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>比对删除</button>' +
             '  <button type="button" id="distributions" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量分配</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
@@ -323,6 +325,69 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 });
             } else {
                 Messenger().post("未发现有选中的学生!");
+            }
+        });
+
+        /*
+         比对删除
+         */
+        $('#comparison_dels').click(function () {
+            // 需要当前实习id,要被排除的实习id
+            $.post(web_path + getAjaxUrl().exclude_internship_release_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
+                var html = excludeInternshipReleaseData(data);
+                $('#excludeInternships').html(html);
+                $('#excludeInternshipModal').modal('show');
+            });
+        });
+
+        $('#excludeInternshipModalMiss').click(function () {
+            $('#exclude_internship_error_msg').addClass('hidden').removeClass('text-danger').text('');
+            $('#excludeInternshipModal').modal('hide');
+        });
+
+        /**
+         * 要排除的实习数据
+         * @param data json数据
+         */
+        function excludeInternshipReleaseData(data) {
+            var source = $("#exclude-internship-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper('value', function () {
+                var value = Handlebars.escapeExpression(this.internshipReleaseId);
+                return new Handlebars.SafeString(value);
+            });
+
+            Handlebars.registerHelper('name', function () {
+                var name = Handlebars.escapeExpression(this.internshipTitle);
+                return new Handlebars.SafeString(name);
+            });
+
+            return template(data);
+        }
+
+        // 确定对比删除
+        $("#saveExcludeInternship").click(function () {
+            var excludeInternships = $('input[name="excludeInternship"]:checked');
+            if (excludeInternships.length <= 0) {
+                $('#exclude_internship_error_msg').removeClass('hidden').addClass('text-danger').text('请至少选择一个实习');
+            } else {
+                $('#exclude_internship_error_msg').addClass('hidden').removeClass('text-danger').text('');
+                var r = [];
+                for (var i = 0; i < roles.length; i++) {
+                    r.push($(excludeInternships[i]).val());
+                }
+                $.post(web_path + getAjaxUrl().comparison_del, {
+                    id: init_page_param.internshipReleaseId,
+                    excludeInternships: r.join(",")
+                }, function (data) {
+                    if (data.state) {
+                        $('#excludeInternshipModal').modal('toggle');
+                        myTable.ajax.reload();
+                    } else {
+                        $('#exclude_internship_error_msg').removeClass('hidden').addClass('text-danger').text(data.msg);
+                    }
+                });
             }
         });
 

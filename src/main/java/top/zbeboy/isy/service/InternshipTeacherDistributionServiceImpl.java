@@ -88,6 +88,18 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                 .fetch();
     }
 
+    @Override
+    public Result<Record> findStudentForBatchDistribution(List<Integer> organizeIds,List<String> internshipReleaseId) {
+        Select<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecords =
+                create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                        .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.in(internshipReleaseId)
+                                .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID)));
+        return create.select()
+                .from(STUDENT)
+                .where(STUDENT.ORGANIZE_ID.in(organizeIds).andNotExists(internshipTeacherDistributionRecords))
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(InternshipTeacherDistribution internshipTeacherDistribution) {
@@ -103,6 +115,25 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
+
+    @Override
+    public void deleteByInternshipReleaseId(String internshipReleaseId) {
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .execute();
+    }
+
+    @Override
+    public void comparisonDel(String internshipReleaseId, List<String> excludeInternships) {
+        Select<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecords =
+                create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                        .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.in(excludeInternships)
+                                .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(INTERNSHIP_TEACHER_DISTRIBUTION.as("A").STUDENT_ID)));
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION.as("A"))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.as("A").INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                .andExists(internshipTeacherDistributionRecords))
                 .execute();
     }
 

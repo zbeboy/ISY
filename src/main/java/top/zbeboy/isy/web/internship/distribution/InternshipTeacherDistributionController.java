@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
+import top.zbeboy.isy.domain.tables.records.StudentRecord;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
@@ -355,6 +357,40 @@ public class InternshipTeacherDistributionController {
         return ajaxUtils;
     }
 
+
+    /**
+     * 批量分配 所需排除的实习数据
+     *
+     * @param internshipReleaseId 实习id
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/releases", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipRelease> batchDistributionInternshipReleases(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils<InternshipRelease> ajaxUtils = new AjaxUtils<>();
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            List<InternshipRelease> internshipReleases = new ArrayList<>();
+            InternshipRelease internshipRelease = errorBean.getData();
+            // 获取当前实习的关联专业
+            Result<InternshipReleaseScienceRecord> records = internshipReleaseScienceService.findByInternshipReleaseId(internshipReleaseId);
+            if (records.isNotEmpty()) {
+                List<Integer> scienceIds = new ArrayList<>();
+                records.forEach(id -> scienceIds.add(id.getScienceId()));
+                // 获取相近的实习
+                Result<Record> excludeInternshipRecord =
+                        internshipReleaseScienceService.findInScienceIdAndGradeNeInternshipReleaseId(internshipRelease.getAllowGrade(), scienceIds, internshipReleaseId);
+                if (excludeInternshipRecord.isNotEmpty()) {
+                    internshipReleases = excludeInternshipRecord.into(InternshipRelease.class);
+                }
+            }
+            ajaxUtils.success().msg("获取数据成功").listData(internshipReleases);
+        } else {
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据获取，请返回首页");
+        }
+        return ajaxUtils;
+    }
+
     /**
      * 保存教师分配
      *
@@ -365,7 +401,7 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/save", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils batchDistributionSave(@RequestParam("id") String internshipReleaseId, String organizeId, String staffId) {
+    public AjaxUtils batchDistributionSave(@RequestParam("id") String internshipReleaseId, String organizeId, String staffId, String excludeInternshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
@@ -375,23 +411,34 @@ public class InternshipTeacherDistributionController {
                 List<Integer> staffIds = SmallPropsUtils.StringIdsToList(staffId);
                 int i = 0;
                 Users users = usersService.getUserFromSession();
-                for (Integer id : organizeIds) {
-                    List<Student> students = studentService.findByOrganizeId(id);
-                    // 删除以前的分配记录
-                    students.forEach(s ->
-                            internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, s.getStudentId())
-                    );
-                    for (Student s : students) {
-                        if (i >= staffIds.size()) {
-                            i = 0;
-                        }
-                        int tempStaffId = staffIds.get(i);
-                        InternshipTeacherDistribution internshipTeacherDistribution =
-                                new InternshipTeacherDistribution(tempStaffId, s.getStudentId(), internshipReleaseId, users.getUsername());
-                        internshipTeacherDistributionService.save(internshipTeacherDistribution);
-                        i++;
+                List<Student> students = new ArrayList<>();
+                // 筛选学生数据
+                if (StringUtils.hasLength(excludeInternshipReleaseId)) {
+                    List<String> excludeInternshipReleaseIds = SmallPropsUtils.StringIdsToStringList(excludeInternshipReleaseId);
+                    // 查询并排除掉其它实习的学生
+                    Result<Record> studentRecords = internshipTeacherDistributionService.findStudentForBatchDistribution(organizeIds, excludeInternshipReleaseIds);
+                    if (studentRecords.isNotEmpty()) {
+                        students = studentRecords.into(Student.class);
+                    }
+                } else {
+                    Result<StudentRecord> studentRecords = studentService.findInOrganizeIds(organizeIds);
+                    if (studentRecords.isNotEmpty()) {
+                        students = studentRecords.into(Student.class);
                     }
                 }
+                // 删除以前的分配记录
+                internshipTeacherDistributionService.deleteByInternshipReleaseId(internshipReleaseId);
+                for (Student s : students) {
+                    if (i >= staffIds.size()) {
+                        i = 0;
+                    }
+                    int tempStaffId = staffIds.get(i);
+                    InternshipTeacherDistribution internshipTeacherDistribution =
+                            new InternshipTeacherDistribution(tempStaffId, s.getStudentId(), internshipReleaseId, users.getUsername());
+                    internshipTeacherDistributionService.save(internshipTeacherDistribution);
+                    i++;
+                }
+
                 ajaxUtils.success().msg("保存成功");
             } else {
                 ajaxUtils.fail().msg("保存失败，参数异常");
@@ -490,6 +537,30 @@ public class InternshipTeacherDistributionController {
                 ids.forEach(id ->
                         internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, id)
                 );
+                ajaxUtils.success().msg("删除成功");
+            }
+        } else {
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据操作，请返回首页");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 比对其它实习id的学生删除
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param excludeInternships  其它实习id
+     * @return true or fals
+     */
+    @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/comparison_del", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils comparisonDel(@RequestParam("id") String internshipReleaseId, String excludeInternships) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            if (StringUtils.hasLength(excludeInternships)) {
+                List<String> ids = SmallPropsUtils.StringIdsToStringList(excludeInternships);
+                internshipTeacherDistributionService.comparisonDel(internshipReleaseId, ids);
                 ajaxUtils.success().msg("删除成功");
             }
         } else {

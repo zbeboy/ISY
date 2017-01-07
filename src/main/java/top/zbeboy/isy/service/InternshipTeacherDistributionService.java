@@ -61,6 +61,15 @@ public interface InternshipTeacherDistributionService {
     Result<InternshipTeacherDistributionRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId);
 
     /**
+     * 为批量分配查询学生数据
+     *
+     * @param organizeIds         专业id
+     * @param internshipReleaseId 实习发布id 集合
+     * @return 数据
+     */
+    Result<Record> findStudentForBatchDistribution(List<Integer> organizeIds, List<String> internshipReleaseId);
+
+    /**
      * 保存
      *
      * @param internshipTeacherDistribution 教师分配
@@ -81,6 +90,21 @@ public interface InternshipTeacherDistributionService {
      * @param studentId           学生id
      */
     void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 通过实习发布id删除
+     *
+     * @param internshipReleaseId 实习发布id
+     */
+    void deleteByInternshipReleaseId(String internshipReleaseId);
+
+    /**
+     * 通过比对其它实习学生id删除
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param excludeInternships  其它实习id
+     */
+    void comparisonDel(String internshipReleaseId, List<String> excludeInternships);
 
     /**
      * 分页查询

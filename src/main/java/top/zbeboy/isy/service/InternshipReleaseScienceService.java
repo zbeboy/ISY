@@ -1,9 +1,11 @@
 package top.zbeboy.isy.service;
 
+import io.swagger.models.auth.In;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,6 +36,16 @@ public interface InternshipReleaseScienceService {
      * @return 数据
      */
     Result<InternshipReleaseScienceRecord> findByInternshipReleaseId(String internshipReleaseId);
+
+    /**
+     * 通过年级与专业id集合查询 注：不等于该实习id
+     *
+     * @param grade               年级
+     * @param scienceIds          专业id集合
+     * @param internshipReleaseId 实习发布id
+     * @return 数据
+     */
+    Result<Record> findInScienceIdAndGradeNeInternshipReleaseId(String grade, List<Integer> scienceIds, String internshipReleaseId);
 
     /**
      * 通过实习发布id与专业id查询

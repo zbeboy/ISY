@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
         var ajax_url = {
             organize_data_url: '/web/internship/teacher_distribution/batch/distribution/organizes',
             teacher_data_url: '/web/internship/teacher_distribution/batch/distribution/teachers',
+            exclude_internship_release_data_url: '/web/internship/teacher_distribution/batch/distribution/releases',
             nav: '/web/menu/internship/teacher_distribution',
             save: '/web/internship/teacher_distribution/batch/distribution/save',
             back: '/web/internship/teacher_distribution/distribution/condition'
@@ -24,7 +25,8 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
          */
         var paramId = {
             organizeId: '#select_organize',
-            staffId: '#select_teacher'
+            staffId: '#select_teacher',
+            excludeInternshipReleaseId: '#exclude_internship_release'
         };
 
         /*
@@ -33,6 +35,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
         var param = {
             organizeId: $(paramId.organizeId).val(),
             staffId: $(paramId.staffId).val(),
+            excludeInternshipReleaseId: $(paramId.excludeInternshipReleaseId).val(),
             internshipReleaseId: init_page_param.internshipReleaseId
         };
 
@@ -52,6 +55,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
         function initParam() {
             param.organizeId = $(paramId.organizeId).val();
             param.staffId = $(paramId.staffId).val();
+            param.excludeInternshipReleaseId = $(paramId.excludeInternshipReleaseId).val();
             param.internshipReleaseId = init_page_param.internshipReleaseId;
         }
 
@@ -69,6 +73,10 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
 
             $.get(web_path + ajax_url.teacher_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
                 staffData(data);
+            });
+
+            $.get(web_path + ajax_url.exclude_internship_release_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
+                excludeInternshipReleaseData(data);
             });
         }
 
@@ -115,16 +123,34 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
 
             Handlebars.registerHelper('teacher_name', function () {
                 var realName = this.realName;
-                if(realName == null){
+                if (realName == null) {
                     realName = '';
                 }
-                var name = Handlebars.escapeExpression(realName  + ' ' + this.staffNumber);
+                var name = Handlebars.escapeExpression(realName + ' ' + this.staffNumber);
                 return new Handlebars.SafeString(name);
             });
 
             var html = template(data);
             $(paramId.staffId).html(html);
             initStaffDualListbox();
+        }
+
+        /**
+         * 要排除的实习数据
+         * @param data
+         */
+        function excludeInternshipReleaseData(data) {
+            var source = $("#exclude-internship-release-template").html();
+            var template = Handlebars.compile(source);
+
+            Handlebars.registerHelper('internship_title', function () {
+                var value = Handlebars.escapeExpression(this.internshipTitle);
+                return new Handlebars.SafeString(value);
+            });
+
+            var html = template(data);
+            $(paramId.excludeInternshipReleaseId).html(html);
+            initExcludeInternshipReleaseDualListbox();
         }
 
         /**
@@ -139,6 +165,13 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
          */
         function initStaffDualListbox() {
             $(paramId.staffId).bootstrapDualListbox();
+        }
+
+        /**
+         * 初始化需要排除的实习数据列表
+         */
+        function initExcludeInternshipReleaseDualListbox() {
+            $(paramId.excludeInternshipReleaseId).bootstrapDualListbox();
         }
 
         /*
@@ -230,7 +263,8 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
                 data: {
                     id: param.internshipReleaseId,
                     organizeId: param.organizeId.join(','),
-                    staffId: param.staffId.join(',')
+                    staffId: param.staffId.join(','),
+                    excludeInternshipReleaseId: param.excludeInternshipReleaseId.join(',')
                 },
                 success: function (data) {
                     if (data.state) {
