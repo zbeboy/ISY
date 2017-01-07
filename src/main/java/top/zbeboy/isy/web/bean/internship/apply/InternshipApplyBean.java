@@ -38,6 +38,10 @@ public class InternshipApplyBean extends InternshipApply {
     private String originalFileName;
     private String ext;
 
+    // 用于我实习显示指导教师用
+    private String  schoolGuidanceTeacher;
+    private String  schoolGuidanceTeacherTel;
+
     public String getInternshipTitle() {
         return internshipTitle;
     }
@@ -252,5 +256,21 @@ public class InternshipApplyBean extends InternshipApply {
 
     public void setExt(String ext) {
         this.ext = ext;
+    }
+
+    public String getSchoolGuidanceTeacher() {
+        return schoolGuidanceTeacher;
+    }
+
+    public void setSchoolGuidanceTeacher(String schoolGuidanceTeacher) {
+        this.schoolGuidanceTeacher = schoolGuidanceTeacher;
+    }
+
+    public String getSchoolGuidanceTeacherTel() {
+        return schoolGuidanceTeacherTel;
+    }
+
+    public void setSchoolGuidanceTeacherTel(String schoolGuidanceTeacherTel) {
+        this.schoolGuidanceTeacherTel = schoolGuidanceTeacherTel;
     }
 }

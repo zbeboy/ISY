@@ -175,6 +175,15 @@ public class InternshipApplyController {
             internshipApplyBean.setStudentId(student.getStudentId());
             Result<Record> records = internshipApplyService.findAllByPage(paginationUtils, internshipApplyBean);
             internshipApplyBeens = internshipApplyService.dealData(paginationUtils, records, internshipApplyBean);
+            internshipApplyBeens.forEach(i -> {
+                        Optional<Record> staffRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentIdForStaff(i.getInternshipReleaseId(), student.getStudentId());
+                        if (staffRecord.isPresent()) {
+                            Users staff = staffRecord.get().into(Users.class);
+                            i.setSchoolGuidanceTeacher(staff.getRealName());
+                            i.setSchoolGuidanceTeacherTel(staff.getMobile());
+                        }
+                    }
+            );
         }
         return new AjaxUtils<InternshipApplyBean>().success().msg("获取数据成功").listData(internshipApplyBeens).paginationUtils(paginationUtils);
     }
@@ -965,10 +974,11 @@ public class InternshipApplyController {
 
     /**
      * 组装页面相同参数
-     * @param modelMap 页面对象
+     *
+     * @param modelMap  页面对象
      * @param errorBean 判断条件
      */
-    private void buildCommonModelMap(ModelMap modelMap, ErrorBean<InternshipRelease> errorBean){
+    private void buildCommonModelMap(ModelMap modelMap, ErrorBean<InternshipRelease> errorBean) {
         StudentBean studentBean = (StudentBean) errorBean.getMapData().get("student");
         String qqMail = "";
         if (studentBean.getUsername().toLowerCase().contains("@qq.com")) {
@@ -1140,7 +1150,7 @@ public class InternshipApplyController {
     public AjaxUtils applyState(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
                                 @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
             return ajaxUtils.fail().msg("您的个人信息有误");
         }
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
@@ -1186,7 +1196,7 @@ public class InternshipApplyController {
     public AjaxUtils<FileBean> usersUploadAvatar(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,
                                                  MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
         AjaxUtils<FileBean> data = new AjaxUtils<>();
-        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
             return data.fail().msg("您的个人信息有误");
         }
         try {
@@ -1239,7 +1249,7 @@ public class InternshipApplyController {
     public AjaxUtils deleteFile(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
         AjaxUtils data = new AjaxUtils();
         try {
-            if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+            if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
                 return data.fail().msg("您的个人信息有误");
             }
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
@@ -1269,7 +1279,7 @@ public class InternshipApplyController {
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
 
-        if(!commonControllerMethodService.limitCurrentStudent(studentId)){
+        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
             errorBean.setHasError(true);
             errorBean.setErrorMsg("您的个人信息有误");
             return errorBean;
