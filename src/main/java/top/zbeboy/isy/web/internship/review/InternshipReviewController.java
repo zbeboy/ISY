@@ -326,8 +326,8 @@ public class InternshipReviewController {
                 case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
                     Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                     if (graduationPracticeCollegeRecord.isPresent()) {
-                        GraduationPracticeCollegeBean graduationPracticeCollegeBean = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollegeBean.class);
-                        modelMap.addAttribute("internshipData", graduationPracticeCollegeBean);
+                        GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeCollege);
                         page = "web/internship/review/graduation_practice_college_detail::#page-wrapper";
                     } else {
                         page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
@@ -336,8 +336,8 @@ public class InternshipReviewController {
                 case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
                     Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                     if (graduationPracticeUnifyRecord.isPresent()) {
-                        GraduationPracticeUnifyBean graduationPracticeUnifyBean = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnifyBean.class);
-                        modelMap.addAttribute("internshipData", graduationPracticeUnifyBean);
+                        GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
+                        modelMap.addAttribute("internshipData", graduationPracticeUnify);
                         page = "web/internship/review/graduation_practice_unify_detail::#page-wrapper";
                     } else {
                         page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
@@ -880,10 +880,32 @@ public class InternshipReviewController {
                 }
                 break;
             case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
-                internshipReviewBean.setHasController(false);
+                Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (graduationPracticeCollegeRecord.isPresent()) {
+                    GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
+                    internshipReviewBean.setHasController(true);
+                    internshipReviewBean.setCommitmentBook(graduationPracticeCollege.getCommitmentBook());
+                    internshipReviewBean.setSafetyResponsibilityBook(graduationPracticeCollege.getSafetyResponsibilityBook());
+                    internshipReviewBean.setPracticeAgreement(graduationPracticeCollege.getPracticeAgreement());
+                    internshipReviewBean.setInternshipApplication(graduationPracticeCollege.getInternshipApplication());
+                    internshipReviewBean.setPracticeReceiving(graduationPracticeCollege.getPracticeReceiving());
+                    internshipReviewBean.setSecurityEducationAgreement(graduationPracticeCollege.getSecurityEducationAgreement());
+                    internshipReviewBean.setParentalConsent(graduationPracticeCollege.getParentalConsent());
+                }
                 break;
             case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
-                internshipReviewBean.setHasController(false);
+                Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (graduationPracticeUnifyRecord.isPresent()) {
+                    GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
+                    internshipReviewBean.setHasController(true);
+                    internshipReviewBean.setCommitmentBook(graduationPracticeUnify.getCommitmentBook());
+                    internshipReviewBean.setSafetyResponsibilityBook(graduationPracticeUnify.getSafetyResponsibilityBook());
+                    internshipReviewBean.setPracticeAgreement(graduationPracticeUnify.getPracticeAgreement());
+                    internshipReviewBean.setInternshipApplication(graduationPracticeUnify.getInternshipApplication());
+                    internshipReviewBean.setPracticeReceiving(graduationPracticeUnify.getPracticeReceiving());
+                    internshipReviewBean.setSecurityEducationAgreement(graduationPracticeUnify.getSecurityEducationAgreement());
+                    internshipReviewBean.setParentalConsent(graduationPracticeUnify.getParentalConsent());
+                }
                 break;
             case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
                 Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);

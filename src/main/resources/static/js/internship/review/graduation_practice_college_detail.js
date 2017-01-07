@@ -78,7 +78,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         });
 
         /*
-         通过
+         不通过
          */
         $('#fail').click(function () {
             var id = $('#internshipReleaseId').val();
