@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables;
 
 
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationPracticeUnifyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRecord> {
 
-    private static final long serialVersionUID = -1142645371;
+    private static final long serialVersionUID = -1818768171;
 
     /**
      * The reference instance of <code>isy.graduation_practice_unify</code>
@@ -54,6 +55,126 @@ public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRe
      * The column <code>isy.graduation_practice_unify.graduation_practice_unify_id</code>.
      */
     public final TableField<GraduationPracticeUnifyRecord, String> GRADUATION_PRACTICE_UNIFY_ID = createField("graduation_practice_unify_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.student_name</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> STUDENT_NAME = createField("student_name", org.jooq.impl.SQLDataType.VARCHAR.length(15).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.college_class</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> COLLEGE_CLASS = createField("college_class", org.jooq.impl.SQLDataType.VARCHAR.length(50).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.student_sex</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> STUDENT_SEX = createField("student_sex", org.jooq.impl.SQLDataType.VARCHAR.length(2).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.student_number</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> STUDENT_NUMBER = createField("student_number", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.phone_number</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> PHONE_NUMBER = createField("phone_number", org.jooq.impl.SQLDataType.VARCHAR.length(15).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.qq_mailbox</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> QQ_MAILBOX = createField("qq_mailbox", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.parental_contact</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> PARENTAL_CONTACT = createField("parental_contact", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.headmaster</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> HEADMASTER = createField("headmaster", org.jooq.impl.SQLDataType.VARCHAR.length(10).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.headmaster_contact</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> HEADMASTER_CONTACT = createField("headmaster_contact", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.graduation_practice_unify_name</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> GRADUATION_PRACTICE_UNIFY_NAME = createField("graduation_practice_unify_name", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.graduation_practice_unify_address</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> GRADUATION_PRACTICE_UNIFY_ADDRESS = createField("graduation_practice_unify_address", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.graduation_practice_unify_contacts</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> GRADUATION_PRACTICE_UNIFY_CONTACTS = createField("graduation_practice_unify_contacts", org.jooq.impl.SQLDataType.VARCHAR.length(10).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.graduation_practice_unify_tel</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> GRADUATION_PRACTICE_UNIFY_TEL = createField("graduation_practice_unify_tel", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.school_guidance_teacher</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> SCHOOL_GUIDANCE_TEACHER = createField("school_guidance_teacher", org.jooq.impl.SQLDataType.VARCHAR.length(10).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.school_guidance_teacher_tel</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, String> SCHOOL_GUIDANCE_TEACHER_TEL = createField("school_guidance_teacher_tel", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.start_time</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Date> START_TIME = createField("start_time", org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.end_time</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Date> END_TIME = createField("end_time", org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.commitment_book</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Byte> COMMITMENT_BOOK = createField("commitment_book", org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.safety_responsibility_book</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Byte> SAFETY_RESPONSIBILITY_BOOK = createField("safety_responsibility_book", org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.practice_agreement</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Byte> PRACTICE_AGREEMENT = createField("practice_agreement", org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.internship_application</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Byte> INTERNSHIP_APPLICATION = createField("internship_application", org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.practice_receiving</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Byte> PRACTICE_RECEIVING = createField("practice_receiving", org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.security_education_agreement</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Byte> SECURITY_EDUCATION_AGREEMENT = createField("security_education_agreement", org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
+     * The column <code>isy.graduation_practice_unify.parental_consent</code>.
+     */
+    public final TableField<GraduationPracticeUnifyRecord, Byte> PARENTAL_CONSENT = createField("parental_consent", org.jooq.impl.SQLDataType.TINYINT, this, "");
 
     /**
      * The column <code>isy.graduation_practice_unify.student_id</code>.
