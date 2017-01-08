@@ -221,7 +221,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
         function validOrganizeId() {
             initParam();
             var organizeId = param.organizeId;
-            if (organizeId.length <= 0) {
+            if (organizeId == null || organizeId === '' || organizeId.length <= 0) {
                 Messenger().post({
                     message: '请选择班级',
                     type: 'error',
@@ -238,7 +238,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
         function validStaffId() {
             initParam();
             var staffId = param.staffId;
-            if (staffId.length <= 0) {
+            if (staffId == null || staffId === '' || staffId.length <= 0) {
                 Messenger().post({
                     message: '请选择教师',
                     type: 'error',
@@ -253,6 +253,10 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
          * 发送数据到后台
          */
         function sendAjax() {
+            var excludeInternshipReleaseId = param.excludeInternshipReleaseId;
+            if(excludeInternshipReleaseId != null && excludeInternshipReleaseId !== ''){
+                excludeInternshipReleaseId = excludeInternshipReleaseId.join(',');
+            }
             Messenger().run({
                 successMessage: '保存数据成功',
                 errorMessage: '保存数据失败',
@@ -264,7 +268,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
                     id: param.internshipReleaseId,
                     organizeId: param.organizeId.join(','),
                     staffId: param.staffId.join(','),
-                    excludeInternshipReleaseId: param.excludeInternshipReleaseId.join(',')
+                    excludeInternshipReleaseId: excludeInternshipReleaseId
                 },
                 success: function (data) {
                     if (data.state) {

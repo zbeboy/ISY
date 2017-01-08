@@ -523,8 +523,32 @@ public class InternshipReviewController {
                         }
                         break;
                     case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                        Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                        if (graduationPracticeCollegeRecord.isPresent()) {
+                            GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
+                            graduationPracticeCollege.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                            graduationPracticeCollege.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                            graduationPracticeCollege.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                            graduationPracticeCollege.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                            graduationPracticeCollege.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                            graduationPracticeCollege.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                            graduationPracticeCollege.setParentalConsent(internshipReviewBean.getParentalConsent());
+                            graduationPracticeCollegeService.update(graduationPracticeCollege);
+                        }
                         break;
                     case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                        Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                        if (graduationPracticeUnifyRecord.isPresent()) {
+                            GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
+                            graduationPracticeUnify.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                            graduationPracticeUnify.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                            graduationPracticeUnify.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                            graduationPracticeUnify.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                            graduationPracticeUnify.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                            graduationPracticeUnify.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                            graduationPracticeUnify.setParentalConsent(internshipReviewBean.getParentalConsent());
+                            graduationPracticeUnifyService.update(graduationPracticeUnify);
+                        }
                         break;
                     case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
                         Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
@@ -638,8 +662,32 @@ public class InternshipReviewController {
                 }
                 break;
             case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(InternshipReleaseId, studentId);
+                if (graduationPracticeCollegeRecord.isPresent()) {
+                    GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
+                    graduationPracticeCollege.setCommitmentBook(b);
+                    graduationPracticeCollege.setSafetyResponsibilityBook(b);
+                    graduationPracticeCollege.setPracticeAgreement(b);
+                    graduationPracticeCollege.setInternshipApplication(b);
+                    graduationPracticeCollege.setPracticeReceiving(b);
+                    graduationPracticeCollege.setSecurityEducationAgreement(b);
+                    graduationPracticeCollege.setParentalConsent(b);
+                    graduationPracticeCollegeService.update(graduationPracticeCollege);
+                }
                 break;
             case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(InternshipReleaseId, studentId);
+                if (graduationPracticeUnifyRecord.isPresent()) {
+                    GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
+                    graduationPracticeUnify.setCommitmentBook(b);
+                    graduationPracticeUnify.setSafetyResponsibilityBook(b);
+                    graduationPracticeUnify.setPracticeAgreement(b);
+                    graduationPracticeUnify.setInternshipApplication(b);
+                    graduationPracticeUnify.setPracticeReceiving(b);
+                    graduationPracticeUnify.setSecurityEducationAgreement(b);
+                    graduationPracticeUnify.setParentalConsent(b);
+                    graduationPracticeUnifyService.update(graduationPracticeUnify);
+                }
                 break;
             case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
                 Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(InternshipReleaseId, studentId);

@@ -1244,6 +1244,14 @@ public class InternshipApplyController {
         return data;
     }
 
+    /**
+     * 删除电子材料
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @param request             请求
+     * @return true or false
+     */
     @RequestMapping(value = "/web/internship/apply/delete/file", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils deleteFile(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {

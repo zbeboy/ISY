@@ -557,6 +557,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
          添加询问
          */
         function add() {
+            initParam();
             var msg;
             msg = Messenger().post({
                 message: "确定保存吗?",

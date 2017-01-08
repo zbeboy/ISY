@@ -26,8 +26,8 @@
                         <input class="form-control" th:value="${internshipData.studentName}" name="studentName"
                                id="studentName" placeholder="学生姓名" maxlength="15"/>
                         <p class="text-danger hidden" id="student_name_error_msg"></p>
-                        <input type="hidden" th:value="${internshipData.graduationPracticeCompanyId}"
-                               name="graduationPracticeCompanyId"/>
+                        <input type="hidden" th:value="${internshipData.graduationPracticeUnifyId}"
+                               name="graduationPracticeUnifyId"/>
                         <input type="hidden" th:value="${internshipData.studentId}" name="studentId" id="studentId"/>
                         <input type="hidden" th:value="${internshipData.internshipReleaseId}"
                                name="internshipReleaseId"/>
@@ -182,7 +182,7 @@
             /*<![CDATA[*/
             /*页面参数*/
             var init_page_param = {
-                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ '',
+                'internshipReleaseId': /*[[${internshipData.internshipReleaseId}]]*/ '',
                 'startTime': /*[[${internshipData.startTime}]]*/ '',
                 'endTime': /*[[${internshipData.endTime}]]*/ '',
                 'internshipApplyState': /*[[${internshipApply.internshipApplyState}]]*/ ''

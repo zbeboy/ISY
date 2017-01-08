@@ -89,7 +89,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     @Override
-    public Result<Record> findStudentForBatchDistribution(List<Integer> organizeIds,List<String> internshipReleaseId) {
+    public Result<Record> findStudentForBatchDistribution(List<Integer> organizeIds, List<String> internshipReleaseId) {
         Select<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecords =
                 create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                         .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.in(internshipReleaseId)
@@ -127,13 +127,16 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
 
     @Override
     public void comparisonDel(String internshipReleaseId, List<String> excludeInternships) {
-        Select<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecords =
-                create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
-                        .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.in(excludeInternships)
-                                .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(INTERNSHIP_TEACHER_DISTRIBUTION.as("A").STUDENT_ID)));
-        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION.as("A"))
-                .where(INTERNSHIP_TEACHER_DISTRIBUTION.as("A").INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
-                .andExists(internshipTeacherDistributionRecords))
+        Select<Record1<Integer>> temp = create.select(INTERNSHIP_TEACHER_DISTRIBUTION.as("A").STUDENT_ID)
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION.as("A"))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.as("A").INTERNSHIP_RELEASE_ID.in(excludeInternships));
+
+        Select<Record1<Integer>> internshipTeacherDistributionRecords =
+                create.select(INTERNSHIP_TEACHER_DISTRIBUTION.as("B").STUDENT_ID)
+                        .from(temp.asTable("B"));
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                        .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.in(internshipTeacherDistributionRecords)))
                 .execute();
     }
 
@@ -327,7 +330,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     /**
      * 院数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override

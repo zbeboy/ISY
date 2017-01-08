@@ -333,7 +333,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
          */
         $('#comparison_dels').click(function () {
             // 需要当前实习id,要被排除的实习id
-            $.post(web_path + getAjaxUrl().exclude_internship_release_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
+            $.get(web_path + getAjaxUrl().exclude_internship_release_data_url, {id: init_page_param.internshipReleaseId}, function (data) {
                 var html = excludeInternshipReleaseData(data);
                 $('#excludeInternships').html(html);
                 $('#excludeInternshipModal').modal('show');
@@ -374,7 +374,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             } else {
                 $('#exclude_internship_error_msg').addClass('hidden').removeClass('text-danger').text('');
                 var r = [];
-                for (var i = 0; i < roles.length; i++) {
+                for (var i = 0; i < excludeInternships.length; i++) {
                     r.push($(excludeInternships[i]).val());
                 }
                 $.post(web_path + getAjaxUrl().comparison_del, {
