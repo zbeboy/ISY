@@ -8,11 +8,21 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-12-24.
  */
 public interface SystemAlertService {
+
+    /**
+     * 通过用户账号和链接id查询
+     *
+     * @param username 用户账号
+     * @param linkId   链接id
+     * @return 提醒内容
+     */
+    Optional<Record> findByUsernameAndLinkId(String username, String linkId);
 
     /**
      * 系统导航栏提醒显示用
@@ -75,4 +85,11 @@ public interface SystemAlertService {
      * @param timestamp 时间
      */
     void deleteByAlertDate(Timestamp timestamp);
+
+    /**
+     * 更新提醒
+     *
+     * @param systemAlert 提醒
+     */
+    void update(SystemAlert systemAlert);
 }

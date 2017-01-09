@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.domain.tables.pojos.SystemMessage;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.SystemMessageService;
 import top.zbeboy.isy.service.UsersService;
@@ -56,12 +57,17 @@ public class SystemMessageController {
     @RequestMapping(value = "/anyone/message/detail", method = RequestMethod.GET)
     public String messageDetail(@RequestParam("id") String messageId, ModelMap modelMap) {
         SystemMessageBean systemMessageBean = new SystemMessageBean();
-        Optional<Record> record = systemMessageService.findByIdRelation(messageId);
+        Users users = usersService.getUserFromSession();
+        Optional<Record> record = systemMessageService.findByIdAndAcceptUsersRelation(messageId,users.getUsername());
         if (record.isPresent()) {
             systemMessageBean = record.get().into(SystemMessageBean.class);
             systemMessageBean.setMessageDateStr(DateTimeUtils.formatDate(systemMessageBean.getMessageDate(), "yyyy年MM月dd日 hh:mm:ss"));
+            Byte b = 1;
+            systemMessageBean.setIsSee(b);
+            systemMessageService.update(systemMessageBean);
         }
         modelMap.addAttribute("message", systemMessageBean);
+
         return "web/system/message/system_message_look::#page-wrapper";
     }
 

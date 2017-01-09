@@ -181,6 +181,8 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
         /**
          * 初始化导航消息
          */
+        var websocketStomp = null;
+        var websocketFrame = null;
         function initRemind() {
             var stompClient = null;
             var socket = new SockJS(web_path + getAjaxUrl().socke_js_url);
@@ -194,11 +196,22 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
                     showAlerts(json);// 提醒
                     showMessages(json);// 消息
                 });
-                stompClient.send(getAjaxUrl().stomp_send_url, {}, frame.headers['user-name']);
+                websocketStomp = stompClient;
+                websocketFrame = frame;
+                getRemind();
                 window.setInterval(function () {
-                    stompClient.send(getAjaxUrl().stomp_send_url, {}, frame.headers['user-name']);
+                    getRemind();
                 }, 180000);
             });
+        }
+
+        /**
+         * 获取提醒数据
+         */
+        function getRemind() {
+            if(websocketStomp){
+                websocketStomp.send(getAjaxUrl().stomp_send_url, {}, websocketFrame.headers['user-name']);
+            }
         }
 
         /**
@@ -207,9 +220,12 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          */
         function showAlerts(data) {
             var count = data.mapResult.alertsCount;
+            var alertsCount = $('#alertsCount');
             if (count > 0) {
-                var alertsCount = $('#alertsCount');
                 alertsCount.removeClass('hidden');
+                alertsCount.text(count);
+            } else {
+                alertsCount.addClass('hidden');
                 alertsCount.text(count);
             }
             moment.locale('zh-cn');
@@ -233,9 +249,12 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          */
         function showMessages(data) {
             var count = data.mapResult.messagesCount;
+            var messagesCount = $('#messagesCount');
             if (count > 0) {
-                var messagesCount = $('#messagesCount');
                 messagesCount.removeClass('hidden');
+                messagesCount.text(count);
+            } else {
+                messagesCount.addClass('hidden');
                 messagesCount.text(count);
             }
             moment.locale('zh-cn');
@@ -287,6 +306,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
         $('#wrapper').delegate('.message_detail', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(getAjaxUrl().message_detail_url + '?id=' + id);
+            getRemind();
         });
 
         /*
@@ -296,6 +316,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             var id = $(this).attr('data-id');
             var type = $(this).attr('data-type');
             $.address.value(getAjaxUrl().alert_detail_url + '?id=' + id + '&type=' + type);
+            getRemind();
         });
 
 

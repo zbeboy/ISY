@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.SystemAlert;
 import top.zbeboy.isy.domain.tables.pojos.SystemAlertType;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.SystemAlertService;
@@ -23,6 +24,7 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-12-30.
@@ -64,11 +66,19 @@ public class SystemAlertController {
     @RequestMapping(value = "/anyone/alert/detail", method = RequestMethod.GET)
     public String alertDetail(@RequestParam("id") String linkId, @RequestParam("type") int type) {
         String page = "";
-        SystemAlertType systemAlertType = systemAlertTypeService.findById(type);
-        if (!ObjectUtils.isEmpty(systemAlertType)) {
-            if (systemAlertType.getName().equals(Workbook.ALERT_MESSAGE_TYPE)) {
-                page = "redirect:/anyone/message/detail?id=" + linkId;
+        Users users = usersService.getUserFromSession();
+        Optional<Record> record = systemAlertService.findByUsernameAndLinkId(users.getUsername(),linkId);
+        if(record.isPresent()){
+            SystemAlertType systemAlertType = systemAlertTypeService.findById(type);
+            if (!ObjectUtils.isEmpty(systemAlertType)) {
+                if (systemAlertType.getName().equals(Workbook.ALERT_MESSAGE_TYPE)) {
+                    page = "redirect:/anyone/message/detail?id=" + linkId;
+                }
             }
+            SystemAlert systemAlert = record.get().into(SystemAlert.class);
+            Byte b = 1;
+            systemAlert.setIsSee(b);
+            systemAlertService.update(systemAlert);
         }
         return page;
     }

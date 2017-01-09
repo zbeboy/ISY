@@ -72,6 +72,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             student: '#student_error_msg'
         };
 
+        init();
+
         /**
          * 检验成功
          * @param validId
@@ -320,8 +322,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             }
             return msg;
         }
-
-        init();
 
         /**
          * 初始化数据

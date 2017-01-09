@@ -47,12 +47,17 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     }
 
     @Override
-    public Optional<Record> findByIdRelation(String id) {
+    public SystemMessage findById(String id) {
+        return systemMessageDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdAndAcceptUsersRelation(String id, String acceptUser) {
         return create.select()
                 .from(SYSTEM_MESSAGE)
                 .join(USERS)
                 .on(SYSTEM_MESSAGE.SEND_USERS.eq(USERS.USERNAME))
-                .where(SYSTEM_MESSAGE.SYSTEM_MESSAGE_ID.eq(id))
+                .where(SYSTEM_MESSAGE.SYSTEM_MESSAGE_ID.eq(id).and(SYSTEM_MESSAGE.ACCEPT_USERS.eq(acceptUser)))
                 .fetchOptional();
     }
 
@@ -141,6 +146,11 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     @Override
     public void deleteByMessageDate(Timestamp timestamp) {
         create.deleteFrom(SYSTEM_MESSAGE).where(SYSTEM_MESSAGE.MESSAGE_DATE.le(timestamp)).execute();
+    }
+
+    @Override
+    public void update(SystemMessage systemMessage) {
+        systemMessageDao.update(systemMessage);
     }
 
     /**

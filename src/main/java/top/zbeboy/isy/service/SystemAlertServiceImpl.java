@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.SYSTEM_ALERT;
 import static top.zbeboy.isy.domain.Tables.SYSTEM_ALERT_TYPE;
@@ -43,6 +44,14 @@ public class SystemAlertServiceImpl implements SystemAlertService {
     @Autowired
     public SystemAlertServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public Optional<Record> findByUsernameAndLinkId(String username, String linkId) {
+        return create.select()
+                .from(SYSTEM_ALERT)
+                .where(SYSTEM_ALERT.USERNAME.eq(username).and(SYSTEM_ALERT.LINK_ID.eq(linkId)))
+                .fetchOptional();
     }
 
     @Override
@@ -130,6 +139,11 @@ public class SystemAlertServiceImpl implements SystemAlertService {
     @Override
     public void deleteByAlertDate(Timestamp timestamp) {
         create.deleteFrom(SYSTEM_ALERT).where(SYSTEM_ALERT.ALERT_DATE.le(timestamp)).execute();
+    }
+
+    @Override
+    public void update(SystemAlert systemAlert) {
+        systemAlertDao.update(systemAlert);
     }
 
     /**

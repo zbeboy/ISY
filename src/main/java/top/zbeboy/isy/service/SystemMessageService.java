@@ -16,12 +16,21 @@ import java.util.Optional;
 public interface SystemMessageService {
 
     /**
-     * 通过id关联查询
+     * 根据主键查询
      *
      * @param id 主键
+     * @return 数据
+     */
+    SystemMessage findById(String id);
+
+    /**
+     * 通过id与接收者关联查询
+     *
+     * @param id         主键
+     * @param acceptUser 接收者
      * @return 消息
      */
-    Optional<Record> findByIdRelation(String id);
+    Optional<Record> findByIdAndAcceptUsersRelation(String id, String acceptUser);
 
     /**
      * 系统导航栏消息显示用
@@ -84,4 +93,11 @@ public interface SystemMessageService {
      * @param timestamp 时间
      */
     void deleteByMessageDate(Timestamp timestamp);
+
+    /**
+     * 更新
+     *
+     * @param systemMessage 消息
+     */
+    void update(SystemMessage systemMessage);
 }
