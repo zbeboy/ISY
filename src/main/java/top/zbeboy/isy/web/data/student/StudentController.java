@@ -343,6 +343,8 @@ public class StudentController {
                 student.setDormitoryNumber(studentVo.getDormitoryNumber());
                 if(StringUtils.hasLength(studentVo.getIdCard())){
                     student.setIdCard(studentVo.getIdCard());
+                } else {
+                    student.setIdCard(null);
                 }
                 student.setFamilyResidence(studentVo.getFamilyResidence());
                 student.setParentName(studentVo.getParentName());

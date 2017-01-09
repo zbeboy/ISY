@@ -332,6 +332,8 @@ public class StaffController {
                 }
                 if(StringUtils.hasLength(staffVo.getIdCard())){
                     staff.setIdCard(staffVo.getIdCard());
+                } else {
+                    staff.setIdCard(null);
                 }
                 staff.setFamilyResidence(staffVo.getFamilyResidence());
                 staff.setPost(staffVo.getPost());
