@@ -229,7 +229,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
      * 检验学校id
      */
     function validSchoolId() {
-        msg.cancel();
         initParam();
         var schoolId = param.schoolId;
         if (Number(schoolId) <= 0) {

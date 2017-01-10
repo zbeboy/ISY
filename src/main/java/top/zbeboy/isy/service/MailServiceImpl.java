@@ -121,7 +121,7 @@ public class MailServiceImpl implements MailService {
         Context data = new Context();
         data.setLocale(locale);
         data.setVariable("user", users);
-        data.setVariable("validLink", baseUrl + "/user/login/password/forget/reset?key=" + users.getPasswordResetKey() + "&username=" + users.getUsername());
+        data.setVariable("resetLink", baseUrl + "/user/login/password/forget/reset?key=" + users.getPasswordResetKey() + "&username=" + users.getUsername());
         String subject = messageSource.getMessage("email.reset.title", null, locale);
         String content = springTemplateEngine.process("mails/passwordresetemail", data);
         sendEmail(users.getUsername(), subject, content, false, true);

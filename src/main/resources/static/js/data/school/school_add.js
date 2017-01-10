@@ -150,7 +150,8 @@ require(["jquery", "nav_active", "messenger", "jquery.address", "bootstrap-maxle
                     label: '确定',
                     phrase: 'Retrying TIME',
                     action: function () {
-                        validSchoolName(msg);
+                        msg.cancel();
+                        validSchoolName();
                     }
                 },
                 cancel: {
@@ -165,10 +166,8 @@ require(["jquery", "nav_active", "messenger", "jquery.address", "bootstrap-maxle
 
     /**
      * 添加时检验并提交数据
-     * @param msg
      */
-    function validSchoolName(msg) {
-        msg.cancel();
+    function validSchoolName() {
         initParam();
         var schoolName = param.schoolName;
         if (schoolName.length <= 0 || schoolName.length > 200) {
