@@ -324,6 +324,8 @@ public class StudentController {
                 String avatar = studentVo.getAvatar();
                 if (StringUtils.hasLength(realName)) {
                     users.setRealName(realName);
+                } else {
+                    users.setRealName(null);
                 }
                 if (StringUtils.hasLength(avatar)) {
                     users.setAvatar(studentVo.getAvatar());
@@ -339,6 +341,8 @@ public class StudentController {
                 student.setPoliticalLandscapeId(studentVo.getPoliticalLandscapeId());
                 if (StringUtils.hasLength(studentVo.getBirthday())) {
                     student.setBirthday(DateTimeUtils.formatDate(studentVo.getBirthday()));
+                } else {
+                    student.setBirthday(null);
                 }
                 student.setDormitoryNumber(studentVo.getDormitoryNumber());
                 if(StringUtils.hasLength(studentVo.getIdCard())){

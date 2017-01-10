@@ -314,6 +314,8 @@ public class StaffController {
                 String avatar = staffVo.getAvatar();
                 if (StringUtils.hasLength(realName)) {
                     users.setRealName(realName);
+                } else {
+                    users.setRealName(null);
                 }
                 if (StringUtils.hasLength(avatar)) {
                     users.setAvatar(staffVo.getAvatar());
@@ -329,6 +331,8 @@ public class StaffController {
                 staff.setPoliticalLandscapeId(staffVo.getPoliticalLandscapeId());
                 if (StringUtils.hasLength(staffVo.getBirthday())) {
                     staff.setBirthday(DateTimeUtils.formatDate(staffVo.getBirthday()));
+                } else {
+                    staff.setBirthday(null);
                 }
                 if(StringUtils.hasLength(staffVo.getIdCard())){
                     staff.setIdCard(staffVo.getIdCard());
