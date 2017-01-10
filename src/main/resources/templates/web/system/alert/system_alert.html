@@ -51,7 +51,13 @@
             {{#each listResult}}
             <a href="javascript:;" data-id="{{linkId}}" data-type="{{systemAlertTypeId}}"
                class="list-group-item row alert_detail">
-                <div class="col-md-6">{{alertContent}}</div>
+                <div class="col-md-6">
+                    {{#if isSee}}
+                    {{alertContent}}
+                    {{else}}
+                    <strong>{{alertContent}}</strong>
+                    {{/if}}
+                </div>
                 <div class="col-md-6 text-right">{{alertDateStr}}</div>
             </a>
             {{/each}}
