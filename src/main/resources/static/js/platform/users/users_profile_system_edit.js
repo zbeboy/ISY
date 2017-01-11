@@ -51,9 +51,17 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
         }
 
         /*
+         消息
+         */
+        var msg = {
+            real_name_error_msg: '请填写姓名'
+        };
+
+        /*
          参数id
          */
         var paramId = {
+            realName: '#realName',
             username: '#username'
         };
 
@@ -61,13 +69,29 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
          参数
          */
         var param = {
+            realName: $(paramId.realName).val().trim(),
             username: $(paramId.username).val().trim()
+        };
+
+        /*
+         验证form id
+         */
+        var validId = {
+            valid_real_name: '#valid_real_name'
+        };
+
+        /*
+         错误消息 id
+         */
+        var errorMsgId = {
+            real_name_error_msg: '#real_name_error_msg'
         };
 
         /*
          初始化参数
          */
         function initParam() {
+            param.realName = $(paramId.realName).val().trim();
             param.username = $(paramId.username).val().trim();
         }
 
@@ -118,14 +142,38 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
             $.address.value(ajax_url.back);
         });
 
+        // 即时检验
+        $(paramId.realName).blur(function () {
+            initParam();
+            var realName = param.realName;
+            if (realName === '') {
+                validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+            } else {
+                validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+            }
+        });
+
         /**
          * 表单提交时检验
          */
         $('#save').click(function () {
             // 显示遮罩
             startLoading();
-            sendAjax();
+            validRealName();
         });
+
+        function validRealName() {
+            initParam();
+            var realName = param.realName;
+            if (realName === '') {
+                // 去除遮罩
+                endLoading();
+                validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+            } else {
+                validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+                sendAjax();
+            }
+        }
 
         /*
          发送数据到后台保存

@@ -156,6 +156,7 @@ public class StudentController {
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
                                         saveUsers.setVerifyMailbox(verifyMailbox);
+                                        saveUsers.setRealName(studentVo.getRealName());
                                         usersService.save(saveUsers);
 
                                         Student saveStudent = new Student();

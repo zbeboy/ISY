@@ -156,6 +156,7 @@ public class StaffController {
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
                                         saveUsers.setVerifyMailbox(verifyMailbox);
+                                        saveUsers.setRealName(staffVo.getRealName());
                                         usersService.save(saveUsers);
 
                                         Staff saveStaff = new Staff();

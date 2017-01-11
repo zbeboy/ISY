@@ -50,6 +50,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      消息
      */
     var msg = {
+        real_name_error_msg: '请填写姓名',
         staff_number_error_msg: '工号至少8位数字',
         email_error_msg: '邮箱格式不正确',
         mobile_error_msg: '手机号格式不正确',
@@ -99,6 +100,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         select_school: '#select_school',
         select_college: '#select_college',
         select_department: '#select_department',
+        realName: '#realName',
         staffNumber: '#staffNumber',
         email: '#email',
         mobile: '#mobile',
@@ -111,6 +113,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      参数
      */
     var param = {
+        realName: $(paramId.realName).val().trim(),
         staffNumber: $(paramId.staffNumber).val().trim(),
         email: $(paramId.email).val().trim(),
         mobile: $(paramId.mobile).val().trim(),
@@ -126,6 +129,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      初始化参数
      */
     function initParam() {
+        param.realName = $(paramId.realName).val().trim();
         param.staffNumber = $(paramId.staffNumber).val().trim();
         param.email = $(paramId.email).val().trim();
         param.mobile = $(paramId.mobile).val().trim();
@@ -145,6 +149,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         valid_college: '#valid_college',
         valid_department: '#valid_department',
         valid_staff_number: '#valid_staff_number',
+        valid_real_name: '#valid_real_name',
         valid_email: '#valid_email',
         valid_mobile: '#valid_mobile',
         valid_phone_verify_code: '#valid_phone_verify_code',
@@ -159,6 +164,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         school_error_msg: '#school_error_msg',
         college_error_msg: '#college_error_msg',
         department_error_msg: '#department_error_msg',
+        real_name_error_msg: '#real_name_error_msg',
         staff_number_error_msg: '#staff_number_error_msg',
         email_error_msg: '#email_error_msg',
         mobile_error_msg: '#mobile_error_msg',
@@ -350,6 +356,17 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
             });
         }
     }
+
+    // 即时检验
+    $(paramId.realName).blur(function () {
+        initParam();
+        var realName = param.realName;
+        if (realName === '') {
+            validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+        } else {
+            validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+        }
+    });
 
     // 即时检验
     $(paramId.staffNumber).blur(function () {
@@ -550,8 +567,21 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
             validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
         }
 
-        validStaffNumber();//开始顺序检验
+        validRealName();//开始顺序检验
     });
+
+    function validRealName(){
+        initParam();
+        var realName = param.realName;
+        if(realName === ''){
+            // 去除遮罩
+            endLoading();
+            validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+        } else {
+            validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+            validStaffNumber();
+        }
+    }
 
     /**
      * 检验数据是否正常

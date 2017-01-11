@@ -33,6 +33,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          消息
          */
         var msg = {
+            real_name_error_msg: '请填写姓名',
             student_number_error_msg: '学号至少13位数字',
             id_card_error_msg: '身份证号不正确',
             parent_contact_phone_error_msg: '手机号不正确'
@@ -76,6 +77,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          参数id
          */
         var paramId = {
+            realName: '#realName',
             username: '#username',
             studentNumber: '#studentNumber',
             idCard: '#idCard',
@@ -88,6 +90,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          参数
          */
         var param = {
+            realName: $(paramId.realName).val().trim(),
             username: $(paramId.username).val().trim(),
             studentNumber: $(paramId.studentNumber).val().trim(),
             idCard: $(paramId.idCard).val().trim(),
@@ -98,6 +101,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          初始化参数
          */
         function initParam() {
+            param.realName = $(paramId.realName).val().trim();
             param.username = $(paramId.username).val().trim();
             param.studentNumber = $(paramId.studentNumber).val().trim();
             param.idCard = $(paramId.idCard).val().trim();
@@ -148,6 +152,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          验证form id
          */
         var validId = {
+            valid_real_name: '#valid_real_name',
             valid_student_number: '#valid_student_number',
             valid_id_card: '#valid_id_card',
             valid_parent_contact_phone: '#valid_parent_contact_phone'
@@ -157,6 +162,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          错误消息 id
          */
         var errorMsgId = {
+            real_name_error_msg: '#real_name_error_msg',
             student_number_error_msg: '#student_number_error_msg',
             id_card_error_msg: '#id_card_error_msg',
             parent_contact_phone_error_msg: '#parent_contact_phone_error_msg'
@@ -273,6 +279,17 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         });
 
         // 即时检验
+        $(paramId.realName).blur(function () {
+            initParam();
+            var realName = param.realName;
+            if (realName === '') {
+                validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+            } else {
+                validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+            }
+        });
+
+        // 即时检验
         $(paramId.studentNumber).blur(function () {
             initParam();
             var studentNumber = param.studentNumber;
@@ -331,8 +348,21 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         $('#save').click(function () {
             // 显示遮罩
             startLoading();
-            validStudentNumber();
+            validRealName();
         });
+
+        function validRealName() {
+            initParam();
+            var realName = param.realName;
+            if (realName === '') {
+                // 去除遮罩
+                endLoading();
+                validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+            } else {
+                validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+                validStudentNumber();
+            }
+        }
 
         /**
          * 检验数据是否正常

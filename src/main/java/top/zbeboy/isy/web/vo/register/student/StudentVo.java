@@ -3,6 +3,7 @@ package top.zbeboy.isy.web.vo.register.student;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * Created by lenovo on 2016-08-23.
@@ -43,6 +44,10 @@ public class StudentVo {
     @NotNull
     @Pattern(regexp = "^1[0-9]{10}")
     private String mobile;
+
+    @NotNull
+    @Size(max = 30)
+    private String realName;
 
     @NotNull
     private String phoneVerifyCode;
@@ -124,6 +129,14 @@ public class StudentVo {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public String getPhoneVerifyCode() {

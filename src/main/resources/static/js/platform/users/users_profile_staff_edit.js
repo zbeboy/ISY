@@ -13,7 +13,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             nation_data_url: '/user/nations',
             political_landscape_data_url: '/user/political_landscapes',
             file_upload_url: '/anyone/users/upload/avatar',
-            avatar_review_url:'/anyone/users/review/avatar',
+            avatar_review_url: '/anyone/users/review/avatar',
             valid_staff_url: '/anyone/users/valid/staff',
             valid_id_card_url: '/anyone/users/valid/id_card',
             update: '/anyone/users/staff/update',
@@ -32,6 +32,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          消息
          */
         var msg = {
+            real_name_error_msg: '请填写姓名',
             staff_number_error_msg: '工号至少8位数字',
             id_card_error_msg: '身份证号不正确'
         };
@@ -74,6 +75,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          参数id
          */
         var paramId = {
+            realName: '#realName',
             username: '#username',
             staffNumber: '#staffNumber',
             idCard: '#idCard',
@@ -85,6 +87,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          参数
          */
         var param = {
+            realName: $(paramId.realName).val().trim(),
             username: $(paramId.username).val().trim(),
             staffNumber: $(paramId.staffNumber).val().trim(),
             idCard: $(paramId.idCard).val().trim()
@@ -94,6 +97,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          初始化参数
          */
         function initParam() {
+            param.realName = $(paramId.realName).val().trim();
             param.username = $(paramId.username).val().trim();
             param.staffNumber = $(paramId.staffNumber).val().trim();
             param.idCard = $(paramId.idCard).val().trim();
@@ -143,6 +147,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          验证form id
          */
         var validId = {
+            valid_real_name: '#valid_real_name',
             valid_staff_number: '#valid_staff_number',
             valid_id_card: '#valid_id_card'
         };
@@ -151,6 +156,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          错误消息 id
          */
         var errorMsgId = {
+            real_name_error_msg: '#real_name_error_msg',
             staff_number_error_msg: '#staff_number_error_msg',
             id_card_error_msg: '#id_card_error_msg'
         };
@@ -266,6 +272,17 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         });
 
         // 即时检验
+        $(paramId.realName).blur(function () {
+            initParam();
+            var realName = param.realName;
+            if (realName === '') {
+                validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+            } else {
+                validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+            }
+        });
+
+        // 即时检验
         $(paramId.staffNumber).blur(function () {
             initParam();
             var staffNumber = param.staffNumber;
@@ -310,8 +327,21 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         $('#save').click(function () {
             // 显示遮罩
             startLoading();
-            validStaffNumber();
+            validRealName();
         });
+
+        function validRealName() {
+            initParam();
+            var realName = param.realName;
+            if (realName === '') {
+                // 去除遮罩
+                endLoading();
+                validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+            } else {
+                validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+                validStaffNumber();
+            }
+        }
 
         /**
          * 检验数据是否正常

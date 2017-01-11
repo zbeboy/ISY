@@ -53,6 +53,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      消息
      */
     var msg = {
+        real_name_error_msg: '请填写姓名',
         student_number_error_msg: '学号至少13位数字',
         email_error_msg: '邮箱格式不正确',
         mobile_error_msg: '手机号格式不正确',
@@ -105,6 +106,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         select_science: '#select_science',
         select_grade: '#select_grade',
         select_organize: '#select_organize',
+        realName: '#realName',
         studentNumber: '#studentNumber',
         email: '#email',
         mobile: '#mobile',
@@ -117,6 +119,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      参数
      */
     var param = {
+        realName: $(paramId.realName).val().trim(),
         studentNumber: $(paramId.studentNumber).val().trim(),
         email: $(paramId.email).val().trim(),
         mobile: $(paramId.mobile).val().trim(),
@@ -135,6 +138,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      初始化参数
      */
     function initParam() {
+        param.realName = $(paramId.realName).val().trim();
         param.studentNumber = $(paramId.studentNumber).val().trim();
         param.email = $(paramId.email).val().trim();
         param.mobile = $(paramId.mobile).val().trim();
@@ -159,6 +163,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         valid_science: '#valid_science',
         valid_grade: '#valid_grade',
         valid_organize: '#valid_organize',
+        valid_real_name: '#valid_real_name',
         valid_student_number: '#valid_student_number',
         valid_email: '#valid_email',
         valid_mobile: '#valid_mobile',
@@ -177,6 +182,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         science_error_msg: '#science_error_msg',
         grade_error_msg: '#grade_error_msg',
         organize_error_msg: '#organize_error_msg',
+        real_name_error_msg: '#real_name_error_msg',
         student_number_error_msg: '#student_number_error_msg',
         email_error_msg: '#email_error_msg',
         mobile_error_msg: '#mobile_error_msg',
@@ -605,6 +611,16 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         }
     }
 
+    // 即时检验
+    $(paramId.realName).blur(function () {
+        initParam();
+        var realName = param.realName;
+        if (realName === '') {
+            validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+        } else {
+            validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+        }
+    });
 
     // 即时检验
     $(paramId.studentNumber).blur(function () {
@@ -835,8 +851,21 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         } else {
             validSuccessDom(validId.valid_organize, errorMsgId.organize_error_msg);
         }
-        validStudentNumber();//开始顺序检验
+        validRealName();//开始顺序检验
     });
+
+    function validRealName(){
+        initParam();
+        var realName = param.realName;
+        if(realName === ''){
+            // 去除遮罩
+            endLoading();
+            validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);
+        } else {
+            validSuccessDom(validId.valid_real_name, errorMsgId.real_name_error_msg);
+            validStudentNumber();
+        }
+    }
 
     /**
      * 检验数据是否正常
@@ -859,7 +888,6 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
                     // 去除遮罩
                     endLoading();
                     validErrorDom(validId.valid_student_number, errorMsgId.student_number_error_msg, '该学号已被注册');
-                    ;
                 }
             });
         }
