@@ -279,6 +279,35 @@ public class UsersController {
     }
 
     /**
+     * 重新发送验证邮件
+     *
+     * @param username 用户账号
+     * @param request  请求
+     * @param modelMap 页面对象
+     * @return 消息
+     */
+    @RequestMapping("/user/register/mailbox/anew")
+    public String anewSendVerifyMail(@RequestParam("username") String username, HttpServletRequest request, ModelMap modelMap) {
+        Users users = usersService.findByUsername(username);
+        if (!ObjectUtils.isEmpty(users)) {
+            if (users.getVerifyMailbox() <= 0) {
+                //发送验证邮件
+                if (isyProperties.getMail().isOpen()) {
+                    mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
+                    modelMap.put("msg", "验证邮件已发送至您的邮件，请登录邮箱尽快验证！");
+                } else {
+                    modelMap.put("msg", "邮件推送已被管理员关闭，暂时无法验证");
+                }
+            } else {
+                modelMap.put("msg", "该邮箱已经验证，请勿重复验证");
+            }
+        } else {
+            modelMap.put("msg", "未查询到用户信息");
+        }
+        return "msg";
+    }
+
+    /**
      * 获取手机验证码
      *
      * @param mobile  手机号
@@ -794,7 +823,7 @@ public class UsersController {
         if (student.isPresent()) {
             StudentBean studentBean = student.get().into(StudentBean.class);
             modelMap.addAttribute("avatarForSaveOrUpdate", studentBean.getAvatar());
-            String showAvatar = getAvatar(studentBean.getAvatar(),request);
+            String showAvatar = getAvatar(studentBean.getAvatar(), request);
             studentBean.setAvatar(showAvatar);
             modelMap.addAttribute("user", studentBean);
         }
@@ -812,7 +841,7 @@ public class UsersController {
         if (staff.isPresent()) {
             StaffBean staffBean = staff.get().into(StaffBean.class);
             modelMap.addAttribute("avatarForSaveOrUpdate", staffBean.getAvatar());
-            String showAvatar = getAvatar(staffBean.getAvatar(),request);
+            String showAvatar = getAvatar(staffBean.getAvatar(), request);
             staffBean.setAvatar(showAvatar);
             modelMap.addAttribute("user", staffBean);
         }
@@ -828,7 +857,7 @@ public class UsersController {
     private void profileSystem(Users users, ModelMap modelMap, HttpServletRequest request) {
         Users newUsers = usersService.findByUsername(users.getUsername());
         modelMap.addAttribute("avatarForSaveOrUpdate", newUsers.getAvatar());
-        String showAvatar = getAvatar(newUsers.getAvatar(),request);
+        String showAvatar = getAvatar(newUsers.getAvatar(), request);
         newUsers.setAvatar(showAvatar);
         modelMap.addAttribute("user", newUsers);
     }
@@ -929,7 +958,7 @@ public class UsersController {
      *
      * @param request 请求
      */
-    @RequestMapping(value = "/anyone/users/review/avatar",method = RequestMethod.GET)
+    @RequestMapping(value = "/anyone/users/review/avatar", method = RequestMethod.GET)
     public void reviewAvatar(@RequestParam("path") String path, HttpServletRequest request, HttpServletResponse response) {
         uploadService.reviewPic("/" + path, request, response);
     }

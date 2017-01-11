@@ -31,6 +31,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
             student_register: '/register?type=student',
             staff_register: '/register?type=staff',
             password_forget: '/user/login/password/forget',
+            anew_send_verify_mailbox: '/user/register/mailbox/anew',
             login: '/login',
             backstage: '/web/menu/backstage'
         };
@@ -246,6 +247,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
 
         function validCaptcha() {
             initParam();
+            var email = param.email;
             var j_captcha_response = param.captcha;
             if (!valid_regex.captcha_regex.test(j_captcha_response)) {
                 validErrorDom(validId.captcha, errorMsgId.captcha, msg.captcha);
@@ -306,7 +308,8 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
                             changeJcaptcha();
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
-                            p_error_msg.removeClass('hidden').text('您的邮箱未验证无法登录');
+                            var anew_mail = '<a href="' + web_path + ajax_url.anew_send_verify_mailbox + '?username=' + email + '" >重新验证</a>';
+                            p_error_msg.removeClass('hidden').html('您的邮箱未验证无法登录  ' + anew_mail + '?');
                             break;
                         case error_code.USERNAME_IS_ENABLES:
                             changeJcaptcha();
