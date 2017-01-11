@@ -211,9 +211,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             },
             "columns": [
                 {"data": null},
+                {"data": "realName"},
                 {"data": "username"},
                 {"data": "mobile"},
-                {"data": "realName"},
                 {"data": "roleName"},
                 {"data": "usersTypeName"},
                 {"data": "enabled"},
@@ -231,7 +231,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 },
                 {
                     targets: 4,
-                    orderable: false,
+                    orderable: false
                 },
                 {
                     targets: 6,
@@ -728,6 +728,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             },
             "columns": [
                 {"data": null},
+                {"data": "realName"},
                 {"data": "username"},
                 {"data": "mobile"},
                 {"data": "usersTypeName"},
@@ -744,11 +745,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     }
                 },
                 {
-                    targets: 3,
-                    orderable: false,
-                },
-                {
-                    targets: 6,
+                    targets: 7,
                     orderable: false,
                     render: function (a, b, c, d) {
                         var context =

@@ -635,9 +635,9 @@ public class UsersController {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("select");
+        headers.add("real_name");
         headers.add("username");
         headers.add("mobile");
-        headers.add("real_name");
         headers.add("role_name");
         headers.add("users_type_name");
         headers.add("enabled");
@@ -669,6 +669,7 @@ public class UsersController {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("select");
+        headers.add("real_name");
         headers.add("username");
         headers.add("mobile");
         headers.add("users_type_name");
