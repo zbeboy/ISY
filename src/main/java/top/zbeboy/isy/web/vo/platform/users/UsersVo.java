@@ -10,6 +10,8 @@ public class UsersVo {
     @NotNull
     @Size(max = 200)
     private String username;
+    @NotNull
+    @Size(max = 30)
     private String realName;
     private String avatar;
 
