@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
+import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.service.*;
 
 import javax.annotation.Resource;
@@ -65,6 +67,21 @@ public class ScheduledConfiguration {
     @Resource
     private SystemMessageService systemMessageService;
 
+    @Resource
+    private UsersService usersService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private StaffService staffService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
+
     /**
      * 清理信息
      */
@@ -78,6 +95,29 @@ public class ScheduledConfiguration {
         systemMailboxService.deleteBySendTime(ts);
         systemSmsService.deleteBySendTime(ts);
         log.info(">>>>>>>>>>>>> scheduled ... log , mailbox , sms ");
+    }
+
+    /**
+     * 清理未验证用户信息
+     */
+    @Scheduled(cron = "0 15 01 02 * ?")// 每月2号 晚间1点15分
+    public void cleanUsers() {
+        // 清理
+        DateTime dateTime = DateTime.now();
+        DateTime oldTime = dateTime.minusDays(30);
+        Byte b = 0;
+        // 查询未验证用户
+        Result<UsersRecord> records = usersService.findByJoinDateAndVerifyMailbox(oldTime.toDate(), b);
+        records.forEach(r -> {
+            UsersType usersType = usersTypeService.findByUsersTypeId(r.getUsersTypeId());
+            authoritiesService.deleteByUsername(r.getUsername());
+            if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
+                staffService.deleteByUsername(r.getUsername());
+            } else if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
+                studentService.deleteByUsername(r.getUsername());
+            }
+        });
+        log.info(">>>>>>>>>>>>> scheduled ... users ");
     }
 
     /**

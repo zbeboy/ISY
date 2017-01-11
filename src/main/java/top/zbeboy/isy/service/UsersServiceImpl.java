@@ -20,6 +20,7 @@ import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.security.MyUserImpl;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
@@ -27,6 +28,7 @@ import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,6 +69,13 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Users findByUsername(String username) {
         return usersDao.findById(username);
+    }
+
+    @Override
+    public Result<UsersRecord> findByJoinDateAndVerifyMailbox(Date joinDate, Byte verifyMailbox) {
+        return create.selectFrom(USERS)
+                .where(USERS.JOIN_DATE.le(DateTimeUtils.utilDateToSqlDate(joinDate)).and(USERS.VERIFY_MAILBOX.eq(verifyMailbox)))
+                .fetch();
     }
 
     @Override

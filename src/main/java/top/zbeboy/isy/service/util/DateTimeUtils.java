@@ -34,6 +34,16 @@ public class DateTimeUtils {
     }
 
     /**
+     * util date to sql date
+     *
+     * @param date util date
+     * @return sql date
+     */
+    public static java.sql.Date utilDateToSqlDate(java.util.Date date) {
+        return new java.sql.Date(date.getTime());
+    }
+
+    /**
      * 格式化date
      *
      * @param date   日期

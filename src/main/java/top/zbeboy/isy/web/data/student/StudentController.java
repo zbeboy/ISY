@@ -140,6 +140,7 @@ public class StudentController {
                                         // 注册成功
                                         Users saveUsers = new Users();
                                         Byte enabled = 1;
+                                        Byte verifyMailbox = 0;
                                         saveUsers.setUsername(email);
                                         saveUsers.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
@@ -154,6 +155,7 @@ public class StudentController {
                                         saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        saveUsers.setVerifyMailbox(verifyMailbox);
                                         usersService.save(saveUsers);
 
                                         Student saveStudent = new Student();

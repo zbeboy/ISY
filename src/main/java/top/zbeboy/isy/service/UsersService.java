@@ -13,6 +13,7 @@ import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,15 @@ public interface UsersService {
      * @return 用户信息
      */
     Users findByUsername(String username);
+
+    /**
+     * 注意 用于定时 查询未验证用户
+     *
+     * @param joinDate      加入时间
+     * @param verifyMailbox 验证否
+     * @return 用户
+     */
+    Result<UsersRecord> findByJoinDateAndVerifyMailbox(Date joinDate, Byte verifyMailbox);
 
     /**
      * 从session中获取用户完整信息
