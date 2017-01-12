@@ -569,4 +569,17 @@ public class InternshipTeacherDistributionController {
         return ajaxUtils;
     }
 
+    /**
+     * 删除未申请学生的分配
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/teacher_distribution/distribution/delete_not_apply", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils deleteNotApply(@RequestParam("id") String internshipReleaseId) {
+        internshipTeacherDistributionService.deleteNotApply(internshipReleaseId);
+        return new AjaxUtils().success().msg("删除成功");
+    }
+
 }
