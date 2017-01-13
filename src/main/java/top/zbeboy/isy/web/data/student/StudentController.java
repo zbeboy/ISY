@@ -149,7 +149,7 @@ public class StudentController {
                                         saveUsers.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
 
                                         DateTime dateTime = DateTime.now();
-                                        dateTime = dateTime.plusDays(5);
+                                        dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);
                                         String mailboxVerifyCode = RandomUtils.generateEmailCheckKey();
                                         saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
                                         saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));

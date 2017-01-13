@@ -291,6 +291,12 @@ public class UsersController {
         Users users = usersService.findByUsername(username);
         if (!ObjectUtils.isEmpty(users)) {
             if (users.getVerifyMailbox() <= 0) {
+                DateTime dateTime = DateTime.now();
+                dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);
+                String mailboxVerifyCode = RandomUtils.generateEmailCheckKey();
+                users.setMailboxVerifyCode(mailboxVerifyCode);
+                users.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
+                usersService.update(users);
                 //发送验证邮件
                 if (isyProperties.getMail().isOpen()) {
                     mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
@@ -320,14 +326,14 @@ public class UsersController {
         String regex = "1[0-9]{10}";
         if (mobile.matches(regex)) {
             DateTime dateTime = DateTime.now();
-            dateTime = dateTime.plusMinutes(30);
+            dateTime = dateTime.plusMinutes(Workbook.MOBILE_VERIFY_VALID);
             String mobileKey = RandomUtils.generateMobileKey();
             session.setAttribute("mobile", mobile);
             session.setAttribute("mobileExpiry", dateTime.toDate());
             session.setAttribute("mobileCode", mobileKey);
             mobileService.sendValidMobileShortMessage(mobile, mobileKey);
             if (isyProperties.getMobile().isOpen()) {
-                return new AjaxUtils().success().msg("短信已发送，请您稍等");
+                return new AjaxUtils().success().msg("短信已发送，请您耐心等待(验证码30分钟内有效，无需重复发送)");
             } else {
                 return new AjaxUtils().fail().msg("短信发送已被管理员关闭");
             }
@@ -447,12 +453,12 @@ public class UsersController {
     @ResponseBody
     public AjaxUtils loginPasswordForgetEmail(@RequestParam("username") String email, HttpServletRequest request) {
         String username = StringUtils.trimWhitespace(email);
-        String msg = "获取账号信息失败";
+        String msg;
         if (StringUtils.hasLength(username)) {
             Users users = usersService.findByUsername(username);
             if (!ObjectUtils.isEmpty(users)) {
                 DateTime dateTime = DateTime.now();
-                dateTime = dateTime.plusDays(2);
+                dateTime = dateTime.plusDays(Workbook.MAILBOX_FORGET_PASSWORD_VALID);
                 String passwordResetKey = RandomUtils.generateResetKey();
                 users.setPasswordResetKey(passwordResetKey);
                 users.setPasswordResetKeyValid(new Timestamp(dateTime.toDate().getTime()));
@@ -463,7 +469,11 @@ public class UsersController {
                 } else {
                     msg = "邮件推送已被管理员关闭";
                 }
+            } else {
+                msg = "获取账号信息失败";
             }
+        } else {
+            msg = "获取参数有误";
         }
         return new AjaxUtils().fail().msg(msg);
     }

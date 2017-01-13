@@ -65,6 +65,21 @@ public final class Workbook {
     public static final String XLSX_FILE = "xlsx";
 
     /*
+    邮件验证有效期 单位天
+     */
+    public static final int MAILBOX_VERIFY_VALID = 5;
+
+    /*
+    忘记密码邮件有效期 单位天
+     */
+    public static final int MAILBOX_FORGET_PASSWORD_VALID = 2;
+
+    /*
+    手机验证有效期 单位分钟
+     */
+    public static final int MOBILE_VERIFY_VALID = 30;
+
+    /*
     系统角色
      */
     public static final String SYSTEM_ROLE_NAME = "系统";
