@@ -145,9 +145,9 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     public void deleteNotApply(String internshipReleaseId) {
         Select<InternshipApplyRecord> internshipApplyRecord =
                 create.selectFrom(INTERNSHIP_APPLY)
-                .where(INTERNSHIP_APPLY.STUDENT_ID.eq(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID));
+                .where(INTERNSHIP_APPLY.STUDENT_ID.eq(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID).and(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID)));
          create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
-                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).andExists(internshipApplyRecord))
+                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).andNotExists(internshipApplyRecord))
                  .execute();
     }
 

@@ -180,7 +180,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            sendDeleteNotApplyAjax();
+                            sendDeleteNotApplyAjax(id);
                         }
                     },
                     cancel: {
@@ -196,7 +196,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 发送删除未申请学生分配
          */
-        function sendDeleteNotApplyAjax(){
+        function sendDeleteNotApplyAjax(id){
             $.post(web_path + ajax_url.delete_not_apply, {id: id}, function (data) {
                 if (data.state) {
                     Messenger().post({
