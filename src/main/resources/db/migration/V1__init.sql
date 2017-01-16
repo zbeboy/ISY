@@ -456,6 +456,7 @@ CREATE TABLE internship_journal(
   school_guidance_teacher VARCHAR(10) NOT NULL ,
   graduation_practice_company_name VARCHAR(200) NOT NULL ,
   internship_journal_content TEXT NOT NULL ,
+  internship_journal_html TEXT NOT NULL ,
   internship_journal_date DATE NOT NULL ,
   create_date DATETIME NOT NULL ,
   student_id INT NOT NULL ,

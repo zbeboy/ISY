@@ -29,6 +29,9 @@ public class InternshipJournalVo {
     @Size(max = 65535)
     private String internshipJournalContent;
     @NotNull
+    @Size(max = 65535)
+    private String internshipJournalHtml;
+    @NotNull
     private Date internshipJournalDate;
     private Timestamp createDate;
     @NotNull
@@ -91,6 +94,14 @@ public class InternshipJournalVo {
 
     public void setInternshipJournalContent(String internshipJournalContent) {
         this.internshipJournalContent = internshipJournalContent;
+    }
+
+    public String getInternshipJournalHtml() {
+        return internshipJournalHtml;
+    }
+
+    public void setInternshipJournalHtml(String internshipJournalHtml) {
+        this.internshipJournalHtml = internshipJournalHtml;
     }
 
     public Date getInternshipJournalDate() {

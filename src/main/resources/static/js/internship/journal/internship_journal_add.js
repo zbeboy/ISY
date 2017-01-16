@@ -21,7 +21,10 @@ require(["jquery", "handlebars", "nav_active", "quill.bubble", "moment", "messen
          */
         var paramId = {
             studentName: '#studentName',
-            internshipJournalContent: '#internshipJournalContent'
+            internshipJournalContent: '#internshipJournalContent',
+            internshipJournalHtml:'#internshipJournalHtml',
+            internshipJournalContentText:'#internshipJournalContentText',
+            internshipJournalDate:'#internshipJournalDate'
         };
 
         /*
@@ -29,7 +32,7 @@ require(["jquery", "handlebars", "nav_active", "quill.bubble", "moment", "messen
          */
         var param = {
             studentName: $(paramId.studentName).val(),
-            internshipJournalContent: $(paramId.internshipJournalContent).val()
+            internshipJournalContent: ''
         };
 
         /*
@@ -80,10 +83,7 @@ require(["jquery", "handlebars", "nav_active", "quill.bubble", "moment", "messen
         // 初始化内容与感想富文本框
         var quill = new Quill(paramId.internshipJournalContent, {
             placeholder: '内容与感想',
-            theme: 'bubble',
-            modules: {
-                toolbar: []
-            }
+            theme: 'bubble'
         });
 
         /**
@@ -95,7 +95,7 @@ require(["jquery", "handlebars", "nav_active", "quill.bubble", "moment", "messen
         }
 
         // 日志日期
-        $('#internshipJournalDate').daterangepicker({
+        $(paramId.internshipJournalDate).daterangepicker({
             "singleDatePicker": true,
             "locale": {
                 format: 'YYYY-MM-DD',
@@ -213,7 +213,8 @@ require(["jquery", "handlebars", "nav_active", "quill.bubble", "moment", "messen
                     showCloseButton: true
                 });
             } else {
-                $('#internshipJournalContentText').val(internshipJournalContent);
+                $(paramId.internshipJournalHtml).val(JSON.stringify(quill.getContents()));
+                $(paramId.internshipJournalContentText).val(internshipJournalContent);
                 sendAjax();
             }
         }

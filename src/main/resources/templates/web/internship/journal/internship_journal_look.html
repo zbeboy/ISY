@@ -41,7 +41,7 @@
                         </tr>
                         <tr>
                             <td colspan="4" rowspan="4"><span><strong>实习内容及感想:</strong></span><br/>
-                                <p th:utext="${internshipJournal.internshipJournalContent}"></p>
+                                <p id="internshipJournalContent"></p>
                                 <div class="text-right">
                                     <span><strong>日期:</strong></span><span th:text="${internshipJournalDate}"></span>
                                 </div>
@@ -58,6 +58,7 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <input type="hidden" id="internshipJournalHtml" th:value="${internshipJournal.internshipJournalHtml}"/>
         <input type="hidden" class="dy_script" value="/js/internship/journal/internship_journal_look.js"/>
     </div>
     <!-- /#page-wrapper -->

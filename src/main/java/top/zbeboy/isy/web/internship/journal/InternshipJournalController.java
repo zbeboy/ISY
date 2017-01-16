@@ -440,6 +440,7 @@ public class InternshipJournalController {
                 internshipJournal.setSchoolGuidanceTeacher(internshipJournalVo.getSchoolGuidanceTeacher());
                 internshipJournal.setGraduationPracticeCompanyName(internshipJournalVo.getGraduationPracticeCompanyName());
                 internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
+                internshipJournal.setInternshipJournalHtml(internshipJournalVo.getInternshipJournalHtml());
                 internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
                 internshipJournal.setCreateDate(new Timestamp(System.currentTimeMillis()));
                 internshipJournal.setStudentId(internshipJournalVo.getStudentId());
@@ -488,6 +489,7 @@ public class InternshipJournalController {
                     InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalVo.getInternshipJournalId());
                     internshipJournal.setStudentName(internshipJournalVo.getStudentName());
                     internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
+                    internshipJournal.setInternshipJournalHtml(internshipJournalVo.getInternshipJournalHtml());
                     internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
                     FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
                     Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());

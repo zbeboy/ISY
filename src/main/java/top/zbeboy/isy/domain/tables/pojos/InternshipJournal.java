@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal implements Serializable {
 
-    private static final long serialVersionUID = 2078520483;
+    private static final long serialVersionUID = -1352948678;
 
     private String    internshipJournalId;
     private String    studentName;
@@ -35,6 +35,7 @@ public class InternshipJournal implements Serializable {
     private String    schoolGuidanceTeacher;
     private String    graduationPracticeCompanyName;
     private String    internshipJournalContent;
+    private String    internshipJournalHtml;
     private Date      internshipJournalDate;
     private Timestamp createDate;
     private Integer   studentId;
@@ -51,6 +52,7 @@ public class InternshipJournal implements Serializable {
         this.schoolGuidanceTeacher = value.schoolGuidanceTeacher;
         this.graduationPracticeCompanyName = value.graduationPracticeCompanyName;
         this.internshipJournalContent = value.internshipJournalContent;
+        this.internshipJournalHtml = value.internshipJournalHtml;
         this.internshipJournalDate = value.internshipJournalDate;
         this.createDate = value.createDate;
         this.studentId = value.studentId;
@@ -66,6 +68,7 @@ public class InternshipJournal implements Serializable {
         String    schoolGuidanceTeacher,
         String    graduationPracticeCompanyName,
         String    internshipJournalContent,
+        String    internshipJournalHtml,
         Date      internshipJournalDate,
         Timestamp createDate,
         Integer   studentId,
@@ -79,6 +82,7 @@ public class InternshipJournal implements Serializable {
         this.schoolGuidanceTeacher = schoolGuidanceTeacher;
         this.graduationPracticeCompanyName = graduationPracticeCompanyName;
         this.internshipJournalContent = internshipJournalContent;
+        this.internshipJournalHtml = internshipJournalHtml;
         this.internshipJournalDate = internshipJournalDate;
         this.createDate = createDate;
         this.studentId = studentId;
@@ -157,6 +161,16 @@ public class InternshipJournal implements Serializable {
     }
 
     @NotNull
+    @Size(max = 65535)
+    public String getInternshipJournalHtml() {
+        return this.internshipJournalHtml;
+    }
+
+    public void setInternshipJournalHtml(String internshipJournalHtml) {
+        this.internshipJournalHtml = internshipJournalHtml;
+    }
+
+    @NotNull
     public Date getInternshipJournalDate() {
         return this.internshipJournalDate;
     }
@@ -214,6 +228,7 @@ public class InternshipJournal implements Serializable {
         sb.append(", ").append(schoolGuidanceTeacher);
         sb.append(", ").append(graduationPracticeCompanyName);
         sb.append(", ").append(internshipJournalContent);
+        sb.append(", ").append(internshipJournalHtml);
         sb.append(", ").append(internshipJournalDate);
         sb.append(", ").append(createDate);
         sb.append(", ").append(studentId);

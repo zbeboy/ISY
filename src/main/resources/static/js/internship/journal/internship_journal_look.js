@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-12-18.
  */
-require(["jquery", "handlebars", "nav_active", "jquery.address"],
-    function ($, Handlebars, nav_active) {
+require(["jquery", "handlebars", "nav_active", "quill.bubble", "jquery.address"],
+    function ($, Handlebars, nav_active, Quill) {
 
         /*
          ajax url.
@@ -15,10 +15,30 @@ require(["jquery", "handlebars", "nav_active", "jquery.address"],
         nav_active(ajax_url.nav);
 
         /*
+         参数id
+         */
+        var paramId = {
+            internshipJournalContent: '#internshipJournalContent',
+            internshipJournalHtml:'#internshipJournalHtml'
+        };
+
+        /*
          返回
          */
         $('#page_back').click(function () {
             window.history.go(-1);
         });
 
+        // 初始化内容与感想富文本框
+        var quill = new Quill(paramId.internshipJournalContent, {
+            placeholder: '内容与感想',
+            theme: 'bubble'
+        });
+
+        init();
+
+        function init(){
+            quill.enable(false);
+            quill.setContents(JSON.parse($(paramId.internshipJournalHtml).val()));
+        }
     });

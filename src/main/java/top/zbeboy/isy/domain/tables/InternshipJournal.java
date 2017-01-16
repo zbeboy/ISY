@@ -37,7 +37,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 
-    private static final long serialVersionUID = 1102512730;
+    private static final long serialVersionUID = 1950474326;
 
     /**
      * The reference instance of <code>isy.internship_journal</code>
@@ -86,6 +86,11 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
      * The column <code>isy.internship_journal.internship_journal_content</code>.
      */
     public final TableField<InternshipJournalRecord, String> INTERNSHIP_JOURNAL_CONTENT = createField("internship_journal_content", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.internship_journal.internship_journal_html</code>.
+     */
+    public final TableField<InternshipJournalRecord, String> INTERNSHIP_JOURNAL_HTML = createField("internship_journal_html", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>isy.internship_journal.internship_journal_date</code>.

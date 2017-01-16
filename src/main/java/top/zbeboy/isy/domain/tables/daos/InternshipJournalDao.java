@@ -113,6 +113,13 @@ public class InternshipJournalDao extends DAOImpl<InternshipJournalRecord, top.z
     }
 
     /**
+     * Fetch records that have <code>internship_journal_html IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.InternshipJournal> fetchByInternshipJournalHtml(String... values) {
+        return fetch(InternshipJournal.INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_HTML, values);
+    }
+
+    /**
      * Fetch records that have <code>internship_journal_date IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.InternshipJournal> fetchByInternshipJournalDate(Date... values) {
