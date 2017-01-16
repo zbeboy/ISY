@@ -63,4 +63,13 @@ public interface InternshipRegulateService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<InternshipRegulateBean> dataTablesUtils, InternshipRegulateBean internshipRegulateBean);
+
+    /**
+     * 导出
+     *
+     * @param dataTablesUtils        datatables工具类
+     * @param internshipRegulateBean 监管
+     * @return 导出数据
+     */
+    Result<Record> exportData(DataTablesUtils<InternshipRegulateBean> dataTablesUtils, InternshipRegulateBean internshipRegulateBean);
 }

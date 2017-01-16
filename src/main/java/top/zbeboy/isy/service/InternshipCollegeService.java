@@ -82,7 +82,7 @@ public interface InternshipCollegeService {
     int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
 
     /**
-     * 查询
+     * 导出
      *
      * @param dataTablesUtils   datatables工具类
      * @param internshipCollege 校外自主实习(去单位)
