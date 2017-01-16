@@ -158,9 +158,9 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
                 if (!ObjectUtils.isEmpty(createDateArr) && createDateArr.length >= 2) {
                     try {
                         if (ObjectUtils.isEmpty(a)) {
-                            a = INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format));
+                            a = INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format)).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
                         } else {
-                            a = a.and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
+                            a = a.and(INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format))).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
                         }
                     } catch (ParseException e) {
                         log.error("Format time error, error is {}", e);

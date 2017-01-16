@@ -95,7 +95,7 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
             String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
             String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
             String studentTel = StringUtils.trimWhitespace(search.getString("studentTel"));
-            String guidanceTeacher = StringUtils.trimWhitespace(search.getString("guidanceTeacher"));
+            String schoolGuidanceTeacher = StringUtils.trimWhitespace(search.getString("schoolGuidanceTeacher"));
             String createDate = StringUtils.trimWhitespace(search.getString("createDate"));
 
             if (StringUtils.hasLength(studentName)) {
@@ -131,11 +131,11 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
                 }
             }
 
-            if (StringUtils.hasLength(guidanceTeacher)) {
+            if (StringUtils.hasLength(schoolGuidanceTeacher)) {
                 if (ObjectUtils.isEmpty(a)) {
-                    a = INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(guidanceTeacher));
+                    a = INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(schoolGuidanceTeacher));
                 } else {
-                    a = a.and(INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(guidanceTeacher)));
+                    a = a.and(INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtils.likeAllParam(schoolGuidanceTeacher)));
                 }
             }
 
@@ -145,9 +145,9 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
                 if (!ObjectUtils.isEmpty(createDateArr) && createDateArr.length >= 2) {
                     try {
                         if (ObjectUtils.isEmpty(a)) {
-                            a = INTERNSHIP_REGULATE.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format));
+                            a = INTERNSHIP_REGULATE.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format)).and(INTERNSHIP_REGULATE.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
                         } else {
-                            a = a.and(INTERNSHIP_REGULATE.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
+                            a = a.and(INTERNSHIP_REGULATE.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format))).and(INTERNSHIP_REGULATE.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
                         }
                     } catch (ParseException e) {
                         log.error("Format time error, error is {}", e);
@@ -162,7 +162,7 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override

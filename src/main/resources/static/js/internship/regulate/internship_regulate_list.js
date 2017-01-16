@@ -2,8 +2,8 @@
  * Created by lenovo on 2016-12-24.
  */
 //# sourceURL=internship_regulate_list.js
-require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
+    function ($, Handlebars, constants, nav_active, moment) {
 
         /*
          ajax url
@@ -31,7 +31,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         function getParamId() {
             return {
                 studentName: '#search_student_name',
-                studentNumber: '#search_student_number'
+                studentNumber: '#search_student_number',
+                schoolGuidanceTeacher: '#search_school_guidance_teacher',
+                createDate: '#search_create_date'
             };
         }
 
@@ -40,7 +42,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
          */
         var param = {
             studentName: '',
-            studentNumber: ''
+            studentNumber: '',
+            schoolGuidanceTeacher: '',
+            createDate: ''
         };
 
         /*
@@ -273,7 +277,32 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         function initParam() {
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
+            param.schoolGuidanceTeacher = $(getParamId().schoolGuidanceTeacher).val();
+            param.createDate = $(getParamId().createDate).val();
         }
+
+        // 创建日期
+        $(getParamId().createDate).daterangepicker({
+            "startDate": moment().subtract(2, "days"),
+            "endDate": moment(),
+            "timePicker": true,
+            "timePicker24Hour": true,
+            "timePickerIncrement": 30,
+            "locale": {
+                format: 'YYYY-MM-DD HH:mm:ss',
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                fromLabel: '起始时间',
+                toLabel: '结束时间',
+                customRangeLabel: '自定义',
+                separator: ' 至 ',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月']
+            }
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
+        });
 
         /*
          清空参数
@@ -281,6 +310,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         function cleanParam() {
             $(getParamId().studentName).val('');
             $(getParamId().studentNumber).val('');
+            $(getParamId().schoolGuidanceTeacher).val('');
+            $(getParamId().createDate).val('');
         }
 
         $('#search').click(function () {
@@ -306,6 +337,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().schoolGuidanceTeacher).keyup(function (event) {
             if (event.keyCode == 13) {
                 initParam();
                 myTable.ajax.reload();
