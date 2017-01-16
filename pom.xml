@@ -614,9 +614,8 @@
                                 </goals>
                             </execution>
                         </executions>
-                       <configuration>
+                        <configuration>
                             <encoding>UTF-8</encoding>
-                            <force>true</force>
                             <nosuffix>true</nosuffix>
                             <excludes>
                                 <exclude>**/*.min.js</exclude>

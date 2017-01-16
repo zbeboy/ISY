@@ -17,11 +17,11 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
 
         /**
          * byte to boolean
-         * @param byte
+         * @param b
          * @returns {*}
          */
-        function byteToBoolean(byte) {
-            if (byte == 1) {
+        function byteToBoolean(b) {
+            if (b == 1) {
                 return '已交';
             } else {
                 return '未交';

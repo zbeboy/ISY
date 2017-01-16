@@ -15,17 +15,14 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             };
         }
 
-        /**
-         * byte to boolean
-         * @param byte
-         * @returns {*}
-         */
-        function byteToBoolean(byte) {
-            if (byte == 1) {
-                return '已交';
-            } else {
-                return '未交';
+        function byteToBoolean(b) {
+            var msg = '';
+            if (b == 1) {
+                msg = '已交';
+            } else if (b <= 0) {
+                msg = '未交';
             }
+            return msg;
         }
 
         var operator_button = $("#operator_button").html();
