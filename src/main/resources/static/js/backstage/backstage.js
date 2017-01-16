@@ -36,7 +36,8 @@ requirejs.config({
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
         "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
         "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate",
-        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination"
+        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination",
+        "quill.bubble": web_path + "/plugin/quill/quill.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -85,6 +86,9 @@ requirejs.config({
         },
         "jquery.simple-pagination": {
             deps: ["jquery"]
+        },
+        "quill.bubble":{
+            deps:["css!" + web_path + "/plugin/quill/quill.bubble"]
         }
     }
 });
@@ -183,6 +187,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          */
         var websocketStomp = null;
         var websocketFrame = null;
+
         function initRemind() {
             var stompClient = null;
             var socket = new SockJS(web_path + getAjaxUrl().socke_js_url);
@@ -209,7 +214,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          * 获取提醒数据
          */
         function getRemind() {
-            if(websocketStomp){
+            if (websocketStomp) {
                 websocketStomp.send(getAjaxUrl().stomp_send_url, {}, websocketFrame.headers['user-name']);
             }
         }

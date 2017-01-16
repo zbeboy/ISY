@@ -2,8 +2,8 @@
  * Created by lenovo on 2016/12/16.
  */
 //# sourceURL=internship_journal_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker", "bootstrap-maxlength"],
-    function ($, Handlebars, nav_active) {
+require(["jquery", "handlebars", "nav_active", "quill.bubble", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker", "bootstrap-maxlength"],
+    function ($, Handlebars, nav_active, Quill) {
 
         /*
          ajax url.
@@ -77,12 +77,21 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             $(errorId).addClass('hidden').text('');
         }
 
+        // 初始化内容与感想富文本框
+        var quill = new Quill(paramId.internshipJournalContent, {
+            placeholder: '内容与感想',
+            theme: 'bubble',
+            modules: {
+                toolbar: []
+            }
+        });
+
         /**
          * 初始化参数
          */
         function initParam() {
             param.studentName = $(paramId.studentName).val();
-            param.internshipJournalContent = $(paramId.internshipJournalContent).val();
+            param.internshipJournalContent = quill.getText(0,quill.getLength());
         }
 
         // 日志日期
@@ -106,14 +115,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
 
         init();
 
-        function init(){
+        function init() {
             initMaxLength();
         }
 
         /**
          * 初始化Input max length
          */
-        function initMaxLength(){
+        function initMaxLength() {
             $(paramId.studentName).maxlength({
                 alwaysShow: true,
                 threshold: 10,
@@ -132,19 +141,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
                 validErrorDom(validId.studentName, errorMsgId.studentName, '姓名10个字符以内');
             } else {
                 validSuccessDom(validId.studentName, errorMsgId.studentName);
-            }
-        });
-
-        /*
-         即时检验内容与感想
-         */
-        $(paramId.internshipJournalContent).blur(function () {
-            initParam();
-            var internshipJournalContent = param.internshipJournalContent;
-            if (internshipJournalContent.length <= 0) {
-                validErrorDom(validId.internshipJournalContent, errorMsgId.internshipJournalContent, '内容与感想不能为空');
-            } else {
-                validSuccessDom(validId.internshipJournalContent, errorMsgId.internshipJournalContent);
             }
         });
 
@@ -210,13 +206,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
          */
         function validInternshipJournalContent() {
             var internshipJournalContent = param.internshipJournalContent;
-            if (internshipJournalContent.length <= 0) {
+            if (internshipJournalContent.length <= 1) {
                 Messenger().post({
                     message: '内容与感想不能为空',
                     type: 'error',
                     showCloseButton: true
                 });
             } else {
+                $('#internshipJournalContentText').val(internshipJournalContent);
                 sendAjax();
             }
         }

@@ -60,9 +60,8 @@
                         <p class="text-danger hidden" id="graduation_practice_company_name_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_journal_content">
-                        <textarea class="form-control" rows="3" name="internshipJournalContent"
-                                  id="internshipJournalContent" placeholder="内容与感想"
-                                  th:text="${internshipJournal.internshipJournalContent}"></textarea>
+                        <div id="internshipJournalContent" style="height:350px;"></div>
+                        <input type="hidden" id="internshipJournalContentText" name="internshipJournalContent" th:value="${internshipJournal.internshipJournalContent}"/>
                         <p class="text-danger hidden" id="internship_journal_content_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_journal_date">
