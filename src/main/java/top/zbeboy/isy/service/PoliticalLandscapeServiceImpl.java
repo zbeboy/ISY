@@ -111,7 +111,7 @@ public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLan
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -119,25 +119,25 @@ public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLan
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("political_landscape_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortInteger = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.asc();
+                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.asc();
                 } else {
-                    sortInteger = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc();
+                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc();
                 }
             }
 
             if ("political_landscape_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
+                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
                 } else {
-                    sortString = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
+                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
                 }
             }
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

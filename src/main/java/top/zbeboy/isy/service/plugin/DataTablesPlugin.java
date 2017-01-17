@@ -17,15 +17,6 @@ public class DataTablesPlugin<T> {
 
     public static final int JOIN_TYPE = 1;
 
-    /*
-    排序
-     */
-    protected SortField<Integer> sortInteger;
-    protected SortField<String> sortString;
-    protected SortField<Byte> sortByte;
-    protected SortField<Date> sortDate;
-    protected SortField<Timestamp> sortTimestamp;
-
     /**
      * 查询全部数据
      *
@@ -213,65 +204,20 @@ public class DataTablesPlugin<T> {
     }
 
     /**
-     * set sort param to null.
-     * warning: if you going to use sortToFinish method . please before clean with this method , it void you sort be clone.
-     */
-    protected void cleanSortParam() {
-        sortInteger = null;
-        sortString = null;
-        sortByte = null;
-        sortDate = null;
-        sortTimestamp = null;
-    }
-
-    /**
      * 排序辅助,调用此方法前请先调用cleanSortParam以避免对象污染所造成的排序混乱
      *
      * @param selectConditionStep 条件1
      * @param selectJoinStep      条件2
      * @param type                类型
      */
-    public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
-        if (!ObjectUtils.isEmpty(sortInteger)) {
+    public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type, SortField sortField) {
+        if (!ObjectUtils.isEmpty(sortField)) {
             if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(sortInteger);
+                selectConditionStep.orderBy(sortField);
             }
 
             if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(sortInteger);
-            }
-
-        } else if (!ObjectUtils.isEmpty(sortString)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(sortString);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(sortString);
-            }
-        } else if (!ObjectUtils.isEmpty(sortByte)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(sortByte);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(sortByte);
-            }
-        } else if (!ObjectUtils.isEmpty(sortDate)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(sortDate);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(sortDate);
-            }
-        } else if (!ObjectUtils.isEmpty(sortTimestamp)) {
-            if (type == CONDITION_TYPE) {
-                selectConditionStep.orderBy(sortTimestamp);
-            }
-
-            if (type == JOIN_TYPE) {
-                selectJoinStep.orderBy(sortTimestamp);
+                selectJoinStep.orderBy(sortField);
             }
         }
     }

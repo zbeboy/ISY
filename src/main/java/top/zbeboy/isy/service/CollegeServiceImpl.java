@@ -189,40 +189,40 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("college_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortInteger = COLLEGE.COLLEGE_ID.asc();
+                    sortField = COLLEGE.COLLEGE_ID.asc();
                 } else {
-                    sortInteger = COLLEGE.COLLEGE_ID.desc();
+                    sortField = COLLEGE.COLLEGE_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SCHOOL.SCHOOL_NAME.asc();
+                    sortField = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    sortString = SCHOOL.SCHOOL_NAME.desc();
+                    sortField = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = COLLEGE.COLLEGE_NAME.asc();
+                    sortField = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    sortString = COLLEGE.COLLEGE_NAME.desc();
+                    sortField = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("college_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = COLLEGE.COLLEGE_IS_DEL.asc();
+                    sortField = COLLEGE.COLLEGE_IS_DEL.asc();
                 } else {
-                    sortByte = COLLEGE.COLLEGE_IS_DEL.desc();
+                    sortField = COLLEGE.COLLEGE_IS_DEL.desc();
                 }
             }
         }
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

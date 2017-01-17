@@ -410,74 +410,74 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("application_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = APPLICATION.APPLICATION_NAME.asc();
+                    sortField = APPLICATION.APPLICATION_NAME.asc();
                 } else {
-                    sortString = APPLICATION.APPLICATION_NAME.desc();
+                    sortField = APPLICATION.APPLICATION_NAME.desc();
                 }
             }
 
             if ("application_en_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = APPLICATION.APPLICATION_EN_NAME.asc();
+                    sortField = APPLICATION.APPLICATION_EN_NAME.asc();
                 } else {
-                    sortString = APPLICATION.APPLICATION_EN_NAME.desc();
+                    sortField = APPLICATION.APPLICATION_EN_NAME.desc();
                 }
             }
 
             if ("application_pid".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortInteger = APPLICATION.APPLICATION_PID.asc();
+                    sortField = APPLICATION.APPLICATION_PID.asc();
                 } else {
-                    sortInteger = APPLICATION.APPLICATION_PID.desc();
+                    sortField = APPLICATION.APPLICATION_PID.desc();
                 }
             }
 
             if ("application_url".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = APPLICATION.APPLICATION_URL.asc();
+                    sortField = APPLICATION.APPLICATION_URL.asc();
                 } else {
-                    sortString = APPLICATION.APPLICATION_URL.desc();
+                    sortField = APPLICATION.APPLICATION_URL.desc();
                 }
             }
 
             if ("icon".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = APPLICATION.ICON.asc();
+                    sortField = APPLICATION.ICON.asc();
                 } else {
-                    sortString = APPLICATION.ICON.desc();
+                    sortField = APPLICATION.ICON.desc();
                 }
             }
 
             if ("application_sort".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortInteger = APPLICATION.APPLICATION_SORT.asc();
+                    sortField = APPLICATION.APPLICATION_SORT.asc();
                 } else {
-                    sortInteger = APPLICATION.APPLICATION_SORT.desc();
+                    sortField = APPLICATION.APPLICATION_SORT.desc();
                 }
             }
 
             if ("application_code".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = APPLICATION.APPLICATION_CODE.asc();
+                    sortField = APPLICATION.APPLICATION_CODE.asc();
                 } else {
-                    sortString = APPLICATION.APPLICATION_CODE.desc();
+                    sortField = APPLICATION.APPLICATION_CODE.desc();
                 }
             }
 
             if ("application_data_url_start_with".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = APPLICATION.APPLICATION_DATA_URL_START_WITH.asc();
+                    sortField = APPLICATION.APPLICATION_DATA_URL_START_WITH.asc();
                 } else {
-                    sortString = APPLICATION.APPLICATION_DATA_URL_START_WITH.desc();
+                    sortField = APPLICATION.APPLICATION_DATA_URL_START_WITH.desc();
                 }
             }
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 
     /**

@@ -145,10 +145,10 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     public void deleteNotApply(String internshipReleaseId) {
         Select<InternshipApplyRecord> internshipApplyRecord =
                 create.selectFrom(INTERNSHIP_APPLY)
-                .where(INTERNSHIP_APPLY.STUDENT_ID.eq(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID).and(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID)));
-         create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
-                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).andNotExists(internshipApplyRecord))
-                 .execute();
+                        .where(INTERNSHIP_APPLY.STUDENT_ID.eq(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID).and(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID)));
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).andNotExists(internshipApplyRecord))
+                .execute();
     }
 
     @Override
@@ -349,106 +349,106 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("internship_title".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.asc();
+                    sortField = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.asc();
                 } else {
-                    sortString = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.desc();
+                    sortField = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SCHOOL.SCHOOL_NAME.asc();
+                    sortField = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    sortString = SCHOOL.SCHOOL_NAME.desc();
+                    sortField = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = COLLEGE.COLLEGE_NAME.asc();
+                    sortField = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    sortString = COLLEGE.COLLEGE_NAME.desc();
+                    sortField = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
-                    sortString = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField = DEPARTMENT.DEPARTMENT_NAME.desc();
                 }
             }
 
             if ("student_real_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = USERS.as("T").REAL_NAME.asc();
+                    sortField = USERS.as("T").REAL_NAME.asc();
                 } else {
-                    sortString = USERS.as("T").REAL_NAME.desc();
+                    sortField = USERS.as("T").REAL_NAME.desc();
                 }
             }
 
             if ("student_username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = USERS.as("T").USERNAME.asc();
+                    sortField = USERS.as("T").USERNAME.asc();
                 } else {
-                    sortString = USERS.as("T").USERNAME.desc();
+                    sortField = USERS.as("T").USERNAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = STUDENT.STUDENT_NUMBER.asc();
+                    sortField = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortString = STUDENT.STUDENT_NUMBER.desc();
+                    sortField = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("staff_real_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = USERS.as("S").REAL_NAME.asc();
+                    sortField = USERS.as("S").REAL_NAME.asc();
                 } else {
-                    sortString = USERS.as("S").REAL_NAME.desc();
+                    sortField = USERS.as("S").REAL_NAME.desc();
                 }
             }
 
             if ("staff_username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = USERS.as("S").USERNAME.asc();
+                    sortField = USERS.as("S").USERNAME.asc();
                 } else {
-                    sortString = USERS.as("S").USERNAME.desc();
+                    sortField = USERS.as("S").USERNAME.desc();
                 }
             }
 
             if ("staff_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = STAFF.STAFF_NUMBER.asc();
+                    sortField = STAFF.STAFF_NUMBER.asc();
                 } else {
-                    sortString = STAFF.STAFF_NUMBER.desc();
+                    sortField = STAFF.STAFF_NUMBER.desc();
                 }
             }
 
             if ("real_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = USERS.as("U").REAL_NAME.asc();
+                    sortField = USERS.as("U").REAL_NAME.asc();
                 } else {
-                    sortString = USERS.as("U").REAL_NAME.desc();
+                    sortField = USERS.as("U").REAL_NAME.desc();
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = USERS.as("U").USERNAME.asc();
+                    sortField = USERS.as("U").USERNAME.asc();
                 } else {
-                    sortString = USERS.as("U").USERNAME.desc();
+                    sortField = USERS.as("U").USERNAME.desc();
                 }
             }
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

@@ -232,202 +232,202 @@ public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCom
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.STUDENT_NAME.asc();
+                    sortField = INTERNSHIP_COMPANY.STUDENT_NAME.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.STUDENT_NAME.desc();
+                    sortField = INTERNSHIP_COMPANY.STUDENT_NAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.STUDENT_NUMBER.asc();
+                    sortField = INTERNSHIP_COMPANY.STUDENT_NUMBER.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.STUDENT_NUMBER.desc();
+                    sortField = INTERNSHIP_COMPANY.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("college_class".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.COLLEGE_CLASS.asc();
+                    sortField = INTERNSHIP_COMPANY.COLLEGE_CLASS.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.COLLEGE_CLASS.desc();
+                    sortField = INTERNSHIP_COMPANY.COLLEGE_CLASS.desc();
                 }
             }
 
             if ("student_sex".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.STUDENT_SEX.asc();
+                    sortField = INTERNSHIP_COMPANY.STUDENT_SEX.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.STUDENT_SEX.desc();
+                    sortField = INTERNSHIP_COMPANY.STUDENT_SEX.desc();
                 }
             }
 
             if ("phone_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.PHONE_NUMBER.asc();
+                    sortField = INTERNSHIP_COMPANY.PHONE_NUMBER.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.PHONE_NUMBER.desc();
+                    sortField = INTERNSHIP_COMPANY.PHONE_NUMBER.desc();
                 }
             }
 
             if ("qq_mailbox".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.QQ_MAILBOX.asc();
+                    sortField = INTERNSHIP_COMPANY.QQ_MAILBOX.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.QQ_MAILBOX.desc();
+                    sortField = INTERNSHIP_COMPANY.QQ_MAILBOX.desc();
                 }
             }
 
             if ("parental_contact".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.PARENTAL_CONTACT.asc();
+                    sortField = INTERNSHIP_COMPANY.PARENTAL_CONTACT.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.PARENTAL_CONTACT.desc();
+                    sortField = INTERNSHIP_COMPANY.PARENTAL_CONTACT.desc();
                 }
             }
 
             if ("headmaster".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.HEADMASTER.asc();
+                    sortField = INTERNSHIP_COMPANY.HEADMASTER.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.HEADMASTER.desc();
+                    sortField = INTERNSHIP_COMPANY.HEADMASTER.desc();
                 }
             }
 
             if ("headmaster_contact".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.HEADMASTER_CONTACT.asc();
+                    sortField = INTERNSHIP_COMPANY.HEADMASTER_CONTACT.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.HEADMASTER_CONTACT.desc();
+                    sortField = INTERNSHIP_COMPANY.HEADMASTER_CONTACT.desc();
                 }
             }
 
             if ("internship_company_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_NAME.asc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_NAME.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_NAME.desc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_NAME.desc();
                 }
             }
 
             if ("internship_company_address".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_ADDRESS.asc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_ADDRESS.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_ADDRESS.desc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_ADDRESS.desc();
                 }
             }
 
             if ("internship_company_contacts".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_CONTACTS.asc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_CONTACTS.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_CONTACTS.desc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_CONTACTS.desc();
                 }
             }
 
             if ("internship_company_tel".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_TEL.asc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_TEL.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_TEL.desc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_TEL.desc();
                 }
             }
 
             if ("school_guidance_teacher".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER.asc();
+                    sortField = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER.desc();
+                    sortField = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER.desc();
                 }
             }
 
             if ("school_guidance_teacher_tel".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.asc();
+                    sortField = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.asc();
                 } else {
-                    sortString = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.desc();
+                    sortField = INTERNSHIP_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.desc();
                 }
             }
 
             if ("start_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortDate = INTERNSHIP_COMPANY.START_TIME.asc();
+                    sortField = INTERNSHIP_COMPANY.START_TIME.asc();
                 } else {
-                    sortDate = INTERNSHIP_COMPANY.START_TIME.desc();
+                    sortField = INTERNSHIP_COMPANY.START_TIME.desc();
                 }
             }
 
             if ("end_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortDate = INTERNSHIP_COMPANY.END_TIME.asc();
+                    sortField = INTERNSHIP_COMPANY.END_TIME.asc();
                 } else {
-                    sortDate = INTERNSHIP_COMPANY.END_TIME.desc();
+                    sortField = INTERNSHIP_COMPANY.END_TIME.desc();
                 }
             }
 
             if ("commitment_book".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = INTERNSHIP_COMPANY.COMMITMENT_BOOK.asc();
+                    sortField = INTERNSHIP_COMPANY.COMMITMENT_BOOK.asc();
                 } else {
-                    sortByte = INTERNSHIP_COMPANY.COMMITMENT_BOOK.desc();
+                    sortField = INTERNSHIP_COMPANY.COMMITMENT_BOOK.desc();
                 }
             }
 
             if ("safety_responsibility_book".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = INTERNSHIP_COMPANY.SAFETY_RESPONSIBILITY_BOOK.asc();
+                    sortField = INTERNSHIP_COMPANY.SAFETY_RESPONSIBILITY_BOOK.asc();
                 } else {
-                    sortByte = INTERNSHIP_COMPANY.SAFETY_RESPONSIBILITY_BOOK.desc();
+                    sortField = INTERNSHIP_COMPANY.SAFETY_RESPONSIBILITY_BOOK.desc();
                 }
             }
 
             if ("practice_agreement".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = INTERNSHIP_COMPANY.PRACTICE_AGREEMENT.asc();
+                    sortField = INTERNSHIP_COMPANY.PRACTICE_AGREEMENT.asc();
                 } else {
-                    sortByte = INTERNSHIP_COMPANY.PRACTICE_AGREEMENT.desc();
+                    sortField = INTERNSHIP_COMPANY.PRACTICE_AGREEMENT.desc();
                 }
             }
 
             if ("internship_application".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = INTERNSHIP_COMPANY.INTERNSHIP_APPLICATION.asc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_APPLICATION.asc();
                 } else {
-                    sortByte = INTERNSHIP_COMPANY.INTERNSHIP_APPLICATION.desc();
+                    sortField = INTERNSHIP_COMPANY.INTERNSHIP_APPLICATION.desc();
                 }
             }
 
             if ("practice_receiving".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = INTERNSHIP_COMPANY.PRACTICE_RECEIVING.asc();
+                    sortField = INTERNSHIP_COMPANY.PRACTICE_RECEIVING.asc();
                 } else {
-                    sortByte = INTERNSHIP_COMPANY.PRACTICE_RECEIVING.desc();
+                    sortField = INTERNSHIP_COMPANY.PRACTICE_RECEIVING.desc();
                 }
             }
 
             if ("security_education_agreement".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = INTERNSHIP_COMPANY.SECURITY_EDUCATION_AGREEMENT.asc();
+                    sortField = INTERNSHIP_COMPANY.SECURITY_EDUCATION_AGREEMENT.asc();
                 } else {
-                    sortByte = INTERNSHIP_COMPANY.SECURITY_EDUCATION_AGREEMENT.desc();
+                    sortField = INTERNSHIP_COMPANY.SECURITY_EDUCATION_AGREEMENT.desc();
                 }
             }
 
             if ("parental_consent".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = INTERNSHIP_COMPANY.PARENTAL_CONSENT.asc();
+                    sortField = INTERNSHIP_COMPANY.PARENTAL_CONSENT.asc();
                 } else {
-                    sortByte = INTERNSHIP_COMPANY.PARENTAL_CONSENT.desc();
+                    sortField = INTERNSHIP_COMPANY.PARENTAL_CONSENT.desc();
                 }
             }
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

@@ -388,7 +388,7 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     /**
      * 班级数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -396,74 +396,74 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("organize_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortInteger = ORGANIZE.ORGANIZE_ID.asc();
+                    sortField = ORGANIZE.ORGANIZE_ID.asc();
                 } else {
-                    sortInteger = ORGANIZE.ORGANIZE_ID.desc();
+                    sortField = ORGANIZE.ORGANIZE_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SCHOOL.SCHOOL_NAME.asc();
+                    sortField = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    sortString = SCHOOL.SCHOOL_NAME.desc();
+                    sortField = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = COLLEGE.COLLEGE_NAME.asc();
+                    sortField = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    sortString = COLLEGE.COLLEGE_NAME.desc();
+                    sortField = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
-                    sortString = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField = DEPARTMENT.DEPARTMENT_NAME.desc();
                 }
             }
 
             if ("science_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SCIENCE.SCIENCE_NAME.asc();
+                    sortField = SCIENCE.SCIENCE_NAME.asc();
                 } else {
-                    sortString = SCIENCE.SCIENCE_NAME.desc();
+                    sortField = SCIENCE.SCIENCE_NAME.desc();
                 }
             }
 
             if ("grade".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = ORGANIZE.GRADE.asc();
+                    sortField = ORGANIZE.GRADE.asc();
                 } else {
-                    sortString = ORGANIZE.GRADE.desc();
+                    sortField = ORGANIZE.GRADE.desc();
                 }
             }
 
             if ("organize_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = ORGANIZE.ORGANIZE_NAME.asc();
+                    sortField = ORGANIZE.ORGANIZE_NAME.asc();
                 } else {
-                    sortString = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortField = ORGANIZE.ORGANIZE_NAME.desc();
                 }
             }
 
             if ("organize_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = ORGANIZE.ORGANIZE_IS_DEL.asc();
+                    sortField = ORGANIZE.ORGANIZE_IS_DEL.asc();
                 } else {
-                    sortByte = ORGANIZE.ORGANIZE_IS_DEL.desc();
+                    sortField = ORGANIZE.ORGANIZE_IS_DEL.desc();
                 }
             }
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

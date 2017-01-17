@@ -122,7 +122,7 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
     /**
      * 学校数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -130,34 +130,34 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("school_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortInteger = SCHOOL.SCHOOL_ID.asc();
+                    sortField = SCHOOL.SCHOOL_ID.asc();
                 } else {
-                    sortInteger = SCHOOL.SCHOOL_ID.desc();
+                    sortField = SCHOOL.SCHOOL_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SCHOOL.SCHOOL_NAME.asc();
+                    sortField = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    sortString = SCHOOL.SCHOOL_NAME.desc();
+                    sortField = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("school_is_del".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = SCHOOL.SCHOOL_IS_DEL.asc();
+                    sortField = SCHOOL.SCHOOL_IS_DEL.asc();
                 } else {
-                    sortByte = SCHOOL.SCHOOL_IS_DEL.desc();
+                    sortField = SCHOOL.SCHOOL_IS_DEL.desc();
                 }
             }
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

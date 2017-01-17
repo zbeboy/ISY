@@ -111,7 +111,7 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -119,25 +119,25 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("nation_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortInteger = NATION.NATION_ID.asc();
+                    sortField = NATION.NATION_ID.asc();
                 } else {
-                    sortInteger = NATION.NATION_ID.desc();
+                    sortField = NATION.NATION_ID.desc();
                 }
             }
 
             if ("nation_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = NATION.NATION_NAME.asc();
+                    sortField = NATION.NATION_NAME.asc();
                 } else {
-                    sortString = NATION.NATION_NAME.desc();
+                    sortField = NATION.NATION_NAME.desc();
                 }
             }
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

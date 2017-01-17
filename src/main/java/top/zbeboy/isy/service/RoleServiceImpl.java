@@ -430,7 +430,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -438,42 +438,42 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("role_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = ROLE.ROLE_NAME.asc();
+                    sortField = ROLE.ROLE_NAME.asc();
                 } else {
-                    sortString = ROLE.ROLE_NAME.desc();
+                    sortField = ROLE.ROLE_NAME.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SCHOOL.SCHOOL_NAME.asc();
+                    sortField = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    sortString = SCHOOL.SCHOOL_NAME.desc();
+                    sortField = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = COLLEGE.COLLEGE_NAME.asc();
+                    sortField = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    sortString = COLLEGE.COLLEGE_NAME.desc();
+                    sortField = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("role_en_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = ROLE.ROLE_EN_NAME.asc();
+                    sortField = ROLE.ROLE_EN_NAME.asc();
                 } else {
-                    sortString = ROLE.ROLE_EN_NAME.desc();
+                    sortField = ROLE.ROLE_EN_NAME.desc();
                 }
             }
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

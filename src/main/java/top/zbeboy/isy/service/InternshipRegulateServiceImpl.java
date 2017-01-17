@@ -175,49 +175,49 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_REGULATE.STUDENT_NAME.asc();
+                    sortField = INTERNSHIP_REGULATE.STUDENT_NAME.asc();
                 } else {
-                    sortString = INTERNSHIP_REGULATE.STUDENT_NAME.desc();
+                    sortField = INTERNSHIP_REGULATE.STUDENT_NAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_REGULATE.STUDENT_NUMBER.asc();
+                    sortField = INTERNSHIP_REGULATE.STUDENT_NUMBER.asc();
                 } else {
-                    sortString = INTERNSHIP_REGULATE.STUDENT_NUMBER.desc();
+                    sortField = INTERNSHIP_REGULATE.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("student_tel".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_REGULATE.STUDENT_TEL.asc();
+                    sortField = INTERNSHIP_REGULATE.STUDENT_TEL.asc();
                 } else {
-                    sortString = INTERNSHIP_REGULATE.STUDENT_TEL.desc();
+                    sortField = INTERNSHIP_REGULATE.STUDENT_TEL.desc();
                 }
             }
 
             if ("school_guidance_teacher".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.asc();
+                    sortField = INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.asc();
                 } else {
-                    sortString = INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.desc();
+                    sortField = INTERNSHIP_REGULATE.SCHOOL_GUIDANCE_TEACHER.desc();
                 }
             }
 
             if ("create_date".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortTimestamp = INTERNSHIP_REGULATE.CREATE_DATE.asc();
+                    sortField = INTERNSHIP_REGULATE.CREATE_DATE.asc();
                 } else {
-                    sortTimestamp = INTERNSHIP_REGULATE.CREATE_DATE.desc();
+                    sortField = INTERNSHIP_REGULATE.CREATE_DATE.desc();
                 }
             }
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

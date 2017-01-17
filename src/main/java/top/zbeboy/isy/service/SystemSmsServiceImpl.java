@@ -90,7 +90,7 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
     /**
      * 系统短信排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -98,34 +98,34 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_sms_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_SMS.SYSTEM_SMS_ID.asc();
+                    sortField = SYSTEM_SMS.SYSTEM_SMS_ID.asc();
                 } else {
-                    sortString = SYSTEM_SMS.SYSTEM_SMS_ID.desc();
+                    sortField = SYSTEM_SMS.SYSTEM_SMS_ID.desc();
                 }
             }
 
             if ("send_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortTimestamp = SYSTEM_SMS.SEND_TIME.asc();
+                    sortField = SYSTEM_SMS.SEND_TIME.asc();
                 } else {
-                    sortTimestamp = SYSTEM_SMS.SEND_TIME.desc();
+                    sortField = SYSTEM_SMS.SEND_TIME.desc();
                 }
             }
 
             if ("accept_phone".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_SMS.ACCEPT_PHONE.asc();
+                    sortField = SYSTEM_SMS.ACCEPT_PHONE.asc();
                 } else {
-                    sortString = SYSTEM_SMS.ACCEPT_PHONE.desc();
+                    sortField = SYSTEM_SMS.ACCEPT_PHONE.desc();
                 }
             }
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

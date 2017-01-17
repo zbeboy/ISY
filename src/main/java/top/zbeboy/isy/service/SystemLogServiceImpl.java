@@ -108,7 +108,7 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
     /**
      * 系统日志排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -116,50 +116,48 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();// clean sort param
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_log_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
+                    sortField = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
                 } else {
-                    sortString = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
+                    sortField = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_LOG.USERNAME.asc();
+                    sortField = SYSTEM_LOG.USERNAME.asc();
                 } else {
-                    sortString = SYSTEM_LOG.USERNAME.desc();
+                    sortField = SYSTEM_LOG.USERNAME.desc();
                 }
             }
 
             if ("behavior".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_LOG.BEHAVIOR.asc();
+                    sortField = SYSTEM_LOG.BEHAVIOR.asc();
                 } else {
-                    sortString = SYSTEM_LOG.BEHAVIOR.desc();
+                    sortField = SYSTEM_LOG.BEHAVIOR.desc();
                 }
             }
 
             if ("operating_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortTimestamp = SYSTEM_LOG.OPERATING_TIME.asc();
+                    sortField = SYSTEM_LOG.OPERATING_TIME.asc();
                 } else {
-                    sortTimestamp = SYSTEM_LOG.OPERATING_TIME.desc();
+                    sortField = SYSTEM_LOG.OPERATING_TIME.desc();
                 }
             }
 
             if ("ip_address".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_LOG.IP_ADDRESS.asc();
+                    sortField = SYSTEM_LOG.IP_ADDRESS.asc();
                 } else {
-                    sortString = SYSTEM_LOG.IP_ADDRESS.desc();
+                    sortField = SYSTEM_LOG.IP_ADDRESS.desc();
                 }
             }
-
         }
-
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

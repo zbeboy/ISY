@@ -231,201 +231,201 @@ public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<Gradu
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.STUDENT_NAME.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.STUDENT_NAME.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.STUDENT_NAME.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.STUDENT_NAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.STUDENT_NUMBER.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.STUDENT_NUMBER.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.STUDENT_NUMBER.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("college_class".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.COLLEGE_CLASS.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.COLLEGE_CLASS.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.COLLEGE_CLASS.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.COLLEGE_CLASS.desc();
                 }
             }
 
             if ("student_sex".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.STUDENT_SEX.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.STUDENT_SEX.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.STUDENT_SEX.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.STUDENT_SEX.desc();
                 }
             }
 
             if ("phone_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.PHONE_NUMBER.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PHONE_NUMBER.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.PHONE_NUMBER.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PHONE_NUMBER.desc();
                 }
             }
 
             if ("qq_mailbox".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.QQ_MAILBOX.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.QQ_MAILBOX.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.QQ_MAILBOX.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.QQ_MAILBOX.desc();
                 }
             }
 
             if ("parental_contact".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONTACT.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONTACT.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONTACT.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONTACT.desc();
                 }
             }
 
             if ("headmaster".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.HEADMASTER.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.HEADMASTER.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.HEADMASTER.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.HEADMASTER.desc();
                 }
             }
 
             if ("headmaster_contact".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.HEADMASTER_CONTACT.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.HEADMASTER_CONTACT.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.HEADMASTER_CONTACT.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.HEADMASTER_CONTACT.desc();
                 }
             }
 
             if ("graduation_practice_company_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_NAME.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_NAME.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_NAME.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_NAME.desc();
                 }
             }
 
             if ("graduation_practice_company_address".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ADDRESS.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ADDRESS.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ADDRESS.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ADDRESS.desc();
                 }
             }
 
             if ("graduation_practice_company_contacts".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_CONTACTS.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_CONTACTS.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_CONTACTS.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_CONTACTS.desc();
                 }
             }
 
             if ("graduation_practice_company_tel".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_TEL.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_TEL.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_TEL.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_TEL.desc();
                 }
             }
 
             if ("school_guidance_teacher".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER.desc();
                 }
             }
 
             if ("school_guidance_teacher_tel".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.asc();
                 } else {
-                    sortString = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SCHOOL_GUIDANCE_TEACHER_TEL.desc();
                 }
             }
 
             if ("start_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortDate = GRADUATION_PRACTICE_COMPANY.START_TIME.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.START_TIME.asc();
                 } else {
-                    sortDate = GRADUATION_PRACTICE_COMPANY.START_TIME.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.START_TIME.desc();
                 }
             }
 
             if ("end_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortDate = GRADUATION_PRACTICE_COMPANY.END_TIME.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.END_TIME.asc();
                 } else {
-                    sortDate = GRADUATION_PRACTICE_COMPANY.END_TIME.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.END_TIME.desc();
                 }
             }
 
             if ("commitment_book".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.COMMITMENT_BOOK.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.COMMITMENT_BOOK.asc();
                 } else {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.COMMITMENT_BOOK.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.COMMITMENT_BOOK.desc();
                 }
             }
 
             if ("safety_responsibility_book".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.SAFETY_RESPONSIBILITY_BOOK.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SAFETY_RESPONSIBILITY_BOOK.asc();
                 } else {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.SAFETY_RESPONSIBILITY_BOOK.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SAFETY_RESPONSIBILITY_BOOK.desc();
                 }
             }
 
             if ("practice_agreement".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.PRACTICE_AGREEMENT.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PRACTICE_AGREEMENT.asc();
                 } else {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.PRACTICE_AGREEMENT.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PRACTICE_AGREEMENT.desc();
                 }
             }
 
             if ("internship_application".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.INTERNSHIP_APPLICATION.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.INTERNSHIP_APPLICATION.asc();
                 } else {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.INTERNSHIP_APPLICATION.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.INTERNSHIP_APPLICATION.desc();
                 }
             }
 
             if ("practice_receiving".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.PRACTICE_RECEIVING.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PRACTICE_RECEIVING.asc();
                 } else {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.PRACTICE_RECEIVING.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PRACTICE_RECEIVING.desc();
                 }
             }
 
             if ("security_education_agreement".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.SECURITY_EDUCATION_AGREEMENT.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SECURITY_EDUCATION_AGREEMENT.asc();
                 } else {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.SECURITY_EDUCATION_AGREEMENT.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.SECURITY_EDUCATION_AGREEMENT.desc();
                 }
             }
 
             if ("parental_consent".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONSENT.asc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONSENT.asc();
                 } else {
-                    sortByte = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONSENT.desc();
+                    sortField = GRADUATION_PRACTICE_COMPANY.PARENTAL_CONSENT.desc();
                 }
             }
 
         }
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

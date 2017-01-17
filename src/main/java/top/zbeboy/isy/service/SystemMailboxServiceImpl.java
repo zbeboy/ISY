@@ -90,7 +90,7 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
     /**
      * 系统邮件排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     @Override
@@ -98,34 +98,34 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        cleanSortParam();
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_mailbox_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
+                    sortField = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
                 } else {
-                    sortString = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
+                    sortField = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
                 }
             }
 
             if ("send_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortTimestamp = SYSTEM_MAILBOX.SEND_TIME.asc();
+                    sortField = SYSTEM_MAILBOX.SEND_TIME.asc();
                 } else {
-                    sortTimestamp = SYSTEM_MAILBOX.SEND_TIME.desc();
+                    sortField = SYSTEM_MAILBOX.SEND_TIME.desc();
                 }
             }
 
             if ("accept_mail".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    sortString = SYSTEM_MAILBOX.ACCEPT_MAIL.asc();
+                    sortField = SYSTEM_MAILBOX.ACCEPT_MAIL.asc();
                 } else {
-                    sortString = SYSTEM_MAILBOX.ACCEPT_MAIL.desc();
+                    sortField = SYSTEM_MAILBOX.ACCEPT_MAIL.desc();
                 }
             }
 
         }
 
-        sortToFinish(selectConditionStep, selectJoinStep, type);
+        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
     }
 }

@@ -669,168 +669,154 @@ public class StaffServiceImpl implements StaffService {
     /**
      * 数据排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
     public void sortCondition(DataTablesUtils<StaffBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField<Integer> a = null;
-        SortField<String> b = null;
-        SortField<Byte> c = null;
-        SortField<java.sql.Date> d = null;
+        SortField sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("staff_number".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = STAFF.STAFF_NUMBER.asc();
+                    sortField = STAFF.STAFF_NUMBER.asc();
                 } else {
-                    b = STAFF.STAFF_NUMBER.desc();
+                    sortField = STAFF.STAFF_NUMBER.desc();
                 }
             }
 
             if ("real_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = USERS.REAL_NAME.asc();
+                    sortField = USERS.REAL_NAME.asc();
                 } else {
-                    b = USERS.REAL_NAME.desc();
+                    sortField = USERS.REAL_NAME.desc();
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = USERS.USERNAME.asc();
+                    sortField = USERS.USERNAME.asc();
                 } else {
-                    b = USERS.USERNAME.desc();
+                    sortField = USERS.USERNAME.desc();
                 }
             }
 
             if ("mobile".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = USERS.MOBILE.asc();
+                    sortField = USERS.MOBILE.asc();
                 } else {
-                    b = USERS.MOBILE.desc();
+                    sortField = USERS.MOBILE.desc();
                 }
             }
 
             if ("id_card".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = STAFF.ID_CARD.asc();
+                    sortField = STAFF.ID_CARD.asc();
                 } else {
-                    b = STAFF.ID_CARD.desc();
+                    sortField = STAFF.ID_CARD.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = SCHOOL.SCHOOL_NAME.asc();
+                    sortField = SCHOOL.SCHOOL_NAME.asc();
                 } else {
-                    b = SCHOOL.SCHOOL_NAME.desc();
+                    sortField = SCHOOL.SCHOOL_NAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = COLLEGE.COLLEGE_NAME.asc();
+                    sortField = COLLEGE.COLLEGE_NAME.asc();
                 } else {
-                    b = COLLEGE.COLLEGE_NAME.desc();
+                    sortField = COLLEGE.COLLEGE_NAME.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
-                    b = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField = DEPARTMENT.DEPARTMENT_NAME.desc();
                 }
             }
 
             if ("post".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = STAFF.POST.asc();
+                    sortField = STAFF.POST.asc();
                 } else {
-                    b = STAFF.POST.desc();
+                    sortField = STAFF.POST.desc();
                 }
             }
 
             if ("sex".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = STAFF.SEX.asc();
+                    sortField = STAFF.SEX.asc();
                 } else {
-                    b = STAFF.SEX.desc();
+                    sortField = STAFF.SEX.desc();
                 }
             }
 
             if ("birthday".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    d = STAFF.BIRTHDAY.asc();
+                    sortField = STAFF.BIRTHDAY.asc();
                 } else {
-                    d = STAFF.BIRTHDAY.desc();
+                    sortField = STAFF.BIRTHDAY.desc();
                 }
             }
 
             if ("nation_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = NATION.NATION_NAME.asc();
+                    sortField = NATION.NATION_NAME.asc();
                 } else {
-                    b = NATION.NATION_NAME.desc();
+                    sortField = NATION.NATION_NAME.desc();
                 }
             }
 
             if ("politicalLandscape_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
+                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
                 } else {
-                    b = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
+                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
                 }
             }
 
 
             if ("family_residence".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = STAFF.FAMILY_RESIDENCE.asc();
+                    sortField = STAFF.FAMILY_RESIDENCE.asc();
                 } else {
-                    b = STAFF.FAMILY_RESIDENCE.desc();
+                    sortField = STAFF.FAMILY_RESIDENCE.desc();
                 }
             }
 
             if ("enabled".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    c = USERS.ENABLED.asc();
+                    sortField = USERS.ENABLED.asc();
                 } else {
-                    c = USERS.ENABLED.desc();
+                    sortField = USERS.ENABLED.desc();
                 }
             }
 
             if ("lang_key".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    b = USERS.LANG_KEY.asc();
+                    sortField = USERS.LANG_KEY.asc();
                 } else {
-                    b = USERS.LANG_KEY.desc();
+                    sortField = USERS.LANG_KEY.desc();
                 }
             }
 
             if ("join_date".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    d = USERS.JOIN_DATE.asc();
+                    sortField = USERS.JOIN_DATE.asc();
                 } else {
-                    d = USERS.JOIN_DATE.desc();
+                    sortField = USERS.JOIN_DATE.desc();
                 }
             }
 
         }
-
-        if (!ObjectUtils.isEmpty(a)) {
-            selectConditionStep.orderBy(a);
-        } else if (!ObjectUtils.isEmpty(b)) {
-            selectConditionStep.orderBy(b);
-        } else if (!ObjectUtils.isEmpty(c)) {
-            selectConditionStep.orderBy(c);
-        } else if (!ObjectUtils.isEmpty(d)) {
-            selectConditionStep.orderBy(d);
-        } else {
-            selectConditionStep.orderBy(USERS.JOIN_DATE.desc());
-        }
+        selectConditionStep.orderBy(sortField);
     }
 
     /**
