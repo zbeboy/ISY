@@ -438,6 +438,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("role_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

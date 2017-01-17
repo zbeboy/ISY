@@ -98,6 +98,7 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_mailbox_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

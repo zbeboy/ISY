@@ -213,7 +213,19 @@ public class DataTablesPlugin<T> {
     }
 
     /**
-     * 排序辅助
+     * set sort param to null.
+     * warning: if you going to use sortToFinish method . please before clean with this method , it void you sort be clone.
+     */
+    protected void cleanSortParam() {
+        sortInteger = null;
+        sortString = null;
+        sortByte = null;
+        sortDate = null;
+        sortTimestamp = null;
+    }
+
+    /**
+     * 排序辅助,调用此方法前请先调用cleanSortParam以避免对象污染所造成的排序混乱
      *
      * @param selectConditionStep 条件1
      * @param selectJoinStep      条件2

@@ -119,6 +119,7 @@ public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLan
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("political_landscape_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

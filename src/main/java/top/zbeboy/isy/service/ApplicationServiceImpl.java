@@ -410,6 +410,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("application_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

@@ -349,6 +349,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("internship_title".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

@@ -333,6 +333,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("science_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

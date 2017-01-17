@@ -189,6 +189,7 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("college_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {

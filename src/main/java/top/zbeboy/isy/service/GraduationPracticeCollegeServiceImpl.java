@@ -232,6 +232,7 @@ public class GraduationPracticeCollegeServiceImpl extends DataTablesPlugin<Gradu
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
+        cleanSortParam();
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
