@@ -85,12 +85,10 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
          * @param data
          */
         function organizeData(data) {
-            var source = $("#organize-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#organize-template").html());
 
             Handlebars.registerHelper('organize_value', function () {
-                var value = Handlebars.escapeExpression(this.organizeId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeId));
             });
 
             Handlebars.registerHelper('organize_name', function () {
@@ -103,8 +101,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
                 return new Handlebars.SafeString(name);
             });
 
-            var html = template(data.mapResult);
-            $(paramId.organizeId).html(html);
+            $(paramId.organizeId).html(template(data.mapResult));
             initOrganizeDualListbox();
         }
 
@@ -113,12 +110,10 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
          * @param data
          */
         function staffData(data) {
-            var source = $("#teacher-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#teacher-template").html());
 
             Handlebars.registerHelper('teacher_value', function () {
-                var value = Handlebars.escapeExpression(this.staffId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffId));
             });
 
             Handlebars.registerHelper('teacher_name', function () {
@@ -130,8 +125,7 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
                 return new Handlebars.SafeString(name);
             });
 
-            var html = template(data);
-            $(paramId.staffId).html(html);
+            $(paramId.staffId).html(template(data));
             initStaffDualListbox();
         }
 
@@ -140,16 +134,13 @@ require(["jquery", "handlebars", "nav_active", "lodash", "messenger", "jquery.ad
          * @param data
          */
         function excludeInternshipReleaseData(data) {
-            var source = $("#exclude-internship-release-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#exclude-internship-release-template").html());
 
             Handlebars.registerHelper('internship_title', function () {
-                var value = Handlebars.escapeExpression(this.internshipTitle);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTitle));
             });
 
-            var html = template(data);
-            $(paramId.excludeInternshipReleaseId).html(html);
+            $(paramId.excludeInternshipReleaseId).html(template(data));
             initExcludeInternshipReleaseDualListbox();
         }
 

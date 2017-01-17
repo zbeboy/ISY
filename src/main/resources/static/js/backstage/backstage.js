@@ -242,9 +242,8 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
                 return new Handlebars.SafeString(value);
             });
 
-            var html = template(data.mapResult);
             var alerts = $('#alerts');
-            alerts.html(html);
+            alerts.html(template(data.mapResult));
             alerts.append(lastTagLi('更多提醒', 'more_alert'));
         }
 
@@ -285,9 +284,8 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
                 return new Handlebars.SafeString(value);
             });
 
-            var html = template(data.mapResult);
             var alerts = $('#messages');
-            alerts.html(html);
+            alerts.html(template(data.mapResult));
             alerts.append(lastTagLi('更多消息', 'more_message'));
         }
 
@@ -309,8 +307,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          消息详情
          */
         $('#wrapper').delegate('.message_detail', "click", function () {
-            var id = $(this).attr('data-id');
-            $.address.value(getAjaxUrl().message_detail_url + '?id=' + id);
+            $.address.value(getAjaxUrl().message_detail_url + '?id=' + $(this).attr('data-id'));
             getRemind();
         });
 
@@ -318,9 +315,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          提醒详情
          */
         $('#wrapper').delegate('.alert_detail', "click", function () {
-            var id = $(this).attr('data-id');
-            var type = $(this).attr('data-type');
-            $.address.value(getAjaxUrl().alert_detail_url + '?id=' + id + '&type=' + type);
+            $.address.value(getAjaxUrl().alert_detail_url + '?id=' + $(this).attr('data-id') + '&type=' + $(this).attr('data-type'));
             getRemind();
         });
 

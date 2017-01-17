@@ -92,14 +92,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param data 数据
          */
         function listData(data) {
-            var source = $("#message-more-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#message-more-template").html());
             Handlebars.registerHelper('real_name', function () {
-                var value = Handlebars.escapeExpression(this.realName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
             });
-            var html = template(data);
-            $(tableData).html(html);
+            $(tableData).html(template(data));
         }
 
         init();

@@ -75,23 +75,17 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address",
          * @param data
          */
         function staffData(data) {
-            var source = $("#teacher-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#teacher-template").html());
 
             Handlebars.registerHelper('teacher_value', function () {
-                var value = Handlebars.escapeExpression(this.staffId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffId));
             });
 
             Handlebars.registerHelper('teacher_name', function () {
-                var name = Handlebars.escapeExpression(this.realName + ' ' + this.staffNumber);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.staffNumber));
             });
 
-            var html = template(data);
-            $(paramId.staffId).html(html);
-
-
+            $(paramId.staffId).html(template(data));
             initStaffSelect();
         }
 

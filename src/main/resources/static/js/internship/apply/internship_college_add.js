@@ -252,21 +252,17 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
          * @param data json数据
          */
         function headmasterData(data) {
-            var source = $("#teacher-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#teacher-template").html());
 
             Handlebars.registerHelper('teacher_value', function () {
-                var value = Handlebars.escapeExpression(this.realName + ' ' + this.mobile);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.mobile));
             });
 
             Handlebars.registerHelper('teacher_name', function () {
-                var name = Handlebars.escapeExpression(this.realName + ' ' + this.mobile);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.mobile));
             });
 
-            var html = template(data);
-            $(paramId.headmaster).html(html);
+            $(paramId.headmaster).html(template(data));
             initHeadmasterSelect();
         }
 
@@ -283,37 +279,30 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
          * @param data 数据
          */
         function initFileShow(data) {
-            var source = $("#file-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#file-template").html());
 
             Handlebars.registerHelper('original_file_name', function () {
-                var value = Handlebars.escapeExpression(this.originalFileName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.originalFileName));
             });
 
             Handlebars.registerHelper('size', function () {
-                var value = Handlebars.escapeExpression(transformationFileUnit(this.size));
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(transformationFileUnit(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
-                var value = Handlebars.escapeExpression(this.relativePath);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.relativePath));
             });
 
             Handlebars.registerHelper('new_name', function () {
-                var value = Handlebars.escapeExpression(this.newName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.newName));
             });
 
             Handlebars.registerHelper('ext', function () {
-                var value = Handlebars.escapeExpression(this.ext);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.ext));
             });
 
             Handlebars.registerHelper('l_size', function () {
-                var value = Handlebars.escapeExpression(this.size);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.size));
             });
 
             var html = template(data);

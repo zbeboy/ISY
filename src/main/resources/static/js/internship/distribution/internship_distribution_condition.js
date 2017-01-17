@@ -24,9 +24,8 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
         // 刷新时选中菜单
         nav_active(getAjaxUrl().back);
 
-        var operator_button = $("#operator_button").html();
         // 预编译模板
-        var template = Handlebars.compile(operator_button);
+        var template = Handlebars.compile($("#operator_button").html());
 
         // datatables 初始化
         var responsiveHelper = undefined;
@@ -350,17 +349,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
          * @param data json数据
          */
         function excludeInternshipReleaseData(data) {
-            var source = $("#exclude-internship-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#exclude-internship-template").html());
 
             Handlebars.registerHelper('value', function () {
-                var value = Handlebars.escapeExpression(this.internshipReleaseId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipReleaseId));
             });
 
             Handlebars.registerHelper('name', function () {
-                var name = Handlebars.escapeExpression(this.internshipTitle);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTitle));
             });
 
             return template(data);

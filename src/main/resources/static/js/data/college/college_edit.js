@@ -100,21 +100,17 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
      * @param data json数据
      */
     function schoolData(data) {
-        var source = $("#school-template").html();
-        var template = Handlebars.compile(source);
+        var template = Handlebars.compile($("#school-template").html());
 
         Handlebars.registerHelper('school_value', function () {
-            var value = Handlebars.escapeExpression(this.schoolId);
-            return new Handlebars.SafeString(value);
+            return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolId));
         });
 
         Handlebars.registerHelper('school_name', function () {
-            var name = Handlebars.escapeExpression(this.schoolName);
-            return new Handlebars.SafeString(name);
+            return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolName));
         });
 
-        var html = template(data);
-        $(paramId.schoolId).html(html);
+        $(paramId.schoolId).html(template(data));
 
         // 只在页面初始化加载一次
         if (selectedSchoolCount) {

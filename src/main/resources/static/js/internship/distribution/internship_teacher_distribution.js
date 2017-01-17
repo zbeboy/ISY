@@ -96,36 +96,29 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param data 数据
          */
         function listData(data) {
-            var source = $("#internship-release-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#internship-release-template").html());
 
             Handlebars.registerHelper('internship_title', function () {
-                var value = Handlebars.escapeExpression(this.internshipTitle);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTitle));
             });
 
             Handlebars.registerHelper('school_name', function () {
-                var value = Handlebars.escapeExpression(this.schoolName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolName));
             });
 
             Handlebars.registerHelper('college_name', function () {
-                var value = Handlebars.escapeExpression(this.collegeName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.collegeName));
             });
 
             Handlebars.registerHelper('department_name', function () {
-                var value = Handlebars.escapeExpression(this.departmentName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentName));
             });
 
             Handlebars.registerHelper('real_name', function () {
-                var value = Handlebars.escapeExpression(this.realName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
             });
 
-            var html = template(data);
-            $(tableData).html(html);
+            $(tableData).html(template(data));
         }
 
         /*

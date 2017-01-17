@@ -175,30 +175,23 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          * @param data 数据
          */
         function listData(data) {
-            var source = $("#internship-audit-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#internship-audit-template").html());
             Handlebars.registerHelper('student_name', function () {
-                var value = Handlebars.escapeExpression(this.studentName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.studentName));
             });
             Handlebars.registerHelper('science_name', function () {
-                var value = Handlebars.escapeExpression(this.scienceName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
             });
             Handlebars.registerHelper('organize_name', function () {
-                var value = Handlebars.escapeExpression(this.organizeName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
             });
             Handlebars.registerHelper('internship_apply_state', function () {
-                var value = Handlebars.escapeExpression(internshipApplyStateCode(this.internshipApplyState));
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(internshipApplyStateCode(this.internshipApplyState)));
             });
             Handlebars.registerHelper('reason', function () {
-                var value = Handlebars.escapeExpression(this.reason);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.reason));
             });
-            var html = template(data);
-            $(tableData).html(html);
+            $(tableData).html(template(data));
         }
 
         /**
@@ -543,21 +536,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         function initSearchSciences() {
             $.post(web_path + ajax_url.science_data_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
-                var source = $("#science-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#science-template").html());
 
                 Handlebars.registerHelper('science_value', function () {
-                    var value = Handlebars.escapeExpression(this.scienceId);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceId));
                 });
 
                 Handlebars.registerHelper('science_name', function () {
-                    var name = Handlebars.escapeExpression(this.scienceName);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
                 });
-
-                var html = template(data);
-                $(paramId.scienceName).html(html);
+                $(paramId.scienceName).html(template(data));
             });
         }
 
@@ -568,8 +556,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function changeOrganize(science) {
 
             if (science === 0) {
-                var source = $("#organize-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
                     listResult: [
@@ -578,35 +565,26 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                 };
 
                 Handlebars.registerHelper('organize_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('organize_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
-
-                var html = template(context);
-                $(paramId.organizeName).html(html);
+                $(paramId.organizeName).html(template(context));
             } else {
                 // 根据年级查询全部班级
                 $.post(web_path + ajax_url.organize_data_url, {scienceId: science}, function (data) {
-                    var source = $("#organize-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#organize-template").html());
 
                     Handlebars.registerHelper('organize_value', function () {
-                        var value = Handlebars.escapeExpression(this.organizeId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeId));
                     });
 
                     Handlebars.registerHelper('organize_name', function () {
-                        var name = Handlebars.escapeExpression(this.organizeName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
                     });
-
-                    var html = template(data);
-                    $(paramId.organizeName).html(html);
+                    $(paramId.organizeName).html(template(data));
                 });
             }
         }

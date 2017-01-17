@@ -318,8 +318,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         function changeDepartment(college_id) {
 
             if (Number(college_id) == 0) {
-                var source = $("#department-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#department-template").html());
 
                 var context = {
                     listResult: [
@@ -328,37 +327,30 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                 };
 
                 Handlebars.registerHelper('department_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('department_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
 
-                var html = template(context);
-                $(paramId.select_department).html(html);
+                $(paramId.select_department).html(template(context));
             } else {
                 // 根据院id查询全部系
                 // 显示遮罩
                 startLoading();
                 $.post(web_path + ajax_url.department_data_url, {collegeId: college_id}, function (data) {
-                    var source = $("#department-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#department-template").html());
 
                     Handlebars.registerHelper('department_value', function () {
-                        var value = Handlebars.escapeExpression(this.departmentId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentId));
                     });
 
                     Handlebars.registerHelper('department_name', function () {
-                        var name = Handlebars.escapeExpression(this.departmentName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentName));
                     });
 
-                    var html = template(data);
-                    $(paramId.select_department).html(html);
+                    $(paramId.select_department).html(template(data));
                     // 只在页面初始化时执行
                     if (selectedDepartmentCount) {
                         selectedDepartment();
@@ -377,8 +369,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         function changeScience(department_id) {
 
             if (Number(department_id) == 0) {
-                var source = $("#science-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#science-template").html());
 
                 var context = {
                     listResult: [
@@ -387,37 +378,30 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                 };
 
                 Handlebars.registerHelper('science_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('science_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
 
-                var html = template(context);
-                $(paramId.select_science).html(html);
+                $(paramId.select_science).html(template(context));
             } else {
                 // 根据系id查询全部专业
                 // 显示遮罩
                 startLoading();
                 $.post(web_path + ajax_url.science_data_url, {departmentId: department_id}, function (data) {
-                    var source = $("#science-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#science-template").html());
 
                     Handlebars.registerHelper('science_value', function () {
-                        var value = Handlebars.escapeExpression(this.scienceId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceId));
                     });
 
                     Handlebars.registerHelper('science_name', function () {
-                        var name = Handlebars.escapeExpression(this.scienceName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
                     });
 
-                    var html = template(data);
-                    $(paramId.select_science).html(html);
+                    $(paramId.select_science).html(template(data));
                     // 只在页面初始化时执行
                     if (selectedScienceCount) {
                         selectedScience();
@@ -436,8 +420,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         function changeGrade(science_id) {
 
             if (Number(science_id) == 0) {
-                var source = $("#grade-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#grade-template").html());
 
                 var context = {
                     listResult: [
@@ -446,37 +429,30 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                 };
 
                 Handlebars.registerHelper('grade_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('grade_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
 
-                var html = template(context);
-                $(paramId.select_grade).html(html);
+                $(paramId.select_grade).html(template(context));
             } else {
                 // 根据专业id查询全部年级
                 // 显示遮罩
                 startLoading();
                 $.post(web_path + ajax_url.grade_data_url, {scienceId: science_id}, function (data) {
-                    var source = $("#grade-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#grade-template").html());
 
                     Handlebars.registerHelper('grade_value', function () {
-                        var value = Handlebars.escapeExpression(this.value);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                     });
 
                     Handlebars.registerHelper('grade_name', function () {
-                        var name = Handlebars.escapeExpression(this.text);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.text));
                     });
 
-                    var html = template(data);
-                    $(paramId.select_grade).html(html);
+                    $(paramId.select_grade).html(template(data));
                     // 只在页面初始化时执行
                     if (selectedGradeCount) {
                         selectedGrade();
@@ -496,8 +472,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         function changeOrganize(grade, scienceId) {
 
             if (grade == 0 || grade === '' || scienceId <= 0) {
-                var source = $("#organize-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
                     listResult: [
@@ -506,37 +481,30 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
                 };
 
                 Handlebars.registerHelper('organize_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('organize_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
 
-                var html = template(context);
-                $(paramId.select_organize).html(html);
+                $(paramId.select_organize).html(template(context));
             } else {
                 // 根据年级查询全部班级
                 // 显示遮罩
                 startLoading();
                 $.post(web_path + ajax_url.organize_data_url, {grade: grade, scienceId: scienceId}, function (data) {
-                    var source = $("#organize-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#organize-template").html());
 
                     Handlebars.registerHelper('organize_value', function () {
-                        var value = Handlebars.escapeExpression(this.organizeId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeId));
                     });
 
                     Handlebars.registerHelper('organize_name', function () {
-                        var name = Handlebars.escapeExpression(this.organizeName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
                     });
 
-                    var html = template(data);
-                    $(paramId.select_organize).html(html);
+                    $(paramId.select_organize).html(template(data));
                     // 只在页面初始化时执行
                     if (selectedOrganizeCount) {
                         selectedOrganize();

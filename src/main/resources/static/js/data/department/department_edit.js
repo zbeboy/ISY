@@ -122,8 +122,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          * @param data json数据
          */
         function schoolData(data) {
-            var source = $("#school-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#school-template").html());
 
             Handlebars.registerHelper('school_value', function () {
                 var value = Handlebars.escapeExpression(this.schoolId);
@@ -135,8 +134,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                 return new Handlebars.SafeString(name);
             });
 
-            var html = template(data);
-            $(paramId.schoolId).html(html);
+            $(paramId.schoolId).html(template(data));
 
             // 只在初始化时执行
             if (selectedSchoolCount) {
@@ -231,8 +229,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function changeCollege(school_id) {
             if (Number(school_id) == 0) {
-                var source = $("#college-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
                     listResult: [
@@ -250,15 +247,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                     return new Handlebars.SafeString(name);
                 });
 
-                var html = template(context);
-                $(paramId.collegeId).html(html);
+                $(paramId.collegeId).html(template(context));
             } else {
                 // 根据学校id查询院数据
                 startLoading();
                 $.post(web_path + ajax_url.college_data_url, {schoolId: school_id}, function (data) {
                     endLoading();
-                    var source = $("#college-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#college-template").html());
 
                     Handlebars.registerHelper('college_value', function () {
                         var value = Handlebars.escapeExpression(this.collegeId);
@@ -270,8 +265,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                         return new Handlebars.SafeString(name);
                     });
 
-                    var html = template(data);
-                    $(paramId.collegeId).html(html);
+                    $(paramId.collegeId).html(template(data));
 
                     // 只在页面初始化时执行
                     if (selectedCollegeCount) {
@@ -364,7 +358,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
 
         /**
          * 检验学校id
-         * @param msg
          */
         function validSchoolId() {
             initParam();

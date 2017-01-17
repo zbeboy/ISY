@@ -27,21 +27,16 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
          */
         function initSearchSciences() {
             $.post(web_path + getAjaxUrl().science_data_url, {internshipReleaseId: init_page_param.internshipReleaseId}, function (data) {
-                var source = $("#science-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#science-template").html());
 
                 Handlebars.registerHelper('science_value', function () {
-                    var value = Handlebars.escapeExpression(this.scienceId);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceId));
                 });
 
                 Handlebars.registerHelper('science_name', function () {
-                    var name = Handlebars.escapeExpression(this.scienceName);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
                 });
-
-                var html = template(data);
-                $(getParamId().scienceName).html(html);
+                $(getParamId().scienceName).html(template(data));
             });
         }
 
@@ -52,8 +47,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         function changeOrganize(science) {
 
             if (science === 0) {
-                var source = $("#organize-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
                     listResult: [
@@ -62,42 +56,32 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 };
 
                 Handlebars.registerHelper('organize_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('organize_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
-
-                var html = template(context);
-                $(getParamId().organizeName).html(html);
+                $(getParamId().organizeName).html(template(context));
             } else {
                 // 根据年级查询全部班级
                 $.post(web_path + getAjaxUrl().organize_data_url, {scienceId: science}, function (data) {
-                    var source = $("#organize-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#organize-template").html());
 
                     Handlebars.registerHelper('organize_value', function () {
-                        var value = Handlebars.escapeExpression(this.organizeId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeId));
                     });
 
                     Handlebars.registerHelper('organize_name', function () {
-                        var name = Handlebars.escapeExpression(this.organizeName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
                     });
-
-                    var html = template(data);
-                    $(getParamId().organizeName).html(html);
+                    $(getParamId().organizeName).html(template(data));
                 });
             }
         }
 
-        var operator_button = $("#operator_button").html();
         // 预编译模板
-        var template = Handlebars.compile(operator_button);
+        var template = Handlebars.compile($("#operator_button").html());
 
         // datatables 初始化
         var responsiveHelper = undefined;

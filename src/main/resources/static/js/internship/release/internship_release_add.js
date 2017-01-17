@@ -272,21 +272,16 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * @param data json数据
          */
         function schoolData(data) {
-            var source = $("#school-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#school-template").html());
 
             Handlebars.registerHelper('school_value', function () {
-                var value = Handlebars.escapeExpression(this.schoolId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolId));
             });
 
             Handlebars.registerHelper('school_name', function () {
-                var name = Handlebars.escapeExpression(this.schoolName);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolName));
             });
-
-            var html = template(data);
-            $(paramId.schoolId).html(html);
+            $(paramId.schoolId).html(template(data));
         }
 
         /**
@@ -294,21 +289,16 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * @param data json数据
          */
         function internshipTypeData(data) {
-            var source = $("#internship-type-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#internship-type-template").html());
 
             Handlebars.registerHelper('internship_type_value', function () {
-                var value = Handlebars.escapeExpression(this.internshipTypeId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTypeId));
             });
 
             Handlebars.registerHelper('internship_type_name', function () {
-                var name = Handlebars.escapeExpression(this.internshipTypeName);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTypeName));
             });
-
-            var html = template(data);
-            $(paramId.internshipTypeId).html(html);
+            $(paramId.internshipTypeId).html(template(data));
         }
 
         // 检验实习标题
@@ -438,8 +428,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          */
         function changeCollege(school_id) {
             if (Number(school_id) == 0) {
-                var source = $("#college-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
                     listResult: [
@@ -448,37 +437,28 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 };
 
                 Handlebars.registerHelper('college_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('college_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
-
-                var html = template(context);
-                $(paramId.collegeId).html(html);
+                $(paramId.collegeId).html(template(context));
             } else {
                 // 根据学校id查询院数据
                 startLoading();
                 $.post(web_path + ajax_url.college_data_url, {schoolId: school_id}, function (data) {
                     endLoading();
-                    var source = $("#college-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#college-template").html());
 
                     Handlebars.registerHelper('college_value', function () {
-                        var value = Handlebars.escapeExpression(this.collegeId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.collegeId));
                     });
 
                     Handlebars.registerHelper('college_name', function () {
-                        var name = Handlebars.escapeExpression(this.collegeName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.collegeName));
                     });
-
-                    var html = template(data);
-                    $(paramId.collegeId).html(html);
+                    $(paramId.collegeId).html(template(data));
                 });
             }
         }
@@ -490,8 +470,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         function changeDepartment(college_id) {
 
             if (Number(college_id) == 0) {
-                var source = $("#department-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#department-template").html());
 
                 var context = {
                     listResult: [
@@ -500,37 +479,28 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 };
 
                 Handlebars.registerHelper('department_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('department_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
-
-                var html = template(context);
-                $(paramId.departmentId).html(html);
+                $(paramId.departmentId).html(template(context));
             } else {
                 // 根据院id查询全部系
                 startLoading();
                 $.post(web_path + ajax_url.department_data_url, {collegeId: college_id}, function (data) {
                     endLoading();
-                    var source = $("#department-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#department-template").html());
 
                     Handlebars.registerHelper('department_value', function () {
-                        var value = Handlebars.escapeExpression(this.departmentId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentId));
                     });
 
                     Handlebars.registerHelper('department_name', function () {
-                        var name = Handlebars.escapeExpression(this.departmentName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentName));
                     });
-
-                    var html = template(data);
-                    $(paramId.departmentId).html(html);
+                    $(paramId.departmentId).html(template(data));
                 });
             }
         }
@@ -541,8 +511,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          */
         function changeGrade(department_id) {
             if (Number(department_id) == 0) {
-                var source = $("#grade-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#grade-template").html());
 
                 var context = {
                     listResult: [
@@ -551,37 +520,28 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 };
 
                 Handlebars.registerHelper('grade_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('grade_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
-
-                var html = template(context);
-                $(paramId.grade).html(html);
+                $(paramId.grade).html(template(context));
             } else {
                 // 根据系id查询全部年级
                 startLoading();
                 $.post(web_path + ajax_url.grade_data_url, {departmentId: department_id}, function (data) {
                     endLoading();
-                    var source = $("#grade-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#grade-template").html());
 
                     Handlebars.registerHelper('grade_value', function () {
-                        var value = Handlebars.escapeExpression(this.value);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                     });
 
                     Handlebars.registerHelper('grade_name', function () {
-                        var name = Handlebars.escapeExpression(this.text);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.text));
                     });
-
-                    var html = template(data);
-                    $(paramId.grade).html(html);
+                    $(paramId.grade).html(template(data));
                 });
             }
         }
@@ -599,21 +559,16 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             } else {
                 // 根据年级查询全部专业
                 $.post(web_path + ajax_url.science_data_url, {grade: grade, departmentId: department}, function (data) {
-                    var source = $("#science-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#science-template").html());
 
                     Handlebars.registerHelper('science_value', function () {
-                        var value = Handlebars.escapeExpression(this.scienceId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceId));
                     });
 
                     Handlebars.registerHelper('science_name', function () {
-                        var name = Handlebars.escapeExpression(this.scienceName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
                     });
-
-                    var html = template(data);
-                    $(paramId.scienceId).html(html);
+                    $(paramId.scienceId).html(template(data));
                     $(paramId.scienceId).selectpicker('refresh');
                 });
             }
@@ -698,41 +653,32 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * @param data 数据
          */
         function fileShow(data) {
-            var source = $("#file-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#file-template").html());
 
             Handlebars.registerHelper('original_file_name', function () {
-                var value = Handlebars.escapeExpression(this.originalFileName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.originalFileName));
             });
 
             Handlebars.registerHelper('size', function () {
-                var value = Handlebars.escapeExpression(transformationFileUnit(this.size));
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(transformationFileUnit(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
-                var value = Handlebars.escapeExpression(data.objectResult + this.newName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(data.objectResult + this.newName));
             });
 
             Handlebars.registerHelper('new_name', function () {
-                var value = Handlebars.escapeExpression(this.newName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.newName));
             });
 
             Handlebars.registerHelper('ext', function () {
-                var value = Handlebars.escapeExpression(this.ext);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.ext));
             });
 
             Handlebars.registerHelper('l_size', function () {
-                var value = Handlebars.escapeExpression(this.size);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.size));
             });
-
-            var html = template(data);
-            $('#fileShow').append(html);
+            $('#fileShow').append(template(data));
         }
 
         /*

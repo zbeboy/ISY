@@ -164,21 +164,17 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
          * @param data
          */
         function studentData(data) {
-            var source = $("#student-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#student-template").html());
 
             Handlebars.registerHelper('student_value', function () {
-                var value = Handlebars.escapeExpression(this.studentId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.studentId));
             });
 
             Handlebars.registerHelper('student_name', function () {
-                var name = Handlebars.escapeExpression(this.realName + ' ' + this.studentNumber);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.studentNumber));
             });
 
-            var html = template(data);
-            $(paramId.studentId).html(html);
+            $(paramId.studentId).html(template(data));
             initStudentSelect();
         }
 

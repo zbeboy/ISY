@@ -92,10 +92,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * @param data 数据
          */
         function listData(data) {
-            var source = $("#alert-more-template").html();
-            var template = Handlebars.compile(source);
-            var html = template(data);
-            $(tableData).html(html);
+            var template = Handlebars.compile($("#alert-more-template").html());
+            $(tableData).html(template(data));
         }
 
         init();

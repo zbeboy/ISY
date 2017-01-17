@@ -35,38 +35,31 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
          * @param data 数据
          */
         function listData(data) {
-            var source = $("#timeline-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#timeline-template").html());
             var count = 0;
 
             Handlebars.registerHelper('timeline_state_css', function () {
-                var value = Handlebars.escapeExpression('info');
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression('info'));
             });
 
             Handlebars.registerHelper('icon', function () {
-                var value = Handlebars.escapeExpression('fa fa-pencil');
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression('fa fa-pencil'));
             });
 
             Handlebars.registerHelper('internship_title', function () {
-                var value = Handlebars.escapeExpression(this.internshipTitle);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTitle));
             });
 
             Handlebars.registerHelper('time', function () {
-                var value = Handlebars.escapeExpression(this.changeTimeStr);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.changeTimeStr));
             });
 
             Handlebars.registerHelper('organize_name', function () {
-                var value = Handlebars.escapeExpression(this.organizeName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
             });
 
             Handlebars.registerHelper('real_name', function () {
-                var value = Handlebars.escapeExpression(this.realName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
             });
 
             Handlebars.registerHelper('inverted', function () {
@@ -81,27 +74,21 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
             });
 
             Handlebars.registerHelper('company_name', function () {
-                var value = Handlebars.escapeExpression(this.companyName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.companyName));
             });
 
             Handlebars.registerHelper('company_address', function () {
-                var value = Handlebars.escapeExpression(this.companyAddress);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.companyAddress));
             });
 
             Handlebars.registerHelper('company_contacts', function () {
-                var value = Handlebars.escapeExpression(this.companyContacts);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.companyContacts));
             });
 
             Handlebars.registerHelper('company_tel', function () {
-                var value = Handlebars.escapeExpression(this.companyTel);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.companyTel));
             });
-
-            var html = template(data);
-            $('#timeData').html(html);
+            $('#timeData').html(template(data));
         }
 
         init();

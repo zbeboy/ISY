@@ -127,21 +127,17 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          * @param data json数据
          */
         function schoolData(data) {
-            var source = $("#school-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#school-template").html());
 
             Handlebars.registerHelper('school_value', function () {
-                var value = Handlebars.escapeExpression(this.schoolId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolId));
             });
 
             Handlebars.registerHelper('school_name', function () {
-                var name = Handlebars.escapeExpression(this.schoolName);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolName));
             });
 
-            var html = template(data);
-            $(paramId.schoolId).html(html);
+            $(paramId.schoolId).html(template(data));
 
             if (selectedSchoolCount) {
                 selectedSchool();
@@ -274,8 +270,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function changeCollege(school_id) {
             if (Number(school_id) == 0) {
-                var source = $("#college-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
                     listResult: [
@@ -284,37 +279,30 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                 };
 
                 Handlebars.registerHelper('college_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('college_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
 
-                var html = template(context);
-                $(paramId.collegeId).html(html);
+                $(paramId.collegeId).html(template(context));
             } else {
                 // 根据学校id查询院数据
                 startLoading();
                 $.post(web_path + ajax_url.college_data_url, {schoolId: school_id}, function (data) {
                     endLoading();
-                    var source = $("#college-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#college-template").html());
 
                     Handlebars.registerHelper('college_value', function () {
-                        var value = Handlebars.escapeExpression(this.collegeId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.collegeId));
                     });
 
                     Handlebars.registerHelper('college_name', function () {
-                        var name = Handlebars.escapeExpression(this.collegeName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.collegeName));
                     });
 
-                    var html = template(data);
-                    $(paramId.collegeId).html(html);
+                    $(paramId.collegeId).html(template(data));
 
                     if (selectedCollegeCount) {
                         selectedCollege();
@@ -331,8 +319,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
         function changeDepartment(college_id) {
 
             if (Number(college_id) == 0) {
-                var source = $("#department-template").html();
-                var template = Handlebars.compile(source);
+                var template = Handlebars.compile($("#department-template").html());
 
                 var context = {
                     listResult: [
@@ -341,37 +328,30 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                 };
 
                 Handlebars.registerHelper('department_value', function () {
-                    var value = Handlebars.escapeExpression(this.value);
-                    return new Handlebars.SafeString(value);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
                 });
 
                 Handlebars.registerHelper('department_name', function () {
-                    var name = Handlebars.escapeExpression(this.name);
-                    return new Handlebars.SafeString(name);
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
                 });
 
-                var html = template(context);
-                $(paramId.departmentId).html(html);
+                $(paramId.departmentId).html(template(context));
             } else {
                 // 根据院id查询全部系
                 startLoading();
                 $.post(web_path + ajax_url.department_data_url, {collegeId: college_id}, function (data) {
                     endLoading();
-                    var source = $("#department-template").html();
-                    var template = Handlebars.compile(source);
+                    var template = Handlebars.compile($("#department-template").html());
 
                     Handlebars.registerHelper('department_value', function () {
-                        var value = Handlebars.escapeExpression(this.departmentId);
-                        return new Handlebars.SafeString(value);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentId));
                     });
 
                     Handlebars.registerHelper('department_name', function () {
-                        var name = Handlebars.escapeExpression(this.departmentName);
-                        return new Handlebars.SafeString(name);
+                        return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentName));
                     });
 
-                    var html = template(data);
-                    $(paramId.departmentId).html(html);
+                    $(paramId.departmentId).html(template(data));
 
                     if (selectedDepartmentCount) {
                         selectedDepartment();

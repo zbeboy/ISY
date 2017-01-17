@@ -35,43 +35,35 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
          * @param data 数据
          */
         function listData(data) {
-            var source = $("#timeline-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#timeline-template").html());
             var count = 0;
 
             Handlebars.registerHelper('timeline_state_css', function () {
-                var value = Handlebars.escapeExpression(badgeCss(this.state));
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(badgeCss(this.state)));
             });
 
             Handlebars.registerHelper('icon', function () {
-                var value = Handlebars.escapeExpression(iconCss(this.state));
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(iconCss(this.state)));
             });
 
             Handlebars.registerHelper('internship_title', function () {
-                var value = Handlebars.escapeExpression(this.internshipTitle);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTitle));
             });
 
             Handlebars.registerHelper('time', function () {
-                var value = Handlebars.escapeExpression(this.applyTimeStr);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.applyTimeStr));
             });
 
             Handlebars.registerHelper('organize_name', function () {
-                var value = Handlebars.escapeExpression(this.organizeName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
             });
 
             Handlebars.registerHelper('real_name', function () {
-                var value = Handlebars.escapeExpression(this.realName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
             });
 
             Handlebars.registerHelper('state', function () {
-                var value = Handlebars.escapeExpression(internshipApplyStateCode(this.state));
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(internshipApplyStateCode(this.state)));
             });
 
             Handlebars.registerHelper('inverted', function () {
@@ -84,9 +76,7 @@ require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/cus
                 count++;
                 return new Handlebars.SafeString(value);
             });
-
-            var html = template(data);
-            $('#timeData').html(html);
+            $('#timeData').html(template(data));
         }
 
         /**

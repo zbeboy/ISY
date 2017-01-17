@@ -217,21 +217,17 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          * @param data json数据
          */
         function nationData(data) {
-            var source = $("#nation-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#nation-template").html());
 
             Handlebars.registerHelper('nation_value', function () {
-                var value = Handlebars.escapeExpression(this.nationId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.nationId));
             });
 
             Handlebars.registerHelper('nation_name', function () {
-                var name = Handlebars.escapeExpression(this.nationName);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.nationName));
             });
 
-            var html = template(data);
-            $(paramId.select_nation).html(html);
+            $(paramId.select_nation).html(template(data));
             if (selectedNationCount) {
                 selectedNation();
                 selectedNationCount = false;
@@ -243,21 +239,17 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          * @param data json数据
          */
         function politicalLandscapeData(data) {
-            var source = $("#political-landscape-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#political-landscape-template").html());
 
             Handlebars.registerHelper('political_landscape_value', function () {
-                var value = Handlebars.escapeExpression(this.politicalLandscapeId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.politicalLandscapeId));
             });
 
             Handlebars.registerHelper('political_landscape_name', function () {
-                var name = Handlebars.escapeExpression(this.politicalLandscapeName);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.politicalLandscapeName));
             });
 
-            var html = template(data);
-            $(paramId.select_political_landscape).html(html);
+            $(paramId.select_political_landscape).html(template(data));
             if (selectedPoliticalLandscapeCount) {
                 selectedPoliticalLandscape();
                 selectedPoliticalLandscapeCount = false;

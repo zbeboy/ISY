@@ -28,9 +28,8 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             }
         }
 
-        var operator_button = $("#operator_button").html();
         // 预编译模板
-        var template = Handlebars.compile(operator_button);
+        var template = Handlebars.compile($("#operator_button").html());
 
         // datatables 初始化
         var responsiveHelper = undefined;

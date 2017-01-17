@@ -8,21 +8,17 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
          * @param data json数据
          */
         function roleData(data) {
-            var source = $("#role-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#role-template").html());
 
             Handlebars.registerHelper('value', function () {
-                var value = Handlebars.escapeExpression(this.roleEnName);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.roleEnName));
             });
 
             Handlebars.registerHelper('name', function () {
-                var name = Handlebars.escapeExpression(this.roleName);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.roleName));
             });
 
-            var html = template(data);
-            return html;
+            return template(data);
         }
 
         /*
@@ -213,9 +209,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
          * init pass tab table.
          */
         function pass() {
-            var operator_button = $("#operator_button").html();
             // 预编译模板
-            var template = Handlebars.compile(operator_button);
+            var template = Handlebars.compile($("#operator_button").html());
 
             // datatables 初始化
             var responsiveHelper = undefined;
@@ -346,8 +341,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                                 };
                             }
 
-                            var html = template(context);
-                            return html;
+                            return template(context);
                         }
                     }
                 ],
@@ -766,9 +760,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         });
 
         function wait() {
-            var operator_button = $("#operator_button").html();
             // 预编译模板
-            var template = Handlebars.compile(operator_button);
+            var template = Handlebars.compile($("#operator_button").html());
 
             // datatables 初始化
             var responsiveHelper = undefined;
@@ -852,9 +845,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                                 ]
                             };
 
-
-                            var html = template(context);
-                            return html;
+                            return template(context);
                         }
                     }
                 ],

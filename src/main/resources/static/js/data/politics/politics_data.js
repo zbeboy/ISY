@@ -17,9 +17,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             };
         }
 
-        var operator_button = $("#operator_button").html();
         // 预编译模板
-        var template = Handlebars.compile(operator_button);
+        var template = Handlebars.compile($("#operator_button").html());
 
         // datatables 初始化
         var responsiveHelper = undefined;
@@ -77,8 +76,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                                 }
                             ]
                         };
-                        var html = template(context);
-                        return html;
+                        return template(context);
                     }
                 }
             ],

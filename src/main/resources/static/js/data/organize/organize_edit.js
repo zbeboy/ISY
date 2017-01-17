@@ -141,21 +141,17 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          * @param data json数据
          */
         function schoolData(data) {
-            var source = $("#school-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#school-template").html());
 
             Handlebars.registerHelper('school_value', function () {
-                var value = Handlebars.escapeExpression(this.schoolId);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolId));
             });
 
             Handlebars.registerHelper('school_name', function () {
-                var name = Handlebars.escapeExpression(this.schoolName);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolName));
             });
 
-            var html = template(data);
-            $(paramId.schoolId).html(html);
+            $(paramId.schoolId).html(template(data));
 
             if (selectedSchoolCount) {
                 selectedSchool();
@@ -532,11 +528,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          * 改变年级选项
          */
         function changeGrade() {
-            var source = $("#grade-template").html();
-            var template = Handlebars.compile(source);
+            var template = Handlebars.compile($("#grade-template").html());
 
-            var date = new Date();
-            var year = date.getFullYear();
+            var year = new Date().getFullYear();
             var beforeYear = year - 5;
             var afterYear = year + 3;
 
@@ -554,17 +548,14 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             };
 
             Handlebars.registerHelper('grade_value', function () {
-                var value = Handlebars.escapeExpression(this.value);
-                return new Handlebars.SafeString(value);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
             });
 
             Handlebars.registerHelper('grade_name', function () {
-                var name = Handlebars.escapeExpression(this.name);
-                return new Handlebars.SafeString(name);
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
             });
 
-            var html = template(context);
-            $(paramId.grade).html(html);
+            $(paramId.grade).html(template(context));
 
             if (selectedGradeCount) {
                 selectedGrade();
@@ -654,7 +645,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
 
         /**
          * 检验学校id
-         * @param msg
          */
         function validSchoolId() {
             initParam();
