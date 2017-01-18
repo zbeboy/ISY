@@ -816,7 +816,11 @@ public class StaffServiceImpl implements StaffService {
             }
 
         }
-        selectConditionStep.orderBy(sortField);
+        if (!ObjectUtils.isEmpty(sortField)) {
+            selectConditionStep.orderBy(sortField);
+        } else {
+            selectConditionStep.orderBy(USERS.USERNAME);
+        }
     }
 
     /**

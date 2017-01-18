@@ -976,7 +976,11 @@ public class StudentServiceImpl implements StudentService {
             }
 
         }
-        selectConditionStep.orderBy(sortField);
+        if (!ObjectUtils.isEmpty(sortField)) {
+            selectConditionStep.orderBy(sortField);
+        } else {
+            selectConditionStep.orderBy(USERS.USERNAME);
+        }
     }
 
     /**
