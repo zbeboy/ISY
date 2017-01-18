@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             internship_apply_data_url: '/web/internship/apply/data',
             my_internship_apply_data_url: '/web/internship/apply/my/data',
+            my_internship_look_data_url: '/web/internship/apply/audit/detail',
             recall_apply_url: '/web/internship/apply/recall',
             change_state_url: '/web/internship/apply/state',
             access_url: '/web/internship/apply/access',
@@ -349,6 +350,15 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         /*
+         查看详情
+         */
+        $(myTableData).delegate('.myApplyLook', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            $.address.value(ajax_url.my_internship_look_data_url + "?id=" + id + "&studentId=" + studentId);
+        });
+
+        /*
          撤消申请
          */
         $(myTableData).delegate('.recallApply', "click", function () {
@@ -398,8 +408,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(myTableData).delegate('.deleteFile', "click", function () {
             var id = $(this).attr('data-id');
             var student = $(this).attr('data-student');
-            $.post(web_path + ajax_url.delete_file,{id:id,studentId:student},function(data){
-                if(data.state){
+            $.post(web_path + ajax_url.delete_file, {id: id, studentId: student}, function (data) {
+                if (data.state) {
                     Messenger().post({
                         message: data.msg,
                         type: 'success',

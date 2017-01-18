@@ -284,10 +284,10 @@
                     <div>
                         <span>电子资料:</span>
                         <span>{{originalFileName}}.{{ext}}</span>
-                        <button type="button" class="btn btn-default downloadFile" data-id="{{fileId}}">
+                        <button type="button" class="btn btn-default btn-sm downloadFile" data-id="{{fileId}}">
                             下载
                         </button>
-                        <button type="button" class="btn btn-default deleteFile" data-id="{{internshipReleaseId}}"
+                        <button type="button" class="btn btn-warning btn-sm deleteFile" data-id="{{internshipReleaseId}}"
                                 data-student="{{studentId}}">
                             删除
                         </button>
@@ -299,6 +299,10 @@
                         <button type="button" class="btn btn-default myApply" data-id="{{internshipReleaseId}}"
                                 data-student="{{studentId}}">
                             编辑
+                        </button>
+                        <button type="button" class="btn btn-default myApplyLook" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            查看
                         </button>
                         <button type="button" class="btn btn-default recallApply" data-id="{{internshipReleaseId}}"
                                 data-student="{{studentId}}">

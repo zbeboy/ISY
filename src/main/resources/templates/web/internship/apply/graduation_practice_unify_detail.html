@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习审核 -
+                    <small>详情</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="edit_form">
+                    <div class="form-group" id="valid_student_name">
+                        <label>学生姓名</label>
+                        <input class="form-control" th:value="${internshipData.studentName}"
+                               id="studentName" placeholder="学生姓名" readonly="readonly"/>
+                        <p class="text-danger hidden" id="student_name_error_msg"></p>
+                        <input type="hidden" th:value="${internshipData.studentId}" name="studentId" id="studentId"/>
+                        <input type="hidden" th:value="${internshipData.internshipReleaseId}" name="internshipReleaseId"
+                               id="internshipReleaseId"/>
+                    </div>
+                    <div class="form-group" id="valid_college_class">
+                        <label>专业班级</label>
+                        <input class="form-control" th:value="${internshipData.collegeClass}"
+                               id="collegeClass" placeholder="专业班级" readonly="readonly"/>
+                        <p class="text-danger hidden" id="college_class_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_sex">
+                        <label>学生性别</label>
+                        <input class="form-control" th:value="${internshipData.studentSex}"
+                               id="studentSex" placeholder="学生性别" readonly="readonly"/>
+                        <p class="text-danger hidden" id="student_sex_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_student_number">
+                        <label>学生学号</label>
+                        <input class="form-control" th:value="${internshipData.studentNumber}"
+                               id="studentNumber" placeholder="学生学号" readonly="readonly"/>
+                        <p class="text-danger hidden" id="student_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_phone_number">
+                        <label>电话号码</label>
+                        <input class="form-control" th:value="${internshipData.phoneNumber}"
+                               id="phoneNumber" placeholder="电话号码" readonly="readonly"/>
+                        <p class="text-danger hidden" id="phone_number_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_qq_mailbox">
+                        <label>QQ邮箱</label>
+                        <input class="form-control" name="qqMailbox" th:value="${internshipData.qqMailbox}"
+                               id="qqMailbox" placeholder="QQ邮箱" readonly="readonly"/>
+                        <p class="text-danger hidden" id="qq_mailbox_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_parental_contact">
+                        <label>父母联系方式</label>
+                        <input class="form-control" th:value="${internshipData.parentalContact}" name="parentalContact"
+                               id="parentalContact" placeholder="父母联系方式" readonly="readonly"/>
+                        <p class="text-danger hidden" id="parental_contact_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_headmaster">
+                        <label>班主任</label>
+                        <input class="form-control"
+                               th:value="${internshipData.headmaster + ' ' + internshipData.headmasterContact}"
+                               id="headmaster"
+                               placeholder="班主任" readonly="readonly"/>
+                        <p class="text-danger hidden" id="headmaster_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_name">
+                        <label>实习单位名称</label>
+                        <input class="form-control"
+                               th:value="${internshipData.graduationPracticeUnifyName}" id="graduationPracticeUnifyName"
+                               placeholder="实习单位名称" readonly="readonly"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_address">
+                        <label>实习单位地址</label>
+                        <input class="form-control"
+                               th:value="${internshipData.graduationPracticeUnifyAddress}" id="graduationPracticeUnifyAddress"
+                               placeholder="实习单位地址" readonly="readonly"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_address_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_contacts">
+                        <label>实习单位联系人</label>
+                        <input class="form-control"
+                               th:value="${internshipData.graduationPracticeUnifyContacts}" id="graduationPracticeUnifyContacts"
+                               placeholder="实习单位联系人" readonly="readonly"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_contacts_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_graduation_practice_unify_tel">
+                        <label>实习单位联系人联系方式</label>
+                        <input class="form-control"
+                               th:value="${internshipData.graduationPracticeUnifyTel}" id="graduationPracticeUnifyTel"
+                               placeholder="实习单位联系人联系方式" readonly="readonly"/>
+                        <p class="text-danger hidden" id="graduation_practice_unify_tel_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_school_guidance_teacher">
+                        <label>校内指导教师</label>
+                        <input class="form-control" name="schoolGuidanceTeacher"
+                               th:value="${internshipData.schoolGuidanceTeacher + ' ' + internshipData.schoolGuidanceTeacherTel}"
+                               id="schoolGuidanceTeacher" placeholder="校内指导教师" readonly="readonly"/>
+                        <p class="text-danger hidden" id="school_guidance_teacher_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_start_time">
+                        <label>实习开始时间</label>
+                        <input class="form-control" th:value="${internshipData.startTime}" id="startTime"
+                               placeholder="实习开始时间" readonly="readonly"/>
+                        <p class="text-danger hidden" id="start_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_end_time">
+                        <label>实习结束时间</label>
+                        <input class="form-control" th:value="${internshipData.endTime}" id="endTime"
+                               placeholder="实习结束时间" readonly="readonly"/>
+                        <p class="text-danger hidden" id="end_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_commitment_book">
+                        <div class="checkbox" th:if="${internshipData.commitmentBook == 1}">
+                            <label>
+                                <input type="checkbox" value="1" checked="checked" name="commitmentBook" disabled="disabled"/>
+                                承诺书
+                            </label>
+                        </div>
+                        <div class="checkbox"
+                             th:if="${internshipData.commitmentBook == null || internshipData.commitmentBook == 0}">
+                            <label>
+                                <input type="checkbox" value="1" name="commitmentBook" disabled="disabled"/>
+                                承诺书
+                            </label>
+                        </div>
+                        <p class="text-danger hidden" id="commitment_book_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_safety_responsibility_book">
+                        <div class="checkbox" th:if="${internshipData.safetyResponsibilityBook == 1}">
+                            <label>
+                                <input type="checkbox" value="1" checked="checked"
+                                       name="safetyResponsibilityBook" disabled="disabled"/>
+                                安全责任书
+                            </label>
+                        </div>
+                        <div class="checkbox"
+                             th:if="${internshipData.safetyResponsibilityBook == null || internshipData.safetyResponsibilityBook == 0}">
+                            <label>
+                                <input type="checkbox" value="1"
+                                       name="safetyResponsibilityBook" disabled="disabled"/>
+                                安全责任书
+                            </label>
+                        </div>
+                        <p class="text-danger hidden" id="safety_responsibility_book_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_practice_agreement">
+                        <div class="checkbox" th:if="${internshipData.practiceAgreement == 1}">
+                            <label>
+                                <input type="checkbox" value="1" checked="checked" name="practiceAgreement" disabled="disabled"/>
+                                实践协议书
+                            </label>
+                        </div>
+                        <div class="checkbox"
+                             th:if="${internshipData.practiceAgreement == null || internshipData.practiceAgreement == 0}">
+                            <label>
+                                <input type="checkbox" value="1" name="practiceAgreement" disabled="disabled"/>
+                                实践协议书
+                            </label>
+                        </div>
+                        <p class="text-danger hidden" id="practice_agreement_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_internship_application">
+                        <div class="checkbox" th:if="${internshipData.internshipApplication == 1}">
+                            <label>
+                                <input type="checkbox" value="1" checked="checked"
+                                       name="internshipApplication" disabled="disabled"/>
+                                实习申请书
+                            </label>
+                        </div>
+                        <div class="checkbox"
+                             th:if="${internshipData.internshipApplication == null || internshipData.internshipApplication == 0}">
+                            <label>
+                                <input type="checkbox" value="1"
+                                       name="internshipApplication" disabled="disabled"/>
+                                实习申请书
+                            </label>
+                        </div>
+                        <p class="text-danger hidden" id="internship_application_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_practice_receiving">
+                        <div class="checkbox" th:if="${internshipData.practiceReceiving == 1}">
+                            <label>
+                                <input type="checkbox" value="1" checked="checked" name="practiceReceiving" disabled="disabled"/>
+                                实习接收
+                            </label>
+                        </div>
+                        <div class="checkbox"
+                             th:if="${internshipData.practiceReceiving == null || internshipData.practiceReceiving == 0}">
+                            <label>
+                                <input type="checkbox" value="1" name="practiceReceiving" disabled="disabled"/>
+                                实习接收
+                            </label>
+                        </div>
+                        <p class="text-danger hidden" id="practice_receiving_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_security_education_agreement">
+                        <div class="checkbox" th:if="${internshipData.securityEducationAgreement == 1}">
+                            <label>
+                                <input type="checkbox" value="1" checked="checked"
+                                       name="securityEducationAgreement" disabled="disabled"/>
+                                安全教育协议
+                            </label>
+                        </div>
+                        <div class="checkbox"
+                             th:if="${internshipData.securityEducationAgreement == null || internshipData.securityEducationAgreement == 0}">
+                            <label>
+                                <input type="checkbox" value="1"
+                                       name="securityEducationAgreement" disabled="disabled"/>
+                                安全教育协议
+                            </label>
+                        </div>
+                        <p class="text-danger hidden" id="security_education_agreement_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_parental_consent">
+                        <div class="checkbox" th:if="${internshipData.parentalConsent == 1}">
+                            <label>
+                                <input type="checkbox" value="1" checked="checked" name="parentalConsent" disabled="disabled"/>
+                                父母同意书
+                            </label>
+                        </div>
+                        <div class="checkbox"
+                             th:if="${internshipData.parentalConsent == null || internshipData.parentalConsent == 0}">
+                            <label>
+                                <input type="checkbox" value="1" name="parentalConsent" disabled="disabled"/>
+                                父母同意书
+                            </label>
+                        </div>
+                        <p class="text-danger hidden" id="parental_consent_error_msg"></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <input type="hidden" class="dy_script" value="/js/internship/apply/graduation_practice_unify_detail.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

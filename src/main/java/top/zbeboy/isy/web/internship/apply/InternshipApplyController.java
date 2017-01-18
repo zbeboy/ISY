@@ -278,6 +278,80 @@ public class InternshipApplyController {
     }
 
     /**
+     * 查看详情页
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/apply/audit/detail", method = RequestMethod.GET)
+    public String auditDetail(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
+        String page;
+        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
+            page = commonControllerMethodService.showTip(modelMap, "您的个人信息有误");
+            return page;
+        }
+        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
+        switch (internshipType.getInternshipTypeName()) {
+            case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipCollegeRecord.isPresent()) {
+                    InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
+                    modelMap.addAttribute("internshipData", internshipCollege);
+                    page = "web/internship/apply/internship_college_detail::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                }
+                break;
+            case Workbook.INTERNSHIP_COMPANY_TYPE:
+                Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipCompanyRecord.isPresent()) {
+                    InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
+                    modelMap.addAttribute("internshipData", internshipCompany);
+                    page = "web/internship/apply/internship_company_detail::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (graduationPracticeCollegeRecord.isPresent()) {
+                    GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
+                    modelMap.addAttribute("internshipData", graduationPracticeCollege);
+                    page = "web/internship/apply/graduation_practice_college_detail::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (graduationPracticeUnifyRecord.isPresent()) {
+                    GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
+                    modelMap.addAttribute("internshipData", graduationPracticeUnify);
+                    page = "web/internship/apply/graduation_practice_unify_detail::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (graduationPracticeCompanyRecord.isPresent()) {
+                    GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
+                    modelMap.addAttribute("internshipData", graduationPracticeCompany);
+                    page = "web/internship/apply/graduation_practice_company_detail::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                }
+                break;
+            default:
+                page = commonControllerMethodService.showTip(modelMap, "未找到相关实习类型页面");
+        }
+        return page;
+    }
+
+    /**
      * 保存顶岗实习(留学院)
      *
      * @param internshipCollegeVo 顶岗实习(留学院)
