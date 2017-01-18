@@ -37,7 +37,8 @@ requirejs.config({
         "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
         "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate",
         "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination",
-        "quill.bubble": web_path + "/plugin/quill/quill.min"
+        "quill.bubble": web_path + "/plugin/quill/quill.min",
+        "jquery.print": web_path + "/plugin/jquery_print/jquery.print"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -87,8 +88,11 @@ requirejs.config({
         "jquery.simple-pagination": {
             deps: ["jquery"]
         },
-        "quill.bubble":{
-            deps:["css!" + web_path + "/plugin/quill/quill.bubble"]
+        "quill.bubble": {
+            deps: ["css!" + web_path + "/plugin/quill/quill.bubble"]
+        },
+        "jquery.print": {
+            deps: ["jquery"]
         }
     }
 });
