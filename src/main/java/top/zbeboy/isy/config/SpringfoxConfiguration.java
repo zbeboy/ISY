@@ -158,7 +158,7 @@ public class SpringfoxConfiguration {
 
     List<GrantType> grantTypes() {
         GrantType grantType = new ImplicitGrantBuilder()
-                .loginEndpoint(new LoginEndpoint("https://" + isyProperties.getConstants().getServerName() + "/login"))
+                .loginEndpoint(new LoginEndpoint("https://" + isyProperties.getConstants().getServerName() + "/rest/user"))
                 .build();
         return newArrayList(grantType);
     }

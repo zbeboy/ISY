@@ -10,6 +10,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import top.zbeboy.isy.config.ISYProperties;
 
 @Configuration
@@ -17,6 +20,7 @@ import top.zbeboy.isy.config.ISYProperties;
 @EnableCaching
 @ComponentScan
 @EnableConfigurationProperties({ISYProperties.class})
+@EnableAuthorizationServer
 public class Application {
 
     private final Logger log = LoggerFactory.getLogger(Application.class);
