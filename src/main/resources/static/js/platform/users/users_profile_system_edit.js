@@ -10,7 +10,6 @@ require(["jquery", "jquery.cropper.upload", "jquery.showLoading", "messenger", "
          ajax url
          */
         var ajax_url = {
-            file_upload_url: '/anyone/users/upload/avatar',
             avatar_review_url: '/anyone/users/review/avatar',
             update: '/anyone/users/update',
             back: '/anyone/users/profile'
@@ -107,29 +106,7 @@ require(["jquery", "jquery.cropper.upload", "jquery.showLoading", "messenger", "
             forceParse: 0
         });
 
-        // 上传组件
-        /*  $('#fileupload').fileupload({
-         url: web_path + ajax_url.file_upload_url,
-         dataType: 'json',
-         maxFileSize: 10000000,// 10MB
-         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-         done: function (e, data) {
-         initParam();
-         $.each(data.result.listResult, function (index, file) {
-         $('#avatar').attr('src', web_path + ajax_url.avatar_review_url + '?path=' + data.result.objectResult + file.newName);
-         $('#form_avatar').val(data.result.objectResult + file.newName);
-         });
-         },
-         progressall: function (e, data) {
-         var progress = parseInt(data.loaded / data.total * 100, 10);
-         $('#progress').find('.progress-bar').css(
-         'width',
-         progress + '%'
-         );
-         }
-         });*/
-
-        cropper($('#page-wrapper'), web_path + ajax_url.file_upload_url, web_path + ajax_url.avatar_review_url);
+        cropper($('#page-wrapper'), web_path + ajax_url.avatar_review_url);
 
         // 清除头像
         $('#cleanAvatar').click(function () {

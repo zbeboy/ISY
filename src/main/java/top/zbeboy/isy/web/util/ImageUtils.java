@@ -597,6 +597,7 @@ public class ImageUtils {
      */
     public static Rectangle CalcRotatedSize(Rectangle src, int angel) {
         // if angel is greater than 90 degree, we need to do some conversion
+        angel = Math.abs(angel) ;
         if (angel >= 90) {
             if (angel / 90 % 2 == 1) {
                 int temp = src.height;

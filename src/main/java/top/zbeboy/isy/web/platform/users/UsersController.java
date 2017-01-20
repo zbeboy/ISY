@@ -962,10 +962,7 @@ public class UsersController {
             Users users = usersService.getUserFromSession();
             List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
                     RequestUtils.getRealPath(request) + Workbook.avatarPath(users), request.getRemoteAddr());
-
-
             AvatarVo avatarVo = JSON.parseObject(request.getParameter("avatar_data"), AvatarVo.class);
-
             int x = avatarVo.getX();
             int y = avatarVo.getY();
             int height = avatarVo.getHeight();
@@ -987,6 +984,7 @@ public class UsersController {
                     // 旋转头像
                     ImageUtils.makeRotate(cropFile, rotateFile, rotate);
                     FilesUtils.deleteFile(curFile.getAbsolutePath());
+                    FilesUtils.deleteFile(cropFile.getAbsolutePath());
                 } else {
                     data.fail().msg("头像创建失败");
                 }

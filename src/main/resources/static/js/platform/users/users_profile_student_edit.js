@@ -2,9 +2,9 @@
  * Created by lenovo on 2016-10-29.
  */
 //# sourceURL=users_profile_student_edit.js
-require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap", "jquery.address",
+require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", "messenger", "bootstrap", "jquery.address",
         "bootstrap-datetimepicker-zh-CN", "jquery.fileupload-validate"],
-    function ($, Handlebars) {
+    function ($, Handlebars, cropper) {
 
         /*
          ajax url
@@ -12,8 +12,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         var ajax_url = {
             nation_data_url: '/user/nations',
             political_landscape_data_url: '/user/political_landscapes',
-            file_upload_url: '/anyone/users/upload/avatar',
-            avatar_review_url:'/anyone/users/review/avatar',
+            avatar_review_url: '/anyone/users/review/avatar',
             valid_student_url: '/anyone/users/valid/student',
             valid_id_card_url: '/anyone/users/valid/id_card',
             update: '/anyone/users/student/update',
@@ -120,27 +119,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             forceParse: 0
         });
 
-        // 上传组件
-        $('#fileupload').fileupload({
-            url: web_path + ajax_url.file_upload_url,
-            dataType: 'json',
-            maxFileSize: 10000000,// 10MB
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            done: function (e, data) {
-                initParam();
-                $.each(data.result.listResult, function (index, file) {
-                    $('#avatar').attr('src', web_path + ajax_url.avatar_review_url + '?path=' + data.result.objectResult + file.newName);
-                    $('#form_avatar').val(data.result.objectResult + file.newName);
-                });
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress').find('.progress-bar').css(
-                    'width',
-                    progress + '%'
-                );
-            }
-        });
+        cropper($('#page-wrapper'), web_path + ajax_url.avatar_review_url);
 
         // 清除头像
         $('#cleanAvatar').click(function () {

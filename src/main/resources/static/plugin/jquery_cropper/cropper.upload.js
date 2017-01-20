@@ -2,10 +2,9 @@
  * Created by lenovo on 2017/1/19.
  */
 define(["jquery"], function ($) {
-    function CropAvatar($element, $fileUploadUrl, $reviewUrl) {
+    function CropAvatar($element, $reviewUrl) {
         this.$container = $element;
 
-        this.$fileUploadUrl = $fileUploadUrl;
         this.$reviewUrl = $reviewUrl;
 
         this.$avatarView = this.$container.find('.avatar-view');
@@ -265,11 +264,9 @@ define(["jquery"], function ($) {
             if ($.isPlainObject(data) && data.state) {
                 if (data) {
                     var imageUrl = '';
-                    var fileUrl = this.$fileUploadUrl;
                     var reviewUrl = this.$reviewUrl;
                     $.each(data.listResult, function (index, file) {
-                        imageUrl = fileUrl + data.objectResult + file.newName;
-                        $('#avatar').attr('src', reviewUrl + '?path=' + data.objectResult + file.newName);
+                        imageUrl = reviewUrl + '?path=' + data.objectResult + file.newName;
                         $('#form_avatar').val(data.objectResult + file.newName);
                     });
                     this.url = imageUrl;
@@ -317,8 +314,8 @@ define(["jquery"], function ($) {
             this.$avatarUpload.after($alert);
         }
     };
-    return function (ele, fileUrl, reviewUrl) {
-        new CropAvatar(ele, fileUrl, reviewUrl);
+    return function (ele, reviewUrl) {
+        new CropAvatar(ele, reviewUrl);
     };
 });
 
