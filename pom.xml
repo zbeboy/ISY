@@ -23,6 +23,7 @@
         <org.dom4j.version>2.0.0</org.dom4j.version>
         <org.apache.poi.version>3.15</org.apache.poi.version>
         <org.apache.commons.compress>1.12</org.apache.commons.compress>
+        <commons-io.verson>2.4</commons-io.verson>
         <xmlbeans.version>2.3.0</xmlbeans.version>
 
         <!-- webjars properties -->
@@ -312,6 +313,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>${org.apache.commons.compress}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.verson}</version>
         </dependency>
 
         <!-- webjars bootstrap -->

@@ -2,9 +2,9 @@
  * Created by lenovo on 2016-11-02.
  */
 //# sourceURL=users_profile_system_edit.js
-require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.address",
-        "bootstrap-datetimepicker-zh-CN", "jquery.fileupload-validate"],
-    function ($) {
+require(["jquery", "jquery.cropper.upload", "jquery.showLoading", "messenger", "bootstrap", "jquery.address",
+        "bootstrap-datetimepicker-zh-CN"],
+    function ($, cropper) {
 
         /*
          ajax url
@@ -108,31 +108,33 @@ require(["jquery", "jquery.showLoading", "messenger", "bootstrap", "jquery.addre
         });
 
         // 上传组件
-        $('#fileupload').fileupload({
-            url: web_path + ajax_url.file_upload_url,
-            dataType: 'json',
-            maxFileSize: 10000000,// 10MB
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            done: function (e, data) {
-                initParam();
-                $.each(data.result.listResult, function (index, file) {
-                    $('#avatar').attr('src', web_path + ajax_url.avatar_review_url + '?path=' + data.result.objectResult + file.newName);
-                    $('#form_avatar').val(data.result.objectResult + file.newName);
-                });
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress').find('.progress-bar').css(
-                    'width',
-                    progress + '%'
-                );
-            }
-        });
+        /*  $('#fileupload').fileupload({
+         url: web_path + ajax_url.file_upload_url,
+         dataType: 'json',
+         maxFileSize: 10000000,// 10MB
+         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+         done: function (e, data) {
+         initParam();
+         $.each(data.result.listResult, function (index, file) {
+         $('#avatar').attr('src', web_path + ajax_url.avatar_review_url + '?path=' + data.result.objectResult + file.newName);
+         $('#form_avatar').val(data.result.objectResult + file.newName);
+         });
+         },
+         progressall: function (e, data) {
+         var progress = parseInt(data.loaded / data.total * 100, 10);
+         $('#progress').find('.progress-bar').css(
+         'width',
+         progress + '%'
+         );
+         }
+         });*/
+
+        cropper($('#page-wrapper'), web_path + ajax_url.file_upload_url, web_path + ajax_url.avatar_review_url);
 
         // 清除头像
         $('#cleanAvatar').click(function () {
             $('#avatar').attr('src', web_path + '/images/avatar.jpg');
-            $('#form_avatar').val('');
+            $('#form_avatar').val('images/avatar.jpg');
         });
 
         /*

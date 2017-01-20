@@ -1,6 +1,8 @@
 package top.zbeboy.isy.web.platform.users;
 
+import com.alibaba.fastjson.JSON;
 import com.octo.captcha.service.CaptchaServiceException;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -24,6 +26,7 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
 import top.zbeboy.isy.service.*;
 import top.zbeboy.isy.service.util.BCryptUtils;
+import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RandomUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
@@ -33,7 +36,9 @@ import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.jcaptcha.CaptchaServiceSingleton;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.ImageUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
+import top.zbeboy.isy.web.vo.platform.users.AvatarVo;
 import top.zbeboy.isy.web.vo.platform.users.UsersVo;
 import top.zbeboy.isy.web.vo.register.student.StudentVo;
 
@@ -957,9 +962,50 @@ public class UsersController {
             Users users = usersService.getUserFromSession();
             List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
                     RequestUtils.getRealPath(request) + Workbook.avatarPath(users), request.getRemoteAddr());
-            data.success().listData(fileBeen).obj(Workbook.avatarPath(users));
+
+
+            AvatarVo avatarVo = JSON.parseObject(request.getParameter("avatar_data"), AvatarVo.class);
+
+            int x = avatarVo.getX();
+            int y = avatarVo.getY();
+            int height = avatarVo.getHeight();
+            int width = avatarVo.getWidth();
+            int rotate = avatarVo.getRotate();
+
+            for (FileBean curFileInfo : fileBeen) {
+                File curFile = new File(curFileInfo.getLastPath());
+                File cropFile = new File(curFile.getPath().substring(0, curFile.getPath().lastIndexOf('.')) + "_crop" + "." + curFileInfo.getExt());
+                File rotateFile = new File(curFile.getPath().substring(0, curFile.getPath().lastIndexOf('.')) + ".png");
+                // 裁剪头像
+                if (curFile.exists()) {
+                    ImageUtils.crop(curFile,
+                            cropFile, x, y, width, height);
+                } else {
+                    data.fail().msg("头像创建失败");
+                }
+                if (cropFile.exists()) {
+                    // 旋转头像
+                    ImageUtils.makeRotate(cropFile, rotateFile, rotate);
+                    FilesUtils.deleteFile(curFile.getAbsolutePath());
+                } else {
+                    data.fail().msg("头像创建失败");
+                }
+                if (rotateFile.exists()) {
+                    data.success().listData(fileBeen).obj(Workbook.avatarPath(users));
+
+                    curFileInfo.setExt("png");
+                    String tempNewName = curFileInfo.getNewName().substring(0, curFileInfo.getNewName().lastIndexOf('.')) + "." + curFileInfo.getExt();
+                    String tempLastPath = curFileInfo.getLastPath().substring(0, curFileInfo.getLastPath().lastIndexOf('.')) + "." + curFileInfo.getExt();
+                    curFileInfo.setNewName(tempNewName);
+                    curFileInfo.setLastPath(tempLastPath);
+                } else {
+                    data.fail().msg("头像创建失败");
+                }
+            }
+
         } catch (Exception e) {
             log.error("Upload avatar error, error is {}", e);
+            data.fail().msg("头像创建失败");
         }
         return data;
     }

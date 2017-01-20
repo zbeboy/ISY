@@ -38,7 +38,9 @@ requirejs.config({
         "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate",
         "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination",
         "quill.bubble": web_path + "/plugin/quill/quill.min",
-        "jquery.print": web_path + "/plugin/jquery_print/jquery.print"
+        "jquery.print": web_path + "/plugin/jquery_print/jquery.print",
+        "jquery.cropper": web_path + "/plugin/jquery_cropper/cropper.min",
+        "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -93,6 +95,9 @@ requirejs.config({
         },
         "jquery.print": {
             deps: ["jquery"]
+        },
+        "jquery.cropper.upload": {
+            deps: ["jquery.cropper", "css!" + web_path + "/plugin/jquery_cropper/cropper.min", "css!" + web_path + "/plugin/jquery_cropper/cropper.upload"]
         }
     }
 });

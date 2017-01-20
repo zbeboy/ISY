@@ -140,7 +140,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
         // 清除头像
         $('#cleanAvatar').click(function () {
             $('#avatar').attr('src', web_path + '/images/avatar.jpg');
-            $('#form_avatar').val('');
+            $('#form_avatar').val('images/avatar.jpg');
         });
 
         /*
