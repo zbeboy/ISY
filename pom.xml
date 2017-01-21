@@ -626,6 +626,7 @@
                             <encoding>UTF-8</encoding>
                             <nosuffix>true</nosuffix>
                             <force>true</force>
+                            <jswarn>false</jswarn>
                             <excludes>
                                 <exclude>**/*.min.js</exclude>
                                 <exclude>**/*.min.css</exclude>
