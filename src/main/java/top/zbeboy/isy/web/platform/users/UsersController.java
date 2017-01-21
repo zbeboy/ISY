@@ -971,24 +971,23 @@ public class UsersController {
 
             for (FileBean curFileInfo : fileBeen) {
                 File curFile = new File(curFileInfo.getLastPath());
-                File cropFile = new File(curFile.getPath().substring(0, curFile.getPath().lastIndexOf('.')) + "_crop" + "." + curFileInfo.getExt());
-                File rotateFile = new File(curFile.getPath().substring(0, curFile.getPath().lastIndexOf('.')) + ".png");
+                File rotateFile = new File(curFile.getPath().substring(0, curFile.getPath().lastIndexOf('.')) + "_rotate.png");
+                File cropFile = new File(curFile.getPath().substring(0, curFile.getPath().lastIndexOf('.')) + ".png");
+
+                // 旋转头像
+                ImageUtils.makeRotate(curFile, rotateFile, rotate);
+
                 // 裁剪头像
-                if (curFile.exists()) {
-                    ImageUtils.crop(curFile,
-                            cropFile, x, y, width, height);
-                } else {
-                    data.fail().msg("头像创建失败");
-                }
-                if (cropFile.exists()) {
-                    // 旋转头像
-                    ImageUtils.makeRotate(cropFile, rotateFile, rotate);
-                    FilesUtils.deleteFile(curFile.getAbsolutePath());
-                    FilesUtils.deleteFile(cropFile.getAbsolutePath());
-                } else {
-                    data.fail().msg("头像创建失败");
-                }
                 if (rotateFile.exists()) {
+                    ImageUtils.crop(rotateFile,
+                            cropFile, x, y, width, height);
+                    FilesUtils.deleteFile(curFile.getAbsolutePath());
+                    FilesUtils.deleteFile(rotateFile.getAbsolutePath());
+                } else {
+                    data.fail().msg("头像创建失败");
+                }
+
+                if (cropFile.exists()) {
                     data.success().listData(fileBeen).obj(Workbook.avatarPath(users));
 
                     curFileInfo.setExt("png");
