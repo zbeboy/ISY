@@ -53,6 +53,7 @@ public class SecureOAuth2ApplicationTests {
     }
 
     @Test
+    @Ignore
     public void everythingIsSecuredByDefault() throws Exception {
         this.mvc.perform(get("/").accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isUnauthorized()).andDo(print());
@@ -76,6 +77,7 @@ public class SecureOAuth2ApplicationTests {
     }
 
     @Test
+    @Ignore
     public void useAppSecretsPlusUserAccountToGetBearerToken() throws Exception {
         String header = "Basic " + new String(Base64.encode("foo:bar".getBytes()));
         MvcResult result = this.mvc
