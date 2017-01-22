@@ -23,7 +23,7 @@ require(["jquery", "jquery.fireworks"], function ($) {
 
     // 烟火 庆祝准备
     $('.intro-header').fireworks({
-        sound: true, // 声音效果
+        sound: false, // 声音效果 不开
         opacity: 0.5,
         width: '100%',
         height: '100%'
