@@ -224,7 +224,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          */
         function getRemind() {
             if (websocketStomp) {
-                websocketStomp.send(getAjaxUrl().stomp_send_url, {}, websocketFrame.headers['user-name']);
+                websocketStomp.send(getAjaxUrl().stomp_send_url, {}, '');
             }
         }
 

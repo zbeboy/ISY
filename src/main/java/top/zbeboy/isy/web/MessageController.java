@@ -15,6 +15,7 @@ import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,14 +38,15 @@ public class MessageController {
     /**
      * 推送到一个用户 的系统信息
      *
-     * @param username 用户账号
+     * @param principal 用户账号
      * @return 消息
      * @throws InterruptedException 异常
      */
     @MessageMapping("/remind")
     @SendToUser(destinations = "/topic/reminds", broadcast = false)
-    public AjaxUtils reminds(String username) throws InterruptedException {
+    public AjaxUtils reminds(Principal principal) throws InterruptedException {
         Thread.sleep(3000);
+        String username = principal.getName();
         Map<String, Object> data = new HashMap<>();
         int pageNum = 1;
         int pageSize = 5;
