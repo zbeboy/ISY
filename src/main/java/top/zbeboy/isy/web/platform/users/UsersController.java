@@ -5,6 +5,7 @@ import com.octo.captcha.service.CaptchaServiceException;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.jooq.Record;
+import org.jooq.Record1;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -345,6 +346,21 @@ public class UsersController {
         } else {
             return new AjaxUtils().fail().msg("手机号格式不正确");
         }
+    }
+
+    /**
+     * 登录时账号自动完成
+     *
+     * @param query 查询参数
+     * @return 账号
+     */
+    @RequestMapping(value = "/user/login/autocomplete/email", method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> loginAutoCompleteEmail(@RequestParam("query") String query) {
+        List<String> emails = new ArrayList<>();
+        Result<Record1<String>> emailRecord = usersService.autoCompleteQueryUsername(query);
+        emailRecord.forEach(e -> emails.add(e.value1()));
+        return emails;
     }
 
     /**

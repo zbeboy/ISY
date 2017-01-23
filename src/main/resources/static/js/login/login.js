@@ -6,18 +6,22 @@ requirejs.config({
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com"
+        "com": web_path + "/js/util/com",
+        "bootstrap-typeahead": web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
         "jquery.showLoading": {
             // jQueryに依存するのでpathsで設定した"module/name"を指定します。
             deps: ["jquery"]
+        },
+        "bootstrap-typeahead": {
+            deps: ["jquery"]
         }
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf", "com"], function ($, domready) {
+require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf", "com", "bootstrap-typeahead"], function ($, domready) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -33,6 +37,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
             password_forget: '/user/login/password/forget',
             anew_send_verify_mailbox: '/user/register/mailbox/anew',
             login: '/login',
+            autocomplete_email: '/user/login/autocomplete/email',
             backstage: '/web/menu/backstage'
         };
 
@@ -148,6 +153,16 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
 
         $('#jcaptcha').click(function () {
             changeJcaptcha();
+        });
+
+        // 自动完成账号
+        $(paramId.email).typeahead({
+            source: function (query, process) {
+                $.get(web_path + ajax_url.autocomplete_email, {query: query}, function (data) {
+                    process(data);
+                });
+            },
+            autoSelect: true
         });
 
         $(paramId.email).blur(function () {

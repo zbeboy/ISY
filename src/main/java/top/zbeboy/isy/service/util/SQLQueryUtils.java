@@ -15,4 +15,14 @@ public class SQLQueryUtils {
     public static String likeAllParam(String param) {
         return "%" + param + "%";
     }
+
+    /**
+     * 右 like
+     *
+     * @param param 参数
+     * @return like '{param}%'
+     */
+    public static String rightLikeParam(String param) {
+        return param + "%";
+    }
 }
