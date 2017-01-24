@@ -6,7 +6,7 @@
 
     <groupId>top.zbeboy.project</groupId>
     <artifactId>ISY</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-RELEASE</version>
     <name>ISY Parent Project</name>
 
     <!--  use a later Java version -->
