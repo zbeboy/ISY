@@ -94,7 +94,7 @@ public class InternshipTeacherDistributionController {
     }
 
     /**
-     * 分配情况页面
+     * 教师分配页面
      *
      * @param internshipReleaseId 实习发布id
      * @return 页面
@@ -109,6 +109,19 @@ public class InternshipTeacherDistributionController {
         } else {
             page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
+        return page;
+    }
+
+    /**
+     * 查看分配页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return 页面
+     */
+    @RequestMapping("/web/internship/teacher_distribution/distribution/look")
+    public String distributionLook(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page = "web/internship/distribution/internship_distribution_look::#page-wrapper";
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         return page;
     }
 
@@ -152,30 +165,27 @@ public class InternshipTeacherDistributionController {
     public DataTablesUtils<InternshipTeacherDistributionBean> distributionConditionDatas(HttpServletRequest request) {
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = null;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
-        if (!errorBean.isHasError()) {
-            // 前台数据标题 注：要和前台标题顺序一致，获取order用
-            List<String> headers = new ArrayList<>();
-            headers.add("select");
-            headers.add("internship_title");
-            headers.add("school_name");
-            headers.add("college_name");
-            headers.add("department_name");
-            headers.add("student_real_name");
-            headers.add("student_username");
-            headers.add("student_number");
-            headers.add("staff_real_name");
-            headers.add("staff_username");
-            headers.add("staff_number");
-            headers.add("real_name");
-            headers.add("username");
-            headers.add("operator");
-            dataTablesUtils = new DataTablesUtils<>(request, headers);
-            List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils, internshipReleaseId);
-            dataTablesUtils.setData(internshipTeacherDistributionBeens);
-            dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
-            dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId));
-        }
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("select");
+        headers.add("internship_title");
+        headers.add("school_name");
+        headers.add("college_name");
+        headers.add("department_name");
+        headers.add("student_real_name");
+        headers.add("student_username");
+        headers.add("student_number");
+        headers.add("staff_real_name");
+        headers.add("staff_username");
+        headers.add("staff_number");
+        headers.add("real_name");
+        headers.add("username");
+        headers.add("operator");
+        dataTablesUtils = new DataTablesUtils<>(request, headers);
+        List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils, internshipReleaseId);
+        dataTablesUtils.setData(internshipTeacherDistributionBeens);
+        dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
+        dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId));
         return dataTablesUtils;
     }
 

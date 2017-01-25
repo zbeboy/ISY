@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">实习教师分配 -
-                    <small>教师分配</small>
+                    <small>查看分配</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -62,7 +62,7 @@
                     <thead>
                     <tr>
                         <th>
-                            <input type="checkbox" name="checkall" id="checkall"/>
+                            序号
                         </th>
                         <th data-class="expand">标题</th>
                         <th data-hide="always">学校</th>
@@ -76,7 +76,6 @@
                         <th data-hide="always">指导教师工号</th>
                         <th data-hide="phone">分配人</th>
                         <th data-hide="always">分配人ID</th>
-                        <th data-hide="phone">操作</th>
                     </tr>
                     </thead>
 
@@ -95,7 +94,6 @@
                         <th>指导教师工号</th>
                         <th>分配人</th>
                         <th>分配人ID</th>
-                        <th>操作</th>
                     </tr>
                     </tfoot>
 
@@ -110,13 +108,6 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
-        <!--定义操作列按钮模板-->
-        <script id="operator_button" type="text/x-handlebars-template">
-            {{#each func}}
-            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
-            </button>
-            {{/each}}
-        </script>
         <script th:inline="javascript">
             /*<![CDATA[*/
             /*页面参数*/
@@ -125,44 +116,8 @@
             };
             /*]]>*/
         </script>
-
-        <!-- 实习发布数据Modal -->
-        <div class="modal fade" id="excludeInternshipModal" tabindex="-1" role="dialog" aria-labelledby="excludeInternshipModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="excludeInternshipModalLabel">请选择要排除的实习</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form" id="role_form" style="height: 300px;overflow: auto">
-                            <div class="form-group" id="excludeInternships"></div>
-                        </form>
-                        <p id="exclude_internship_error_msg" class="hidden"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" id="excludeInternshipModalMiss">取消</button>
-                        <button type="button" class="btn btn-primary" id="saveExcludeInternship">确定</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--定义实习发布数据模板-->
-        <script id="exclude-internship-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value="{{value}}" name="excludeInternship"/>{{name}}
-                </label>
-            </div>
-            {{/each}}
-        </script>
-
         <input type="hidden" class="dy_script"
-               value="/js/internship/distribution/internship_distribution_condition.js"/>
+               value="/js/internship/distribution/internship_distribution_look.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>
