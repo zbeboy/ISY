@@ -105,11 +105,6 @@ public final class Workbook {
     public static final String SETTINGS_PATH = "./settings/";
 
     /*
-    url mapping
-     */
-    public static final String URL_MAPPING_FILE_PATH = SETTINGS_PATH + "url-mapping.txt";
-
-    /*
    实习日志模板
     */
     public static final String INTERNSHIP_JOURNAL_FILE_PATH = SETTINGS_PATH + "internshipJournalTemplate.docx";

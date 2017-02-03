@@ -30,9 +30,6 @@ public class InitConfiguration implements CommandLineRunner {
     private final CacheManager cacheManager;
 
     @Autowired
-    private RequestMappingHandlerMapping handlerMapping;
-
-    @Autowired
     public InitConfiguration(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
@@ -42,40 +39,5 @@ public class InitConfiguration implements CommandLineRunner {
         logger.info("\n\n" + "=========================================================\n"
                 + "Using cache manager: " + this.cacheManager.getClass().getName() + "\n"
                 + "=========================================================\n\n");
-        initUrlMapping();
-    }
-
-    /**
-     * 初始化url mapping
-     */
-    private void initUrlMapping() {
-        try {
-            String filePath = Workbook.URL_MAPPING_FILE_PATH;
-            String resourcesPath = Workbook.SETTINGS_PATH;
-            File file = new File(resourcesPath);
-            boolean mkdirsSuccess = true;
-            if (!file.exists()) {
-                mkdirsSuccess = file.mkdirs();
-            }
-            if (mkdirsSuccess) {
-                PrintWriter printWriter = new PrintWriter(filePath);
-                final String[] url = {""};
-                Map<RequestMappingInfo, HandlerMethod> map = this.handlerMapping.getHandlerMethods();
-                map.forEach((key, value) -> {
-                    url[0] = key.toString();
-                    url[0] = url[0].split(",")[0];
-                    int i1 = url[0].indexOf("[") + 1;
-                    int i2 = url[0].lastIndexOf("]");
-                    url[0] = url[0].substring(i1, i2);
-                    printWriter.println(url[0]);
-                });
-                printWriter.close();
-                logger.info("Init url mapping to {} finish!", filePath);
-            } else {
-                logger.error("Init url mapping error,is create mkdirs fail.");
-            }
-        } catch (IOException e) {
-            logger.error("Init url mapping error : {}", e);
-        }
     }
 }
