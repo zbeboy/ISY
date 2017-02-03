@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -267,7 +268,7 @@ public class InternshipReleaseController {
             InternshipRelease internshipRelease = new InternshipRelease();
             internshipRelease.setInternshipReleaseId(internshipReleaseId);
             internshipRelease.setInternshipTitle(internshipReleaseAddVo.getReleaseTitle());
-            internshipRelease.setReleaseTime(new Timestamp(System.currentTimeMillis()));
+            internshipRelease.setReleaseTime(new Timestamp(Clock.systemDefaultZone().millis()));
             Users users = usersService.getUserFromSession();
             internshipRelease.setUsername(users.getUsername());
             saveOrUpdateTime(internshipRelease, teacherDistributionTime, time);

@@ -37,6 +37,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.time.Clock;
 import java.util.*;
 
 /**
@@ -428,7 +429,7 @@ public class InternshipApplyController {
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                             internshipChangeCompanyHistory.setInternshipReleaseId(internshipCollege.getInternshipReleaseId());
                             internshipChangeCompanyHistory.setStudentId(internshipCollege.getStudentId());
-                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                             internshipChangeCompanyHistory.setCompanyName(internshipCollege.getInternshipCollegeName());
                             internshipChangeCompanyHistory.setCompanyAddress(internshipCollege.getInternshipCollegeAddress());
                             internshipChangeCompanyHistory.setCompanyContacts(internshipCollege.getInternshipCollegeContacts());
@@ -447,7 +448,7 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                         internshipChangeCompanyHistory.setInternshipReleaseId(internshipCollegeVo.getInternshipReleaseId());
                         internshipChangeCompanyHistory.setStudentId(internshipCollegeVo.getStudentId());
-                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                         internshipChangeCompanyHistory.setCompanyName(internshipCollegeVo.getInternshipCollegeName());
                         internshipChangeCompanyHistory.setCompanyAddress(internshipCollegeVo.getInternshipCollegeAddress());
                         internshipChangeCompanyHistory.setCompanyContacts(internshipCollegeVo.getInternshipCollegeContacts());
@@ -567,7 +568,7 @@ public class InternshipApplyController {
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                             internshipChangeCompanyHistory.setInternshipReleaseId(internshipCompany.getInternshipReleaseId());
                             internshipChangeCompanyHistory.setStudentId(internshipCompany.getStudentId());
-                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                             internshipChangeCompanyHistory.setCompanyName(internshipCompany.getInternshipCompanyName());
                             internshipChangeCompanyHistory.setCompanyAddress(internshipCompany.getInternshipCompanyAddress());
                             internshipChangeCompanyHistory.setCompanyContacts(internshipCompany.getInternshipCompanyContacts());
@@ -586,7 +587,7 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                         internshipChangeCompanyHistory.setInternshipReleaseId(internshipCompanyVo.getInternshipReleaseId());
                         internshipChangeCompanyHistory.setStudentId(internshipCompanyVo.getStudentId());
-                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                         internshipChangeCompanyHistory.setCompanyName(internshipCompanyVo.getInternshipCompanyName());
                         internshipChangeCompanyHistory.setCompanyAddress(internshipCompanyVo.getInternshipCompanyAddress());
                         internshipChangeCompanyHistory.setCompanyContacts(internshipCompanyVo.getInternshipCompanyContacts());
@@ -706,7 +707,7 @@ public class InternshipApplyController {
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                             internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeCollege.getInternshipReleaseId());
                             internshipChangeCompanyHistory.setStudentId(graduationPracticeCollege.getStudentId());
-                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                             internshipChangeCompanyHistory.setCompanyName(graduationPracticeCollege.getGraduationPracticeCollegeName());
                             internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeCollege.getGraduationPracticeCollegeAddress());
                             internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeCollege.getGraduationPracticeCollegeContacts());
@@ -725,7 +726,7 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                         internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeCollegeVo.getInternshipReleaseId());
                         internshipChangeCompanyHistory.setStudentId(graduationPracticeCollegeVo.getStudentId());
-                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                         internshipChangeCompanyHistory.setCompanyName(graduationPracticeCollegeVo.getGraduationPracticeCollegeName());
                         internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeCollegeVo.getGraduationPracticeCollegeAddress());
                         internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeCollegeVo.getGraduationPracticeCollegeContacts());
@@ -845,7 +846,7 @@ public class InternshipApplyController {
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                             internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeUnify.getInternshipReleaseId());
                             internshipChangeCompanyHistory.setStudentId(graduationPracticeUnify.getStudentId());
-                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                             internshipChangeCompanyHistory.setCompanyName(graduationPracticeUnify.getGraduationPracticeUnifyName());
                             internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeUnify.getGraduationPracticeUnifyAddress());
                             internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeUnify.getGraduationPracticeUnifyContacts());
@@ -864,7 +865,7 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                         internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeUnifyVo.getInternshipReleaseId());
                         internshipChangeCompanyHistory.setStudentId(graduationPracticeUnifyVo.getStudentId());
-                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                         internshipChangeCompanyHistory.setCompanyName(graduationPracticeUnifyVo.getGraduationPracticeUnifyName());
                         internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeUnifyVo.getGraduationPracticeUnifyAddress());
                         internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeUnifyVo.getGraduationPracticeUnifyContacts());
@@ -984,7 +985,7 @@ public class InternshipApplyController {
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                             internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeCompany.getInternshipReleaseId());
                             internshipChangeCompanyHistory.setStudentId(graduationPracticeCompany.getStudentId());
-                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                            internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                             internshipChangeCompanyHistory.setCompanyName(graduationPracticeCompany.getGraduationPracticeCompanyName());
                             internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeCompany.getGraduationPracticeCompanyAddress());
                             internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeCompany.getGraduationPracticeCompanyContacts());
@@ -1002,7 +1003,7 @@ public class InternshipApplyController {
                         internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtils.getUUID());
                         internshipChangeCompanyHistory.setInternshipReleaseId(graduationPracticeCompanyVo.getInternshipReleaseId());
                         internshipChangeCompanyHistory.setStudentId(graduationPracticeCompanyVo.getStudentId());
-                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(System.currentTimeMillis()));
+                        internshipChangeCompanyHistory.setChangeTime(new Timestamp(Clock.systemDefaultZone().millis()));
                         internshipChangeCompanyHistory.setCompanyName(graduationPracticeCompanyVo.getGraduationPracticeCompanyName());
                         internshipChangeCompanyHistory.setCompanyAddress(graduationPracticeCompanyVo.getGraduationPracticeCompanyAddress());
                         internshipChangeCompanyHistory.setCompanyContacts(graduationPracticeCompanyVo.getGraduationPracticeCompanyContacts());
@@ -1201,7 +1202,7 @@ public class InternshipApplyController {
                 internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
                 internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
                 internshipChangeHistory.setStudentId(studentId);
-                internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
                 internshipChangeHistoryService.save(internshipChangeHistory);
             }
         } else {
@@ -1232,7 +1233,7 @@ public class InternshipApplyController {
             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
             // 处于 2：已通过 才可变更申请
             if (internshipApply.getInternshipApplyState() == 2) {
-                Timestamp now = new Timestamp(System.currentTimeMillis());
+                Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
                 internshipApply.setInternshipApplyState(internshipApplyState);
                 internshipApply.setReason(reason);
                 internshipApply.setApplyTime(now);

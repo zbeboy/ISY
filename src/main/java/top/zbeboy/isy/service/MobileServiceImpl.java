@@ -19,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.time.Clock;
 
 /**
  * Created by lenovo on 2016-05-17.
@@ -66,7 +67,7 @@ public class MobileServiceImpl implements MobileService {
             log.info("Send sms to mobile {} is exception : {}", mobile, e);
         }
         log.debug(" mobile result : {}", result);
-        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(System.currentTimeMillis()), mobile);
+        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), mobile);
         systemSmsService.save(systemSms);
     }
 

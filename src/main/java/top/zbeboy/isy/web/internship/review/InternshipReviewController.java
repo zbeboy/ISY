@@ -30,6 +30,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -603,7 +604,7 @@ public class InternshipReviewController {
                     internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
                     internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
-                    internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                    internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
                     internshipChangeHistoryService.save(internshipChangeHistory);
 
                     Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
@@ -747,7 +748,7 @@ public class InternshipReviewController {
                     internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
                     internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
-                    internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                    internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
                     internshipChangeHistoryService.save(internshipChangeHistory);
 
                     Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
@@ -793,7 +794,7 @@ public class InternshipReviewController {
                 internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
                 internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
                 internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
-                internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+                internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
                 internshipChangeHistoryService.save(internshipChangeHistory);
 
                 Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
@@ -838,7 +839,7 @@ public class InternshipReviewController {
             internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
             internshipChangeHistory.setStudentId(studentId);
             internshipChangeHistory.setState(internshipApplyState);
-            internshipChangeHistory.setApplyTime(new Timestamp(System.currentTimeMillis()));
+            internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
             internshipChangeHistoryService.save(internshipChangeHistory);
 
             Optional<Record> userRecord = studentService.findByIdRelation(studentId);

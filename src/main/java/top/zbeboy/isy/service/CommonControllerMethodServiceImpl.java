@@ -19,6 +19,7 @@ import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.Optional;
 
 /**
@@ -150,7 +151,7 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
         SystemMessage systemMessage = new SystemMessage();
         String messageId = UUIDUtils.getUUID();
         Byte isSee = 0;
-        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
         systemMessage.setSystemMessageId(messageId);
         systemMessage.setAcceptUsers(users.getUsername());
         systemMessage.setIsSee(isSee);

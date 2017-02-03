@@ -23,6 +23,7 @@ import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeUnifyVo;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -68,7 +69,7 @@ public class GraduationPracticeUnifyServiceImpl extends DataTablesPlugin<Graduat
     @Override
     public void saveWithTransaction(GraduationPracticeUnifyVo graduationPracticeUnifyVo) {
         create.transaction(configuration -> {
-            Timestamp now = new Timestamp(System.currentTimeMillis());
+            Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
             int state = 0;
             DSL.using(configuration)
                     .insertInto(INTERNSHIP_APPLY)
