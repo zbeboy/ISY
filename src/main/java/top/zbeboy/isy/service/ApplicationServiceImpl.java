@@ -8,6 +8,8 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import top.zbeboy.isy.domain.tables.daos.ApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
+import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -41,6 +44,7 @@ import static top.zbeboy.isy.domain.Tables.COLLEGE_APPLICATION;
  */
 @Service("applicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+@CacheConfig(cacheNames = "application")
 public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> implements ApplicationService {
 
     private final Logger log = LoggerFactory.getLogger(ApplicationServiceImpl.class);
@@ -62,17 +66,18 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     }
 
+    @Cacheable(cacheNames = "menuHtml", key = "#username")
     @Override
     public String menuHtml(List<Role> roles, String username) {
         List<Integer> roleIds = new ArrayList<>();
         String html = "";
         roleIds.addAll(roles.stream().map(Role::getRoleId).collect(Collectors.toList()));
-        Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findInRoleIdsWithUsername(roleIds, username);
-        if (roleApplicationRecords.isNotEmpty()) {
+        List<RoleApplication> roleApplications = roleApplicationService.findInRoleIdsWithUsername(roleIds, username);
+        if (!roleApplications.isEmpty()) {
             List<Integer> applicationIds = new ArrayList<>();
-            for (RoleApplicationRecord roleApplicationRecord : roleApplicationRecords) {
-                if (!applicationIds.contains(roleApplicationRecord.getApplicationId())) {// 防止重复菜单加载
-                    applicationIds.add(roleApplicationRecord.getApplicationId());
+            for (RoleApplication roleApplication : roleApplications) {
+                if (!applicationIds.contains(roleApplication.getApplicationId())) {// 防止重复菜单加载
+                    applicationIds.add(roleApplication.getApplicationId());
                 }
             }
             Result<ApplicationRecord> applicationRecords = findInIdsAndPid(applicationIds, 0);
@@ -214,11 +219,17 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         return applications;
     }
 
+    @Cacheable(cacheNames = "userApplicationId", key = "#username")
     @Override
-    public Result<ApplicationRecord> findInIdsWithUsername(List<Integer> ids, String username) {
-        return create.selectFrom(APPLICATION)
+    public List<Application> findInIdsWithUsername(List<Integer> ids, String username) {
+        List<Application> applications = new ArrayList<>();
+        Result<ApplicationRecord> applicationRecords = create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_ID.in(ids))
                 .fetch();
+        if(applicationRecords.isNotEmpty()){
+            applications = applicationRecords.into(Application.class);
+        }
+        return applications;
     }
 
     @Override
@@ -236,12 +247,13 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 .fetch();
     }
 
+    @Cacheable(cacheNames = "urlMapping", key = "#application.getApplicationId()")
     @Override
-    public List<String> urlMapping(ApplicationRecord applicationRecord) {
+    public List<String> urlMapping(Application application) {
         List<String> urlMapping = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(applicationRecord)) {
+        if (!ObjectUtils.isEmpty(application)) {
             List<String> urlMappingAll = getUrlMapping();
-            urlMappingAll.stream().filter(url -> url.startsWith(applicationRecord.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
+            urlMappingAll.stream().filter(url -> url.startsWith(application.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
         }
         return urlMapping;
     }

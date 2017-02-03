@@ -5,12 +5,15 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
@@ -20,6 +23,7 @@ import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
  */
 @Service("roleApplicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+@CacheConfig(cacheNames = "roleApplication")
 public class RoleApplicationServiceImpl implements RoleApplicationService {
 
     private final Logger log = LoggerFactory.getLogger(RoleApplicationServiceImpl.class);
@@ -31,11 +35,17 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
         this.create = dslContext;
     }
 
+    @Cacheable(cacheNames = "userRoleId", key = "#username")
     @Override
-    public Result<RoleApplicationRecord> findInRoleIdsWithUsername(List<Integer> roleIds, String username) {
-        return create.selectFrom(ROLE_APPLICATION)
+    public List<RoleApplication> findInRoleIdsWithUsername(List<Integer> roleIds, String username) {
+        List<RoleApplication> roleApplications = new ArrayList<>();
+        Result<RoleApplicationRecord> roleApplicationRecords = create.selectFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.in(roleIds))
                 .fetch();
+        if(roleApplicationRecords.isNotEmpty()){
+            roleApplications = roleApplicationRecords.into(RoleApplication.class);
+        }
+        return roleApplications;
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

@@ -7,6 +7,8 @@ import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +17,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.UsersDao;
+import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
@@ -28,10 +31,7 @@ import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -40,6 +40,7 @@ import static top.zbeboy.isy.domain.Tables.*;
  */
 @Service("usersService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+@CacheConfig(cacheNames = "users")
 public class UsersServiceImpl implements UsersService {
 
     private final Logger log = LoggerFactory.getLogger(UsersServiceImpl.class);
@@ -213,9 +214,11 @@ public class UsersServiceImpl implements UsersService {
         return isDel;
     }
 
+    @Cacheable(cacheNames = "userRole", key = "#username")
     @Override
-    public Result<Record> findByUsernameWithRole(String username) {
-        return create.select()
+    public List<Role> findByUsernameWithRole(String username) {
+        List<Role> roleList = new ArrayList<>();
+        Result<Record> records = create.select()
                 .from(USERS)
                 .leftJoin(AUTHORITIES)
                 .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
@@ -223,6 +226,10 @@ public class UsersServiceImpl implements UsersService {
                 .on(AUTHORITIES.AUTHORITY.eq(ROLE.ROLE_EN_NAME))
                 .where(USERS.USERNAME.eq(username))
                 .fetch();
+        if (records.isNotEmpty()) {
+            roleList = records.into(Role.class);
+        }
+        return roleList;
     }
 
     @Override

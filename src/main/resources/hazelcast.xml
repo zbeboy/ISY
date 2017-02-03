@@ -11,7 +11,7 @@
         <max-size>200</max-size>
     </map>
 
-    <map name="role_application">
+    <map name="roleApplication">
         <time-to-live-seconds>1200</time-to-live-seconds>
         <max-size>200</max-size>
     </map>
@@ -30,21 +30,21 @@
         <management-enabled>true</management-enabled>
     </cache>
 
-    <cache name="findByUsernameWithRole">
+    <cache name="userRole">
         <eviction size="200"/>
 
         <statistics-enabled>true</statistics-enabled>
         <management-enabled>true</management-enabled>
     </cache>
 
-    <cache name="findInIdsWithUsername">
+    <cache name="userApplicationId">
         <eviction size="200"/>
 
         <statistics-enabled>true</statistics-enabled>
         <management-enabled>true</management-enabled>
     </cache>
 
-    <cache name="findInRoleIdsWithUsername">
+    <cache name="userRoleId">
         <eviction size="200"/>
 
         <statistics-enabled>true</statistics-enabled>

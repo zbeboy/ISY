@@ -5,8 +5,7 @@ import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
 import org.jooq.Select;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
+import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
@@ -20,7 +19,6 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-01-05.
  */
-@CacheConfig(cacheNames = "users")
 public interface UsersService {
 
     /**
@@ -122,8 +120,7 @@ public interface UsersService {
      * @param username 用户账号
      * @return 角色
      */
-    @Cacheable(cacheNames = "findByUsernameWithRole", key = "#username")
-    Result<Record> findByUsernameWithRole(String username);
+    List<Role> findByUsernameWithRole(String username);
 
     /**
      * 根据用户账号查询角色 无缓存

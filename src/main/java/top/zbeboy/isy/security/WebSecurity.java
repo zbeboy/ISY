@@ -1,17 +1,15 @@
 package top.zbeboy.isy.security;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
+import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
-import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.service.ApplicationService;
 import top.zbeboy.isy.service.RoleApplicationService;
 import top.zbeboy.isy.service.UsersService;
@@ -62,34 +60,31 @@ public class WebSecurity {
             return true;
         }
         boolean hasRole = false;
-        Result<Record> roles = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
-        if (roles.isNotEmpty()) {
-            List<Role> roleList = roles.into(Role.class);
-            List<Integer> roleIds = new ArrayList<>();
-            roleIds.addAll(roleList.stream().map(Role::getRoleId).collect(Collectors.toList()));
+        List<Role> roleList = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
+        List<Integer> roleIds = new ArrayList<>();
+        roleIds.addAll(roleList.stream().map(Role::getRoleId).collect(Collectors.toList()));
 
-            Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存
-            if (roleApplicationRecords.isNotEmpty()) {
-                List<Integer> applicationIds = new ArrayList<>();
-                // 防止重复菜单加载
-                roleApplicationRecords.stream().filter(roleApplicationRecord -> !applicationIds.contains(roleApplicationRecord.getApplicationId())).forEach(roleApplicationRecord -> {// 防止重复菜单加载
-                    applicationIds.add(roleApplicationRecord.getApplicationId());
-                });
+        List<RoleApplication> roleApplications = roleApplicationService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存
+        if (!roleApplications.isEmpty()) {
+            List<Integer> applicationIds = new ArrayList<>();
+            // 防止重复菜单加载
+            roleApplications.stream().filter(roleApplication -> !applicationIds.contains(roleApplication.getApplicationId())).forEach(roleApplication -> {// 防止重复菜单加载
+                applicationIds.add(roleApplication.getApplicationId());
+            });
 
-                Result<ApplicationRecord> applicationRecords = applicationService.findInIdsWithUsername(applicationIds, users.getUsername());// 已缓存
-                for (ApplicationRecord applicationRecord : applicationRecords) {
-                    if (uri.endsWith(applicationRecord.getApplicationUrl())) {
-                        hasRole = true;
-                        break;
-                    }
-                    if (StringUtils.hasLength(applicationRecord.getApplicationDataUrlStartWith())) {
-                        List<String> urlMapping = applicationService.urlMapping(applicationRecord);// 已缓存
-                        if (!ObjectUtils.isEmpty(urlMapping)) {
-                            Optional<String> urlOne = urlMapping.stream().filter(uri::endsWith).findFirst();
-                            if (urlOne.isPresent()) {
-                                hasRole = true;
-                                break;
-                            }
+            List<Application> applications = applicationService.findInIdsWithUsername(applicationIds, users.getUsername());// 已缓存
+            for (Application application : applications) {
+                if (uri.endsWith(application.getApplicationUrl())) {
+                    hasRole = true;
+                    break;
+                }
+                if (StringUtils.hasLength(application.getApplicationDataUrlStartWith())) {
+                    List<String> urlMapping = applicationService.urlMapping(application);// 已缓存
+                    if (!ObjectUtils.isEmpty(urlMapping)) {
+                        Optional<String> urlOne = urlMapping.stream().filter(uri::endsWith).findFirst();
+                        if (urlOne.isPresent()) {
+                            hasRole = true;
+                            break;
                         }
                     }
                 }

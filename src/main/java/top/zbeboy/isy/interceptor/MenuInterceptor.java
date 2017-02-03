@@ -1,7 +1,5 @@
 package top.zbeboy.isy.interceptor;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -43,12 +41,9 @@ public class MenuInterceptor implements HandlerInterceptor {
                 .getBean("applicationService");
         Users users = usersService.getUserFromSession();
         if (!ObjectUtils.isEmpty(users)) {
-            Result<Record> roles = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
-            if (roles.isNotEmpty()) {
-                List<Role> roleList = roles.into(Role.class);
-                String menuHtml = applicationService.menuHtml(roleList, users.getUsername());
-                request.setAttribute("menu", menuHtml);
-            }
+            List<Role> roleList = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
+            String menuHtml = applicationService.menuHtml(roleList, users.getUsername());
+            request.setAttribute("menu", menuHtml);
         }
     }
 
