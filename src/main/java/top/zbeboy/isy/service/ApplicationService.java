@@ -2,8 +2,6 @@ package top.zbeboy.isy.service;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
@@ -16,7 +14,6 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-09-28.
  */
-@CacheConfig(cacheNames = "application")
 public interface ApplicationService {
 
     /**
@@ -25,7 +22,6 @@ public interface ApplicationService {
      * @param roles 角色
      * @return 菜单html
      */
-    @Cacheable(cacheNames = "menuHtml", key = "#username")
     String menuHtml(List<Role> roles, String username);
 
     /**
@@ -89,8 +85,7 @@ public interface ApplicationService {
      * @param username 用户账号 缓存
      * @return 应用
      */
-    @Cacheable(cacheNames = "findInIdsWithUsername", key = "#username")
-    Result<ApplicationRecord> findInIdsWithUsername(List<Integer> ids, String username);
+    List<Application> findInIdsWithUsername(List<Integer> ids, String username);
 
     /**
      * 通过pids查询
@@ -112,11 +107,10 @@ public interface ApplicationService {
     /**
      * 获取该菜单下的data url
      *
-     * @param applicationRecord 菜单
+     * @param application 菜单
      * @return data url
      */
-    @Cacheable(cacheNames = "urlMapping", key = "#applicationRecord.getApplicationId()")
-    List<String> urlMapping(ApplicationRecord applicationRecord);
+    List<String> urlMapping(Application application);
 
     /**
      * 分页查询

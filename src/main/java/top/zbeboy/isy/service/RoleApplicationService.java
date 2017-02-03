@@ -1,8 +1,6 @@
 package top.zbeboy.isy.service;
 
 import org.jooq.Result;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 
@@ -11,7 +9,6 @@ import java.util.List;
 /**
  * Created by lenovo on 2016/9/29.
  */
-@CacheConfig(cacheNames = "role_application")
 public interface RoleApplicationService {
 
     /**
@@ -21,8 +18,7 @@ public interface RoleApplicationService {
      * @param username 用户账号用于缓存
      * @return 数据
      */
-    @Cacheable(cacheNames = "findInRoleIdsWithUsername", key = "#username")
-    Result<RoleApplicationRecord> findInRoleIdsWithUsername(List<Integer> roleIds, String username);
+    List<RoleApplication> findInRoleIdsWithUsername(List<Integer> roleIds, String username);
 
     /**
      * 保存
