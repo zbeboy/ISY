@@ -23,6 +23,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
+import java.time.Clock;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
@@ -218,7 +219,7 @@ public class WXBizMsgCrypt {
 
         // 生成安全签名
         if (Objects.equals(timeStamp, "")) {
-            timeStamp = Long.toString(System.currentTimeMillis());
+            timeStamp = Long.toString(Clock.systemDefaultZone().millis());
         }
 
         String signature = SHA1.getSHA1(token, timeStamp, nonce, encrypt);

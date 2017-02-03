@@ -24,6 +24,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -83,7 +84,7 @@ public class MailServiceImpl implements MailService {
             }
         }
 
-        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(System.currentTimeMillis()), to);
+        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to);
         systemMailboxService.save(systemMailbox);
 
     }

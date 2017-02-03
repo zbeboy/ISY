@@ -14,6 +14,7 @@ import top.zbeboy.isy.service.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.time.Clock;
 
 /**
  * 定时任务配置
@@ -126,7 +127,7 @@ public class ScheduledConfiguration {
     @Scheduled(cron = "0 15 02 * * ?")// 每天 晚间2点15分
     public void internshipApply() {
         // 更改实习提交状态
-        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
         Result<InternshipReleaseRecord> internshipReleaseRecords = internshipReleaseService.findByEndTime(now);
         for (InternshipReleaseRecord r : internshipReleaseRecords) {
             internshipApplyService.updateStateWithInternshipReleaseIdAndState(r.getInternshipReleaseId(), 0, 1);

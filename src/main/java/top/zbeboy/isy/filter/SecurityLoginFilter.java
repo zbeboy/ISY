@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.Clock;
 
 /**
  * Created by lenovo on 2016-09-03.
@@ -60,7 +61,7 @@ public class SecurityLoginFilter implements Filter {
                                         boolean isDel = usersService.validSCDSOIsDel(users);
                                         if (!isDel) {// 用户所在院校是否已被注销
                                             String ip = RequestUtils.getIpAddress(request);
-                                            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), "登录系统", new Timestamp(System.currentTimeMillis()), users.getUsername(), ip);
+                                            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), "登录系统", new Timestamp(Clock.systemDefaultZone().millis()), users.getUsername(), ip);
                                             SystemLogService systemLogService = (SystemLogService) ctx
                                                     .getBean("systemLogService");
                                             systemLogService.save(systemLog);

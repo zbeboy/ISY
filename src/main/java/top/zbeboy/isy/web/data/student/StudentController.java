@@ -35,6 +35,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,7 +147,7 @@ public class StudentController {
                                         saveUsers.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
                                         saveUsers.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
-                                        saveUsers.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
+                                        saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
 
                                         DateTime dateTime = DateTime.now();
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);

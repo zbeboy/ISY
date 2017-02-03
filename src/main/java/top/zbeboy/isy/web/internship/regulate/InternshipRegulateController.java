@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.*;
 
 /**
@@ -424,7 +425,7 @@ public class InternshipRegulateController {
                     internshipRegulate.setReportDate(internshipRegulateVo.getReportDate());
                     internshipRegulate.setSchoolGuidanceTeacher(staffBean.getRealName());
                     internshipRegulate.setTliy(internshipRegulateVo.getTliy());
-                    internshipRegulate.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    internshipRegulate.setCreateDate(new Timestamp(Clock.systemDefaultZone().millis()));
                     internshipRegulate.setStudentId(internshipRegulateVo.getStudentId());
                     internshipRegulate.setInternshipReleaseId(internshipRegulateVo.getInternshipReleaseId());
                     internshipRegulate.setStaffId(internshipRegulateVo.getStaffId());

@@ -56,6 +56,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -265,7 +266,7 @@ public class UsersController {
         Users users = usersService.findByUsername(username);
         if (!ObjectUtils.isEmpty(users)) {
             Timestamp mailboxVerifyValid = users.getMailboxVerifyValid();
-            Timestamp now = new Timestamp(System.currentTimeMillis());
+            Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
             if (now.before(mailboxVerifyValid)) {
                 if (key.equals(users.getMailboxVerifyCode())) {
                     Byte verifyMailbox = 1;
@@ -516,7 +517,7 @@ public class UsersController {
             Users users = usersService.findByUsername(username);
             if (!ObjectUtils.isEmpty(users)) {
                 Timestamp passwordResetKeyValid = users.getPasswordResetKeyValid();
-                Timestamp now = new Timestamp(System.currentTimeMillis());
+                Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
                 if (now.before(passwordResetKeyValid)) {
                     if (resetKey.equals(users.getPasswordResetKey())) {
                         modelMap.addAttribute("username", email);

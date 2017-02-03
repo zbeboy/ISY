@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.*;
 
 /**
@@ -442,7 +443,7 @@ public class InternshipJournalController {
                 internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
                 internshipJournal.setInternshipJournalHtml(internshipJournalVo.getInternshipJournalHtml());
                 internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
-                internshipJournal.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                internshipJournal.setCreateDate(new Timestamp(Clock.systemDefaultZone().millis()));
                 internshipJournal.setStudentId(internshipJournalVo.getStudentId());
                 internshipJournal.setInternshipReleaseId(internshipJournalVo.getInternshipReleaseId());
 

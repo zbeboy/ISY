@@ -4,6 +4,7 @@ package top.zbeboy.isy.service.util;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
 
 /**
  * Created by lenovo on 2016-09-15.
@@ -125,10 +126,7 @@ public class DateTimeUtils {
      * @return true or false
      */
     public static boolean timestampRangeDecide(java.sql.Timestamp after, java.sql.Timestamp before) {
-        java.sql.Timestamp now = new Timestamp(System.currentTimeMillis());
-        if (now.after(after) && now.before(before)) {
-            return true;
-        }
-        return false;
+        java.sql.Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
+        return now.after(after) && now.before(before);
     }
 }
