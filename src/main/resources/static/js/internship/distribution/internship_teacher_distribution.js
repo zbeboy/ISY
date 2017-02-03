@@ -12,7 +12,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             internship_distribution_data_url: '/anyone/internship/data',
             distribution_condition_url: '/web/internship/teacher_distribution/distribution/condition',
             batch_distribution_url: '/web/internship/teacher_distribution/batch/distribution',
-            delete_not_apply:'/web/internship/teacher_distribution/distribution/delete_not_apply',
+            look_distribution_url: '/web/internship/teacher_distribution/distribution/look',
             access_condition_url: '/web/internship/teacher_distribution/condition'
         };
 
@@ -141,6 +141,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         /*
+         查看分配
+         */
+        $(tableData).delegate('.look_distribution', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.look_distribution_url + "?id=" + id);
+        });
+
+        /*
          批量分配
          */
         $(tableData).delegate('.batch_distribution', "click", function () {
@@ -158,54 +166,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 }
             });
         });
-
-        /*
-         删除未申请学生
-         */
-        $(tableData).delegate('.delete_not_apply', "click", function () {
-            var id = $(this).attr('data-id');
-            var msg;
-            msg = Messenger().post({
-                message: "确定删除未申请学生的分配吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            sendDeleteNotApplyAjax(id);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-        });
-
-        /**
-         * 发送删除未申请学生分配
-         */
-        function sendDeleteNotApplyAjax(id){
-            $.post(web_path + ajax_url.delete_not_apply, {id: id}, function (data) {
-                if (data.state) {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'info',
-                        showCloseButton: true
-                    });
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
-        }
 
         init();
 

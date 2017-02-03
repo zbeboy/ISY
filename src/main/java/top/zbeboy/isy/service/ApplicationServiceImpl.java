@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.config.Workbook;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import top.zbeboy.isy.domain.tables.daos.ApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
@@ -26,9 +28,9 @@ import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static top.zbeboy.isy.domain.Tables.APPLICATION;
@@ -44,6 +46,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     private final Logger log = LoggerFactory.getLogger(ApplicationServiceImpl.class);
 
     private final DSLContext create;
+
+    @Autowired
+    private RequestMappingHandlerMapping handlerMapping;
 
     @Resource
     private ApplicationDao applicationDao;
@@ -234,13 +239,9 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     @Override
     public List<String> urlMapping(ApplicationRecord applicationRecord) {
         List<String> urlMapping = new ArrayList<>();
-        try {
-            if (!ObjectUtils.isEmpty(applicationRecord)) {
-                List<String> urlMappingFromText = getUrlMappingFromTxt();
-                urlMappingFromText.stream().filter(url -> url.startsWith(applicationRecord.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
-            }
-        } catch (FileNotFoundException e) {
-            log.error("url-mapping.txt file not found.The exception is {}", e);
+        if (!ObjectUtils.isEmpty(applicationRecord)) {
+            List<String> urlMappingAll = getUrlMapping();
+            urlMappingAll.stream().filter(url -> url.startsWith(applicationRecord.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
         }
         return urlMapping;
     }
@@ -481,24 +482,22 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     /**
-     * 从文本文件中获取所有url
+     * 获取所有url
      *
      * @return urls
-     * @throws FileNotFoundException 文件未找到异常
      */
-    public List<String> getUrlMappingFromTxt() throws FileNotFoundException {
+    public List<String> getUrlMapping() {
         List<String> urlMapping = new ArrayList<>();
-        File file = new File(Workbook.URL_MAPPING_FILE_PATH);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String tempString;
-            // 一次读入一行，直到读入null为文件结束
-            while ((tempString = reader.readLine()) != null) {
-                urlMapping.add(tempString);
-            }
-            reader.close();
-        } catch (IOException e) {
-            log.error("Read url-mapping.txt error.The exception is {}.", e);
-        }
+        Map<RequestMappingInfo, HandlerMethod> map = this.handlerMapping.getHandlerMethods();
+        final String[] url = {""};
+        map.forEach((key, value) -> {
+            url[0] = key.toString();
+            url[0] = url[0].split(",")[0];
+            int i1 = url[0].indexOf("[") + 1;
+            int i2 = url[0].lastIndexOf("]");
+            url[0] = url[0].substring(i1, i2);
+            urlMapping.add(url[0]);
+        });
         return urlMapping;
     }
 }
