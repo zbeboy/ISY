@@ -172,14 +172,6 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
                     .join(STUDENT.join(USERS.as("T")).on(STUDENT.USERNAME.eq(USERS.as("T").USERNAME)))
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(INTERNSHIP_RELEASE)
-                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
-                    .join(DEPARTMENT)
-                    .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                    .join(COLLEGE)
-                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .join(SCHOOL)
-                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .join(USERS.as("U"))
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.eq(USERS.as("U").USERNAME))
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId));
@@ -193,14 +185,6 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
                     .join(STUDENT.join(USERS.as("T")).on(STUDENT.USERNAME.eq(USERS.as("T").USERNAME)))
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(INTERNSHIP_RELEASE)
-                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
-                    .join(DEPARTMENT)
-                    .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                    .join(COLLEGE)
-                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .join(SCHOOL)
-                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .join(USERS.as("U"))
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.eq(USERS.as("U").USERNAME))
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)).and(a);
@@ -212,10 +196,6 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
         if (records.isNotEmpty()) {
             for (Record r : records) {
                 InternshipTeacherDistributionBean internshipTeacherDistributionBeen = new InternshipTeacherDistributionBean();
-                internshipTeacherDistributionBeen.setInternshipTitle(r.getValue(INTERNSHIP_RELEASE.INTERNSHIP_TITLE));
-                internshipTeacherDistributionBeen.setSchoolName(r.getValue(SCHOOL.SCHOOL_NAME));
-                internshipTeacherDistributionBeen.setCollegeName(r.getValue(COLLEGE.COLLEGE_NAME));
-                internshipTeacherDistributionBeen.setDepartmentName(r.getValue(DEPARTMENT.DEPARTMENT_NAME));
                 internshipTeacherDistributionBeen.setStudentRealName(r.getValue(USERS.as("T").REAL_NAME));
                 internshipTeacherDistributionBeen.setStudentUsername(r.getValue(USERS.as("T").USERNAME));
                 internshipTeacherDistributionBeen.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
@@ -257,14 +237,6 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
                     .join(STUDENT.join(USERS.as("T")).on(STUDENT.USERNAME.eq(USERS.as("T").USERNAME)))
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(INTERNSHIP_RELEASE)
-                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
-                    .join(DEPARTMENT)
-                    .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                    .join(COLLEGE)
-                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .join(SCHOOL)
-                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .join(USERS.as("U"))
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.eq(USERS.as("U").USERNAME))
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)).and(a);
@@ -349,101 +321,90 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if ("internship_title".equalsIgnoreCase(orderColumnName)) {
-                if (isAsc) {
-                    sortField = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.asc();
-                } else {
-                    sortField = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.desc();
-                }
-            }
-
-            if ("school_name".equalsIgnoreCase(orderColumnName)) {
-                if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_NAME.asc();
-                } else {
-                    sortField = SCHOOL.SCHOOL_NAME.desc();
-                }
-            }
-
-            if ("college_name".equalsIgnoreCase(orderColumnName)) {
-                if (isAsc) {
-                    sortField = COLLEGE.COLLEGE_NAME.asc();
-                } else {
-                    sortField = COLLEGE.COLLEGE_NAME.desc();
-                }
-            }
-
-            if ("department_name".equalsIgnoreCase(orderColumnName)) {
-                if (isAsc) {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.asc();
-                } else {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.desc();
-                }
-            }
 
             if ("student_real_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.as("T").REAL_NAME.asc();
+                    sortField[0] = USERS.as("T").REAL_NAME.asc();
+                    sortField[1] = USERS.as("T").USERNAME.asc();
                 } else {
-                    sortField = USERS.as("T").REAL_NAME.desc();
+                    sortField[0] = USERS.as("T").REAL_NAME.desc();
+                    sortField[1] = USERS.as("T").USERNAME.desc();
                 }
             }
 
             if ("student_username".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = USERS.as("T").USERNAME.asc();
+                    sortField[0] = USERS.as("T").USERNAME.asc();
                 } else {
-                    sortField = USERS.as("T").USERNAME.desc();
+                    sortField[0] = USERS.as("T").USERNAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[0] = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortField = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[0] = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("staff_real_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.as("S").REAL_NAME.asc();
+                    sortField[0] = USERS.as("S").REAL_NAME.asc();
+                    sortField[1] = USERS.as("S").USERNAME.asc();
                 } else {
-                    sortField = USERS.as("S").REAL_NAME.desc();
+                    sortField[0] = USERS.as("S").REAL_NAME.desc();
+                    sortField[1] = USERS.as("S").USERNAME.desc();
                 }
             }
 
             if ("staff_username".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.as("S").USERNAME.asc();
+                    sortField[0] = USERS.as("S").USERNAME.asc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortField = USERS.as("S").USERNAME.desc();
+                    sortField[0] = USERS.as("S").USERNAME.desc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("staff_number".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STAFF.STAFF_NUMBER.asc();
+                    sortField[0] = STAFF.STAFF_NUMBER.asc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortField = STAFF.STAFF_NUMBER.desc();
+                    sortField[0] = STAFF.STAFF_NUMBER.desc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("real_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.as("U").REAL_NAME.asc();
+                    sortField[0] = USERS.as("U").REAL_NAME.asc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortField = USERS.as("U").REAL_NAME.desc();
+                    sortField[0] = USERS.as("U").REAL_NAME.desc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.as("U").USERNAME.asc();
+                    sortField[0] = USERS.as("U").USERNAME.asc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortField = USERS.as("U").USERNAME.desc();
+                    sortField[0] = USERS.as("U").USERNAME.desc();
+                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 

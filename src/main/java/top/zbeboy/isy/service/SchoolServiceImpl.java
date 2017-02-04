@@ -130,29 +130,36 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("school_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_ID.asc();
+                    sortField[0] = SCHOOL.SCHOOL_ID.asc();
                 } else {
-                    sortField = SCHOOL.SCHOOL_ID.desc();
+                    sortField[0] = SCHOOL.SCHOOL_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[1] = SCHOOL.SCHOOL_ID.asc();
                 } else {
-                    sortField = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[1] = SCHOOL.SCHOOL_ID.desc();
                 }
             }
 
             if ("school_is_del".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_IS_DEL.asc();
+                    sortField[0] = SCHOOL.SCHOOL_IS_DEL.asc();
+                    sortField[1] = SCHOOL.SCHOOL_ID.asc();
                 } else {
-                    sortField = SCHOOL.SCHOOL_IS_DEL.desc();
+                    sortField[0] = SCHOOL.SCHOOL_IS_DEL.desc();
+                    sortField[1] = SCHOOL.SCHOOL_ID.desc();
                 }
             }
 

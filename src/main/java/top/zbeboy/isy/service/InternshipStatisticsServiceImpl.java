@@ -298,45 +298,58 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.REAL_NAME.asc();
+                    sortField[0] = USERS.REAL_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = USERS.REAL_NAME.desc();
+                    sortField[0] = USERS.REAL_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[0] = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortField = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[0] = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("science_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCIENCE.SCIENCE_NAME.asc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = SCIENCE.SCIENCE_NAME.desc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("organize_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = ORGANIZE.ORGANIZE_NAME.asc();
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("internship_apply_state".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.asc();
+                    sortField[0] = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.desc();
+                    sortField[0] = INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 

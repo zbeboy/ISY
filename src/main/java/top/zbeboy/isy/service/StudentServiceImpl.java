@@ -789,197 +789,256 @@ public class StudentServiceImpl implements StudentService {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[0] = STUDENT.STUDENT_NUMBER.asc();
                 } else {
-                    sortField = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[0] = STUDENT.STUDENT_NUMBER.desc();
                 }
             }
 
             if ("real_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.REAL_NAME.asc();
+                    sortField[0] = USERS.REAL_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = USERS.REAL_NAME.desc();
+                    sortField[0] = USERS.REAL_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = USERS.USERNAME.asc();
+                    sortField[0] = USERS.USERNAME.asc();
                 } else {
-                    sortField = USERS.USERNAME.desc();
+                    sortField[0] = USERS.USERNAME.desc();
                 }
             }
 
             if ("mobile".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = USERS.MOBILE.asc();
+                    sortField[0] = USERS.MOBILE.asc();
                 } else {
-                    sortField = USERS.MOBILE.desc();
+                    sortField[0] = USERS.MOBILE.desc();
                 }
             }
 
             if ("id_card".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = STUDENT.ID_CARD.asc();
+                    sortField[0] = STUDENT.ID_CARD.asc();
                 } else {
-                    sortField = STUDENT.ID_CARD.desc();
+                    sortField[0] = STUDENT.ID_CARD.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("science_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCIENCE.SCIENCE_NAME.asc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = SCIENCE.SCIENCE_NAME.desc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("grade".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = ORGANIZE.GRADE.asc();
+                    sortField[0] = ORGANIZE.GRADE.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = ORGANIZE.GRADE.desc();
+                    sortField[0] = ORGANIZE.GRADE.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("organize_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = ORGANIZE.ORGANIZE_NAME.asc();
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("sex".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STUDENT.SEX.asc();
+                    sortField[0] = STUDENT.SEX.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = STUDENT.SEX.desc();
+                    sortField[0] = STUDENT.SEX.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("birthday".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STUDENT.BIRTHDAY.asc();
+                    sortField[0] = STUDENT.BIRTHDAY.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = STUDENT.BIRTHDAY.desc();
+                    sortField[0] = STUDENT.BIRTHDAY.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("nation_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = NATION.NATION_NAME.asc();
+                    sortField[0] = NATION.NATION_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = NATION.NATION_NAME.desc();
+                    sortField[0] = NATION.NATION_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("politicalLandscape_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
+                    sortField[0] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
+                    sortField[0] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("dormitory_number".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STUDENT.DORMITORY_NUMBER.asc();
+                    sortField[0] = STUDENT.DORMITORY_NUMBER.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = STUDENT.DORMITORY_NUMBER.desc();
+                    sortField[0] = STUDENT.DORMITORY_NUMBER.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("place_origin".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STUDENT.PLACE_ORIGIN.asc();
+                    sortField[0] = STUDENT.PLACE_ORIGIN.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = STUDENT.PLACE_ORIGIN.desc();
+                    sortField[0] = STUDENT.PLACE_ORIGIN.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("parent_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STUDENT.PARENT_NAME.asc();
+                    sortField[0] = STUDENT.PARENT_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = STUDENT.PARENT_NAME.desc();
+                    sortField[0] = STUDENT.PARENT_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("parent_contact_phone".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STUDENT.PARENT_CONTACT_PHONE.asc();
+                    sortField[0] = STUDENT.PARENT_CONTACT_PHONE.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = STUDENT.PARENT_CONTACT_PHONE.desc();
+                    sortField[0] = STUDENT.PARENT_CONTACT_PHONE.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("family_residence".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = STUDENT.FAMILY_RESIDENCE.asc();
+                    sortField[0] = STUDENT.FAMILY_RESIDENCE.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = STUDENT.FAMILY_RESIDENCE.desc();
+                    sortField[0] = STUDENT.FAMILY_RESIDENCE.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("enabled".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.ENABLED.asc();
+                    sortField[0] = USERS.ENABLED.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = USERS.ENABLED.desc();
+                    sortField[0] = USERS.ENABLED.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("lang_key".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.LANG_KEY.asc();
+                    sortField[0] = USERS.LANG_KEY.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = USERS.LANG_KEY.desc();
+                    sortField[0] = USERS.LANG_KEY.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
             if ("join_date".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = USERS.JOIN_DATE.asc();
+                    sortField[0] = USERS.JOIN_DATE.asc();
+                    sortField[1] = USERS.USERNAME.asc();
                 } else {
-                    sortField = USERS.JOIN_DATE.desc();
+                    sortField[0] = USERS.JOIN_DATE.desc();
+                    sortField[1] = USERS.USERNAME.desc();
                 }
             }
 
         }
         if (!ObjectUtils.isEmpty(sortField)) {
             selectConditionStep.orderBy(sortField);
-        } else {
-            selectConditionStep.orderBy(USERS.USERNAME);
         }
     }
 

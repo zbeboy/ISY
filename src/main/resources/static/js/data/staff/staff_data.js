@@ -240,6 +240,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 searching: false,
                 "processing": true, // 打开数据加载时的等待效果
                 "serverSide": true,// 打开后台分页
+                "aaSorting": [[2, 'asc']],// 排序
                 "ajax": {
                     "url": web_path + getAjaxUrl().passData,
                     "dataSrc": "data",
@@ -791,6 +792,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 searching: false,
                 "processing": true, // 打开数据加载时的等待效果
                 "serverSide": true,// 打开后台分页
+                "aaSorting": [[9, 'desc']],// 排序
                 "ajax": {
                     "url": web_path + getAjaxUrl().waitData,
                     "dataSrc": "data",

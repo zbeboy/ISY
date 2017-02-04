@@ -297,45 +297,56 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("department_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = DEPARTMENT.DEPARTMENT_ID.asc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_ID.asc();
                 } else {
-                    sortField = DEPARTMENT.DEPARTMENT_ID.desc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[1] = DEPARTMENT.DEPARTMENT_ID.asc();
                 } else {
-                    sortField = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[1] = DEPARTMENT.DEPARTMENT_ID.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[1] = DEPARTMENT.DEPARTMENT_ID.asc();
                 } else {
-                    sortField = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[1] = DEPARTMENT.DEPARTMENT_ID.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_NAME.asc();
                 } else {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_NAME.desc();
                 }
             }
 
             if ("department_is_del".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = DEPARTMENT.DEPARTMENT_IS_DEL.asc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_IS_DEL.asc();
+                    sortField[1] = DEPARTMENT.DEPARTMENT_ID.asc();
                 } else {
-                    sortField = DEPARTMENT.DEPARTMENT_IS_DEL.desc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_IS_DEL.desc();
+                    sortField[1] = DEPARTMENT.DEPARTMENT_ID.desc();
                 }
             }
 

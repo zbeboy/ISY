@@ -119,21 +119,23 @@ public class NationServiceImpl extends DataTablesPlugin<Nation> implements Natio
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("nation_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = NATION.NATION_ID.asc();
+                    sortField[0] = NATION.NATION_ID.asc();
                 } else {
-                    sortField = NATION.NATION_ID.desc();
+                    sortField[0] = NATION.NATION_ID.desc();
                 }
             }
 
             if ("nation_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = NATION.NATION_NAME.asc();
+                    sortField[0] = NATION.NATION_NAME.asc();
                 } else {
-                    sortField = NATION.NATION_NAME.desc();
+                    sortField[0] = NATION.NATION_NAME.desc();
                 }
             }
         }

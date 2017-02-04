@@ -116,45 +116,56 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_log_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
+                    sortField[0] = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
                 } else {
-                    sortField = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
+                    sortField[0] = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SYSTEM_LOG.USERNAME.asc();
+                    sortField[0] = SYSTEM_LOG.USERNAME.asc();
+                    sortField[1] = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
                 } else {
-                    sortField = SYSTEM_LOG.USERNAME.desc();
+                    sortField[0] = SYSTEM_LOG.USERNAME.desc();
+                    sortField[1] = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
                 }
             }
 
             if ("behavior".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SYSTEM_LOG.BEHAVIOR.asc();
+                    sortField[0] = SYSTEM_LOG.BEHAVIOR.asc();
+                    sortField[1] = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
                 } else {
-                    sortField = SYSTEM_LOG.BEHAVIOR.desc();
+                    sortField[0] = SYSTEM_LOG.BEHAVIOR.desc();
+                    sortField[1] = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
                 }
             }
 
             if ("operating_time".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SYSTEM_LOG.OPERATING_TIME.asc();
+                    sortField[0] = SYSTEM_LOG.OPERATING_TIME.asc();
                 } else {
-                    sortField = SYSTEM_LOG.OPERATING_TIME.desc();
+                    sortField[0] = SYSTEM_LOG.OPERATING_TIME.desc();
                 }
             }
 
             if ("ip_address".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SYSTEM_LOG.IP_ADDRESS.asc();
+                    sortField[0] = SYSTEM_LOG.IP_ADDRESS.asc();
+                    sortField[1] = SYSTEM_LOG.SYSTEM_LOG_ID.asc();
                 } else {
-                    sortField = SYSTEM_LOG.IP_ADDRESS.desc();
+                    sortField[0] = SYSTEM_LOG.IP_ADDRESS.desc();
+                    sortField[1] = SYSTEM_LOG.SYSTEM_LOG_ID.desc();
                 }
             }
         }

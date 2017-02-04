@@ -67,10 +67,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             },
             "columns": [
                 {"data": null},
-                {"data": "internshipTitle"},
-                {"data": "schoolName"},
-                {"data": "collegeName"},
-                {"data": "departmentName"},
                 {"data": "studentRealName"},
                 {"data": "studentUsername"},
                 {"data": "studentNumber"},
@@ -90,7 +86,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                     }
                 },
                 {
-                    targets: 13,
+                    targets: 9,
                     orderable: false,
                     render: function (a, b, c, d) {
 
