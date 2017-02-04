@@ -98,29 +98,34 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_sms_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SYSTEM_SMS.SYSTEM_SMS_ID.asc();
+                    sortField[0] = SYSTEM_SMS.SYSTEM_SMS_ID.asc();
                 } else {
-                    sortField = SYSTEM_SMS.SYSTEM_SMS_ID.desc();
+                    sortField[0] = SYSTEM_SMS.SYSTEM_SMS_ID.desc();
                 }
             }
 
             if ("send_time".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SYSTEM_SMS.SEND_TIME.asc();
+                    sortField[0] = SYSTEM_SMS.SEND_TIME.asc();
                 } else {
-                    sortField = SYSTEM_SMS.SEND_TIME.desc();
+                    sortField[0] = SYSTEM_SMS.SEND_TIME.desc();
                 }
             }
 
             if ("accept_phone".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SYSTEM_SMS.ACCEPT_PHONE.asc();
+                    sortField[0] = SYSTEM_SMS.ACCEPT_PHONE.asc();
+                    sortField[1] = SYSTEM_SMS.SYSTEM_SMS_ID.asc();
                 } else {
-                    sortField = SYSTEM_SMS.ACCEPT_PHONE.desc();
+                    sortField[0] = SYSTEM_SMS.ACCEPT_PHONE.desc();
+                    sortField[1] = SYSTEM_SMS.SYSTEM_SMS_ID.desc();
                 }
             }
 

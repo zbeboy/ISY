@@ -183,45 +183,60 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = INTERNSHIP_JOURNAL.STUDENT_NAME.asc();
+                    sortField[0] = INTERNSHIP_JOURNAL.STUDENT_NAME.asc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.asc();
                 } else {
-                    sortField = INTERNSHIP_JOURNAL.STUDENT_NAME.desc();
+                    sortField[0] = INTERNSHIP_JOURNAL.STUDENT_NAME.desc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.desc();
                 }
             }
 
             if ("student_number".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = INTERNSHIP_JOURNAL.STUDENT_NUMBER.asc();
+                    sortField[0] = INTERNSHIP_JOURNAL.STUDENT_NUMBER.asc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.asc();
                 } else {
-                    sortField = INTERNSHIP_JOURNAL.STUDENT_NUMBER.desc();
+                    sortField[0] = INTERNSHIP_JOURNAL.STUDENT_NUMBER.desc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.desc();
                 }
             }
 
             if ("organize".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = INTERNSHIP_JOURNAL.ORGANIZE.asc();
+                    sortField[0] = INTERNSHIP_JOURNAL.ORGANIZE.asc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.asc();
                 } else {
-                    sortField = INTERNSHIP_JOURNAL.ORGANIZE.desc();
+                    sortField[0] = INTERNSHIP_JOURNAL.ORGANIZE.desc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.desc();
                 }
             }
 
             if ("school_guidance_teacher".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = INTERNSHIP_JOURNAL.SCHOOL_GUIDANCE_TEACHER.asc();
+                    sortField[0] = INTERNSHIP_JOURNAL.SCHOOL_GUIDANCE_TEACHER.asc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.asc();
                 } else {
-                    sortField = INTERNSHIP_JOURNAL.SCHOOL_GUIDANCE_TEACHER.desc();
+                    sortField[0] = INTERNSHIP_JOURNAL.SCHOOL_GUIDANCE_TEACHER.desc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.desc();
                 }
             }
 
             if ("create_date".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = INTERNSHIP_JOURNAL.CREATE_DATE.asc();
+                    sortField[0] = INTERNSHIP_JOURNAL.CREATE_DATE.asc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.asc();
                 } else {
-                    sortField = INTERNSHIP_JOURNAL.CREATE_DATE.desc();
+                    sortField[0] = INTERNSHIP_JOURNAL.CREATE_DATE.desc();
+                    sortField[1] = INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.desc();
                 }
             }
         }

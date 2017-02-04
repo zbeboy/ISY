@@ -98,29 +98,34 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_mailbox_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
+                    sortField[0] = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
                 } else {
-                    sortField = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
+                    sortField[0] = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
                 }
             }
 
             if ("send_time".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SYSTEM_MAILBOX.SEND_TIME.asc();
+                    sortField[0] = SYSTEM_MAILBOX.SEND_TIME.asc();
                 } else {
-                    sortField = SYSTEM_MAILBOX.SEND_TIME.desc();
+                    sortField[0] = SYSTEM_MAILBOX.SEND_TIME.desc();
                 }
             }
 
             if ("accept_mail".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SYSTEM_MAILBOX.ACCEPT_MAIL.asc();
+                    sortField[0] = SYSTEM_MAILBOX.ACCEPT_MAIL.asc();
+                    sortField[1] = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
                 } else {
-                    sortField = SYSTEM_MAILBOX.ACCEPT_MAIL.desc();
+                    sortField[0] = SYSTEM_MAILBOX.ACCEPT_MAIL.desc();
+                    sortField[1] = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
                 }
             }
 

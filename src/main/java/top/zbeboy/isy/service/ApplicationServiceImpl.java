@@ -423,69 +423,81 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("application_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = APPLICATION.APPLICATION_NAME.asc();
+                    sortField[0] = APPLICATION.APPLICATION_NAME.asc();
                 } else {
-                    sortField = APPLICATION.APPLICATION_NAME.desc();
+                    sortField[0] = APPLICATION.APPLICATION_NAME.desc();
                 }
             }
 
             if ("application_en_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = APPLICATION.APPLICATION_EN_NAME.asc();
+                    sortField[0] = APPLICATION.APPLICATION_EN_NAME.asc();
                 } else {
-                    sortField = APPLICATION.APPLICATION_EN_NAME.desc();
+                    sortField[0] = APPLICATION.APPLICATION_EN_NAME.desc();
                 }
             }
 
             if ("application_pid".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = APPLICATION.APPLICATION_PID.asc();
+                    sortField[0] = APPLICATION.APPLICATION_PID.asc();
+                    sortField[1] = APPLICATION.APPLICATION_ID.asc();
                 } else {
-                    sortField = APPLICATION.APPLICATION_PID.desc();
+                    sortField[0] = APPLICATION.APPLICATION_PID.desc();
+                    sortField[1] = APPLICATION.APPLICATION_ID.desc();
                 }
             }
 
             if ("application_url".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = APPLICATION.APPLICATION_URL.asc();
+                    sortField[0] = APPLICATION.APPLICATION_URL.asc();
                 } else {
-                    sortField = APPLICATION.APPLICATION_URL.desc();
+                    sortField[0] = APPLICATION.APPLICATION_URL.desc();
                 }
             }
 
             if ("icon".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = APPLICATION.ICON.asc();
+                    sortField[0] = APPLICATION.ICON.asc();
+                    sortField[1] = APPLICATION.APPLICATION_ID.asc();
                 } else {
-                    sortField = APPLICATION.ICON.desc();
+                    sortField[0] = APPLICATION.ICON.desc();
+                    sortField[1] = APPLICATION.APPLICATION_ID.desc();
                 }
             }
 
             if ("application_sort".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = APPLICATION.APPLICATION_SORT.asc();
+                    sortField[0] = APPLICATION.APPLICATION_SORT.asc();
                 } else {
-                    sortField = APPLICATION.APPLICATION_SORT.desc();
+                    sortField[0] = APPLICATION.APPLICATION_SORT.desc();
                 }
             }
 
             if ("application_code".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = APPLICATION.APPLICATION_CODE.asc();
+                    sortField[0] = APPLICATION.APPLICATION_CODE.asc();
                 } else {
-                    sortField = APPLICATION.APPLICATION_CODE.desc();
+                    sortField[0] = APPLICATION.APPLICATION_CODE.desc();
                 }
             }
 
             if ("application_data_url_start_with".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = APPLICATION.APPLICATION_DATA_URL_START_WITH.asc();
+                    sortField[0] = APPLICATION.APPLICATION_DATA_URL_START_WITH.asc();
                 } else {
-                    sortField = APPLICATION.APPLICATION_DATA_URL_START_WITH.desc();
+                    sortField[0] = APPLICATION.APPLICATION_DATA_URL_START_WITH.desc();
                 }
             }
         }

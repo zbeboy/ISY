@@ -58,10 +58,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             },
             "columns": [
                 {"data": null},
-                {"data": "internshipTitle"},
-                {"data": "schoolName"},
-                {"data": "collegeName"},
-                {"data": "departmentName"},
                 {"data": "studentRealName"},
                 {"data": "studentUsername"},
                 {"data": "studentNumber"},

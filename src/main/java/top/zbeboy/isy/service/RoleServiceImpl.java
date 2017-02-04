@@ -438,37 +438,49 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("role_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = ROLE.ROLE_NAME.asc();
+                    sortField[0] = ROLE.ROLE_NAME.asc();
+                    sortField[1] = ROLE.ROLE_ID.asc();
                 } else {
-                    sortField = ROLE.ROLE_NAME.desc();
+                    sortField[0] = ROLE.ROLE_NAME.desc();
+                    sortField[1] = ROLE.ROLE_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[1] = ROLE.ROLE_ID.asc();
                 } else {
-                    sortField = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[1] = ROLE.ROLE_ID.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[1] = ROLE.ROLE_ID.asc();
                 } else {
-                    sortField = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[1] = ROLE.ROLE_ID.desc();
                 }
             }
 
             if ("role_en_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = ROLE.ROLE_EN_NAME.asc();
+                    sortField[0] = ROLE.ROLE_EN_NAME.asc();
+                    sortField[1] = ROLE.ROLE_ID.asc();
                 } else {
-                    sortField = ROLE.ROLE_EN_NAME.desc();
+                    sortField[0] = ROLE.ROLE_EN_NAME.desc();
+                    sortField[1] = ROLE.ROLE_ID.desc();
                 }
             }
 

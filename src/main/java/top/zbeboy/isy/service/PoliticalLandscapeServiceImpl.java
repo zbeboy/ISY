@@ -119,21 +119,25 @@ public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLan
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("political_landscape_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.asc();
+                    sortField[0] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.asc();
                 } else {
-                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc();
+                    sortField[0] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc();
                 }
             }
 
             if ("political_landscape_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
+                    sortField[0] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.asc();
+                    sortField[1] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.asc();
                 } else {
-                    sortField = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
+                    sortField[0] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME.desc();
+                    sortField[1] = POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID.desc();
                 }
             }
         }

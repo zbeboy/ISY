@@ -333,53 +333,67 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField sortField = null;
+        SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
             if ("science_id".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SCIENCE.SCIENCE_ID.asc();
+                    sortField[0] = SCIENCE.SCIENCE_ID.asc();
                 } else {
-                    sortField = SCIENCE.SCIENCE_ID.desc();
+                    sortField[0] = SCIENCE.SCIENCE_ID.desc();
                 }
             }
 
             if ("school_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.asc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.asc();
                 } else {
-                    sortField = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[0] = SCHOOL.SCHOOL_NAME.desc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.desc();
                 }
             }
 
             if ("college_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.asc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.asc();
                 } else {
-                    sortField = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.desc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.desc();
                 }
             }
 
             if ("department_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_NAME.asc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.asc();
                 } else {
-                    sortField = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField[0] = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.desc();
                 }
             }
 
             if ("science_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
                 if (isAsc) {
-                    sortField = SCIENCE.SCIENCE_NAME.asc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.asc();
                 } else {
-                    sortField = SCIENCE.SCIENCE_NAME.desc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.desc();
                 }
             }
 
             if ("science_is_del".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
                 if (isAsc) {
-                    sortField = SCIENCE.SCIENCE_IS_DEL.asc();
+                    sortField[0] = SCIENCE.SCIENCE_IS_DEL.asc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.asc();
                 } else {
-                    sortField = SCIENCE.SCIENCE_IS_DEL.desc();
+                    sortField[0] = SCIENCE.SCIENCE_IS_DEL.desc();
+                    sortField[1] = SCIENCE.SCIENCE_ID.desc();
                 }
             }
 
