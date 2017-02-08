@@ -8,7 +8,6 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,7 +22,6 @@ import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
-import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.application.ApplicationBean;
@@ -225,7 +223,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         Result<ApplicationRecord> applicationRecords = create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_ID.in(ids))
                 .fetch();
-        if(applicationRecords.isNotEmpty()){
+        if (applicationRecords.isNotEmpty()) {
             applications = applicationRecords.into(Application.class);
         }
         return applications;
