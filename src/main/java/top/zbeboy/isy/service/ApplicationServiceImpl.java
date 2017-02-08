@@ -44,7 +44,6 @@ import static top.zbeboy.isy.domain.Tables.COLLEGE_APPLICATION;
  */
 @Service("applicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-@CacheConfig(cacheNames = "application")
 public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> implements ApplicationService {
 
     private final Logger log = LoggerFactory.getLogger(ApplicationServiceImpl.class);

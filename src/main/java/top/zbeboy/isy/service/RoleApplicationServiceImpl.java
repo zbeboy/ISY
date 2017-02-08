@@ -23,7 +23,6 @@ import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
  */
 @Service("roleApplicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-@CacheConfig(cacheNames = "roleApplication")
 public class RoleApplicationServiceImpl implements RoleApplicationService {
 
     private final Logger log = LoggerFactory.getLogger(RoleApplicationServiceImpl.class);

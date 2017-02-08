@@ -40,7 +40,6 @@ import static top.zbeboy.isy.domain.Tables.*;
  */
 @Service("usersService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-@CacheConfig(cacheNames = "users")
 public class UsersServiceImpl implements UsersService {
 
     private final Logger log = LoggerFactory.getLogger(UsersServiceImpl.class);

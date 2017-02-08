@@ -243,12 +243,6 @@
             <version>${jsoup.version}</version>
         </dependency>
 
-        <!-- JSR-107 API (try the JCache support) -->
-        <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-        </dependency>
-
         <!-- inject -->
         <dependency>
             <groupId>javax.inject</groupId>
