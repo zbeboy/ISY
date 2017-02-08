@@ -5,7 +5,6 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,7 +40,7 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
         Result<RoleApplicationRecord> roleApplicationRecords = create.selectFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.in(roleIds))
                 .fetch();
-        if(roleApplicationRecords.isNotEmpty()){
+        if (roleApplicationRecords.isNotEmpty()) {
             roleApplications = roleApplicationRecords.into(RoleApplication.class);
         }
         return roleApplications;
