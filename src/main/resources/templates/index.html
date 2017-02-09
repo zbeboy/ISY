@@ -12,6 +12,10 @@
     <title th:text="#{web.title}">ISY</title>
     <!-- favicon -->
     <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+    <!-- font css -->
+    <link rel="stylesheet" href="css/useso.css" th:href="@{/css/custom/useso.css}"/>
+    <!-- normalize -->
+    <link rel="stylesheet" href="css/normalize.css" th:href="@{/webjars/normalize.css}"/>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
@@ -19,9 +23,7 @@
     <link rel="stylesheet" href="webjars/font-awesome/css/font-awesome.min.css"
           th:href="@{/webjars/font-awesome/css/font-awesome.min.css}"/>
     <!-- Custom CSS-->
-    <link rel="stylesheet" href="css/general.css" th:href="@{/css/custom/general.css}"/>
-    <!-- Owl-Carousel -->
-    <link rel="stylesheet" href="css/fui.css" th:href="@{/css/custom/fui.css}"/>
+    <link rel="stylesheet" href="css/index.css" th:href="@{/css/custom/index.css}"/>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -52,27 +54,35 @@
     </script>
 </head>
 <body>
-<!-- Preloader -->
-<div id="preloader">
-    <div id="status"></div>
-</div>
-<!-- FullScreen -->
-<div class="intro-header">
-    <div class="col-xs-12 text-center abcen1">
-        <h1 class="h1_home">ISY</h1>
-        <!--<h3 class="h3_home">最近记录：<button type="button" class="btn btn-lg btn-link">昆明理工大学-城市学院</button></h3>-->
-        <ul class="list-inline intro-social-buttons">
-            <!--<li><a href="https://twitter.com/galantiandrea" class="btn  btn-lg mybutton_cyano"><span>去学校</span></a>
-            </li>-->
-            <li><a href="login.html" th:href="@{/login}" class="btn  btn-lg mybutton_standard"><span>马上登录！</span></a>
-            </li>
-        </ul>
-        <div th:include="footer::footer" style="margin-top:200px;">
-            <p class="text-muted">&copy; Company 2016</p>
+<!-- SITE HEADER -->
+<div class="site-top" id="top">
+    <div class="site-top-overlay"></div>
+    <div class="welcome-text">
+        <div class="container text-center white-text">
+            <div class="col-xs-8 col-xs-offset-2">
+                <h1>ISY</h1>
+                <a href="login.html" th:href="@{/login}" class="button outline white">马上登录</a>
+            </div>
         </div>
     </div>
-    <!-- /.container -->
-</div>
+    <!-- SITE-FOOTER -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="social-icons">
+                        <li><a href="javascript:;" class="fa fa-qq"></a></li>
+                        <li><a href="javascript:;" class="fa fa-weixin"></a></li>
+                        <li><a href="https://zbeboy.github.io/ISY/" class="fa fa-github-square"></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" th:include="footer::footer"></div>
+            </div>
+        </div>
+    </footer>
+</div> <!-- .site-top -->
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
         data-main="/index"></script>

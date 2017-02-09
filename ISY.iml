@@ -158,6 +158,7 @@
     <orderEntry type="library" name="Maven: org.webjars:sockjs-client:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:stomp-websocket:2.3.3" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:font-awesome:4.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:normalize.css:5.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:metisMenu:2.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:startbootstrap-sb-admin-2:1.0.8-1" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:bootstrap-treeview:1.2.0" level="project" />
