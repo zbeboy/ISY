@@ -247,14 +247,14 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function initMaxLength(){
             $(getParamId().addPolitics).maxlength({
-                alwaysShow: true,
+                alwaysShow: false,
                 threshold: 10,
                 warningClass: "label label-success",
                 limitReachedClass: "label label-danger"
             });
 
             $(getParamId().updatePolitics).maxlength({
-                alwaysShow: true,
+                alwaysShow: false,
                 threshold: 10,
                 warningClass: "label label-success",
                 limitReachedClass: "label label-danger"
