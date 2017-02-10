@@ -5,7 +5,7 @@
 							http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
 	<cache alias="menuHtml">
 		<expiry>
-			<ttl unit="seconds">600</ttl>
+			<ttl unit="seconds">1200</ttl>
 		</expiry>
 		<heap unit="entries">200</heap>
 		<jsr107:mbeans enable-statistics="true"/>
@@ -13,7 +13,7 @@
 
 	<cache alias="userApplicationId">
 		<expiry>
-			<ttl unit="seconds">1200</ttl>
+			<ttl unit="seconds">3600</ttl>
 		</expiry>
 		<heap unit="entries">200</heap>
 		<jsr107:mbeans enable-statistics="true"/>
@@ -21,7 +21,7 @@
 
 	<cache alias="urlMapping">
 		<expiry>
-			<ttl unit="seconds">1200</ttl>
+			<ttl unit="seconds">3600</ttl>
 		</expiry>
 		<heap unit="entries">200</heap>
 		<jsr107:mbeans enable-statistics="true"/>
@@ -29,7 +29,7 @@
 
 	<cache alias="userRoleId">
 		<expiry>
-			<ttl unit="seconds">600</ttl>
+			<ttl unit="seconds">1200</ttl>
 		</expiry>
 		<heap unit="entries">200</heap>
 		<jsr107:mbeans enable-statistics="true"/>
@@ -37,7 +37,7 @@
 
 	<cache alias="userRole">
 		<expiry>
-			<ttl unit="seconds">600</ttl>
+			<ttl unit="seconds">1200</ttl>
 		</expiry>
 		<heap unit="entries">200</heap>
 		<jsr107:mbeans enable-statistics="true"/>
