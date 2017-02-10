@@ -135,6 +135,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
              动态链接点击效果
              */
             $('.dy_href').click(function () {
+                document.title = $(this).text();
                 addActive(this);
             });
 
