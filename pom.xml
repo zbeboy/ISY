@@ -14,11 +14,11 @@
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
         <jcaptcha.version>1.0</jcaptcha.version>
-        <fastJson.version>1.2.8</fastJson.version>
+        <fastJson.version>1.2.24</fastJson.version>
         <jsoup.version>1.9.2</jsoup.version>
         <springfox-swagger2.version>2.6.0</springfox-swagger2.version>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
-        <HikariCP.version>2.5.1</HikariCP.version>
+        <HikariCP.version>2.6.0</HikariCP.version>
         <commons-codec.version>1.9</commons-codec.version>
         <org.dom4j.version>2.0.0</org.dom4j.version>
         <org.apache.poi.version>3.15</org.apache.poi.version>
@@ -44,14 +44,13 @@
         <webjars.stomp-websocket.version>2.3.3</webjars.stomp-websocket.version>
         <webjars.lato.version>0.3.0</webjars.lato.version>
         <webjars.lodash.version>4.15.0</webjars.lodash.version>
-        <webjars-locator.version>0.30</webjars-locator.version>
     </properties>
 
     <!-- Inherit defaults from Spring Boot -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.3.RELEASE</version>
+        <version>1.5.1.RELEASE</version>
     </parent>
 
     <!-- Add typical dependencies for a web application -->
@@ -457,7 +456,6 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator</artifactId>
-            <version>${webjars-locator.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
