@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head th:include="header :: header(~{::meta},~{::title},~{::link})">
+<head th:replace="header :: header(~{::meta},~{::title},~{::link})">
     <meta baidu-gxt-verify-token="434aa6bac42e42ae7fff7983cd1ada50"/>
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title th:text="#{web.title}">ISY</title>
@@ -44,14 +44,12 @@
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
         data-main="/index"></script>
-<script>
-    /*<![CDATA[*/
+<script th:inline="javascript">
     var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
     require.config({
         baseUrl: web_path + "/js/index",
         waitSeconds: 0
     });
-    /*]]>*/
 </script>
 </body>
 </html>

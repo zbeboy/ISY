@@ -126,13 +126,11 @@
             {{/each}}
         </script>
         <script th:inline="javascript">
-            /*<![CDATA[*/
             /*页面参数*/
             var init_page_param = {
                 'collegeId': /*[[${user.collegeId}]]*/ 0,
                 'departmentId': /*[[${user.departmentId}]]*/ 0
             };
-            /*]]>*/
         </script>
         <input type="hidden" class="dy_script" value="/js/platform/users/users_profile_staff.js"/>
     </div>

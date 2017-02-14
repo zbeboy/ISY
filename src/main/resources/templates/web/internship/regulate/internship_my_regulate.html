@@ -98,13 +98,11 @@
             {{/each}}
         </script>
         <script th:inline="javascript">
-            /*<![CDATA[*/
             /*页面参数*/
             var init_page_param = {
                 'internshipReleaseId': /*[[${internshipReleaseId}]]*/ '',
                 'staffId': /*[[${staffId}]]*/ 0
             };
-            /*]]>*/
         </script>
         <input type="hidden" class="dy_script" value="/js/internship/regulate/internship_my_regulate.js"/>
     </div>

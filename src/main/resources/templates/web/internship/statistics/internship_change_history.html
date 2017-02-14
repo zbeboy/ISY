@@ -30,13 +30,11 @@
         </footer>
         <!-- /.footer -->
         <script th:inline="javascript">
-            /*<![CDATA[*/
             /*页面参数*/
             var init_page_param = {
                 'internshipReleaseId': /*[[${internshipReleaseId}]]*/ '',
                 'studentId': /*[[${studentId}]]*/ ''
             };
-            /*]]>*/
         </script>
         <script id="timeline-template" type="text/x-handlebars-template">
             {{#each listResult}}

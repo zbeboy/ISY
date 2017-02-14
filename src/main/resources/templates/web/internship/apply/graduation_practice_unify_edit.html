@@ -179,7 +179,6 @@
             {{/each}}
         </script>
         <script th:inline="javascript">
-            /*<![CDATA[*/
             /*页面参数*/
             var init_page_param = {
                 'internshipReleaseId': /*[[${internshipData.internshipReleaseId}]]*/ '',
@@ -187,7 +186,6 @@
                 'endTime': /*[[${internshipData.endTime}]]*/ '',
                 'internshipApplyState': /*[[${internshipApply.internshipApplyState}]]*/ ''
             };
-            /*]]>*/
         </script>
         <input type="hidden" class="dy_script" value="/js/internship/apply/graduation_practice_unify_edit.js"/>
     </div>
