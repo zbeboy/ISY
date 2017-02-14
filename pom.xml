@@ -26,8 +26,9 @@
         <commons-io.verson>2.4</commons-io.verson>
         <xmlbeans.version>2.3.0</xmlbeans.version>
 
-        <thymeleaf.version>3.0.2.RELEASE</thymeleaf.version>
-        <thymeleaf-layout-dialect.version>2.1.1</thymeleaf-layout-dialect.version>
+        <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
+        <thymeleaf-layout-dialect.version>2.1.2</thymeleaf-layout-dialect.version>
+        <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 
         <!-- webjars properties -->
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>

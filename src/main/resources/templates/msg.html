@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head th:include="header :: header(~{::meta},~{::title},~{::link})">
+<head th:replace="header :: header(~{::meta},~{::title},~{::link})">
     <!-- csrf -->
     <meta name="_csrf" content="" th:content="${_csrf.token}"/>
     <!-- default header name is X-CSRF-TOKEN -->
@@ -29,14 +29,12 @@
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
         data-main="/notice"></script>
-<script>
-    /*<![CDATA[*/
+<script th:inline="javascript">
     var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
     require.config({
         baseUrl: web_path + "/js/msg",
         waitSeconds: 0
     });
-    /*]]>*/
 </script>
 </body>
 </html>

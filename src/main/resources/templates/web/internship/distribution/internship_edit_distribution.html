@@ -59,13 +59,11 @@
             {{/each}}
         </script>
         <script th:inline="javascript">
-            /*<![CDATA[*/
             /*页面参数*/
             var init_page_param = {
                 'internshipReleaseId': /*[[${internshipReleaseId}]]*/ '',
                 'staffId': /*[[${staffId}]]*/ ''
             };
-            /*]]>*/
         </script>
         <input type="hidden" class="dy_script" value="/js/internship/distribution/internship_edit_distribution.js"/>
     </div>
