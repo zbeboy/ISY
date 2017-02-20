@@ -25,7 +25,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
         var valid_regex = {
             student_number_valid_regex: /^\d{13,}$/,
             id_card_valid_regex: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
-            parent_contact_phone_regex: /^1[0-9]{10}/
+            parent_contact_phone_regex: /^1[0-9]{10}$/,
+            dormitory_number_regex: /^\d*$/
         };
 
         /*
@@ -35,7 +36,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             real_name_error_msg: '请填写姓名',
             student_number_error_msg: '学号至少13位数字',
             id_card_error_msg: '身份证号不正确',
-            parent_contact_phone_error_msg: '手机号不正确'
+            parent_contact_phone_error_msg: '手机号不正确',
+            dormitory_number_error_msg: '宿舍号格式不正确'
         };
 
         function startLoading() {
@@ -82,7 +84,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             idCard: '#idCard',
             parentContactPhone: '#parentContactPhone',
             select_nation: '#select_nation',
-            select_political_landscape: '#select_political_landscape'
+            select_political_landscape: '#select_political_landscape',
+            dormitoryNumber: '#dormitoryNumber'
         };
 
         /*
@@ -93,7 +96,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             username: $(paramId.username).val().trim(),
             studentNumber: $(paramId.studentNumber).val().trim(),
             idCard: $(paramId.idCard).val().trim(),
-            parentContactPhone: $(paramId.parentContactPhone).val().trim()
+            parentContactPhone: $(paramId.parentContactPhone).val().trim(),
+            dormitoryNumber: $(paramId.dormitoryNumber).val().trim()
         };
 
         /*
@@ -105,6 +109,7 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             param.studentNumber = $(paramId.studentNumber).val().trim();
             param.idCard = $(paramId.idCard).val().trim();
             param.parentContactPhone = $(paramId.parentContactPhone).val().trim();
+            param.dormitoryNumber = $(paramId.dormitoryNumber).val().trim()
         }
 
         // 初始化生日
@@ -134,7 +139,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             valid_real_name: '#valid_real_name',
             valid_student_number: '#valid_student_number',
             valid_id_card: '#valid_id_card',
-            valid_parent_contact_phone: '#valid_parent_contact_phone'
+            valid_parent_contact_phone: '#valid_parent_contact_phone',
+            valid_dormitory_number: '#valid_dormitory_number'
         };
 
         /*
@@ -144,7 +150,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             real_name_error_msg: '#real_name_error_msg',
             student_number_error_msg: '#student_number_error_msg',
             id_card_error_msg: '#id_card_error_msg',
-            parent_contact_phone_error_msg: '#parent_contact_phone_error_msg'
+            parent_contact_phone_error_msg: '#parent_contact_phone_error_msg',
+            dormitory_number_error_msg: '#dormitory_number_error_msg'
         };
 
         /*
@@ -278,6 +285,20 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             }
         });
 
+        $(paramId.dormitoryNumber).blur(function () {
+            initParam();
+            var dormitoryNumber = param.dormitoryNumber;
+            if (dormitoryNumber.length > 0) {
+                if (!valid_regex.dormitory_number_regex.test(dormitoryNumber)) {
+                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, msg.dormitory_number_error_msg);
+                } else {
+                    validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                }
+            } else {
+                validCleanDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+            }
+        });
+
         $(paramId.idCard).blur(function () {
             initParam();
             var idCard = param.idCard;
@@ -350,13 +371,34 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
                 $.post(web_path + ajax_url.valid_student_url, param, function (data) {
                     if (data.state) {
                         validSuccessDom(validId.valid_student_number, errorMsgId.student_number_error_msg);
-                        validIdCard();
+                        validDormitoryNumber();
                     } else {
                         validErrorDom(validId.valid_student_number, errorMsgId.student_number_error_msg, '该学号已被注册');
                         // 去除遮罩
                         endLoading();
                     }
                 });
+            }
+        }
+
+        /**
+         * 检验宿舍号
+         */
+        function validDormitoryNumber() {
+            initParam();
+            var dormitoryNumber = param.dormitoryNumber;
+            if (dormitoryNumber.length > 0) {
+                if (!valid_regex.dormitory_number_regex.test(dormitoryNumber)) {
+                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, msg.dormitory_number_error_msg);
+                    // 去除遮罩
+                    endLoading();
+                } else {
+                    validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                    validIdCard();
+                }
+            } else {
+                validCleanDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                validIdCard();
             }
         }
 
