@@ -36,8 +36,7 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             real_name_error_msg: '请填写姓名',
             student_number_error_msg: '学号至少13位数字',
             id_card_error_msg: '身份证号不正确',
-            parent_contact_phone_error_msg: '手机号不正确',
-            dormitory_number_error_msg: '宿舍号格式不正确'
+            parent_contact_phone_error_msg: '手机号不正确'
         };
 
         function startLoading() {
@@ -85,6 +84,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             parentContactPhone: '#parentContactPhone',
             select_nation: '#select_nation',
             select_political_landscape: '#select_political_landscape',
+            ridgepole: '#ridgepole',
+            dorm: '#dorm',
             dormitoryNumber: '#dormitoryNumber'
         };
 
@@ -97,6 +98,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             studentNumber: $(paramId.studentNumber).val().trim(),
             idCard: $(paramId.idCard).val().trim(),
             parentContactPhone: $(paramId.parentContactPhone).val().trim(),
+            ridgepole: $(paramId.ridgepole).val().trim(),
+            dorm: $(paramId.dorm).val().trim(),
             dormitoryNumber: $(paramId.dormitoryNumber).val().trim()
         };
 
@@ -109,6 +112,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             param.studentNumber = $(paramId.studentNumber).val().trim();
             param.idCard = $(paramId.idCard).val().trim();
             param.parentContactPhone = $(paramId.parentContactPhone).val().trim();
+            param.ridgepole = $(paramId.ridgepole).val().trim();
+            param.dorm = $(paramId.dorm).val().trim();
             param.dormitoryNumber = $(paramId.dormitoryNumber).val().trim()
         }
 
@@ -285,20 +290,6 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             }
         });
 
-        $(paramId.dormitoryNumber).blur(function () {
-            initParam();
-            var dormitoryNumber = param.dormitoryNumber;
-            if (dormitoryNumber.length > 0) {
-                if (!valid_regex.dormitory_number_regex.test(dormitoryNumber)) {
-                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, msg.dormitory_number_error_msg);
-                } else {
-                    validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
-                }
-            } else {
-                validCleanDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
-            }
-        });
-
         $(paramId.idCard).blur(function () {
             initParam();
             var idCard = param.idCard;
@@ -386,19 +377,63 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
          */
         function validDormitoryNumber() {
             initParam();
-            var dormitoryNumber = param.dormitoryNumber;
-            if (dormitoryNumber.length > 0) {
-                if (!valid_regex.dormitory_number_regex.test(dormitoryNumber)) {
-                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, msg.dormitory_number_error_msg);
+            var ridgepole = param.ridgepole;
+            var dorm = param.dorm;
+
+            if(ridgepole.length <= 0 && dorm.length <= 0){
+                validCleanDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                $(paramId.dormitoryNumber).val('');
+                validIdCard();
+                return;
+            }
+
+            if (ridgepole.length > 0) {
+                if (!valid_regex.dormitory_number_regex.test(ridgepole)) {
+                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '栋号应为数字类型');
                     // 去除遮罩
                     endLoading();
                 } else {
-                    validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
-                    validIdCard();
+                    if (dorm.length > 0) {
+                        if (!valid_regex.dormitory_number_regex.test(dorm)) {
+                            validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '宿舍号应为数字类型');
+                            // 去除遮罩
+                            endLoading();
+                        } else {
+                            validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                            $(paramId.dormitoryNumber).val($(paramId.ridgepole).val().trim() + '-' + $(paramId.dorm).val().trim());
+                            validIdCard();
+                            return;
+                        }
+                    } else {
+                        validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '请填写宿舍号');
+                        // 去除遮罩
+                        endLoading();
+                    }
                 }
-            } else {
-                validCleanDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
-                validIdCard();
+            }
+
+            if (dorm.length > 0) {
+                if (!valid_regex.dormitory_number_regex.test(dorm)) {
+                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '宿舍号应为数字类型');
+                    // 去除遮罩
+                    endLoading();
+                } else {
+                    if (ridgepole.length > 0) {
+                        if (!valid_regex.dormitory_number_regex.test(ridgepole)) {
+                            validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '栋号应为数字类型');
+                            // 去除遮罩
+                            endLoading();
+                        } else {
+                            validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                            $(paramId.dormitoryNumber).val($(paramId.ridgepole).val().trim() + '-' + $(paramId.dorm).val().trim());
+                            validIdCard();
+                        }
+                    } else {
+                        validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '请填写栋号');
+                        // 去除遮罩
+                        endLoading();
+                    }
+                }
             }
         }
 

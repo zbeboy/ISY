@@ -49,6 +49,11 @@ public class StudentBean extends Student {
 
     private String roleName;
 
+    // 楼号
+    private String ridgepole;
+    // 宿舍号
+    private String dorm;
+
     public Integer getSchoolId() {
         return schoolId;
     }
@@ -295,5 +300,21 @@ public class StudentBean extends Student {
 
     public void setPoliticalLandscapeName(String politicalLandscapeName) {
         this.politicalLandscapeName = politicalLandscapeName;
+    }
+
+    public String getRidgepole() {
+        return ridgepole;
+    }
+
+    public void setRidgepole(String ridgepole) {
+        this.ridgepole = ridgepole;
+    }
+
+    public String getDorm() {
+        return dorm;
+    }
+
+    public void setDorm(String dorm) {
+        this.dorm = dorm;
     }
 }

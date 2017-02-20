@@ -858,6 +858,14 @@ public class UsersController {
             modelMap.addAttribute("avatarForSaveOrUpdate", studentBean.getAvatar());
             String showAvatar = getAvatar(studentBean.getAvatar(), request);
             studentBean.setAvatar(showAvatar);
+            String dormitoryNumber = studentBean.getDormitoryNumber();
+            if (StringUtils.hasLength(dormitoryNumber) && dormitoryNumber.contains("-")) {
+                String[] dormitoryNumberArr = dormitoryNumber.split("-");
+                if (dormitoryNumberArr.length >= 2) {
+                    studentBean.setRidgepole(dormitoryNumberArr[0]);
+                    studentBean.setDorm(dormitoryNumberArr[1]);
+                }
+            }
             modelMap.addAttribute("user", studentBean);
         }
     }
