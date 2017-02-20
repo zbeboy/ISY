@@ -92,10 +92,24 @@
                     </div>
                     <div class="form-group" id="valid_dormitory_number">
                         <label>宿舍号</label>
-                        <input class="form-control" name="dormitoryNumber" id="dormitoryNumber"
-                               th:value="${user.dormitoryNumber}"
-                               placeholder="宿舍号"/>
-                        <p class="help-block">格式：第一位为栋号，之后为宿舍号 如：6603 中间不要出现其它字符。</p>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="ridgepole"
+                                           th:value="${user.ridgepole}"/>
+                                    <div class="input-group-addon">栋</div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="dorm"
+                                           th:value="${user.dorm}"/>
+                                    <div class="input-group-addon">号</div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" class="form-control" name="dormitoryNumber" id="dormitoryNumber"
+                               th:value="${user.dormitoryNumber}"/>
                         <p class="text-danger hidden" id="dormitory_number_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_id_card">
@@ -139,7 +153,8 @@
                 </div>
                 <div class="caption text-center">
                     <p>
-                        <a href="javascript:;" id="cleanAvatar" class="btn btn-default" role="button"><i class="fa fa-times"></i> 清除</a>
+                        <a href="javascript:;" id="cleanAvatar" class="btn btn-default" role="button"><i
+                                class="fa fa-times"></i> 清除</a>
                     </p>
                 </div>
             </div>
