@@ -3,6 +3,11 @@
  */
 // require(["module/name", ...], function(params){ ... });
 require(["jquery", "bootstrap"], function ($) {
+    // Preloader
+    $('#status').delay(300).fadeOut();
+    $('#preloader').delay(300).fadeOut('slow');
+    $('body').delay(550).css({'overflow':'visible'});
+
     // qq social
     $('.fa-qq').popover({
         trigger: 'focus',
