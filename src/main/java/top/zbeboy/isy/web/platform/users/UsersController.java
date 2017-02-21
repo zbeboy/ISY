@@ -2,7 +2,6 @@ package top.zbeboy.isy.web.platform.users;
 
 import com.alibaba.fastjson.JSON;
 import com.octo.captcha.service.CaptchaServiceException;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Record1;
@@ -10,7 +9,6 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -860,11 +858,8 @@ public class UsersController {
             studentBean.setAvatar(showAvatar);
             String dormitoryNumber = studentBean.getDormitoryNumber();
             if (StringUtils.hasLength(dormitoryNumber) && dormitoryNumber.contains("-")) {
-                String[] dormitoryNumberArr = dormitoryNumber.split("-");
-                if (dormitoryNumberArr.length >= 2) {
-                    studentBean.setRidgepole(dormitoryNumberArr[0]);
-                    studentBean.setDorm(dormitoryNumberArr[1]);
-                }
+                studentBean.setRidgepole(dormitoryNumber.substring(0, dormitoryNumber.lastIndexOf('-')));
+                studentBean.setDorm(dormitoryNumber.substring(dormitoryNumber.lastIndexOf('-') + 1));
             }
             modelMap.addAttribute("user", studentBean);
         }
