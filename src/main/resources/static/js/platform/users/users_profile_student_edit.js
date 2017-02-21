@@ -25,8 +25,7 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
         var valid_regex = {
             student_number_valid_regex: /^\d{13,}$/,
             id_card_valid_regex: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
-            parent_contact_phone_regex: /^1[0-9]{10}$/,
-            dormitory_number_regex: /^\d*$/
+            parent_contact_phone_regex: /^1[0-9]{10}$/
         };
 
         /*
@@ -380,7 +379,7 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             var ridgepole = param.ridgepole;
             var dorm = param.dorm;
 
-            if(ridgepole.length <= 0 && dorm.length <= 0){
+            if (ridgepole.length <= 0 && dorm.length <= 0) {
                 validCleanDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
                 $(paramId.dormitoryNumber).val('');
                 validIdCard();
@@ -388,51 +387,27 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             }
 
             if (ridgepole.length > 0) {
-                if (!valid_regex.dormitory_number_regex.test(ridgepole)) {
-                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '栋号应为数字类型');
+                if (dorm.length > 0) {
+                    validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                    $(paramId.dormitoryNumber).val($(paramId.ridgepole).val().trim() + '-' + $(paramId.dorm).val().trim());
+                    validIdCard();
+                    return;
+                } else {
+                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '请填写宿舍号');
                     // 去除遮罩
                     endLoading();
-                } else {
-                    if (dorm.length > 0) {
-                        if (!valid_regex.dormitory_number_regex.test(dorm)) {
-                            validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '宿舍号应为数字类型');
-                            // 去除遮罩
-                            endLoading();
-                        } else {
-                            validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
-                            $(paramId.dormitoryNumber).val($(paramId.ridgepole).val().trim() + '-' + $(paramId.dorm).val().trim());
-                            validIdCard();
-                            return;
-                        }
-                    } else {
-                        validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '请填写宿舍号');
-                        // 去除遮罩
-                        endLoading();
-                    }
                 }
             }
 
             if (dorm.length > 0) {
-                if (!valid_regex.dormitory_number_regex.test(dorm)) {
-                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '宿舍号应为数字类型');
+                if (ridgepole.length > 0) {
+                    validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
+                    $(paramId.dormitoryNumber).val($(paramId.ridgepole).val().trim() + '-' + $(paramId.dorm).val().trim());
+                    validIdCard();
+                } else {
+                    validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '请填写栋号');
                     // 去除遮罩
                     endLoading();
-                } else {
-                    if (ridgepole.length > 0) {
-                        if (!valid_regex.dormitory_number_regex.test(ridgepole)) {
-                            validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '栋号应为数字类型');
-                            // 去除遮罩
-                            endLoading();
-                        } else {
-                            validSuccessDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg);
-                            $(paramId.dormitoryNumber).val($(paramId.ridgepole).val().trim() + '-' + $(paramId.dorm).val().trim());
-                            validIdCard();
-                        }
-                    } else {
-                        validErrorDom(validId.valid_dormitory_number, errorMsgId.dormitory_number_error_msg, '请填写栋号');
-                        // 去除遮罩
-                        endLoading();
-                    }
                 }
             }
         }
