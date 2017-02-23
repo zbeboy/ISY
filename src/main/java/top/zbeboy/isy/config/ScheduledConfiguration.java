@@ -117,6 +117,7 @@ public class ScheduledConfiguration {
             } else if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
                 studentService.deleteByUsername(r.getUsername());
             }
+            usersService.deleteById(r.getUsername());
         });
         log.info(">>>>>>>>>>>>> scheduled ... users ");
     }
