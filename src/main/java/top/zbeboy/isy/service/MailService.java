@@ -61,6 +61,17 @@ public interface MailService {
     void sendNotifyMail(Users users, String baseUrl, String notify);
 
     /**
+     * 使用内置方式发送
+     *
+     * @param to          接收方
+     * @param subject     标题
+     * @param content     内容
+     * @param isMultipart 多段
+     * @param isHtml      是html?
+     */
+    void sendDefaultMail(String to, String subject, String content, boolean isMultipart, boolean isHtml);
+
+    /**
      * 阿里云邮箱服务
      *
      * @param userMail 用户邮箱

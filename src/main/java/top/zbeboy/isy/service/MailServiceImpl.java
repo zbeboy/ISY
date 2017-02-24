@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import top.zbeboy.isy.config.ISYProperties;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.SystemMailbox;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.util.UUIDUtils;
@@ -48,40 +46,24 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private ISYProperties isyProperties;
 
-    @Autowired
-    private Environment env;
-
     @Resource
     private SystemMailboxService systemMailboxService;
 
     @Async
     @Override
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
-        if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
-            log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
-                    isMultipart, isHtml, to, subject, content);
 
-            // Prepare message using a Spring helper
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            try {
-                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
-                message.setTo(to);
-                message.setFrom(isyProperties.getConstants().getMailForm());
-                message.setSubject(subject);
-                String str1 = content.replaceAll("<!\\[CDATA\\[", "");
-                String messages = str1.replaceAll("]]>", "");
-                message.setText(messages, isHtml);
-                javaMailSender.send(mimeMessage);
-                log.debug("Sent e-mail to User '{}'", to);
-            } catch (Exception e) {
-                log.info("E-mail could not be sent to user '{}', exception is: {}", to, e);
-            }
-        } else {
-            if (isyProperties.getMail().isOpen()) {
+        if (!isyProperties.getMail().isOpen()) {
+            log.debug(" 管理员已关闭邮件发送 ");
+            return;
+        }
+        switch (isyProperties.getMail().getSendMethod()) {
+            case 1:
+                sendDefaultMail(to, subject, content, isMultipart, isHtml);
+                break;
+            case 2:
                 sendAliDMMail(to, subject, content);
-            } else {
-                log.debug(" 管理员已关闭邮件发送 ");
-            }
+                break;
         }
 
         SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to);
@@ -155,6 +137,26 @@ public class MailServiceImpl implements MailService {
         String subject = messageSource.getMessage("email.notify.title", null, locale);
         String content = springTemplateEngine.process("mails/notifyemail", data);
         sendEmail(users.getUsername(), subject, content, false, true);
+    }
+
+    @Override
+    public void sendDefaultMail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
+        log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
+                isMultipart, isHtml, to, subject, content);
+
+        // Prepare message using a Spring helper
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
+            message.setTo(to);
+            message.setFrom(isyProperties.getConstants().getMailForm());
+            message.setSubject(subject);
+            message.setText(content, isHtml);
+            javaMailSender.send(mimeMessage);
+            log.debug("Sent e-mail to User '{}'", to);
+        } catch (Exception e) {
+            log.info("E-mail could not be sent to user '{}', exception is: {}", to, e);
+        }
     }
 
     @Async

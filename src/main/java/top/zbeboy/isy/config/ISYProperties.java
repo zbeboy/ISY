@@ -108,6 +108,8 @@ public class ISYProperties {
 
         private int port;
 
+        private int sendMethod;
+
         private boolean open;
 
         public String getUser() {
@@ -140,6 +142,14 @@ public class ISYProperties {
 
         public void setPort(int port) {
             this.port = port;
+        }
+
+        public int getSendMethod() {
+            return sendMethod;
+        }
+
+        public void setSendMethod(int sendMethod) {
+            this.sendMethod = sendMethod;
         }
 
         public boolean isOpen() {
