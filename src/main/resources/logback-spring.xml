@@ -5,8 +5,7 @@
         <include resource="org/springframework/boot/logging/logback/base.xml"/>
         <logger name="org.springframework.web" level="DEBUG"/>
         <logger name="org.jooq" level="DEBUG"/>
-        <logger name="top.zbeboy.isy.web" level="DEBUG"/>
-        <logger name="top.zbeboy.isy.service" level="DEBUG"/>
+        <logger name="top.zbeboy.isy" level="DEBUG"/>
     </springProfile>
 
     <springProfile name="prod">

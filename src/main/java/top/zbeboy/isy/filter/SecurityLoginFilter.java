@@ -60,8 +60,7 @@ public class SecurityLoginFilter implements Filter {
                                     if (!ObjectUtils.isEmpty(users.getVerifyMailbox()) && users.getVerifyMailbox() == 1) {// 用户邮箱是否已被验证
                                         boolean isDel = usersService.validSCDSOIsDel(users);
                                         if (!isDel) {// 用户所在院校是否已被注销
-                                            String ip = RequestUtils.getIpAddress(request);
-                                            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), "登录系统", new Timestamp(Clock.systemDefaultZone().millis()), users.getUsername(), ip);
+                                            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), "登录系统", new Timestamp(Clock.systemDefaultZone().millis()), users.getUsername(), RequestUtils.getIpAddress(request));
                                             SystemLogService systemLogService = (SystemLogService) ctx
                                                     .getBean("systemLogService");
                                             systemLogService.save(systemLog);
