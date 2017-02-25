@@ -38,7 +38,7 @@ public class MobileServiceImpl implements MobileService {
     @Async
     @Override
     public void sendShortMessage(String mobile, String content) {
-        String result = null;
+        String result = "";
         try {
             String httpUrl = "http://apis.baidu.com/kingtto_media/106sms/106sms";
             String sendContent = URLEncoder.encode(content, CharEncoding.UTF_8);
@@ -65,9 +65,9 @@ public class MobileServiceImpl implements MobileService {
             result = sbf.toString();
         } catch (Exception e) {
             log.info("Send sms to mobile {} is exception : {}", mobile, e);
+            result = e.getMessage();
         }
-        log.debug(" mobile result : {}", result);
-        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), mobile);
+        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), mobile, result);
         systemSmsService.save(systemSms);
     }
 

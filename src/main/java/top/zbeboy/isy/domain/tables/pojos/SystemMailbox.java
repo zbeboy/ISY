@@ -25,11 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemMailbox implements Serializable {
 
-    private static final long serialVersionUID = 1972653472;
+    private static final long serialVersionUID = 1307805423;
 
     private String    systemMailboxId;
     private Timestamp sendTime;
     private String    acceptMail;
+    private String    sendCondition;
 
     public SystemMailbox() {}
 
@@ -37,16 +38,19 @@ public class SystemMailbox implements Serializable {
         this.systemMailboxId = value.systemMailboxId;
         this.sendTime = value.sendTime;
         this.acceptMail = value.acceptMail;
+        this.sendCondition = value.sendCondition;
     }
 
     public SystemMailbox(
         String    systemMailboxId,
         Timestamp sendTime,
-        String    acceptMail
+        String    acceptMail,
+        String    sendCondition
     ) {
         this.systemMailboxId = systemMailboxId;
         this.sendTime = sendTime;
         this.acceptMail = acceptMail;
+        this.sendCondition = sendCondition;
     }
 
     @NotNull
@@ -76,6 +80,15 @@ public class SystemMailbox implements Serializable {
         this.acceptMail = acceptMail;
     }
 
+    @Size(max = 500)
+    public String getSendCondition() {
+        return this.sendCondition;
+    }
+
+    public void setSendCondition(String sendCondition) {
+        this.sendCondition = sendCondition;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("SystemMailbox (");
@@ -83,6 +96,7 @@ public class SystemMailbox implements Serializable {
         sb.append(systemMailboxId);
         sb.append(", ").append(sendTime);
         sb.append(", ").append(acceptMail);
+        sb.append(", ").append(sendCondition);
 
         sb.append(")");
         return sb.toString();

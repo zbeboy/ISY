@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.SystemSmsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemSms extends TableImpl<SystemSmsRecord> {
 
-    private static final long serialVersionUID = 1203321349;
+    private static final long serialVersionUID = 830477037;
 
     /**
      * The reference instance of <code>isy.system_sms</code>
@@ -64,6 +64,11 @@ public class SystemSms extends TableImpl<SystemSmsRecord> {
      * The column <code>isy.system_sms.accept_phone</code>.
      */
     public final TableField<SystemSmsRecord, String> ACCEPT_PHONE = createField("accept_phone", org.jooq.impl.SQLDataType.VARCHAR.length(15), this, "");
+
+    /**
+     * The column <code>isy.system_sms.send_condition</code>.
+     */
+    public final TableField<SystemSmsRecord, String> SEND_CONDITION = createField("send_condition", org.jooq.impl.SQLDataType.VARCHAR.length(500), this, "");
 
     /**
      * Create a <code>isy.system_sms</code> table reference

@@ -25,11 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SystemSms implements Serializable {
 
-    private static final long serialVersionUID = -183514798;
+    private static final long serialVersionUID = 1662551893;
 
     private String    systemSmsId;
     private Timestamp sendTime;
     private String    acceptPhone;
+    private String    sendCondition;
 
     public SystemSms() {}
 
@@ -37,16 +38,19 @@ public class SystemSms implements Serializable {
         this.systemSmsId = value.systemSmsId;
         this.sendTime = value.sendTime;
         this.acceptPhone = value.acceptPhone;
+        this.sendCondition = value.sendCondition;
     }
 
     public SystemSms(
         String    systemSmsId,
         Timestamp sendTime,
-        String    acceptPhone
+        String    acceptPhone,
+        String    sendCondition
     ) {
         this.systemSmsId = systemSmsId;
         this.sendTime = sendTime;
         this.acceptPhone = acceptPhone;
+        this.sendCondition = sendCondition;
     }
 
     @NotNull
@@ -76,6 +80,15 @@ public class SystemSms implements Serializable {
         this.acceptPhone = acceptPhone;
     }
 
+    @Size(max = 500)
+    public String getSendCondition() {
+        return this.sendCondition;
+    }
+
+    public void setSendCondition(String sendCondition) {
+        this.sendCondition = sendCondition;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("SystemSms (");
@@ -83,6 +96,7 @@ public class SystemSms implements Serializable {
         sb.append(systemSmsId);
         sb.append(", ").append(sendTime);
         sb.append(", ").append(acceptPhone);
+        sb.append(", ").append(sendCondition);
 
         sb.append(")");
         return sb.toString();
