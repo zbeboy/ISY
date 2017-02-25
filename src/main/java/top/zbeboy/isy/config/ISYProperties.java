@@ -108,6 +108,12 @@ public class ISYProperties {
 
         private int port;
 
+        private String apiUser;
+
+        private String apiKey;
+
+        private String fromName;
+
         private int sendMethod;
 
         private boolean open;
@@ -142,6 +148,30 @@ public class ISYProperties {
 
         public void setPort(int port) {
             this.port = port;
+        }
+
+        public String getApiUser() {
+            return apiUser;
+        }
+
+        public void setApiUser(String apiUser) {
+            this.apiUser = apiUser;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+        }
+
+        public String getFromName() {
+            return fromName;
+        }
+
+        public void setFromName(String fromName) {
+            this.fromName = fromName;
         }
 
         public int getSendMethod() {
