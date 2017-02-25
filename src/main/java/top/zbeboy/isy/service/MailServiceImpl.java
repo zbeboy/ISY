@@ -1,6 +1,8 @@
 package top.zbeboy.isy.service;
 
 
+import io.jstack.sendcloud4j.SendCloud;
+import io.jstack.sendcloud4j.mail.Email;
 import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,21 +56,34 @@ public class MailServiceImpl implements MailService {
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
 
         if (!isyProperties.getMail().isOpen()) {
-            log.debug(" 管理员已关闭邮件发送 ");
+            log.info(" 管理员已关闭邮件发送 ");
             return;
         }
+        boolean isSend = false;
         switch (isyProperties.getMail().getSendMethod()) {
             case 1:
                 sendDefaultMail(to, subject, content, isMultipart, isHtml);
+                isSend = true;
+                log.info("使用默认邮件服务发送");
                 break;
             case 2:
                 sendAliDMMail(to, subject, content);
+                isSend = true;
+                log.info("使用阿里云邮件服务发送");
                 break;
+            case 3:
+                sendCloudMail(to, subject, content);
+                isSend = true;
+                log.info("使用sendCloud邮件服务发送");
+                break;
+            default:
+                log.info("未配置邮箱发送方式");
         }
 
-        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to);
-        systemMailboxService.save(systemMailbox);
-
+        if (isSend) {
+            SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to);
+            systemMailboxService.save(systemMailbox);
+        }
     }
 
     @Async
@@ -213,6 +228,18 @@ public class MailServiceImpl implements MailService {
         } catch (MessagingException e) {
             log.info("E-mail could not be sent to user '{}', exception is: {}", userMail, e);
         }
+    }
+
+    @Override
+    public void sendCloudMail(String userMail, String subject, String content) {
+        SendCloud webapi = SendCloud.createWebApi(isyProperties.getMail().getApiUser(), isyProperties.getMail().getApiKey());
+        Email email = Email.general()
+                .from(isyProperties.getMail().getUser())
+                .fromName(isyProperties.getMail().getFromName())
+                .html(content)          // or .plain()
+                .subject(subject)
+                .to(userMail);
+        webapi.mail().send(email);
     }
 
 }

@@ -79,4 +79,13 @@ public interface MailService {
      * @param content  内容
      */
     void sendAliDMMail(String userMail, String subject, String content);
+
+    /**
+     * sendCloud邮箱服务
+     *
+     * @param userMail 用户邮箱
+     * @param subject  标题
+     * @param content  内容
+     */
+    void sendCloudMail(String userMail, String subject, String content);
 }
