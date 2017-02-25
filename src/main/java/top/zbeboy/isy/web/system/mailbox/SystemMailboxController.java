@@ -56,6 +56,7 @@ public class SystemMailboxController {
         List<String> headers = new ArrayList<>();
         headers.add("accept_mail");
         headers.add("send_time");
+        headers.add("send_condition");
         DataTablesUtils<SystemMailboxBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         Result<Record> records = systemMailboxService.findAllByPage(dataTablesUtils);
         List<SystemMailboxBean> systemMailboxes = new ArrayList<>();

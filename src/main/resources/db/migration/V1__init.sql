@@ -173,13 +173,15 @@ CREATE TABLE system_log(
 CREATE TABLE system_mailbox(
   system_mailbox_id VARCHAR(64) PRIMARY KEY ,
   send_time DATETIME,
-  accept_mail VARCHAR(200)
+  accept_mail VARCHAR(200),
+  send_condition VARCHAR(500)
 );
 
 CREATE TABLE system_sms(
   system_sms_id VARCHAR(64) PRIMARY KEY ,
   send_time DATETIME,
-  accept_phone VARCHAR(15)
+  accept_phone VARCHAR(15),
+  send_condition VARCHAR(500)
 );
 
 CREATE TABLE files(

@@ -82,4 +82,11 @@ public class SystemSmsDao extends DAOImpl<SystemSmsRecord, top.zbeboy.isy.domain
     public List<top.zbeboy.isy.domain.tables.pojos.SystemSms> fetchByAcceptPhone(String... values) {
         return fetch(SystemSms.SYSTEM_SMS.ACCEPT_PHONE, values);
     }
+
+    /**
+     * Fetch records that have <code>send_condition IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.SystemSms> fetchBySendCondition(String... values) {
+        return fetch(SystemSms.SYSTEM_SMS.SEND_CONDITION, values);
+    }
 }

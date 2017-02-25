@@ -129,6 +129,17 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
                 }
             }
 
+            if ("send_condition".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = SYSTEM_MAILBOX.SEND_CONDITION.asc();
+                    sortField[1] = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.asc();
+                } else {
+                    sortField[0] = SYSTEM_MAILBOX.SEND_CONDITION.desc();
+                    sortField[1] = SYSTEM_MAILBOX.SYSTEM_MAILBOX_ID.desc();
+                }
+            }
+
         }
 
         sortToFinish(selectConditionStep, selectJoinStep, type, sortField);

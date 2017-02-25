@@ -3,6 +3,7 @@ package top.zbeboy.isy.service;
 
 import io.jstack.sendcloud4j.SendCloud;
 import io.jstack.sendcloud4j.mail.Email;
+import io.jstack.sendcloud4j.mail.Result;
 import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,30 +60,21 @@ public class MailServiceImpl implements MailService {
             log.info(" 管理员已关闭邮件发送 ");
             return;
         }
-        boolean isSend = false;
         switch (isyProperties.getMail().getSendMethod()) {
             case 1:
                 sendDefaultMail(to, subject, content, isMultipart, isHtml);
-                isSend = true;
                 log.info("使用默认邮件服务发送");
                 break;
             case 2:
                 sendAliDMMail(to, subject, content);
-                isSend = true;
                 log.info("使用阿里云邮件服务发送");
                 break;
             case 3:
                 sendCloudMail(to, subject, content);
-                isSend = true;
                 log.info("使用sendCloud邮件服务发送");
                 break;
             default:
                 log.info("未配置邮箱发送方式");
-        }
-
-        if (isSend) {
-            SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to);
-            systemMailboxService.save(systemMailbox);
         }
     }
 
@@ -158,7 +150,7 @@ public class MailServiceImpl implements MailService {
     public void sendDefaultMail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
                 isMultipart, isHtml, to, subject, content);
-
+        String sendCondition = "";
         // Prepare message using a Spring helper
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
@@ -169,14 +161,19 @@ public class MailServiceImpl implements MailService {
             message.setText(content, isHtml);
             javaMailSender.send(mimeMessage);
             log.debug("Sent e-mail to User '{}'", to);
+            sendCondition = "方式:默认邮箱, 发送成功";
         } catch (Exception e) {
             log.info("E-mail could not be sent to user '{}', exception is: {}", to, e);
+            sendCondition = "方式:默认邮箱, 发送失败 " + e.getMessage();
         }
+        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to, sendCondition);
+        systemMailboxService.save(systemMailbox);
     }
 
     @Async
     @Override
     public void sendAliDMMail(String userMail, String subject, String content) {
+        String sendCondition = "";
         try {
             // 配置发送邮件的环境属性
             final Properties props = new Properties();
@@ -222,12 +219,16 @@ public class MailServiceImpl implements MailService {
             message.setSubject(subject);
             // 设置邮件的内容体
             message.setContent(content, "text/html;charset=UTF-8");
-            log.debug("Sent e-mail to User '{}'", userMail);
             // 发送邮件
             Transport.send(message);
+            log.debug("Sent e-mail to User '{}'", userMail);
+            sendCondition = "方式:阿里云邮箱, 发送成功";
         } catch (MessagingException e) {
             log.info("E-mail could not be sent to user '{}', exception is: {}", userMail, e);
+            sendCondition = "方式:阿里云邮箱, 发送失败 " + e.getMessage();
         }
+        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), userMail, sendCondition);
+        systemMailboxService.save(systemMailbox);
     }
 
     @Override
@@ -239,7 +240,15 @@ public class MailServiceImpl implements MailService {
                 .html(content)          // or .plain()
                 .subject(subject)
                 .to(userMail);
-        webapi.mail().send(email);
+        Result result = webapi.mail().send(email);
+        String sendCondition = "";
+        if (result.isSuccess()) {
+            sendCondition = "方式:sendCloud邮箱, 发送成功 " + result.getStatusCode() + " : " + result.getMessage();
+        } else {
+            sendCondition = "方式:sendCloud邮箱, 发送失败 " + result.getStatusCode() + " : " + result.getMessage();
+        }
+        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), userMail, sendCondition);
+        systemMailboxService.save(systemMailbox);
     }
 
 }

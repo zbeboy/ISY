@@ -45,7 +45,8 @@ require(["jquery", "datatables.responsive"], function ($) {
         },
         "columns": [
             {"data": "acceptPhone"},
-            {"data": "sendTimeNew"}
+            {"data": "sendTimeNew"},
+            {"data": "sendCondition"}
         ],
         "language": {
             "sProcessing": "处理中...",

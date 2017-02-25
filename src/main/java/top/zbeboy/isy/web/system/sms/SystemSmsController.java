@@ -56,6 +56,7 @@ public class SystemSmsController {
         List<String> headers = new ArrayList<>();
         headers.add("accept_phone");
         headers.add("send_time");
+        headers.add("send_condition");
         DataTablesUtils<SystemSmsBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         Result<Record> records = systemSmsService.findAllByPage(dataTablesUtils);
         List<SystemSmsBean> systemSmses = new ArrayList<>();

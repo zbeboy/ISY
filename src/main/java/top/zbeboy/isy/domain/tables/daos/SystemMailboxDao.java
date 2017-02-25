@@ -82,4 +82,11 @@ public class SystemMailboxDao extends DAOImpl<SystemMailboxRecord, top.zbeboy.is
     public List<top.zbeboy.isy.domain.tables.pojos.SystemMailbox> fetchByAcceptMail(String... values) {
         return fetch(SystemMailbox.SYSTEM_MAILBOX.ACCEPT_MAIL, values);
     }
+
+    /**
+     * Fetch records that have <code>send_condition IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.SystemMailbox> fetchBySendCondition(String... values) {
+        return fetch(SystemMailbox.SYSTEM_MAILBOX.SEND_CONDITION, values);
+    }
 }
