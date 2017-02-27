@@ -1,53 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property name="LOG_FILE" value="${LOG_PATH}/${LOG_FILE}"/>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_FILE}</file>
-        <encoder>
-            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
-        </encoder>
-    </appender>
-    <springProfile name="dev">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+    <springProfile name="prod">
         <logger name="org.springframework.web" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="org.webjars" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="org.thymeleaf" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="org.jboss" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="io.undertow" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="io.swagger" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="com.alibaba" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="org.apache" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="org.jooq" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
         <logger name="top.zbeboy.isy" level="DEBUG">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
         </logger>
     </springProfile>
 
-    <springProfile name="prod">
+    <springProfile name="dev">
         <root level="INFO">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
         </root>
     </springProfile>
