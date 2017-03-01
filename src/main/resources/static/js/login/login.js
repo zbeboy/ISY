@@ -4,7 +4,6 @@
 requirejs.config({
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
-        "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
         "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
@@ -12,17 +11,13 @@ requirejs.config({
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
-        "jquery.showLoading": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["jquery"]
-        },
         "bootstrap-typeahead": {
             deps: ["jquery"]
         }
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf", "com", "bootstrap-typeahead"], function ($, domready) {
+require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-typeahead"], function ($, domready) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -48,7 +43,8 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
         var paramId = {
             email: '#email',
             password: '#password',
-            captcha: '#j_captcha_response'
+            captcha: '#j_captcha_response',
+            btnLogin:'#login'
         };
 
         /*
@@ -130,14 +126,14 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
          * 开始加载
          */
         function startLoading() {
-            $('#loading_region').showLoading();
+            $(paramId.btnLogin).attr('disabled',true).text('登录中...');
         }
 
         /**
          * 结束加载
          */
         function endLoading() {
-            $('#loading_region').hideLoading();
+            $(paramId.btnLogin).attr('disabled',false).text('登 录');
         }
 
         $('#student_register').click(function () {
@@ -201,7 +197,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
             $('#jcaptcha').attr('src', web_path + ajax_url.change_jcaptcha + new Date().getTime());
         }
 
-        $('#login').click(function () {
+        $(paramId.btnLogin).click(function () {
             validEmail();
         });
 
@@ -271,8 +267,6 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
                 // 显示遮罩
                 startLoading();
                 $.post(web_path + ajax_url.login, $('#login_form').serialize(), function (data) {
-                    // 去除遮罩
-                    endLoading();
                     var captchaInput = $('#j_captcha_response');
                     var p_error_msg = $('#error_msg');
                     switch (data) {
@@ -339,6 +333,8 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('验证异常');
                     }
+                    // 去除遮罩
+                    endLoading();
                 });
             }
         }

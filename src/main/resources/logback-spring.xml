@@ -4,7 +4,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
     <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
-    <springProfile name="prod">
+    <springProfile name="dev">
         <logger name="org.springframework.web" level="DEBUG">
             <appender-ref ref="CONSOLE"/>
         </logger>
@@ -37,7 +37,7 @@
         </logger>
     </springProfile>
 
-    <springProfile name="dev">
+    <springProfile name="prod">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
