@@ -275,11 +275,15 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('密码错误');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.CAPTCHA_ERROR_CODE:
                             changeJcaptcha();
                             validErrorDom(validId.captcha, errorMsgId.captcha, '验证码错误');
                             p_error_msg.addClass('hidden');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.OK_CODE:
                             window.location.href = web_path + ajax_url.backstage;
@@ -289,30 +293,40 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('您所在院校可能已被注销');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.USERNAME_IS_NOT_EXIST_CODE:
                             changeJcaptcha();
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('账号不存在');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.CAPTCHA_IS_BLANK:
                             changeJcaptcha();
                             captchaInput.val('');
                             validErrorDom(validId.captcha, errorMsgId.captcha, '请填写验证码');
                             p_error_msg.addClass('hidden');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.PASSWORD_IS_BLANK:
                             changeJcaptcha();
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('请填写密码');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.EMAIL_IS_BLANK:
                             changeJcaptcha();
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('请填写账号');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.EMAIL_IS_NOT_VALID:
                             changeJcaptcha();
@@ -320,21 +334,25 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             var anew_mail = '<a href="' + web_path + ajax_url.anew_send_verify_mailbox + '?username=' + email + '" >重新验证</a>';
                             p_error_msg.removeClass('hidden').html('您的邮箱未验证无法登录  ' + anew_mail + '?');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         case error_code.USERNAME_IS_ENABLES:
                             changeJcaptcha();
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('您的账号已被注销，请联系管理员');
+                            // 去除遮罩
+                            endLoading();
                             break;
                         default:
                             changeJcaptcha();
                             captchaInput.val('');
                             validSuccessDom(validId.captcha, errorMsgId.captcha);
                             p_error_msg.removeClass('hidden').text('验证异常');
+                            // 去除遮罩
+                            endLoading();
                     }
-                    // 去除遮罩
-                    endLoading();
                 });
             }
         }
