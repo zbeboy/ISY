@@ -150,10 +150,10 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
          */
         function sendForgetPasswordEmail() {
             $.post(web_path + ajax_url.forget_email, $('#forget_password_form').serialize(), function (data) {
-                endLoading();
                 if (data.state) {
                     window.location.href = web_path + ajax_url.finish;
                 } else {
+                    endLoading();
                     $('#email_error_msg').removeClass('hidden').text(data.msg);
                 }
             });
