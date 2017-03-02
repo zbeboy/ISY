@@ -120,6 +120,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
          提交数据
          */
         $('#forget_password').click(function () {
+            startLoading();
             validEmail();
         });
 
@@ -130,12 +131,14 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
             initParam();
             var email = param.email;
             if (!valid_regex.email.test(email)) {
+                endLoading();
                 validErrorDom(validId.email, errorMsgId.email, msg.email);
             } else {
                 $.post(web_path + ajax_url.valid_email, {email: email}, function (data) {
                     if (data.state) {
                         sendForgetPasswordEmail();
                     } else {
+                        endLoading();
                         validErrorDom(validId.email, errorMsgId.email, data.msg);
                     }
                 });
@@ -146,7 +149,6 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
          * 提交到后台
          */
         function sendForgetPasswordEmail() {
-            startLoading();
             $.post(web_path + ajax_url.forget_email, $('#forget_password_form').serialize(), function (data) {
                 endLoading();
                 if (data.state) {
