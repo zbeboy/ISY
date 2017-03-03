@@ -1,6 +1,0 @@
-{
-  "name": "Isy",
-  "tagline": "学校管理系统",
-  "body": "### 介绍.\r\nI see you(ISY).是为协同校园工作所建立的系统，极大简化校园繁重工作，让学生，教职工更轻松的学习和工作。\r\n\r\n### 目前方向\r\n目前根据校园实习流程进行系统开发，此后会继续加强系统功能。\r\n\r\n### 所使用技术\r\n主框架是以Spring boot做为基础，目前框架版本为1.3.8；其次以基础框架和业务要求为核心做拓展，现已使用到JCache,JOOQ,requirejs,webjars等主流技术。\r\n\r\n### 作者\r\nzbeboy 主要开发者。\r\n\r\n### 支持或联系\r\n如果您有更好的开发建议包括技术支持，请联系863052317@qq.com。\r\n",
-  "note": "Don't delete this file! It's used internally to help with page regeneration."
-}

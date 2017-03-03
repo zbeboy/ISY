@@ -1,0 +1,8 @@
+title: Isy
+description: 学校管理系统
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
