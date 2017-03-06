@@ -49,9 +49,9 @@
                                id="teacherDistributionEndTime"/>
                     </div>
                     <div class="form-group" id="valid_time">
-                        <label>实习时间</label>
+                        <label>实习申请时间</label>
                         <input class="form-control" name="time" id="time" placeholder="实习开始时间"/>
-                        <p class="help-block">建议：实习时间晚于指导教师分配时间</p>
+                        <p class="help-block">建议：实习申请时间应晚于指导教师分配时间</p>
                         <p class="text-danger hidden" id="time_error_msg"></p>
                         <input type="hidden" th:value="${internshipRelease.startTime}" id="startTime"/>
                         <input type="hidden" th:value="${internshipRelease.endTime}" id="endTime"/>
