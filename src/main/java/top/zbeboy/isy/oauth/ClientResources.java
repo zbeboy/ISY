@@ -2,11 +2,13 @@ package top.zbeboy.isy.oauth;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 
 /**
  * Created by lenovo on 2017-03-07.
  */
+@Configuration
 public class ClientResources {
 
     @NestedConfigurationProperty
