@@ -15,7 +15,7 @@ public class MainRestController {
 
     private final Logger log = LoggerFactory.getLogger(MainRestController.class);
 
-    @GetMapping("/rest/user")
+    @GetMapping("/user")
     public Principal user(Principal user) {
         return user;
     }
