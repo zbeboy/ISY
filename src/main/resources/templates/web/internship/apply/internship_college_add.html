@@ -90,25 +90,25 @@
                     <div class="form-group" id="valid_internship_college_name">
                         <label>实习单位名称</label>
                         <input class="form-control" name="internshipCollegeName" id="internshipCollegeName"
-                               placeholder="实习单位名称" maxlength="200"/>
+                               placeholder="实习单位名称" th:value="${companyInfo}" maxlength="200"/>
                         <p class="text-danger hidden" id="internship_college_name_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_college_address">
                         <label>实习单位地址</label>
                         <input class="form-control" name="internshipCollegeAddress" id="internshipCollegeAddress"
-                               placeholder="实习单位地址" maxlength="500"/>
+                               placeholder="实习单位地址" th:value="${companyInfo}" maxlength="500"/>
                         <p class="text-danger hidden" id="internship_college_address_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_college_contacts">
                         <label>实习单位联系人</label>
                         <input class="form-control" name="internshipCollegeContacts" id="internshipCollegeContacts"
-                               placeholder="实习单位联系人" maxlength="10"/>
+                               placeholder="实习单位联系人" th:value="${internshipTeacherName}" maxlength="10"/>
                         <p class="text-danger hidden" id="internship_college_contacts_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_internship_college_tel">
                         <label>实习单位联系人联系方式</label>
                         <input class="form-control" name="internshipCollegeTel" id="internshipCollegeTel"
-                               placeholder="实习单位联系人联系方式"/>
+                               placeholder="实习单位联系人联系方式" th:value="${internshipTeacherMobile}" />
                         <p class="text-danger hidden" id="internship_college_tel_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_school_guidance_teacher">

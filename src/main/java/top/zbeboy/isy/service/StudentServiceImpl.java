@@ -68,6 +68,10 @@ public class StudentServiceImpl implements StudentService {
                 .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                 .join(DEPARTMENT)
                 .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                 .where(STUDENT.STUDENT_ID.eq(id))
                 .fetchOptional();
     }
