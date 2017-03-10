@@ -389,15 +389,15 @@ span.underline {
     padding: 160px 0 168px 0;
 }
 .welcome-text h1 {
-    margin-bottom: 30px;
+    margin-bottom: 32px;
     font-size: 82px;
     color: white;
     letter-spacing:2px;
 }
 .welcome-text h4 {
     color: white;
-    margin-bottom: 30px;
-    line-height: 26px;
+    margin-bottom: 12px;
+    line-height: 10px;
     font-size: 16px;
     letter-spacing:2px;
 }
@@ -409,8 +409,12 @@ span.underline {
  5. Footer
 -------------------------------------------------------- */
 .site-footer {
-    position: relative;
+    position: absolute;
     z-index:9;
+    bottom: 40px;
+    left:0;
+    right:0;
+    margin:auto;
 }
 
 .social-icons {
