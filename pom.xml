@@ -34,7 +34,6 @@
         <!-- webjars properties -->
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
         <webjars.font-awesome.version>4.6.3</webjars.font-awesome.version>
-        <webjars.normalize.version>5.0.0</webjars.normalize.version>
         <webjars.metisMenu.version>2.5.2</webjars.metisMenu.version>
         <webjars.sb-admin.version>1.0.8-1</webjars.sb-admin.version>
         <webjars.bootstrap-treeview.version>1.2.0</webjars.bootstrap-treeview.version>
@@ -375,13 +374,6 @@
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
             <version>${webjars.font-awesome.version}</version>
-        </dependency>
-
-        <!-- normalize -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>normalize.css</artifactId>
-            <version>${webjars.normalize.version}</version>
         </dependency>
 
         <!-- metisMenu -->

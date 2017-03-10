@@ -6,15 +6,28 @@
     <title th:text="#{web.title}">ISY</title>
     <!-- font css -->
     <link rel="stylesheet" href="css/useso.css" th:href="@{/css/custom/useso.css}"/>
-    <!-- normalize -->
-    <link rel="stylesheet" href="css/normalize.css" th:href="@{/webjars/normalize.css}"/>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/vegas/2.4.0/vegas.min.css">
     <!-- Custom CSS-->
     <link rel="stylesheet" href="css/index.css" th:href="@{/css/custom/index.css}"/>
 </head>
 <body>
 <!-- Preloader -->
-<div id="preloader">
-    <div id="status"></div>
+<div class="preloader">
+    <div class="sk-circle">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
+    </div>
 </div>
 
 <!-- SITE HEADER -->
@@ -23,8 +36,8 @@
     <div class="welcome-text">
         <div class="container text-center white-text">
             <div class="col-xs-8 col-xs-offset-2">
-                <h1>ISY</h1>
-                <a href="login.html" th:href="@{/login}" class="button outline white">马上登录</a>
+                <h1 class="wow fadeInUp" data-wow-delay="0.4s">ISY</h1>
+                <a href="login.html" th:href="@{/login}" class="button outline white wow fadeInUp" data-wow-delay="0.8s">马上登录</a>
             </div>
         </div>
     </div>
