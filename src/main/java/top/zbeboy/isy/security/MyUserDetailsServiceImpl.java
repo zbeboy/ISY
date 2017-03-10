@@ -52,24 +52,23 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
     /**
      * 返回验证角色
      *
-     * @param authoritiesRecords
-     * @return
+     * @param authoritiesRecords 权限
+     * @return 组装
      */
     private List<GrantedAuthority> buildUserAuthority(List<AuthoritiesRecord> authoritiesRecords) {
-        Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
+        Set<GrantedAuthority> setAuths = new HashSet<>();
         for (AuthoritiesRecord userRole : authoritiesRecords) {
             setAuths.add(new SimpleGrantedAuthority(userRole.getAuthority()));
         }
-        List<GrantedAuthority> result = new ArrayList<GrantedAuthority>(setAuths);
-        return result;
+        return new ArrayList<>(setAuths);
     }
 
     /**
      * 返回验证用户
      *
-     * @param users
-     * @param authorities
-     * @return
+     * @param users       用户
+     * @param authorities 权限
+     * @return 组装
      */
     private MyUserImpl buildUserForAuthentication(Users users, List<GrantedAuthority> authorities) {
         boolean enable = false;

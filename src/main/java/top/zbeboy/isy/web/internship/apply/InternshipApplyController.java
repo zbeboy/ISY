@@ -1061,7 +1061,11 @@ public class InternshipApplyController {
         }
         modelMap.addAttribute("qqMail", qqMail);
         modelMap.addAttribute("student", studentBean);
-        modelMap.addAttribute("internshipTeacher", getInternshipTeacherFromErrorBean(errorBean));
+        Map<String, String> internshipTeacherParams = getInternshipTeacherFromErrorBean(errorBean);
+        modelMap.addAttribute("internshipTeacher", internshipTeacherParams.get("internshipTeacher"));
+        modelMap.addAttribute("internshipTeacherName", internshipTeacherParams.get("internshipTeacherName"));
+        modelMap.addAttribute("internshipTeacherMobile", internshipTeacherParams.get("internshipTeacherMobile"));
+        modelMap.addAttribute("companyInfo", studentBean.getSchoolName() + studentBean.getCollegeName());
     }
 
     /**
@@ -1070,16 +1074,18 @@ public class InternshipApplyController {
      * @param errorBean 判断条件
      * @return 指导教师
      */
-    private String getInternshipTeacherFromErrorBean(ErrorBean<InternshipRelease> errorBean) {
+    private Map<String, String> getInternshipTeacherFromErrorBean(ErrorBean<InternshipRelease> errorBean) {
+        Map<String, String> params = new HashMap<>();
         InternshipTeacherDistribution internshipTeacherDistribution = (InternshipTeacherDistribution) errorBean.getMapData().get("internshipTeacherDistribution");
         int staffId = internshipTeacherDistribution.getStaffId();
         Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
-        String internshipTeacher = "";
         if (staffRecord.isPresent()) {
             StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-            internshipTeacher = staffBean.getRealName() + " " + staffBean.getMobile();
+            params.put("internshipTeacherName", staffBean.getRealName());
+            params.put("internshipTeacherMobile", staffBean.getMobile());
+            params.put("internshipTeacher", staffBean.getRealName() + " " + staffBean.getMobile());
         }
-        return internshipTeacher;
+        return params;
     }
 
     /**
