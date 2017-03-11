@@ -14,8 +14,8 @@ import top.zbeboy.isy.annotation.logging.RecordSystemLogging;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.SystemLog;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.SystemLogService;
-import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.system.SystemLogService;
+import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 

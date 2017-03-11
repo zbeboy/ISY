@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.Nation;
 import top.zbeboy.isy.domain.tables.records.NationRecord;
-import top.zbeboy.isy.service.NationService;
+import top.zbeboy.isy.service.data.NationService;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.data.nation.NationVo;

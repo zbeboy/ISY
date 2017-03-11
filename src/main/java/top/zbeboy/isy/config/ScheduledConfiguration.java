@@ -10,7 +10,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
-import top.zbeboy.isy.service.*;
+import top.zbeboy.isy.service.data.StaffService;
+import top.zbeboy.isy.service.data.StudentService;
+import top.zbeboy.isy.service.internship.InternshipApplyService;
+import top.zbeboy.isy.service.internship.InternshipReleaseService;
+import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.platform.UsersTypeService;
+import top.zbeboy.isy.service.system.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;

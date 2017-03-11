@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.service.WeixinService;
+import top.zbeboy.isy.service.weixin.WeixinService;
 import top.zbeboy.isy.web.vo.weixin.WeixinVo;
 
 import javax.annotation.Resource;

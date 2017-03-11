@@ -13,8 +13,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.service.AuthoritiesService;
-import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.system.AuthoritiesService;
+import top.zbeboy.isy.service.platform.UsersService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
