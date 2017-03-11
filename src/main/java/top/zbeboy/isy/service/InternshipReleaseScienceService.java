@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service;
 
-import io.swagger.models.auth.In;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
