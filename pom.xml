@@ -212,16 +212,10 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-        <!-- JSR-107 API -->
+        <!-- caffeine -->
         <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-        </dependency>
-
-        <!-- ehcache 3 -->
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
 
         <!-- joda time -->
