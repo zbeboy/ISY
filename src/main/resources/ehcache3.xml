@@ -13,7 +13,7 @@
 
 	<cache alias="userApplicationId">
 		<expiry>
-			<ttl unit="seconds">3600</ttl>
+			<ttl unit="seconds">1200</ttl>
 		</expiry>
 		<heap unit="entries">200</heap>
 		<jsr107:mbeans enable-statistics="true"/>
