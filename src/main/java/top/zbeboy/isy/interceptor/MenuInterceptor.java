@@ -9,8 +9,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.ApplicationService;
-import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.cache.CacheManageService;
+import top.zbeboy.isy.service.system.ApplicationService;
+import top.zbeboy.isy.service.platform.UsersService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -37,12 +38,12 @@ public class MenuInterceptor implements HandlerInterceptor {
                 .getWebApplicationContext(context);
         UsersService usersService = (UsersService) ctx
                 .getBean("usersService");
-        ApplicationService applicationService = (ApplicationService) ctx
-                .getBean("applicationService");
+        CacheManageService cacheManageService = (CacheManageService) ctx
+                .getBean("cacheManageService");
         Users users = usersService.getUserFromSession();
         if (!ObjectUtils.isEmpty(users)) {
-            List<Role> roleList = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
-            String menuHtml = applicationService.menuHtml(roleList, users.getUsername());
+            List<Role> roleList = cacheManageService.findByUsernameWithRole(users.getUsername());// 已缓存
+            String menuHtml = cacheManageService.menuHtml(roleList, users.getUsername());
             request.setAttribute("menu", menuHtml);
         }
     }

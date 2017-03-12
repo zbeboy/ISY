@@ -9,7 +9,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.service.SystemLogService;
+import top.zbeboy.isy.service.system.SystemLogService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.system.log.SystemLogBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;

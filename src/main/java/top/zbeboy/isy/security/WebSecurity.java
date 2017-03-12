@@ -10,9 +10,10 @@ import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.ApplicationService;
-import top.zbeboy.isy.service.RoleApplicationService;
-import top.zbeboy.isy.service.UsersService;
+import top.zbeboy.isy.service.cache.CacheManageService;
+import top.zbeboy.isy.service.system.ApplicationService;
+import top.zbeboy.isy.service.platform.RoleApplicationService;
+import top.zbeboy.isy.service.platform.UsersService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,9 @@ public class WebSecurity {
     @Resource
     private ApplicationService applicationService;
 
+    @Resource
+    private CacheManageService cacheManageService;
+
     /**
      * 权限控制检查
      *
@@ -60,11 +64,11 @@ public class WebSecurity {
             return true;
         }
         boolean hasRole = false;
-        List<Role> roleList = usersService.findByUsernameWithRole(users.getUsername());// 已缓存
+        List<Role> roleList = cacheManageService.findByUsernameWithRole(users.getUsername());// 已缓存
         List<Integer> roleIds = new ArrayList<>();
         roleIds.addAll(roleList.stream().map(Role::getRoleId).collect(Collectors.toList()));
 
-        List<RoleApplication> roleApplications = roleApplicationService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存
+        List<RoleApplication> roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存
         if (!roleApplications.isEmpty()) {
             List<Integer> applicationIds = new ArrayList<>();
             // 防止重复菜单加载
@@ -72,14 +76,14 @@ public class WebSecurity {
                 applicationIds.add(roleApplication.getApplicationId());
             });
 
-            List<Application> applications = applicationService.findInIdsWithUsername(applicationIds, users.getUsername());// 已缓存
+            List<Application> applications = cacheManageService.findInIdsWithUsername(applicationIds, users.getUsername());// 已缓存
             for (Application application : applications) {
                 if (uri.endsWith(application.getApplicationUrl())) {
                     hasRole = true;
                     break;
                 }
                 if (StringUtils.hasLength(application.getApplicationDataUrlStartWith())) {
-                    List<String> urlMapping = applicationService.urlMapping(application);// 已缓存
+                    List<String> urlMapping = cacheManageService.urlMapping(application);// 已缓存
                     if (!ObjectUtils.isEmpty(urlMapping)) {
                         Optional<String> urlOne = urlMapping.stream().filter(uri::endsWith).findFirst();
                         if (urlOne.isPresent()) {

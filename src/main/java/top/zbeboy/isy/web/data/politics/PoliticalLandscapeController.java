@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.PoliticalLandscape;
 import top.zbeboy.isy.domain.tables.records.PoliticalLandscapeRecord;
-import top.zbeboy.isy.service.PoliticalLandscapeService;
+import top.zbeboy.isy.service.data.PoliticalLandscapeService;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.data.politics.PoliticsVo;

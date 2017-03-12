@@ -16,7 +16,7 @@
         <jcaptcha.version>1.0</jcaptcha.version>
         <fastJson.version>1.2.24</fastJson.version>
         <jsoup.version>1.9.2</jsoup.version>
-        <springfox-swagger2.version>2.6.0</springfox-swagger2.version>
+
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
         <HikariCP.version>2.6.0</HikariCP.version>
         <commons-codec.version>1.9</commons-codec.version>
@@ -180,18 +180,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox-swagger2.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox-swagger2.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.webflow</groupId>
             <artifactId>org.springframework.js</artifactId>
             <version>${org.springframework.webflow.version}</version>
@@ -224,16 +212,10 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-        <!-- JSR-107 API -->
+        <!-- caffeine -->
         <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-        </dependency>
-
-        <!-- ehcache 3 -->
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
 
         <!-- joda time -->
