@@ -85,11 +85,12 @@ public class StaffServiceImpl implements StaffService {
         Select<AuthoritiesRecord> authoritiesRecordSelect =
                 create.selectFrom(AUTHORITIES)
                         .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
+        Byte b = 1;
         return create.select()
                 .from(STAFF)
                 .join(USERS)
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                .where(STAFF.DEPARTMENT_ID.eq(departmentId)).andExists(authoritiesRecordSelect)
+                .where(STAFF.DEPARTMENT_ID.eq(departmentId).and(USERS.ENABLED.eq(b))).andExists(authoritiesRecordSelect)
                 .fetch();
 
     }

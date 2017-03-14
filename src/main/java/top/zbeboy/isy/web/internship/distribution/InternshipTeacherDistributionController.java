@@ -353,14 +353,11 @@ public class InternshipTeacherDistributionController {
         AjaxUtils<StaffBean> ajaxUtils = new AjaxUtils<>();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
-            List<StaffBean> staffs = new ArrayList<>();
             InternshipRelease internshipRelease = errorBean.getData();
-            if (!ObjectUtils.isEmpty(internshipRelease)) {
-                int departmentId = internshipRelease.getDepartmentId();
-                Result<Record> staffRecords = staffService.findByDepartmentIdRelationExistsAuthorities(departmentId);
-                if (staffRecords.isNotEmpty()) {
-                    staffs = staffRecords.into(StaffBean.class);
-                }
+            List<StaffBean> staffs = new ArrayList<>();
+            Result<Record> staffRecords = staffService.findByDepartmentIdRelationExistsAuthorities(internshipRelease.getDepartmentId());
+            if (staffRecords.isNotEmpty()) {
+                staffs = staffRecords.into(StaffBean.class);
             }
             ajaxUtils.success().msg("获取教师数据成功").listData(staffs);
         } else {

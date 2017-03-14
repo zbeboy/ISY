@@ -40,7 +40,7 @@ public interface StaffService {
     Staff findByStaffNumber(String staffNumber);
 
     /**
-     * 根据系id查询
+     * 根据系id查询 有权限并且未被注销的教师
      *
      * @param departmentId 系id
      * @return 教职工们
