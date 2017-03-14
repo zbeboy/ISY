@@ -54,20 +54,19 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     }
 
     @Override
-    public Result<Record1<String>> findByScienceIdAndDistinctGrade(int scienceId) {
-        Byte isDel = 0;
+    public Result<Record1<String>> findByScienceIdAndDistinctGradeAndIsDel(int scienceId, Byte b) {
         return create.selectDistinct(ORGANIZE.GRADE)
                 .from(ORGANIZE)
-                .where(ORGANIZE.SCIENCE_ID.eq(scienceId).and(ORGANIZE.ORGANIZE_IS_DEL.eq(isDel)))
+                .where(ORGANIZE.SCIENCE_ID.eq(scienceId).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
                 .orderBy(ORGANIZE.ORGANIZE_ID.desc())
                 .limit(0, 6)
                 .fetch();
     }
 
     @Override
-    public Result<OrganizeRecord> findInScienceIdsAndGrade(List<Integer> scienceIds, String grade) {
+    public Result<OrganizeRecord> findInScienceIdsAndGradeAndIsDel(List<Integer> scienceIds, String grade, Byte b) {
         return create.selectFrom(ORGANIZE)
-                .where(ORGANIZE.SCIENCE_ID.in(scienceIds).and(ORGANIZE.GRADE.eq(grade)))
+                .where(ORGANIZE.SCIENCE_ID.in(scienceIds).and(ORGANIZE.GRADE.eq(grade)).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
                 .fetch();
     }
 

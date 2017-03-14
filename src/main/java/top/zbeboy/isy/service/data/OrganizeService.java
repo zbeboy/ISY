@@ -20,18 +20,20 @@ public interface OrganizeService {
      * 根据专业id查询全部年级
      *
      * @param scienceId 专业id
+     * @param b         状态
      * @return 专业下全部年级
      */
-    Result<Record1<String>> findByScienceIdAndDistinctGrade(int scienceId);
+    Result<Record1<String>> findByScienceIdAndDistinctGradeAndIsDel(int scienceId, Byte b);
 
     /**
      * 根据专业ids查询
      *
      * @param scienceIds 专业ids
      * @param grade      年级
+     * @param b          班级状态
      * @return 班级
      */
-    Result<OrganizeRecord> findInScienceIdsAndGrade(List<Integer> scienceIds, String grade);
+    Result<OrganizeRecord> findInScienceIdsAndGradeAndIsDel(List<Integer> scienceIds, String grade, Byte b);
 
     /**
      * 通过专业查询

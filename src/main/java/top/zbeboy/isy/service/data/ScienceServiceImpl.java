@@ -53,10 +53,9 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     }
 
     @Override
-    public Result<ScienceRecord> findByDepartmentId(int departmentId) {
-        Byte isDel = 0;
+    public Result<ScienceRecord> findByDepartmentIdAndIsDel(int departmentId, Byte b) {
         return create.selectFrom(SCIENCE)
-                .where(SCIENCE.SCIENCE_IS_DEL.eq(isDel).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
+                .where(SCIENCE.SCIENCE_IS_DEL.eq(b).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
                 .fetch();
     }
 

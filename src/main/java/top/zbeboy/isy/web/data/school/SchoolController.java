@@ -50,7 +50,7 @@ public class SchoolController {
         Byte isDel = 0;
         School school = new School(0, "请选择学校", isDel);
         schools.add(school);
-        Result<SchoolRecord> schoolRecords = schoolService.findAll();
+        Result<SchoolRecord> schoolRecords = schoolService.findByIsDel(isDel);
         for (SchoolRecord r : schoolRecords) {
             School tempSchool = new School(r.getSchoolId(), r.getSchoolName(), r.getSchoolIsDel());
             schools.add(tempSchool);

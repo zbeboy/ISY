@@ -63,7 +63,7 @@ public class DepartmentController {
         Byte isDel = 0;
         Department department = new Department(0, "请选择系", isDel, 0);
         departments.add(department);
-        Result<DepartmentRecord> departmentRecords = departmentService.findByCollegeId(collegeId);
+        Result<DepartmentRecord> departmentRecords = departmentService.findByCollegeIdAndIsDel(collegeId, isDel);
         for (DepartmentRecord r : departmentRecords) {
             Department tempDepartment = new Department(r.getDepartmentId(), r.getDepartmentName(), r.getDepartmentIsDel(), r.getCollegeId());
             departments.add(tempDepartment);

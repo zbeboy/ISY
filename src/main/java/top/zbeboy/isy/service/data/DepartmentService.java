@@ -19,9 +19,10 @@ public interface DepartmentService {
      * 通过院id查询全部系
      *
      * @param collegeId 院id
+     * @param b         状态
      * @return 院下全部系
      */
-    Result<DepartmentRecord> findByCollegeId(int collegeId);
+    Result<DepartmentRecord> findByCollegeIdAndIsDel(int collegeId, Byte b);
 
     /**
      * 保存

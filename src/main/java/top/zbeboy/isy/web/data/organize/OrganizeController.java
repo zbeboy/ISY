@@ -58,7 +58,8 @@ public class OrganizeController {
         List<SelectUtils> grades = new ArrayList<>();
         SelectUtils selectUtils = new SelectUtils(0, "0", "请选择年级", true);
         grades.add(selectUtils);
-        Result<Record1<String>> gradeRecord = organizeService.findByScienceIdAndDistinctGrade(scienceId);
+        Byte isDel = 0;
+        Result<Record1<String>> gradeRecord = organizeService.findByScienceIdAndDistinctGradeAndIsDel(scienceId, isDel);
         for (Record r : gradeRecord) {
             SelectUtils tempGrade = new SelectUtils(0, r.getValue("grade").toString(), r.getValue("grade").toString(), false);
             grades.add(tempGrade);

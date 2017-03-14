@@ -321,7 +321,8 @@ public class InternshipTeacherDistributionController {
             if (records.isNotEmpty()) {
                 List<Integer> scienceIds = new ArrayList<>();
                 records.forEach(id -> scienceIds.add(id.getScienceId()));
-                Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIdsAndGrade(scienceIds, internshipRelease.getAllowGrade());
+                Byte isDel = 0;
+                Result<OrganizeRecord> organizeRecords = organizeService.findInScienceIdsAndGradeAndIsDel(scienceIds, internshipRelease.getAllowGrade(), isDel);
                 if (organizeRecords.isNotEmpty()) {
                     organizes = organizeRecords.into(Organize.class);
                 }
@@ -431,7 +432,7 @@ public class InternshipTeacherDistributionController {
                         students = studentRecords.into(Student.class);
                     }
                 } else {
-                    Result<Record> studentRecords = studentService.findInOrganizeIdsAndEnabled(organizeIds, enabled);
+                    Result<Record> studentRecords = studentService.findInOrganizeIdsAndEnabledExistsAuthorities(organizeIds, enabled);
                     if (studentRecords.isNotEmpty()) {
                         students = studentRecords.into(Student.class);
                     }

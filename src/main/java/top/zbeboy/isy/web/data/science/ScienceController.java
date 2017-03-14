@@ -58,7 +58,7 @@ public class ScienceController {
         Byte isDel = 0;
         Science science = new Science(0, "请选择专业", isDel, 0);
         sciences.add(science);
-        Result<ScienceRecord> scienceRecords = scienceService.findByDepartmentId(departmentId);
+        Result<ScienceRecord> scienceRecords = scienceService.findByDepartmentIdAndIsDel(departmentId, isDel);
         for (ScienceRecord r : scienceRecords) {
             Science tempScience = new Science(r.getScienceId(), r.getScienceName(), r.getScienceIsDel(), r.getDepartmentId());
             sciences.add(tempScience);
