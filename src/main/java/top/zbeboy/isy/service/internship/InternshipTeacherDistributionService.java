@@ -65,9 +65,10 @@ public interface InternshipTeacherDistributionService {
      *
      * @param organizeIds         专业id
      * @param internshipReleaseId 实习发布id 集合
+     * @param b 用户状态
      * @return 数据
      */
-    Result<Record> findStudentForBatchDistribution(List<Integer> organizeIds, List<String> internshipReleaseId);
+    Result<Record> findStudentForBatchDistributionEnabled(List<Integer> organizeIds, List<String> internshipReleaseId, Byte b);
 
     /**
      * 保存

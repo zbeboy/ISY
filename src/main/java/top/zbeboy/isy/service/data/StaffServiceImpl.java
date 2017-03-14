@@ -81,11 +81,10 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Result<Record> findByDepartmentIdRelationExistsAuthorities(int departmentId) {
+    public Result<Record> findByDepartmentIdAndEnabledRelationExistsAuthorities(int departmentId, Byte b) {
         Select<AuthoritiesRecord> authoritiesRecordSelect =
                 create.selectFrom(AUTHORITIES)
                         .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
-        Byte b = 1;
         return create.select()
                 .from(STAFF)
                 .join(USERS)

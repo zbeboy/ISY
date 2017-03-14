@@ -94,9 +94,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Result<StudentRecord> findInOrganizeIds(List<Integer> organizeIds) {
-        return create.selectFrom(STUDENT)
-                .where(STUDENT.ORGANIZE_ID.in(organizeIds))
+    public Result<Record> findInOrganizeIdsAndEnabled(List<Integer> organizeIds, Byte b) {
+        return create.select()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(STUDENT.ORGANIZE_ID.in(organizeIds).and(USERS.ENABLED.eq(b)))
                 .fetch();
     }
 
