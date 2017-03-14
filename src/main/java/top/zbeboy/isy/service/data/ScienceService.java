@@ -20,9 +20,10 @@ public interface ScienceService {
      * 通过系id查询全部专业
      *
      * @param departmentId 系id
+     * @param b            状态
      * @return 系下全部专业
      */
-    Result<ScienceRecord> findByDepartmentId(int departmentId);
+    Result<ScienceRecord> findByDepartmentIdAndIsDel(int departmentId, Byte b);
 
     /**
      * 通过年级查询全部专业

@@ -64,7 +64,7 @@ public class CollegeController {
         Byte isDel = 0;
         College college = new College(0, "请选择院", isDel, 0);
         colleges.add(college);
-        Result<CollegeRecord> collegeRecords = collegeService.findBySchoolId(schoolId);
+        Result<CollegeRecord> collegeRecords = collegeService.findBySchoolIdAndIsDel(schoolId, isDel);
         for (CollegeRecord r : collegeRecords) {
             College tempCollege = new College(r.getCollegeId(), r.getCollegeName(), r.getCollegeIsDel(), r.getSchoolId());
             colleges.add(tempCollege);

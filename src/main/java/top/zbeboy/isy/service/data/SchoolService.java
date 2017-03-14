@@ -16,9 +16,10 @@ public interface SchoolService {
     /**
      * 查询全部学校
      *
+     * @param b 状态
      * @return 全部学校
      */
-    Result<SchoolRecord> findAll();
+    Result<SchoolRecord> findByIsDel(Byte b);
 
     /**
      * 保存

@@ -45,10 +45,9 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     }
 
     @Override
-    public Result<CollegeRecord> findBySchoolId(int schoolId) {
-        Byte isDel = 0;
+    public Result<CollegeRecord> findBySchoolIdAndIsDel(int schoolId, Byte b) {
         return create.selectFrom(COLLEGE)
-                .where(COLLEGE.COLLEGE_IS_DEL.eq(isDel).and(COLLEGE.SCHOOL_ID.eq(schoolId)))
+                .where(COLLEGE.COLLEGE_IS_DEL.eq(b).and(COLLEGE.SCHOOL_ID.eq(schoolId)))
                 .fetch();
     }
 

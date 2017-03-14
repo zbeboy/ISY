@@ -19,9 +19,10 @@ public interface CollegeService {
      * 通过学校id查询全部院
      *
      * @param schoolId 学校id
+     * @param b        状态
      * @return 该学校下的全部院
      */
-    Result<CollegeRecord> findBySchoolId(int schoolId);
+    Result<CollegeRecord> findBySchoolIdAndIsDel(int schoolId, Byte b);
 
     /**
      * 分页查询

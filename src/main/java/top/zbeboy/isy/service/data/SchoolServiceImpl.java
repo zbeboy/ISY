@@ -42,10 +42,9 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
     }
 
     @Override
-    public Result<SchoolRecord> findAll() {
-        Byte isDel = 0;
+    public Result<SchoolRecord> findByIsDel(Byte b) {
         return create.selectFrom(SCHOOL)
-                .where(SCHOOL.SCHOOL_IS_DEL.eq(isDel))
+                .where(SCHOOL.SCHOOL_IS_DEL.eq(b))
                 .fetch();
     }
 

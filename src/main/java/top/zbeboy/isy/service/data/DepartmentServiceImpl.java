@@ -54,10 +54,9 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     }
 
     @Override
-    public Result<DepartmentRecord> findByCollegeId(int collegeId) {
-        Byte isDel = 0;
+    public Result<DepartmentRecord> findByCollegeIdAndIsDel(int collegeId, Byte b) {
         return create.selectFrom(DEPARTMENT)
-                .where(DEPARTMENT.DEPARTMENT_IS_DEL.eq(isDel).and(DEPARTMENT.COLLEGE_ID.eq(collegeId)))
+                .where(DEPARTMENT.DEPARTMENT_IS_DEL.eq(b).and(DEPARTMENT.COLLEGE_ID.eq(collegeId)))
                 .fetch();
     }
 
