@@ -90,14 +90,16 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     @Override
-    public Result<Record> findStudentForBatchDistribution(List<Integer> organizeIds, List<String> internshipReleaseId) {
+    public Result<Record> findStudentForBatchDistributionEnabled(List<Integer> organizeIds, List<String> internshipReleaseId, Byte b) {
         Select<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecords =
                 create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                         .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.in(internshipReleaseId)
                                 .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID)));
         return create.select()
                 .from(STUDENT)
-                .where(STUDENT.ORGANIZE_ID.in(organizeIds).andNotExists(internshipTeacherDistributionRecords))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(STUDENT.ORGANIZE_ID.in(organizeIds).andNotExists(internshipTeacherDistributionRecords).and(USERS.ENABLED.eq(b)))
                 .fetch();
     }
 

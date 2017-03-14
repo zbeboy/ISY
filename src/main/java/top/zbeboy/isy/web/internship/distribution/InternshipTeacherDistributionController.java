@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
-import top.zbeboy.isy.domain.tables.records.StudentRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -353,14 +352,12 @@ public class InternshipTeacherDistributionController {
         AjaxUtils<StaffBean> ajaxUtils = new AjaxUtils<>();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
-            List<StaffBean> staffs = new ArrayList<>();
             InternshipRelease internshipRelease = errorBean.getData();
-            if (!ObjectUtils.isEmpty(internshipRelease)) {
-                int departmentId = internshipRelease.getDepartmentId();
-                Result<Record> staffRecords = staffService.findByDepartmentIdRelationExistsAuthorities(departmentId);
-                if (staffRecords.isNotEmpty()) {
-                    staffs = staffRecords.into(StaffBean.class);
-                }
+            List<StaffBean> staffs = new ArrayList<>();
+            Byte enabled = 1;
+            Result<Record> staffRecords = staffService.findByDepartmentIdAndEnabledRelationExistsAuthorities(internshipRelease.getDepartmentId(), enabled);
+            if (staffRecords.isNotEmpty()) {
+                staffs = staffRecords.into(StaffBean.class);
             }
             ajaxUtils.success().msg("获取教师数据成功").listData(staffs);
         } else {
@@ -425,15 +422,16 @@ public class InternshipTeacherDistributionController {
                 Users users = usersService.getUserFromSession();
                 List<Student> students = new ArrayList<>();
                 // 筛选学生数据
+                Byte enabled = 1;
                 if (StringUtils.hasLength(excludeInternshipReleaseId)) {
                     List<String> excludeInternshipReleaseIds = SmallPropsUtils.StringIdsToStringList(excludeInternshipReleaseId);
                     // 查询并排除掉其它实习的学生
-                    Result<Record> studentRecords = internshipTeacherDistributionService.findStudentForBatchDistribution(organizeIds, excludeInternshipReleaseIds);
+                    Result<Record> studentRecords = internshipTeacherDistributionService.findStudentForBatchDistributionEnabled(organizeIds, excludeInternshipReleaseIds, enabled);
                     if (studentRecords.isNotEmpty()) {
                         students = studentRecords.into(Student.class);
                     }
                 } else {
-                    Result<StudentRecord> studentRecords = studentService.findInOrganizeIds(organizeIds);
+                    Result<Record> studentRecords = studentService.findInOrganizeIdsAndEnabled(organizeIds, enabled);
                     if (studentRecords.isNotEmpty()) {
                         students = studentRecords.into(Student.class);
                     }
