@@ -7,9 +7,12 @@ import com.octo.captcha.component.image.deformation.ImageDeformation;
 import com.octo.captcha.component.image.deformation.ImageDeformationByFilters;
 import com.octo.captcha.component.image.fontgenerator.FontGenerator;
 import com.octo.captcha.component.image.fontgenerator.RandomFontGenerator;
-import com.octo.captcha.component.image.textpaster.DecoratedRandomTextPaster;
+import com.octo.captcha.component.image.textpaster.GlyphsPaster;
 import com.octo.captcha.component.image.textpaster.TextPaster;
-import com.octo.captcha.component.image.textpaster.textdecorator.TextDecorator;
+import com.octo.captcha.component.image.textpaster.glyphsvisitor.GlyphsVisitors;
+import com.octo.captcha.component.image.textpaster.glyphsvisitor.OverlapGlyphsUsingShapeVisitor;
+import com.octo.captcha.component.image.textpaster.glyphsvisitor.TranslateAllToRandomPointVisitor;
+import com.octo.captcha.component.image.textpaster.glyphsvisitor.TranslateGlyphsVerticalRandomVisitor;
 import com.octo.captcha.component.image.wordtoimage.DeformedComposedWordToImage;
 import com.octo.captcha.component.image.wordtoimage.WordToImage;
 import com.octo.captcha.component.word.FileDictionary;
@@ -30,15 +33,15 @@ public class GMailEngine extends ListImageCaptchaEngine {
 
         int minWordLength = 4;
         int maxWordLength = 5;
-        int fontSize = 24;
+        int fontSize = 32;
         int imageWidth = 100;
-        int imageHeight = 40;
+        int imageHeight = 36;
 
         //word generator
         WordGenerator dictionnaryWords = new ComposeDictionaryWordGenerator(new FileDictionary("toddlist"));
 
         //word2image components
-        TextPaster randomPaster = new DecoratedRandomTextPaster(
+        TextPaster randomPaster = new GlyphsPaster(
                 minWordLength,
                 maxWordLength,
                 new RandomListColorGenerator(new Color[]{
@@ -46,7 +49,11 @@ public class GMailEngine extends ListImageCaptchaEngine {
                         new Color(220, 34, 11),
                         new Color(23, 67, 172)
                 }),
-                new TextDecorator[]{}
+                new GlyphsVisitors[]{
+                        new TranslateGlyphsVerticalRandomVisitor(1),
+                        new OverlapGlyphsUsingShapeVisitor(3),
+                        new TranslateAllToRandomPointVisitor()
+                }
         );
 
         BackgroundGenerator background = new UniColorBackgroundGenerator(imageWidth, imageHeight, Color.white);

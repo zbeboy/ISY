@@ -13,19 +13,23 @@
     <properties>
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
-        <jcaptcha.version>1.0</jcaptcha.version>
         <fastJson.version>1.2.24</fastJson.version>
         <jsoup.version>1.9.2</jsoup.version>
-
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
         <HikariCP.version>2.6.0</HikariCP.version>
-        <commons-codec.version>1.9</commons-codec.version>
         <org.dom4j.version>2.0.0</org.dom4j.version>
-        <org.apache.poi.version>3.15</org.apache.poi.version>
-        <org.apache.commons.compress>1.12</org.apache.commons.compress>
-        <commons-io.verson>2.4</commons-io.verson>
         <xmlbeans.version>2.3.0</xmlbeans.version>
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
+
+        <org.apache.poi.version>3.15</org.apache.poi.version>
+        <org.apache.commons.compress>1.12</org.apache.commons.compress>
+
+        <jcaptcha.version>2.0-alpha-1</jcaptcha.version>
+        <jcaptcha-api.verison>1.0</jcaptcha-api.verison>
+
+        <commons-codec.version>1.9</commons-codec.version>
+        <commons-io.verson>2.4</commons-io.verson>
+        <commons-collections.verison>3.2.1</commons-collections.verison>
 
         <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.1.2</thymeleaf-layout-dialect.version>
@@ -231,6 +235,12 @@
             <version>${jcaptcha.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.octo.captcha</groupId>
+            <artifactId>jcaptcha-api</artifactId>
+            <version>${jcaptcha-api.verison}</version>
+        </dependency>
+
         <!-- alibaba fastjson -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -257,6 +267,13 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec.version}</version>
+        </dependency>
+
+        <!-- commons-collections -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.verison}</version>
         </dependency>
 
         <!-- dom4j -->
@@ -534,7 +551,7 @@
                                     <springAnnotations>true</springAnnotations>
                                 </generate>
                                 <database>
-                                    <name>org.jooq.util.mysql.MySQLDatabase</name>
+                                    <name>org.jooq.util.mariadb.MariaDBDatabase</name>
                                     <includes>.*</includes>
                                     <inputSchema>${datasource.schema}</inputSchema>
                                     <!-- First, register your custom types here -->
