@@ -12,6 +12,9 @@
     <!-- Loading CSS -->
     <link href="plugin/loading/css/showLoading.css" rel="stylesheet"
           th:href="@{/plugin/loading/css/showLoading.css}"/>
+    <!-- password strength css-->
+    <link href="plugin/jquery_entropizer/css/jquery-entropizer.css" rel="stylesheet"
+          th:href="@{/plugin/jquery_entropizer/css/jquery-entropizer.css}"/>
     <!-- sticky-footer CSS -->
     <link href="css/sticky-footer.css" rel="stylesheet" th:href="@{/css/custom/sticky-footer.css}"/>
 </head>
@@ -67,7 +70,6 @@
                                     <input class="form-control" placeholder="手机验证码" name="phoneVerifyCode"
                                            id="phoneVerifyCode" type="text"/>
                                     <span class="input-group-btn">
-
                                             <input type="button" class="btn btn-default" id="get_verification_code"
                                                    value="获取验证码"/>
 										</span>
@@ -77,6 +79,7 @@
                             <div class="form-group" id="valid_password">
                                 <input class="form-control" placeholder="密码" name="password" id="password"
                                        type="password"/>
+                                <div id="meter2"></div>
                                 <p class="text-danger hidden" id="password_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_confirm_password">
