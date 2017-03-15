@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-06.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenger"], function ($, Handlebars) {
+require(["jquery", "handlebars", "datatables.responsive", "dataTables.fixedHeader", "check.all", "messenger"], function ($, Handlebars) {
 
     /**
      * 用户类型数据展现
@@ -172,6 +172,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         var tableElement = $('#pass_table');
 
         passTable = tableElement.DataTable({
+            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.
@@ -688,6 +689,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         var tableElement = $('#wait_table');
 
         waitTable = tableElement.DataTable({
+            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.

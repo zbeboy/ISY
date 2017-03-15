@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/12/14.
  */
 //# sourceURL=internship_my_regulate.js
-require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "dataTables.fixedHeader", "check.all", "jquery.address", "messenger"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -69,6 +69,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
         var tableElement = $('#example');
 
         var myTable = tableElement.DataTable({
+            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.

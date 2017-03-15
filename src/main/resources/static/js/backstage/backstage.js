@@ -15,6 +15,7 @@ requirejs.config({
         "datatables.responsive": web_path + "/plugin/datatables/js/datatables.responsive",
         "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
         "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
+        "dataTables.fixedHeader": web_path + "/plugin/datatables/plugin/fixed_header/dataTables.fixedHeader",
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
         "nav": web_path + "/js/util/nav",
@@ -55,6 +56,9 @@ requirejs.config({
         "datatables.responsive": {
             deps: ["datatables.bootstrap", "css!" + web_path + "/plugin/datatables/css/dataTables.bootstrap.min",
                 "css!" + web_path + "/plugin/datatables/css/datatables.responsive"]
+        },
+        "dataTables.fixedHeader": {
+            deps: ["css!" + web_path + "/plugin/datatables/plugin/fixed_header/fixedHeader.bootstrap"]
         },
         "messenger": {
             deps: ["jquery"]
@@ -105,7 +109,7 @@ requirejs.config({
             deps: ["jquery.cropper", "css!" + web_path + "/plugin/jquery_cropper/cropper.min", "css!" + web_path + "/plugin/jquery_cropper/cropper.upload"]
         },
         "jquery.entropizer": {
-            deps: ["jquery", "entropizer", "css!" + web_path + "/plugin/jquery_entropizer/css/jquery-entropizer"]
+            deps: ["css!" + web_path + "/plugin/jquery_entropizer/css/jquery-entropizer"]
         }
     }
 });
