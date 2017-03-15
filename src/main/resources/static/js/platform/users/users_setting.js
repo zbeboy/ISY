@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-11-01.
  */
 //# sourceURL=users_setting.js
-require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
+require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address", "jquery.entropizer"],
     function ($) {
         /*
          ajax url
@@ -30,7 +30,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
         var msg = {
             mobile_error_msg: '手机号格式不正确',
             phone_verify_code_error_msg: '验证码不正确',
-            password_error_msg: '密码至少6位任意字母或数字，以及下划线',
+            password_error_msg: '密码6-16位任意字母或数字，以及下划线',
             confirm_password_error_msg: '密码不一致'
         };
 
@@ -110,6 +110,17 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address"],
             password_error_msg: '#new_password_error_msg',
             confirm_password_error_msg: '#ok_password_error_msg'
         };
+
+        // 密码强度检测
+        $('#meter2').entropizer({
+            target: paramId.password,
+            update: function (data, ui) {
+                ui.bar.css({
+                    'background-color': data.color,
+                    'width': data.percent + '%'
+                });
+            }
+        });
 
         $(paramId.mobile).blur(function () {
             initParam();

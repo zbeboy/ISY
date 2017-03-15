@@ -6,19 +6,24 @@ requirejs.config({
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com"
+        "com": web_path + "/js/util/com",
+        "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
         "jquery.showLoading": {
             // jQueryに依存するのでpathsで設定した"module/name"を指定します。
             deps: ["jquery"]
+        },
+        "jquery.entropizer": {
+            deps: ["jquery", "entropizer"]
         }
     }
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"], function ($, Handlebars) {
+require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csrf", "com", "sb-admin"], function ($, Handlebars) {
 
     /*
      ajax url
@@ -55,7 +60,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         email_error_msg: '邮箱格式不正确',
         mobile_error_msg: '手机号格式不正确',
         phone_verify_code_error_msg: '验证码不正确',
-        password_error_msg: '密码至少6位任意字母或数字，以及下划线',
+        password_error_msg: '密码6-16位任意字母或数字，以及下划线',
         confirm_password_error_msg: '密码不一致'
     };
 
@@ -172,6 +177,17 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         password_error_msg: '#password_error_msg',
         confirm_password_error_msg: '#confirm_password_error_msg'
     };
+
+    // 密码强度检测
+    $('#meter2').entropizer({
+        target: paramId.password,
+        update: function (data, ui) {
+            ui.bar.css({
+                'background-color': data.color,
+                'width': data.percent + '%'
+            });
+        }
+    });
 
     // 初始化学校数据.
     // 显示遮罩
@@ -550,10 +566,10 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         validRealName();//开始顺序检验
     });
 
-    function validRealName(){
+    function validRealName() {
         initParam();
         var realName = param.realName;
-        if(realName === ''){
+        if (realName === '') {
             // 去除遮罩
             endLoading();
             validErrorDom(validId.valid_real_name, errorMsgId.real_name_error_msg, msg.real_name_error_msg);

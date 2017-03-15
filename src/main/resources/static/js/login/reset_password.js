@@ -6,18 +6,23 @@ requirejs.config({
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com"
+        "com": web_path + "/js/util/com",
+        "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
         "jquery.showLoading": {
             // jQueryに依存するのでpathsで設定した"module/name"を指定します。
             deps: ["jquery"]
+        },
+        "jquery.entropizer": {
+            deps: ["jquery", "entropizer"]
         }
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf", "com"], function ($, domready) {
+require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf", "com", "jquery.entropizer"], function ($, domready) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -38,7 +43,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
          消息
          */
         var msg = {
-            password_error_msg: '密码至少6位任意字母或数字，以及下划线',
+            password_error_msg: '密码6-16位任意字母或数字，以及下划线',
             confirm_password_error_msg: '密码不一致'
         };
 
@@ -119,6 +124,17 @@ require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf
             password_error_msg: '#password_error_msg',
             confirm_password_error_msg: '#confirm_password_error_msg'
         };
+
+        // 密码强度检测
+        $('#meter2').entropizer({
+            target: paramId.password,
+            update: function (data, ui) {
+                ui.bar.css({
+                    'background-color': data.color,
+                    'width': data.percent + '%'
+                });
+            }
+        });
 
         /*
          密码验证
