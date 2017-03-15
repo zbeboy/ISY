@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-12-11.
  */
-require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "messenger"],
+require(["jquery", "handlebars", "datatables.responsive", "dataTables.fixedHeader", "jquery.address", "messenger"],
     function ($, Handlebars) {
 
         /*
@@ -37,6 +37,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         var tableElement = $('#example');
 
         var myTable = tableElement.DataTable({
+            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.

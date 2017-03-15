@@ -2,7 +2,7 @@
  * Created by lenovo on 2017-01-25.
  */
 //# sourceURL=internship_distribution_look.js
-require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.address", "messenger"],
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "dataTables.fixedHeader", "jquery.address", "messenger"],
     function ($, Handlebars, nav_active) {
 
         /*
@@ -29,6 +29,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         var tableElement = $('#example');
 
         var myTable = tableElement.DataTable({
+            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.
@@ -106,7 +107,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             "<'row'<'col-sm-5'i><'col-sm-7'p>>"
         });
 
-        var global_button =  '<button type="button" id="delete_not_apply" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>删除未申请学生分配</button>' +
+        var global_button = '<button type="button" id="delete_not_apply" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>删除未申请学生分配</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 

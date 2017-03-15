@@ -15,9 +15,6 @@ requirejs.config({
         "jquery.showLoading": {
             // jQueryに依存するのでpathsで設定した"module/name"を指定します。
             deps: ["jquery"]
-        },
-        "jquery.entropizer": {
-            deps: ["jquery", "entropizer"]
         }
     }
 });

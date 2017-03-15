@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-11-03.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "bootstrap", "messenger", "bootstrap-maxlength"],
+require(["jquery", "handlebars", "datatables.responsive", "dataTables.fixedHeader", "check.all", "jquery.address", "bootstrap", "messenger", "bootstrap-maxlength"],
     function ($, Handlebars) {
 
         /*
@@ -29,6 +29,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         var tableElement = $('#example');
 
         var myTable = tableElement.DataTable({
+            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.
@@ -238,14 +239,14 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         init();
 
-        function init(){
+        function init() {
             initMaxLength();
         }
 
         /**
          * 初始化Input max length
          */
-        function initMaxLength(){
+        function initMaxLength() {
             $(getParamId().addPolitics).maxlength({
                 alwaysShow: false,
                 threshold: 10,
