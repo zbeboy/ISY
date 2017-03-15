@@ -97,7 +97,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
          */
         var msg = {
             email: '邮箱格式不正确',
-            password: '密码至少6位任意字母或数字，以及下划线',
+            password: '密码不能为空',
             captcha: '验证码不能为空'
         };
 
