@@ -8,7 +8,7 @@ requirejs.config({
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer"
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
