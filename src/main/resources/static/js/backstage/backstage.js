@@ -11,11 +11,11 @@ requirejs.config({
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
-        "check.all": web_path + "/plugin/checkall/checkall",
-        "datatables.responsive": web_path + "/plugin/datatables/js/datatables.responsive",
+        "check.all": web_path + "/plugin/checkall/checkall.min",
+        "datatables.responsive": web_path + "/plugin/datatables/js/datatables.responsive.min",
         "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
         "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
-        "dataTables.fixedHeader": web_path + "/plugin/datatables/plugin/fixed_header/dataTables.fixedHeader",
+        "dataTables.fixedHeader": web_path + "/plugin/datatables/plugin/fixed_header/dataTables.fixedHeader.min",
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
         "nav": web_path + "/js/util/nav",
@@ -24,29 +24,29 @@ requirejs.config({
         "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
         "jquery.address": ["https://cdn.bootcss.com/jquery.address/1.6/jquery.address.min",
             web_path + "/plugin/jquery_address/jquery.address-1.6.min"],
-        "bootstrap-datetimepicker-zh-CN": web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
+        "bootstrap-datetimepicker-zh-CN": web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.min",
         "bootstrap-datetimepicker": web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
-        "bootstrap-daterangepicker": web_path + "/plugin/bootstrap-daterangepicker/daterangepicker",
+        "bootstrap-daterangepicker": web_path + "/plugin/bootstrap-daterangepicker/daterangepicker.min",
         "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min",
         "bootstrap-duallistbox": web_path + "/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
         "bootstrap-maxlength": ["https://cdn.bootcss.com/bootstrap-maxlength/1.7.0/bootstrap-maxlength.min",
-            web_path + "/plugin/bootstrap-maxlength/bootstrap-maxlength"],
+            web_path + "/plugin/bootstrap-maxlength/bootstrap-maxlength.min"],
         "moment": ["https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/moment.min",
             web_path + "/plugin/moment/moment.min"],
-        "moment-with-locales": web_path + "/plugin/moment/moment-with-locales",
-        "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget",
-        "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport",
-        "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process",
-        "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload",
-        "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate",
-        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination",
+        "moment-with-locales": web_path + "/plugin/moment/moment-with-locales.min",
+        "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget.min",
+        "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport.min",
+        "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process.min",
+        "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload.min",
+        "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate.min",
+        "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination.min",
         "quill.bubble": web_path + "/plugin/quill/quill.min",
-        "jquery.print": web_path + "/plugin/jquery_print/jquery.print",
+        "jquery.print": web_path + "/plugin/jquery_print/jquery.print.min",
         "jquery.cropper": web_path + "/plugin/jquery_cropper/cropper.min",
-        "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload",
+        "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload.min",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer"
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -55,10 +55,10 @@ requirejs.config({
         },
         "datatables.responsive": {
             deps: ["datatables.bootstrap", "css!" + web_path + "/plugin/datatables/css/dataTables.bootstrap.min",
-                "css!" + web_path + "/plugin/datatables/css/datatables.responsive"]
+                "css!" + web_path + "/plugin/datatables/css/datatables.responsive.min"]
         },
         "dataTables.fixedHeader": {
-            deps: ["css!" + web_path + "/plugin/datatables/plugin/fixed_header/fixedHeader.bootstrap"]
+            deps: ["css!" + web_path + "/plugin/datatables/plugin/fixed_header/fixedHeader.bootstrap.min"]
         },
         "messenger": {
             deps: ["jquery"]
@@ -76,7 +76,7 @@ requirejs.config({
             deps: ["bootstrap-datetimepicker", "css!" + web_path + "/plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min"]
         },
         "bootstrap-daterangepicker": {
-            deps: ["css!" + web_path + "/plugin/bootstrap-daterangepicker/daterangepicker"]
+            deps: ["css!" + web_path + "/plugin/bootstrap-daterangepicker/daterangepicker.min"]
         },
         "bootstrap-select-zh-CN": {
             deps: ["bootstrap-select", "css!" + web_path + "/plugin/bootstrap-select/css/bootstrap-select.min"]
@@ -94,22 +94,22 @@ requirejs.config({
             deps: ["jquery-ui/widget", "jquery.iframe-transport"]
         },
         "jquery.fileupload-validate": {
-            deps: ["jquery.fileupload", "jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload"]
+            deps: ["jquery.fileupload", "jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload.min"]
         },
         "jquery.simple-pagination": {
             deps: ["jquery"]
         },
         "quill.bubble": {
-            deps: ["css!" + web_path + "/plugin/quill/quill.bubble"]
+            deps: ["css!" + web_path + "/plugin/quill/quill.bubble.min"]
         },
         "jquery.print": {
             deps: ["jquery"]
         },
         "jquery.cropper.upload": {
-            deps: ["jquery.cropper", "css!" + web_path + "/plugin/jquery_cropper/cropper.min", "css!" + web_path + "/plugin/jquery_cropper/cropper.upload"]
+            deps: ["jquery.cropper", "css!" + web_path + "/plugin/jquery_cropper/cropper.min", "css!" + web_path + "/plugin/jquery_cropper/cropper.upload.min"]
         },
         "jquery.entropizer": {
-            deps: ["css!" + web_path + "/plugin/jquery_entropizer/css/jquery-entropizer"]
+            deps: ["css!" + web_path + "/plugin/jquery_entropizer/css/jquery-entropizer.min"]
         }
     }
 });
