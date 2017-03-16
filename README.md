@@ -4,7 +4,8 @@
 1.jdk 1.8.*;  
 2.Intellij IDEA 2015或更高;  
 3.MySQL 5.7或更高;  
-4.有需要可配置额外maven,以便代码走查.  
+4.Maven 3.1.1或更高;  
+5.Node 6或更高;  
 # 安装
 1.clone 代码.  
 2.需要配置application.properties(主要配置开发环境本地数据库链接即可),因本项目为安全性,仅提供开发者使用.  
