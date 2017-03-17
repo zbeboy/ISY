@@ -29,9 +29,12 @@ public class InternshipReviewBean {
     private Byte parentalConsent;
     private String fileId;
     private String originalFileName;
-    private String  ext;;
+    private String ext;
 
     private String fillTime;
+
+    // 只更新实习状态
+    private Byte onlyUpdateInternshipApplyState;
 
     public int getStudentId() {
         return studentId;
@@ -231,5 +234,13 @@ public class InternshipReviewBean {
 
     public void setExt(String ext) {
         this.ext = ext;
+    }
+
+    public Byte getOnlyUpdateInternshipApplyState() {
+        return onlyUpdateInternshipApplyState;
+    }
+
+    public void setOnlyUpdateInternshipApplyState(Byte onlyUpdateInternshipApplyState) {
+        this.onlyUpdateInternshipApplyState = onlyUpdateInternshipApplyState;
     }
 }

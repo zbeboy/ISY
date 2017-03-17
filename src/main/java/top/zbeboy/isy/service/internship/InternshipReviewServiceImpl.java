@@ -63,7 +63,7 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
                 .leftJoin(FILES)
                 .on(INTERNSHIP_APPLY.INTERNSHIP_FILE_ID.eq(FILES.FILE_ID))
                 .where(a)
-                .orderBy(STUDENT.STUDENT_NUMBER.desc())
+                .orderBy(STUDENT.STUDENT_NUMBER.asc())
                 .limit((pageNum - 1) * pageSize, pageSize)
                 .fetch();
         records.forEach(r -> {

@@ -221,13 +221,15 @@
                         </div>
                         <input type="hidden" name="internshipReleaseId" value="{{internshipReleaseId}}"/>
                         <input type="hidden" name="studentId" value="{{studentId}}"/>
+                        <input type="hidden" value="1" name="onlyUpdateInternshipApplyState"/>
+                        <input type="hidden" value="" name="reason"/>
+                        <input type="hidden" value="2" name="internshipApplyState"/>
                     </form>
                     {{/if}}
                 </div>
                 <div class="panel-footer">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default pass_apply" data-id="{{internshipReleaseId}}"
-                                data-student="{{studentId}}" data-name="{{student_name}}">
+                        <button type="button" class="btn btn-default pass_apply" data-name="{{student_name}}">
                             通过
                         </button>
                     </div>

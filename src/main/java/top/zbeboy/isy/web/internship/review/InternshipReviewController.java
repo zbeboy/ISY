@@ -496,78 +496,7 @@ public class InternshipReviewController {
             if (!errorBean.isHasError()) {
                 InternshipRelease internshipRelease = errorBean.getData();
                 InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
-                switch (internshipType.getInternshipTypeName()) {
-                    case Workbook.INTERNSHIP_COLLEGE_TYPE:
-                        Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
-                        if (internshipCollegeRecord.isPresent()) {
-                            InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
-                            internshipCollege.setCommitmentBook(internshipReviewBean.getCommitmentBook());
-                            internshipCollege.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
-                            internshipCollege.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
-                            internshipCollege.setInternshipApplication(internshipReviewBean.getInternshipApplication());
-                            internshipCollege.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
-                            internshipCollege.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
-                            internshipCollege.setParentalConsent(internshipReviewBean.getParentalConsent());
-                            internshipCollegeService.update(internshipCollege);
-                        }
-                        break;
-                    case Workbook.INTERNSHIP_COMPANY_TYPE:
-                        Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
-                        if (internshipCompanyRecord.isPresent()) {
-                            InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
-                            internshipCompany.setCommitmentBook(internshipReviewBean.getCommitmentBook());
-                            internshipCompany.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
-                            internshipCompany.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
-                            internshipCompany.setInternshipApplication(internshipReviewBean.getInternshipApplication());
-                            internshipCompany.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
-                            internshipCompany.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
-                            internshipCompany.setParentalConsent(internshipReviewBean.getParentalConsent());
-                            internshipCompanyService.update(internshipCompany);
-                        }
-                        break;
-                    case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
-                        Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
-                        if (graduationPracticeCollegeRecord.isPresent()) {
-                            GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
-                            graduationPracticeCollege.setCommitmentBook(internshipReviewBean.getCommitmentBook());
-                            graduationPracticeCollege.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
-                            graduationPracticeCollege.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
-                            graduationPracticeCollege.setInternshipApplication(internshipReviewBean.getInternshipApplication());
-                            graduationPracticeCollege.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
-                            graduationPracticeCollege.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
-                            graduationPracticeCollege.setParentalConsent(internshipReviewBean.getParentalConsent());
-                            graduationPracticeCollegeService.update(graduationPracticeCollege);
-                        }
-                        break;
-                    case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
-                        Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
-                        if (graduationPracticeUnifyRecord.isPresent()) {
-                            GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
-                            graduationPracticeUnify.setCommitmentBook(internshipReviewBean.getCommitmentBook());
-                            graduationPracticeUnify.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
-                            graduationPracticeUnify.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
-                            graduationPracticeUnify.setInternshipApplication(internshipReviewBean.getInternshipApplication());
-                            graduationPracticeUnify.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
-                            graduationPracticeUnify.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
-                            graduationPracticeUnify.setParentalConsent(internshipReviewBean.getParentalConsent());
-                            graduationPracticeUnifyService.update(graduationPracticeUnify);
-                        }
-                        break;
-                    case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
-                        Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
-                        if (graduationPracticeCompanyRecord.isPresent()) {
-                            GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
-                            graduationPracticeCompany.setCommitmentBook(internshipReviewBean.getCommitmentBook());
-                            graduationPracticeCompany.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
-                            graduationPracticeCompany.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
-                            graduationPracticeCompany.setInternshipApplication(internshipReviewBean.getInternshipApplication());
-                            graduationPracticeCompany.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
-                            graduationPracticeCompany.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
-                            graduationPracticeCompany.setParentalConsent(internshipReviewBean.getParentalConsent());
-                            graduationPracticeCompanyService.update(graduationPracticeCompany);
-                        }
-                        break;
-                }
+                updateInternshipMaterialState(internshipType, internshipReviewBean);
                 ajaxUtils.success().msg("保存成功");
             } else {
                 ajaxUtils.fail().msg("未查询相关实习信息");
@@ -597,10 +526,10 @@ public class InternshipReviewController {
                 internshipApplyService.update(internshipApply);
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReviewBean.getInternshipReleaseId());
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
-                    Byte b = 1;
-                    updateInternshipMaterialState(internshipType, b, internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
-                    ajaxUtils.success().msg("保存成功");
+                    if (internshipReviewBean.getOnlyUpdateInternshipApplyState() == 0) {
+                        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
+                        updateInternshipMaterialState(internshipType, internshipReviewBean);
+                    }
                     InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
                     internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
                     internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
@@ -616,6 +545,7 @@ public class InternshipReviewController {
                         String notify = "您的自主实习 " + internshipRelease.getInternshipTitle() + " 申请已通过。";
                         commonControllerMethodService.sendNotify(users, curUsers, internshipRelease.getInternshipTitle(), notify, request);
                     }
+                    ajaxUtils.success().msg("保存成功");
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习信息");
                 }
@@ -626,6 +556,84 @@ public class InternshipReviewController {
             ajaxUtils.fail().msg("缺失必要参数");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 更新实习材料状态
+     */
+    private void updateInternshipMaterialState(InternshipType internshipType, InternshipReviewBean internshipReviewBean) {
+        switch (internshipType.getInternshipTypeName()) {
+            case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                Optional<Record> internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (internshipCollegeRecord.isPresent()) {
+                    InternshipCollege internshipCollege = internshipCollegeRecord.get().into(InternshipCollege.class);
+                    internshipCollege.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                    internshipCollege.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                    internshipCollege.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                    internshipCollege.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                    internshipCollege.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                    internshipCollege.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                    internshipCollege.setParentalConsent(internshipReviewBean.getParentalConsent());
+                    internshipCollegeService.update(internshipCollege);
+                }
+                break;
+            case Workbook.INTERNSHIP_COMPANY_TYPE:
+                Optional<Record> internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (internshipCompanyRecord.isPresent()) {
+                    InternshipCompany internshipCompany = internshipCompanyRecord.get().into(InternshipCompany.class);
+                    internshipCompany.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                    internshipCompany.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                    internshipCompany.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                    internshipCompany.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                    internshipCompany.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                    internshipCompany.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                    internshipCompany.setParentalConsent(internshipReviewBean.getParentalConsent());
+                    internshipCompanyService.update(internshipCompany);
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                Optional<Record> graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (graduationPracticeCollegeRecord.isPresent()) {
+                    GraduationPracticeCollege graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege.class);
+                    graduationPracticeCollege.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                    graduationPracticeCollege.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                    graduationPracticeCollege.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                    graduationPracticeCollege.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                    graduationPracticeCollege.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                    graduationPracticeCollege.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                    graduationPracticeCollege.setParentalConsent(internshipReviewBean.getParentalConsent());
+                    graduationPracticeCollegeService.update(graduationPracticeCollege);
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                Optional<Record> graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (graduationPracticeUnifyRecord.isPresent()) {
+                    GraduationPracticeUnify graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify.class);
+                    graduationPracticeUnify.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                    graduationPracticeUnify.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                    graduationPracticeUnify.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                    graduationPracticeUnify.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                    graduationPracticeUnify.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                    graduationPracticeUnify.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                    graduationPracticeUnify.setParentalConsent(internshipReviewBean.getParentalConsent());
+                    graduationPracticeUnifyService.update(graduationPracticeUnify);
+                }
+                break;
+            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                Optional<Record> graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (graduationPracticeCompanyRecord.isPresent()) {
+                    GraduationPracticeCompany graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany.class);
+                    graduationPracticeCompany.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                    graduationPracticeCompany.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                    graduationPracticeCompany.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                    graduationPracticeCompany.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                    graduationPracticeCompany.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                    graduationPracticeCompany.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                    graduationPracticeCompany.setParentalConsent(internshipReviewBean.getParentalConsent());
+                    graduationPracticeCompanyService.update(graduationPracticeCompany);
+                }
+                break;
+        }
     }
 
     /**

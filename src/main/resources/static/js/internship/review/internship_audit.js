@@ -247,12 +247,15 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             $.address.value(ajax_url.audit_detail_url + '?internshipReleaseId=' + id + '&studentId=' + studentId);
         });
 
+        // 数据form
+        var dataForm = null;
+
         /*
          保存
          */
         $(tableData).delegate('.save_apply', "click", function () {
-            var form = $(this).parent().parent().prev().find('form');
-            $.post(web_path + ajax_url.save, form.serialize(), function (data) {
+            dataForm = $(this).parent().parent().prev().find('form');
+            $.post(web_path + ajax_url.save, dataForm.serialize(), function (data) {
                 Messenger().post({
                     message: data.msg,
                     type: 'info',
@@ -265,10 +268,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          通过
          */
         $(tableData).delegate('.pass_apply', "click", function () {
-            var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
+            dataForm = $(this).parent().parent().prev().find('form');
             var studentName = $(this).attr('data-name');
-            ask(id, studentId, '', 2, studentName, $(this), ajax_url.audit_pass_url);
+            ask(studentName);
         });
 
         /*
@@ -400,15 +402,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
 
         /**
          * 状态修改询问
-         * @param internshipReleaseId 实习发布id
-         * @param studentId 学生id
-         * @param reason 原因
-         * @param state 状态
          * @param studentName 学生名
-         * @param obj 当前dom对象
-         * @param url 提交url
          */
-        function ask(internshipReleaseId, studentId, reason, state, studentName, obj, url) {
+        function ask(studentName) {
             var msg;
             msg = Messenger().post({
                 message: "确定通过学生 '" + studentName + "'  吗?",
@@ -418,7 +414,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            sendAjax(internshipReleaseId, studentId, reason, state, obj, url);
+                            sendAjax();
                         }
                     },
                     cancel: {
@@ -434,20 +430,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         /**
          * 发送数据到后台
          */
-        function sendAjax(internshipReleaseId, studentId, reason, state, obj, url) {
+        function sendAjax() {
+            console.log(dataForm.serialize());
             Messenger().run({
                 successMessage: '保存数据成功',
                 errorMessage: '保存数据失败',
                 progressMessage: '正在保存数据....'
             }, {
-                url: web_path + url,
+                url: web_path + ajax_url.audit_pass_url,
                 type: 'post',
-                data: {
-                    internshipReleaseId: internshipReleaseId,
-                    studentId: studentId,
-                    reason: reason,
-                    internshipApplyState: state
-                },
+                data: dataForm.serialize(),
                 success: function (data) {
                     if (data.state) {
                         init();
