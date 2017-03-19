@@ -152,14 +152,12 @@ public class InternshipJournalController {
         Users users = usersService.getUserFromSession();
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
             Student student = studentService.findByUsername(users.getUsername());
-            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
-            canUse = !errorBean.isHasError();
             if (!ObjectUtils.isEmpty(student)) {
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
+                canUse = !errorBean.isHasError();
                 modelMap.addAttribute("studentId", student.getStudentId());
-            } else {
-                modelMap.addAttribute("studentId", null);
+                modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             }
-            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         }
         if (canUse) {
             page = "web/internship/journal/internship_my_journal::#page-wrapper";

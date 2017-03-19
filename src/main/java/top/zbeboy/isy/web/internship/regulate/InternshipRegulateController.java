@@ -118,10 +118,13 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/list", method = RequestMethod.GET)
     public String regulateList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = usersService.findUserSchoolInfo(users);
-        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            Staff staff = record.get().into(Staff.class);
-            modelMap.addAttribute("staffId", staff.getStaffId());
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if(!ObjectUtils.isEmpty(staff)){
+                modelMap.addAttribute("staffId", staff.getStaffId());
+            } else {
+                modelMap.addAttribute("staffId", null);
+            }
         }
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
@@ -144,13 +147,14 @@ public class InternshipRegulateController {
         String page;
         boolean canUse = false;
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = usersService.findUserSchoolInfo(users);
-        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            Staff staff = record.get().into(Staff.class);
-            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staff.getStaffId());
-            canUse = !errorBean.isHasError();
-            modelMap.addAttribute("staffId", staff.getStaffId());
-            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if(!ObjectUtils.isEmpty(staff)){
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staff.getStaffId());
+                canUse = !errorBean.isHasError();
+                modelMap.addAttribute("staffId", staff.getStaffId());
+                modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            }
         }
         if (canUse) {
             page = "web/internship/regulate/internship_my_regulate::#page-wrapper";
