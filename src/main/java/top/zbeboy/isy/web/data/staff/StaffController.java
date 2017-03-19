@@ -19,10 +19,10 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.system.MailService;
 import top.zbeboy.isy.service.util.BCryptUtils;
 import top.zbeboy.isy.service.util.DateTimeUtils;
@@ -59,7 +59,7 @@ public class StaffController {
     private UsersService usersService;
 
     @Resource
-    private UsersTypeService usersTypeService;
+    private CacheManageService cacheManageService;
 
     @Resource
     private RoleService roleService;
@@ -150,7 +150,7 @@ public class StaffController {
                                         saveUsers.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
-                                        saveUsers.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
+                                        saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
 
                                         DateTime dateTime = DateTime.now();
@@ -343,7 +343,7 @@ public class StaffController {
                 } else {
                     staff.setBirthday(null);
                 }
-                if(StringUtils.hasLength(staffVo.getIdCard())){
+                if (StringUtils.hasLength(staffVo.getIdCard())) {
                     staff.setIdCard(staffVo.getIdCard());
                 } else {
                     staff.setIdCard(null);

@@ -47,8 +47,7 @@ require(["jquery", "bootstrap", "wow", "vegas"], function ($) {
             {src: web_path + '/images/slide-2.jpg'}
         ],
         timer: false,
-        transition: ['zoomOut'],
-        preload: true
+        transition: ['zoomOut']
     });
 
     new WOW({mobile: false}).init();

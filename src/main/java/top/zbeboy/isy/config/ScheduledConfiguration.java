@@ -10,12 +10,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.InternshipApplyService;
 import top.zbeboy.isy.service.internship.InternshipReleaseService;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.system.*;
 
 import javax.annotation.Resource;
@@ -78,7 +78,7 @@ public class ScheduledConfiguration {
     private UsersService usersService;
 
     @Resource
-    private UsersTypeService usersTypeService;
+    private CacheManageService cacheManageService;
 
     @Resource
     private StaffService staffService;
@@ -116,7 +116,7 @@ public class ScheduledConfiguration {
         // 查询未验证用户
         Result<UsersRecord> records = usersService.findByJoinDateAndVerifyMailbox(oldTime.toDate(), b);
         records.forEach(r -> {
-            UsersType usersType = usersTypeService.findByUsersTypeId(r.getUsersTypeId());
+            UsersType usersType = cacheManageService.findByUsersTypeId(r.getUsersTypeId());
             authoritiesService.deleteByUsername(r.getUsername());
             if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
                 staffService.deleteByUsername(r.getUsername());

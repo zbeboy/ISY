@@ -39,6 +39,7 @@ public class InternshipJournalVo {
     @NotNull
     private String internshipReleaseId;
     private String internshipJournalWord;
+    private Byte isSeeStaff;
 
     public String getInternshipJournalId() {
         return internshipJournalId;
@@ -142,5 +143,13 @@ public class InternshipJournalVo {
 
     public void setInternshipJournalWord(String internshipJournalWord) {
         this.internshipJournalWord = internshipJournalWord;
+    }
+
+    public Byte getIsSeeStaff() {
+        return isSeeStaff;
+    }
+
+    public void setIsSeeStaff(Byte isSeeStaff) {
+        this.isSeeStaff = isSeeStaff;
     }
 }

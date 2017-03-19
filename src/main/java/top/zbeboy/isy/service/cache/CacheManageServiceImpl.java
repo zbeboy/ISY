@@ -17,9 +17,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import top.zbeboy.isy.domain.tables.daos.UsersTypeDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
+import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.service.system.ApplicationService;
@@ -31,6 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static top.zbeboy.isy.domain.Tables.*;
+import static top.zbeboy.isy.domain.tables.UsersType.USERS_TYPE;
 
 /**
  * Created by lenovo on 2017-03-11.
@@ -49,9 +52,24 @@ public class CacheManageServiceImpl implements CacheManageService {
     @Autowired
     private RequestMappingHandlerMapping handlerMapping;
 
+    @Resource
+    private UsersTypeDao usersTypeDao;
+
     @Autowired
     public CacheManageServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Cacheable(cacheNames = "queryUsersTypeByName", key = "#usersTypeName")
+    @Override
+    public UsersType findByUsersTypeName(String usersTypeName) {
+        return usersTypeDao.fetchOne(USERS_TYPE.USERS_TYPE_NAME, usersTypeName);
+    }
+
+    @Cacheable(cacheNames = "queryUsersTypeById", key = "#usersTypeId")
+    @Override
+    public UsersType findByUsersTypeId(int usersTypeId) {
+        return usersTypeDao.findById(usersTypeId);
     }
 
     @Cacheable(cacheNames = "menuHtml", key = "#username")

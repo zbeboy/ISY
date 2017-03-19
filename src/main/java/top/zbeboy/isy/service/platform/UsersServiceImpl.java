@@ -20,6 +20,7 @@ import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.security.MyUserImpl;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
@@ -52,7 +53,7 @@ public class UsersServiceImpl implements UsersService {
     private UsersDao usersDao;
 
     @Resource
-    private UsersTypeService usersTypeService;
+    private CacheManageService cacheManageService;
 
     @Resource
     private StudentService studentService;
@@ -103,7 +104,7 @@ public class UsersServiceImpl implements UsersService {
         Optional<Record> record = Optional.empty();
         if (!ObjectUtils.isEmpty(users)) {
             int userTypeId = users.getUsersTypeId();
-            UsersType usersType = usersTypeService.findByUsersTypeId(userTypeId);
+            UsersType usersType = cacheManageService.findByUsersTypeId(userTypeId);
             if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {// 学生
                 record = studentService.findByUsernameRelation(users.getUsername());
             } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {// 教职工
@@ -151,7 +152,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public boolean validSCDSOIsDel(Users users) {
         // 检验学校等信息是否已被注销
-        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
         boolean isDel = true;
         if (!ObjectUtils.isEmpty(usersType)) {
             switch (usersType.getUsersTypeName()) {

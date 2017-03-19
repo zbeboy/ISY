@@ -23,6 +23,7 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.CollegeRoleService;
@@ -103,6 +104,9 @@ public class UsersController {
 
     @Resource
     private UsersTypeService usersTypeService;
+
+    @Resource
+    private CacheManageService cacheManageService;
 
     @Resource
     private AuthoritiesService authoritiesService;
@@ -763,7 +767,7 @@ public class UsersController {
                     ajaxUtils.fail().msg("用户存在角色关联，无法删除");
                 } else {
                     Users users = usersService.findByUsername(id);
-                    UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+                    UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
                     switch (usersType.getUsersTypeName()) {
                         case Workbook.STUDENT_USERS_TYPE:  // 学生
                             studentService.deleteByUsername(id);
@@ -798,7 +802,7 @@ public class UsersController {
     @RequestMapping("/anyone/users/profile")
     public String usersProfile(ModelMap modelMap, HttpServletRequest request) {
         Users users = usersService.getUserFromSession();
-        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
         String page;
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
@@ -830,7 +834,7 @@ public class UsersController {
     @RequestMapping("/anyone/users/profile/edit")
     public String usersProfileEdit(ModelMap modelMap, HttpServletRequest request) {
         Users users = usersService.getUserFromSession();
-        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
         String page;
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
@@ -950,7 +954,7 @@ public class UsersController {
     public AjaxUtils validIdCard(@RequestParam("username") String username, @RequestParam("idCard") String idCard) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         Users users = usersService.getUserFromSession();
-        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
         switch (usersType.getUsersTypeName()) {
             case Workbook.STUDENT_USERS_TYPE:  // 学生
                 Result<StudentRecord> studentRecords = studentService.findByIdCardNeUsername(username, idCard);

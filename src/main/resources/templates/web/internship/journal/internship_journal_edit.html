@@ -73,6 +73,18 @@
                         <input type="hidden" id="journalDate" th:value="${internshipJournal.internshipJournalDate}"/>
                         <p class="text-danger hidden" id="internship_journal_date_error_msg"></p>
                     </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label th:if="${internshipJournal.isSeeStaff == 0 || internshipJournal.isSeeStaff == null}">
+                                <input type="checkbox" name="isSeeStaff" id="isSeeStaff"
+                                       value="1"/>仅允许教职工查阅
+                            </label>
+                            <label th:if="${internshipJournal.isSeeStaff == 1}">
+                                <input type="checkbox" name="isSeeStaff" id="isSeeStaff"
+                                       checked="checked" value="1"/>仅允许教职工查阅
+                            </label>
+                        </div>
+                    </div>
                     <div class="text-center">
                         <button type="button" id="save" class="btn btn-default">保存</button>
                         <button type="reset" class="btn btn-default">重置</button>

@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-12-24.
  */
 //# sourceURL=internship_regulate_list.js
-require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatables.responsive", "dataTables.fixedHeader", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
+require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
     function ($, Handlebars, constants, nav_active, moment) {
 
         /*
@@ -99,7 +99,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         var tableElement = $('#example');
 
         var myTable = tableElement.DataTable({
-            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.
@@ -119,6 +118,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[5, 'desc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().data_url,
                 "dataSrc": "data",
