@@ -19,10 +19,10 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.system.MailService;
 import top.zbeboy.isy.service.util.BCryptUtils;
 import top.zbeboy.isy.service.util.DateTimeUtils;
@@ -59,7 +59,7 @@ public class StudentController {
     private UsersService usersService;
 
     @Resource
-    private UsersTypeService usersTypeService;
+    private CacheManageService cacheManageService;
 
     @Resource
     private RoleService roleService;
@@ -150,7 +150,7 @@ public class StudentController {
                                         saveUsers.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
-                                        saveUsers.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
+                                        saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
 
                                         DateTime dateTime = DateTime.now();
@@ -354,7 +354,7 @@ public class StudentController {
                     student.setBirthday(null);
                 }
                 student.setDormitoryNumber(studentVo.getDormitoryNumber());
-                if(StringUtils.hasLength(studentVo.getIdCard())){
+                if (StringUtils.hasLength(studentVo.getIdCard())) {
                     student.setIdCard(studentVo.getIdCard());
                 } else {
                     student.setIdCard(null);

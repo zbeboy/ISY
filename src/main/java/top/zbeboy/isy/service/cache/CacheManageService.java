@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.cache;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
+import top.zbeboy.isy.domain.tables.pojos.UsersType;
 
 import java.util.List;
 
@@ -10,6 +11,23 @@ import java.util.List;
  * Created by lenovo on 2017-03-11.
  */
 public interface CacheManageService {
+
+    /**
+     * 根据用户类型查询id
+     *
+     * @param usersTypeName 用户类型名
+     * @return 用户类型
+     */
+    UsersType findByUsersTypeName(String usersTypeName);
+
+    /**
+     * 根据用户id查询类型
+     *
+     * @param usersTypeId 用户类型id
+     * @return 用户类型
+     */
+    UsersType findByUsersTypeId(int usersTypeId);
+
     /**
      * 通过角色id查询出应用id并生成菜单html
      *

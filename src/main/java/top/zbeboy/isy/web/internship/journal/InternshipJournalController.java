@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
@@ -79,6 +80,9 @@ public class InternshipJournalController {
     private UsersTypeService usersTypeService;
 
     @Resource
+    private CacheManageService cacheManageService;
+
+    @Resource
     private StudentService studentService;
 
     @Resource
@@ -127,7 +131,7 @@ public class InternshipJournalController {
                 modelMap.addAttribute("studentId", null);
             }
         }
-        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
         modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);

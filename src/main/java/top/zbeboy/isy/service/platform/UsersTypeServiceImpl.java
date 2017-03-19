@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.UsersTypeRecord;
 
 import javax.annotation.Resource;
@@ -37,17 +36,6 @@ public class UsersTypeServiceImpl implements UsersTypeService {
     @Autowired
     public UsersTypeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
-    }
-
-
-    @Override
-    public UsersType findByUsersTypeName(String usersTypeName) {
-        return usersTypeDao.fetchOne(USERS_TYPE.USERS_TYPE_NAME, usersTypeName);
-    }
-
-    @Override
-    public UsersType findByUsersTypeId(int usersTypeId) {
-        return usersTypeDao.findById(usersTypeId);
     }
 
     @Override
