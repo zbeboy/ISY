@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal implements Serializable {
 
-    private static final long serialVersionUID = -719320714;
+    private static final long serialVersionUID = -1581562693;
 
     private String    internshipJournalId;
     private String    studentName;
@@ -41,6 +41,7 @@ public class InternshipJournal implements Serializable {
     private Integer   studentId;
     private String    internshipReleaseId;
     private String    internshipJournalWord;
+    private Byte      isSeeStaff;
 
     public InternshipJournal() {}
 
@@ -58,6 +59,7 @@ public class InternshipJournal implements Serializable {
         this.studentId = value.studentId;
         this.internshipReleaseId = value.internshipReleaseId;
         this.internshipJournalWord = value.internshipJournalWord;
+        this.isSeeStaff = value.isSeeStaff;
     }
 
     public InternshipJournal(
@@ -73,7 +75,8 @@ public class InternshipJournal implements Serializable {
         Timestamp createDate,
         Integer   studentId,
         String    internshipReleaseId,
-        String    internshipJournalWord
+        String    internshipJournalWord,
+        Byte      isSeeStaff
     ) {
         this.internshipJournalId = internshipJournalId;
         this.studentName = studentName;
@@ -88,6 +91,7 @@ public class InternshipJournal implements Serializable {
         this.studentId = studentId;
         this.internshipReleaseId = internshipReleaseId;
         this.internshipJournalWord = internshipJournalWord;
+        this.isSeeStaff = isSeeStaff;
     }
 
     @NotNull
@@ -217,6 +221,14 @@ public class InternshipJournal implements Serializable {
         this.internshipJournalWord = internshipJournalWord;
     }
 
+    public Byte getIsSeeStaff() {
+        return this.isSeeStaff;
+    }
+
+    public void setIsSeeStaff(Byte isSeeStaff) {
+        this.isSeeStaff = isSeeStaff;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("InternshipJournal (");
@@ -234,6 +246,7 @@ public class InternshipJournal implements Serializable {
         sb.append(", ").append(studentId);
         sb.append(", ").append(internshipReleaseId);
         sb.append(", ").append(internshipJournalWord);
+        sb.append(", ").append(isSeeStaff);
 
         sb.append(")");
         return sb.toString();

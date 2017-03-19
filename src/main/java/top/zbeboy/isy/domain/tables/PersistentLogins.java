@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.PersistentLoginsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class PersistentLogins extends TableImpl<PersistentLoginsRecord> {
 
-    private static final long serialVersionUID = 1727019591;
+    private static final long serialVersionUID = 625721026;
 
     /**
      * The reference instance of <code>isy.persistent_logins</code>
@@ -68,7 +68,7 @@ public class PersistentLogins extends TableImpl<PersistentLoginsRecord> {
     /**
      * The column <code>isy.persistent_logins.last_used</code>.
      */
-    public final TableField<PersistentLoginsRecord, Timestamp> LAST_USED = createField("last_used", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<PersistentLoginsRecord, Timestamp> LAST_USED = createField("last_used", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>isy.persistent_logins</code> table reference

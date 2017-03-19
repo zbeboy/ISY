@@ -90,6 +90,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[5, 'desc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().data_url,
                 "dataSrc": "data",
@@ -121,11 +122,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                     targets: 6,
                     orderable: false,
                     render: function (a, b, c, d) {
-
-                        var context = [];
-
-                        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
-                            init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                        var context = null;
+                        var html = '<i class="fa fa-lock"></i>';
+                        // 当前用户查看自己的实习日志
+                        if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
                             context =
                             {
                                 func: [
@@ -155,8 +155,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                                     }
                                 ]
                             };
-                        } else {
-                            if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
+                        } else { // 该实习日志不属于当前用户
+                            // 当前用户角色为系统或管理员
+                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                                 context =
                                 {
                                     func: [
@@ -186,28 +188,54 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                                         }
                                     ]
                                 };
-                            } else {
-                                context =
-                                {
-                                    func: [
+                            } else {// 非作者也非管理员
+                                // 若限制仅允许教职工查阅
+                                if (c.isSeeStaff == 1) {
+                                    if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
+                                        context =
                                         {
-                                            "name": "查看",
-                                            "css": "look",
-                                            "type": "info",
-                                            "id": c.internshipJournalId
-                                        },
-                                        {
-                                            "name": "下载",
-                                            "css": "download",
-                                            "type": "default",
-                                            "id": c.internshipJournalId
-                                        }
-                                    ]
-                                };
+                                            func: [
+                                                {
+                                                    "name": "查看",
+                                                    "css": "look",
+                                                    "type": "info",
+                                                    "id": c.internshipJournalId
+                                                },
+                                                {
+                                                    "name": "下载",
+                                                    "css": "download",
+                                                    "type": "default",
+                                                    "id": c.internshipJournalId
+                                                }
+                                            ]
+                                        };
+                                    }
+                                } else {
+                                    context =
+                                    {
+                                        func: [
+                                            {
+                                                "name": "查看",
+                                                "css": "look",
+                                                "type": "info",
+                                                "id": c.internshipJournalId
+                                            },
+                                            {
+                                                "name": "下载",
+                                                "css": "download",
+                                                "type": "default",
+                                                "id": c.internshipJournalId
+                                            }
+                                        ]
+                                    };
+                                }
                             }
                         }
 
-                        return template(context);
+                        if (context != null) {
+                            html = template(context);
+                        }
+                        return html;
                     }
                 }
 

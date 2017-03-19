@@ -88,13 +88,7 @@ public class InternshipJournalController {
     private InternshipCompanyService internshipCompanyService;
 
     @Resource
-    private GraduationPracticeCollegeService graduationPracticeCollegeService;
-
-    @Resource
     private GraduationPracticeCompanyService graduationPracticeCompanyService;
-
-    @Resource
-    private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
     @Resource
     private FilesService filesService;
@@ -125,11 +119,16 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/list", method = RequestMethod.GET)
     public String journalList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = usersService.findUserSchoolInfo(users);
-        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            Student student = record.get().into(Student.class);
-            modelMap.addAttribute("studentId", student.getStudentId());
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(student)) {
+                modelMap.addAttribute("studentId", student.getStudentId());
+            } else {
+                modelMap.addAttribute("studentId", null);
+            }
         }
+        UsersType usersType = usersTypeService.findByUsersTypeId(users.getUsersTypeId());
+        modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
         } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
@@ -151,12 +150,15 @@ public class InternshipJournalController {
         String page;
         boolean canUse = false;
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = usersService.findUserSchoolInfo(users);
-        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            Student student = record.get().into(Student.class);
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
             canUse = !errorBean.isHasError();
-            modelMap.addAttribute("studentId", student.getStudentId());
+            if (!ObjectUtils.isEmpty(student)) {
+                modelMap.addAttribute("studentId", student.getStudentId());
+            } else {
+                modelMap.addAttribute("studentId", null);
+            }
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         }
         if (canUse) {
@@ -309,9 +311,13 @@ public class InternshipJournalController {
         String page;
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
-            modelMap.addAttribute("internshipJournalDate", DateTimeUtils.formatDate(internshipJournal.getInternshipJournalDate(), "yyyy年MM月dd日"));
-            modelMap.addAttribute("internshipJournal", internshipJournal);
-            page = "web/internship/journal/internship_journal_look::#page-wrapper";
+            if (isSeeStaff(internshipJournal)) {
+                modelMap.addAttribute("internshipJournalDate", DateTimeUtils.formatDate(internshipJournal.getInternshipJournalDate(), "yyyy年MM月dd日"));
+                modelMap.addAttribute("internshipJournal", internshipJournal);
+                page = "web/internship/journal/internship_journal_look::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "该日志已限制查阅");
+            }
         } else {
             page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
         }
@@ -329,8 +335,25 @@ public class InternshipJournalController {
     public void journalListDownload(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
         InternshipJournal internshipJournal = internshipJournalService.findById(id);
         if (!ObjectUtils.isEmpty(internshipJournal)) {
-            uploadService.download(internshipJournal.getStudentName() + " " + internshipJournal.getStudentNumber(), "/" + internshipJournal.getInternshipJournalWord(), response, request);
+            if (isSeeStaff(internshipJournal)) {
+                uploadService.download(internshipJournal.getStudentName() + " " + internshipJournal.getStudentNumber(), "/" + internshipJournal.getInternshipJournalWord(), response, request);
+            }
         }
+    }
+
+    /**
+     * 判断是否允许查看和下载
+     *
+     * @param internshipJournal 实习日志
+     * @return true or false
+     */
+    private boolean isSeeStaff(InternshipJournal internshipJournal) {
+        Student student = studentService.findById(internshipJournal.getStudentId());
+        Users users = usersService.getUserFromSession();
+        return users.getUsername().equals(student.getUsername()) ||
+                roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) ||
+                roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) ||
+                internshipJournal.getIsSeeStaff() != 1 || usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE);
     }
 
     /**
@@ -453,6 +476,7 @@ public class InternshipJournalController {
                 internshipJournal.setCreateDate(new Timestamp(Clock.systemDefaultZone().millis()));
                 internshipJournal.setStudentId(internshipJournalVo.getStudentId());
                 internshipJournal.setInternshipReleaseId(internshipJournalVo.getInternshipReleaseId());
+                internshipJournal.setIsSeeStaff(internshipJournalVo.getIsSeeStaff());
 
                 Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
                 if (studentRecord.isPresent()) {
@@ -499,6 +523,7 @@ public class InternshipJournalController {
                     internshipJournal.setInternshipJournalContent(internshipJournalVo.getInternshipJournalContent());
                     internshipJournal.setInternshipJournalHtml(internshipJournalVo.getInternshipJournalHtml());
                     internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
+                    internshipJournal.setIsSeeStaff(internshipJournalVo.getIsSeeStaff() == null ? 0 : internshipJournalVo.getIsSeeStaff());
                     FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
                     Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournalVo.getStudentId());
                     if (studentRecord.isPresent()) {
