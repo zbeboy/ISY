@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-12.
  */
-require(["jquery", "datatables.responsive", "dataTables.fixedHeader"],
+require(["jquery", "datatables.responsive"],
     function ($) {
 
         function getAjaxUrl() {
@@ -18,7 +18,6 @@ require(["jquery", "datatables.responsive", "dataTables.fixedHeader"],
         var tableElement = $('#example');
 
         var myTable = tableElement.DataTable({
-            fixedHeader: true,
             autoWidth: false,
             preDrawCallback: function () {
                 // Initialize the responsive datatables helper once.

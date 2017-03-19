@@ -15,7 +15,6 @@ requirejs.config({
         "datatables.responsive": web_path + "/plugin/datatables/js/datatables.responsive.min",
         "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
         "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
-        "dataTables.fixedHeader": web_path + "/plugin/datatables/plugin/fixed_header/dataTables.fixedHeader.min",
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
         "nav": web_path + "/js/util/nav",
@@ -56,9 +55,6 @@ requirejs.config({
         "datatables.responsive": {
             deps: ["datatables.bootstrap", "css!" + web_path + "/plugin/datatables/css/dataTables.bootstrap.min",
                 "css!" + web_path + "/plugin/datatables/css/datatables.responsive.min"]
-        },
-        "dataTables.fixedHeader": {
-            deps: ["css!" + web_path + "/plugin/datatables/plugin/fixed_header/fixedHeader.bootstrap.min"]
         },
         "messenger": {
             deps: ["jquery"]
