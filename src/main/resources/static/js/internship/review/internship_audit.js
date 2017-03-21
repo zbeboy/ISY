@@ -312,6 +312,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         /*
+         全选
+         */
+        $(tableData).delegate('.check_all_apply', "click", function () {
+            dataForm = $(this).parent().parent().prev().find('form');
+            $(dataForm[0]).find('.check').each(function(i,data){
+                data.checked = true;
+            });
+        });
+
+        /*
          提交变更申请
          */
         $('#stateOk').click(function () {
