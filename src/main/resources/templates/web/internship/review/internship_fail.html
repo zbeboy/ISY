@@ -88,14 +88,14 @@
                                 {{#if commitmentBook}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="commitmentBook"/>
+                                        <input type="checkbox" class="check" value="1" checked="checked" name="commitmentBook"/>
                                         承诺书
                                     </label>
                                 </div>
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="commitmentBook"/>
+                                        <input type="checkbox" class="check" value="1" name="commitmentBook"/>
                                         承诺书
                                     </label>
                                 </div>
@@ -104,7 +104,7 @@
                                 {{#if safetyResponsibilityBook}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked"
+                                        <input type="checkbox" class="check" value="1" checked="checked"
                                                name="safetyResponsibilityBook"/>
                                         安全责任书
                                     </label>
@@ -112,7 +112,7 @@
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="safetyResponsibilityBook"/>
+                                        <input type="checkbox" class="check" value="1" name="safetyResponsibilityBook"/>
                                         安全责任书
                                     </label>
                                 </div>
@@ -121,14 +121,14 @@
                                 {{#if practiceAgreement}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="practiceAgreement"/>
+                                        <input type="checkbox" class="check" value="1" checked="checked" name="practiceAgreement"/>
                                         实践协议书
                                     </label>
                                 </div>
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="practiceAgreement"/>
+                                        <input type="checkbox" class="check" value="1" name="practiceAgreement"/>
                                         实践协议书
                                     </label>
                                 </div>
@@ -138,7 +138,7 @@
                                 {{#if internshipApplication}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked"
+                                        <input type="checkbox" class="check" value="1" checked="checked"
                                                name="internshipApplication"/>
                                         实习申请书
                                     </label>
@@ -146,7 +146,7 @@
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="internshipApplication"/>
+                                        <input type="checkbox" class="check" value="1" name="internshipApplication"/>
                                         实习申请书
                                     </label>
                                 </div>
@@ -155,14 +155,14 @@
                                 {{#if practiceReceiving}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="practiceReceiving"/>
+                                        <input type="checkbox" class="check" value="1" checked="checked" name="practiceReceiving"/>
                                         实习接收
                                     </label>
                                 </div>
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="practiceReceiving"/>
+                                        <input type="checkbox" class="check" value="1" name="practiceReceiving"/>
                                         实习接收
                                     </label>
                                 </div>
@@ -171,7 +171,7 @@
                                 {{#if securityEducationAgreement}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked"
+                                        <input type="checkbox" class="check" value="1" checked="checked"
                                                name="securityEducationAgreement"/>
                                         安全教育协议
                                     </label>
@@ -179,7 +179,7 @@
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="securityEducationAgreement"/>
+                                        <input type="checkbox" class="check" value="1" name="securityEducationAgreement"/>
                                         安全教育协议
                                     </label>
                                 </div>
@@ -190,14 +190,14 @@
                                 {{#if parentalConsent}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" checked="checked" name="parentalConsent"/>
+                                        <input type="checkbox" class="check" value="1" checked="checked" name="parentalConsent"/>
                                         父母同意书
                                     </label>
                                 </div>
                                 {{else}}
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value="1" name="parentalConsent"/>
+                                        <input type="checkbox" class="check" value="1" name="parentalConsent"/>
                                         父母同意书
                                     </label>
                                 </div>
@@ -229,6 +229,9 @@
                         <button type="button" class="btn btn-default delete_apply" data-id="{{internshipReleaseId}}"
                                 data-student="{{studentId}}" data-name="{{student_name}}">
                             删除
+                        </button>
+                        <button type="button" class="btn btn-default check_all_apply">
+                            全选
                         </button>
                     </div>
                 </div>
