@@ -16,7 +16,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
                 add: '/web/internship/journal/list/add',
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
-                downloads: '/web/internship/journal/list/downloads',
+                downloads: '/web/internship/journal/list/my/downloads',
                 nav: '/web/menu/internship/journal',
                 back: '/web/menu/internship/journal'
             };
@@ -379,7 +379,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {journalIds: journalId, studentId: init_page_param.studentId},
+                data: {journalIds: journalId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

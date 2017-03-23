@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
+import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.*;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -42,6 +44,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Clock;
@@ -84,6 +87,9 @@ public class InternshipJournalController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private StaffService staffService;
 
     @Resource
     private InternshipCollegeService internshipCollegeService;
@@ -172,6 +178,56 @@ public class InternshipJournalController {
     }
 
     /**
+     * 小组日志列表页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/journal/team/list", method = RequestMethod.GET)
+    public String teamJournalList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        String page;
+        boolean canUse = false;
+        Users users = usersService.getUserFromSession();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(student)) {
+                Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.getStudentId());
+                if (record.isPresent()) {
+                    InternshipTeacherDistribution internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
+                    canUse = true;
+                    modelMap.addAttribute("studentId", student.getStudentId());
+                    modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
+                    modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+                    modelMap.addAttribute("usersTypeName", Workbook.STUDENT_USERS_TYPE);
+                } else {
+                    canUse = false;
+                }
+            }
+        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(staff)) {
+                Result<InternshipTeacherDistributionRecord> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staff.getStaffId());
+                canUse = records.isNotEmpty();
+                modelMap.addAttribute("staffId", staff.getStaffId());
+                modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+                modelMap.addAttribute("usersTypeName", Workbook.STAFF_USERS_TYPE);
+            }
+        }
+
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
+        }
+
+        if (canUse) {
+            page = "web/internship/journal/internship_team_journal::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+        }
+        return page;
+    }
+
+    /**
      * 日志列表数据
      *
      * @param request 请求
@@ -238,6 +294,7 @@ public class InternshipJournalController {
             if (internshipTeacherDistributionRecord.isPresent()) {
                 InternshipTeacherDistributionBean internshipTeacherDistributionBean = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistributionBean.class);
                 internshipJournal.setSchoolGuidanceTeacher(internshipTeacherDistributionBean.getRealName());
+                internshipJournal.setStaffId(internshipTeacherDistributionBean.getStaffId());
             }
             InternshipRelease internshipRelease = errorBean.getData();
             InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
@@ -366,8 +423,8 @@ public class InternshipJournalController {
      * @param request             请求
      * @param response            响应
      */
-    @RequestMapping(value = "/web/internship/journal/list/downloads", method = RequestMethod.GET)
-    public void journalListDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/web/internship/journal/list/my/downloads", method = RequestMethod.GET)
+    public void journalListMyDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request, HttpServletResponse response) {
         try {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
             if (!errorBean.isHasError()) {
@@ -385,7 +442,7 @@ public class InternshipJournalController {
                         String downloadFileName = StringUtils.hasLength(users.getRealName()) ? users.getRealName() : "实习日志";
                         String zipName = downloadFileName + ".zip";
                         String downloadFilePath = Workbook.internshipJournalPath(users) + zipName;
-                        String zipPath = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users) + zipName;
+                        String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
                         FilesUtils.compressZipMulti(fileName, zipPath, filePath);
                         uploadService.download(downloadFileName, "/" + downloadFilePath, response, request);
                     }
@@ -397,37 +454,80 @@ public class InternshipJournalController {
     }
 
     /**
+     * 下载小组全部实习日志
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param request             请求
+     * @param response            响应
+     */
+    @RequestMapping(value = "/web/internship/journal/list/team/downloads", method = RequestMethod.GET)
+    public void journalListTeamDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
+            if (records.isNotEmpty()) {
+                List<String> fileName = new ArrayList<>();
+                List<String> filePath = new ArrayList<>();
+                records.forEach(r -> {
+                    filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
+                    fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf('/') + 1));
+                });
+                String downloadFileName = "实习日志";
+                String zipName = downloadFileName + ".zip";
+                String downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName;
+                String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
+                FilesUtils.compressZipMulti(fileName, zipPath, filePath);
+                uploadService.download(downloadFileName, "/" + downloadFilePath, response, request);
+            }
+        } catch (Exception e) {
+            log.error("Compress zip error , error is {}", e);
+        }
+    }
+
+    /**
      * 批量删除日志
      *
      * @param journalIds ids
-     * @param studentId  学生id
      * @param request    请求
      * @return true 删除成功
      */
     @RequestMapping(value = "/web/internship/journal/list/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils journalListDel(String journalIds, @RequestParam("studentId") int studentId, HttpServletRequest request) {
+    public AjaxUtils journalListDel(String journalIds, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
-            return ajaxUtils.fail().msg("您的个人信息可能有误");
-        }
-        if (StringUtils.hasLength(journalIds)) {
-            List<String> ids = SmallPropsUtils.StringIdsToStringList(journalIds);
-            ids.forEach(id -> {
-                InternshipJournal internshipJournal = internshipJournalService.findById(id);
-                try {
+        try {
+            boolean canDel = false;
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                canDel = true;
+            }
+            Users users = usersService.getUserFromSession();
+            Student student = studentService.findByUsername(users.getUsername());
+            if (StringUtils.hasLength(journalIds)) {
+                List<String> ids = SmallPropsUtils.StringIdsToStringList(journalIds);
+                for (String id : ids) {
+                    InternshipJournal internshipJournal = internshipJournalService.findById(id);
                     if (!ObjectUtils.isEmpty(internshipJournal)) {
-                        FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                        if (!canDel) {
+                            // 学生个人操作
+                            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE) && !ObjectUtils.isEmpty(student) && Objects.equals(student.getStudentId(), internshipJournal.getStudentId())) {
+                                FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                                internshipJournalService.deleteById(id);
+                            }
+                        } else { // 系统或管理员操作
+                            FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                            internshipJournalService.deleteById(id);
+                        }
                     }
-                } catch (IOException e) {
-                    log.error("Not found journal file , error is {}", e);
                 }
-            });
-            internshipJournalService.batchDelete(ids);
-            return ajaxUtils.success().msg("删除日志成功");
+                ajaxUtils.success().msg("删除日志成功");
+            } else {
+                ajaxUtils.fail().msg("未查询到相关信息");
+            }
+        } catch (IOException e) {
+            log.error("Not found journal file , error is {}", e);
+            ajaxUtils.fail().msg("删除日志失败");
         }
 
-        return ajaxUtils.fail().msg("删除日志失败");
+        return ajaxUtils;
     }
 
     /**
@@ -477,6 +577,7 @@ public class InternshipJournalController {
                 internshipJournal.setInternshipJournalDate(internshipJournalVo.getInternshipJournalDate());
                 internshipJournal.setCreateDate(new Timestamp(Clock.systemDefaultZone().millis()));
                 internshipJournal.setStudentId(internshipJournalVo.getStudentId());
+                internshipJournal.setStaffId(internshipJournalVo.getStaffId());
                 internshipJournal.setInternshipReleaseId(internshipJournalVo.getInternshipReleaseId());
                 internshipJournal.setIsSeeStaff(internshipJournalVo.getIsSeeStaff());
 
@@ -574,13 +675,31 @@ public class InternshipJournalController {
             student = studentService.findByStudentNumber(info);
         }
         if (!ObjectUtils.isEmpty(student)) {
-            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
-            if (!errorBean.isHasError()) {
-                ajaxUtils.success().msg("查询学生数据成功").obj(student.getStudentId());
-            } else {
-                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            // 当前用户角色
+            boolean canGo = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES);
+            // step 1.
+            if (!canGo) {
+                // 是否为该生指导教师
+                Optional<Record> staffInfo = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentIdForStaff(internshipReleaseId, student.getStudentId());
+                if (staffInfo.isPresent()) {
+                    Staff staff = staffInfo.get().into(Staff.class);
+                    Users users = usersService.getUserFromSession();
+                    canGo = staff.getUsername().equals(users.getUsername());
+                } else {
+                    canGo = false;
+                }
             }
-
+            // step 2.
+            if (canGo) {
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
+                if (!errorBean.isHasError()) {
+                    ajaxUtils.success().msg("查询学生数据成功").obj(student.getStudentId());
+                } else {
+                    ajaxUtils.fail().msg(errorBean.getErrorMsg());
+                }
+            } else {
+                ajaxUtils.fail().msg("您权限不足或未参与该实习");
+            }
         } else {
             ajaxUtils.fail().msg("查询学生数据失败");
         }

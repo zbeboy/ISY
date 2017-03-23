@@ -1,9 +1,9 @@
 /**
- * Created by lenovo on 2016/12/14.
+ * Created by lenovo on 2017/3/23.
  */
-//# sourceURL=internship_journal_list.js
-require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, constants, nav_active) {
+//# sourceURL=internship_team_journal.js
+require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
+    function ($, Handlebars, constants, nav_active, moment) {
 
         /*
          ajax url
@@ -15,6 +15,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
+                downloads: '/web/internship/journal/list/team/downloads',
                 nav: '/web/menu/internship/journal',
                 add: '/web/internship/journal/list/add',
                 valid_is_student: '/anyone/valid/cur/is/student',
@@ -49,6 +50,37 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         function validErrorDom(validId, errorMsgId, msg) {
             $(validId).addClass('has-error').removeClass('has-success');
             $(errorMsgId).removeClass('hidden').text(msg);
+        }
+
+
+        /*
+         参数id
+         */
+        function getParamId() {
+            return {
+                studentName: '#search_student_name',
+                studentNumber: '#search_student_number',
+                organize: '#search_organize',
+                createDate: '#search_create_date'
+            };
+        }
+
+        /*
+         参数
+         */
+        var param = {
+            staffId: init_page_param.staffId,
+            studentName: '',
+            studentNumber: '',
+            organize: '',
+            createDate: ''
+        };
+
+        /*
+         得到参数
+         */
+        function getParam() {
+            return param;
         }
 
         /*
@@ -96,6 +128,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 "data": function (d) {
                     // 添加额外的参数传给服务器
                     var searchParam = getParam();
+                    console.log(searchParam);
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
                 }
@@ -155,9 +188,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                                 ]
                             };
                         } else { // 该实习日志不属于当前用户
-                            // 当前用户角色为系统或管理员
-                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
-                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                            // 当前用户角色为管理员
+                            if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                                 context =
                                 {
                                     func: [
@@ -286,43 +318,17 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         });
 
         var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
-        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
-            init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-            var temp = '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
-            global_button = temp + global_button;
+        if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+            var temp1 = '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+            global_button = temp1 + global_button;
+        }
+        if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
+            var temp2 = '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>下载全部</button>';
+            global_button = temp2 + global_button;
         }
         global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-trash-plus"></i>添加</button>' +
             global_button;
         $('#global_button').append(global_button);
-
-        /*
-         参数id
-         */
-        function getParamId() {
-            return {
-                studentName: '#search_student_name',
-                studentNumber: '#search_student_number',
-                organize: '#search_organize',
-                guidanceTeacher: '#search_guidance_teacher'
-            };
-        }
-
-        /*
-         参数
-         */
-        var param = {
-            studentName: '',
-            studentNumber: '',
-            organize: '',
-            guidanceTeacher: ''
-        };
-
-        /*
-         得到参数
-         */
-        function getParam() {
-            return param;
-        }
 
         /*
          初始化参数
@@ -331,8 +337,31 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organize = $(getParamId().organize).val();
-            param.guidanceTeacher = $(getParamId().guidanceTeacher).val();
+            param.createDate = $(getParamId().createDate).val();
         }
+
+        // 创建日期
+        $(getParamId().createDate).daterangepicker({
+            "startDate": moment().subtract(2, "days"),
+            "endDate": moment(),
+            "timePicker": true,
+            "timePicker24Hour": true,
+            "timePickerIncrement": 30,
+            "locale": {
+                format: 'YYYY-MM-DD HH:mm:ss',
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                fromLabel: '起始时间',
+                toLabel: '结束时间',
+                customRangeLabel: '自定义',
+                separator: ' 至 ',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月']
+            }
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
+        });
 
         /*
          清空参数
@@ -341,7 +370,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             $(getParamId().studentName).val('');
             $(getParamId().studentNumber).val('');
             $(getParamId().organize).val('');
-            $(getParamId().guidanceTeacher).val('');
+            $(getParamId().createDate).val('');
         }
 
         $(getParamId().studentName).keyup(function (event) {
@@ -468,6 +497,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 });
             }
         }
+
+        /*
+         下载 全部
+         */
+        $('#journal_download_all').click(function () {
+            window.location.href = web_path + getAjaxUrl().downloads + '?id=' + init_page_param.internshipReleaseId + '&staffId=' + init_page_param.staffId;
+        });
 
         /*
          批量删除

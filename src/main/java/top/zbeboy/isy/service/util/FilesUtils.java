@@ -76,7 +76,11 @@ public class FilesUtils {
         File file = new File(filePath);
         if (file.exists()) {
             ScatterSample scatterSample = new ScatterSample();
-            ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
+            File zipFile = new File(zipPath);
+            if (!zipFile.getParentFile().exists()) {//create file
+                zipFile.getParentFile().mkdirs();
+            }
+            ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(zipFile);
             ZipArchiveEntry entry = new ZipArchiveEntry(fileName);
             entry.setMethod(ZipMethod.STORED.getCode());
             scatterSample.addEntry(entry, new ZipInputStream(file));
@@ -96,7 +100,11 @@ public class FilesUtils {
      * @throws Exception
      */
     public static void compressZipMulti(List<String> fileName, String zipPath, List<String> filePath) throws Exception {
-        ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(new File(zipPath));
+        File zipFile = new File(zipPath);
+        if (!zipFile.getParentFile().exists()) {//create file
+            zipFile.getParentFile().mkdirs();
+        }
+        ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(zipFile);
         if (!ObjectUtils.isEmpty(fileName) && !ObjectUtils.isEmpty(filePath) && fileName.size() == filePath.size()) {
             for (int i = 0; i < fileName.size(); i++) {
                 File file = new File(filePath.get(i));

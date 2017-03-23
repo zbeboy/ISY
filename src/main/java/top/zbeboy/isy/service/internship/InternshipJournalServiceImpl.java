@@ -57,6 +57,13 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
                 .fetch();
     }
 
+    @Override
+    public Result<InternshipJournalRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId) {
+        return create.selectFrom(INTERNSHIP_JOURNAL)
+                .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_JOURNAL.STAFF_ID.eq(staffId)))
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(InternshipJournal internshipJournal) {
@@ -84,13 +91,8 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
     }
 
     @Override
-    public List<InternshipJournal> findInIds(String ids) {
-        return internshipJournalDao.fetchByInternshipJournalId(ids);
-    }
-
-    @Override
-    public void batchDelete(List<String> ids) {
-        internshipJournalDao.deleteById(ids);
+    public void deleteById(String id) {
+        internshipJournalDao.deleteById(id);
     }
 
     /**
@@ -105,6 +107,7 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
         JSONObject search = dataTablesUtils.getSearch();
         if (!ObjectUtils.isEmpty(search)) {
             String studentId = StringUtils.trimWhitespace(search.getString("studentId"));
+            String staffId = StringUtils.trimWhitespace(search.getString("staffId"));
             String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
             String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
             String organize = StringUtils.trimWhitespace(search.getString("organize"));
@@ -131,6 +134,19 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
                             a = INTERNSHIP_JOURNAL.STUDENT_ID.eq(tempStudentId);
                         } else {
                             a = a.and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(tempStudentId));
+                        }
+                    }
+                }
+            }
+
+            if (StringUtils.hasLength(staffId)) {
+                if (NumberUtils.isDigits(staffId)) {
+                    int tempStaffId = NumberUtils.toInt(staffId);
+                    if (tempStaffId > 0) {
+                        if (ObjectUtils.isEmpty(a)) {
+                            a = INTERNSHIP_JOURNAL.STAFF_ID.eq(tempStaffId);
+                        } else {
+                            a = a.and(INTERNSHIP_JOURNAL.STAFF_ID.eq(tempStaffId));
                         }
                     }
                 }
