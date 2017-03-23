@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.internship.regulate;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -187,6 +188,12 @@ public class InternshipRegulateController {
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
             otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            String staffId = request.getParameter("staffId");
+            if (StringUtils.hasLength(staffId)) {
+                if (NumberUtils.isDigits(staffId)) {
+                    otherCondition.setStaffId(NumberUtils.toInt(staffId));
+                }
+            }
             Result<Record> records = internshipRegulateService.findAllByPage(dataTablesUtils, otherCondition);
             List<InternshipRegulateBean> internshipRegulateBeans = new ArrayList<>();
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {

@@ -38,7 +38,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
          参数
          */
         var param = {
-            studentId: init_page_param.studentId,
             createDate: ''
         };
 
@@ -96,6 +95,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
+                    d.studentId = init_page_param.studentId;
                 }
             },
             "columns": [
