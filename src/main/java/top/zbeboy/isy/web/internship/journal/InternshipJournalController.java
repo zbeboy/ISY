@@ -416,7 +416,7 @@ public class InternshipJournalController {
     }
 
     /**
-     * 下载某位学生全部实习日志
+     * 下载全部实习日志
      *
      * @param internshipReleaseId 实习发布id
      * @param studentId           学生id
@@ -463,20 +463,25 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/list/team/downloads", method = RequestMethod.GET)
     public void journalListTeamDownloads(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, HttpServletRequest request, HttpServletResponse response) {
         try {
-            Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
-            if (records.isNotEmpty()) {
-                List<String> fileName = new ArrayList<>();
-                List<String> filePath = new ArrayList<>();
-                records.forEach(r -> {
-                    filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
-                    fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf('/') + 1));
-                });
-                String downloadFileName = "实习日志";
-                String zipName = downloadFileName + ".zip";
-                String downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName;
-                String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
-                FilesUtils.compressZipMulti(fileName, zipPath, filePath);
-                uploadService.download(downloadFileName, "/" + downloadFilePath, response, request);
+            boolean canDown = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) ||
+                    roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) ||
+                    usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE);
+            if (canDown) {
+                Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
+                if (records.isNotEmpty()) {
+                    List<String> fileName = new ArrayList<>();
+                    List<String> filePath = new ArrayList<>();
+                    records.forEach(r -> {
+                        filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
+                        fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf('/') + 1));
+                    });
+                    String downloadFileName = "实习日志";
+                    String zipName = downloadFileName + ".zip";
+                    String downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName;
+                    String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
+                    FilesUtils.compressZipMulti(fileName, zipPath, filePath);
+                    uploadService.download(downloadFileName, "/" + downloadFilePath, response, request);
+                }
             }
         } catch (Exception e) {
             log.error("Compress zip error , error is {}", e);
@@ -495,20 +500,20 @@ public class InternshipJournalController {
     public AjaxUtils journalListDel(String journalIds, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         try {
-            boolean canDel = false;
-            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                canDel = true;
-            }
+            boolean canDel = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES);
             Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
+            Student student = null;
+            if (!canDel && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                student = studentService.findByUsername(users.getUsername());
+            }
             if (StringUtils.hasLength(journalIds)) {
                 List<String> ids = SmallPropsUtils.StringIdsToStringList(journalIds);
                 for (String id : ids) {
                     InternshipJournal internshipJournal = internshipJournalService.findById(id);
                     if (!ObjectUtils.isEmpty(internshipJournal)) {
                         if (!canDel) {
-                            // 学生个人操作
-                            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE) && !ObjectUtils.isEmpty(student) && Objects.equals(student.getStudentId(), internshipJournal.getStudentId())) {
+                            // 学生本人操作
+                            if (!ObjectUtils.isEmpty(student) && Objects.equals(student.getStudentId(), internshipJournal.getStudentId())) {
                                 FilesUtils.deleteFile(RequestUtils.getRealPath(request) + internshipJournal.getInternshipJournalWord());
                                 internshipJournalService.deleteById(id);
                             }
