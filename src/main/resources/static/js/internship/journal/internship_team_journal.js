@@ -69,7 +69,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
          参数
          */
         var param = {
-            staffId: init_page_param.staffId,
             studentName: '',
             studentNumber: '',
             organize: '',
@@ -131,6 +130,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                     console.log(searchParam);
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
+                    d.staffId = init_page_param.staffId;
                 }
             },
             "columns": [

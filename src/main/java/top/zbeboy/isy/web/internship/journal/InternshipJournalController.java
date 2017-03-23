@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.internship.journal;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -250,6 +251,18 @@ public class InternshipJournalController {
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
             otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            String studentId = request.getParameter("studentId");
+            String staffId = request.getParameter("staffId");
+            if (StringUtils.hasLength(studentId)) {
+                if (NumberUtils.isDigits(studentId)) {
+                    otherCondition.setStudentId(NumberUtils.toInt(studentId));
+                }
+            }
+            if (StringUtils.hasLength(staffId)) {
+                if (NumberUtils.isDigits(staffId)) {
+                    otherCondition.setStaffId(NumberUtils.toInt(staffId));
+                }
+            }
             Result<Record> records = internshipJournalService.findAllByPage(dataTablesUtils, otherCondition);
             List<InternshipJournalBean> internshipJournalBeans = new ArrayList<>();
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {

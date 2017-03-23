@@ -77,22 +77,39 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<InternshipJournalBean> dataTablesUtils, InternshipJournalBean internshipJournalBean) {
-        return dataPagingQueryAllWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournalBean.getInternshipReleaseId()));
+        return dataPagingQueryAllWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, extraCondition(internshipJournalBean));
     }
 
     @Override
     public int countAll(InternshipJournalBean internshipJournalBean) {
-        return statisticsAllWithCondition(create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournalBean.getInternshipReleaseId()));
+        return statisticsAllWithCondition(create, INTERNSHIP_JOURNAL, extraCondition(internshipJournalBean));
     }
 
     @Override
     public int countByCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils, InternshipJournalBean internshipJournalBean) {
-        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournalBean.getInternshipReleaseId()));
+        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_JOURNAL, extraCondition(internshipJournalBean));
     }
 
     @Override
     public void deleteById(String id) {
         internshipJournalDao.deleteById(id);
+    }
+
+    /**
+     * 额外参数条件
+     *
+     * @param internshipJournalBean 条件
+     * @return 条件语句
+     */
+    private Condition extraCondition(InternshipJournalBean internshipJournalBean) {
+        Condition extraCondition = INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipJournalBean.getInternshipReleaseId());
+        if (!ObjectUtils.isEmpty(internshipJournalBean.getStudentId())) {
+            extraCondition = extraCondition.and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(internshipJournalBean.getStudentId()));
+        }
+        if (!ObjectUtils.isEmpty(internshipJournalBean.getStaffId())) {
+            extraCondition = extraCondition.and(INTERNSHIP_JOURNAL.STAFF_ID.eq(internshipJournalBean.getStaffId()));
+        }
+        return extraCondition;
     }
 
     /**
@@ -106,8 +123,6 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
         Condition a = null;
         JSONObject search = dataTablesUtils.getSearch();
         if (!ObjectUtils.isEmpty(search)) {
-            String studentId = StringUtils.trimWhitespace(search.getString("studentId"));
-            String staffId = StringUtils.trimWhitespace(search.getString("staffId"));
             String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
             String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
             String organize = StringUtils.trimWhitespace(search.getString("organize"));
@@ -123,32 +138,6 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
                     a = INTERNSHIP_JOURNAL.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
                 } else {
                     a = a.and(INTERNSHIP_JOURNAL.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
-                }
-            }
-
-            if (StringUtils.hasLength(studentId)) {
-                if (NumberUtils.isDigits(studentId)) {
-                    int tempStudentId = NumberUtils.toInt(studentId);
-                    if (tempStudentId > 0) {
-                        if (ObjectUtils.isEmpty(a)) {
-                            a = INTERNSHIP_JOURNAL.STUDENT_ID.eq(tempStudentId);
-                        } else {
-                            a = a.and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(tempStudentId));
-                        }
-                    }
-                }
-            }
-
-            if (StringUtils.hasLength(staffId)) {
-                if (NumberUtils.isDigits(staffId)) {
-                    int tempStaffId = NumberUtils.toInt(staffId);
-                    if (tempStaffId > 0) {
-                        if (ObjectUtils.isEmpty(a)) {
-                            a = INTERNSHIP_JOURNAL.STAFF_ID.eq(tempStaffId);
-                        } else {
-                            a = a.and(INTERNSHIP_JOURNAL.STAFF_ID.eq(tempStaffId));
-                        }
-                    }
                 }
             }
 

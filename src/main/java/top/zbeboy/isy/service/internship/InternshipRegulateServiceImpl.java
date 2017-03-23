@@ -67,22 +67,36 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtils<InternshipRegulateBean> dataTablesUtils, InternshipRegulateBean internshipRegulateBean) {
-        return dataPagingQueryAllWithCondition(dataTablesUtils, create, INTERNSHIP_REGULATE, INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID.eq(internshipRegulateBean.getInternshipReleaseId()));
+        return dataPagingQueryAllWithCondition(dataTablesUtils, create, INTERNSHIP_REGULATE, extraCondition(internshipRegulateBean));
     }
 
     @Override
     public int countAll(InternshipRegulateBean internshipRegulateBean) {
-        return statisticsAllWithCondition(create, INTERNSHIP_REGULATE, INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID.eq(internshipRegulateBean.getInternshipReleaseId()));
+        return statisticsAllWithCondition(create, INTERNSHIP_REGULATE, extraCondition(internshipRegulateBean));
     }
 
     @Override
     public int countByCondition(DataTablesUtils<InternshipRegulateBean> dataTablesUtils, InternshipRegulateBean internshipRegulateBean) {
-        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_REGULATE, INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID.eq(internshipRegulateBean.getInternshipReleaseId()));
+        return statisticsWithCondition(dataTablesUtils, create, INTERNSHIP_REGULATE, extraCondition(internshipRegulateBean));
     }
 
     @Override
     public Result<Record> exportData(DataTablesUtils<InternshipRegulateBean> dataTablesUtils, InternshipRegulateBean internshipRegulateBean) {
         return dataPagingQueryAllWithConditionNoPage(dataTablesUtils, create, INTERNSHIP_REGULATE, INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID.eq(internshipRegulateBean.getInternshipReleaseId()));
+    }
+
+    /**
+     * 额外参数条件
+     *
+     * @param internshipRegulateBean 条件
+     * @return 条件语句
+     */
+    private Condition extraCondition(InternshipRegulateBean internshipRegulateBean) {
+        Condition extraCondition = INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID.eq(internshipRegulateBean.getInternshipReleaseId());
+        if (!ObjectUtils.isEmpty(internshipRegulateBean.getStaffId())) {
+            extraCondition = extraCondition.and(INTERNSHIP_REGULATE.STAFF_ID.eq(internshipRegulateBean.getStaffId()));
+        }
+        return extraCondition;
     }
 
     /**
