@@ -463,10 +463,12 @@ CREATE TABLE internship_journal(
   create_date DATETIME NOT NULL ,
   student_id INT NOT NULL ,
   internship_release_id VARCHAR(64) NOT NULL ,
+  staff_id INT NOT NULL ,
   internship_journal_word VARCHAR(500) NOT NULL ,
   is_see_staff BOOLEAN NOT NULL DEFAULT 0,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id)
+  FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
 
 CREATE TABLE internship_regulate(

@@ -32,6 +32,15 @@ public interface InternshipJournalService {
     Result<InternshipJournalRecord> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
+     * 通过实习发布id与教职工id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId             教职工id
+     * @return 数据
+     */
+    Result<InternshipJournalRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId);
+
+    /**
      * 保存
      *
      * @param internshipJournal 实习日志
@@ -68,17 +77,9 @@ public interface InternshipJournalService {
     int countByCondition(DataTablesUtils<InternshipJournalBean> dataTablesUtils, InternshipJournalBean internshipJournalBean);
 
     /**
-     * 通过id查询
+     * 通过id删除
      *
-     * @param ids 主键
-     * @return 实习日志
+     * @param id id
      */
-    List<InternshipJournal> findInIds(String ids);
-
-    /**
-     * 批量删除
-     *
-     * @param ids ids
-     */
-    void batchDelete(List<String> ids);
+    void deleteById(String id);
 }

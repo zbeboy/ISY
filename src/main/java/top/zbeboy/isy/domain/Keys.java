@@ -227,6 +227,7 @@ public class Keys {
     public static final ForeignKey<InternshipFileRecord, FilesRecord> INTERNSHIP_FILE_IBFK_2 = ForeignKeys0.INTERNSHIP_FILE_IBFK_2;
     public static final ForeignKey<InternshipJournalRecord, StudentRecord> INTERNSHIP_JOURNAL_IBFK_1 = ForeignKeys0.INTERNSHIP_JOURNAL_IBFK_1;
     public static final ForeignKey<InternshipJournalRecord, InternshipReleaseRecord> INTERNSHIP_JOURNAL_IBFK_2 = ForeignKeys0.INTERNSHIP_JOURNAL_IBFK_2;
+    public static final ForeignKey<InternshipJournalRecord, StaffRecord> INTERNSHIP_JOURNAL_IBFK_3 = ForeignKeys0.INTERNSHIP_JOURNAL_IBFK_3;
     public static final ForeignKey<InternshipRegulateRecord, StudentRecord> INTERNSHIP_REGULATE_IBFK_1 = ForeignKeys0.INTERNSHIP_REGULATE_IBFK_1;
     public static final ForeignKey<InternshipRegulateRecord, InternshipReleaseRecord> INTERNSHIP_REGULATE_IBFK_2 = ForeignKeys0.INTERNSHIP_REGULATE_IBFK_2;
     public static final ForeignKey<InternshipRegulateRecord, StaffRecord> INTERNSHIP_REGULATE_IBFK_3 = ForeignKeys0.INTERNSHIP_REGULATE_IBFK_3;
@@ -359,6 +360,7 @@ public class Keys {
         public static final ForeignKey<InternshipFileRecord, FilesRecord> INTERNSHIP_FILE_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_FILES_PRIMARY, InternshipFile.INTERNSHIP_FILE, "internship_file_ibfk_2", InternshipFile.INTERNSHIP_FILE.FILE_ID);
         public static final ForeignKey<InternshipJournalRecord, StudentRecord> INTERNSHIP_JOURNAL_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_STUDENT_PRIMARY, InternshipJournal.INTERNSHIP_JOURNAL, "internship_journal_ibfk_1", InternshipJournal.INTERNSHIP_JOURNAL.STUDENT_ID);
         public static final ForeignKey<InternshipJournalRecord, InternshipReleaseRecord> INTERNSHIP_JOURNAL_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_INTERNSHIP_RELEASE_PRIMARY, InternshipJournal.INTERNSHIP_JOURNAL, "internship_journal_ibfk_2", InternshipJournal.INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID);
+        public static final ForeignKey<InternshipJournalRecord, StaffRecord> INTERNSHIP_JOURNAL_IBFK_3 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_STAFF_PRIMARY, InternshipJournal.INTERNSHIP_JOURNAL, "internship_journal_ibfk_3", InternshipJournal.INTERNSHIP_JOURNAL.STAFF_ID);
         public static final ForeignKey<InternshipRegulateRecord, StudentRecord> INTERNSHIP_REGULATE_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_STUDENT_PRIMARY, InternshipRegulate.INTERNSHIP_REGULATE, "internship_regulate_ibfk_1", InternshipRegulate.INTERNSHIP_REGULATE.STUDENT_ID);
         public static final ForeignKey<InternshipRegulateRecord, InternshipReleaseRecord> INTERNSHIP_REGULATE_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_INTERNSHIP_RELEASE_PRIMARY, InternshipRegulate.INTERNSHIP_REGULATE, "internship_regulate_ibfk_2", InternshipRegulate.INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID);
         public static final ForeignKey<InternshipRegulateRecord, StaffRecord> INTERNSHIP_REGULATE_IBFK_3 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_STAFF_PRIMARY, InternshipRegulate.INTERNSHIP_REGULATE, "internship_regulate_ibfk_3", InternshipRegulate.INTERNSHIP_REGULATE.STAFF_ID);

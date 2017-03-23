@@ -37,6 +37,8 @@ public class InternshipJournalVo {
     @NotNull
     private Integer studentId;
     @NotNull
+    private Integer staffId;
+    @NotNull
     private String internshipReleaseId;
     private String internshipJournalWord;
     private Byte isSeeStaff;
@@ -127,6 +129,14 @@ public class InternshipJournalVo {
 
     public void setStudentId(Integer studentId) {
         this.studentId = studentId;
+    }
+
+    public Integer getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(Integer staffId) {
+        this.staffId = staffId;
     }
 
     public String getInternshipReleaseId() {

@@ -37,7 +37,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 
-    private static final long serialVersionUID = -931691705;
+    private static final long serialVersionUID = 1611984437;
 
     /**
      * The reference instance of <code>isy.internship_journal</code>
@@ -113,6 +113,11 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
     public final TableField<InternshipJournalRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
+     * The column <code>isy.internship_journal.staff_id</code>.
+     */
+    public final TableField<InternshipJournalRecord, Integer> STAFF_ID = createField("staff_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
      * The column <code>isy.internship_journal.internship_journal_word</code>.
      */
     public final TableField<InternshipJournalRecord, String> INTERNSHIP_JOURNAL_WORD = createField("internship_journal_word", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
@@ -173,7 +178,7 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
      */
     @Override
     public List<ForeignKey<InternshipJournalRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<InternshipJournalRecord, ?>>asList(Keys.INTERNSHIP_JOURNAL_IBFK_1, Keys.INTERNSHIP_JOURNAL_IBFK_2);
+        return Arrays.<ForeignKey<InternshipJournalRecord, ?>>asList(Keys.INTERNSHIP_JOURNAL_IBFK_1, Keys.INTERNSHIP_JOURNAL_IBFK_2, Keys.INTERNSHIP_JOURNAL_IBFK_3);
     }
 
     /**

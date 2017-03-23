@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal implements Serializable {
 
-    private static final long serialVersionUID = -1581562693;
+    private static final long serialVersionUID = -649724414;
 
     private String    internshipJournalId;
     private String    studentName;
@@ -40,6 +40,7 @@ public class InternshipJournal implements Serializable {
     private Timestamp createDate;
     private Integer   studentId;
     private String    internshipReleaseId;
+    private Integer   staffId;
     private String    internshipJournalWord;
     private Byte      isSeeStaff;
 
@@ -58,6 +59,7 @@ public class InternshipJournal implements Serializable {
         this.createDate = value.createDate;
         this.studentId = value.studentId;
         this.internshipReleaseId = value.internshipReleaseId;
+        this.staffId = value.staffId;
         this.internshipJournalWord = value.internshipJournalWord;
         this.isSeeStaff = value.isSeeStaff;
     }
@@ -75,6 +77,7 @@ public class InternshipJournal implements Serializable {
         Timestamp createDate,
         Integer   studentId,
         String    internshipReleaseId,
+        Integer   staffId,
         String    internshipJournalWord,
         Byte      isSeeStaff
     ) {
@@ -90,6 +93,7 @@ public class InternshipJournal implements Serializable {
         this.createDate = createDate;
         this.studentId = studentId;
         this.internshipReleaseId = internshipReleaseId;
+        this.staffId = staffId;
         this.internshipJournalWord = internshipJournalWord;
         this.isSeeStaff = isSeeStaff;
     }
@@ -212,6 +216,15 @@ public class InternshipJournal implements Serializable {
     }
 
     @NotNull
+    public Integer getStaffId() {
+        return this.staffId;
+    }
+
+    public void setStaffId(Integer staffId) {
+        this.staffId = staffId;
+    }
+
+    @NotNull
     @Size(max = 500)
     public String getInternshipJournalWord() {
         return this.internshipJournalWord;
@@ -245,6 +258,7 @@ public class InternshipJournal implements Serializable {
         sb.append(", ").append(createDate);
         sb.append(", ").append(studentId);
         sb.append(", ").append(internshipReleaseId);
+        sb.append(", ").append(staffId);
         sb.append(", ").append(internshipJournalWord);
         sb.append(", ").append(isSeeStaff);
 

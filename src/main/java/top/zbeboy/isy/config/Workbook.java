@@ -125,6 +125,11 @@ public final class Workbook {
     public static final String FILES_PORTFOLIOS = "files/";
 
     /*
+    临时文件档案路径
+    */
+    public static final String TEMP_FILES_PORTFOLIOS = "files/temp";
+
+    /*
     提示页面
      */
     public static final String TIP_PAGE = "tip::#page-wrapper";
