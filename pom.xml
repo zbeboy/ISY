@@ -551,90 +551,9 @@
                                     <springAnnotations>true</springAnnotations>
                                 </generate>
                                 <database>
-                                    <name>org.jooq.util.mariadb.MariaDBDatabase</name>
+                                    <name>org.jooq.util.mysql.MySQLDatabase</name>
                                     <includes>.*</includes>
                                     <inputSchema>${datasource.schema}</inputSchema>
-                                    <!-- First, register your custom types here -->
-                                    <customTypes>
-                                        <customType>
-                                            <!-- Specify the name of your custom type. Avoid using names from org.jooq.impl.SQLDataType -->
-                                            <name>GregorianCalendar</name>
-                                            <!-- Specify the Java type of your custom type. This corresponds to the Converter's <U> type. -->
-                                            <type>java.util.GregorianCalendar</type>
-                                            <!-- Associate that custom type with your converter. -->
-                                            <converter>top.zbeboy.isy.converter.CalendarConverter</converter>
-                                        </customType>
-                                        <customType>
-                                            <!-- Specify the name of your custom type. Avoid using names from org.jooq.impl.SQLDataType -->
-                                            <name>Boolean</name>
-                                            <!-- Specify the Java type of your custom type. This corresponds to the Converter's <U> type. -->
-                                            <type>java.lang.Boolean</type>
-                                            <!-- Associate that custom type with your converter. -->
-                                            <converter>top.zbeboy.isy.converter.BooleanConverter</converter>
-                                        </customType>
-                                        <customType>
-                                            <!-- Specify the name of your custom type. Avoid using names from org.jooq.impl.SQLDataType -->
-                                            <name>Date</name>
-                                            <!-- Specify the Java type of your custom type. This corresponds to the Converter's <U> type. -->
-                                            <type>java.util.Date</type>
-                                            <!-- Associate that custom type with your converter. -->
-                                            <converter>top.zbeboy.isy.converter.DateConverter</converter>
-                                        </customType>
-                                    </customTypes>
-                                    <!-- Then, associate custom types with database columns -->
-                                    <forcedTypes>
-                                        <forcedType>
-                                            <!-- Specify the name of your custom type -->
-                                            <name>GregorianCalendar</name>
-                                            <!-- Add a Java regular expression matching fully-qualified columns. Use the pipe to separate several expressions.
-                                            If provided, both "expressions" and "types" must match. -->
-                                            <expression>.*\.TIMESTAMP_OF_.*</expression>
-                                            <!-- Add a Java regular expression matching data types to be forced to
-                                            have this type.
-                                            Data types may be reported by your database as:
-                                            - NUMBER regexp suggestion: NUMBER
-                                            - NUMBER(5) regexp suggestion: NUMBER\(5\)
-                                            - NUMBER(5, 2) regexp suggestion: NUMBER\(5,\s*2\)
-                                            - any other form
-                                            It is thus recommended to use defensive regexes for types.
-                                            If provided, both "expressions" and "types" must match. -->
-                                            <types>.*</types>
-                                        </forcedType>
-                                        <forcedType>
-                                            <!-- Specify the name of your custom type -->
-                                            <name>Boolean</name>
-                                            <!-- Add a Java regular expression matching fully-qualified columns. Use the pipe to separate several expressions.
-                                            If provided, both "expressions" and "types" must match. -->
-                                            <expression>.*\.IS_OF_.*</expression>
-                                            <!-- Add a Java regular expression matching data types to be forced to
-                                            have this type.
-                                            Data types may be reported by your database as:
-                                            - NUMBER regexp suggestion: NUMBER
-                                            - NUMBER(5) regexp suggestion: NUMBER\(5\)
-                                            - NUMBER(5, 2) regexp suggestion: NUMBER\(5,\s*2\)
-                                            - any other form
-                                            It is thus recommended to use defensive regexes for types.
-                                            If provided, both "expressions" and "types" must match. -->
-                                            <types>.*</types>
-                                        </forcedType>
-                                        <forcedType>
-                                            <!-- Specify the name of your custom type -->
-                                            <name>Date</name>
-                                            <!-- Add a Java regular expression matching fully-qualified columns. Use the pipe to separate several expressions.
-                                            If provided, both "expressions" and "types" must match. -->
-                                            <expression>.*\.DATE_OF_.*</expression>
-                                            <!-- Add a Java regular expression matching data types to be forced to
-                                            have this type.
-                                            Data types may be reported by your database as:
-                                            - NUMBER regexp suggestion: NUMBER
-                                            - NUMBER(5) regexp suggestion: NUMBER\(5\)
-                                            - NUMBER(5, 2) regexp suggestion: NUMBER\(5,\s*2\)
-                                            - any other form
-                                            It is thus recommended to use defensive regexes for types.
-                                            If provided, both "expressions" and "types" must match. -->
-                                            <types>.*</types>
-                                        </forcedType>
-                                    </forcedTypes>
                                 </database>
                                 <target>
                                     <packageName>top.zbeboy.isy.domain</packageName>
