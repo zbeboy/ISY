@@ -551,7 +551,7 @@
                                     <springAnnotations>true</springAnnotations>
                                 </generate>
                                 <database>
-                                    <name>org.jooq.util.mariadb.MariaDBDatabase</name>
+                                    <name>org.jooq.util.mysql.MySQLDatabase</name>
                                     <includes>.*</includes>
                                     <inputSchema>${datasource.schema}</inputSchema>
                                 </database>
