@@ -34,6 +34,14 @@ public interface InternshipTeacherDistributionService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
+     * 通过实习ids查询
+     *
+     * @param internshipReleaseIds 实习发布ids
+     * @return 数据
+     */
+    Result<InternshipTeacherDistributionRecord> findInInternshipReleaseIds(List<String> internshipReleaseIds);
+
+    /**
      * 通过实习发布id 和指导教师id查询 学生信息
      *
      * @param internshipReleaseId 实习发布id
@@ -65,7 +73,7 @@ public interface InternshipTeacherDistributionService {
      *
      * @param organizeIds         专业id
      * @param internshipReleaseId 实习发布id 集合
-     * @param b 用户状态
+     * @param b                   用户状态
      * @return 数据
      */
     Result<Record> findStudentForBatchDistributionEnabled(List<Integer> organizeIds, List<String> internshipReleaseId, Byte b);

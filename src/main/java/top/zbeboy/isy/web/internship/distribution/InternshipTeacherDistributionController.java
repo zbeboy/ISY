@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.OrganizeService;
@@ -573,6 +574,38 @@ public class InternshipTeacherDistributionController {
                 List<String> ids = SmallPropsUtils.StringIdsToStringList(excludeInternships);
                 internshipTeacherDistributionService.comparisonDel(internshipReleaseId, ids);
                 ajaxUtils.success().msg("删除成功");
+            }
+        } else {
+            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据操作，请返回首页");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 拷贝其它实习id的学生数据
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param copyInternships     其它实习id
+     * @return true or fals
+     */
+    @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/copy", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils copyData(@RequestParam("id") String internshipReleaseId, String copyInternships) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            if (StringUtils.hasLength(copyInternships)) {
+                // 删除以前的分配记录 避免主键冲突
+                internshipTeacherDistributionService.deleteByInternshipReleaseId(internshipReleaseId);
+                List<String> ids = SmallPropsUtils.StringIdsToStringList(copyInternships);
+                Result<InternshipTeacherDistributionRecord> records = internshipTeacherDistributionService.findInInternshipReleaseIds(ids);
+                Users users = usersService.getUserFromSession();
+                records.forEach(r -> {
+                    InternshipTeacherDistribution internshipTeacherDistribution =
+                            new InternshipTeacherDistribution(r.getStaffId(), r.getStudentId(), internshipReleaseId, users.getUsername());
+                    internshipTeacherDistributionService.save(internshipTeacherDistribution);
+                });
+                ajaxUtils.success().msg("数据拷贝成功");
             }
         } else {
             ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据操作，请返回首页");
