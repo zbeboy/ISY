@@ -2,6 +2,7 @@ package top.zbeboy.isy.web.internship.distribution;
 
 import org.jooq.Record;
 import org.jooq.Record1;
+import org.jooq.Record2;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -598,13 +599,16 @@ public class InternshipTeacherDistributionController {
                 // 删除以前的分配记录 避免主键冲突
                 internshipTeacherDistributionService.deleteByInternshipReleaseId(internshipReleaseId);
                 List<String> ids = SmallPropsUtils.StringIdsToStringList(copyInternships);
-                Result<InternshipTeacherDistributionRecord> records = internshipTeacherDistributionService.findInInternshipReleaseIds(ids);
+                Result<Record2<Integer, Integer>> records = internshipTeacherDistributionService.findInInternshipReleaseIdsDistinctStudentId(ids);
                 Users users = usersService.getUserFromSession();
-                records.forEach(r -> {
-                    InternshipTeacherDistribution internshipTeacherDistribution =
-                            new InternshipTeacherDistribution(r.getStaffId(), r.getStudentId(), internshipReleaseId, users.getUsername());
-                    internshipTeacherDistributionService.save(internshipTeacherDistribution);
-                });
+                if(records.isNotEmpty()){
+                    List<InternshipTeacherDistribution> internshipTeacherDistributions = records.into(InternshipTeacherDistribution.class);
+                    internshipTeacherDistributions.forEach(r->{
+                        InternshipTeacherDistribution internshipTeacherDistribution =
+                                new InternshipTeacherDistribution(r.getStaffId(), r.getStudentId(), internshipReleaseId, users.getUsername());
+                        internshipTeacherDistributionService.save(internshipTeacherDistribution);
+                    });
+                }
                 ajaxUtils.success().msg("数据拷贝成功");
             }
         } else {
