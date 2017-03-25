@@ -2,6 +2,7 @@ package top.zbeboy.isy.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Record1;
+import org.jooq.Record2;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
@@ -34,12 +35,12 @@ public interface InternshipTeacherDistributionService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
-     * 通过实习ids查询
+     * 通过实习ids distinct学生id查询
      *
      * @param internshipReleaseIds 实习发布ids
      * @return 数据
      */
-    Result<InternshipTeacherDistributionRecord> findInInternshipReleaseIds(List<String> internshipReleaseIds);
+    Result<Record2<Integer, Integer>> findInInternshipReleaseIdsDistinctStudentId(List<String> internshipReleaseIds);
 
     /**
      * 通过实习发布id 和指导教师id查询 学生信息
