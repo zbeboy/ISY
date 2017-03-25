@@ -59,6 +59,13 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     @Override
+    public Result<InternshipTeacherDistributionRecord> findInInternshipReleaseIds(List<String> internshipReleaseIds) {
+        return create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.in(internshipReleaseIds))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findByInternshipReleaseIdAndStaffIdForStudent(String internshipReleaseId, int staffId) {
         return create.select()
                 .from(INTERNSHIP_TEACHER_DISTRIBUTION)

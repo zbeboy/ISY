@@ -117,7 +117,8 @@
         </script>
 
         <!-- 实习发布数据Modal -->
-        <div class="modal fade" id="excludeInternshipModal" tabindex="-1" role="dialog" aria-labelledby="excludeInternshipModalLabel"
+        <div class="modal fade" id="excludeInternshipModal" tabindex="-1" role="dialog"
+             aria-labelledby="excludeInternshipModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -127,7 +128,7 @@
                         <h4 class="modal-title" id="excludeInternshipModalLabel">请选择要排除的实习</h4>
                     </div>
                     <div class="modal-body">
-                        <form role="form" id="role_form" style="height: 300px;overflow: auto">
+                        <form role="form" style="height: 300px;overflow: auto">
                             <div class="form-group" id="excludeInternships"></div>
                         </form>
                         <p id="exclude_internship_error_msg" class="hidden"></p>
@@ -140,12 +141,49 @@
             </div>
         </div>
 
+        <!-- 数据拷贝Modal -->
+        <div class="modal fade" id="copyInternshipModal" tabindex="-1" role="dialog"
+             aria-labelledby="copyInternshipModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="copyInternshipModalLabel">请选择要拷贝的实习</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" style="height: 300px;overflow: auto">
+                            <div class="form-group" id="copyInternships"></div>
+                        </form>
+                        <p id="copy_internship_error_msg" class="hidden"></p>
+                        <p class="text-warning">警告:复制前会删除目前数据</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="copyInternshipModalMiss">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveCopyInternship">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!--定义实习发布数据模板-->
         <script id="exclude-internship-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <div class="checkbox">
                 <label>
                     <input type="checkbox" value="{{value}}" name="excludeInternship"/>{{name}}
+                </label>
+            </div>
+            {{/each}}
+        </script>
+
+        <!--定义数据拷贝模板-->
+        <script id="copy-internship-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="copyInternship" value="{{value}}"/>{{name}}
                 </label>
             </div>
             {{/each}}
