@@ -198,7 +198,7 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
         });
 
         var html = '<input type="text" id="search_school" class="form-control input-sm" placeholder="学校" />' +
-            '<input type="text" id="search_college" class="form-control input-sm" placeholder="院" />' +
+            '  <input type="text" id="search_college" class="form-control input-sm" placeholder="院" />' +
             '  <button type="button" id="search" class="btn btn-outline btn-default btn-sm"><i class="fa fa-search"></i>搜索</button>' +
             '  <button type="button" id="reset_search" class="btn btn-outline btn-default btn-sm"><i class="fa fa-repeat"></i>重置</button>';
         $('#mytoolbox').append(html);
