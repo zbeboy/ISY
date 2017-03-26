@@ -15,8 +15,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             my_journal: '/web/internship/journal/my/list',
             add: '/web/internship/journal/list/add',
             valid_is_student: '/anyone/valid/cur/is/student',
-            valid_student: '/web/internship/journal/valid/student',
-            access_condition_url: '/web/internship/journal/condition'
+            valid_student: '/web/internship/journal/valid/student'
         };
 
         /*

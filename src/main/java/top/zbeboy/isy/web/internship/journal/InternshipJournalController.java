@@ -488,7 +488,8 @@ public class InternshipJournalController {
                         filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
                         fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf('/') + 1));
                     });
-                    String downloadFileName = "实习日志";
+                    Users users = usersService.getUserFromSession();
+                    String downloadFileName = users.getRealName() + "小组实习日志";
                     String zipName = downloadFileName + ".zip";
                     String downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName;
                     String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
@@ -545,26 +546,6 @@ public class InternshipJournalController {
             ajaxUtils.fail().msg("删除日志失败");
         }
 
-        return ajaxUtils;
-    }
-
-    /**
-     * 实习日志进入条件
-     *
-     * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
-     * @return true or false
-     */
-    @RequestMapping(value = "/web/internship/journal/condition", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId, int studentId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
-        if (!errorBean.isHasError()) {
-            ajaxUtils.success().msg("在条件范围，允许使用");
-        } else {
-            ajaxUtils.fail().msg(errorBean.getErrorMsg());
-        }
         return ajaxUtils;
     }
 
