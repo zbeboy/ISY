@@ -526,9 +526,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             initParam();
             $.get(web_path + ajax_url.audit_data_url, param, function (data) {
                 endLoading();
-                if (data.listResult.length > 0) {
-                    createPage(data);
-                }
+                createPage(data);
                 listData(data);
             });
         }

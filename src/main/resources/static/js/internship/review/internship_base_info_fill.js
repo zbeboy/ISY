@@ -307,9 +307,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             initParam();
             $.get(web_path + ajax_url.base_info_fill_url, param, function (data) {
                 endLoading();
-                if (data.listResult.length > 0) {
-                    createPage(data);
-                }
+                createPage(data);
                 listData(data);
             });
         }

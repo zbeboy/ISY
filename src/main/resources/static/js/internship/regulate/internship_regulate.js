@@ -264,9 +264,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             startLoading();
             $.get(web_path + ajax_url.internship_regulate_data_url, param, function (data) {
                 endLoading();
-                if (data.listResult.length > 0) {
-                    createPage(data);
-                }
+                createPage(data);
                 listData(data);
             });
         }

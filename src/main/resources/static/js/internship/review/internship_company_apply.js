@@ -447,9 +447,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             initParam();
             $.get(web_path + ajax_url.company_apply_data_url, param, function (data) {
                 endLoading();
-                if (data.listResult.length > 0) {
-                    createPage(data);
-                }
+                createPage(data);
                 listData(data);
             });
         }
