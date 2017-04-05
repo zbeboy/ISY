@@ -23,12 +23,12 @@ public class DataTablesUtils<T> {
     /*
     数据总数
      */
-    private int iTotalRecords;
+    private long iTotalRecords;
 
     /*
     过滤条件下的总数
      */
-    private int iTotalDisplayRecords;
+    private long iTotalDisplayRecords;
 
     /*
     从哪页开始
@@ -71,6 +71,11 @@ public class DataTablesUtils<T> {
     private String extraSearch;
 
     /*
+    当前页号
+     */
+    private int extraPage;
+
+    /*
     object extraSearch
      */
     private JSONObject search;
@@ -86,6 +91,7 @@ public class DataTablesUtils<T> {
         String orderDirParam = request.getParameter("order[0][dir]");
         String searchValueParam = request.getParameter("search[value]");
         String extraSearchParam = request.getParameter("extra_search");
+        String extraPage = request.getParameter("extra_page");
         String dramParam = request.getParameter("draw");
 
         if (NumberUtils.isNumber(startParam)) {
@@ -118,6 +124,10 @@ public class DataTablesUtils<T> {
             this.search = JSON.parseObject(extraSearchParam);
         }
 
+        if(NumberUtils.isNumber(extraPage)){
+            this.extraPage = NumberUtils.toInt(extraPage);
+        }
+
         if (NumberUtils.isNumber(dramParam)) {
             this.draw = NumberUtils.toInt(dramParam);
         }
@@ -140,19 +150,19 @@ public class DataTablesUtils<T> {
         this.draw = draw;
     }
 
-    public int getiTotalRecords() {
+    public long getiTotalRecords() {
         return iTotalRecords;
     }
 
-    public void setiTotalRecords(int iTotalRecords) {
+    public void setiTotalRecords(long iTotalRecords) {
         this.iTotalRecords = iTotalRecords;
     }
 
-    public int getiTotalDisplayRecords() {
+    public long getiTotalDisplayRecords() {
         return iTotalDisplayRecords;
     }
 
-    public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
+    public void setiTotalDisplayRecords(long iTotalDisplayRecords) {
         this.iTotalDisplayRecords = iTotalDisplayRecords;
     }
 
@@ -218,6 +228,14 @@ public class DataTablesUtils<T> {
 
     public void setExtraSearch(String extraSearch) {
         this.extraSearch = extraSearch;
+    }
+
+    public int getExtraPage() {
+        return extraPage;
+    }
+
+    public void setExtraPage(int extraPage) {
+        this.extraPage = extraPage;
     }
 
     public JSONObject getSearch() {
