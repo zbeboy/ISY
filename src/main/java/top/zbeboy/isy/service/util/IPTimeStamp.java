@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Random;
 
@@ -58,7 +60,6 @@ public class IPTimeStamp {
     }
 
     private String getTimeStamp() {
-        this.sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        return this.sdf.format(new Date());
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
     }
 }
