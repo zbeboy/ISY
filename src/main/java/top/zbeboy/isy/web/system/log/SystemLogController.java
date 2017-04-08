@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.glue.system.SystemLogGlue;
 import top.zbeboy.isy.glue.util.ResultUtils;
-import top.zbeboy.isy.service.system.SystemLogService;
 import top.zbeboy.isy.web.bean.system.log.SystemLogBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -26,9 +25,6 @@ import java.util.List;
 public class SystemLogController {
 
     private final Logger log = LoggerFactory.getLogger(SystemLogController.class);
-
-    @Resource
-    private SystemLogService systemLogService;
 
     @Resource
     private SystemLogGlue systemLogGlue;
@@ -62,7 +58,7 @@ public class SystemLogController {
         ResultUtils<List<SystemLogBean>> resultUtils = systemLogGlue.findAllByPage(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
         dataTablesUtils.setiTotalRecords(systemLogGlue.countAll(dataTablesUtils));
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.isSearch() ? resultUtils.getTotalElements() : systemLogService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.isSearch() ? resultUtils.getTotalElements() : systemLogGlue.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 }

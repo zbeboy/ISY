@@ -70,12 +70,7 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
 
     @Override
     public long countByCondition(DataTablesUtils<SystemLogBean> dataTablesUtils) {
-        JSONObject search = dataTablesUtils.getSearch();
-        long count = 0;
-        if (!SearchUtils.mapValueIsNotEmpty(search)) {
-            count = systemLogService.countByCondition(dataTablesUtils);
-        }
-        return count;
+        return systemLogService.countByCondition(dataTablesUtils);
     }
 
     /**
