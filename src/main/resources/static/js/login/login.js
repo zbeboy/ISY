@@ -159,15 +159,21 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
                     process(data);
                 });
             },
+            afterSelect: function (item) {
+                //选择项之后的事件 ，item是当前选中的。
+                initParam();
+                var email = param.email;
+                if (valid_regex.email_regex.test(email)) {
+                    validSuccessDom(validId.email, errorMsgId.email);
+                }
+            },
             autoSelect: true
         });
 
         $(paramId.email).blur(function () {
             initParam();
             var email = param.email;
-            if (!valid_regex.email_regex.test(email)) {
-                validErrorDom(validId.email, errorMsgId.email, msg.email);
-            } else {
+            if (valid_regex.email_regex.test(email)) {
                 validSuccessDom(validId.email, errorMsgId.email);
             }
         });
@@ -175,9 +181,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
         $(paramId.password).blur(function () {
             initParam();
             var password = param.password;
-            if (!valid_regex.password_regex.test(password)) {
-                validErrorDom(validId.password, errorMsgId.password, msg.password);
-            } else {
+            if (valid_regex.password_regex.test(password)) {
                 validSuccessDom(validId.password, errorMsgId.password);
             }
         });
@@ -185,9 +189,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
         $(paramId.captcha).blur(function () {
             initParam();
             var j_captcha_response = param.captcha;
-            if (!valid_regex.captcha_regex.test(j_captcha_response)) {
-                validErrorDom(validId.captcha, errorMsgId.captcha, msg.captcha);
-            } else {
+            if (valid_regex.captcha_regex.test(j_captcha_response)) {
                 validSuccessDom(validId.captcha, errorMsgId.captcha);
             }
         });
