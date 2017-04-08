@@ -57,11 +57,6 @@ public class IPTimeStamp {
         return s.toString();
     }
 
-    public String getDate() {
-        this.sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-        return this.sdf.format(new Date());
-    }
-
     private String getTimeStamp() {
         this.sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         return this.sdf.format(new Date());
