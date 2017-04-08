@@ -161,9 +161,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
             },
             afterSelect: function (item) {
                 //选择项之后的事件 ，item是当前选中的。
-                initParam();
-                var email = param.email;
-                if (valid_regex.email_regex.test(email)) {
+                if (valid_regex.email_regex.test(item)) {
                     validSuccessDom(validId.email, errorMsgId.email);
                 }
             },
