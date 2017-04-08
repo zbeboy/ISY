@@ -4,10 +4,8 @@ package top.zbeboy.isy.service.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -21,8 +19,6 @@ import java.util.Random;
 public class IPTimeStamp {
 
     private final Logger log = LoggerFactory.getLogger(IPTimeStamp.class);
-
-    private SimpleDateFormat sdf = null;
 
     private String ip = null;
 

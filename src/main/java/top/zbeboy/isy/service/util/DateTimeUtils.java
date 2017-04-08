@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,7 +35,7 @@ public class DateTimeUtils {
      * @return string
      */
     public static String timestampToString(java.sql.Timestamp timestamp, String format) {
-        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern(format)) ;
+        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern(format));
     }
 
     /**
@@ -68,7 +67,7 @@ public class DateTimeUtils {
      * @return 格式化后的时间
      */
     public static String formatDate(java.sql.Date date, String format) {
-        return  date.toLocalDate().format(DateTimeFormatter.ofPattern(format));
+        return date.toLocalDate().format(DateTimeFormatter.ofPattern(format));
     }
 
     /**
@@ -99,7 +98,7 @@ public class DateTimeUtils {
      * @throws ParseException
      */
     public static java.sql.Date formatDate(String date) throws ParseException {
-        return new java.sql.Date(java.sql.Date.from(LocalDate.parse(StringUtils.trim(date),DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
+        return new java.sql.Date(java.sql.Date.from(LocalDate.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
     }
 
     /**
@@ -111,7 +110,7 @@ public class DateTimeUtils {
      * @throws ParseException
      */
     public static java.sql.Date formatDate(String date, String format) throws ParseException {
-        return new java.sql.Date(java.sql.Date.from(LocalDate.parse(StringUtils.trim(date),DateTimeFormatter.ofPattern(format)).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
+        return new java.sql.Date(java.sql.Date.from(LocalDate.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern(format)).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
     }
 
     /**
@@ -123,7 +122,7 @@ public class DateTimeUtils {
      * @throws ParseException
      */
     public static java.sql.Timestamp formatDateToTimestamp(String date, String format) throws ParseException {
-        return new java.sql.Timestamp(java.sql.Timestamp.from(LocalDateTime.parse(StringUtils.trim(date),DateTimeFormatter.ofPattern(format)).atZone(ZoneId.systemDefault()).toInstant()).getTime());
+        return new java.sql.Timestamp(java.sql.Timestamp.from(LocalDateTime.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern(format)).atZone(ZoneId.systemDefault()).toInstant()).getTime());
     }
 
     /**
