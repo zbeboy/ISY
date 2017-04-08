@@ -147,7 +147,8 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
     /**
      * 系统日志排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils          datatables工具类
+     * @param nativeSearchQueryBuilder 查询器
      */
     @Override
     public NativeSearchQueryBuilder sortCondition(DataTablesUtils<SystemLogBean> dataTablesUtils, NativeSearchQueryBuilder nativeSearchQueryBuilder) {

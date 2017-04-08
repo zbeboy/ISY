@@ -12,6 +12,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.SystemLogDao;
 import top.zbeboy.isy.domain.tables.pojos.SystemLog;
+import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
+import top.zbeboy.isy.elastic.repository.SystemLogElasticRepository;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.log.SystemLogBean;
@@ -36,6 +38,9 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
     @Resource
     private SystemLogDao systemLogDao;
 
+    @Resource
+    private SystemLogElasticRepository systemLogElasticRepository;
+
     @Autowired
     public SystemLogServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
@@ -45,11 +50,13 @@ public class SystemLogServiceImpl extends DataTablesPlugin<SystemLogBean> implem
     @Override
     public void save(SystemLog systemLog) {
         systemLogDao.insert(systemLog);
+        systemLogElasticRepository.save(new SystemLogElastic(systemLog.getSystemLogId(),systemLog.getBehavior(),systemLog.getOperatingTime(),systemLog.getUsername(),systemLog.getIpAddress()));
     }
 
     @Override
     public void deleteByOperatingTime(Timestamp operatingTime) {
         create.deleteFrom(SYSTEM_LOG).where(SYSTEM_LOG.OPERATING_TIME.le(operatingTime)).execute();
+        systemLogElasticRepository.deleteByOperatingTimeLessThanEqual(operatingTime.getTime());
     }
 
     @Override

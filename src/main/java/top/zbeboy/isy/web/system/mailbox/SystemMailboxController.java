@@ -1,23 +1,19 @@
 package top.zbeboy.isy.web.system.mailbox;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.service.system.SystemMailboxService;
-import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.glue.system.SystemMailboxGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.web.bean.system.mailbox.SystemMailboxBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +27,7 @@ public class SystemMailboxController {
     private final Logger log = LoggerFactory.getLogger(SystemMailboxController.class);
 
     @Resource
-    private SystemMailboxService systemMailboxService;
+    private SystemMailboxGlue systemMailboxGlue;
 
     /**
      * 系统邮件
@@ -58,18 +54,10 @@ public class SystemMailboxController {
         headers.add("send_time");
         headers.add("send_condition");
         DataTablesUtils<SystemMailboxBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = systemMailboxService.findAllByPage(dataTablesUtils);
-        List<SystemMailboxBean> systemMailboxes = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            systemMailboxes = records.into(SystemMailboxBean.class);
-            systemMailboxes.forEach(s -> {
-                Date date = DateTimeUtils.timestampToDate(s.getSendTime());
-                s.setSendTimeNew(DateTimeUtils.formatDate(date));
-            });
-        }
-        dataTablesUtils.setData(systemMailboxes);
-        dataTablesUtils.setiTotalRecords(systemMailboxService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(systemMailboxService.countByCondition(dataTablesUtils));
+        ResultUtils<List<SystemMailboxBean>> resultUtils = systemMailboxGlue.findAllByPage(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(systemMailboxGlue.countAll(dataTablesUtils));
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.isSearch() ? resultUtils.getTotalElements() : systemMailboxGlue.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 }
