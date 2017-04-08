@@ -401,18 +401,46 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         /*
-         下载电子资料
+         删除电子资料
          */
         $(myTableData).delegate('.deleteFile', "click", function () {
             var id = $(this).attr('data-id');
             var student = $(this).attr('data-student');
-            $.post(web_path + ajax_url.delete_file, {id: id, studentId: student}, function (data) {
+            var msg = Messenger().post({
+                message: "确定删除吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            deleteFile(id, student);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        });
+
+        /**
+         * 发送删除ajax
+         * @param id
+         * @param studentId
+         */
+        function deleteFile(id, studentId) {
+            $.post(web_path + ajax_url.delete_file, {id: id, studentId: studentId}, function (data) {
                 if (data.state) {
                     Messenger().post({
                         message: data.msg,
                         type: 'success',
                         showCloseButton: true
                     });
+                    initMyData();
                 } else {
                     Messenger().post({
                         message: data.msg,
@@ -421,7 +449,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                     });
                 }
             });
-        });
+        }
 
         /**
          * 展开上传文件modal
