@@ -51,7 +51,7 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
         JSONObject search = dataTablesUtils.getSearch();
         ResultUtils<List<SystemMailboxBean>> resultUtils = new ResultUtils<>();
         if (SearchUtils.mapValueIsNotEmpty(search)) {
-            Page<SystemMailboxElastic> systemMailboxElasticPage = systemMailboxElasticRepository.search(buildSearchQuery(search, dataTablesUtils));
+            Page<SystemMailboxElastic> systemMailboxElasticPage = systemMailboxElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
             resultUtils.data(dataBuilder(systemMailboxElasticPage)).isSearch(true).totalElements(systemMailboxElasticPage.getTotalElements());
         } else {
             resultUtils.data(freestanding(dataTablesUtils)).isSearch(false);

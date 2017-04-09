@@ -14,16 +14,16 @@ public class InternshipReleaseAddVo {
     private String releaseTitle;
     @NotNull
     @Min(1)
-    private int internshipTypeId;
+    private Integer internshipTypeId;
     @NotNull
     private String teacherDistributionTime;
     @NotNull
     private String time;
-    private int schoolId;
-    private int collegeId;
+    private Integer schoolId;
+    private Integer collegeId;
     @NotNull
     @Min(1)
-    private int departmentId;
+    private Integer departmentId;
     @NotNull
     private String grade;
     @NotNull
@@ -47,11 +47,11 @@ public class InternshipReleaseAddVo {
         this.releaseTitle = releaseTitle;
     }
 
-    public int getInternshipTypeId() {
+    public Integer getInternshipTypeId() {
         return internshipTypeId;
     }
 
-    public void setInternshipTypeId(int internshipTypeId) {
+    public void setInternshipTypeId(Integer internshipTypeId) {
         this.internshipTypeId = internshipTypeId;
     }
 
@@ -71,27 +71,27 @@ public class InternshipReleaseAddVo {
         this.time = time;
     }
 
-    public int getSchoolId() {
+    public Integer getSchoolId() {
         return schoolId;
     }
 
-    public void setSchoolId(int schoolId) {
+    public void setSchoolId(Integer schoolId) {
         this.schoolId = schoolId;
     }
 
-    public int getCollegeId() {
+    public Integer getCollegeId() {
         return collegeId;
     }
 
-    public void setCollegeId(int collegeId) {
+    public void setCollegeId(Integer collegeId) {
         this.collegeId = collegeId;
     }
 
-    public int getDepartmentId() {
+    public Integer getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(int departmentId) {
+    public void setDepartmentId(Integer departmentId) {
         this.departmentId = departmentId;
     }
 

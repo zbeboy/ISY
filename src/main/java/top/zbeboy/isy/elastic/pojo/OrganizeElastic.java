@@ -1,25 +1,20 @@
-package top.zbeboy.isy.web.vo.data.organize;
+package top.zbeboy.isy.elastic.pojo;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
- * Created by lenovo on 2016-09-25.
+ * Created by lenovo on 2017-04-09.
  */
-public class OrganizeVo {
-    private Integer organizeId;
-    @NotNull
-    @Size(max = 200)
+@Document(indexName = "organize", type = "organize", shards = 1, replicas = 0, refreshInterval = "-1")
+public class OrganizeElastic {
+    @Id
+    private String organizeId;
     private String organizeName;
     private Byte organizeIsDel;
-    @NotNull
-    @Min(1)
     private Integer scienceId;
-    @NotNull
-    @Size(max = 5)
     private String grade;
-
     private Integer schoolId;
     private String schoolName;
     private Integer collegeId;
@@ -28,12 +23,15 @@ public class OrganizeVo {
     private String departmentName;
     private String scienceName;
 
+    public OrganizeElastic() {
+    }
+
     public Integer getOrganizeId() {
-        return organizeId;
+        return NumberUtils.toInt(organizeId);
     }
 
     public void setOrganizeId(Integer organizeId) {
-        this.organizeId = organizeId;
+        this.organizeId = organizeId + "";
     }
 
     public String getOrganizeName() {
@@ -126,7 +124,7 @@ public class OrganizeVo {
 
     @Override
     public String toString() {
-        return "OrganizeVo{" +
+        return "OrganizeElastic{" +
                 "organizeId=" + organizeId +
                 ", organizeName='" + organizeName + '\'' +
                 ", organizeIsDel=" + organizeIsDel +

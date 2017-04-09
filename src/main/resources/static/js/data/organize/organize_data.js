@@ -16,6 +16,18 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             };
         }
 
+        /**
+         * 获取分页信息
+         * @returns {number}
+         */
+        function getPage() {
+            var page = 0;
+            if (myTable) {
+                page = myTable.page();
+            }
+            return page;
+        }
+
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
 
@@ -47,6 +59,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[1, 'desc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().organizes,
                 "dataSrc": "data",
@@ -54,6 +67,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     // 添加额外的参数传给服务器
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
+                    d.extra_page = getPage();
                 }
             },
             "columns": [

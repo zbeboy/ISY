@@ -17,6 +17,7 @@ import top.zbeboy.isy.elastic.pojo.SystemSmsElastic;
 import top.zbeboy.isy.elastic.repository.SystemSmsElasticRepository;
 import top.zbeboy.isy.glue.plugin.ElasticPlugin;
 import top.zbeboy.isy.glue.util.ResultUtils;
+import top.zbeboy.isy.glue.util.SearchUtils;
 import top.zbeboy.isy.service.system.SystemSmsService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -45,17 +46,32 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
 
     @Override
     public ResultUtils<List<SystemSmsBean>> findAllByPage(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        return null;
+        JSONObject search = dataTablesUtils.getSearch();
+        ResultUtils<List<SystemSmsBean>> resultUtils = new ResultUtils<>();
+        if (SearchUtils.mapValueIsNotEmpty(search)) {
+            Page<SystemSmsElastic> systemSmsElasticPage = systemSmsElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
+            resultUtils.data(dataBuilder(systemSmsElasticPage)).isSearch(true).totalElements(systemSmsElasticPage.getTotalElements());
+        } else {
+            resultUtils.data(freestanding(dataTablesUtils)).isSearch(false);
+        }
+        return resultUtils;
     }
 
     @Override
     public long countAll(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        return 0;
+        JSONObject search = dataTablesUtils.getSearch();
+        long count;
+        if (SearchUtils.mapValueIsNotEmpty(search)) {
+            count = systemSmsElasticRepository.count();
+        } else {
+            count = systemSmsService.countAll();
+        }
+        return count;
     }
 
     @Override
     public long countByCondition(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        return 0;
+        return systemSmsService.countByCondition(dataTablesUtils);
     }
 
     /**
@@ -99,7 +115,7 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     }
 
     /**
-     * 系统日志全局搜索条件
+     * 系统短信全局搜索条件
      *
      * @param search 搜索参数
      * @return 搜索条件
@@ -118,7 +134,7 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     }
 
     /**
-     * 系统日志排序
+     * 系统短信排序
      *
      * @param dataTablesUtils          datatables工具类
      * @param nativeSearchQueryBuilder 查询器

@@ -12,26 +12,26 @@ public class StudentVo {
 
     @NotNull
     @Min(1)
-    private int school;
+    private Integer school;
 
     @NotNull
     @Min(1)
-    private int college;
+    private Integer college;
 
     @NotNull
     @Min(1)
-    private int department;
+    private Integer department;
 
     @NotNull
     @Min(1)
-    private int science;
+    private Integer science;
 
     @NotNull
     private String grade;
 
     @NotNull
     @Min(1)
-    private int organize;
+    private Integer organize;
 
     @NotNull
     @Pattern(regexp = "^[\\d]{13,}$")
@@ -59,35 +59,35 @@ public class StudentVo {
     @NotNull
     private String confirmPassword;
 
-    public int getSchool() {
+    public Integer getSchool() {
         return school;
     }
 
-    public void setSchool(int school) {
+    public void setSchool(Integer school) {
         this.school = school;
     }
 
-    public int getCollege() {
+    public Integer getCollege() {
         return college;
     }
 
-    public void setCollege(int college) {
+    public void setCollege(Integer college) {
         this.college = college;
     }
 
-    public int getDepartment() {
+    public Integer getDepartment() {
         return department;
     }
 
-    public void setDepartment(int department) {
+    public void setDepartment(Integer department) {
         this.department = department;
     }
 
-    public int getScience() {
+    public Integer getScience() {
         return science;
     }
 
-    public void setScience(int science) {
+    public void setScience(Integer science) {
         this.science = science;
     }
 
@@ -99,11 +99,11 @@ public class StudentVo {
         this.grade = grade;
     }
 
-    public int getOrganize() {
+    public Integer getOrganize() {
         return organize;
     }
 
-    public void setOrganize(int organize) {
+    public void setOrganize(Integer organize) {
         this.organize = organize;
     }
 

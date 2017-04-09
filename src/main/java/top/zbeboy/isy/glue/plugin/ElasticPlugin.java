@@ -13,14 +13,30 @@ import top.zbeboy.isy.web.util.DataTablesUtils;
 public class ElasticPlugin<T> {
 
     /**
+     * 若有其它条件可 覆盖实现
+     *
+     * @param search 条件内容
+     * @return 其它条件
+     */
+    public QueryBuilder prepositionCondition(JSONObject search) {
+        return null;
+    }
+
+    /**
      * 构建查询语句
      *
      * @param search          搜索条件
      * @param dataTablesUtils datatables工具类
+     * @param hasPreposition  是否有前置条件
      * @return 条件
      */
-    public SearchQuery buildSearchQuery(JSONObject search, DataTablesUtils<T> dataTablesUtils) {
-        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(searchCondition(search));
+    public SearchQuery buildSearchQuery(JSONObject search, DataTablesUtils<T> dataTablesUtils, boolean hasPreposition) {
+        NativeSearchQueryBuilder nativeSearchQueryBuilder;
+        if (hasPreposition) {
+            nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search));
+        } else {
+            nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(searchCondition(search));
+        }
         return sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build();
     }
 

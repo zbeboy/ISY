@@ -48,7 +48,7 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
         JSONObject search = dataTablesUtils.getSearch();
         ResultUtils<List<SystemLogBean>> resultUtils = new ResultUtils<>();
         if (SearchUtils.mapValueIsNotEmpty(search)) {
-            Page<SystemLogElastic> systemLogElasticPage = systemLogElasticRepository.search(buildSearchQuery(search, dataTablesUtils));
+            Page<SystemLogElastic> systemLogElasticPage = systemLogElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
             resultUtils.data(dataBuilder(systemLogElasticPage)).isSearch(true).totalElements(systemLogElasticPage.getTotalElements());
         } else {
             resultUtils.data(freestanding(dataTablesUtils)).isSearch(false);
