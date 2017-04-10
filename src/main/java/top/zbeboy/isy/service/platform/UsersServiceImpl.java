@@ -19,6 +19,8 @@ import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
+import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
 import top.zbeboy.isy.security.MyUserImpl;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -63,6 +65,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private UsersElasticRepository usersElasticRepository;
 
     @Autowired
     public UsersServiceImpl(DSLContext dslContext) {
@@ -128,25 +133,63 @@ public class UsersServiceImpl implements UsersService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(Users users) {
-        usersDao.insert(users);
+    public void save(UsersElastic usersElastic) {
+        create.insertInto(USERS)
+                .set(USERS.USERNAME, usersElastic.getUsername())
+                .set(USERS.PASSWORD, usersElastic.getPassword())
+                .set(USERS.ENABLED, usersElastic.getEnabled())
+                .set(USERS.USERS_TYPE_ID, usersElastic.getUsersTypeId())
+                .set(USERS.REAL_NAME, usersElastic.getRealName())
+                .set(USERS.MOBILE, usersElastic.getMobile())
+                .set(USERS.AVATAR, usersElastic.getAvatar())
+                .set(USERS.VERIFY_MAILBOX, usersElastic.getVerifyMailbox())
+                .set(USERS.MAILBOX_VERIFY_CODE, usersElastic.getMailboxVerifyCode())
+                .set(USERS.PASSWORD_RESET_KEY, usersElastic.getPasswordResetKey())
+                .set(USERS.MAILBOX_VERIFY_VALID, usersElastic.getMailboxVerifyValid())
+                .set(USERS.PASSWORD_RESET_KEY_VALID, usersElastic.getPasswordResetKeyValid())
+                .set(USERS.LANG_KEY, usersElastic.getLangKey())
+                .set(USERS.JOIN_DATE, usersElastic.getJoinDate())
+                .execute();
+        usersElasticRepository.save(usersElastic);
     }
 
     @Override
     public void update(Users users) {
         usersDao.update(users);
+        UsersElastic usersElastic = usersElasticRepository.findOne(users.getUsername());
+        usersElastic.setUsername(users.getUsername());
+        usersElastic.setPassword(users.getPassword());
+        usersElastic.setEnabled(users.getEnabled());
+        usersElastic.setUsersTypeId(users.getUsersTypeId());
+        usersElastic.setRealName(users.getRealName());
+        usersElastic.setMobile(users.getMobile());
+        usersElastic.setAvatar(users.getAvatar());
+        usersElastic.setVerifyMailbox(users.getVerifyMailbox());
+        usersElastic.setMailboxVerifyCode(users.getMailboxVerifyCode());
+        usersElastic.setPasswordResetKey(users.getPasswordResetKey());
+        usersElastic.setMailboxVerifyValid(users.getMailboxVerifyValid());
+        usersElastic.setPasswordResetKeyValid(users.getPasswordResetKeyValid());
+        usersElastic.setLangKey(users.getLangKey());
+        usersElastic.setJoinDate(users.getJoinDate());
+        usersElasticRepository.delete(usersElastic);
+        usersElasticRepository.save(usersElastic);
     }
 
     @Override
     public void updateEnabled(List<String> ids, Byte enabled) {
-        ids.forEach(id ->
-                create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute()
-        );
+        ids.forEach(id -> {
+            create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute();
+            UsersElastic usersElastic = usersElasticRepository.findOne(id);
+            usersElastic.setEnabled(enabled);
+            usersElasticRepository.delete(usersElastic);
+            usersElasticRepository.save(usersElastic);
+        });
     }
 
     @Override
     public void deleteById(String username) {
         usersDao.deleteById(username);
+        usersElasticRepository.delete(username);
     }
 
     @Override

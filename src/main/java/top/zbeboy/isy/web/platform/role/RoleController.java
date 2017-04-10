@@ -244,7 +244,7 @@ public class RoleController {
     @ResponseBody
     public AjaxUtils roleSave(@RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = new Role();
-        role.setRoleName(roleName);
+        role.setRoleName(StringUtils.trimAllWhitespace(roleName));
         role.setRoleEnName("ROLE_" + RandomUtils.generateRoleEnName().toUpperCase());
         role.setRoleType(2);
         int roleId = roleService.saveAndReturnId(role);
@@ -268,7 +268,7 @@ public class RoleController {
     @ResponseBody
     public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
-        role.setRoleName(roleName);
+        role.setRoleName(StringUtils.trimAllWhitespace(roleName));
         roleService.update(role);
         if (roleId > 0) {
             roleApplicationService.deleteByRoleId(roleId);

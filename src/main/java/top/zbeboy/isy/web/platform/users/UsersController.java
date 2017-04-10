@@ -23,6 +23,8 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
+import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
@@ -140,6 +142,9 @@ public class UsersController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private UsersElasticRepository usersElasticRepository;
 
     /**
      * 检验注册表单
@@ -644,14 +649,30 @@ public class UsersController {
         if (StringUtils.hasLength(roles)) {
             List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
             authoritiesService.deleteByUsername(username);
+            UsersElastic usersElastic = usersElasticRepository.findOne(username);
+            List<String> roleEnNames = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
             roleList.forEach(role -> {
                 Authorities authorities = new Authorities(username, role);
                 authoritiesService.save(authorities);
-                Users users = usersService.findByUsername(username);
-                Users curUsers = usersService.getUserFromSession();
-                String notify = "您的权限已变更。";
-                commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
+                Role tempRole = roleService.findByRoleEnName(role);
+                roleEnNames.add(tempRole.getRoleEnName());
+                stringBuilder.append(tempRole.getRoleName()).append(" ");
             });
+            if (roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES)) {
+                usersElastic.setAuthorities(1);
+            } else if (roleEnNames.contains(Workbook.ADMIN_AUTHORITIES)) {
+                usersElastic.setAuthorities(2);
+            } else {
+                usersElastic.setAuthorities(0);
+            }
+            usersElastic.setRoleName(stringBuilder.toString().trim());
+            usersElasticRepository.delete(username);
+            usersElasticRepository.save(usersElastic);
+            Users users = usersService.findByUsername(username);
+            Users curUsers = usersService.getUserFromSession();
+            String notify = "您的权限已变更为" + usersElastic.getRoleName() + " ，请登录查看。";
+            commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
             return new AjaxUtils().success().msg("更改用户角色成功");
         }
         return new AjaxUtils().fail().msg("用户角色参数异常");

@@ -139,13 +139,13 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
 
     @Override
     public void updateIsDel(List<Integer> ids, Byte isDel) {
-        for (int id : ids) {
+        ids.forEach(id -> {
             create.update(ORGANIZE).set(ORGANIZE.ORGANIZE_IS_DEL, isDel).where(ORGANIZE.ORGANIZE_ID.eq(id)).execute();
             OrganizeElastic organizeElastic = organizeElasticRepository.findOne(id + "");
             organizeElastic.setOrganizeIsDel(isDel);
             organizeElasticRepository.delete(organizeElastic);
             organizeElasticRepository.save(organizeElastic);
-        }
+        });
     }
 
     @Override

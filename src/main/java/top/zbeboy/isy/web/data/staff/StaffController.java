@@ -19,6 +19,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
+import top.zbeboy.isy.elastic.pojo.UsersElastic;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -143,7 +144,7 @@ public class StaffController {
                                         return new AjaxUtils().fail().msg("密码不一致");
                                     } else {
                                         // 注册成功
-                                        Users saveUsers = new Users();
+                                        UsersElastic saveUsers = new UsersElastic();
                                         Byte enabled = 1;
                                         Byte verifyMailbox = 0;
                                         saveUsers.setUsername(email);
@@ -151,6 +152,7 @@ public class StaffController {
                                         saveUsers.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
                                         saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
+                                        saveUsers.setUsersTypeName(Workbook.STAFF_USERS_TYPE);
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
 
                                         DateTime dateTime = DateTime.now();
@@ -162,6 +164,7 @@ public class StaffController {
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
                                         saveUsers.setVerifyMailbox(verifyMailbox);
                                         saveUsers.setRealName(staffVo.getRealName());
+                                        saveUsers.setAuthorities(-1);
                                         usersService.save(saveUsers);
 
                                         Staff saveStaff = new Staff();
@@ -177,7 +180,12 @@ public class StaffController {
 
                                         //发送验证邮件
                                         if (isyProperties.getMail().isOpen()) {
-                                            mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
+                                            Users users = new Users();
+                                            users.setUsername(saveUsers.getUsername());
+                                            users.setLangKey(saveUsers.getLangKey());
+                                            users.setMailboxVerifyCode(saveUsers.getMailboxVerifyCode());
+                                            users.setMailboxVerifyValid(saveUsers.getMailboxVerifyValid());
+                                            mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
                                             return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
                                         } else {
                                             return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
