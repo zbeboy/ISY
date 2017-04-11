@@ -9,11 +9,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.*;
+import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
@@ -24,11 +26,14 @@ import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -87,6 +92,9 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
 
     @Resource
     private GraduationPracticeUnifyService graduationPracticeUnifyService;
+
+    @Resource
+    private RoleApplicationService roleApplicationService;
 
     @Override
     public void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap) {
@@ -195,5 +203,15 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
             }
         }
         return true;
+    }
+
+    @Override
+    public void batchSaveRoleApplication(String applicationIds, int roleId) {
+        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
+            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
+            List<RoleApplication> roleApplications = new ArrayList<>();
+            ids.forEach(id -> roleApplications.add(new RoleApplication(roleId, id)));
+            roleApplicationService.save(roleApplications);
+        }
     }
 }

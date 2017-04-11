@@ -59,4 +59,12 @@ public interface CommonControllerMethodService {
      * @return 是否可操作
      */
     boolean limitCurrentStudent(int studentId);
+
+    /**
+     * 批量保存或更新角色
+     *
+     * @param applicationIds 应用ids
+     * @param roleId         角色id
+     */
+    void batchSaveRoleApplication(String applicationIds, int roleId);
 }

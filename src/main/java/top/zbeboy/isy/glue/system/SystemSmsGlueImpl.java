@@ -48,30 +48,13 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     public ResultUtils<List<SystemSmsBean>> findAllByPage(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
         ResultUtils<List<SystemSmsBean>> resultUtils = new ResultUtils<>();
-        if (SearchUtils.mapValueIsNotEmpty(search)) {
-            Page<SystemSmsElastic> systemSmsElasticPage = systemSmsElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
-            resultUtils.data(dataBuilder(systemSmsElasticPage)).isSearch(true).totalElements(systemSmsElasticPage.getTotalElements());
-        } else {
-            resultUtils.data(freestanding(dataTablesUtils)).isSearch(false);
-        }
-        return resultUtils;
+        Page<SystemSmsElastic> systemSmsElasticPage = systemSmsElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
+        return resultUtils.data(dataBuilder(systemSmsElasticPage)).totalElements(systemSmsElasticPage.getTotalElements());
     }
 
     @Override
-    public long countAll(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        JSONObject search = dataTablesUtils.getSearch();
-        long count;
-        if (SearchUtils.mapValueIsNotEmpty(search)) {
-            count = systemSmsElasticRepository.count();
-        } else {
-            count = systemSmsService.countAll();
-        }
-        return count;
-    }
-
-    @Override
-    public long countByCondition(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        return systemSmsService.countByCondition(dataTablesUtils);
+    public long countAll() {
+        return systemSmsElasticRepository.count();
     }
 
     /**
@@ -96,25 +79,6 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     }
 
     /**
-     * 数据原生实现方式
-     *
-     * @param dataTablesUtils datatables工具类
-     * @return 原生数据
-     */
-    private List<SystemSmsBean> freestanding(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
-        List<SystemSmsBean> systemSmses = new ArrayList<>();
-        Result<Record> records = systemSmsService.findAllByPage(dataTablesUtils);
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            systemSmses = records.into(SystemSmsBean.class);
-            systemSmses.forEach(s -> {
-                Date date = DateTimeUtils.timestampToDate(s.getSendTime());
-                s.setSendTimeNew(DateTimeUtils.formatDate(date));
-            });
-        }
-        return systemSmses;
-    }
-
-    /**
      * 系统短信全局搜索条件
      *
      * @param search 搜索参数
@@ -123,13 +87,13 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     @Override
     public QueryBuilder searchCondition(JSONObject search) {
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
-        String acceptPhone = StringUtils.trimWhitespace(search.getString("acceptPhone"));
-
-        if (StringUtils.hasLength(acceptPhone)) {
-            WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptPhone", SQLQueryUtils.elasticLikeAllParam(acceptPhone));
-            boolqueryBuilder.must(wildcardQueryBuilder);
+        if (!ObjectUtils.isEmpty(search)) {
+            String acceptPhone = StringUtils.trimWhitespace(search.getString("acceptPhone"));
+            if (StringUtils.hasLength(acceptPhone)) {
+                WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptPhone", SQLQueryUtils.elasticLikeAllParam(acceptPhone));
+                boolqueryBuilder.must(wildcardQueryBuilder);
+            }
         }
-
         return boolqueryBuilder;
     }
 
@@ -147,37 +111,37 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_sms_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 
             if ("send_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.ASC).unmappedType("long"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.DESC).unmappedType("long"));
                 }
             }
 
             if ("accept_phone".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.ASC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.DESC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 
             if ("send_condition".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
         }

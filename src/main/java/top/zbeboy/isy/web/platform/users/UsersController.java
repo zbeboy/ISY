@@ -646,8 +646,14 @@ public class UsersController {
     @RequestMapping(value = "/special/channel/users/role/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles, HttpServletRequest request) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
         if (StringUtils.hasLength(roles)) {
             List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
+            // 禁止非系统用户 提升用户权限到系统或管理员级别权限
+            if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                    && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))){
+                return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限");
+            }
             authoritiesService.deleteByUsername(username);
             UsersElastic usersElastic = usersElasticRepository.findOne(username);
             List<String> roleEnNames = new ArrayList<>();
@@ -673,9 +679,11 @@ public class UsersController {
             Users curUsers = usersService.getUserFromSession();
             String notify = "您的权限已变更为" + usersElastic.getRoleName() + " ，请登录查看。";
             commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
-            return new AjaxUtils().success().msg("更改用户角色成功");
+            ajaxUtils.success().msg("更改用户角色成功");
+        } else {
+            ajaxUtils.fail().msg("用户角色参数异常");
         }
-        return new AjaxUtils().fail().msg("用户角色参数异常");
+        return ajaxUtils;
     }
 
     /**

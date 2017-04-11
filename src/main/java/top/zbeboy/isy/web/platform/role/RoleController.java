@@ -292,13 +292,7 @@ public class RoleController {
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             collegeId = roleService.getRoleCollegeId(record);
         }
-        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
-            ids.forEach(id -> {
-                RoleApplication roleApplication = new RoleApplication(roleId, id);
-                roleApplicationService.save(roleApplication);
-            });
-        }
+        commonControllerMethodService.batchSaveRoleApplication(applicationIds,roleId);
         if (collegeId > 0) {
             CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
             collegeRoleService.save(collegeRole);

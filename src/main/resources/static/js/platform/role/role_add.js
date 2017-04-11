@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
-//# sourceURL=system_role_add.js
+//# sourceURL=role_add.js
 require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address",
     "bootstrap-maxlength", "jquery.showLoading", "com"], function ($, Handlebars, constants, nav_active) {
 

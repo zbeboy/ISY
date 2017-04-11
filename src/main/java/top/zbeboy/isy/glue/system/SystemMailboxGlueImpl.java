@@ -7,8 +7,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.WildcardQueryBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,8 +18,6 @@ import top.zbeboy.isy.elastic.pojo.SystemMailboxElastic;
 import top.zbeboy.isy.elastic.repository.SystemMailboxElasticRepository;
 import top.zbeboy.isy.glue.plugin.ElasticPlugin;
 import top.zbeboy.isy.glue.util.ResultUtils;
-import top.zbeboy.isy.glue.util.SearchUtils;
-import top.zbeboy.isy.service.system.SystemMailboxService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.mailbox.SystemMailboxBean;
@@ -41,39 +37,19 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
     private final Logger log = LoggerFactory.getLogger(SystemMailboxGlueImpl.class);
 
     @Resource
-    private SystemMailboxService systemMailboxService;
-
-    @Resource
     private SystemMailboxElasticRepository systemMailboxElasticRepository;
 
     @Override
     public ResultUtils<List<SystemMailboxBean>> findAllByPage(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
         ResultUtils<List<SystemMailboxBean>> resultUtils = new ResultUtils<>();
-        if (SearchUtils.mapValueIsNotEmpty(search)) {
-            Page<SystemMailboxElastic> systemMailboxElasticPage = systemMailboxElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
-            resultUtils.data(dataBuilder(systemMailboxElasticPage)).isSearch(true).totalElements(systemMailboxElasticPage.getTotalElements());
-        } else {
-            resultUtils.data(freestanding(dataTablesUtils)).isSearch(false);
-        }
-        return resultUtils;
+        Page<SystemMailboxElastic> systemMailboxElasticPage = systemMailboxElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
+        return resultUtils.data(dataBuilder(systemMailboxElasticPage)).totalElements(systemMailboxElasticPage.getTotalElements());
     }
 
     @Override
-    public long countAll(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
-        JSONObject search = dataTablesUtils.getSearch();
-        long count;
-        if (SearchUtils.mapValueIsNotEmpty(search)) {
-            count = systemMailboxElasticRepository.count();
-        } else {
-            count = systemMailboxService.countAll();
-        }
-        return count;
-    }
-
-    @Override
-    public long countByCondition(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
-        return systemMailboxService.countByCondition(dataTablesUtils);
+    public long countAll() {
+        return systemMailboxElasticRepository.count();
     }
 
     /**
@@ -98,25 +74,6 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
     }
 
     /**
-     * 数据原生实现方式
-     *
-     * @param dataTablesUtils datatables工具类
-     * @return 原生数据
-     */
-    private List<SystemMailboxBean> freestanding(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
-        List<SystemMailboxBean> systemMailboxes = new ArrayList<>();
-        Result<Record> records = systemMailboxService.findAllByPage(dataTablesUtils);
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            systemMailboxes = records.into(SystemMailboxBean.class);
-            systemMailboxes.forEach(s -> {
-                Date date = DateTimeUtils.timestampToDate(s.getSendTime());
-                s.setSendTimeNew(DateTimeUtils.formatDate(date));
-            });
-        }
-        return systemMailboxes;
-    }
-
-    /**
      * 系统邮件全局搜索条件
      *
      * @param search 搜索参数
@@ -125,10 +82,12 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
     @Override
     public QueryBuilder searchCondition(JSONObject search) {
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
-        String acceptMail = StringUtils.trimWhitespace(search.getString("acceptMail"));
-        if (StringUtils.hasLength(acceptMail)) {
-            WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptMail", SQLQueryUtils.elasticLikeAllParam(acceptMail));
-            boolqueryBuilder.must(wildcardQueryBuilder);
+        if (!ObjectUtils.isEmpty(search)) {
+            String acceptMail = StringUtils.trimWhitespace(search.getString("acceptMail"));
+            if (StringUtils.hasLength(acceptMail)) {
+                WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptMail", SQLQueryUtils.elasticLikeAllParam(acceptMail));
+                boolqueryBuilder.must(wildcardQueryBuilder);
+            }
         }
         return boolqueryBuilder;
     }
@@ -147,37 +106,37 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_mailbox_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 
             if ("send_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.ASC).unmappedType("long"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.DESC).unmappedType("long"));
                 }
             }
 
             if ("accept_mail".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.ASC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.DESC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 
             if ("send_condition".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 

@@ -23,12 +23,5 @@ public interface SystemSmsGlue {
      *
      * @return 总数
      */
-    long countAll(DataTablesUtils<SystemSmsBean> dataTablesUtils);
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    long countByCondition(DataTablesUtils<SystemSmsBean> dataTablesUtils);
+    long countAll();
 }

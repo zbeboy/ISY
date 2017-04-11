@@ -10,8 +10,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         function getAjaxUrl() {
             return {
                 roles: '/web/system/role/data',
-                del: '/web/system/role/delete',
-                add: '/web/system/role/add',
                 edit: '/web/system/role/edit'
             };
         }
@@ -73,13 +71,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                                     "type": "primary",
                                     "id": c.roleId,
                                     "role": c.roleName
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.roleId,
-                                    "role": c.roleName
                                 }
                             ]
                         };
@@ -119,15 +110,10 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'));
                 });
-
-                tableElement.delegate('.del', "click", function () {
-                    role_del($(this).attr('data-id'), $(this).attr('data-role'));
-                });
             }
         });
 
-        var global_button = /*'<button type="button" id="school_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +*/
-            '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        var global_button = '<button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
         /*
@@ -190,74 +176,9 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         });
 
         /*
-         添加页面
-         */
-        $('#school_add').click(function () {
-            $.address.value(getAjaxUrl().add);
-        });
-
-        /*
          编辑页面
          */
         function edit(roleId) {
             $.address.value(getAjaxUrl().edit + '?id=' + roleId);
-        }
-
-        /*
-         删除
-         */
-        function role_del(roleId, roleName) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定删除角色 '" + roleName + "' 吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            del(roleId);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-        }
-
-        function del(roleId) {
-            sendDelAjax(roleId, '删除', 1);
-        }
-
-        /**
-         * 删除ajax
-         * @param roleId
-         * @param message
-         */
-        function sendDelAjax(roleId, message) {
-            Messenger().run({
-                successMessage: message + '角色成功',
-                errorMessage: message + '角色失败',
-                progressMessage: '正在' + message + '角色....'
-            }, {
-                url: web_path + getAjaxUrl().del,
-                type: 'post',
-                data: {roleId: roleId,},
-                success: function (data) {
-                    if (data.state) {
-                        myTable.ajax.reload();
-                    }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
         }
     });

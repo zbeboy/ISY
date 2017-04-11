@@ -56,8 +56,8 @@ public class SystemMailboxController {
         DataTablesUtils<SystemMailboxBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<SystemMailboxBean>> resultUtils = systemMailboxGlue.findAllByPage(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setiTotalRecords(systemMailboxGlue.countAll(dataTablesUtils));
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.isSearch() ? resultUtils.getTotalElements() : systemMailboxGlue.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalRecords(systemMailboxGlue.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 }

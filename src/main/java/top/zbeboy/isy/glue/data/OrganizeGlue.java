@@ -1,7 +1,5 @@
 package top.zbeboy.isy.glue.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -25,12 +23,5 @@ public interface OrganizeGlue {
      *
      * @return 总数
      */
-    long countAll(DataTablesUtils<OrganizeBean> dataTablesUtils);
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    long countByCondition(DataTablesUtils<OrganizeBean> dataTablesUtils);
+    long countAll();
 }

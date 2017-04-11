@@ -56,8 +56,8 @@ public class SystemSmsController {
         DataTablesUtils<SystemSmsBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<SystemSmsBean>> resultUtils = systemSmsGlue.findAllByPage(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setiTotalRecords(systemSmsGlue.countAll(dataTablesUtils));
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.isSearch() ? resultUtils.getTotalElements() : systemSmsGlue.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalRecords(systemSmsGlue.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 }

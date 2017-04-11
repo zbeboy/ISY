@@ -57,8 +57,8 @@ public class SystemLogController {
         DataTablesUtils<SystemLogBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<SystemLogBean>> resultUtils = systemLogGlue.findAllByPage(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setiTotalRecords(systemLogGlue.countAll(dataTablesUtils));
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.isSearch() ? resultUtils.getTotalElements() : systemLogGlue.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalRecords(systemLogGlue.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 }
