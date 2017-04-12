@@ -13,16 +13,17 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.Application;
-import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
-import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
-import top.zbeboy.isy.elastic.pojo.SystemMailboxElastic;
-import top.zbeboy.isy.elastic.pojo.SystemSmsElastic;
-import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
-import top.zbeboy.isy.elastic.repository.SystemLogElasticRepository;
-import top.zbeboy.isy.elastic.repository.SystemMailboxElasticRepository;
-import top.zbeboy.isy.elastic.repository.SystemSmsElasticRepository;
+import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.Role;
+import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.elastic.pojo.*;
+import top.zbeboy.isy.elastic.repository.*;
+import top.zbeboy.isy.service.platform.RoleService;
+import top.zbeboy.isy.service.system.AuthoritiesService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -49,6 +50,15 @@ public class ElasticSyncData {
     @Autowired
     SystemSmsElasticRepository systemSmsElasticRepository;
 
+    @Autowired
+    UsersElasticRepository usersElasticRepository;
+
+    @Autowired
+    AuthoritiesService authoritiesService;
+
+    @Autowired
+    RoleService roleService;
+
     @Test
     public void syncOrganizeData() {
         organizeElasticRepository.deleteAll();
@@ -64,9 +74,9 @@ public class ElasticSyncData {
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                 .fetch();
 
-        if(record.isNotEmpty()){
+        if (record.isNotEmpty()) {
             List<OrganizeElastic> organizeElastics = record.into(OrganizeElastic.class);
-            organizeElastics.forEach(i->organizeElasticRepository.save(i));
+            organizeElastics.forEach(i -> organizeElasticRepository.save(i));
         }
     }
 
@@ -77,9 +87,9 @@ public class ElasticSyncData {
                 .from(SYSTEM_LOG)
                 .fetch();
 
-        if(record.isNotEmpty()){
+        if (record.isNotEmpty()) {
             List<SystemLogElastic> systemLogElastics = record.into(SystemLogElastic.class);
-            systemLogElastics.forEach(i->systemLogElasticRepository.save(i));
+            systemLogElastics.forEach(i -> systemLogElasticRepository.save(i));
         }
     }
 
@@ -90,9 +100,9 @@ public class ElasticSyncData {
                 .from(SYSTEM_MAILBOX)
                 .fetch();
 
-        if(record.isNotEmpty()){
+        if (record.isNotEmpty()) {
             List<SystemMailboxElastic> systemMailboxElastics = record.into(SystemMailboxElastic.class);
-            systemMailboxElastics.forEach(i->systemMailboxElasticRepository.save(i));
+            systemMailboxElastics.forEach(i -> systemMailboxElasticRepository.save(i));
         }
     }
 
@@ -103,9 +113,56 @@ public class ElasticSyncData {
                 .from(SYSTEM_SMS)
                 .fetch();
 
-        if(record.isNotEmpty()){
+        if (record.isNotEmpty()) {
             List<SystemSmsElastic> systemSmsElastics = record.into(SystemSmsElastic.class);
-            systemSmsElastics.forEach(i->systemSmsElasticRepository.save(i));
+            systemSmsElastics.forEach(i -> systemSmsElasticRepository.save(i));
         }
+    }
+
+    @Test
+    public void syncUsersData() {
+        usersElasticRepository.deleteAll();
+        Result<Record> record = create.select()
+                .from(USERS)
+                .join(USERS_TYPE)
+                .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                .fetch();
+        List<UsersElastic> usersElastics = new ArrayList<>();
+        for (Record r : record) {
+            UsersElastic usersElastic = r.into(UsersElastic.class);
+            List<AuthoritiesRecord> authoritiesRecords = authoritiesService.findByUsername(r.get(USERS.USERNAME));
+            /**
+             * -1 : 无权限
+             * 0 :  有权限
+             * 1 : 系统
+             * 2 : 管理员
+             */
+            if (!ObjectUtils.isEmpty(authoritiesRecords) && authoritiesRecords.size() > 0) {
+                boolean hasUse = false;
+                StringBuilder stringBuilder = new StringBuilder();
+                for (AuthoritiesRecord a : authoritiesRecords) {
+                    if (!hasUse && a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
+                        usersElastic.setAuthorities(1);
+                        hasUse = true;
+                    }
+                    if (!hasUse && a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
+                        usersElastic.setAuthorities(2);
+                        hasUse = true;
+                    }
+                    Role tempRole = roleService.findByRoleEnName(a.getAuthority());
+                    stringBuilder.append(tempRole.getRoleName()).append(" ");
+                }
+                if (!hasUse) {
+                    usersElastic.setAuthorities(0);
+                }
+                usersElastic.setRoleName(stringBuilder.toString().trim());
+            } else {
+                usersElastic.setAuthorities(-1);
+            }
+            usersElastics.add(usersElastic);
+        }
+        usersElastics.forEach(users ->
+                usersElasticRepository.save(users)
+        );
     }
 }

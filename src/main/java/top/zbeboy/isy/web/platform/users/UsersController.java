@@ -25,6 +25,8 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
 import top.zbeboy.isy.elastic.pojo.UsersElastic;
 import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
+import top.zbeboy.isy.glue.platform.UsersGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
@@ -145,6 +147,9 @@ public class UsersController {
 
     @Resource
     private UsersElasticRepository usersElasticRepository;
+
+    @Resource
+    private UsersGlue usersGlue;
 
     /**
      * 检验注册表单
@@ -650,8 +655,8 @@ public class UsersController {
         if (StringUtils.hasLength(roles)) {
             List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
             // 禁止非系统用户 提升用户权限到系统或管理员级别权限
-            if(!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                    && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))){
+            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                    && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
                 return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限");
             }
             authoritiesService.deleteByUsername(username);
@@ -718,15 +723,10 @@ public class UsersController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<UsersBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = usersService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<UsersBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(UsersBean.class);
-            usersBeen.forEach(user -> user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername())));
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(usersService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<UsersBean>> resultUtils = usersGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -750,14 +750,10 @@ public class UsersController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<UsersBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = usersService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<UsersBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(UsersBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(usersService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<UsersBean>> resultUtils = usersGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

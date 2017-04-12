@@ -116,7 +116,7 @@ public class OrganizeGlueImpl extends ElasticPlugin<OrganizeBean> implements Org
         int collegeId = roleService.getRoleCollegeId(record);
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
-        boolqueryBuilder.must(QueryBuilders.matchQuery("collegeId", collegeId));
+        boolqueryBuilder.must(QueryBuilders.termQuery("collegeId", collegeId));
         return boolqueryBuilder;
     }
 

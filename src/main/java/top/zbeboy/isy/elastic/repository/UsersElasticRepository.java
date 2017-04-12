@@ -7,4 +7,11 @@ import top.zbeboy.isy.elastic.pojo.UsersElastic;
  * Created by lenovo on 2017-04-10.
  */
 public interface UsersElasticRepository extends ElasticsearchRepository<UsersElastic, String> {
+    /**
+     * 通过院id统计
+     *
+     * @param authorities 权限区分字段(详见:UsersElastic)
+     * @return 数量
+     */
+    long countByAuthorities(int authorities);
 }
