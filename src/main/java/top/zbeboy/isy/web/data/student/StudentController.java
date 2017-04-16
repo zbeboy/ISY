@@ -1,7 +1,6 @@
 package top.zbeboy.isy.web.data.student;
 
 import org.joda.time.DateTime;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,8 @@ import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.glue.data.StudentGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -73,6 +74,9 @@ public class StudentController {
 
     @Autowired
     private RequestUtils requestUtils;
+
+    @Resource
+    private StudentGlue studentGlue;
 
     /**
      * 判断学号是否已被注册
@@ -266,17 +270,10 @@ public class StudentController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = studentService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<StudentBean> studentBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            studentBeen = records.into(StudentBean.class);
-            studentBeen.forEach(user -> {
-                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
-            });
-        }
-        dataTablesUtils.setData(studentBeen);
-        dataTablesUtils.setiTotalRecords(studentService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -306,14 +303,10 @@ public class StudentController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = studentService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<StudentBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(StudentBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(studentService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

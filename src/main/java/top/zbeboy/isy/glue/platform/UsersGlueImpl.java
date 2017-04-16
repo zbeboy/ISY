@@ -68,7 +68,16 @@ public class UsersGlueImpl implements UsersGlue {
 
     @Override
     public long countAllExistsAuthorities() {
-        return usersElasticRepository.countByAuthorities(0);
+        long count;
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            List<Integer> list = new ArrayList<>();
+            list.add(1);
+            list.add(-1);
+            count = usersElasticRepository.countNotInAuthorities(list);
+        } else {
+            count = usersElasticRepository.countByAuthorities(0);
+        }
+        return count;
     }
 
     @Override

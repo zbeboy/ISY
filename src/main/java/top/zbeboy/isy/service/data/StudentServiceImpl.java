@@ -173,19 +173,19 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void save(StudentElastic studentElastic) {
         StudentRecord studentRecord = create.insertInto(STUDENT)
-                .set(STUDENT.STUDENT_NUMBER,studentElastic.getStudentNumber())
-                .set(STUDENT.BIRTHDAY,studentElastic.getBirthday())
-                .set(STUDENT.SEX,studentElastic.getSex())
-                .set(STUDENT.ID_CARD,studentElastic.getIdCard())
-                .set(STUDENT.FAMILY_RESIDENCE,studentElastic.getFamilyResidence())
-                .set(STUDENT.POLITICAL_LANDSCAPE_ID,studentElastic.getPoliticalLandscapeId())
-                .set(STUDENT.NATION_ID,studentElastic.getNationId())
-                .set(STUDENT.DORMITORY_NUMBER,studentElastic.getDormitoryNumber())
-                .set(STUDENT.PARENT_NAME,studentElastic.getParentName())
-                .set(STUDENT.PARENT_CONTACT_PHONE,studentElastic.getParentContactPhone())
-                .set(STUDENT.PLACE_ORIGIN,studentElastic.getPlaceOrigin())
-                .set(STUDENT.ORGANIZE_ID,studentElastic.getOrganizeId())
-                .set(STUDENT.USERNAME,studentElastic.getUsername())
+                .set(STUDENT.STUDENT_NUMBER, studentElastic.getStudentNumber())
+                .set(STUDENT.BIRTHDAY, studentElastic.getBirthday())
+                .set(STUDENT.SEX, studentElastic.getSex())
+                .set(STUDENT.ID_CARD, studentElastic.getIdCard())
+                .set(STUDENT.FAMILY_RESIDENCE, studentElastic.getFamilyResidence())
+                .set(STUDENT.POLITICAL_LANDSCAPE_ID, studentElastic.getPoliticalLandscapeId())
+                .set(STUDENT.NATION_ID, studentElastic.getNationId())
+                .set(STUDENT.DORMITORY_NUMBER, studentElastic.getDormitoryNumber())
+                .set(STUDENT.PARENT_NAME, studentElastic.getParentName())
+                .set(STUDENT.PARENT_CONTACT_PHONE, studentElastic.getParentContactPhone())
+                .set(STUDENT.PLACE_ORIGIN, studentElastic.getPlaceOrigin())
+                .set(STUDENT.ORGANIZE_ID, studentElastic.getOrganizeId())
+                .set(STUDENT.USERNAME, studentElastic.getUsername())
                 .returning(STUDENT.STUDENT_ID)
                 .fetchOne();
         studentElastic.setStudentId(studentRecord.getStudentId());
@@ -215,9 +215,9 @@ public class StudentServiceImpl implements StudentService {
             studentElastic.setNationId(nation.getNationId());
             studentElastic.setNationName(nation.getNationName());
         }
-        if(!Objects.equals(student.getOrganizeId(), studentElastic.getOrganizeId())){
+        if (!Objects.equals(student.getOrganizeId(), studentElastic.getOrganizeId())) {
             Optional<Record> record = organizeService.findByIdRelation(student.getOrganizeId());
-            if(record.isPresent()){
+            if (record.isPresent()) {
                 OrganizeBean organizeBean = record.get().into(OrganizeBean.class);
                 studentElastic.setSchoolId(organizeBean.getSchoolId());
                 studentElastic.setSchoolName(organizeBean.getSchoolName());

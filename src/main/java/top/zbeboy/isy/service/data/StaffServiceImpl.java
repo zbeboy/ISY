@@ -24,7 +24,6 @@ import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
-import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 

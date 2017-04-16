@@ -692,13 +692,13 @@ public class UsersController {
             usersElasticRepository.save(usersElastic);
             Users users = usersService.findByUsername(username);
             UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-            if(usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)){
+            if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
                 StudentElastic studentElastic = studentElasticRepository.findByUsername(username);
                 studentElastic.setAuthorities(usersElastic.getAuthorities());
                 studentElastic.setRoleName(usersElastic.getRoleName());
                 studentElasticRepository.deleteByUsername(username);
                 studentElasticRepository.save(studentElastic);
-            } else if(usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)){
+            } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
                 StaffElastic staffElastic = staffElasticRepository.findByUsername(username);
                 staffElastic.setAuthorities(usersElastic.getAuthorities());
                 staffElastic.setRoleName(usersElastic.getRoleName());

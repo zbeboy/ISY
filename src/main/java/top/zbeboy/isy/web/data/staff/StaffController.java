@@ -1,7 +1,6 @@
 package top.zbeboy.isy.web.data.staff;
 
 import org.joda.time.DateTime;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,8 @@ import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.glue.data.StaffGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -73,6 +74,9 @@ public class StaffController {
 
     @Autowired
     private RequestUtils requestUtils;
+
+    @Resource
+    private StaffGlue staffGlue;
 
     /**
      * 判断工号是否已被注册
@@ -260,17 +264,10 @@ public class StaffController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StaffBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = staffService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<StaffBean> staffBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            staffBeen = records.into(StaffBean.class);
-            staffBeen.forEach(user -> {
-                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
-            });
-        }
-        dataTablesUtils.setData(staffBeen);
-        dataTablesUtils.setiTotalRecords(staffService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StaffBean>> resultUtils = staffGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(staffGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -297,14 +294,10 @@ public class StaffController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StaffBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = staffService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<StaffBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(StaffBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(staffService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StaffBean>> resultUtils = staffGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(staffGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
