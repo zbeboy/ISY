@@ -15,6 +15,8 @@ import top.zbeboy.isy.domain.tables.daos.DepartmentDao;
 import top.zbeboy.isy.domain.tables.pojos.Department;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.DepartmentRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -48,6 +50,12 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private OrganizeService organizeService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
+
     @Autowired
     public DepartmentServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
@@ -69,6 +77,13 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     @Override
     public void update(Department department) {
         departmentDao.update(department);
+        List<OrganizeElastic> records = organizeElasticRepository.findByDepartmentId(department.getDepartmentId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setDepartmentId(department.getDepartmentId());
+            organizeElastic.setDepartmentName(department.getDepartmentName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

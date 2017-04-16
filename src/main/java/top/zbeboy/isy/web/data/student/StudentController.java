@@ -19,7 +19,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
-import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -144,16 +144,19 @@ public class StudentController {
                                         return new AjaxUtils().fail().msg("密码不一致");
                                     } else {
                                         // 注册成功
-                                        UsersElastic saveUsers = new UsersElastic();
+                                        Users saveUsers = new Users();
+                                        StudentElastic saveStudent = new StudentElastic();
                                         Byte enabled = 1;
                                         Byte verifyMailbox = 0;
                                         saveUsers.setUsername(email);
                                         saveUsers.setEnabled(enabled);
+                                        saveStudent.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
+                                        saveStudent.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
                                         saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
-                                        saveUsers.setUsersTypeName(Workbook.STUDENT_USERS_TYPE);
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
+                                        saveStudent.setJoinDate(saveUsers.getJoinDate());
 
                                         DateTime dateTime = DateTime.now();
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);
@@ -161,13 +164,24 @@ public class StudentController {
                                         saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
                                         saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                        saveStudent.setLangKey(saveUsers.getLangKey());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        saveStudent.setAvatar(saveUsers.getAvatar());
                                         saveUsers.setVerifyMailbox(verifyMailbox);
                                         saveUsers.setRealName(studentVo.getRealName());
-                                        saveUsers.setAuthorities(-1);
+                                        saveStudent.setRealName(saveUsers.getRealName());
                                         usersService.save(saveUsers);
 
-                                        Student saveStudent = new Student();
+                                        saveStudent.setSchoolId(studentVo.getSchool());
+                                        saveStudent.setSchoolName(studentVo.getSchoolName());
+                                        saveStudent.setCollegeId(studentVo.getCollege());
+                                        saveStudent.setCollegeName(studentVo.getCollegeName());
+                                        saveStudent.setDepartmentId(studentVo.getDepartment());
+                                        saveStudent.setDepartmentName(studentVo.getDepartmentName());
+                                        saveStudent.setScienceId(studentVo.getScience());
+                                        saveStudent.setScienceName(studentVo.getScienceName());
+                                        saveStudent.setGrade(studentVo.getGrade());
+                                        saveStudent.setOrganizeName(studentVo.getOrganizeName());
                                         saveStudent.setOrganizeId(studentVo.getOrganize());
                                         saveStudent.setStudentNumber(studentVo.getStudentNumber());
                                         saveStudent.setUsername(email);
@@ -180,12 +194,7 @@ public class StudentController {
 
                                         //发送验证邮件
                                         if (isyProperties.getMail().isOpen()) {
-                                            Users users = new Users();
-                                            users.setUsername(saveUsers.getUsername());
-                                            users.setLangKey(saveUsers.getLangKey());
-                                            users.setMailboxVerifyCode(saveUsers.getMailboxVerifyCode());
-                                            users.setMailboxVerifyValid(saveUsers.getMailboxVerifyValid());
-                                            mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
+                                            mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
                                             return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
                                         } else {
                                             return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");

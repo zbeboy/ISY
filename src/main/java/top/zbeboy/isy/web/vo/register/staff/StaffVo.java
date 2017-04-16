@@ -13,14 +13,17 @@ public class StaffVo {
     @NotNull
     @Min(1)
     private Integer school;
+    private String schoolName;
 
     @NotNull
     @Min(1)
     private Integer college;
+    private String collegeName;
 
     @NotNull
     @Min(1)
     private Integer department;
+    private String departmentName;
 
     @NotNull
     @Pattern(regexp = "^[\\d]{8,}$")
@@ -126,5 +129,29 @@ public class StaffVo {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 }

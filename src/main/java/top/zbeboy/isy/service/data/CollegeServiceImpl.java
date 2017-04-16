@@ -13,6 +13,8 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.CollegeDao;
 import top.zbeboy.isy.domain.tables.pojos.College;
 import top.zbeboy.isy.domain.tables.records.CollegeRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.college.CollegeBean;
@@ -38,6 +40,12 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
 
     @Resource
     private CollegeDao collegeDao;
+
+    @Resource
+    private OrganizeService organizeService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public CollegeServiceImpl(DSLContext dslContext) {
@@ -116,6 +124,13 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     @Override
     public void update(College college) {
         collegeDao.update(college);
+        List<OrganizeElastic> records = organizeElasticRepository.findByCollegeId(college.getSchoolId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setCollegeId(college.getCollegeId());
+            organizeElastic.setCollegeName(college.getCollegeName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

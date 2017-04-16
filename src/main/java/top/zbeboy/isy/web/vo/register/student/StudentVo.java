@@ -13,18 +13,22 @@ public class StudentVo {
     @NotNull
     @Min(1)
     private Integer school;
+    private String schoolName;
 
     @NotNull
     @Min(1)
     private Integer college;
+    private String collegeName;
 
     @NotNull
     @Min(1)
     private Integer department;
+    private String departmentName;
 
     @NotNull
     @Min(1)
     private Integer science;
+    private String scienceName;
 
     @NotNull
     private String grade;
@@ -32,6 +36,7 @@ public class StudentVo {
     @NotNull
     @Min(1)
     private Integer organize;
+    private String organizeName;
 
     @NotNull
     @Pattern(regexp = "^[\\d]{13,}$")
@@ -161,5 +166,45 @@ public class StudentVo {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getScienceName() {
+        return scienceName;
+    }
+
+    public void setScienceName(String scienceName) {
+        this.scienceName = scienceName;
+    }
+
+    public String getOrganizeName() {
+        return organizeName;
+    }
+
+    public void setOrganizeName(String organizeName) {
+        this.organizeName = organizeName;
     }
 }

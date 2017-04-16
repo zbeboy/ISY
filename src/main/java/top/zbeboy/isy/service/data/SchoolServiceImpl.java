@@ -13,6 +13,8 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.SchoolDao;
 import top.zbeboy.isy.domain.tables.pojos.School;
 import top.zbeboy.isy.domain.tables.records.SchoolRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -36,6 +38,12 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
     @Resource
     private SchoolDao schoolDao;
 
+    @Resource
+    private OrganizeService organizeService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
+
     @Autowired
     public SchoolServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
@@ -57,6 +65,13 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
     @Override
     public void update(School school) {
         schoolDao.update(school);
+        List<OrganizeElastic> records = organizeElasticRepository.findBySchoolId(school.getSchoolId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setSchoolId(school.getSchoolId());
+            organizeElastic.setSchoolName(school.getSchoolName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

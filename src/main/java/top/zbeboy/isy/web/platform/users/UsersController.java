@@ -23,7 +23,11 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
 import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
 import top.zbeboy.isy.glue.platform.UsersGlue;
 import top.zbeboy.isy.glue.util.ResultUtils;
@@ -147,6 +151,12 @@ public class UsersController {
 
     @Resource
     private UsersElasticRepository usersElasticRepository;
+
+    @Resource
+    private StudentElasticRepository studentElasticRepository;
+
+    @Resource
+    private StaffElasticRepository staffElasticRepository;
 
     @Resource
     private UsersGlue usersGlue;
@@ -681,6 +691,20 @@ public class UsersController {
             usersElasticRepository.delete(username);
             usersElasticRepository.save(usersElastic);
             Users users = usersService.findByUsername(username);
+            UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+            if(usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)){
+                StudentElastic studentElastic = studentElasticRepository.findByUsername(username);
+                studentElastic.setAuthorities(usersElastic.getAuthorities());
+                studentElastic.setRoleName(usersElastic.getRoleName());
+                studentElasticRepository.deleteByUsername(username);
+                studentElasticRepository.save(studentElastic);
+            } else if(usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)){
+                StaffElastic staffElastic = staffElasticRepository.findByUsername(username);
+                staffElastic.setAuthorities(usersElastic.getAuthorities());
+                staffElastic.setRoleName(usersElastic.getRoleName());
+                staffElasticRepository.deleteByUsername(username);
+                staffElasticRepository.save(staffElastic);
+            }
             Users curUsers = usersService.getUserFromSession();
             String notify = "您的权限已变更为" + usersElastic.getRoleName() + " ，请登录查看。";
             commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);

@@ -128,7 +128,6 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     public void update(Organize organize) {
         organizeDao.update(organize);
         OrganizeElastic organizeElastic = organizeElasticRepository.findOne(organize.getOrganizeId() + "");
-        organizeElastic.setOrganizeId(organize.getOrganizeId());
         organizeElastic.setOrganizeIsDel(organize.getOrganizeIsDel());
         organizeElastic.setOrganizeName(organize.getOrganizeName());
         organizeElastic.setScienceId(organize.getScienceId());

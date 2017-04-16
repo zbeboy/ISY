@@ -8,7 +8,6 @@ import org.jooq.Select;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
-import top.zbeboy.isy.elastic.pojo.UsersElastic;
 import top.zbeboy.isy.web.bean.platform.users.UsersBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -80,9 +79,9 @@ public interface UsersService {
     /**
      * 保存用户
      *
-     * @param usersElastic 用户
+     * @param users 用户
      */
-    void save(UsersElastic usersElastic);
+    void save(Users users);
 
     /**
      * 更新用户

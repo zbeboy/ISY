@@ -19,7 +19,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
-import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -144,16 +144,19 @@ public class StaffController {
                                         return new AjaxUtils().fail().msg("密码不一致");
                                     } else {
                                         // 注册成功
-                                        UsersElastic saveUsers = new UsersElastic();
+                                        Users saveUsers = new Users();
+                                        StaffElastic saveStaff = new StaffElastic();
                                         Byte enabled = 1;
                                         Byte verifyMailbox = 0;
                                         saveUsers.setUsername(email);
                                         saveUsers.setEnabled(enabled);
+                                        saveStaff.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
+                                        saveStaff.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
                                         saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
-                                        saveUsers.setUsersTypeName(Workbook.STAFF_USERS_TYPE);
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
+                                        saveStaff.setJoinDate(saveUsers.getJoinDate());
 
                                         DateTime dateTime = DateTime.now();
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);
@@ -161,13 +164,20 @@ public class StaffController {
                                         saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
                                         saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                        saveStaff.setLangKey(saveUsers.getLangKey());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        saveStaff.setAvatar(saveUsers.getAvatar());
                                         saveUsers.setVerifyMailbox(verifyMailbox);
                                         saveUsers.setRealName(staffVo.getRealName());
-                                        saveUsers.setAuthorities(-1);
+                                        saveStaff.setRealName(saveUsers.getRealName());
                                         usersService.save(saveUsers);
 
-                                        Staff saveStaff = new Staff();
+                                        saveStaff.setSchoolId(staffVo.getSchool());
+                                        saveStaff.setSchoolName(staffVo.getSchoolName());
+                                        saveStaff.setCollegeId(staffVo.getCollege());
+                                        saveStaff.setCollegeName(staffVo.getCollegeName());
+                                        saveStaff.setDepartmentId(staffVo.getDepartment());
+                                        saveStaff.setDepartmentName(staffVo.getDepartmentName());
                                         saveStaff.setDepartmentId(staffVo.getDepartment());
                                         saveStaff.setStaffNumber(staffVo.getStaffNumber());
                                         saveStaff.setUsername(email);
