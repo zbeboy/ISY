@@ -151,6 +151,7 @@ public class StaffServiceImpl implements StaffService {
                 .set(STAFF.USERNAME, staffElastic.getUsername())
                 .returning(STAFF.STAFF_ID)
                 .fetchOne();
+        staffElastic.setAuthorities(-1);
         staffElastic.setStaffId(staffRecord.getStaffId());
         staffElasticRepository.save(staffElastic);
     }
@@ -166,16 +167,30 @@ public class StaffServiceImpl implements StaffService {
         staffElastic.setFamilyResidence(staff.getFamilyResidence());
         staffElastic.setPost(staff.getPost());
         if (!Objects.equals(staff.getPoliticalLandscapeId(), staffElastic.getPoliticalLandscapeId())) {
-            PoliticalLandscape politicalLandscape = politicalLandscapeService.findById(staff.getPoliticalLandscapeId());
-            staffElastic.setPoliticalLandscapeId(politicalLandscape.getPoliticalLandscapeId());
-            staffElastic.setPoliticalLandscapeName(politicalLandscape.getPoliticalLandscapeName());
+            if (!Objects.isNull(staff.getPoliticalLandscapeId()) && staff.getPoliticalLandscapeId() > 0) {
+                PoliticalLandscape politicalLandscape = politicalLandscapeService.findById(staff.getPoliticalLandscapeId());
+                if (!Objects.isNull(politicalLandscape)) {
+                    staffElastic.setPoliticalLandscapeId(politicalLandscape.getPoliticalLandscapeId());
+                    staffElastic.setPoliticalLandscapeName(politicalLandscape.getPoliticalLandscapeName());
+                }
+            } else {
+                staffElastic.setPoliticalLandscapeId(staff.getPoliticalLandscapeId());
+                staffElastic.setPoliticalLandscapeName("");
+            }
         }
         if (!Objects.equals(staff.getNationId(), staffElastic.getNationId())) {
-            Nation nation = nationService.findById(staff.getPoliticalLandscapeId());
-            staffElastic.setNationId(nation.getNationId());
-            staffElastic.setNationName(nation.getNationName());
+            if (!Objects.isNull(staff.getNationId()) && staff.getNationId() > 0) {
+                Nation nation = nationService.findById(staff.getNationId());
+                if (!Objects.isNull(nation)) {
+                    staffElastic.setNationId(nation.getNationId());
+                    staffElastic.setNationName(nation.getNationName());
+                }
+            } else {
+                staffElastic.setNationId(staff.getNationId());
+                staffElastic.setNationName("");
+            }
         }
-        if (!Objects.equals(staff.getDepartmentId(), staffElastic.getDepartmentId())) {
+        if (!Objects.isNull(staff.getDepartmentId()) && staff.getDepartmentId() > 0 && !Objects.equals(staff.getDepartmentId(), staffElastic.getDepartmentId())) {
             Optional<Record> record = departmentService.findByIdRelation(staff.getDepartmentId());
             if (record.isPresent()) {
                 DepartmentBean departmentBean = record.get().into(DepartmentBean.class);

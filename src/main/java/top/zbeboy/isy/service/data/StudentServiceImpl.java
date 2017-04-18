@@ -188,6 +188,7 @@ public class StudentServiceImpl implements StudentService {
                 .set(STUDENT.USERNAME, studentElastic.getUsername())
                 .returning(STUDENT.STUDENT_ID)
                 .fetchOne();
+        studentElastic.setAuthorities(-1);
         studentElastic.setStudentId(studentRecord.getStudentId());
         studentElasticRepository.save(studentElastic);
     }
@@ -206,16 +207,31 @@ public class StudentServiceImpl implements StudentService {
         studentElastic.setParentContactPhone(student.getParentContactPhone());
         studentElastic.setPlaceOrigin(student.getPlaceOrigin());
         if (!Objects.equals(student.getPoliticalLandscapeId(), studentElastic.getPoliticalLandscapeId())) {
-            PoliticalLandscape politicalLandscape = politicalLandscapeService.findById(student.getPoliticalLandscapeId());
-            studentElastic.setPoliticalLandscapeId(politicalLandscape.getPoliticalLandscapeId());
-            studentElastic.setPoliticalLandscapeName(politicalLandscape.getPoliticalLandscapeName());
+            if (!Objects.isNull(student.getPoliticalLandscapeId()) && student.getPoliticalLandscapeId() > 0) {
+                PoliticalLandscape politicalLandscape = politicalLandscapeService.findById(student.getPoliticalLandscapeId());
+                if (!Objects.isNull(politicalLandscape)) {
+                    studentElastic.setPoliticalLandscapeId(politicalLandscape.getPoliticalLandscapeId());
+                    studentElastic.setPoliticalLandscapeName(politicalLandscape.getPoliticalLandscapeName());
+                }
+            } else {
+                studentElastic.setPoliticalLandscapeId(student.getPoliticalLandscapeId());
+                studentElastic.setPoliticalLandscapeName("");
+            }
         }
         if (!Objects.equals(student.getNationId(), studentElastic.getNationId())) {
-            Nation nation = nationService.findById(student.getPoliticalLandscapeId());
-            studentElastic.setNationId(nation.getNationId());
-            studentElastic.setNationName(nation.getNationName());
+            if (!Objects.isNull(student.getNationId()) && student.getNationId() > 0) {
+                Nation nation = nationService.findById(student.getNationId());
+                if (!Objects.isNull(nation)) {
+                    studentElastic.setNationId(nation.getNationId());
+                    studentElastic.setNationName(nation.getNationName());
+                }
+            } else {
+                studentElastic.setNationId(student.getNationId());
+                studentElastic.setNationName("");
+            }
+
         }
-        if (!Objects.equals(student.getOrganizeId(), studentElastic.getOrganizeId())) {
+        if (!Objects.isNull(student.getOrganizeId()) && student.getOrganizeId() > 0 && !Objects.equals(student.getOrganizeId(), studentElastic.getOrganizeId())) {
             Optional<Record> record = organizeService.findByIdRelation(student.getOrganizeId());
             if (record.isPresent()) {
                 OrganizeBean organizeBean = record.get().into(OrganizeBean.class);

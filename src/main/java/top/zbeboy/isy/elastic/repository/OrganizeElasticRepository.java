@@ -47,5 +47,5 @@ public interface OrganizeElasticRepository extends ElasticsearchRepository<Organ
      * @param scienceId 专业id
      * @return 班级
      */
-    List<OrganizeElastic> findByScienceIdRelation(int scienceId);
+    List<OrganizeElastic> findByScienceId(int scienceId);
 }

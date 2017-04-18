@@ -87,7 +87,7 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     @Override
     public void update(Science science) {
         scienceDao.update(science);
-        List<OrganizeElastic> records = organizeElasticRepository.findByCollegeId(science.getScienceId());
+        List<OrganizeElastic> records = organizeElasticRepository.findByScienceId(science.getScienceId());
         records.forEach(organizeElastic -> {
             organizeElastic.setScienceId(science.getScienceId());
             organizeElastic.setScienceName(science.getScienceName());

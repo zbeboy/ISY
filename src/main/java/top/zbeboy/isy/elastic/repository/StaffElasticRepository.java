@@ -39,5 +39,5 @@ public interface StaffElasticRepository extends ElasticsearchRepository<StaffEla
      * @param authorities 权限区分字段(详见:UsersElastic)
      * @return 数量
      */
-    long countNotInAuthorities(Collection<Integer> authorities);
+    long countByAuthoritiesNotIn(Collection<Integer> authorities);
 }

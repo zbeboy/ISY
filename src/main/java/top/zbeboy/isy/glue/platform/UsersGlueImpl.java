@@ -73,7 +73,7 @@ public class UsersGlueImpl implements UsersGlue {
             List<Integer> list = new ArrayList<>();
             list.add(1);
             list.add(-1);
-            count = usersElasticRepository.countNotInAuthorities(list);
+            count = usersElasticRepository.countByAuthoritiesNotIn(list);
         } else {
             count = usersElasticRepository.countByAuthorities(0);
         }

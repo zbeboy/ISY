@@ -73,7 +73,7 @@ public class StudentGlueImpl implements StudentGlue {
             List<Integer> list = new ArrayList<>();
             list.add(1);
             list.add(-1);
-            count = studentElasticRepository.countNotInAuthorities(list);
+            count = studentElasticRepository.countByAuthoritiesNotIn(list);
         } else {
             count = studentElasticRepository.countByAuthorities(0);
         }
@@ -141,6 +141,7 @@ public class StudentGlueImpl implements StudentGlue {
             studentBean.setAvatar(studentElastic.getAvatar());
             studentBean.setLangKey(studentElastic.getLangKey());
             studentBean.setJoinDate(studentElastic.getJoinDate());
+            studentBean.setRoleName(studentElastic.getRoleName());
             students.add(studentBean);
         }
         return students;

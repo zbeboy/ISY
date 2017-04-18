@@ -72,7 +72,7 @@ public class StaffGlueImpl implements StaffGlue {
             List<Integer> list = new ArrayList<>();
             list.add(1);
             list.add(-1);
-            count = staffElasticRepository.countNotInAuthorities(list);
+            count = staffElasticRepository.countByAuthoritiesNotIn(list);
         } else {
             count = staffElasticRepository.countByAuthorities(0);
         }
@@ -132,6 +132,7 @@ public class StaffGlueImpl implements StaffGlue {
             staffBean.setAvatar(staffElastic.getAvatar());
             staffBean.setLangKey(staffElastic.getLangKey());
             staffBean.setJoinDate(staffElastic.getJoinDate());
+            staffBean.setRoleName(staffElastic.getRoleName());
             staffs.add(staffBean);
         }
         return staffs;
