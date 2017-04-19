@@ -3,5 +3,6 @@
 /root/*
 application*.properties
 *.jks
+*.pfx
 /node_modules/
 /.idea/dataSources.xml
