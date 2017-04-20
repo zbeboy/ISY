@@ -12,6 +12,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.SystemMailboxDao;
 import top.zbeboy.isy.domain.tables.pojos.SystemMailbox;
+import top.zbeboy.isy.elastic.pojo.SystemMailboxElastic;
+import top.zbeboy.isy.elastic.repository.SystemMailboxElasticRepository;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.mailbox.SystemMailboxBean;
@@ -36,6 +38,9 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
     @Resource
     private SystemMailboxDao systemMailboxDao;
 
+    @Resource
+    private SystemMailboxElasticRepository systemMailboxElasticRepository;
+
     @Autowired
     public SystemMailboxServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
@@ -45,11 +50,13 @@ public class SystemMailboxServiceImpl extends DataTablesPlugin<SystemMailboxBean
     @Override
     public void save(SystemMailbox systemMailbox) {
         systemMailboxDao.insert(systemMailbox);
+        systemMailboxElasticRepository.save(new SystemMailboxElastic(systemMailbox.getSystemMailboxId(),systemMailbox.getSendTime(),systemMailbox.getAcceptMail(),systemMailbox.getSendCondition()));
     }
 
     @Override
     public void deleteBySendTime(Timestamp sendTime) {
         create.deleteFrom(SYSTEM_MAILBOX).where(SYSTEM_MAILBOX.SEND_TIME.le(sendTime)).execute();
+        systemMailboxElasticRepository.deleteBySendTimeLessThanEqual(sendTime.getTime());
     }
 
     @Override

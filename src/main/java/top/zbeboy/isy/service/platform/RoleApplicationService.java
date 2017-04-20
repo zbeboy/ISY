@@ -4,6 +4,8 @@ import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 
+import java.util.List;
+
 /**
  * Created by lenovo on 2016/9/29.
  */
@@ -15,6 +17,13 @@ public interface RoleApplicationService {
      * @param roleApplication 角色与应用
      */
     void save(RoleApplication roleApplication);
+
+    /**
+     * 保存
+     *
+     * @param roleApplication 角色与应用
+     */
+    void save(List<RoleApplication> roleApplication);
 
     /**
      * 通过应用id删除

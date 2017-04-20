@@ -1,7 +1,6 @@
 package top.zbeboy.isy.web.data.student;
 
 import org.joda.time.DateTime;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,9 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.glue.data.StudentGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -72,6 +74,9 @@ public class StudentController {
 
     @Autowired
     private RequestUtils requestUtils;
+
+    @Resource
+    private StudentGlue studentGlue;
 
     /**
      * 判断学号是否已被注册
@@ -144,14 +149,18 @@ public class StudentController {
                                     } else {
                                         // 注册成功
                                         Users saveUsers = new Users();
+                                        StudentElastic saveStudent = new StudentElastic();
                                         Byte enabled = 1;
                                         Byte verifyMailbox = 0;
                                         saveUsers.setUsername(email);
                                         saveUsers.setEnabled(enabled);
+                                        saveStudent.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
+                                        saveStudent.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
                                         saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
+                                        saveStudent.setJoinDate(saveUsers.getJoinDate());
 
                                         DateTime dateTime = DateTime.now();
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);
@@ -159,12 +168,24 @@ public class StudentController {
                                         saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
                                         saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                        saveStudent.setLangKey(saveUsers.getLangKey());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        saveStudent.setAvatar(saveUsers.getAvatar());
                                         saveUsers.setVerifyMailbox(verifyMailbox);
                                         saveUsers.setRealName(studentVo.getRealName());
+                                        saveStudent.setRealName(saveUsers.getRealName());
                                         usersService.save(saveUsers);
 
-                                        Student saveStudent = new Student();
+                                        saveStudent.setSchoolId(studentVo.getSchool());
+                                        saveStudent.setSchoolName(studentVo.getSchoolName());
+                                        saveStudent.setCollegeId(studentVo.getCollege());
+                                        saveStudent.setCollegeName(studentVo.getCollegeName());
+                                        saveStudent.setDepartmentId(studentVo.getDepartment());
+                                        saveStudent.setDepartmentName(studentVo.getDepartmentName());
+                                        saveStudent.setScienceId(studentVo.getScience());
+                                        saveStudent.setScienceName(studentVo.getScienceName());
+                                        saveStudent.setGrade(studentVo.getGrade());
+                                        saveStudent.setOrganizeName(studentVo.getOrganizeName());
                                         saveStudent.setOrganizeId(studentVo.getOrganize());
                                         saveStudent.setStudentNumber(studentVo.getStudentNumber());
                                         saveStudent.setUsername(email);
@@ -249,17 +270,10 @@ public class StudentController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = studentService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<StudentBean> studentBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            studentBeen = records.into(StudentBean.class);
-            studentBeen.forEach(user -> {
-                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
-            });
-        }
-        dataTablesUtils.setData(studentBeen);
-        dataTablesUtils.setiTotalRecords(studentService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -289,14 +303,10 @@ public class StudentController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = studentService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<StudentBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(StudentBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(studentService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

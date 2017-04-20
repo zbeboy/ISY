@@ -49,16 +49,7 @@ public class SystemRoleController {
     private RoleService roleService;
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
-    private AuthoritiesService authoritiesService;
-
-    @Resource
     private RoleApplicationService roleApplicationService;
-
-    @Resource
-    private CollegeRoleService collegeRoleService;
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
@@ -111,16 +102,6 @@ public class SystemRoleController {
     }
 
     /**
-     * 角色数据添加
-     *
-     * @return 添加页面
-     */
-    @RequestMapping(value = "/web/system/role/add", method = RequestMethod.GET)
-    public String roleAdd() {
-        return "web/system/role/system_role_add::#page-wrapper";
-    }
-
-    /**
      * 角色数据编辑
      *
      * @return 编辑页面
@@ -137,27 +118,6 @@ public class SystemRoleController {
         }
         modelMap.addAttribute("role", roleBean);
         return "web/system/role/system_role_edit::#page-wrapper";
-    }
-
-    /**
-     * 保存时检验角色是否重复
-     *
-     * @param name 角色名
-     * @return true 合格 false 不合格
-     */
-    @RequestMapping(value = "/web/system/role/save/valid", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils saveValid(@RequestParam("roleName") String name) {
-        String roleName = StringUtils.trimWhitespace(name);
-        if (StringUtils.hasLength(roleName)) {
-            Result<Record> records = roleService.findByRoleNameAndRoleType(name, 1);
-            if (records.isEmpty()) {
-                return new AjaxUtils().success().msg("角色名不重复");
-            } else {
-                return new AjaxUtils().fail().msg("角色名重复");
-            }
-        }
-        return new AjaxUtils().fail().msg("角色名不能为空");
     }
 
     /**
@@ -183,28 +143,6 @@ public class SystemRoleController {
     }
 
     /**
-     * 保存角色
-     *
-     * @param roleName       角色名
-     * @param applicationIds 应用ids
-     * @return true 保存成功 false 保存失败
-     */
-    @RequestMapping(value = "/web/system/role/save", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils roleSave(@RequestParam("roleName") String roleName, String applicationIds) {
-        Role role = new Role();
-        role.setRoleName(roleName);
-        role.setRoleEnName("ROLE_" + RandomUtils.generateRoleEnName().toUpperCase());
-        role.setRoleType(1);
-        int roleId = roleService.saveAndReturnId(role);
-        if (roleId > 0) {
-            saveOrUpdate(applicationIds, roleId);
-            return new AjaxUtils().success().msg("保存成功");
-        }
-        return new AjaxUtils().fail().msg("保存失败");
-    }
-
-    /**
      * 更新角色
      *
      * @param roleId         角色id
@@ -220,44 +158,10 @@ public class SystemRoleController {
         roleService.update(role);
         if (roleId > 0) {
             roleApplicationService.deleteByRoleId(roleId);
-            saveOrUpdate(applicationIds, roleId);
+            commonControllerMethodService.batchSaveRoleApplication(applicationIds,roleId);
             return new AjaxUtils().success().msg("更新成功");
         }
         return new AjaxUtils().fail().msg("更新失败");
-    }
-
-    /**
-     * 保存或更新与角色相关的表
-     *
-     * @param applicationIds 应用ids
-     * @param roleId         角色id
-     */
-    private void saveOrUpdate(String applicationIds, int roleId) {
-        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
-            ids.forEach(id -> {
-                RoleApplication roleApplication = new RoleApplication(roleId, id);
-                roleApplicationService.save(roleApplication);
-            });
-        }
-    }
-
-    /**
-     * 删除角色
-     *
-     * @param roleId 角色id
-     * @return true成功
-     */
-    @RequestMapping(value = "/web/system/role/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils roleDelete(@RequestParam("roleId") int roleId) {
-        Role role = roleService.findById(roleId);
-        if (!ObjectUtils.isEmpty(role)) {
-            roleApplicationService.deleteByRoleId(roleId);
-            authoritiesService.deleteByAuthorities(role.getRoleEnName());
-            roleService.deleteById(roleId);
-        }
-        return new AjaxUtils().success().msg("删除成功");
     }
 
     /**

@@ -4,8 +4,8 @@ package top.zbeboy.isy.service.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 /**
@@ -19,8 +19,6 @@ import java.util.Random;
 public class IPTimeStamp {
 
     private final Logger log = LoggerFactory.getLogger(IPTimeStamp.class);
-
-    private SimpleDateFormat sdf = null;
 
     private String ip = null;
 
@@ -57,13 +55,7 @@ public class IPTimeStamp {
         return s.toString();
     }
 
-    public String getDate() {
-        this.sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-        return this.sdf.format(new Date());
-    }
-
     private String getTimeStamp() {
-        this.sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        return this.sdf.format(new Date());
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
     }
 }

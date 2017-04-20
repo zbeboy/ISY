@@ -103,11 +103,16 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
      */
     var paramId = {
         select_school: '#select_school',
+        schoolName: '#schoolName',
         select_college: '#select_college',
+        collegeName: '#collegeName',
         select_department: '#select_department',
+        departmentName: '#departmentName',
         select_science: '#select_science',
+        scienceName: '#scienceName',
         select_grade: '#select_grade',
         select_organize: '#select_organize',
+        organizeName: '#organizeName',
         realName: '#realName',
         studentNumber: '#studentNumber',
         email: '#email',
@@ -129,11 +134,16 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         password: $(paramId.password).val().trim(),
         confirmPassword: $(paramId.confirmPassword).val().trim(),
         school: $(paramId.select_school).val().trim(),
+        schoolName: '',
         college: $(paramId.select_college).val().trim(),
+        collegeName: '',
         department: $(paramId.select_department).val().trim(),
+        departmentName: '',
         science: $(paramId.select_science).val().trim(),
+        scienceName: '',
         grade: $(paramId.select_grade).val().trim(),
-        organize: $(paramId.select_organize).val().trim()
+        organize: $(paramId.select_organize).val().trim(),
+        organizeName: ''
     };
 
     /*
@@ -148,11 +158,16 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         param.password = $(paramId.password).val().trim();
         param.confirmPassword = $(paramId.confirmPassword).val().trim();
         param.school = $(paramId.select_school).val().trim();
+        param.schoolName = $(paramId.select_school).find('option:selected').text();
         param.college = $(paramId.select_college).val().trim();
+        param.collegeName = $(paramId.select_college).find('option:selected').text();
         param.department = $(paramId.select_department).val().trim();
+        param.departmentName = $(paramId.select_department).find('option:selected').text();
         param.science = $(paramId.select_science).val().trim();
+        param.scienceName = $(paramId.select_science).find('option:selected').text();
         param.grade = $(paramId.select_grade).val().trim();
         param.organize = $(paramId.select_organize).val().trim();
+        param.organizeName = $(paramId.select_organize).find('option:selected').text();
     }
 
     /*
@@ -820,6 +835,13 @@ require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin"
         } else {
             validSuccessDom(validId.valid_organize, errorMsgId.organize_error_msg);
         }
+        // 填充数据
+        $(paramId.schoolName).val($(paramId.select_school).find('option:selected').text());
+        $(paramId.collegeName).val($(paramId.select_college).find('option:selected').text());
+        $(paramId.departmentName).val($(paramId.select_department).find('option:selected').text());
+        $(paramId.scienceName).val($(paramId.select_science).find('option:selected').text());
+        $(paramId.organizeName).val($(paramId.select_organize).find('option:selected').text());
+
         validRealName();//开始顺序检验
     });
 

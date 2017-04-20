@@ -19,6 +19,12 @@ import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
 import top.zbeboy.isy.security.MyUserImpl;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -63,6 +69,15 @@ public class UsersServiceImpl implements UsersService {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private UsersElasticRepository usersElasticRepository;
+
+    @Resource
+    private StudentElasticRepository studentElasticRepository;
+
+    @Resource
+    private StaffElasticRepository staffElasticRepository;
 
     @Autowired
     public UsersServiceImpl(DSLContext dslContext) {
@@ -130,23 +145,96 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void save(Users users) {
         usersDao.insert(users);
+        UsersElastic usersElastic = new UsersElastic();
+        usersElastic.setUsername(users.getUsername());
+        usersElastic.setPassword(users.getPassword());
+        usersElastic.setEnabled(users.getEnabled());
+        usersElastic.setUsersTypeId(users.getUsersTypeId());
+        usersElastic.setUsersTypeName(cacheManageService.findByUsersTypeId(users.getUsersTypeId()).getUsersTypeName());
+        usersElastic.setRealName(users.getRealName());
+        usersElastic.setMobile(users.getMobile());
+        usersElastic.setAvatar(users.getAvatar());
+        usersElastic.setVerifyMailbox(users.getVerifyMailbox());
+        usersElastic.setMailboxVerifyCode(users.getMailboxVerifyCode());
+        usersElastic.setPasswordResetKey(users.getPasswordResetKey());
+        usersElastic.setMailboxVerifyValid(users.getMailboxVerifyValid());
+        usersElastic.setPasswordResetKeyValid(users.getPasswordResetKeyValid());
+        usersElastic.setLangKey(users.getLangKey());
+        usersElastic.setJoinDate(users.getJoinDate());
+        usersElastic.setAuthorities(-1);
+        usersElasticRepository.save(usersElastic);
     }
 
     @Override
     public void update(Users users) {
         usersDao.update(users);
+        UsersElastic usersElastic = usersElasticRepository.findOne(users.getUsername());
+        usersElastic.setPassword(users.getPassword());
+        usersElastic.setEnabled(users.getEnabled());
+        usersElastic.setUsersTypeId(users.getUsersTypeId());
+        usersElastic.setRealName(users.getRealName());
+        usersElastic.setMobile(users.getMobile());
+        usersElastic.setAvatar(users.getAvatar());
+        usersElastic.setVerifyMailbox(users.getVerifyMailbox());
+        usersElastic.setMailboxVerifyCode(users.getMailboxVerifyCode());
+        usersElastic.setPasswordResetKey(users.getPasswordResetKey());
+        usersElastic.setMailboxVerifyValid(users.getMailboxVerifyValid());
+        usersElastic.setPasswordResetKeyValid(users.getPasswordResetKeyValid());
+        usersElastic.setLangKey(users.getLangKey());
+        usersElastic.setJoinDate(users.getJoinDate());
+        usersElasticRepository.delete(usersElastic);
+        usersElasticRepository.save(usersElastic);
+        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+        if(usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)){
+            StudentElastic studentElastic = studentElasticRepository.findByUsername(users.getUsername());
+            studentElastic.setEnabled(users.getEnabled());
+            studentElastic.setRealName(users.getRealName());
+            studentElastic.setMobile(users.getMobile());
+            studentElastic.setAvatar(users.getAvatar());
+            studentElastic.setLangKey(users.getLangKey());
+            studentElastic.setJoinDate(users.getJoinDate());
+            studentElasticRepository.delete(studentElastic);
+            studentElasticRepository.save(studentElastic);
+        } else if(usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)){
+            StaffElastic staffElastic = staffElasticRepository.findByUsername(users.getUsername());
+            staffElastic.setEnabled(users.getEnabled());
+            staffElastic.setRealName(users.getRealName());
+            staffElastic.setMobile(users.getMobile());
+            staffElastic.setAvatar(users.getAvatar());
+            staffElastic.setLangKey(users.getLangKey());
+            staffElastic.setJoinDate(users.getJoinDate());
+            staffElasticRepository.delete(staffElastic);
+            staffElasticRepository.save(staffElastic);
+        }
     }
 
     @Override
     public void updateEnabled(List<String> ids, Byte enabled) {
-        ids.forEach(id ->
-                create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute()
-        );
+        ids.forEach(id -> {
+            create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute();
+            UsersElastic usersElastic = usersElasticRepository.findOne(id);
+            usersElastic.setEnabled(enabled);
+            usersElasticRepository.delete(usersElastic);
+            usersElasticRepository.save(usersElastic);
+            UsersType usersType = cacheManageService.findByUsersTypeId(usersElastic.getUsersTypeId());
+            if(usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)){
+                StudentElastic studentElastic = studentElasticRepository.findByUsername(usersElastic.getUsername());
+                studentElastic.setEnabled(usersElastic.getEnabled());
+                studentElasticRepository.delete(studentElastic);
+                studentElasticRepository.save(studentElastic);
+            } else if(usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)){
+                StaffElastic staffElastic = staffElasticRepository.findByUsername(usersElastic.getUsername());
+                staffElastic.setEnabled(usersElastic.getEnabled());
+                staffElasticRepository.delete(staffElastic);
+                staffElasticRepository.save(staffElastic);
+            }
+        });
     }
 
     @Override
     public void deleteById(String username) {
         usersDao.deleteById(username);
+        usersElasticRepository.delete(username);
     }
 
     @Override

@@ -24,12 +24,5 @@ public interface SystemLogGlue {
      *
      * @return 总数
      */
-    long countAll(DataTablesUtils<SystemLogBean> dataTablesUtils);
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    long countByCondition(DataTablesUtils<SystemLogBean> dataTablesUtils);
+    long countAll();
 }

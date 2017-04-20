@@ -20,6 +20,14 @@ public class OrganizeVo {
     @Size(max = 5)
     private String grade;
 
+    private Integer schoolId;
+    private String schoolName;
+    private Integer collegeId;
+    private String collegeName;
+    private Integer departmentId;
+    private String departmentName;
+    private String scienceName;
+
     public Integer getOrganizeId() {
         return organizeId;
     }
@@ -58,5 +66,79 @@ public class OrganizeVo {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public Integer getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(Integer collegeId) {
+        this.collegeId = collegeId;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    public Integer getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getScienceName() {
+        return scienceName;
+    }
+
+    public void setScienceName(String scienceName) {
+        this.scienceName = scienceName;
+    }
+
+    @Override
+    public String toString() {
+        return "OrganizeVo{" +
+                "organizeId=" + organizeId +
+                ", organizeName='" + organizeName + '\'' +
+                ", organizeIsDel=" + organizeIsDel +
+                ", scienceId=" + scienceId +
+                ", grade='" + grade + '\'' +
+                ", schoolId=" + schoolId +
+                ", schoolName='" + schoolName + '\'' +
+                ", collegeId=" + collegeId +
+                ", collegeName='" + collegeName + '\'' +
+                ", departmentId=" + departmentId +
+                ", departmentName='" + departmentName + '\'' +
+                ", scienceName='" + scienceName + '\'' +
+                '}';
     }
 }

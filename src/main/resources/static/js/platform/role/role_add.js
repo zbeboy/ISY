@@ -1,9 +1,9 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
-//# sourceURL=system_role_add.js
+//# sourceURL=role_add.js
 require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength", "jquery.showLoading"], function ($, Handlebars, constants, nav_active) {
+    "bootstrap-maxlength", "jquery.showLoading", "com"], function ($, Handlebars, constants, nav_active) {
 
     /*
      ajax url.
@@ -240,35 +240,40 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     }
 
     /*
-     即时检验系名
+     即时检验角色名
      */
     $(paramId.roleName).blur(function () {
         initParam();
-        var roleName = param.roleName;
+        var roleName = param.roleName.trim();
         if (roleName.length <= 0 || roleName.length > 50) {
             validErrorDom(validId.roleName, errorMsgId.roleName, '角色名50个字符以内');
         } else {
-            // 院名是否重复
-            Messenger().run({
-                errorMessage: '请求失败'
-            }, {
-                url: web_path + ajax_url.valid,
-                type: 'post',
-                data: param,
-                success: function (data) {
-                    if (data.state) {
-                        validSuccessDom(validId.roleName, errorMsgId.roleName);
-                    } else {
-                        validErrorDom(validId.roleName, errorMsgId.roleName, data.msg);
+            // 检验字符之前是否含有空格
+            if (roleName.indexOf(" ") == -1) {
+                // 角色名是否重复
+                Messenger().run({
+                    errorMessage: '请求失败'
+                }, {
+                    url: web_path + ajax_url.valid,
+                    type: 'post',
+                    data: param,
+                    success: function (data) {
+                        if (data.state) {
+                            validSuccessDom(validId.roleName, errorMsgId.roleName);
+                        } else {
+                            validErrorDom(validId.roleName, errorMsgId.roleName, data.msg);
+                        }
+                    },
+                    error: function (xhr) {
+                        if ((xhr != null ? xhr.status : void 0) === 404) {
+                            return "请求失败";
+                        }
+                        return true;
                     }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
+                });
+            } else {
+                validErrorDom(validId.roleName, errorMsgId.roleName, '角色名之间不允许存在空格');
+            }
         }
     });
 
@@ -319,7 +324,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      */
     function validRoleName() {
         initParam();
-        var roleName = param.roleName;
+        var roleName = param.roleName.trim();
         if (roleName.length <= 0 || roleName.length > 50) {
             Messenger().post({
                 message: '角色名为1~50个字符',
@@ -327,30 +332,39 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
                 showCloseButton: true
             });
         } else {
-            Messenger().run({
-                errorMessage: '请求失败'
-            }, {
-                url: web_path + ajax_url.valid,
-                type: 'post',
-                data: param,
-                success: function (data) {
-                    if (data.state) {
-                        sendAjax();
-                    } else {
-                        Messenger().post({
-                            message: data.msg,
-                            type: 'error',
-                            showCloseButton: true
-                        });
+            // 检验字符之前是否含有空格
+            if (roleName.indexOf(" ") == -1) {
+                Messenger().run({
+                    errorMessage: '请求失败'
+                }, {
+                    url: web_path + ajax_url.valid,
+                    type: 'post',
+                    data: param,
+                    success: function (data) {
+                        if (data.state) {
+                            sendAjax();
+                        } else {
+                            Messenger().post({
+                                message: data.msg,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        if ((xhr != null ? xhr.status : void 0) === 404) {
+                            return "请求失败";
+                        }
+                        return true;
                     }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
+                });
+            } else {
+                Messenger().post({
+                    message: '角色名之间不允许存在空格',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import org.jooq.Record1;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Organize;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -73,9 +74,9 @@ public interface OrganizeService {
     /**
      * 保存
      *
-     * @param organize 班级
+     * @param organizeElastic 班级
      */
-    void save(Organize organize);
+    void save(OrganizeElastic organizeElastic);
 
     /**
      * 更新

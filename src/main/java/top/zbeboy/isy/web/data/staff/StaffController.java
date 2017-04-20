@@ -1,7 +1,6 @@
 package top.zbeboy.isy.web.data.staff;
 
 import org.joda.time.DateTime;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,9 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.glue.data.StaffGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -72,6 +74,9 @@ public class StaffController {
 
     @Autowired
     private RequestUtils requestUtils;
+
+    @Resource
+    private StaffGlue staffGlue;
 
     /**
      * 判断工号是否已被注册
@@ -144,14 +149,18 @@ public class StaffController {
                                     } else {
                                         // 注册成功
                                         Users saveUsers = new Users();
+                                        StaffElastic saveStaff = new StaffElastic();
                                         Byte enabled = 1;
                                         Byte verifyMailbox = 0;
                                         saveUsers.setUsername(email);
                                         saveUsers.setEnabled(enabled);
+                                        saveStaff.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
+                                        saveStaff.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
                                         saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
+                                        saveStaff.setJoinDate(saveUsers.getJoinDate());
 
                                         DateTime dateTime = DateTime.now();
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);
@@ -159,12 +168,20 @@ public class StaffController {
                                         saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
                                         saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                        saveStaff.setLangKey(saveUsers.getLangKey());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        saveStaff.setAvatar(saveUsers.getAvatar());
                                         saveUsers.setVerifyMailbox(verifyMailbox);
                                         saveUsers.setRealName(staffVo.getRealName());
+                                        saveStaff.setRealName(saveUsers.getRealName());
                                         usersService.save(saveUsers);
 
-                                        Staff saveStaff = new Staff();
+                                        saveStaff.setSchoolId(staffVo.getSchool());
+                                        saveStaff.setSchoolName(staffVo.getSchoolName());
+                                        saveStaff.setCollegeId(staffVo.getCollege());
+                                        saveStaff.setCollegeName(staffVo.getCollegeName());
+                                        saveStaff.setDepartmentId(staffVo.getDepartment());
+                                        saveStaff.setDepartmentName(staffVo.getDepartmentName());
                                         saveStaff.setDepartmentId(staffVo.getDepartment());
                                         saveStaff.setStaffNumber(staffVo.getStaffNumber());
                                         saveStaff.setUsername(email);
@@ -177,7 +194,12 @@ public class StaffController {
 
                                         //发送验证邮件
                                         if (isyProperties.getMail().isOpen()) {
-                                            mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
+                                            Users users = new Users();
+                                            users.setUsername(saveUsers.getUsername());
+                                            users.setLangKey(saveUsers.getLangKey());
+                                            users.setMailboxVerifyCode(saveUsers.getMailboxVerifyCode());
+                                            users.setMailboxVerifyValid(saveUsers.getMailboxVerifyValid());
+                                            mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
                                             return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
                                         } else {
                                             return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
@@ -242,17 +264,10 @@ public class StaffController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StaffBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = staffService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<StaffBean> staffBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            staffBeen = records.into(StaffBean.class);
-            staffBeen.forEach(user -> {
-                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
-            });
-        }
-        dataTablesUtils.setData(staffBeen);
-        dataTablesUtils.setiTotalRecords(staffService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StaffBean>> resultUtils = staffGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(staffGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -279,14 +294,10 @@ public class StaffController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StaffBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = staffService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<StaffBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(StaffBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(staffService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StaffBean>> resultUtils = staffGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(staffGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

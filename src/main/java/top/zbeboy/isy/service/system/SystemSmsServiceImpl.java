@@ -12,6 +12,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.SystemSmsDao;
 import top.zbeboy.isy.domain.tables.pojos.SystemSms;
+import top.zbeboy.isy.elastic.pojo.SystemSmsElastic;
+import top.zbeboy.isy.elastic.repository.SystemSmsElasticRepository;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.sms.SystemSmsBean;
@@ -36,6 +38,9 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
     @Resource
     private SystemSmsDao systemSmsDao;
 
+    @Resource
+    private SystemSmsElasticRepository systemSmsElasticRepository;
+
     @Autowired
     public SystemSmsServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
@@ -45,11 +50,13 @@ public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implem
     @Override
     public void save(SystemSms systemSms) {
         systemSmsDao.insert(systemSms);
+        systemSmsElasticRepository.save(new SystemSmsElastic(systemSms.getSystemSmsId(),systemSms.getSendTime(),systemSms.getAcceptPhone(),systemSms.getSendCondition()));
     }
 
     @Override
     public void deleteBySendTime(Timestamp sendTime) {
         create.deleteFrom(SYSTEM_SMS).where(SYSTEM_SMS.SEND_TIME.le(sendTime)).execute();
+        systemSmsElasticRepository.deleteBySendTimeLessThanEqual(sendTime.getTime());
     }
 
     @Override

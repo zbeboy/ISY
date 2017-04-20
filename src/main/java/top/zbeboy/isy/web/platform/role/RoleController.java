@@ -244,7 +244,7 @@ public class RoleController {
     @ResponseBody
     public AjaxUtils roleSave(@RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = new Role();
-        role.setRoleName(roleName);
+        role.setRoleName(StringUtils.trimAllWhitespace(roleName));
         role.setRoleEnName("ROLE_" + RandomUtils.generateRoleEnName().toUpperCase());
         role.setRoleType(2);
         int roleId = roleService.saveAndReturnId(role);
@@ -268,7 +268,7 @@ public class RoleController {
     @ResponseBody
     public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
-        role.setRoleName(roleName);
+        role.setRoleName(StringUtils.trimAllWhitespace(roleName));
         roleService.update(role);
         if (roleId > 0) {
             roleApplicationService.deleteByRoleId(roleId);
@@ -292,13 +292,7 @@ public class RoleController {
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             collegeId = roleService.getRoleCollegeId(record);
         }
-        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
-            ids.forEach(id -> {
-                RoleApplication roleApplication = new RoleApplication(roleId, id);
-                roleApplicationService.save(roleApplication);
-            });
-        }
+        commonControllerMethodService.batchSaveRoleApplication(applicationIds,roleId);
         if (collegeId > 0) {
             CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
             collegeRoleService.save(collegeRole);

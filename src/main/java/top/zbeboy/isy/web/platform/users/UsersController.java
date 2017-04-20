@@ -23,6 +23,14 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
+import top.zbeboy.isy.glue.platform.UsersGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
@@ -140,6 +148,18 @@ public class UsersController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private UsersElasticRepository usersElasticRepository;
+
+    @Resource
+    private StudentElasticRepository studentElasticRepository;
+
+    @Resource
+    private StaffElasticRepository staffElasticRepository;
+
+    @Resource
+    private UsersGlue usersGlue;
 
     /**
      * 检验注册表单
@@ -641,20 +661,58 @@ public class UsersController {
     @RequestMapping(value = "/special/channel/users/role/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles, HttpServletRequest request) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
         if (StringUtils.hasLength(roles)) {
             List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
+            // 禁止非系统用户 提升用户权限到系统或管理员级别权限
+            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                    && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
+                return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限");
+            }
             authoritiesService.deleteByUsername(username);
+            UsersElastic usersElastic = usersElasticRepository.findOne(username);
+            List<String> roleEnNames = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
             roleList.forEach(role -> {
                 Authorities authorities = new Authorities(username, role);
                 authoritiesService.save(authorities);
-                Users users = usersService.findByUsername(username);
-                Users curUsers = usersService.getUserFromSession();
-                String notify = "您的权限已变更。";
-                commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
+                Role tempRole = roleService.findByRoleEnName(role);
+                roleEnNames.add(tempRole.getRoleEnName());
+                stringBuilder.append(tempRole.getRoleName()).append(" ");
             });
-            return new AjaxUtils().success().msg("更改用户角色成功");
+            if (roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES)) {
+                usersElastic.setAuthorities(1);
+            } else if (roleEnNames.contains(Workbook.ADMIN_AUTHORITIES)) {
+                usersElastic.setAuthorities(2);
+            } else {
+                usersElastic.setAuthorities(0);
+            }
+            usersElastic.setRoleName(stringBuilder.toString().trim());
+            usersElasticRepository.delete(username);
+            usersElasticRepository.save(usersElastic);
+            Users users = usersService.findByUsername(username);
+            UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+            if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
+                StudentElastic studentElastic = studentElasticRepository.findByUsername(username);
+                studentElastic.setAuthorities(usersElastic.getAuthorities());
+                studentElastic.setRoleName(usersElastic.getRoleName());
+                studentElasticRepository.deleteByUsername(username);
+                studentElasticRepository.save(studentElastic);
+            } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
+                StaffElastic staffElastic = staffElasticRepository.findByUsername(username);
+                staffElastic.setAuthorities(usersElastic.getAuthorities());
+                staffElastic.setRoleName(usersElastic.getRoleName());
+                staffElasticRepository.deleteByUsername(username);
+                staffElasticRepository.save(staffElastic);
+            }
+            Users curUsers = usersService.getUserFromSession();
+            String notify = "您的权限已变更为" + usersElastic.getRoleName() + " ，请登录查看。";
+            commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
+            ajaxUtils.success().msg("更改用户角色成功");
+        } else {
+            ajaxUtils.fail().msg("用户角色参数异常");
         }
-        return new AjaxUtils().fail().msg("用户角色参数异常");
+        return ajaxUtils;
     }
 
     /**
@@ -689,15 +747,10 @@ public class UsersController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<UsersBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = usersService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<UsersBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(UsersBean.class);
-            usersBeen.forEach(user -> user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername())));
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(usersService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<UsersBean>> resultUtils = usersGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -721,14 +774,10 @@ public class UsersController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<UsersBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = usersService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<UsersBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(UsersBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(usersService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<UsersBean>> resultUtils = usersGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

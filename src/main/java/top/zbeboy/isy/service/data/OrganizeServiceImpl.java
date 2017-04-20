@@ -15,6 +15,8 @@ import top.zbeboy.isy.domain.tables.daos.OrganizeDao;
 import top.zbeboy.isy.domain.tables.pojos.Organize;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -47,6 +49,9 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public OrganizeServiceImpl(DSLContext dslContext) {
@@ -107,20 +112,39 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(Organize organize) {
-        organizeDao.insert(organize);
+    public void save(OrganizeElastic organizeElastic) {
+        OrganizeRecord record = create.insertInto(ORGANIZE)
+                .set(ORGANIZE.ORGANIZE_NAME, organizeElastic.getOrganizeName())
+                .set(ORGANIZE.ORGANIZE_IS_DEL, organizeElastic.getOrganizeIsDel())
+                .set(ORGANIZE.SCIENCE_ID, organizeElastic.getScienceId())
+                .set(ORGANIZE.GRADE, organizeElastic.getGrade())
+                .returning(ORGANIZE.ORGANIZE_ID)
+                .fetchOne();
+        organizeElastic.setOrganizeId(record.getOrganizeId());
+        organizeElasticRepository.save(organizeElastic);
     }
 
     @Override
     public void update(Organize organize) {
         organizeDao.update(organize);
+        OrganizeElastic organizeElastic = organizeElasticRepository.findOne(organize.getOrganizeId() + "");
+        organizeElastic.setOrganizeIsDel(organize.getOrganizeIsDel());
+        organizeElastic.setOrganizeName(organize.getOrganizeName());
+        organizeElastic.setScienceId(organize.getScienceId());
+        organizeElastic.setGrade(organize.getGrade());
+        organizeElasticRepository.delete(organizeElastic);
+        organizeElasticRepository.save(organizeElastic);
     }
 
     @Override
     public void updateIsDel(List<Integer> ids, Byte isDel) {
-        for (int id : ids) {
+        ids.forEach(id -> {
             create.update(ORGANIZE).set(ORGANIZE.ORGANIZE_IS_DEL, isDel).where(ORGANIZE.ORGANIZE_ID.eq(id)).execute();
-        }
+            OrganizeElastic organizeElastic = organizeElasticRepository.findOne(id + "");
+            organizeElastic.setOrganizeIsDel(isDel);
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

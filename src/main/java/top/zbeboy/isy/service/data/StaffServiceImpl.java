@@ -12,18 +12,24 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.StaffDao;
+import top.zbeboy.isy.domain.tables.pojos.Nation;
+import top.zbeboy.isy.domain.tables.pojos.PoliticalLandscape;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -47,6 +53,18 @@ public class StaffServiceImpl implements StaffService {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private StaffElasticRepository staffElasticRepository;
+
+    @Resource
+    private DepartmentService departmentService;
+
+    @Resource
+    private PoliticalLandscapeService politicalLandscapeService;
+
+    @Resource
+    private NationService nationService;
 
     @Autowired
     public StaffServiceImpl(DSLContext dslContext) {
@@ -119,13 +137,73 @@ public class StaffServiceImpl implements StaffService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(Staff staff) {
-        staffDao.insert(staff);
+    public void save(StaffElastic staffElastic) {
+        StaffRecord staffRecord = create.insertInto(STAFF)
+                .set(STAFF.STAFF_NUMBER, staffElastic.getStaffNumber())
+                .set(STAFF.BIRTHDAY, staffElastic.getBirthday())
+                .set(STAFF.SEX, staffElastic.getSex())
+                .set(STAFF.ID_CARD, staffElastic.getIdCard())
+                .set(STAFF.FAMILY_RESIDENCE, staffElastic.getFamilyResidence())
+                .set(STAFF.POLITICAL_LANDSCAPE_ID, staffElastic.getPoliticalLandscapeId())
+                .set(STAFF.NATION_ID, staffElastic.getNationId())
+                .set(STAFF.POST, staffElastic.getPost())
+                .set(STAFF.DEPARTMENT_ID, staffElastic.getDepartmentId())
+                .set(STAFF.USERNAME, staffElastic.getUsername())
+                .returning(STAFF.STAFF_ID)
+                .fetchOne();
+        staffElastic.setAuthorities(-1);
+        staffElastic.setStaffId(staffRecord.getStaffId());
+        staffElasticRepository.save(staffElastic);
     }
 
     @Override
     public void update(Staff staff) {
         staffDao.update(staff);
+        StaffElastic staffElastic = staffElasticRepository.findOne(staff.getStaffId() + "");
+        staffElastic.setStaffNumber(staff.getStaffNumber());
+        staffElastic.setBirthday(staff.getBirthday());
+        staffElastic.setSex(staff.getSex());
+        staffElastic.setIdCard(staff.getIdCard());
+        staffElastic.setFamilyResidence(staff.getFamilyResidence());
+        staffElastic.setPost(staff.getPost());
+        if (!Objects.equals(staff.getPoliticalLandscapeId(), staffElastic.getPoliticalLandscapeId())) {
+            if (!Objects.isNull(staff.getPoliticalLandscapeId()) && staff.getPoliticalLandscapeId() > 0) {
+                PoliticalLandscape politicalLandscape = politicalLandscapeService.findById(staff.getPoliticalLandscapeId());
+                if (!Objects.isNull(politicalLandscape)) {
+                    staffElastic.setPoliticalLandscapeId(politicalLandscape.getPoliticalLandscapeId());
+                    staffElastic.setPoliticalLandscapeName(politicalLandscape.getPoliticalLandscapeName());
+                }
+            } else {
+                staffElastic.setPoliticalLandscapeId(staff.getPoliticalLandscapeId());
+                staffElastic.setPoliticalLandscapeName("");
+            }
+        }
+        if (!Objects.equals(staff.getNationId(), staffElastic.getNationId())) {
+            if (!Objects.isNull(staff.getNationId()) && staff.getNationId() > 0) {
+                Nation nation = nationService.findById(staff.getNationId());
+                if (!Objects.isNull(nation)) {
+                    staffElastic.setNationId(nation.getNationId());
+                    staffElastic.setNationName(nation.getNationName());
+                }
+            } else {
+                staffElastic.setNationId(staff.getNationId());
+                staffElastic.setNationName("");
+            }
+        }
+        if (!Objects.isNull(staff.getDepartmentId()) && staff.getDepartmentId() > 0 && !Objects.equals(staff.getDepartmentId(), staffElastic.getDepartmentId())) {
+            Optional<Record> record = departmentService.findByIdRelation(staff.getDepartmentId());
+            if (record.isPresent()) {
+                DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+                staffElastic.setSchoolId(departmentBean.getSchoolId());
+                staffElastic.setSchoolName(departmentBean.getSchoolName());
+                staffElastic.setCollegeId(departmentBean.getCollegeId());
+                staffElastic.setCollegeName(departmentBean.getCollegeName());
+                staffElastic.setDepartmentId(departmentBean.getDepartmentId());
+                staffElastic.setDepartmentName(departmentBean.getDepartmentName());
+            }
+        }
+        staffElasticRepository.delete(staffElastic);
+        staffElasticRepository.save(staffElastic);
     }
 
     @Override
@@ -151,6 +229,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public void deleteByUsername(String username) {
         create.deleteFrom(STAFF).where(STAFF.USERNAME.eq(username)).execute();
+        staffElasticRepository.deleteByUsername(username);
     }
 
     @Override

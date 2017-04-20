@@ -17,6 +17,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -62,7 +65,7 @@ public class FilesServiceImpl implements FilesService {
 
             Map<String, String> paraMap = new HashMap<>();
             paraMap.put("${internshipJournalContent}", internshipJournal.getInternshipJournalContent());
-            paraMap.put("${date}", new SimpleDateFormat("yyyy年MM月dd日").format(internshipJournal.getInternshipJournalDate()));
+            paraMap.put("${date}", internshipJournal.getInternshipJournalDate().toLocalDate().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日")));
 
             XWPFDocument doc = new XWPFDocument(is);
 
@@ -109,7 +112,7 @@ public class FilesServiceImpl implements FilesService {
             }
 
             String path = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users);
-            String filename = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + ".docx";
+            String filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))+ ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
                 saveFile.mkdirs();

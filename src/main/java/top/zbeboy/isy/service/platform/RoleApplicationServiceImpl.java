@@ -8,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.daos.RoleApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
+
+import javax.annotation.Resource;
+
+import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
 
@@ -24,6 +29,9 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
 
     private final DSLContext create;
 
+    @Resource
+    private RoleApplicationDao roleApplicationDao;
+
     @Autowired
     public RoleApplicationServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
@@ -36,6 +44,12 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
                 .set(ROLE_APPLICATION.ROLE_ID, roleApplication.getRoleId())
                 .set(ROLE_APPLICATION.APPLICATION_ID, roleApplication.getApplicationId())
                 .execute();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(List<RoleApplication> roleApplication) {
+        roleApplicationDao.insert(roleApplication);
     }
 
     @Override

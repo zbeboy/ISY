@@ -4,49 +4,49 @@ package top.zbeboy.isy.web.vo.platform.users;
  * Created by zbeboy on 2017/1/20.
  */
 public class AvatarVo {
-    private int x;
-    private int y;
-    private int height;
-    private int width;
-    private int rotate;
+    private Integer x;
+    private Integer y;
+    private Integer height;
+    private Integer width;
+    private Integer rotate;
 
-    public int getX() {
+    public Integer getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         this.x = x;
     }
 
-    public int getY() {
+    public Integer getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(Integer y) {
         this.y = y;
     }
 
-    public int getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
-    public int getWidth() {
+    public Integer getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(Integer width) {
         this.width = width;
     }
 
-    public int getRotate() {
+    public Integer getRotate() {
         return rotate;
     }
 
-    public void setRotate(int rotate) {
+    public void setRotate(Integer rotate) {
         this.rotate = rotate;
     }
 }

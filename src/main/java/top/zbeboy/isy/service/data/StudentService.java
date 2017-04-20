@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -103,9 +104,9 @@ public interface StudentService {
     /**
      * 保存学生信息
      *
-     * @param student 学生
+     * @param studentElastic 学生
      */
-    void save(Student student);
+    void save(StudentElastic studentElastic);
 
     /**
      * 更新学生信息

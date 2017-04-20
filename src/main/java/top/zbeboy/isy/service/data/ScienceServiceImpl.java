@@ -15,6 +15,8 @@ import top.zbeboy.isy.domain.tables.daos.ScienceDao;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.ScienceRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -46,6 +48,12 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private OrganizeService organizeService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public ScienceServiceImpl(DSLContext dslContext) {
@@ -79,6 +87,13 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     @Override
     public void update(Science science) {
         scienceDao.update(science);
+        List<OrganizeElastic> records = organizeElasticRepository.findByScienceId(science.getScienceId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setScienceId(science.getScienceId());
+            organizeElastic.setScienceName(science.getScienceName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

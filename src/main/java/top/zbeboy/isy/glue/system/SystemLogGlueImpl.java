@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,7 +15,6 @@ import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
 import top.zbeboy.isy.elastic.repository.SystemLogElasticRepository;
 import top.zbeboy.isy.glue.plugin.ElasticPlugin;
 import top.zbeboy.isy.glue.util.ResultUtils;
-import top.zbeboy.isy.glue.util.SearchUtils;
 import top.zbeboy.isy.service.system.SystemLogService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -47,35 +44,13 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
     public ResultUtils<List<SystemLogBean>> findAllByPage(DataTablesUtils<SystemLogBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
         ResultUtils<List<SystemLogBean>> resultUtils = new ResultUtils<>();
-        if (SearchUtils.mapValueIsNotEmpty(search)) {
-            Page<SystemLogElastic> systemLogElasticPage = systemLogElasticRepository.search(buildSearchQuery(search, dataTablesUtils));
-            resultUtils.data(dataBuilder(systemLogElasticPage)).isSearch(true).totalElements(systemLogElasticPage.getTotalElements());
-        } else {
-            resultUtils.data(freestanding(dataTablesUtils)).isSearch(false);
-        }
-        return resultUtils;
+        Page<SystemLogElastic> systemLogElasticPage = systemLogElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
+        return resultUtils.data(dataBuilder(systemLogElasticPage)).totalElements(systemLogElasticPage.getTotalElements());
     }
 
     @Override
-    public long countAll(DataTablesUtils<SystemLogBean> dataTablesUtils) {
-        JSONObject search = dataTablesUtils.getSearch();
-        long count;
-        if (SearchUtils.mapValueIsNotEmpty(search)) {
-            count = systemLogElasticRepository.count();
-        } else {
-            count = systemLogService.countAll();
-        }
-        return count;
-    }
-
-    @Override
-    public long countByCondition(DataTablesUtils<SystemLogBean> dataTablesUtils) {
-        JSONObject search = dataTablesUtils.getSearch();
-        long count = 0;
-        if (!SearchUtils.mapValueIsNotEmpty(search)) {
-            count = systemLogService.countByCondition(dataTablesUtils);
-        }
-        return count;
+    public long countAll() {
+        return systemLogElasticRepository.count();
     }
 
     /**
@@ -101,25 +76,6 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
     }
 
     /**
-     * 数据原生实现方式
-     *
-     * @param dataTablesUtils datatables工具类
-     * @return 原生数据
-     */
-    private List<SystemLogBean> freestanding(DataTablesUtils<SystemLogBean> dataTablesUtils) {
-        List<SystemLogBean> systemLogs = new ArrayList<>();
-        Result<Record> records = systemLogService.findAllByPage(dataTablesUtils);
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            systemLogs = records.into(SystemLogBean.class);
-            systemLogs.forEach(s -> {
-                Date date = DateTimeUtils.timestampToDate(s.getOperatingTime());
-                s.setOperatingTimeNew(DateTimeUtils.formatDate(date));
-            });
-        }
-        return systemLogs;
-    }
-
-    /**
      * 系统日志全局搜索条件
      *
      * @param search 搜索参数
@@ -128,31 +84,33 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
     @Override
     public QueryBuilder searchCondition(JSONObject search) {
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
-        String username = StringUtils.trimWhitespace(search.getString("username"));
-        String behavior = StringUtils.trimWhitespace(search.getString("behavior"));
-        String ipAddress = StringUtils.trimWhitespace(search.getString("ipAddress"));
-        if (StringUtils.hasLength(username)) {
-            WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("username", SQLQueryUtils.elasticLikeAllParam(username));
-            boolqueryBuilder.must(wildcardQueryBuilder);
-        }
+        if (!ObjectUtils.isEmpty(search)) {
+            String username = StringUtils.trimWhitespace(search.getString("username"));
+            String behavior = StringUtils.trimWhitespace(search.getString("behavior"));
+            String ipAddress = StringUtils.trimWhitespace(search.getString("ipAddress"));
+            if (StringUtils.hasLength(username)) {
+                WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("username", SQLQueryUtils.elasticLikeAllParam(username));
+                boolqueryBuilder.must(wildcardQueryBuilder);
+            }
 
-        if (StringUtils.hasLength(behavior)) {
-            MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchPhraseQuery("behavior", behavior);
-            boolqueryBuilder.must(matchQueryBuilder);
-        }
+            if (StringUtils.hasLength(behavior)) {
+                MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchPhraseQuery("behavior", behavior);
+                boolqueryBuilder.must(matchQueryBuilder);
+            }
 
-        if (StringUtils.hasLength(ipAddress)) {
-            WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("ipAddress", SQLQueryUtils.elasticLikeAllParam(ipAddress));
-            boolqueryBuilder.must(wildcardQueryBuilder);
+            if (StringUtils.hasLength(ipAddress)) {
+                WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("ipAddress", SQLQueryUtils.elasticLikeAllParam(ipAddress));
+                boolqueryBuilder.must(wildcardQueryBuilder);
+            }
         }
-
         return boolqueryBuilder;
     }
 
     /**
      * 系统日志排序
      *
-     * @param dataTablesUtils datatables工具类
+     * @param dataTablesUtils          datatables工具类
+     * @param nativeSearchQueryBuilder 查询器
      */
     @Override
     public NativeSearchQueryBuilder sortCondition(DataTablesUtils<SystemLogBean> dataTablesUtils, NativeSearchQueryBuilder nativeSearchQueryBuilder) {
@@ -162,47 +120,47 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
         if (StringUtils.hasLength(orderColumnName)) {
             if ("system_log_id".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 
             if ("username".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 
             if ("behavior".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("behavior").order(SortOrder.ASC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("behavior").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("behavior").order(SortOrder.DESC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("behavior").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
 
             if ("operating_time".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("operatingTime").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("operatingTime").order(SortOrder.ASC).unmappedType("long"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("operatingTime").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("operatingTime").order(SortOrder.DESC).unmappedType("long"));
                 }
             }
 
             if ("ip_address".equalsIgnoreCase(orderColumnName)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("ipAddress").order(SortOrder.ASC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("ipAddress").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"));
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("ipAddress").order(SortOrder.DESC));
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("ipAddress").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"));
                 }
             }
         }

@@ -9,6 +9,18 @@ require(["jquery", "datatables.responsive"], function ($) {
         }
     }
 
+    /**
+     * 获取分页信息
+     * @returns {number}
+     */
+    function getPage() {
+        var page = 0;
+        if (myTable) {
+            page = myTable.page();
+        }
+        return page;
+    }
+
     var responsiveHelper = undefined;
     var breakpointDefinition = {
         tablet: 1024,
@@ -41,6 +53,7 @@ require(["jquery", "datatables.responsive"], function ($) {
                 // 添加额外的参数传给服务器
                 var searchParam = getParam();
                 d.extra_search = JSON.stringify(searchParam);
+                d.extra_page = getPage();
             }
         },
         "columns": [
