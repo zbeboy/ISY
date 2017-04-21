@@ -56,11 +56,11 @@ public class ScienceController {
     public AjaxUtils<Science> sciences(@RequestParam("departmentId") int departmentId) {
         List<Science> sciences = new ArrayList<>();
         Byte isDel = 0;
-        Science science = new Science(0, "请选择专业", isDel, 0);
+        Science science = new Science(0, "请选择专业", null, isDel, 0);
         sciences.add(science);
         Result<ScienceRecord> scienceRecords = scienceService.findByDepartmentIdAndIsDel(departmentId, isDel);
         for (ScienceRecord r : scienceRecords) {
-            Science tempScience = new Science(r.getScienceId(), r.getScienceName(), r.getScienceIsDel(), r.getDepartmentId());
+            Science tempScience = new Science(r.getScienceId(), r.getScienceName(), r.getScienceCode(), r.getScienceIsDel(), r.getDepartmentId());
             sciences.add(tempScience);
         }
         return new AjaxUtils<Science>().success().msg("获取专业数据成功！").listData(sciences);
@@ -107,6 +107,7 @@ public class ScienceController {
         headers.add("college_name");
         headers.add("department_name");
         headers.add("science_name");
+        headers.add("science_code");
         headers.add("science_is_del");
         headers.add("operator");
         DataTablesUtils<ScienceBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
@@ -161,9 +162,9 @@ public class ScienceController {
      * @param departmentId 系id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/data/science/save/valid", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/data/science/save/valid/name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils saveValid(@RequestParam("scienceName") String scienceName, @RequestParam("departmentId") int departmentId) {
+    public AjaxUtils saveValidName(@RequestParam("scienceName") String scienceName, @RequestParam("departmentId") int departmentId) {
         if (StringUtils.hasLength(scienceName)) {
             Result<ScienceRecord> scienceRecords = scienceService.findByScienceNameAndDepartmentId(scienceName, departmentId);
             if (ObjectUtils.isEmpty(scienceRecords)) {
@@ -176,6 +177,26 @@ public class ScienceController {
     }
 
     /**
+     * 保存时检验专业代码是否重复
+     *
+     * @param scienceCode 专业代码
+     * @return true 合格 false 不合格
+     */
+    @RequestMapping(value = "/web/data/science/save/valid/code", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils saveValidCode(@RequestParam("scienceCode") String scienceCode) {
+        if (StringUtils.hasLength(scienceCode)) {
+            Result<ScienceRecord> scienceRecords = scienceService.findByScienceCode(scienceCode);
+            if (ObjectUtils.isEmpty(scienceRecords)) {
+                return new AjaxUtils().success().msg("专业代码不存在");
+            } else {
+                return new AjaxUtils().fail().msg("专业代码已存在");
+            }
+        }
+        return new AjaxUtils().fail().msg("专业代码不能为空");
+    }
+
+    /**
      * 检验编辑时专业名重复
      *
      * @param id           专业id
@@ -183,15 +204,33 @@ public class ScienceController {
      * @param departmentId 系id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/data/science/update/valid", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/data/science/update/valid/name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValid(@RequestParam("scienceId") int id, @RequestParam("scienceName") String scienceName, @RequestParam("departmentId") int departmentId) {
+    public AjaxUtils updateValidName(@RequestParam("scienceId") int id, @RequestParam("scienceName") String scienceName, @RequestParam("departmentId") int departmentId) {
         Result<ScienceRecord> scienceRecords = scienceService.findByScienceNameAndDepartmentIdNeScienceId(scienceName, id, departmentId);
         if (scienceRecords.isEmpty()) {
             return new AjaxUtils().success().msg("专业名不重复");
         }
 
         return new AjaxUtils().fail().msg("专业名重复");
+    }
+
+    /**
+     * 检验编辑时专业代码重复
+     *
+     * @param id          专业id
+     * @param scienceCode 专业代码
+     * @return true 合格 false 不合格
+     */
+    @RequestMapping(value = "/web/data/science/update/valid/code", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils updateValidCode(@RequestParam("scienceId") int id, @RequestParam("scienceCode") String scienceCode) {
+        Result<ScienceRecord> scienceRecords = scienceService.findByScienceCodeNeScienceId(scienceCode, id);
+        if (scienceRecords.isEmpty()) {
+            return new AjaxUtils().success().msg("专业代码不重复");
+        }
+
+        return new AjaxUtils().fail().msg("专业代码重复");
     }
 
     /**
@@ -212,6 +251,7 @@ public class ScienceController {
             }
             science.setScienceIsDel(isDel);
             science.setScienceName(scienceVo.getScienceName());
+            science.setScienceCode(scienceVo.getScienceCode());
             science.setDepartmentId(scienceVo.getDepartmentId());
             scienceService.save(science);
             return new AjaxUtils().success().msg("保存成功");
@@ -238,6 +278,7 @@ public class ScienceController {
                 }
                 science.setScienceIsDel(isDel);
                 science.setScienceName(scienceVo.getScienceName());
+                science.setScienceCode(scienceVo.getScienceCode());
                 science.setDepartmentId(scienceVo.getDepartmentId());
                 scienceService.update(science);
                 return new AjaxUtils().success().msg("更改成功");

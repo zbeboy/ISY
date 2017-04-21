@@ -76,6 +76,13 @@ public class ScienceDao extends DAOImpl<ScienceRecord, top.zbeboy.isy.domain.tab
     }
 
     /**
+     * Fetch records that have <code>science_code IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.Science> fetchByScienceCode(String... values) {
+        return fetch(Science.SCIENCE.SCIENCE_CODE, values);
+    }
+
+    /**
      * Fetch records that have <code>science_is_del IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.Science> fetchByScienceIsDel(Byte... values) {

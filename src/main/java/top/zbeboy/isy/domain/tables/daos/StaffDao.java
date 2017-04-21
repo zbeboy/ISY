@@ -140,6 +140,13 @@ public class StaffDao extends DAOImpl<StaffRecord, top.zbeboy.isy.domain.tables.
     }
 
     /**
+     * Fetch records that have <code>academic_title_id IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.Staff> fetchByAcademicTitleId(Integer... values) {
+        return fetch(Staff.STAFF.ACADEMIC_TITLE_ID, values);
+    }
+
+    /**
      * Fetch records that have <code>department_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.Staff> fetchByDepartmentId(Integer... values) {

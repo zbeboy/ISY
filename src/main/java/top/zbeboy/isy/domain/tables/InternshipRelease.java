@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
 
-    private static final long serialVersionUID = -2044947888;
+    private static final long serialVersionUID = -1005876973;
 
     /**
      * The reference instance of <code>isy.internship_release</code>
@@ -64,7 +64,7 @@ public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
     /**
      * The column <code>isy.internship_release.release_time</code>.
      */
-    public final TableField<InternshipReleaseRecord, Timestamp> RELEASE_TIME = createField("release_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<InternshipReleaseRecord, Timestamp> RELEASE_TIME = createField("release_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>isy.internship_release.username</code>.

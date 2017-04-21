@@ -11,6 +11,7 @@ import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
 
+import top.zbeboy.isy.domain.tables.AcademicTitle;
 import top.zbeboy.isy.domain.tables.Application;
 import top.zbeboy.isy.domain.tables.Authorities;
 import top.zbeboy.isy.domain.tables.College;
@@ -55,6 +56,7 @@ import top.zbeboy.isy.domain.tables.SystemMessage;
 import top.zbeboy.isy.domain.tables.SystemSms;
 import top.zbeboy.isy.domain.tables.Users;
 import top.zbeboy.isy.domain.tables.UsersType;
+import top.zbeboy.isy.domain.tables.records.AcademicTitleRecord;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
@@ -119,6 +121,7 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Identities0.IDENTITY_ACADEMIC_TITLE;
     public static final Identity<ApplicationRecord, Integer> IDENTITY_APPLICATION = Identities0.IDENTITY_APPLICATION;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
     public static final Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Identities0.IDENTITY_DEPARTMENT;
@@ -138,6 +141,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AcademicTitleRecord> KEY_ACADEMIC_TITLE_PRIMARY = UniqueKeys0.KEY_ACADEMIC_TITLE_PRIMARY;
     public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = UniqueKeys0.KEY_APPLICATION_PRIMARY;
     public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = UniqueKeys0.KEY_AUTHORITIES_PRIMARY;
     public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = UniqueKeys0.KEY_COLLEGE_PRIMARY;
@@ -256,6 +260,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class Identities0 extends AbstractKeys {
+        public static Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = createIdentity(AcademicTitle.ACADEMIC_TITLE, AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
         public static Identity<ApplicationRecord, Integer> IDENTITY_APPLICATION = createIdentity(Application.APPLICATION, Application.APPLICATION.APPLICATION_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
         public static Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = createIdentity(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
@@ -273,6 +278,7 @@ public class Keys {
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
+        public static final UniqueKey<AcademicTitleRecord> KEY_ACADEMIC_TITLE_PRIMARY = createUniqueKey(AcademicTitle.ACADEMIC_TITLE, "KEY_academic_title_PRIMARY", AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
         public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = createUniqueKey(Application.APPLICATION, "KEY_application_PRIMARY", Application.APPLICATION.APPLICATION_ID);
         public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = createUniqueKey(Authorities.AUTHORITIES, "KEY_authorities_PRIMARY", Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY);
         public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = createUniqueKey(College.COLLEGE, "KEY_college_PRIMARY", College.COLLEGE.COLLEGE_ID);

@@ -25,7 +25,7 @@ import static top.zbeboy.isy.domain.Tables.POLITICAL_LANDSCAPE;
 /**
  * Created by lenovo on 2016-10-30.
  */
-@Service("PoliticalLandscapeService")
+@Service("politicalLandscapeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLandscape> implements PoliticalLandscapeService {
 

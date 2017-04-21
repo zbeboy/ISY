@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">职称数据</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th data-class="expand">id</th>
+                        <th>职称</th>
+                        <th data-hide="phone">操作</th>
+                    </tr>
+                    </thead>
+
+                    <tfoot>
+                    <tr>
+                        <th>id</th>
+                        <th>职称</th>
+                        <th>操作</th>
+                    </tr>
+                    </tfoot>
+
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+
+        <!-- add职称Modal -->
+        <div class="modal fade" id="addAcademicModal" tabindex="-1" role="dialog" aria-labelledby="addAcademicModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="addAcademicModalLabel">添加职称信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" id="add_form">
+                            <fieldset>
+                                <div class="form-group" id="valid_add_academic">
+                                    <input class="form-control" name="academicTitleName" id="addAcademicTitleName"
+                                           placeholder="职称" maxlength="30"/>
+                                    <p class="text-danger hidden" id="add_academic_title_name_error_msg"></p>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="add_academic">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- update职称Modal -->
+        <div class="modal fade" id="updateAcademicModal" tabindex="-1" role="dialog"
+             aria-labelledby="updateAcademicModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="updateAcademicModalLabel">编辑职称信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" id="update_form">
+                            <fieldset>
+                                <div class="form-group" id="valid_update_academic">
+                                    <input class="form-control" name="academicTitleName" id="updateAcademicTitleName"
+                                           placeholder="职称" maxlength="30"/>
+                                    <p class="text-danger hidden" id="update_academic_title_name_error_msg"></p>
+                                    <input type="hidden" id="updateAcademicTitleId" name="academicTitleId"/>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="update_academic">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--定义操作列按钮模板-->
+        <script id="operator_button" type="text/x-handlebars-template">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-value="{{this.value}}">{{this.name}}
+            </button>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/data/academic/academic_data.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

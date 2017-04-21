@@ -16,6 +16,12 @@ public class CollegeVo {
     @NotNull
     @Min(1)
     private Integer schoolId;
+    @NotNull
+    @Size(max = 500)
+    private String  collegeAddress;
+    @NotNull
+    @Size(max = 20)
+    private String  collegeCode;
 
     public Integer getCollegeId() {
         return collegeId;
@@ -49,6 +55,22 @@ public class CollegeVo {
         this.schoolId = schoolId;
     }
 
+    public String getCollegeAddress() {
+        return collegeAddress;
+    }
+
+    public void setCollegeAddress(String collegeAddress) {
+        this.collegeAddress = collegeAddress;
+    }
+
+    public String getCollegeCode() {
+        return collegeCode;
+    }
+
+    public void setCollegeCode(String collegeCode) {
+        this.collegeCode = collegeCode;
+    }
+
     @Override
     public String toString() {
         return "CollegeVo{" +
@@ -56,6 +78,8 @@ public class CollegeVo {
                 ", collegeName='" + collegeName + '\'' +
                 ", collegeIsDel=" + collegeIsDel +
                 ", schoolId=" + schoolId +
+                ", collegeAddress='" + collegeAddress + '\'' +
+                ", collegeCode='" + collegeCode + '\'' +
                 '}';
     }
 }

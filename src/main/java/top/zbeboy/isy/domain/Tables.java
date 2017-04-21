@@ -6,6 +6,7 @@ package top.zbeboy.isy.domain;
 
 import javax.annotation.Generated;
 
+import top.zbeboy.isy.domain.tables.AcademicTitle;
 import top.zbeboy.isy.domain.tables.Application;
 import top.zbeboy.isy.domain.tables.Authorities;
 import top.zbeboy.isy.domain.tables.College;
@@ -66,6 +67,11 @@ import top.zbeboy.isy.domain.tables.UsersType;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>isy.academic_title</code>.
+     */
+    public static final AcademicTitle ACADEMIC_TITLE = top.zbeboy.isy.domain.tables.AcademicTitle.ACADEMIC_TITLE;
 
     /**
      * The table <code>isy.application</code>.

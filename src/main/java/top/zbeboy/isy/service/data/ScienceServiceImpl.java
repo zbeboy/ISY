@@ -284,9 +284,23 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     }
 
     @Override
+    public Result<ScienceRecord> findByScienceCode(String scienceCode) {
+        return create.selectFrom(SCIENCE)
+                .where(SCIENCE.SCIENCE_CODE.eq(scienceCode))
+                .fetch();
+    }
+
+    @Override
     public Result<ScienceRecord> findByScienceNameAndDepartmentIdNeScienceId(String scienceName, int scienceId, int departmentId) {
         return create.selectFrom(SCIENCE)
                 .where(SCIENCE.SCIENCE_NAME.eq(scienceName).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<ScienceRecord> findByScienceCodeNeScienceId(String scienceCode, int scienceId) {
+        return create.selectFrom(SCIENCE)
+                .where(SCIENCE.SCIENCE_CODE.eq(scienceCode).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
                 .fetch();
     }
 
@@ -399,6 +413,15 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                     sortField[0] = SCIENCE.SCIENCE_NAME.asc();
                 } else {
                     sortField[0] = SCIENCE.SCIENCE_NAME.desc();
+                }
+            }
+
+            if ("science_code".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = SCIENCE.SCIENCE_CODE.asc();
+                } else {
+                    sortField[0] = SCIENCE.SCIENCE_CODE.desc();
                 }
             }
 

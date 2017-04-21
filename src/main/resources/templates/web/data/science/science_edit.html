@@ -50,6 +50,12 @@
                         <p class="text-danger hidden" id="science_name_error_msg"></p>
                         <input type="hidden" id="scienceId" name="scienceId" th:value="${science.scienceId}"/>
                     </div>
+                    <div class="form-group" id="valid_science_code">
+                        <label>专业代码</label>
+                        <input class="form-control" name="scienceCode" id="scienceCode"
+                               th:value="${science.scienceCode}" maxlength="20" placeholder="专业代码"/>
+                        <p class="text-danger hidden" id="science_code_error_msg"></p>
+                    </div>
                     <div class="form-group">
                         <label>状态</label>
                         <div class="checkbox">

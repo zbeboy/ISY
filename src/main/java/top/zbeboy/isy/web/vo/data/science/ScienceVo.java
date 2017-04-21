@@ -16,6 +16,9 @@ public class ScienceVo {
     @NotNull
     @Min(1)
     private Integer departmentId;
+    @NotNull
+    @Size(max = 20)
+    private String  scienceCode;
 
     public Integer getScienceId() {
         return scienceId;
@@ -47,5 +50,13 @@ public class ScienceVo {
 
     public void setDepartmentId(Integer departmentId) {
         this.departmentId = departmentId;
+    }
+
+    public String getScienceCode() {
+        return scienceCode;
+    }
+
+    public void setScienceCode(String scienceCode) {
+        this.scienceCode = scienceCode;
     }
 }

@@ -24,10 +24,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class College implements Serializable {
 
-    private static final long serialVersionUID = 1935588504;
+    private static final long serialVersionUID = 3014916;
 
     private Integer collegeId;
     private String  collegeName;
+    private String  collegeAddress;
+    private String  collegeCode;
     private Byte    collegeIsDel;
     private Integer schoolId;
 
@@ -36,6 +38,8 @@ public class College implements Serializable {
     public College(College value) {
         this.collegeId = value.collegeId;
         this.collegeName = value.collegeName;
+        this.collegeAddress = value.collegeAddress;
+        this.collegeCode = value.collegeCode;
         this.collegeIsDel = value.collegeIsDel;
         this.schoolId = value.schoolId;
     }
@@ -43,11 +47,15 @@ public class College implements Serializable {
     public College(
         Integer collegeId,
         String  collegeName,
+        String  collegeAddress,
+        String  collegeCode,
         Byte    collegeIsDel,
         Integer schoolId
     ) {
         this.collegeId = collegeId;
         this.collegeName = collegeName;
+        this.collegeAddress = collegeAddress;
+        this.collegeCode = collegeCode;
         this.collegeIsDel = collegeIsDel;
         this.schoolId = schoolId;
     }
@@ -69,6 +77,26 @@ public class College implements Serializable {
 
     public void setCollegeName(String collegeName) {
         this.collegeName = collegeName;
+    }
+
+    @NotNull
+    @Size(max = 500)
+    public String getCollegeAddress() {
+        return this.collegeAddress;
+    }
+
+    public void setCollegeAddress(String collegeAddress) {
+        this.collegeAddress = collegeAddress;
+    }
+
+    @NotNull
+    @Size(max = 20)
+    public String getCollegeCode() {
+        return this.collegeCode;
+    }
+
+    public void setCollegeCode(String collegeCode) {
+        this.collegeCode = collegeCode;
     }
 
     public Byte getCollegeIsDel() {
@@ -94,6 +122,8 @@ public class College implements Serializable {
 
         sb.append(collegeId);
         sb.append(", ").append(collegeName);
+        sb.append(", ").append(collegeAddress);
+        sb.append(", ").append(collegeCode);
         sb.append(", ").append(collegeIsDel);
         sb.append(", ").append(schoolId);
 

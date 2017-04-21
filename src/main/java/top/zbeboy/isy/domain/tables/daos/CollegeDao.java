@@ -76,6 +76,20 @@ public class CollegeDao extends DAOImpl<CollegeRecord, top.zbeboy.isy.domain.tab
     }
 
     /**
+     * Fetch records that have <code>college_address IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.College> fetchByCollegeAddress(String... values) {
+        return fetch(College.COLLEGE.COLLEGE_ADDRESS, values);
+    }
+
+    /**
+     * Fetch records that have <code>college_code IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.College> fetchByCollegeCode(String... values) {
+        return fetch(College.COLLEGE.COLLEGE_CODE, values);
+    }
+
+    /**
      * Fetch records that have <code>college_is_del IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.College> fetchByCollegeIsDel(Byte... values) {

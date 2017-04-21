@@ -25,7 +25,7 @@ import static top.zbeboy.isy.domain.Tables.NATION;
 /**
  * Created by lenovo on 2016-10-30.
  */
-@Service("NationService")
+@Service("nationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class NationServiceImpl extends DataTablesPlugin<Nation> implements NationService {
 

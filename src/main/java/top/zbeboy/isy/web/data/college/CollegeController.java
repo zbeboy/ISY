@@ -17,9 +17,9 @@ import top.zbeboy.isy.domain.tables.pojos.College;
 import top.zbeboy.isy.domain.tables.pojos.CollegeApplication;
 import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.CollegeRecord;
-import top.zbeboy.isy.service.system.ApplicationService;
 import top.zbeboy.isy.service.data.CollegeApplicationService;
 import top.zbeboy.isy.service.data.CollegeService;
+import top.zbeboy.isy.service.system.ApplicationService;
 import top.zbeboy.isy.web.bean.data.college.CollegeBean;
 import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -62,11 +62,11 @@ public class CollegeController {
     public AjaxUtils<College> colleges(@RequestParam("schoolId") int schoolId) {
         List<College> colleges = new ArrayList<>();
         Byte isDel = 0;
-        College college = new College(0, "请选择院", isDel, 0);
+        College college = new College(0, "请选择院", null, null, isDel, 0);
         colleges.add(college);
         Result<CollegeRecord> collegeRecords = collegeService.findBySchoolIdAndIsDel(schoolId, isDel);
         for (CollegeRecord r : collegeRecords) {
-            College tempCollege = new College(r.getCollegeId(), r.getCollegeName(), r.getCollegeIsDel(), r.getSchoolId());
+            College tempCollege = new College(r.getCollegeId(), r.getCollegeName(), r.getCollegeAddress(), r.getCollegeCode(), r.getCollegeIsDel(), r.getSchoolId());
             colleges.add(tempCollege);
         }
         return new AjaxUtils<College>().success().msg("获取院数据成功！").listData(colleges);
@@ -97,6 +97,8 @@ public class CollegeController {
         headers.add("college_id");
         headers.add("school_name");
         headers.add("college_name");
+        headers.add("college_code");
+        headers.add("college_address");
         headers.add("college_is_del");
         headers.add("operator");
         DataTablesUtils<CollegeBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
@@ -142,9 +144,9 @@ public class CollegeController {
      * @param schoolId    学校id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/data/college/save/valid", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/data/college/save/valid/name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils saveValid(@RequestParam("collegeName") String collegeName, @RequestParam("schoolId") int schoolId) {
+    public AjaxUtils saveValidName(@RequestParam("collegeName") String collegeName, @RequestParam("schoolId") int schoolId) {
         if (StringUtils.hasLength(collegeName)) {
             Result<CollegeRecord> collegeRecords = collegeService.findByCollegeNameAndSchoolId(collegeName, schoolId);
             if (collegeRecords.isEmpty()) {
@@ -157,6 +159,26 @@ public class CollegeController {
     }
 
     /**
+     * 检验院代码是否重复
+     *
+     * @param collegeCode 院代码
+     * @return true 合格 false 不合格
+     */
+    @RequestMapping(value = "/web/data/college/save/valid/code", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils saveValidCode(@RequestParam("collegeCode") String collegeCode) {
+        if (StringUtils.hasLength(collegeCode)) {
+            Result<CollegeRecord> collegeRecords = collegeService.findByCollegeCode(collegeCode);
+            if (collegeRecords.isEmpty()) {
+                return new AjaxUtils().success().msg("院代码不存在");
+            } else {
+                return new AjaxUtils().fail().msg("院代码已存在");
+            }
+        }
+        return new AjaxUtils().fail().msg("院代码不能为空");
+    }
+
+    /**
      * 检验编辑时院名重复
      *
      * @param id          院id
@@ -164,15 +186,33 @@ public class CollegeController {
      * @param schoolId    学校id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/data/college/update/valid", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/data/college/update/valid/name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValid(@RequestParam("collegeId") int id, @RequestParam("collegeName") String collegeName, @RequestParam("schoolId") int schoolId) {
+    public AjaxUtils updateValidName(@RequestParam("collegeId") int id, @RequestParam("collegeName") String collegeName, @RequestParam("schoolId") int schoolId) {
         Result<CollegeRecord> collegeRecords = collegeService.findByCollegeNameAndSchoolIdNeCollegeId(collegeName, id, schoolId);
         if (collegeRecords.isEmpty()) {
             return new AjaxUtils().success().msg("院名不重复");
         }
 
         return new AjaxUtils().fail().msg("院名重复");
+    }
+
+    /**
+     * 检验编辑时院代码重复
+     *
+     * @param id          院id
+     * @param collegeCode 院代码
+     * @return true 合格 false 不合格
+     */
+    @RequestMapping(value = "/web/data/college/update/valid/code", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils updateValidName(@RequestParam("collegeId") int id, @RequestParam("collegeCode") String collegeCode) {
+        Result<CollegeRecord> collegeRecords = collegeService.findByCollegeCodeNeCollegeId(collegeCode, id);
+        if (collegeRecords.isEmpty()) {
+            return new AjaxUtils().success().msg("院代码不重复");
+        }
+
+        return new AjaxUtils().fail().msg("院代码重复");
     }
 
     /**
@@ -194,6 +234,8 @@ public class CollegeController {
                 }
                 college.setCollegeIsDel(isDel);
                 college.setCollegeName(collegeVo.getCollegeName());
+                college.setCollegeCode(collegeVo.getCollegeCode());
+                college.setCollegeAddress(collegeVo.getCollegeAddress());
                 college.setSchoolId(collegeVo.getSchoolId());
                 collegeService.update(college);
                 return new AjaxUtils().success().msg("更改成功");
@@ -220,6 +262,8 @@ public class CollegeController {
             }
             college.setCollegeIsDel(isDel);
             college.setCollegeName(collegeVo.getCollegeName());
+            college.setCollegeCode(collegeVo.getCollegeCode());
+            college.setCollegeAddress(collegeVo.getCollegeAddress());
             college.setSchoolId(collegeVo.getSchoolId());
             collegeService.save(college);
             return new AjaxUtils().success().msg("保存成功");

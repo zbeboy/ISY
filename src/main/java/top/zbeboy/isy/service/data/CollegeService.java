@@ -56,6 +56,14 @@ public interface CollegeService {
     Result<CollegeRecord> findByCollegeNameAndSchoolId(String collegeName, int schoolId);
 
     /**
+     *  院代码查询 注：等于院代码
+     *
+     * @param collegeCode 院代码
+     * @return 数据
+     */
+    Result<CollegeRecord> findByCollegeCode(String collegeCode);
+
+    /**
      * 保存
      *
      * @param college 院
@@ -102,4 +110,13 @@ public interface CollegeService {
      * @return 院
      */
     Result<CollegeRecord> findByCollegeNameAndSchoolIdNeCollegeId(String collegeName, int collegeId, int schoolId);
+
+    /**
+     * 学校下 院代码查询 注：不等于院id
+     *
+     * @param collegeCode 院代码
+     * @param collegeId   院id
+     * @return 数据
+     */
+    Result<CollegeRecord> findByCollegeCodeNeCollegeId(String collegeCode, int collegeId);
 }

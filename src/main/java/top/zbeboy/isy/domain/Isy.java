@@ -14,6 +14,7 @@ import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
+import top.zbeboy.isy.domain.tables.AcademicTitle;
 import top.zbeboy.isy.domain.tables.Application;
 import top.zbeboy.isy.domain.tables.Authorities;
 import top.zbeboy.isy.domain.tables.College;
@@ -75,12 +76,17 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = -1991083106;
+    private static final long serialVersionUID = -838256026;
 
     /**
      * The reference instance of <code>isy</code>
      */
     public static final Isy ISY = new Isy();
+
+    /**
+     * The table <code>isy.academic_title</code>.
+     */
+    public final AcademicTitle ACADEMIC_TITLE = top.zbeboy.isy.domain.tables.AcademicTitle.ACADEMIC_TITLE;
 
     /**
      * The table <code>isy.application</code>.
@@ -337,6 +343,7 @@ public class Isy extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            AcademicTitle.ACADEMIC_TITLE,
             Application.APPLICATION,
             Authorities.AUTHORITIES,
             College.COLLEGE,

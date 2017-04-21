@@ -71,6 +71,8 @@ CREATE TABLE school(
 CREATE TABLE college(
   college_id INT AUTO_INCREMENT PRIMARY KEY ,
   college_name VARCHAR(200) NOT NULL ,
+  college_address VARCHAR(500) NOT NULL ,
+  college_code VARCHAR(20) NOT NULL UNIQUE ,
   college_is_del BOOLEAN,
   school_id INT NOT NULL ,
   FOREIGN KEY (school_id) REFERENCES school(school_id)
@@ -103,6 +105,7 @@ CREATE TABLE department(
 CREATE TABLE science(
   science_id INT AUTO_INCREMENT PRIMARY KEY ,
   science_name VARCHAR(200) NOT NULL ,
+  science_code VARCHAR(20) NOT NULL UNIQUE ,
   science_is_del BOOLEAN,
   department_id INT NOT NULL ,
   FOREIGN KEY (department_id) REFERENCES department(department_id)
@@ -125,6 +128,11 @@ CREATE TABLE political_landscape(
 CREATE TABLE nation(
   nation_id INT AUTO_INCREMENT PRIMARY KEY ,
   nation_name VARCHAR(30) UNIQUE NOT NULL
+);
+
+CREATE TABLE academic_title(
+  academic_title_id INT AUTO_INCREMENT PRIMARY KEY ,
+  academic_title_name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE student(
@@ -156,6 +164,7 @@ CREATE TABLE staff(
   political_landscape_id INT,
   nation_id INT,
   post VARCHAR(500),
+  academic_title_id INT,
   department_id INT NOT NULL ,
   username VARCHAR(64) NOT NULL ,
   FOREIGN KEY (department_id) REFERENCES department(department_id),
@@ -657,6 +666,10 @@ INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
 VALUES ('政治面貌数据',809,2,'/web/menu/data/politics','data_politics','data_politics','','/web/data/politics');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('职称数据',809,2,'/web/menu/data/academic','data_academic','data_academic','','/web/data/academic');
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
@@ -721,6 +734,7 @@ INSERT INTO role_application(role_id, application_id) VALUES (1,24);
 INSERT INTO role_application(role_id, application_id) VALUES (1,25);
 INSERT INTO role_application(role_id, application_id) VALUES (1,26);
 INSERT INTO role_application(role_id, application_id) VALUES (1,27);
+INSERT INTO role_application(role_id, application_id) VALUES (1,28);
 
 INSERT INTO role_application(role_id, application_id) VALUES (2,1);
 INSERT INTO role_application(role_id, application_id) VALUES (2,2);
@@ -739,7 +753,8 @@ INSERT INTO role_application(role_id, application_id) VALUES (2,17);
 INSERT INTO role_application(role_id, application_id) VALUES (2,18);
 INSERT INTO role_application(role_id, application_id) VALUES (2,19);
 INSERT INTO role_application(role_id, application_id) VALUES (2,20);
-INSERT INTO role_application(role_id, application_id) VALUES (2,22);
+INSERT INTO role_application(role_id, application_id) VALUES (2,21);
+INSERT INTO role_application(role_id, application_id) VALUES (2,23);
 
 INSERT INTO political_landscape(political_landscape_name) VALUES ('群众');
 INSERT INTO political_landscape(political_landscape_name) VALUES ('共青团员');
@@ -811,5 +826,20 @@ INSERT INTO nation(nation_name) VALUES('赫哲族');
 INSERT INTO nation(nation_name) VALUES('门巴族');
 INSERT INTO nation(nation_name) VALUES('珞巴族');
 INSERT INTO nation(nation_name) VALUES('基诺族');
+
+INSERT INTO academic_title(academic_title_name) VALUES ('讲师');
+INSERT INTO academic_title(academic_title_name) VALUES ('副教授');
+INSERT INTO academic_title(academic_title_name) VALUES ('教授');
+INSERT INTO academic_title(academic_title_name) VALUES ('助教');
+INSERT INTO academic_title(academic_title_name) VALUES ('工程师');
+INSERT INTO academic_title(academic_title_name) VALUES ('高级工程师');
+INSERT INTO academic_title(academic_title_name) VALUES ('教授级高级工程师');
+INSERT INTO academic_title(academic_title_name) VALUES ('助理工程师');
+INSERT INTO academic_title(academic_title_name) VALUES ('实验师');
+INSERT INTO academic_title(academic_title_name) VALUES ('助理实验师');
+INSERT INTO academic_title(academic_title_name) VALUES ('高级实验师');
+INSERT INTO academic_title(academic_title_name) VALUES ('副研究员');
+INSERT INTO academic_title(academic_title_name) VALUES ('研究员');
+INSERT INTO academic_title(academic_title_name) VALUES ('助理研究员');
 
 INSERT INTO system_alert_type(name, icon) VALUES ('消息','fa fa-envelope fa-fw');

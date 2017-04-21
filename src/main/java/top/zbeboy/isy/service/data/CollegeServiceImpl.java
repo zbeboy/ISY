@@ -115,6 +115,13 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                 .fetch();
     }
 
+    @Override
+    public Result<CollegeRecord> findByCollegeCode(String collegeCode) {
+        return create.selectFrom(COLLEGE)
+                .where(COLLEGE.COLLEGE_CODE.eq(collegeCode))
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(College college) {
@@ -159,6 +166,13 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     public Result<CollegeRecord> findByCollegeNameAndSchoolIdNeCollegeId(String collegeName, int collegeId, int schoolId) {
         return create.selectFrom(COLLEGE)
                 .where(COLLEGE.COLLEGE_NAME.eq(collegeName).and(COLLEGE.COLLEGE_ID.ne(collegeId)).and(COLLEGE.SCHOOL_ID.eq(schoolId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<CollegeRecord> findByCollegeCodeNeCollegeId(String collegeCode, int collegeId) {
+        return create.selectFrom(COLLEGE)
+                .where(COLLEGE.COLLEGE_CODE.eq(collegeCode).and(COLLEGE.COLLEGE_ID.ne(collegeId)))
                 .fetch();
     }
 
@@ -231,6 +245,24 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                     sortField[0] = COLLEGE.COLLEGE_NAME.asc();
                 } else {
                     sortField[0] = COLLEGE.COLLEGE_NAME.desc();
+                }
+            }
+
+            if ("college_code".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = COLLEGE.COLLEGE_CODE.asc();
+                } else {
+                    sortField[0] = COLLEGE.COLLEGE_CODE.desc();
+                }
+            }
+
+            if ("college_address".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = COLLEGE.COLLEGE_ADDRESS.asc();
+                } else {
+                    sortField[0] = COLLEGE.COLLEGE_ADDRESS.desc();
                 }
             }
 

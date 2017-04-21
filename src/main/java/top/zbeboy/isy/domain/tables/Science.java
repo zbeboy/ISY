@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.ScienceRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Science extends TableImpl<ScienceRecord> {
 
-    private static final long serialVersionUID = -543108137;
+    private static final long serialVersionUID = 295575446;
 
     /**
      * The reference instance of <code>isy.science</code>
@@ -60,6 +60,11 @@ public class Science extends TableImpl<ScienceRecord> {
      * The column <code>isy.science.science_name</code>.
      */
     public final TableField<ScienceRecord, String> SCIENCE_NAME = createField("science_name", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.science.science_code</code>.
+     */
+    public final TableField<ScienceRecord, String> SCIENCE_CODE = createField("science_code", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
      * The column <code>isy.science.science_is_del</code>.

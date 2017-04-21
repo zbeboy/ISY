@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.SchemaVersionRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SchemaVersion extends TableImpl<SchemaVersionRecord> {
 
-    private static final long serialVersionUID = -1604226733;
+    private static final long serialVersionUID = -837942608;
 
     /**
      * The reference instance of <code>isy.schema_version</code>
@@ -93,7 +93,7 @@ public class SchemaVersion extends TableImpl<SchemaVersionRecord> {
     /**
      * The column <code>isy.schema_version.installed_on</code>.
      */
-    public final TableField<SchemaVersionRecord, Timestamp> INSTALLED_ON = createField("installed_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<SchemaVersionRecord, Timestamp> INSTALLED_ON = createField("installed_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>isy.schema_version.execution_time</code>.

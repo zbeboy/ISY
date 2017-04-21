@@ -14,23 +14,25 @@ import java.sql.Timestamp;
 public class StaffElastic {
     @Id
     private String staffId;
-    private String  staffNumber;
+    private String staffNumber;
     private Date birthday;
-    private String  sex;
-    private String  idCard;
-    private String  familyResidence;
+    private String sex;
+    private String idCard;
+    private String familyResidence;
     private Integer politicalLandscapeId;
-    private String  politicalLandscapeName;
+    private String politicalLandscapeName;
     private Integer nationId;
-    private String  nationName;
-    private String  post;
+    private String nationName;
+    private Integer academicTitleId;
+    private String academicTitleName;
+    private String post;
     private Integer schoolId;
     private String schoolName;
     private Integer collegeId;
     private String collegeName;
     private Integer departmentId;
     private String departmentName;
-    private String  username;
+    private String username;
     private Byte enabled;
     private String realName;
     private String mobile;
@@ -262,5 +264,21 @@ public class StaffElastic {
 
     public void setNationName(String nationName) {
         this.nationName = nationName;
+    }
+
+    public Integer getAcademicTitleId() {
+        return academicTitleId;
+    }
+
+    public void setAcademicTitleId(Integer academicTitleId) {
+        this.academicTitleId = academicTitleId;
+    }
+
+    public String getAcademicTitleName() {
+        return academicTitleName;
+    }
+
+    public void setAcademicTitleName(String academicTitleName) {
+        this.academicTitleName = academicTitleName;
     }
 }

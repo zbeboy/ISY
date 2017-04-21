@@ -104,6 +104,14 @@ public interface ScienceService {
     Result<ScienceRecord> findByScienceNameAndDepartmentId(String scienceName, int departmentId);
 
     /**
+     * 专业代码查询 注：等于专业代码
+     *
+     * @param scienceCode 专业代码
+     * @return 数据
+     */
+    Result<ScienceRecord> findByScienceCode(String scienceCode);
+
+    /**
      * 查找系下不等于该专业id的专业名
      *
      * @param scienceName  专业名
@@ -112,4 +120,13 @@ public interface ScienceService {
      * @return 数据
      */
     Result<ScienceRecord> findByScienceNameAndDepartmentIdNeScienceId(String scienceName, int scienceId, int departmentId);
+
+    /**
+     * 专业代码查询 注：等于专业id
+     *
+     * @param scienceCode 专业代码
+     * @param scienceId   专业id
+     * @return 数据
+     */
+    Result<ScienceRecord> findByScienceCodeNeScienceId(String scienceCode, int scienceId);
 }

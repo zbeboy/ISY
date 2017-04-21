@@ -37,7 +37,7 @@ import top.zbeboy.isy.domain.tables.records.StaffRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Staff extends TableImpl<StaffRecord> {
 
-    private static final long serialVersionUID = 1904330939;
+    private static final long serialVersionUID = -1614618806;
 
     /**
      * The reference instance of <code>isy.staff</code>
@@ -96,6 +96,11 @@ public class Staff extends TableImpl<StaffRecord> {
      * The column <code>isy.staff.post</code>.
      */
     public final TableField<StaffRecord, String> POST = createField("post", org.jooq.impl.SQLDataType.VARCHAR.length(500), this, "");
+
+    /**
+     * The column <code>isy.staff.academic_title_id</code>.
+     */
+    public final TableField<StaffRecord, Integer> ACADEMIC_TITLE_ID = createField("academic_title_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>isy.staff.department_id</code>.

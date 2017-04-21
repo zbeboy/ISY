@@ -12,6 +12,7 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
         var ajax_url = {
             nation_data_url: '/user/nations',
             political_landscape_data_url: '/user/political_landscapes',
+            academic_data_url:'/user/academic',
             avatar_review_url: '/anyone/users/review/avatar',
             valid_staff_url: '/anyone/users/valid/staff',
             valid_id_card_url: '/anyone/users/valid/id_card',
@@ -79,7 +80,8 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             staffNumber: '#staffNumber',
             idCard: '#idCard',
             select_nation: '#select_nation',
-            select_political_landscape: '#select_political_landscape'
+            select_political_landscape: '#select_political_landscape',
+            select_academic:'#select_academic'
         };
 
         /*
@@ -145,6 +147,7 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
          */
         var selectedNationCount = true;
         var selectedPoliticalLandscapeCount = true;
+        var selectedAcademicCount = true;
 
         /**
          * 选中民族
@@ -175,6 +178,20 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
         }
 
         /**
+         * 选中职称
+         */
+        function selectedAcademic() {
+            var realAcademicTitleId = $('#academicTitleId').val();
+            var academicChildrens = $(paramId.select_academic).children();
+            for (var i = 0; i < academicChildrens.length; i++) {
+                if ($(academicChildrens[i]).val() === realAcademicTitleId) {
+                    $(academicChildrens[i]).prop('selected', true);
+                    break;
+                }
+            }
+        }
+
+        /**
          * 初始化
          */
         function init() {
@@ -186,6 +203,10 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
 
             $.get(web_path + ajax_url.political_landscape_data_url, function (data) {
                 politicalLandscapeData(data);
+            });
+
+            $.get(web_path + ajax_url.academic_data_url, function (data) {
+                academicData(data);
             });
         }
 
@@ -232,6 +253,28 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
             if (selectedPoliticalLandscapeCount) {
                 selectedPoliticalLandscape();
                 selectedPoliticalLandscapeCount = false;
+            }
+        }
+
+        /**
+         * 职称数据展现
+         * @param data json数据
+         */
+        function academicData(data) {
+            var template = Handlebars.compile($("#academic-template").html());
+
+            Handlebars.registerHelper('academic_value', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.academicTitleId));
+            });
+
+            Handlebars.registerHelper('academic_name', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.academicTitleName));
+            });
+
+            $(paramId.select_academic).html(template(data));
+            if (selectedAcademicCount) {
+                selectedNation();
+                selectedAcademicCount = false;
             }
         }
 

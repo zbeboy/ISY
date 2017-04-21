@@ -63,6 +63,8 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
                 {"data": "collegeId"},
                 {"data": "schoolName"},
                 {"data": "collegeName"},
+                {"data": "collegeCode"},
+                {"data": "collegeAddress"},
                 {"data": "collegeIsDel"},
                 {"data": null}
             ],
@@ -75,7 +77,7 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
                     }
                 },
                 {
-                    targets: 5,
+                    targets: 7,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -141,7 +143,7 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
                     }
                 },
                 {
-                    targets: 4,
+                    targets: 6,
                     render: function (a, b, c, d) {
                         if (c.collegeIsDel == 0 || c.collegeIsDel == null) {
                             return "<span class='text-info'>正常</span>";
