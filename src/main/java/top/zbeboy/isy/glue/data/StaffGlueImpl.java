@@ -118,6 +118,8 @@ public class StaffGlueImpl implements StaffGlue {
             staffBean.setPoliticalLandscapeName(staffElastic.getPoliticalLandscapeName());
             staffBean.setNationId(staffElastic.getNationId());
             staffBean.setNationName(staffElastic.getNationName());
+            staffBean.setAcademicTitleId(staffElastic.getAcademicTitleId());
+            staffBean.setAcademicTitleName(staffElastic.getAcademicTitleName());
             staffBean.setPost(staffElastic.getPost());
             staffBean.setSchoolId(staffElastic.getSchoolId());
             staffBean.setSchoolName(staffElastic.getSchoolName());
@@ -290,6 +292,16 @@ public class StaffGlueImpl implements StaffGlue {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"));
                 } else {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("departmentName").order(SortOrder.DESC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"));
+                }
+            }
+
+            if ("academic_title_name".equalsIgnoreCase(orderColumnName)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("academicTitleName").order(SortOrder.ASC).unmappedType("string"));
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"));
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("academicTitleName").order(SortOrder.DESC).unmappedType("string"));
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"));
                 }
             }

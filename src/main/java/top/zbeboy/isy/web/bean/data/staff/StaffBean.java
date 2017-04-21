@@ -40,6 +40,8 @@ public class StaffBean extends Staff{
 
     private String roleName;
 
+    private String academicTitleName;
+
     public Integer getSchoolId() {
         return schoolId;
     }
@@ -230,5 +232,13 @@ public class StaffBean extends Staff{
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getAcademicTitleName() {
+        return academicTitleName;
+    }
+
+    public void setAcademicTitleName(String academicTitleName) {
+        this.academicTitleName = academicTitleName;
     }
 }

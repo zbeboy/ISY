@@ -253,6 +253,7 @@ public class StaffController {
         headers.add("school_name");
         headers.add("college_name");
         headers.add("department_name");
+        headers.add("academic_title_name");
         headers.add("post");
         headers.add("sex");
         headers.add("birthday");
@@ -349,6 +350,7 @@ public class StaffController {
                 staff.setSex(staffVo.getSex());
                 staff.setNationId(staffVo.getNationId());
                 staff.setPoliticalLandscapeId(staffVo.getPoliticalLandscapeId());
+                staff.setAcademicTitleId(staffVo.getAcademicTitleId());
                 if (StringUtils.hasLength(staffVo.getBirthday())) {
                     staff.setBirthday(DateTimeUtils.formatDate(staffVo.getBirthday()));
                 } else {

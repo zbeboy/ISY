@@ -17,6 +17,7 @@ public class StaffVo {
     private String familyResidence;
     private Integer politicalLandscapeId;
     private Integer nationId;
+    private Integer academicTitleId;
     private String post;
     private Integer departmentId;
     @NotNull
@@ -80,6 +81,14 @@ public class StaffVo {
 
     public void setNationId(Integer nationId) {
         this.nationId = nationId;
+    }
+
+    public Integer getAcademicTitleId() {
+        return academicTitleId;
+    }
+
+    public void setAcademicTitleId(Integer academicTitleId) {
+        this.academicTitleId = academicTitleId;
     }
 
     public String getPost() {

@@ -251,6 +251,8 @@ public class ElasticSyncData {
                 .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                 .leftJoin(POLITICAL_LANDSCAPE)
                 .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                .leftJoin(ACADEMIC_TITLE)
+                .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                 .fetch();
         List<StaffElastic> staffElastics = new ArrayList<>();
         for (Record r : record) {

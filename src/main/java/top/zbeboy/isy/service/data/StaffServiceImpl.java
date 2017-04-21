@@ -12,10 +12,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.StaffDao;
-import top.zbeboy.isy.domain.tables.pojos.Nation;
-import top.zbeboy.isy.domain.tables.pojos.PoliticalLandscape;
-import top.zbeboy.isy.domain.tables.pojos.Staff;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
@@ -65,6 +62,9 @@ public class StaffServiceImpl implements StaffService {
 
     @Resource
     private NationService nationService;
+
+    @Resource
+    private AcademicTitleService academicTitleService;
 
     @Autowired
     public StaffServiceImpl(DSLContext dslContext) {
@@ -147,6 +147,7 @@ public class StaffServiceImpl implements StaffService {
                 .set(STAFF.POLITICAL_LANDSCAPE_ID, staffElastic.getPoliticalLandscapeId())
                 .set(STAFF.NATION_ID, staffElastic.getNationId())
                 .set(STAFF.POST, staffElastic.getPost())
+                .set(STAFF.ACADEMIC_TITLE_ID,staffElastic.getAcademicTitleId())
                 .set(STAFF.DEPARTMENT_ID, staffElastic.getDepartmentId())
                 .set(STAFF.USERNAME, staffElastic.getUsername())
                 .returning(STAFF.STAFF_ID)
@@ -190,6 +191,18 @@ public class StaffServiceImpl implements StaffService {
                 staffElastic.setNationName("");
             }
         }
+        if (!Objects.equals(staff.getAcademicTitleId(), staffElastic.getAcademicTitleId())) {
+            if (!Objects.isNull(staff.getAcademicTitleId()) && staff.getAcademicTitleId() > 0) {
+                AcademicTitle academicTitle = academicTitleService.findById(staff.getAcademicTitleId());
+                if (!Objects.isNull(academicTitle)) {
+                    staffElastic.setAcademicTitleId(academicTitle.getAcademicTitleId());
+                    staffElastic.setAcademicTitleName(academicTitle.getAcademicTitleName());
+                }
+            } else {
+                staffElastic.setAcademicTitleId(staff.getAcademicTitleId());
+                staffElastic.setAcademicTitleName("");
+            }
+        }
         if (!Objects.isNull(staff.getDepartmentId()) && staff.getDepartmentId() > 0 && !Objects.equals(staff.getDepartmentId(), staffElastic.getDepartmentId())) {
             Optional<Record> record = departmentService.findByIdRelation(staff.getDepartmentId());
             if (record.isPresent()) {
@@ -222,6 +235,8 @@ public class StaffServiceImpl implements StaffService {
                 .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                 .leftJoin(POLITICAL_LANDSCAPE)
                 .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                .leftJoin(ACADEMIC_TITLE)
+                .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                 .where(STAFF.USERNAME.eq(username))
                 .fetchOptional();
     }
@@ -254,6 +269,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .whereExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -276,6 +293,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId)).andExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -299,6 +318,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(a).andExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -321,6 +342,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a)).andExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -354,6 +377,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .whereNotExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -376,6 +401,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId)).andNotExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -398,6 +425,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(a).andNotExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -420,6 +449,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a)).andNotExists(select);
                 sortCondition(dataTablesUtils, selectConditionStep);
                 pagination(dataTablesUtils, selectConditionStep);
@@ -539,6 +570,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(a).andExists(select);
                 count = selectConditionStep.fetchOne();
             } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
@@ -559,6 +592,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a)).andExists(select);
                 count = selectConditionStep.fetchOne();
             }
@@ -617,6 +652,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(a).andNotExists(select);
                 count = selectConditionStep.fetchOne();
             } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
@@ -637,6 +674,8 @@ public class StaffServiceImpl implements StaffService {
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
                         .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
+                        .leftJoin(ACADEMIC_TITLE)
+                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a)).andNotExists(select);
                 count = selectConditionStep.fetchOne();
             }
@@ -835,6 +874,17 @@ public class StaffServiceImpl implements StaffService {
                     sortField[1] = USERS.USERNAME.asc();
                 } else {
                     sortField[0] = DEPARTMENT.DEPARTMENT_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
+                }
+            }
+
+            if ("academic_title_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = ACADEMIC_TITLE.ACADEMIC_TITLE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
+                } else {
+                    sortField[0] = ACADEMIC_TITLE.ACADEMIC_TITLE_NAME.desc();
                     sortField[1] = USERS.USERNAME.desc();
                 }
             }

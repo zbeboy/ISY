@@ -273,7 +273,7 @@ require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", 
 
             $(paramId.select_academic).html(template(data));
             if (selectedAcademicCount) {
-                selectedNation();
+                selectedAcademic();
                 selectedAcademicCount = false;
             }
         }
