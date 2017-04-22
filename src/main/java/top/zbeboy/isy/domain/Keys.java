@@ -145,6 +145,7 @@ public class Keys {
     public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = UniqueKeys0.KEY_APPLICATION_PRIMARY;
     public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = UniqueKeys0.KEY_AUTHORITIES_PRIMARY;
     public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = UniqueKeys0.KEY_COLLEGE_PRIMARY;
+    public static final UniqueKey<CollegeRecord> KEY_COLLEGE_COLLEGE_CODE = UniqueKeys0.KEY_COLLEGE_COLLEGE_CODE;
     public static final UniqueKey<CollegeApplicationRecord> KEY_COLLEGE_APPLICATION_PRIMARY = UniqueKeys0.KEY_COLLEGE_APPLICATION_PRIMARY;
     public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = UniqueKeys0.KEY_COLLEGE_ROLE_PRIMARY;
     public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
@@ -184,6 +185,7 @@ public class Keys {
     public static final UniqueKey<SchemaVersionRecord> KEY_SCHEMA_VERSION_PRIMARY = UniqueKeys0.KEY_SCHEMA_VERSION_PRIMARY;
     public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = UniqueKeys0.KEY_SCHOOL_PRIMARY;
     public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = UniqueKeys0.KEY_SCIENCE_PRIMARY;
+    public static final UniqueKey<ScienceRecord> KEY_SCIENCE_SCIENCE_CODE = UniqueKeys0.KEY_SCIENCE_SCIENCE_CODE;
     public static final UniqueKey<StaffRecord> KEY_STAFF_PRIMARY = UniqueKeys0.KEY_STAFF_PRIMARY;
     public static final UniqueKey<StaffRecord> KEY_STAFF_STAFF_NUMBER = UniqueKeys0.KEY_STAFF_STAFF_NUMBER;
     public static final UniqueKey<StaffRecord> KEY_STAFF_ID_CARD = UniqueKeys0.KEY_STAFF_ID_CARD;
@@ -282,6 +284,7 @@ public class Keys {
         public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = createUniqueKey(Application.APPLICATION, "KEY_application_PRIMARY", Application.APPLICATION.APPLICATION_ID);
         public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = createUniqueKey(Authorities.AUTHORITIES, "KEY_authorities_PRIMARY", Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY);
         public static final UniqueKey<CollegeRecord> KEY_COLLEGE_PRIMARY = createUniqueKey(College.COLLEGE, "KEY_college_PRIMARY", College.COLLEGE.COLLEGE_ID);
+        public static final UniqueKey<CollegeRecord> KEY_COLLEGE_COLLEGE_CODE = createUniqueKey(College.COLLEGE, "KEY_college_college_code", College.COLLEGE.COLLEGE_CODE);
         public static final UniqueKey<CollegeApplicationRecord> KEY_COLLEGE_APPLICATION_PRIMARY = createUniqueKey(CollegeApplication.COLLEGE_APPLICATION, "KEY_college_application_PRIMARY", CollegeApplication.COLLEGE_APPLICATION.APPLICATION_ID, CollegeApplication.COLLEGE_APPLICATION.COLLEGE_ID);
         public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = createUniqueKey(CollegeRole.COLLEGE_ROLE, "KEY_college_role_PRIMARY", CollegeRole.COLLEGE_ROLE.ROLE_ID, CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
         public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = createUniqueKey(Department.DEPARTMENT, "KEY_department_PRIMARY", Department.DEPARTMENT.DEPARTMENT_ID);
@@ -321,6 +324,7 @@ public class Keys {
         public static final UniqueKey<SchemaVersionRecord> KEY_SCHEMA_VERSION_PRIMARY = createUniqueKey(SchemaVersion.SCHEMA_VERSION, "KEY_schema_version_PRIMARY", SchemaVersion.SCHEMA_VERSION.VERSION);
         public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = createUniqueKey(School.SCHOOL, "KEY_school_PRIMARY", School.SCHOOL.SCHOOL_ID);
         public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = createUniqueKey(Science.SCIENCE, "KEY_science_PRIMARY", Science.SCIENCE.SCIENCE_ID);
+        public static final UniqueKey<ScienceRecord> KEY_SCIENCE_SCIENCE_CODE = createUniqueKey(Science.SCIENCE, "KEY_science_science_code", Science.SCIENCE.SCIENCE_CODE);
         public static final UniqueKey<StaffRecord> KEY_STAFF_PRIMARY = createUniqueKey(Staff.STAFF, "KEY_staff_PRIMARY", Staff.STAFF.STAFF_ID);
         public static final UniqueKey<StaffRecord> KEY_STAFF_STAFF_NUMBER = createUniqueKey(Staff.STAFF, "KEY_staff_staff_number", Staff.STAFF.STAFF_NUMBER);
         public static final UniqueKey<StaffRecord> KEY_STAFF_ID_CARD = createUniqueKey(Staff.STAFF, "KEY_staff_id_card", Staff.STAFF.ID_CARD);

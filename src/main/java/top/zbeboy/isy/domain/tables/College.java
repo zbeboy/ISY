@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.CollegeRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class College extends TableImpl<CollegeRecord> {
 
-    private static final long serialVersionUID = -1222885095;
+    private static final long serialVersionUID = 393205228;
 
     /**
      * The reference instance of <code>isy.college</code>
@@ -132,7 +132,7 @@ public class College extends TableImpl<CollegeRecord> {
      */
     @Override
     public List<UniqueKey<CollegeRecord>> getKeys() {
-        return Arrays.<UniqueKey<CollegeRecord>>asList(Keys.KEY_COLLEGE_PRIMARY);
+        return Arrays.<UniqueKey<CollegeRecord>>asList(Keys.KEY_COLLEGE_PRIMARY, Keys.KEY_COLLEGE_COLLEGE_CODE);
     }
 
     /**

@@ -90,6 +90,13 @@ public class CollegeDao extends DAOImpl<CollegeRecord, top.zbeboy.isy.domain.tab
     }
 
     /**
+     * Fetch a unique record that has <code>college_code = value</code>
+     */
+    public top.zbeboy.isy.domain.tables.pojos.College fetchOneByCollegeCode(String value) {
+        return fetchOne(College.COLLEGE.COLLEGE_CODE, value);
+    }
+
+    /**
      * Fetch records that have <code>college_is_del IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.College> fetchByCollegeIsDel(Byte... values) {

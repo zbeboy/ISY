@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.ScienceRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Science extends TableImpl<ScienceRecord> {
 
-    private static final long serialVersionUID = 295575446;
+    private static final long serialVersionUID = -1387340893;
 
     /**
      * The reference instance of <code>isy.science</code>
@@ -127,7 +127,7 @@ public class Science extends TableImpl<ScienceRecord> {
      */
     @Override
     public List<UniqueKey<ScienceRecord>> getKeys() {
-        return Arrays.<UniqueKey<ScienceRecord>>asList(Keys.KEY_SCIENCE_PRIMARY);
+        return Arrays.<UniqueKey<ScienceRecord>>asList(Keys.KEY_SCIENCE_PRIMARY, Keys.KEY_SCIENCE_SCIENCE_CODE);
     }
 
     /**
