@@ -158,7 +158,7 @@ public class CacheManageServiceImpl implements CacheManageService {
             Result<ApplicationRecord> secondLevelRecord = applicationService.findInIdsAndPid(applicationIds, applicationRecord.getApplicationId());// 查询二级菜单
             String url = getWebPath(applicationRecord.getApplicationUrl());
             if (secondLevelRecord.isEmpty()) { // 无下级菜单
-                li += "<a href=\"" + url + "\" class=\"dy_href\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
+                li += "<a href=\"" + url + "\" class=\"dy_href\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "</a>";
             } else {
                 li += "<a href=\"" + url + "\"><i class=\"fa " + applicationRecord.getIcon() + " fa-fw\"></i> " + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
                 // 生成下级菜单
@@ -180,7 +180,7 @@ public class CacheManageServiceImpl implements CacheManageService {
             if (thirdLevelRecord.isEmpty()) { // 无下级菜单
                 li += "<a href=\"" + url + "\" class=\"dy_href\">" + applicationRecord.getApplicationName() + "</a>";
             } else {
-                li += "<a href=\"" + url + "\">" + applicationRecord.getApplicationName() + "</a>";
+                li += "<a href=\"" + url + "\">" + applicationRecord.getApplicationName() + "<span class=\"fa arrow\"></span></a>";
                 // 生成下级菜单
                 li += thirdLevelHtml(thirdLevelRecord);
             }

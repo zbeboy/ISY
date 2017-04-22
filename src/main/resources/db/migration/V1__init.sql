@@ -591,6 +591,10 @@ VALUES ('实习',200,0,'#','internship','internship','fa-coffee');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon)
+VALUES ('毕业',230,0,'#','graduate','graduate','fa-graduation-cap');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon)
 VALUES ('数据',800,0,'#','datas','datas','fa-hdd-o');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
@@ -632,74 +636,128 @@ VALUES ('实习监管',207,1,'/web/menu/internship/regulate','internship_regulat
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('学校数据',801,2,'/web/menu/data/school','data_school','data_school','','/web/data/school');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('院数据',802,2,'/web/menu/data/college','data_college','data_college','','/web/data/college');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系数据',803,2,'/web/menu/data/department','data_department','data_department','','/web/data/department');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('专业数据',804,2,'/web/menu/data/science','data_science','data_science','','/web/data/science');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('班级数据',805,2,'/web/menu/data/organize','data_organize','data_organize','','/web/data/organize');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('教职工数据',806,2,'/web/menu/data/staff','data_staff','data_staff','','/web/data/staff');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('学生数据',807,2,'/web/menu/data/student','data_student','data_student','','/web/data/student');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('民族数据',808,2,'/web/menu/data/nation','data_nation','data_nation','','/web/data/nation');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('政治面貌数据',809,2,'/web/menu/data/politics','data_politics','data_politics','','/web/data/politics');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('职称数据',809,2,'/web/menu/data/academic','data_academic','data_academic','','/web/data/academic');
+                        application_code, application_en_name, icon)
+VALUES ('毕业设计',231,2,'#','graduate_design','graduate_design','');
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('平台用户',901,3,'/web/menu/platform/users','platform_users','platform_users','','/web/platform/users');
+VALUES ('学校数据',801,3,'/web/menu/data/school','data_school','data_school','','/web/data/school');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('平台角色',902,3,'/web/menu/platform/role','platform_role','platform_role','','/web/platform/role');
+VALUES ('院数据',802,3,'/web/menu/data/college','data_college','data_college','','/web/data/college');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('系数据',803,3,'/web/menu/data/department','data_department','data_department','','/web/data/department');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('专业数据',804,3,'/web/menu/data/science','data_science','data_science','','/web/data/science');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('班级数据',805,3,'/web/menu/data/organize','data_organize','data_organize','','/web/data/organize');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('教职工数据',806,3,'/web/menu/data/staff','data_staff','data_staff','','/web/data/staff');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('学生数据',807,3,'/web/menu/data/student','data_student','data_student','','/web/data/student');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('民族数据',808,3,'/web/menu/data/nation','data_nation','data_nation','','/web/data/nation');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('政治面貌数据',809,3,'/web/menu/data/politics','data_politics','data_politics','','/web/data/politics');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('职称数据',809,3,'/web/menu/data/academic','data_academic','data_academic','','/web/data/academic');
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统应用',1001,4,'/web/menu/system/application','system_application','system_application','','/web/system/application');
+VALUES ('平台用户',901,4,'/web/menu/platform/users','platform_users','platform_users','','/web/platform/users');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统角色',1002,4,'/web/menu/system/role','system_role','system_role','','/web/system/role');
+VALUES ('平台角色',902,4,'/web/menu/platform/role','platform_role','platform_role','','/web/platform/role');
+
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统日志',1003,4,'/web/menu/system/log','system_log','system_log','','/web/system/log');
+VALUES ('系统应用',1001,5,'/web/menu/system/application','system_application','system_application','','/web/system/application');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统短信',1004,4,'/web/menu/system/sms','system_sms','system_sms','','/web/system/sms');
+VALUES ('系统角色',1002,5,'/web/menu/system/role','system_role','system_role','','/web/system/role');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('系统邮件',1005,4,'/web/menu/system/mailbox','system_mailbox','system_mailbox','','/web/system/mailbox');
+VALUES ('系统日志',1003,5,'/web/menu/system/log','system_log','system_log','','/web/system/log');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('系统短信',1004,5,'/web/menu/system/sms','system_sms','system_sms','','/web/system/sms');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('系统邮件',1005,5,'/web/menu/system/mailbox','system_mailbox','system_mailbox','','/web/system/mailbox');
+
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业设计发布',232,13,'/web/menu/graduate/design/release','graduate_design_release','graduate_design_release','','/web/graduate/design/release');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业指导教师',233,13,'/web/menu/graduate/design/tutor','graduate_design_tutor','graduate_design_tutor','','/web/graduate/design/tutor');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('填报指导教师',234,13,'/web/menu/graduate/design/pharmtech','graduate_design_pharmtech','graduate_design_pharmtech','','/web/graduate/design/pharmtech');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业设计规划',235,13,'/web/menu/graduate/design/project','graduate_design_project','graduate_design_project','','/web/graduate/design/project');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业设计题目',236,13,'/web/menu/graduate/design/subject','graduate_design_subject','graduate_design_subject','','/web/graduate/design/subject');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业设计申报',237,13,'/web/menu/graduate/design/declare','graduate_design_declare','graduate_design_declare','','/web/graduate/design/declare');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业任务书',238,13,'/web/menu/graduate/design/assignment','graduate_design_assignment','graduate_design_assignment','','/web/graduate/design/assignment');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业开题报告',239,13,'/web/menu/graduate/design/proposal','graduate_design_proposal','graduate_design_proposal','','/web/graduate/design/proposal');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业答辩顺序',240,13,'/web/menu/graduate/design/reorder','graduate_design_reorder','graduate_design_reorder','','/web/graduate/design/reorder');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业答辩安排',241,13,'/web/menu/graduate/design/replan','graduate_design_replan','graduate_design_replan','','/web/graduate/design/replan');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业设计清单',242,13,'/web/menu/graduate/design/manifest','graduate_design_manifest','graduate_design_manifest','','/web/graduate/design/manifest');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业设计归档',243,13,'/web/menu/graduate/design/archive','graduate_design_archive','graduate_design_archive','','/web/graduate/design/archive');
 
 INSERT INTO internship_type(internship_type_name) VALUES ('顶岗实习(留学院)');
 INSERT INTO internship_type(internship_type_name) VALUES ('校外自主实习(去单位)');
@@ -735,26 +793,54 @@ INSERT INTO role_application(role_id, application_id) VALUES (1,25);
 INSERT INTO role_application(role_id, application_id) VALUES (1,26);
 INSERT INTO role_application(role_id, application_id) VALUES (1,27);
 INSERT INTO role_application(role_id, application_id) VALUES (1,28);
+INSERT INTO role_application(role_id, application_id) VALUES (1,29);
+INSERT INTO role_application(role_id, application_id) VALUES (1,30);
+INSERT INTO role_application(role_id, application_id) VALUES (1,31);
+INSERT INTO role_application(role_id, application_id) VALUES (1,32);
+INSERT INTO role_application(role_id, application_id) VALUES (1,33);
+INSERT INTO role_application(role_id, application_id) VALUES (1,34);
+INSERT INTO role_application(role_id, application_id) VALUES (1,35);
+INSERT INTO role_application(role_id, application_id) VALUES (1,36);
+INSERT INTO role_application(role_id, application_id) VALUES (1,37);
+INSERT INTO role_application(role_id, application_id) VALUES (1,38);
+INSERT INTO role_application(role_id, application_id) VALUES (1,39);
+INSERT INTO role_application(role_id, application_id) VALUES (1,40);
+INSERT INTO role_application(role_id, application_id) VALUES (1,41);
+INSERT INTO role_application(role_id, application_id) VALUES (1,42);
 
 INSERT INTO role_application(role_id, application_id) VALUES (2,1);
 INSERT INTO role_application(role_id, application_id) VALUES (2,2);
 INSERT INTO role_application(role_id, application_id) VALUES (2,3);
-INSERT INTO role_application(role_id, application_id) VALUES (2,5);
+INSERT INTO role_application(role_id, application_id) VALUES (2,4);
 INSERT INTO role_application(role_id, application_id) VALUES (2,6);
 INSERT INTO role_application(role_id, application_id) VALUES (2,7);
 INSERT INTO role_application(role_id, application_id) VALUES (2,8);
 INSERT INTO role_application(role_id, application_id) VALUES (2,9);
 INSERT INTO role_application(role_id, application_id) VALUES (2,10);
 INSERT INTO role_application(role_id, application_id) VALUES (2,11);
-INSERT INTO role_application(role_id, application_id) VALUES (2,14);
-INSERT INTO role_application(role_id, application_id) VALUES (2,15);
+INSERT INTO role_application(role_id, application_id) VALUES (2,12);
+INSERT INTO role_application(role_id, application_id) VALUES (2,13);
 INSERT INTO role_application(role_id, application_id) VALUES (2,16);
 INSERT INTO role_application(role_id, application_id) VALUES (2,17);
 INSERT INTO role_application(role_id, application_id) VALUES (2,18);
 INSERT INTO role_application(role_id, application_id) VALUES (2,19);
 INSERT INTO role_application(role_id, application_id) VALUES (2,20);
 INSERT INTO role_application(role_id, application_id) VALUES (2,21);
+INSERT INTO role_application(role_id, application_id) VALUES (2,22);
 INSERT INTO role_application(role_id, application_id) VALUES (2,23);
+INSERT INTO role_application(role_id, application_id) VALUES (2,25);
+INSERT INTO role_application(role_id, application_id) VALUES (2,31);
+INSERT INTO role_application(role_id, application_id) VALUES (2,32);
+INSERT INTO role_application(role_id, application_id) VALUES (2,33);
+INSERT INTO role_application(role_id, application_id) VALUES (2,34);
+INSERT INTO role_application(role_id, application_id) VALUES (2,35);
+INSERT INTO role_application(role_id, application_id) VALUES (2,36);
+INSERT INTO role_application(role_id, application_id) VALUES (2,37);
+INSERT INTO role_application(role_id, application_id) VALUES (2,38);
+INSERT INTO role_application(role_id, application_id) VALUES (2,39);
+INSERT INTO role_application(role_id, application_id) VALUES (2,40);
+INSERT INTO role_application(role_id, application_id) VALUES (2,41);
+INSERT INTO role_application(role_id, application_id) VALUES (2,42);
 
 INSERT INTO political_landscape(political_landscape_name) VALUES ('群众');
 INSERT INTO political_landscape(political_landscape_name) VALUES ('共青团员');
