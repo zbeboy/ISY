@@ -352,8 +352,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.myApplyLook', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            $.address.value(ajax_url.my_internship_look_data_url + "?id=" + id + "&studentId=" + studentId);
+            $.address.value(ajax_url.my_internship_look_data_url + "?id=" + id);
         });
 
         /*
@@ -361,8 +360,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.recallApply', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            recall(id, studentId);
+            recall(id);
         });
 
         /*
@@ -370,8 +368,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.basisApply', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            showStateModal(4, id, studentId, '基础信息变更申请');
+            showStateModal(4, id, '基础信息变更申请');
         });
 
         /*
@@ -379,8 +376,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.firmApply', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            showStateModal(6, id, studentId, '单位信息变更申请');
+            showStateModal(6, id, '单位信息变更申请');
         });
 
         /*
@@ -388,8 +384,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.uploadFile', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            showUploadModal(id, studentId);
+            showUploadModal(id);
         });
 
         /*
@@ -405,7 +400,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.deleteFile', "click", function () {
             var id = $(this).attr('data-id');
-            var student = $(this).attr('data-student');
             var msg = Messenger().post({
                 message: "确定删除吗?",
                 actions: {
@@ -414,7 +408,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            deleteFile(id, student);
+                            deleteFile(id);
                         }
                     },
                     cancel: {
@@ -430,10 +424,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 发送删除ajax
          * @param id
-         * @param studentId
          */
-        function deleteFile(id, studentId) {
-            $.post(web_path + ajax_url.delete_file, {id: id, studentId: studentId}, function (data) {
+        function deleteFile(id) {
+            $.post(web_path + ajax_url.delete_file, {id: id}, function (data) {
                 if (data.state) {
                     Messenger().post({
                         message: data.msg,
@@ -454,11 +447,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 展开上传文件modal
          * @param id
-         * @param studentId
          */
-        function showUploadModal(id, studentId) {
+        function showUploadModal(id) {
             $('#uploadInternshipReleaseId').val(id);
-            $('#uploadStudentId').val(studentId);
             $('#uploadModal').modal('show');
         }
 
@@ -467,7 +458,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function closeUploadModal() {
             $('#uploadInternshipReleaseId').val('');
-            $('#uploadStudentId').val('');
             $('#fileName').text('');
             $('#fileSize').text('');
             $('#uploadModal').modal('hide');
@@ -476,9 +466,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 撤消询问
          * @param id
-         * @param studentId
          */
-        function recall(id, studentId) {
+        function recall(id) {
             var msg;
             msg = Messenger().post({
                 message: "确定撤消申请吗?",
@@ -488,7 +477,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            sendRecallAjax(id, studentId);
+                            sendRecallAjax(id);
                         }
                     },
                     cancel: {
@@ -504,10 +493,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 撤消ajax
          * @param id
-         * @param studentId
          */
-        function sendRecallAjax(id, studentId) {
-            $.post(web_path + ajax_url.recall_apply_url, {id: id, studentId: studentId}, function (data) {
+        function sendRecallAjax(id) {
+            $.post(web_path + ajax_url.recall_apply_url, {id: id}, function (data) {
                 if (data.state) {
                     initMyData();
                 } else {
@@ -524,13 +512,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 展示变更模态框
          * @param state
          * @param internshipReleaseId
-         * @param studentId
          * @param title
          */
-        function showStateModal(state, internshipReleaseId, studentId, title) {
+        function showStateModal(state, internshipReleaseId, title) {
             $('#applyState').val(state);
             $('#applyInternshipReleaseId').val(internshipReleaseId);
-            $('#applyStudentId').val(studentId);
             $('#stateModalLabel').text(title);
             $('#stateModal').modal('show');
         }
@@ -553,7 +539,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         function hideStateModal() {
             $('#applyState').val('');
             $('#applyInternshipReleaseId').val('');
-            $('#applyStudentId').val('');
             $('#reason').val('');
             $('#stateModalLabel').text('');
             validCleanDom('#valid_reason', '#reason_error_msg');
@@ -824,10 +809,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             submit: function (e, data) {
                 if (validUpload()) {
                     var internshipReleaseId = $('#uploadInternshipReleaseId').val();
-                    var studentId = $('#uploadStudentId').val();
                     data.formData = {
-                        'internshipReleaseId': internshipReleaseId,
-                        'studentId': studentId
+                        'internshipReleaseId': internshipReleaseId
                     };
                 }
             },
@@ -839,9 +822,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
 
         function validUpload() {
             var internshipReleaseId = $('#uploadInternshipReleaseId').val();
-            var studentId = $('#uploadStudentId').val();
             var fileName = $('#fileName').text();
-            if (internshipReleaseId !== '' && Number(studentId) > 0) {
+            if (internshipReleaseId !== '') {
                 if (fileName !== '') {
                     return true;
                 } else {

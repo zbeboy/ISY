@@ -170,8 +170,8 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
                 $(id[i]).removeClass('active').parent().parent().removeClass('in').parent();
             }
 
-            for (var i = 0; i < li.length; i++) {
-                $(li[i]).removeClass('active');
+            for (var j = 0; j < li.length; j++) {
+                $(li[j]).removeClass('active');
             }
 
             var width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
@@ -183,7 +183,6 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             if (parent.is('li')) {
                 parent.addClass('active');
             }
-
         }
 
         function getAjaxUrl() {

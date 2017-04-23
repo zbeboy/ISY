@@ -108,7 +108,7 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping("/web/internship/teacher_distribution/distribution/condition")
     public String distributionCondition(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "";
+        String page;
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
@@ -171,7 +171,6 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public DataTablesUtils<InternshipTeacherDistributionBean> distributionConditionDatas(HttpServletRequest request) {
         String internshipReleaseId = request.getParameter("internshipReleaseId");
-        DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = null;
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("select");
@@ -184,7 +183,7 @@ public class InternshipTeacherDistributionController {
         headers.add("real_name");
         headers.add("username");
         headers.add("operator");
-        dataTablesUtils = new DataTablesUtils<>(request, headers);
+        DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils, internshipReleaseId);
         dataTablesUtils.setData(internshipTeacherDistributionBeens);
         dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
@@ -533,7 +532,7 @@ public class InternshipTeacherDistributionController {
     }
 
     /**
-     * 批量更改删除
+     * 批量删除
      *
      * @param studentIds          学生ids
      * @param internshipReleaseId 实习id

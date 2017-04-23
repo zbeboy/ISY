@@ -2,6 +2,7 @@ package top.zbeboy.isy.service.util;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -135,5 +136,25 @@ public class DateTimeUtils {
     public static boolean timestampRangeDecide(java.sql.Timestamp after, java.sql.Timestamp before) {
         java.sql.Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
         return now.after(after) && now.before(before);
+    }
+
+    /**
+     * 拆分时间
+     *
+     * @param splitSymbol 分隔符
+     * @param dateTime    需要拆分的时间
+     * @return 拆分的数组时间
+     */
+    public static String[] splitDateTime(String splitSymbol, String dateTime) throws ParseException {
+        if (StringUtils.isNotBlank(dateTime)) {
+            String[] arr = dateTime.split(splitSymbol);
+            if (!ObjectUtils.isEmpty(arr) && arr.length >= 2) {
+                return arr;
+            } else {
+                throw new ParseException("时间长度不够", -1);
+            }
+        } else {
+            throw new ParseException("时间为空", -1);
+        }
     }
 }

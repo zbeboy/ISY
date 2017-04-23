@@ -32,9 +32,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.time.Clock;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by lenovo on 2016-10-15.
@@ -110,20 +108,22 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     }
 
     @Override
-    public void accessRoleCondition(InternshipReleaseBean internshipReleaseBean) {
+    public Map<String, Integer> accessRoleCondition() {
+        Map<String, Integer> map = new HashMap<>();
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
                 && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int departmentId = roleService.getRoleDepartmentId(record);
-            internshipReleaseBean.setDepartmentId(departmentId);
+            map.put("departmentId", departmentId);
         }
         if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int collegeId = roleService.getRoleCollegeId(record);
-            internshipReleaseBean.setCollegeId(collegeId);
+            map.put("collegeId", collegeId);
         }
+        return map;
     }
 
     @Override

@@ -50,6 +50,7 @@ import java.text.ParseException;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -116,7 +117,9 @@ public class InternshipReleaseController {
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
-        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
@@ -134,7 +137,9 @@ public class InternshipReleaseController {
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
@@ -148,21 +153,9 @@ public class InternshipReleaseController {
      */
     @RequestMapping(value = "/web/internship/release/add", method = RequestMethod.GET)
     public String releaseAdd(ModelMap modelMap) {
-        int departmentId = -1;
-        int collegeId = -1;
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            departmentId = roleService.getRoleDepartmentId(record);
-        }
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = roleService.getRoleCollegeId(record);
-        }
-        modelMap.addAttribute("departmentId", departmentId);
-        modelMap.addAttribute("collegeId", collegeId);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        modelMap.addAttribute("departmentId", StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        modelMap.addAttribute("collegeId", StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         return "web/internship/release/internship_release_add::#page-wrapper";
     }
 
@@ -359,20 +352,12 @@ public class InternshipReleaseController {
     private void saveOrUpdateTime(InternshipRelease internshipRelease, String teacherDistributionTime, String time) {
         try {
             String format = "yyyy-MM-dd HH:mm:ss";
-            if (StringUtils.hasLength(teacherDistributionTime)) {
-                String[] teacherDistributionArr = teacherDistributionTime.split("至");
-                if (!ObjectUtils.isEmpty(teacherDistributionArr) && teacherDistributionArr.length >= 2) {
-                    internshipRelease.setTeacherDistributionStartTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[0], format));
-                    internshipRelease.setTeacherDistributionEndTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[1], format));
-                }
-            }
-            if (StringUtils.hasLength(time)) {
-                String[] timeArr = time.split("至");
-                if (!ObjectUtils.isEmpty(timeArr) && timeArr.length >= 2) {
-                    internshipRelease.setStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
-                    internshipRelease.setEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
-                }
-            }
+            String[] teacherDistributionArr = DateTimeUtils.splitDateTime("至", teacherDistributionTime);
+            internshipRelease.setTeacherDistributionStartTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[0], format));
+            internshipRelease.setTeacherDistributionEndTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[1], format));
+            String[] timeArr = DateTimeUtils.splitDateTime("至", time);
+            internshipRelease.setStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
+            internshipRelease.setEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
         } catch (ParseException e) {
             log.error(" format time is exception.", e);
         }
@@ -414,28 +399,20 @@ public class InternshipReleaseController {
         try {
             School school = null;
             College college = null;
-            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                    && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                Users users = usersService.getUserFromSession();
-                Optional<Record> record = usersService.findUserSchoolInfo(users);
-                if (record.isPresent()) {
-                    school = record.get().into(School.class);
-                    college = record.get().into(College.class);
-                }
-            }
-            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                Users users = usersService.getUserFromSession();
-                Optional<Record> record = usersService.findUserSchoolInfo(users);
-                if (record.isPresent()) {
-                    school = record.get().into(School.class);
-                    college = record.get().into(College.class);
-                }
-            }
+            Department department = null;
             if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
                 school = schoolService.findById(schoolId);
                 college = collegeService.findById(collegeId);
+                department = departmentService.findById(departmentId);
+            } else {
+                Users users = usersService.getUserFromSession();
+                Optional<Record> record = usersService.findUserSchoolInfo(users);
+                if (record.isPresent()) {
+                    school = record.get().into(School.class);
+                    college = record.get().into(College.class);
+                    department = record.get().into(Department.class);
+                }
             }
-            Department department = departmentService.findById(departmentId);
             if (!ObjectUtils.isEmpty(school)) {
                 if (!ObjectUtils.isEmpty(college)) {
                     if (!ObjectUtils.isEmpty(department)) {

@@ -35,6 +35,7 @@ import java.text.ParseException;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -117,7 +118,9 @@ public class InternshipReviewController {
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         internshipReleaseBeens.forEach(r -> {
@@ -736,11 +739,9 @@ public class InternshipReviewController {
                     internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
                     String format = "yyyy-MM-dd HH:mm:ss";
                     if (StringUtils.hasLength(internshipReviewBean.getFillTime())) {
-                        String[] timeArr = internshipReviewBean.getFillTime().split("至");
-                        if (!ObjectUtils.isEmpty(timeArr) && timeArr.length >= 2) {
-                            internshipApply.setChangeFillStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
-                            internshipApply.setChangeFillEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
-                        }
+                        String[] timeArr = DateTimeUtils.splitDateTime("至", internshipReviewBean.getFillTime());
+                        internshipApply.setChangeFillStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
+                        internshipApply.setChangeFillEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
                     }
                     internshipApplyService.update(internshipApply);
 

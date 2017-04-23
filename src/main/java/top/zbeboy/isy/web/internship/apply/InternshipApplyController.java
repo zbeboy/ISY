@@ -177,10 +177,9 @@ public class InternshipApplyController {
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
         internshipApplyBean.setInternshipReleaseIsDel(isDel);
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = usersService.findUserSchoolInfo(users);
         List<InternshipApplyBean> internshipApplyBeens = new ArrayList<>();
-        if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            Student student = record.get().into(Student.class);
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
             internshipApplyBean.setStudentId(student.getStudentId());
             Result<Record> records = internshipApplyService.findAllByPage(paginationUtils, internshipApplyBean);
             internshipApplyBeens = internshipApplyService.dealData(paginationUtils, records, internshipApplyBean);
@@ -290,17 +289,19 @@ public class InternshipApplyController {
      * 查看详情页
      *
      * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
      * @param modelMap            页面对象
      * @return 页面
      */
     @RequestMapping(value = "/web/internship/apply/audit/detail", method = RequestMethod.GET)
-    public String auditDetail(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
+    public String auditDetail(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
-            page = commonControllerMethodService.showTip(modelMap, "您的个人信息有误");
+        Users users = usersService.getUserFromSession();
+        Student student = studentService.findByUsername(users.getUsername());
+        if (Objects.isNull(student)) {
+            page = commonControllerMethodService.showTip(modelMap, "查询学生信息为空");
             return page;
         }
+        int studentId = student.getStudentId();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
         switch (internshipType.getInternshipTypeName()) {
@@ -1172,13 +1173,18 @@ public class InternshipApplyController {
      * 撤消状态
      *
      * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/apply/recall", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils applyRecall(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+    public AjaxUtils applyRecall(@RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
+        Users users = usersService.getUserFromSession();
+        Student student = studentService.findByUsername(users.getUsername());
+        if(Objects.isNull(student)){
+            return ajaxUtils.fail().msg("未查询到相关学生信息");
+        }
+        int studentId = student.getStudentId();
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
@@ -1232,17 +1238,19 @@ public class InternshipApplyController {
      * @param reason               原因
      * @param internshipApplyState 状态
      * @param internshipReleaseId  实习发布id
-     * @param studentId            学生id
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/apply/state", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils applyState(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
-                                @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+                                @RequestParam("internshipReleaseId") String internshipReleaseId) {
         AjaxUtils ajaxUtils = new AjaxUtils();
-        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
-            return ajaxUtils.fail().msg("您的个人信息有误");
+        Users users = usersService.getUserFromSession();
+        Student student = studentService.findByUsername(users.getUsername());
+        if(Objects.isNull(student)){
+            return ajaxUtils.fail().msg("未查询到相关学生信息");
         }
+        int studentId = student.getStudentId();
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
@@ -1276,25 +1284,24 @@ public class InternshipApplyController {
      * 保存实习申请资料
      *
      * @param internshipReleaseId         实习发布id
-     * @param studentId                   学生id
      * @param multipartHttpServletRequest 文件
      * @param request                     请求
      * @return true or false
      */
     @RequestMapping("/web/internship/apply/upload")
     @ResponseBody
-    public AjaxUtils<FileBean> usersUploadAvatar(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId,
-                                                 MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
+    public AjaxUtils<FileBean> usersUpload(@RequestParam("internshipReleaseId") String internshipReleaseId, MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
         AjaxUtils<FileBean> data = new AjaxUtils<>();
-        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
-            return data.fail().msg("您的个人信息有误");
-        }
         try {
-            Student student = studentService.findById(studentId);
+            Users users = usersService.getUserFromSession();
+            Student student = studentService.findByUsername(users.getUsername());
+            if(Objects.isNull(student)){
+                return data.fail().msg("未查询到相关学生信息");
+            }
+            int studentId = student.getStudentId();
             if (!ObjectUtils.isEmpty(student)) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                 if (internshipApplyRecord.isPresent()) {
-                    Users users = usersService.findByUsername(student.getUsername());
                     String path = Workbook.internshipApplyPath(users);
                     List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
                             RequestUtils.getRealPath(request) + path, request.getRemoteAddr());
@@ -1338,18 +1345,20 @@ public class InternshipApplyController {
      * 删除电子材料
      *
      * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
      * @param request             请求
      * @return true or false
      */
     @RequestMapping(value = "/web/internship/apply/delete/file", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils deleteFile(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
+    public AjaxUtils deleteFile(@RequestParam("id") String internshipReleaseId, HttpServletRequest request) {
         AjaxUtils data = new AjaxUtils();
         try {
-            if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
-                return data.fail().msg("您的个人信息有误");
+            Users users = usersService.getUserFromSession();
+            Student student = studentService.findByUsername(users.getUsername());
+            if(Objects.isNull(student)){
+                return data.fail().msg("未查询到相关学生信息");
             }
+            int studentId = student.getStudentId();
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
             if (internshipApplyRecord.isPresent()) {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
