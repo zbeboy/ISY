@@ -580,9 +580,11 @@ INSERT INTO users(username, password, enabled, users_type_id, real_name, mobile,
 VALUES ('863052317@qq.com','$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2',1,3,'赵银','13987614709','images/avatar.jpg',1,'','',NULL ,NULL ,'zh-CN','2016-08-18');
 
 INSERT INTO role(role_name, role_en_name,role_type) VALUES ('系统','ROLE_SYSTEM',1);
+INSERT INTO role(role_name, role_en_name,role_type) VALUES ('运维','ROLE_ACTUATOR',1);
 INSERT INTO role(role_name, role_en_name,role_type) VALUES ('管理员','ROLE_ADMIN',1);
 
 INSERT INTO authorities(username, authority) VALUES ('863052317@qq.com','ROLE_SYSTEM');
+INSERT INTO authorities(username, authority) VALUES ('863052317@qq.com','ROLE_ACTUATOR');
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,

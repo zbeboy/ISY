@@ -81,17 +81,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM", "ADMIN") // 特别通道 跨controller调用共同方法使用
                 .and().authorizeRequests().antMatchers("/anyone/**","/remind/**").authenticated()
                 .and().authorizeRequests().antMatchers("/user/**", "/index","/weixin/**").permitAll()
-                .antMatchers("/metrics/**").hasRole("SYSTEM")
-                .antMatchers("/health/**").hasRole("SYSTEM")
-                .antMatchers("/trace/**").hasRole("SYSTEM")
-                .antMatchers("/dump/**").hasRole("SYSTEM")
-                .antMatchers("/shutdown/**").hasRole("SYSTEM")
-                .antMatchers("/beans/**").hasRole("SYSTEM")
-                .antMatchers("/configprops/**").hasRole("SYSTEM")
-                .antMatchers("/info/**").hasRole("SYSTEM")
-                .antMatchers("/autoconfig/**").hasRole("SYSTEM")
-                .antMatchers("/env/**").hasRole("SYSTEM")
-                .antMatchers("/mappings/**").hasRole("SYSTEM")
+                .antMatchers("/metrics/**").hasRole("ACTUATOR")
+                .antMatchers("/health/**").hasRole("ACTUATOR")
+                .antMatchers("/trace/**").hasRole("ACTUATOR")
+                .antMatchers("/dump/**").hasRole("ACTUATOR")
+                .antMatchers("/shutdown/**").hasRole("ACTUATOR")
+                .antMatchers("/beans/**").hasRole("ACTUATOR")
+                .antMatchers("/configprops/**").hasRole("ACTUATOR")
+                .antMatchers("/info/**").hasRole("ACTUATOR")
+                .antMatchers("/autoconfig/**").hasRole("ACTUATOR")
+                .antMatchers("/env/**").hasRole("ACTUATOR")
+                .antMatchers("/mappings/**").hasRole("ACTUATOR")
                 .and().addFilterBefore(new SecurityLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

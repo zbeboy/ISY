@@ -631,8 +631,8 @@ public class UsersController {
     public AjaxUtils<Role> roleData(@RequestParam("username") String username) {
         List<Role> roles = new ArrayList<>();
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            Role role = roleService.findByRoleEnName(Workbook.ADMIN_AUTHORITIES);
-            roles.add(role);
+            roles.add(roleService.findByRoleEnName(Workbook.ADMIN_AUTHORITIES));
+            roles.add(roleService.findByRoleEnName(Workbook.OPS_AUTHORITIES));
         }
         // 根据此用户账号查询院下所有角色
         Users users = usersService.findByUsername(username);

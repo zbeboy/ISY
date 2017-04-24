@@ -90,6 +90,16 @@ public final class Workbook {
     public static final String SYSTEM_AUTHORITIES = "ROLE_SYSTEM";
 
     /*
+   运维角色
+    */
+    public static final String OPS_ROLE_NAME = "运维";
+
+    /*
+    运维权限
+     */
+    public static final String OPS_AUTHORITIES = "ROLE_ACTUATOR";
+
+    /*
     管理员角色
      */
     public static final String ADMIN_ROLE_NAME = "管理员";
