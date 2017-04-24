@@ -1075,6 +1075,7 @@ public class InternshipApplyController {
         modelMap.addAttribute("internshipTeacherName", internshipTeacherParams.get("internshipTeacherName"));
         modelMap.addAttribute("internshipTeacherMobile", internshipTeacherParams.get("internshipTeacherMobile"));
         modelMap.addAttribute("companyInfo", studentBean.getSchoolName() + studentBean.getCollegeName());
+        modelMap.addAttribute("companyAddr", studentBean.getCollegeAddress());
     }
 
     /**
@@ -1416,10 +1417,9 @@ public class InternshipApplyController {
             inTimeRange = false;
         }
         if (inTimeRange) {
-            StudentBean studentBean;
             Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
             if (studentRecord.isPresent()) {
-                studentBean = studentRecord.get().into(StudentBean.class);
+                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
                 mapData.put("student", studentBean);
                 Optional<Record> internshipReleaseScienceRecord = internshipReleaseScienceService.findByInternshipReleaseIdAndScienceId(internshipReleaseId, studentBean.getScienceId());
                 if (internshipReleaseScienceRecord.isPresent()) { // 判断专业

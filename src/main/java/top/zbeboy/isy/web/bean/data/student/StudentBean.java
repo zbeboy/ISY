@@ -15,6 +15,7 @@ public class StudentBean extends Student {
 
     private Integer collegeId;
     private String collegeName;
+    private String collegeAddress;
     private Byte collegeIsDel;
 
     private Integer departmentId;
@@ -92,6 +93,14 @@ public class StudentBean extends Student {
 
     public void setCollegeName(String collegeName) {
         this.collegeName = collegeName;
+    }
+
+    public String getCollegeAddress() {
+        return collegeAddress;
+    }
+
+    public void setCollegeAddress(String collegeAddress) {
+        this.collegeAddress = collegeAddress;
     }
 
     public Byte getCollegeIsDel() {
