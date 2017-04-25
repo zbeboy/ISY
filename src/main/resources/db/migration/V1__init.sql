@@ -235,7 +235,7 @@ CREATE TABLE internship_release_science(
 
 CREATE TABLE internship_file(
   internship_release_id VARCHAR(64) NOT NULL ,
-  file_id VARCHAR(100) NOT NULL ,
+  file_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (internship_release_id) REFERENCES internship_release(internship_release_id),
   FOREIGN KEY (file_id) REFERENCES files(file_id),
   PRIMARY KEY (internship_release_id,file_id)
