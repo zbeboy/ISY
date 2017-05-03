@@ -743,11 +743,11 @@ VALUES ('毕业设计资料',238,13,'/web/menu/graduate/design/proposal','gradua
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业答辩顺序',239,13,'/web/menu/graduate/design/reorder','graduate_design_reorder','graduate_design_reorder','','/web/graduate/design/reorder');
+VALUES ('毕业答辩安排',239,13,'/web/menu/graduate/design/replan','graduate_design_replan','graduate_design_replan','','/web/graduate/design/replan');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业答辩安排',240,13,'/web/menu/graduate/design/replan','graduate_design_replan','graduate_design_replan','','/web/graduate/design/replan');
+VALUES ('毕业答辩顺序',240,13,'/web/menu/graduate/design/reorder','graduate_design_reorder','graduate_design_reorder','','/web/graduate/design/reorder');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
