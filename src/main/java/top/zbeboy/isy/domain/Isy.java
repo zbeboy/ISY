@@ -17,11 +17,32 @@ import org.jooq.impl.SchemaImpl;
 import top.zbeboy.isy.domain.tables.AcademicTitle;
 import top.zbeboy.isy.domain.tables.Application;
 import top.zbeboy.isy.domain.tables.Authorities;
+import top.zbeboy.isy.domain.tables.Building;
 import top.zbeboy.isy.domain.tables.College;
 import top.zbeboy.isy.domain.tables.CollegeApplication;
 import top.zbeboy.isy.domain.tables.CollegeRole;
+import top.zbeboy.isy.domain.tables.DefenseArrangement;
+import top.zbeboy.isy.domain.tables.DefenseGroup;
+import top.zbeboy.isy.domain.tables.DefenseGroupMember;
+import top.zbeboy.isy.domain.tables.DefenseOrder;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
+import top.zbeboy.isy.domain.tables.GraduateArchives;
+import top.zbeboy.isy.domain.tables.GraduateBill;
+import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
+import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
+import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
+import top.zbeboy.isy.domain.tables.GraduationDesignDeclareData;
+import top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk;
+import top.zbeboy.isy.domain.tables.GraduationDesignHopeTutor;
+import top.zbeboy.isy.domain.tables.GraduationDesignPlan;
+import top.zbeboy.isy.domain.tables.GraduationDesignPresubject;
+import top.zbeboy.isy.domain.tables.GraduationDesignRelease;
+import top.zbeboy.isy.domain.tables.GraduationDesignReleaseFile;
+import top.zbeboy.isy.domain.tables.GraduationDesignSubjectOriginType;
+import top.zbeboy.isy.domain.tables.GraduationDesignSubjectType;
+import top.zbeboy.isy.domain.tables.GraduationDesignTeacher;
+import top.zbeboy.isy.domain.tables.GraduationDesignTutor;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCompany;
 import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
@@ -50,7 +71,9 @@ import top.zbeboy.isy.domain.tables.Role;
 import top.zbeboy.isy.domain.tables.RoleApplication;
 import top.zbeboy.isy.domain.tables.SchemaVersion;
 import top.zbeboy.isy.domain.tables.School;
+import top.zbeboy.isy.domain.tables.Schoolroom;
 import top.zbeboy.isy.domain.tables.Science;
+import top.zbeboy.isy.domain.tables.ScoreType;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
 import top.zbeboy.isy.domain.tables.SystemAlert;
@@ -76,7 +99,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = -838256026;
+    private static final long serialVersionUID = 872195968;
 
     /**
      * The reference instance of <code>isy</code>
@@ -99,6 +122,11 @@ public class Isy extends SchemaImpl {
     public final Authorities AUTHORITIES = top.zbeboy.isy.domain.tables.Authorities.AUTHORITIES;
 
     /**
+     * The table <code>isy.building</code>.
+     */
+    public final Building BUILDING = top.zbeboy.isy.domain.tables.Building.BUILDING;
+
+    /**
      * The table <code>isy.college</code>.
      */
     public final College COLLEGE = top.zbeboy.isy.domain.tables.College.COLLEGE;
@@ -114,6 +142,26 @@ public class Isy extends SchemaImpl {
     public final CollegeRole COLLEGE_ROLE = top.zbeboy.isy.domain.tables.CollegeRole.COLLEGE_ROLE;
 
     /**
+     * The table <code>isy.defense_arrangement</code>.
+     */
+    public final DefenseArrangement DEFENSE_ARRANGEMENT = top.zbeboy.isy.domain.tables.DefenseArrangement.DEFENSE_ARRANGEMENT;
+
+    /**
+     * The table <code>isy.defense_group</code>.
+     */
+    public final DefenseGroup DEFENSE_GROUP = top.zbeboy.isy.domain.tables.DefenseGroup.DEFENSE_GROUP;
+
+    /**
+     * The table <code>isy.defense_group_member</code>.
+     */
+    public final DefenseGroupMember DEFENSE_GROUP_MEMBER = top.zbeboy.isy.domain.tables.DefenseGroupMember.DEFENSE_GROUP_MEMBER;
+
+    /**
+     * The table <code>isy.defense_order</code>.
+     */
+    public final DefenseOrder DEFENSE_ORDER = top.zbeboy.isy.domain.tables.DefenseOrder.DEFENSE_ORDER;
+
+    /**
      * The table <code>isy.department</code>.
      */
     public final Department DEPARTMENT = top.zbeboy.isy.domain.tables.Department.DEPARTMENT;
@@ -122,6 +170,86 @@ public class Isy extends SchemaImpl {
      * The table <code>isy.files</code>.
      */
     public final Files FILES = top.zbeboy.isy.domain.tables.Files.FILES;
+
+    /**
+     * The table <code>isy.graduate_archives</code>.
+     */
+    public final GraduateArchives GRADUATE_ARCHIVES = top.zbeboy.isy.domain.tables.GraduateArchives.GRADUATE_ARCHIVES;
+
+    /**
+     * The table <code>isy.graduate_bill</code>.
+     */
+    public final GraduateBill GRADUATE_BILL = top.zbeboy.isy.domain.tables.GraduateBill.GRADUATE_BILL;
+
+    /**
+     * The table <code>isy.graduation_design_datum</code>.
+     */
+    public final GraduationDesignDatum GRADUATION_DESIGN_DATUM = top.zbeboy.isy.domain.tables.GraduationDesignDatum.GRADUATION_DESIGN_DATUM;
+
+    /**
+     * The table <code>isy.graduation_design_datum_type</code>.
+     */
+    public final GraduationDesignDatumType GRADUATION_DESIGN_DATUM_TYPE = top.zbeboy.isy.domain.tables.GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE;
+
+    /**
+     * The table <code>isy.graduation_design_declare</code>.
+     */
+    public final GraduationDesignDeclare GRADUATION_DESIGN_DECLARE = top.zbeboy.isy.domain.tables.GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE;
+
+    /**
+     * The table <code>isy.graduation_design_declare_data</code>.
+     */
+    public final GraduationDesignDeclareData GRADUATION_DESIGN_DECLARE_DATA = top.zbeboy.isy.domain.tables.GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA;
+
+    /**
+     * The table <code>isy.graduation_design_declare_ok</code>.
+     */
+    public final GraduationDesignDeclareOk GRADUATION_DESIGN_DECLARE_OK = top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk.GRADUATION_DESIGN_DECLARE_OK;
+
+    /**
+     * The table <code>isy.graduation_design_hope_tutor</code>.
+     */
+    public final GraduationDesignHopeTutor GRADUATION_DESIGN_HOPE_TUTOR = top.zbeboy.isy.domain.tables.GraduationDesignHopeTutor.GRADUATION_DESIGN_HOPE_TUTOR;
+
+    /**
+     * The table <code>isy.graduation_design_plan</code>.
+     */
+    public final GraduationDesignPlan GRADUATION_DESIGN_PLAN = top.zbeboy.isy.domain.tables.GraduationDesignPlan.GRADUATION_DESIGN_PLAN;
+
+    /**
+     * The table <code>isy.graduation_design_presubject</code>.
+     */
+    public final GraduationDesignPresubject GRADUATION_DESIGN_PRESUBJECT = top.zbeboy.isy.domain.tables.GraduationDesignPresubject.GRADUATION_DESIGN_PRESUBJECT;
+
+    /**
+     * The table <code>isy.graduation_design_release</code>.
+     */
+    public final GraduationDesignRelease GRADUATION_DESIGN_RELEASE = top.zbeboy.isy.domain.tables.GraduationDesignRelease.GRADUATION_DESIGN_RELEASE;
+
+    /**
+     * The table <code>isy.graduation_design_release_file</code>.
+     */
+    public final GraduationDesignReleaseFile GRADUATION_DESIGN_RELEASE_FILE = top.zbeboy.isy.domain.tables.GraduationDesignReleaseFile.GRADUATION_DESIGN_RELEASE_FILE;
+
+    /**
+     * The table <code>isy.graduation_design_subject_origin_type</code>.
+     */
+    public final GraduationDesignSubjectOriginType GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE = top.zbeboy.isy.domain.tables.GraduationDesignSubjectOriginType.GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE;
+
+    /**
+     * The table <code>isy.graduation_design_subject_type</code>.
+     */
+    public final GraduationDesignSubjectType GRADUATION_DESIGN_SUBJECT_TYPE = top.zbeboy.isy.domain.tables.GraduationDesignSubjectType.GRADUATION_DESIGN_SUBJECT_TYPE;
+
+    /**
+     * The table <code>isy.graduation_design_teacher</code>.
+     */
+    public final GraduationDesignTeacher GRADUATION_DESIGN_TEACHER = top.zbeboy.isy.domain.tables.GraduationDesignTeacher.GRADUATION_DESIGN_TEACHER;
+
+    /**
+     * The table <code>isy.graduation_design_tutor</code>.
+     */
+    public final GraduationDesignTutor GRADUATION_DESIGN_TUTOR = top.zbeboy.isy.domain.tables.GraduationDesignTutor.GRADUATION_DESIGN_TUTOR;
 
     /**
      * The table <code>isy.graduation_practice_college</code>.
@@ -264,9 +392,19 @@ public class Isy extends SchemaImpl {
     public final School SCHOOL = top.zbeboy.isy.domain.tables.School.SCHOOL;
 
     /**
+     * The table <code>isy.schoolroom</code>.
+     */
+    public final Schoolroom SCHOOLROOM = top.zbeboy.isy.domain.tables.Schoolroom.SCHOOLROOM;
+
+    /**
      * The table <code>isy.science</code>.
      */
     public final Science SCIENCE = top.zbeboy.isy.domain.tables.Science.SCIENCE;
+
+    /**
+     * The table <code>isy.score_type</code>.
+     */
+    public final ScoreType SCORE_TYPE = top.zbeboy.isy.domain.tables.ScoreType.SCORE_TYPE;
 
     /**
      * The table <code>isy.staff</code>.
@@ -346,11 +484,32 @@ public class Isy extends SchemaImpl {
             AcademicTitle.ACADEMIC_TITLE,
             Application.APPLICATION,
             Authorities.AUTHORITIES,
+            Building.BUILDING,
             College.COLLEGE,
             CollegeApplication.COLLEGE_APPLICATION,
             CollegeRole.COLLEGE_ROLE,
+            DefenseArrangement.DEFENSE_ARRANGEMENT,
+            DefenseGroup.DEFENSE_GROUP,
+            DefenseGroupMember.DEFENSE_GROUP_MEMBER,
+            DefenseOrder.DEFENSE_ORDER,
             Department.DEPARTMENT,
             Files.FILES,
+            GraduateArchives.GRADUATE_ARCHIVES,
+            GraduateBill.GRADUATE_BILL,
+            GraduationDesignDatum.GRADUATION_DESIGN_DATUM,
+            GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE,
+            GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE,
+            GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA,
+            GraduationDesignDeclareOk.GRADUATION_DESIGN_DECLARE_OK,
+            GraduationDesignHopeTutor.GRADUATION_DESIGN_HOPE_TUTOR,
+            GraduationDesignPlan.GRADUATION_DESIGN_PLAN,
+            GraduationDesignPresubject.GRADUATION_DESIGN_PRESUBJECT,
+            GraduationDesignRelease.GRADUATION_DESIGN_RELEASE,
+            GraduationDesignReleaseFile.GRADUATION_DESIGN_RELEASE_FILE,
+            GraduationDesignSubjectOriginType.GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE,
+            GraduationDesignSubjectType.GRADUATION_DESIGN_SUBJECT_TYPE,
+            GraduationDesignTeacher.GRADUATION_DESIGN_TEACHER,
+            GraduationDesignTutor.GRADUATION_DESIGN_TUTOR,
             GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE,
             GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY,
             GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY,
@@ -379,7 +538,9 @@ public class Isy extends SchemaImpl {
             RoleApplication.ROLE_APPLICATION,
             SchemaVersion.SCHEMA_VERSION,
             School.SCHOOL,
+            Schoolroom.SCHOOLROOM,
             Science.SCIENCE,
+            ScoreType.SCORE_TYPE,
             Staff.STAFF,
             Student.STUDENT,
             SystemAlert.SYSTEM_ALERT,

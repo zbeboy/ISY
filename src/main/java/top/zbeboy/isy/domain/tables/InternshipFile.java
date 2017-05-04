@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipFileRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipFile extends TableImpl<InternshipFileRecord> {
 
-    private static final long serialVersionUID = -1356592825;
+    private static final long serialVersionUID = 1411157138;
 
     /**
      * The reference instance of <code>isy.internship_file</code>
@@ -58,7 +58,7 @@ public class InternshipFile extends TableImpl<InternshipFileRecord> {
     /**
      * The column <code>isy.internship_file.file_id</code>.
      */
-    public final TableField<InternshipFileRecord, String> FILE_ID = createField("file_id", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+    public final TableField<InternshipFileRecord, String> FILE_ID = createField("file_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.internship_file</code> table reference

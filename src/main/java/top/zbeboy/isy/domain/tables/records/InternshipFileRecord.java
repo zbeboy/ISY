@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.InternshipFile;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipFileRecord extends UpdatableRecordImpl<InternshipFileRecord> implements Record2<String, String> {
 
-    private static final long serialVersionUID = -565359060;
+    private static final long serialVersionUID = -67600953;
 
     /**
      * Setter for <code>isy.internship_file.internship_release_id</code>.
@@ -58,7 +58,7 @@ public class InternshipFileRecord extends UpdatableRecordImpl<InternshipFileReco
      * Getter for <code>isy.internship_file.file_id</code>.
      */
     @NotNull
-    @Size(max = 100)
+    @Size(max = 64)
     public String getFileId() {
         return (String) get(1);
     }

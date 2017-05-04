@@ -9,11 +9,32 @@ import javax.annotation.Generated;
 import top.zbeboy.isy.domain.tables.AcademicTitle;
 import top.zbeboy.isy.domain.tables.Application;
 import top.zbeboy.isy.domain.tables.Authorities;
+import top.zbeboy.isy.domain.tables.Building;
 import top.zbeboy.isy.domain.tables.College;
 import top.zbeboy.isy.domain.tables.CollegeApplication;
 import top.zbeboy.isy.domain.tables.CollegeRole;
+import top.zbeboy.isy.domain.tables.DefenseArrangement;
+import top.zbeboy.isy.domain.tables.DefenseGroup;
+import top.zbeboy.isy.domain.tables.DefenseGroupMember;
+import top.zbeboy.isy.domain.tables.DefenseOrder;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
+import top.zbeboy.isy.domain.tables.GraduateArchives;
+import top.zbeboy.isy.domain.tables.GraduateBill;
+import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
+import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
+import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
+import top.zbeboy.isy.domain.tables.GraduationDesignDeclareData;
+import top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk;
+import top.zbeboy.isy.domain.tables.GraduationDesignHopeTutor;
+import top.zbeboy.isy.domain.tables.GraduationDesignPlan;
+import top.zbeboy.isy.domain.tables.GraduationDesignPresubject;
+import top.zbeboy.isy.domain.tables.GraduationDesignRelease;
+import top.zbeboy.isy.domain.tables.GraduationDesignReleaseFile;
+import top.zbeboy.isy.domain.tables.GraduationDesignSubjectOriginType;
+import top.zbeboy.isy.domain.tables.GraduationDesignSubjectType;
+import top.zbeboy.isy.domain.tables.GraduationDesignTeacher;
+import top.zbeboy.isy.domain.tables.GraduationDesignTutor;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 import top.zbeboy.isy.domain.tables.GraduationPracticeCompany;
 import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
@@ -42,7 +63,9 @@ import top.zbeboy.isy.domain.tables.Role;
 import top.zbeboy.isy.domain.tables.RoleApplication;
 import top.zbeboy.isy.domain.tables.SchemaVersion;
 import top.zbeboy.isy.domain.tables.School;
+import top.zbeboy.isy.domain.tables.Schoolroom;
 import top.zbeboy.isy.domain.tables.Science;
+import top.zbeboy.isy.domain.tables.ScoreType;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
 import top.zbeboy.isy.domain.tables.SystemAlert;
@@ -84,6 +107,11 @@ public class Tables {
     public static final Authorities AUTHORITIES = top.zbeboy.isy.domain.tables.Authorities.AUTHORITIES;
 
     /**
+     * The table <code>isy.building</code>.
+     */
+    public static final Building BUILDING = top.zbeboy.isy.domain.tables.Building.BUILDING;
+
+    /**
      * The table <code>isy.college</code>.
      */
     public static final College COLLEGE = top.zbeboy.isy.domain.tables.College.COLLEGE;
@@ -99,6 +127,26 @@ public class Tables {
     public static final CollegeRole COLLEGE_ROLE = top.zbeboy.isy.domain.tables.CollegeRole.COLLEGE_ROLE;
 
     /**
+     * The table <code>isy.defense_arrangement</code>.
+     */
+    public static final DefenseArrangement DEFENSE_ARRANGEMENT = top.zbeboy.isy.domain.tables.DefenseArrangement.DEFENSE_ARRANGEMENT;
+
+    /**
+     * The table <code>isy.defense_group</code>.
+     */
+    public static final DefenseGroup DEFENSE_GROUP = top.zbeboy.isy.domain.tables.DefenseGroup.DEFENSE_GROUP;
+
+    /**
+     * The table <code>isy.defense_group_member</code>.
+     */
+    public static final DefenseGroupMember DEFENSE_GROUP_MEMBER = top.zbeboy.isy.domain.tables.DefenseGroupMember.DEFENSE_GROUP_MEMBER;
+
+    /**
+     * The table <code>isy.defense_order</code>.
+     */
+    public static final DefenseOrder DEFENSE_ORDER = top.zbeboy.isy.domain.tables.DefenseOrder.DEFENSE_ORDER;
+
+    /**
      * The table <code>isy.department</code>.
      */
     public static final Department DEPARTMENT = top.zbeboy.isy.domain.tables.Department.DEPARTMENT;
@@ -107,6 +155,86 @@ public class Tables {
      * The table <code>isy.files</code>.
      */
     public static final Files FILES = top.zbeboy.isy.domain.tables.Files.FILES;
+
+    /**
+     * The table <code>isy.graduate_archives</code>.
+     */
+    public static final GraduateArchives GRADUATE_ARCHIVES = top.zbeboy.isy.domain.tables.GraduateArchives.GRADUATE_ARCHIVES;
+
+    /**
+     * The table <code>isy.graduate_bill</code>.
+     */
+    public static final GraduateBill GRADUATE_BILL = top.zbeboy.isy.domain.tables.GraduateBill.GRADUATE_BILL;
+
+    /**
+     * The table <code>isy.graduation_design_datum</code>.
+     */
+    public static final GraduationDesignDatum GRADUATION_DESIGN_DATUM = top.zbeboy.isy.domain.tables.GraduationDesignDatum.GRADUATION_DESIGN_DATUM;
+
+    /**
+     * The table <code>isy.graduation_design_datum_type</code>.
+     */
+    public static final GraduationDesignDatumType GRADUATION_DESIGN_DATUM_TYPE = top.zbeboy.isy.domain.tables.GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE;
+
+    /**
+     * The table <code>isy.graduation_design_declare</code>.
+     */
+    public static final GraduationDesignDeclare GRADUATION_DESIGN_DECLARE = top.zbeboy.isy.domain.tables.GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE;
+
+    /**
+     * The table <code>isy.graduation_design_declare_data</code>.
+     */
+    public static final GraduationDesignDeclareData GRADUATION_DESIGN_DECLARE_DATA = top.zbeboy.isy.domain.tables.GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA;
+
+    /**
+     * The table <code>isy.graduation_design_declare_ok</code>.
+     */
+    public static final GraduationDesignDeclareOk GRADUATION_DESIGN_DECLARE_OK = top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk.GRADUATION_DESIGN_DECLARE_OK;
+
+    /**
+     * The table <code>isy.graduation_design_hope_tutor</code>.
+     */
+    public static final GraduationDesignHopeTutor GRADUATION_DESIGN_HOPE_TUTOR = top.zbeboy.isy.domain.tables.GraduationDesignHopeTutor.GRADUATION_DESIGN_HOPE_TUTOR;
+
+    /**
+     * The table <code>isy.graduation_design_plan</code>.
+     */
+    public static final GraduationDesignPlan GRADUATION_DESIGN_PLAN = top.zbeboy.isy.domain.tables.GraduationDesignPlan.GRADUATION_DESIGN_PLAN;
+
+    /**
+     * The table <code>isy.graduation_design_presubject</code>.
+     */
+    public static final GraduationDesignPresubject GRADUATION_DESIGN_PRESUBJECT = top.zbeboy.isy.domain.tables.GraduationDesignPresubject.GRADUATION_DESIGN_PRESUBJECT;
+
+    /**
+     * The table <code>isy.graduation_design_release</code>.
+     */
+    public static final GraduationDesignRelease GRADUATION_DESIGN_RELEASE = top.zbeboy.isy.domain.tables.GraduationDesignRelease.GRADUATION_DESIGN_RELEASE;
+
+    /**
+     * The table <code>isy.graduation_design_release_file</code>.
+     */
+    public static final GraduationDesignReleaseFile GRADUATION_DESIGN_RELEASE_FILE = top.zbeboy.isy.domain.tables.GraduationDesignReleaseFile.GRADUATION_DESIGN_RELEASE_FILE;
+
+    /**
+     * The table <code>isy.graduation_design_subject_origin_type</code>.
+     */
+    public static final GraduationDesignSubjectOriginType GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE = top.zbeboy.isy.domain.tables.GraduationDesignSubjectOriginType.GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE;
+
+    /**
+     * The table <code>isy.graduation_design_subject_type</code>.
+     */
+    public static final GraduationDesignSubjectType GRADUATION_DESIGN_SUBJECT_TYPE = top.zbeboy.isy.domain.tables.GraduationDesignSubjectType.GRADUATION_DESIGN_SUBJECT_TYPE;
+
+    /**
+     * The table <code>isy.graduation_design_teacher</code>.
+     */
+    public static final GraduationDesignTeacher GRADUATION_DESIGN_TEACHER = top.zbeboy.isy.domain.tables.GraduationDesignTeacher.GRADUATION_DESIGN_TEACHER;
+
+    /**
+     * The table <code>isy.graduation_design_tutor</code>.
+     */
+    public static final GraduationDesignTutor GRADUATION_DESIGN_TUTOR = top.zbeboy.isy.domain.tables.GraduationDesignTutor.GRADUATION_DESIGN_TUTOR;
 
     /**
      * The table <code>isy.graduation_practice_college</code>.
@@ -249,9 +377,19 @@ public class Tables {
     public static final School SCHOOL = top.zbeboy.isy.domain.tables.School.SCHOOL;
 
     /**
+     * The table <code>isy.schoolroom</code>.
+     */
+    public static final Schoolroom SCHOOLROOM = top.zbeboy.isy.domain.tables.Schoolroom.SCHOOLROOM;
+
+    /**
      * The table <code>isy.science</code>.
      */
     public static final Science SCIENCE = top.zbeboy.isy.domain.tables.Science.SCIENCE;
+
+    /**
+     * The table <code>isy.score_type</code>.
+     */
+    public static final ScoreType SCORE_TYPE = top.zbeboy.isy.domain.tables.ScoreType.SCORE_TYPE;
 
     /**
      * The table <code>isy.staff</code>.
