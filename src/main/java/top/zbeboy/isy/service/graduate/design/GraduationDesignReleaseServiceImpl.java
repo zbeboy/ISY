@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.GraduationDesignReleaseDao;
-import top.zbeboy.isy.domain.tables.pojos.Science;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +42,18 @@ public class GraduationDesignReleaseServiceImpl implements GraduationDesignRelea
     @Autowired
     public GraduationDesignReleaseServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public List<GraduationDesignRelease> findByGraduationDesignTitle(String graduationDesignTitle) {
+        return graduationDesignReleaseDao.fetchByGraduationDesignTitle(graduationDesignTitle);
+    }
+
+    @Override
+    public Result<GraduationDesignReleaseRecord> findByGraduationDesignTitleNeInternshipReleaseId(String graduationDesignTitle, String graduationDesignReleaseId) {
+        return create.selectFrom(GRADUATION_DESIGN_RELEASE)
+                .where(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_TITLE.eq(graduationDesignTitle).and(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID.ne(graduationDesignReleaseId)))
+                .fetch();
     }
 
     @Override
@@ -84,6 +96,12 @@ public class GraduationDesignReleaseServiceImpl implements GraduationDesignRelea
             paginationUtils.setTotalDatas(countByCondition(paginationUtils, graduationDesignReleaseBean));
         }
         return graduationDesignReleaseBeans;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationDesignRelease graduationDesignRelease) {
+        graduationDesignReleaseDao.insert(graduationDesignRelease);
     }
 
     public int countByCondition(PaginationUtils paginationUtils, GraduationDesignReleaseBean graduationDesignReleaseBean) {

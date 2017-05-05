@@ -154,13 +154,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
 
         /**
          * 注销确认
-         * @param id 毕业发布id
+         * @param id 毕业设计发布id
          * @param name 标题
          */
         function releaseDel(id, name) {
             var msg;
             msg = Messenger().post({
-                message: "确定注销毕业发布 '" + name + "' 吗?",
+                message: "确定注销毕业设计 '" + name + "' 吗?",
                 actions: {
                     retry: {
                         label: '确定',
@@ -182,13 +182,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
 
         /**
          * 恢复确认
-         * @param id 毕业发布id
+         * @param id 毕业设计发布id
          * @param name 标题
          */
         function releaseRecovery(id, name) {
             var msg;
             msg = Messenger().post({
-                message: "确定恢复毕业发布 '" + name + "' 吗?",
+                message: "确定恢复毕业设计 '" + name + "' 吗?",
                 actions: {
                     retry: {
                         label: '确定',
@@ -232,9 +232,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function sendUpdateDelAjax(graduationDesignReleaseId, message, isDel) {
             Messenger().run({
-                successMessage: message + '毕业发布成功',
-                errorMessage: message + '毕业发布失败',
-                progressMessage: '正在' + message + '毕业发布....'
+                successMessage: message + '毕业设计成功',
+                errorMessage: message + '毕业设计失败',
+                progressMessage: '正在' + message + '毕业设计....'
             }, {
                 url: web_path + ajax_url.updateDel,
                 type: 'post',

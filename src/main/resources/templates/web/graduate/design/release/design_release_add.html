@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业设计发布 -
+                    <small>添加</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="add_form">
+                    <div class="form-group" id="valid_release_title">
+                        <label>标题</label>
+                        <input class="form-control" name="graduationDesignTitle" id="graduationDesignTitle" placeholder="标题" maxlength="100"/>
+                        <p class="text-danger hidden" id="release_title_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_start_time">
+                        <label>毕业设计开始时间</label>
+                        <input class="form-control" name="startTime" id="startTime" readonly="readonly"
+                               placeholder="毕业设计开始时间"/>
+                        <p class="text-danger hidden" id="start_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_end_time">
+                        <label>毕业设计结束时间</label>
+                        <input class="form-control" name="endTime" id="endTime" readonly="readonly"
+                               placeholder="毕业设计结束时间"/>
+                        <p class="text-danger hidden" id="end_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_fill_teacher_time">
+                        <label>学生申报教师时间</label>
+                        <input class="form-control" name="fillTeacherTime" id="fillTeacherTime" placeholder="学生申报教师时间"/>
+                        <p class="text-danger hidden" id="fill_teacher_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_school" sec:authorize="hasRole('ROLE_SYSTEM')">
+                        <select class="form-control" name="schoolId" id="select_school">
+                            <option>请选择学校</option>
+                        </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
+                        <p class="text-danger hidden" id="school_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_college" sec:authorize="hasRole('ROLE_SYSTEM')">
+                        <select class="form-control" name="collegeId" id="select_college">
+                            <option>请选择院</option>
+                        </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
+                        <p class="text-danger hidden" id="college_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_department"
+                         sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
+                        <select class="form-control" name="departmentId" id="select_department">
+                            <option>请选择系</option>
+                        </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
+                        <p class="text-danger hidden" id="department_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_grade">
+                        <select class="form-control" name="grade" id="select_grade">
+                            <option>请选择年级</option>
+                        </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
+                        <p class="text-danger hidden" id="grade_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_science">
+                        <select class="form-control" name="science" id="select_science">
+                            <option>请选择专业</option>
+                        </select>
+                        <p class="help-block">注意：此字段保存后不可编辑</p>
+                        <p class="text-danger hidden" id="science_error_msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>状态</label>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="graduationDesignIsDel" id="graduationDesignIsDel"
+                                       value="1" checked="checked"/>注销
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>附件</label>
+                        <div class="row" id="fileShow">
+
+                        </div>
+                        <div class="text-center">
+                            <!-- The global progress bar -->
+                            <div id="progress" class="progress">
+                                <div class="progress-bar progress-bar-success"></div>
+                            </div>
+                            <p>
+                            <span class="btn btn-primary fileinput-button">
+                                <span>添加附件</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files[]" multiple="multiple"/>
+                            </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="school-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{school_value}}">{{school_name}}</option>
+            {{/each}}
+        </script>
+        <script id="college-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{college_value}}">{{college_name}}</option>
+            {{/each}}
+        </script>
+        <script id="department-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{department_value}}">{{department_name}}</option>
+            {{/each}}
+        </script>
+        <script id="grade-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{grade_value}}">{{grade_name}}</option>
+            {{/each}}
+        </script>
+        <script id="science-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{science_value}}">{{science_name}}</option>
+            {{/each}}
+        </script>
+        <script id="file-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                 data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+                <div class="col-lg-6">
+                    {{original_file_name}}
+                </div>
+                <div class="col-lg-4">
+                    {{size}}
+                </div>
+                <div class="col-lg-2 text-center">
+                    <a class="clearfile" data-file-path="{{lastPath}}" href="javascript:;">删除</a>
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'departmentId': /*[[${departmentId}]]*/ -1,
+                'collegeId': /*[[${collegeId}]]*/ -1
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/release/design_release_add.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

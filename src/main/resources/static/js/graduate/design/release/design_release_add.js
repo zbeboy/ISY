@@ -1,9 +1,9 @@
 /**
- * Created by lenovo on 2016-11-10.
+ * Created by lenovo on 2017/5/5.
  */
-//# sourceURL=internship_release_add.js
+//# sourceURL=graduate_design_release_add.js.js
 require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
-        "bootstrap-select-zh-CN", "jquery.fileupload-validate", "bootstrap-maxlength", "jquery.showLoading"],
+        "bootstrap-datetimepicker-zh-CN", "jquery.fileupload-validate", "bootstrap-maxlength", "jquery.showLoading"],
     function ($, Handlebars, nav_active, moment) {
 
         /*
@@ -15,12 +15,11 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             department_data_url: '/user/departments',
             grade_data_url: '/user/department/grades',
             science_data_url: '/user/grade/sciences',
-            internship_type_url: '/user/internship/types',
-            valid: '/web/internship/release/save/valid',
-            file_upload_url: '/anyone/users/upload/internship',
+            valid: '/web/graduate/design/release/save/valid',
+            file_upload_url: '/anyone/users/upload/graduate/design',
             delete_file_url: '/anyone/users/delete/file',
-            save: '/web/internship/release/save',
-            back: '/web/menu/internship/release'
+            save: '/web/graduate/design/release/save',
+            back: '/web/menu/graduate/design/release'
         };
 
         // 刷新时选中菜单
@@ -30,32 +29,32 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          参数id
          */
         var paramId = {
-            releaseTitle: '#releaseTitle',
-            internshipTypeId: '#select_internship_type',
-            teacherDistributionTime: '#teacherDistributionTime',
-            time: '#time',
+            graduationDesignTitle: '#graduationDesignTitle',
+            startTime: '#startTime',
+            endTime: '#endTime',
+            fillTeacherTime: '#fillTeacherTime',
             schoolId: '#select_school',
             collegeId: '#select_college',
             departmentId: '#select_department',
             grade: '#select_grade',
             scienceId: '#select_science',
-            internshipReleaseIsDel: '#internshipReleaseIsDel'
+            graduationDesignIsDel: '#graduationDesignIsDel'
         };
 
         /*
          参数
          */
         var param = {
-            releaseTitle: $(paramId.releaseTitle).val(),
-            internshipTypeId: $(paramId.internshipTypeId).val(),
-            teacherDistributionTime: $(paramId.teacherDistributionTime).val(),
-            time: $(paramId.time).val(),
+            graduationDesignTitle: $(paramId.graduationDesignTitle).val(),
+            startTime: $(paramId.startTime).val(),
+            endTime: $(paramId.endTime).val(),
+            fillTeacherTime: $(paramId.fillTeacherTime).val(),
             schoolId: $(paramId.schoolId).val(),
             collegeId: $(paramId.collegeId).val(),
             departmentId: $(paramId.departmentId).val(),
             grade: $(paramId.grade).val(),
             scienceId: $(paramId.scienceId).val(),
-            internshipReleaseIsDel: $('input[name="internshipReleaseIsDel"]:checked').val(),
+            graduationDesignIsDel: $('input[name="graduationDesignIsDel"]:checked').val(),
             files: ''
         };
 
@@ -63,10 +62,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          检验id
          */
         var validId = {
-            releaseTitle: '#valid_release_title',
-            internshipTypeId: '#valid_internship_type',
-            teacherDistributionTime: '#valid_teacher_distribution_time',
-            time: '#valid_time',
+            graduationDesignTitle: '#valid_release_title',
+            startTime: '#valid_start_time',
+            endTime: '#valid_end_time',
+            fillTeacherTime: '#fillTeacherTime',
             schoolId: '#valid_school',
             collegeId: '#valid_college',
             departmentId: '#valid_department',
@@ -78,10 +77,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          错误消息id
          */
         var errorMsgId = {
-            releaseTitle: '#release_title_error_msg',
-            internshipTypeId: '#internship_type_error_msg',
-            teacherDistributionTime: '#teacher_distribution_time_error_msg',
-            time: '#time_error_msg',
+            graduationDesignTitle: '#release_title_error_msg',
+            startTime: '#start_time_error_msg',
+            endTime: '#end_time_error_msg',
+            fillTeacherTime: '#fill_teacher_time_error_msg',
             schoolId: '#school_error_msg',
             collegeId: '#college_error_msg',
             departmentId: '#department_error_msg',
@@ -132,10 +131,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * 初始化参数
          */
         function initParam() {
-            param.releaseTitle = $(paramId.releaseTitle).val();
-            param.internshipTypeId = $(paramId.internshipTypeId).val();
-            param.teacherDistributionTime = $(paramId.teacherDistributionTime).val();
-            param.time = $(paramId.time).val();
+            param.graduationDesignTitle = $(paramId.graduationDesignTitle).val();
+            param.startTime = $(paramId.startTime).val();
+            param.endTime = $(paramId.endTime).val();
+            param.fillTeacherTime = $(paramId.fillTeacherTime).val();
             param.schoolId = $(paramId.schoolId).val();
             if (init_page_param.collegeId != -1) {
                 param.collegeId = init_page_param.collegeId;
@@ -152,9 +151,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             }
             param.grade = $(paramId.grade).val().trim();
             param.scienceId = $(paramId.scienceId).val();
-            param.internshipReleaseIsDel = $('input[name="internshipReleaseIsDel"]:checked').val();
-            if (typeof(param.internshipReleaseIsDel) == "undefined") {
-                param.internshipReleaseIsDel = 0;
+            param.graduationDesignIsDel = $('input[name="graduationDesignIsDel"]:checked').val();
+            if (typeof(param.graduationDesignIsDel) == "undefined") {
+                param.graduationDesignIsDel = 0;
             }
             var f = $('.fileobj');
             var p = [];
@@ -180,8 +179,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             $.address.value(ajax_url.back);
         });
 
-        // 教师分配时间
-        $(paramId.teacherDistributionTime).daterangepicker({
+        // 开始时间
+        $(paramId.startTime).datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+        // 结束时间
+        $(paramId.endTime).datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+
+        // 学生申报教师时间
+        $(paramId.fillTeacherTime).daterangepicker({
             "startDate": moment().add(1, "days"),
             "endDate": moment().add(2, "days"),
             "timePicker": true,
@@ -203,51 +207,17 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
 
-        // 实习时间
-        $(paramId.time).daterangepicker({
-            "startDate": moment().add(2, "days"),
-            "endDate": moment().add(3, "days"),
-            "timePicker": true,
-            "timePicker24Hour": true,
-            "timePickerIncrement": 30,
-            "locale": {
-                format: 'YYYY-MM-DD HH:mm:ss',
-                applyLabel: '确定',
-                cancelLabel: '取消',
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
-                customRangeLabel: '自定义',
-                separator: ' 至 ',
-                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月']
-            }
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
-        });
-
-        // 选择专业
-        $(paramId.scienceId).selectpicker({
-            liveSearch: true,
-            deselectAllText: '反选',
-            selectAllText: '全选'
-        });
-
         init();
 
         function init() {
-            startLoading();
-            $.get(web_path + ajax_url.internship_type_url, function (data) {
-                endLoading();
-                internshipTypeData(data);
-            });
-
             if (init_page_param.departmentId != -1) {
                 changeGrade(init_page_param.departmentId);
             } else if (init_page_param.collegeId != -1) {
                 changeDepartment(init_page_param.collegeId);
             } else {
+                startLoading();
                 $.get(web_path + ajax_url.school_data_url, function (data) {
+                    endLoading();
                     schoolData(data);
                 });
             }
@@ -259,7 +229,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          * 初始化Input max length
          */
         function initMaxLength() {
-            $(paramId.releaseTitle).maxlength({
+            $(paramId.graduationDesignTitle).maxlength({
                 alwaysShow: true,
                 threshold: 10,
                 warningClass: "label label-success",
@@ -284,29 +254,12 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             $(paramId.schoolId).html(template(data));
         }
 
-        /**
-         * 实习类型数据展现
-         * @param data json数据
-         */
-        function internshipTypeData(data) {
-            var template = Handlebars.compile($("#internship-type-template").html());
-
-            Handlebars.registerHelper('internship_type_value', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTypeId));
-            });
-
-            Handlebars.registerHelper('internship_type_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.internshipTypeName));
-            });
-            $(paramId.internshipTypeId).html(template(data));
-        }
-
-        // 检验实习标题
-        $(paramId.releaseTitle).blur(function () {
+        // 检验毕业设计发布标题
+        $(paramId.graduationDesignTitle).blur(function () {
             initParam();
-            var releaseTitle = param.releaseTitle;
-            if (releaseTitle.length <= 0 || releaseTitle.length > 100) {
-                validErrorDom(validId.releaseTitle, errorMsgId.releaseTitle, '标题100个字符以内');
+            var graduationDesignTitle = param.graduationDesignTitle;
+            if (graduationDesignTitle.length <= 0 || graduationDesignTitle.length > 100) {
+                validErrorDom(validId.graduationDesignTitle, errorMsgId.graduationDesignTitle, '标题100个字符以内');
             } else {
                 // 标题是否重复
                 Messenger().run({
@@ -317,9 +270,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     data: param,
                     success: function (data) {
                         if (data.state) {
-                            validSuccessDom(validId.releaseTitle, errorMsgId.releaseTitle);
+                            validSuccessDom(validId.graduationDesignTitle, errorMsgId.graduationDesignTitle);
                         } else {
-                            validErrorDom(validId.releaseTitle, errorMsgId.releaseTitle, data.msg);
+                            validErrorDom(validId.graduationDesignTitle, errorMsgId.graduationDesignTitle, data.msg);
                         }
                     },
                     error: function (xhr) {
@@ -329,18 +282,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                         return true;
                     }
                 });
-            }
-        });
-
-        // 检验实习类型
-        $(paramId.internshipTypeId).change(function () {
-            initParam();
-            var internshipTypeId = param.internshipTypeId;
-            // 改变选项时，检验
-            if (Number(internshipTypeId) > 0) {
-                validSuccessDom(validId.internshipTypeId, errorMsgId.internshipTypeId);
-            } else {
-                validErrorDom(validId.internshipTypeId, errorMsgId.internshipTypeId, '请选择实习类型');
             }
         });
 
@@ -420,6 +361,18 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 validErrorDom(validId.grade, errorMsgId.grade, '请选择年级');
             }
             validCleanDom(validId.scienceId, errorMsgId.scienceId);
+        });
+
+        // 变换专业数据.
+        $(paramId.scienceId).change(function () {
+            initParam();
+            var scienceId = param.scienceId;
+
+            if (Number(scienceId) > 0) {
+                validSuccessDom(validId.scienceId, errorMsgId.scienceId);
+            } else {
+                validErrorDom(validId.scienceId, errorMsgId.scienceId, '请选择专业');
+            }
         });
 
         /**
@@ -554,11 +507,28 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         function changeScience(grade, department) {
 
             if (Number(grade) == 0) {
-                $(paramId.scienceId).html('');
-                $(paramId.scienceId).selectpicker('refresh');
+                var template = Handlebars.compile($("#science-template").html());
+
+                var context = {
+                    listResult: [
+                        {name: "请选择专业", value: ""}
+                    ]
+                };
+
+                Handlebars.registerHelper('science_value', function () {
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.value));
+                });
+
+                Handlebars.registerHelper('science_name', function () {
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(this.name));
+                });
+
+                $(paramId.scienceId).html(template(context));
             } else {
                 // 根据年级查询全部专业
+                startLoading();
                 $.post(web_path + ajax_url.science_data_url, {grade: grade, departmentId: department}, function (data) {
+                    endLoading();
                     var template = Handlebars.compile($("#science-template").html());
 
                     Handlebars.registerHelper('science_value', function () {
@@ -569,7 +539,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                         return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
                     });
                     $(paramId.scienceId).html(template(data));
-                    $(paramId.scienceId).selectpicker('refresh');
                 });
             }
 
@@ -601,7 +570,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     return false;
                 }
 
-                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1)||
+                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
                     (init_page_param.departmentId == -1 && init_page_param.collegeId != -1))
                     && Number(param.departmentId) <= 0) {
                     Messenger().post({
@@ -612,7 +581,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     return false;
                 }
 
-                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1)||
+                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
                     (init_page_param.departmentId == -1 && init_page_param.collegeId != -1) ||
                     (init_page_param.departmentId != -1 && init_page_param.collegeId == -1))
                     && param.grade === '0') {
@@ -753,14 +722,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             var releaseTitle = param.releaseTitle;
             var msg;
             msg = Messenger().post({
-                message: "确定添加实习 '" + releaseTitle + "'  吗?",
+                message: "确定添加毕业设计 '" + releaseTitle + "'  吗?",
                 actions: {
                     retry: {
                         label: '确定',
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            validReleaseTitle();
+                            validGraduationDesignTitle();
                         }
                     },
                     cancel: {
@@ -774,11 +743,11 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         }
 
         /**
-         * 检验实习标题
+         * 检验毕业设计标题
          */
-        function validReleaseTitle() {
-            var releaseTitle = param.releaseTitle;
-            if (releaseTitle.length <= 0 || releaseTitle.length > 100) {
+        function validGraduationDesignTitle() {
+            var graduationDesignTitle = param.graduationDesignTitle;
+            if (graduationDesignTitle.length <= 0 || graduationDesignTitle.length > 100) {
                 Messenger().post({
                     message: '标题为1~100个字符',
                     type: 'error',
@@ -794,7 +763,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     data: param,
                     success: function (data) {
                         if (data.state) {
-                            validInternshipTypeId();
+                            if (init_page_param.departmentId != -1) {
+                                validGrade();
+                            } else if (init_page_param.collegeId != -1) {
+                                validDepartmentId();
+                            } else {
+                                validSchoolId();
+                            }
                         } else {
                             Messenger().post({
                                 message: data.msg,
@@ -809,29 +784,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                         }
                         return true;
                     }
-                });
-            }
-        }
-
-        /**
-         * 检验实习类型
-         */
-        function validInternshipTypeId() {
-            var internshipTypeId = param.internshipTypeId;
-            // 改变选项时，检验
-            if (Number(internshipTypeId) > 0) {
-                if (init_page_param.departmentId != -1) {
-                    validGrade();
-                } else if(init_page_param.collegeId != -1){
-                    validDepartmentId();
-                } else {
-                    validSchoolId();
-                }
-            } else {
-                Messenger().post({
-                    message: '请选择实习类型',
-                    type: 'error',
-                    showCloseButton: true
                 });
             }
         }
@@ -905,7 +857,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          */
         function validScienceId() {
             var scienceId = param.scienceId;
-            if (scienceId == null || scienceId.length <= 0) {
+            if (Number(scienceId) <= 0) {
                 Messenger().post({
                     message: '请选择专业',
                     type: 'error',
@@ -917,7 +869,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         }
 
         function sendAjax() {
-            param.scienceId = param.scienceId.join(',');
             Messenger().run({
                 successMessage: '保存数据成功',
                 errorMessage: '保存数据失败',

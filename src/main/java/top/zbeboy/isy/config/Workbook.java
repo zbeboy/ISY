@@ -193,4 +193,16 @@ public final class Workbook {
     public static String internshipPath(String schoolName, String collegeName, String departmentName) {
         return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "internship/";
     }
+
+    /**
+     * 毕业设计文件路径
+     *
+     * @param schoolName     学校名
+     * @param collegeName    院名
+     * @param departmentName 系名
+     * @return 路径
+     */
+    public static String graduateDesignPath(String schoolName, String collegeName, String departmentName) {
+        return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "graduate/design/";
+    }
 }
