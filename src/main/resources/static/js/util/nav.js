@@ -20,6 +20,16 @@ define(["jquery", "sb-admin"], function ($) {
         }
         // end
 
+        var url = window.location;
+        var element = $('ul.nav a').filter(function () {
+            return this.href == url || url.href.indexOf(this.href) == 0;
+        }).parent().parent().parent();
+        var thirdParent = element.parent();
+        if (thirdParent.is('ul')) {
+            thirdParent.addClass('in');
+            thirdParent.parent().addClass('active');
+        }
+
         // 菜单搜索
         /**
          * @return {boolean}

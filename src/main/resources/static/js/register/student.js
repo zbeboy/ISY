@@ -20,7 +20,7 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "sb-admin", "jquery.entropizer"], function ($, Handlebars) {
+require(["jquery", "handlebars", "jquery.showLoading", "csrf", "com", "bootstrap", "jquery.entropizer"], function ($, Handlebars) {
 
     /*
      ajax url

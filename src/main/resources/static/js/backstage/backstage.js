@@ -183,6 +183,12 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             if (parent.is('li')) {
                 parent.addClass('active');
             }
+
+            var thirdParent = parent.parent();
+            if(thirdParent.is('ul')){
+                thirdParent.addClass('in');
+                thirdParent.parent().addClass('active');
+            }
         }
 
         function getAjaxUrl() {

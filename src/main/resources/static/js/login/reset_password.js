@@ -19,7 +19,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "sb-admin", "jquery.showLoading", "csrf", "com", "jquery.entropizer"], function ($, domready) {
+require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csrf", "com", "jquery.entropizer"], function ($, domready) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate

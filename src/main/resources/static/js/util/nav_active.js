@@ -10,5 +10,11 @@ define(["jquery"], function ($) {
         if (element.is('li')) {
             element.addClass('active');
         }
+
+        var thirdParent = element.parent();
+        if(thirdParent.is('ul')){
+            thirdParent.addClass('in');
+            thirdParent.parent().addClass('active');
+        }
     }
 });
