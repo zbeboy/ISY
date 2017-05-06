@@ -22,6 +22,7 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -45,12 +46,33 @@ public class GraduationDesignReleaseServiceImpl implements GraduationDesignRelea
     }
 
     @Override
+    public GraduationDesignRelease findById(String id) {
+        return graduationDesignReleaseDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(GRADUATION_DESIGN_RELEASE)
+                .join(SCIENCE)
+                .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public List<GraduationDesignRelease> findByGraduationDesignTitle(String graduationDesignTitle) {
         return graduationDesignReleaseDao.fetchByGraduationDesignTitle(graduationDesignTitle);
     }
 
     @Override
-    public Result<GraduationDesignReleaseRecord> findByGraduationDesignTitleNeInternshipReleaseId(String graduationDesignTitle, String graduationDesignReleaseId) {
+    public Result<GraduationDesignReleaseRecord> findByGraduationDesignTitleNeGraduationDesignReleaseId(String graduationDesignTitle, String graduationDesignReleaseId) {
         return create.selectFrom(GRADUATION_DESIGN_RELEASE)
                 .where(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_TITLE.eq(graduationDesignTitle).and(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID.ne(graduationDesignReleaseId)))
                 .fetch();
@@ -104,6 +126,11 @@ public class GraduationDesignReleaseServiceImpl implements GraduationDesignRelea
         graduationDesignReleaseDao.insert(graduationDesignRelease);
     }
 
+    @Override
+    public void update(GraduationDesignRelease graduationDesignRelease) {
+        graduationDesignReleaseDao.update(graduationDesignRelease);
+    }
+
     public int countByCondition(PaginationUtils paginationUtils, GraduationDesignReleaseBean graduationDesignReleaseBean) {
         Record1<Integer> count;
         Condition a = searchCondition(paginationUtils);
@@ -152,7 +179,7 @@ public class GraduationDesignReleaseServiceImpl implements GraduationDesignRelea
     /**
      * 其它条件参数
      *
-     * @param a                     搜索条件
+     * @param a                           搜索条件
      * @param graduationDesignReleaseBean 额外参数
      * @return 条件
      */

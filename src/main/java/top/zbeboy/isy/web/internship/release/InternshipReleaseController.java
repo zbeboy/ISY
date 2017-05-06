@@ -163,7 +163,7 @@ public class InternshipReleaseController {
      * 实习发布编辑页面
      *
      * @param internshipReleaseId 实习发布id
-     * @param modelMap            对面对象
+     * @param modelMap            页面对象
      * @return 实习发布编辑页面
      */
     @RequestMapping(value = "/web/internship/release/edit", method = RequestMethod.GET)
@@ -446,8 +446,8 @@ public class InternshipReleaseController {
      */
     @RequestMapping("/anyone/users/delete/file/internship")
     @ResponseBody
-    public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId, @RequestParam("internshipReleaseId") String internshipReleaseId,
-                                          HttpServletRequest request) {
+    public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId,
+                                          @RequestParam("internshipReleaseId") String internshipReleaseId, HttpServletRequest request) {
         AjaxUtils ajaxUtils = new AjaxUtils();
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {

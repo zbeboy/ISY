@@ -8,11 +8,28 @@ import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBe
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by zbeboy on 2017/5/5.
  */
 public interface GraduationDesignReleaseService {
+
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 毕业设计发布
+     */
+    GraduationDesignRelease findById(String id);
+
+    /**
+     * 通过主键关联查询
+     *
+     * @param id 主键
+     * @return 关联数据
+     */
+    Optional<Record> findByIdRelation(String id);
 
     /**
      * 通过标题查询
@@ -29,7 +46,7 @@ public interface GraduationDesignReleaseService {
      * @param graduationDesignReleaseId 毕业设计id
      * @return 毕业设计
      */
-    Result<GraduationDesignReleaseRecord> findByGraduationDesignTitleNeInternshipReleaseId(String graduationDesignTitle, String graduationDesignReleaseId);
+    Result<GraduationDesignReleaseRecord> findByGraduationDesignTitleNeGraduationDesignReleaseId(String graduationDesignTitle, String graduationDesignReleaseId);
 
     /**
      * 分页查询全部
@@ -56,4 +73,11 @@ public interface GraduationDesignReleaseService {
      * @param graduationDesignRelease 数据
      */
     void save(GraduationDesignRelease graduationDesignRelease);
+
+    /**
+     * 更新
+     *
+     * @param graduationDesignRelease 数据
+     */
+    void update(GraduationDesignRelease graduationDesignRelease);
 }

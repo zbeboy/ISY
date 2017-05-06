@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
  */
 public class InternshipReleaseUpdateVo {
     @NotNull
+    @Size(max = 64)
     private String internshipReleaseId;
     @NotNull
     @Size(max = 100)

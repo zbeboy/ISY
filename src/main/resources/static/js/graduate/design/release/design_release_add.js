@@ -180,9 +180,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         });
 
         // 开始时间
-        $(paramId.startTime).datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+        $(paramId.startTime).datetimepicker({format: 'yyyy-mm-dd hh:ii:ss',language:'zh-CN'});
         // 结束时间
-        $(paramId.endTime).datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+        $(paramId.endTime).datetimepicker({format: 'yyyy-mm-dd hh:ii:ss',language:'zh-CN'});
 
         // 学生申报教师时间
         $(paramId.fillTeacherTime).daterangepicker({
@@ -719,10 +719,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          */
         function add() {
             initParam();
-            var releaseTitle = param.releaseTitle;
+            var graduationDesignTitle = param.graduationDesignTitle;
             var msg;
             msg = Messenger().post({
-                message: "确定添加毕业设计 '" + releaseTitle + "'  吗?",
+                message: "确定添加毕业设计 '" + graduationDesignTitle + "'  吗?",
                 actions: {
                     retry: {
                         label: '确定',

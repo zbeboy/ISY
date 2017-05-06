@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">毕业设计发布 -
-                    <small>添加</small>
+                    <small>编辑</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -24,68 +24,72 @@
                 <form role="form" id="add_form">
                     <div class="form-group" id="valid_release_title">
                         <label>标题</label>
-                        <input class="form-control" name="graduationDesignTitle" id="graduationDesignTitle" placeholder="标题" maxlength="100"/>
+                        <input class="form-control" name="graduationDesignTitle" id="graduationDesignTitle"
+                               placeholder="标题" maxlength="100" th:value="${graduationDesignRelease.graduationDesignTitle}"/>
                         <p class="text-danger hidden" id="release_title_error_msg"></p>
+                        <input type="hidden" name="graduationDesignReleaseId" id="graduationDesignReleaseId"
+                               th:value="${graduationDesignRelease.graduationDesignReleaseId}"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.schoolId}" id="schoolId"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.collegeId}" id="collegeId"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.departmentId}" id="departmentId"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.scienceId}" id="scienceId"/>
                     </div>
                     <div class="form-group" id="valid_start_time">
                         <label>毕业设计开始时间</label>
                         <input class="form-control" name="startTime" id="startTime" readonly="readonly"
-                               placeholder="毕业设计开始时间"/>
+                               placeholder="毕业设计开始时间" th:value="${graduationDesignRelease.startTimeStr}" />
                         <p class="text-danger hidden" id="start_time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_end_time">
                         <label>毕业设计结束时间</label>
                         <input class="form-control" name="endTime" id="endTime" readonly="readonly"
-                               placeholder="毕业设计结束时间"/>
+                               placeholder="毕业设计结束时间" th:value="${graduationDesignRelease.endTimeStr}"/>
                         <p class="text-danger hidden" id="end_time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_fill_teacher_time">
                         <label>学生申报教师时间</label>
                         <input class="form-control" name="fillTeacherTime" id="fillTeacherTime" placeholder="学生申报教师时间"/>
                         <p class="text-danger hidden" id="fill_teacher_time_error_msg"></p>
+                        <input type="hidden" th:value="${graduationDesignRelease.fillTeacherStartTime}"
+                               id="fillTeacherStartTime"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.fillTeacherEndTime}"
+                               id="fillTeacherEndTime"/>
                     </div>
-                    <div class="form-group" id="valid_school" sec:authorize="hasRole('ROLE_SYSTEM')">
-                        <select class="form-control" name="schoolId" id="select_school">
-                            <option>请选择学校</option>
-                        </select>
-                        <p class="help-block">注意：此字段保存后不可编辑</p>
-                        <p class="text-danger hidden" id="school_error_msg"></p>
+                    <div class="form-group">
+                        <label>学校</label>
+                        <input class="form-control" name="schoolName" th:value="${graduationDesignRelease.schoolName}"
+                               readonly="readonly"/>
                     </div>
-                    <div class="form-group" id="valid_college" sec:authorize="hasRole('ROLE_SYSTEM')">
-                        <select class="form-control" name="collegeId" id="select_college">
-                            <option>请选择院</option>
-                        </select>
-                        <p class="help-block">注意：此字段保存后不可编辑</p>
-                        <p class="text-danger hidden" id="college_error_msg"></p>
+                    <div class="form-group">
+                        <label>院</label>
+                        <input class="form-control" name="collegeName" th:value="${graduationDesignRelease.collegeName}"
+                               readonly="readonly"/>
                     </div>
-                    <div class="form-group" id="valid_department"
-                         sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
-                        <select class="form-control" name="departmentId" id="select_department">
-                            <option>请选择系</option>
-                        </select>
-                        <p class="help-block">注意：此字段保存后不可编辑</p>
-                        <p class="text-danger hidden" id="department_error_msg"></p>
+                    <div class="form-group">
+                        <label>系</label>
+                        <input class="form-control" name="departmentName" th:value="${graduationDesignRelease.departmentName}"
+                               readonly="readonly"/>
                     </div>
-                    <div class="form-group" id="valid_grade">
-                        <select class="form-control" name="grade" id="select_grade">
-                            <option>请选择年级</option>
-                        </select>
-                        <p class="help-block">注意：此字段保存后不可编辑</p>
-                        <p class="text-danger hidden" id="grade_error_msg"></p>
+                    <div class="form-group">
+                        <label>年级</label>
+                        <input class="form-control" name="grade" id="grade" th:value="${graduationDesignRelease.allowGrade}"
+                               readonly="readonly"/>
                     </div>
-                    <div class="form-group" id="valid_science">
-                        <select class="form-control" name="scienceId" id="select_science">
-                            <option>请选择专业</option>
-                        </select>
-                        <p class="help-block">注意：此字段保存后不可编辑</p>
-                        <p class="text-danger hidden" id="science_error_msg"></p>
+                    <div class="form-group">
+                        <label>专业</label>
+                        <input class="form-control" name="scienceName" th:value="${graduationDesignRelease.scienceName}"
+                               readonly="readonly"/>
                     </div>
                     <div class="form-group">
                         <label>状态</label>
                         <div class="checkbox">
-                            <label>
+                            <label th:if="${graduationDesignRelease.graduationDesignIsDel == 0 || graduationDesignRelease.graduationDesignIsDel == null}">
                                 <input type="checkbox" name="graduationDesignIsDel" id="graduationDesignIsDel"
-                                       value="1" checked="checked"/>注销
+                                       value="1"/>注销
+                            </label>
+                            <label th:if="${graduationDesignRelease.graduationDesignIsDel == 1}">
+                                <input type="checkbox" name="graduationDesignIsDel" id="graduationDesignIsDel"
+                                       checked="checked" value="1"/>注销
                             </label>
                         </div>
                     </div>
@@ -120,31 +124,6 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
-        <script id="school-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{school_value}}">{{school_name}}</option>
-            {{/each}}
-        </script>
-        <script id="college-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{college_value}}">{{college_name}}</option>
-            {{/each}}
-        </script>
-        <script id="department-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{department_value}}">{{department_name}}</option>
-            {{/each}}
-        </script>
-        <script id="grade-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{grade_value}}">{{grade_name}}</option>
-            {{/each}}
-        </script>
-        <script id="science-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <option value="{{science_value}}">{{science_name}}</option>
-            {{/each}}
-        </script>
         <script id="file-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
@@ -156,19 +135,13 @@
                     {{size}}
                 </div>
                 <div class="col-lg-2 text-center">
-                    <a class="clearfile" data-file-path="{{lastPath}}" href="javascript:;">删除</a>
+                    <a class="clearfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                       data-file-id="{{fileId}}" href="javascript:;">删除</a>
                 </div>
             </div>
             {{/each}}
         </script>
-        <script th:inline="javascript">
-            /*页面参数*/
-            var init_page_param = {
-                'departmentId': /*[[${departmentId}]]*/ -1,
-                'collegeId': /*[[${collegeId}]]*/ -1
-            };
-        </script>
-        <input type="hidden" class="dy_script" value="/js/graduate/design/release/design_release_add.js"/>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/release/design_release_edit.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>
