@@ -4,7 +4,7 @@
 1.jdk 1.8.*;  
 2.Intellij IDEA 2015或更高;  
 3.MySQL 5.7或更高;  
-4.Maven 3.1.1或更高;  
+4.Maven 3.5.0或更高;  
 5.Node 6或更高;  
 # 安装
 1.clone 代码.  
