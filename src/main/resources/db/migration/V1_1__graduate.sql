@@ -42,10 +42,12 @@ CREATE TABLE graduation_design_hope_tutor(
 );
 
 CREATE TABLE graduation_design_tutor(
+  graduation_design_tutor_id VARCHAR(64) PRIMARY KEY ,
   graduation_design_teacher_id VARCHAR(64) NOT NULL ,
   student_id INT NOT NULL ,
   FOREIGN KEY (graduation_design_teacher_id) REFERENCES  graduation_design_teacher(graduation_design_teacher_id),
-  FOREIGN KEY (student_id) REFERENCES student(student_id)
+  FOREIGN KEY (student_id) REFERENCES student(student_id),
+  UNIQUE (graduation_design_teacher_id,student_id)
 );
 
 CREATE TABLE graduation_design_plan(
@@ -111,11 +113,9 @@ CREATE TABLE graduation_design_declare(
   student_number VARCHAR(20),
   student_name VARCHAR(30),
   graduation_design_declare_data_id VARCHAR(64) NOT NULL ,
-  student_id INT NOT NULL ,
-  staff_id INT NOT NULL ,
+  graduation_design_tutor_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_declare_data_id) REFERENCES graduation_design_declare_data(graduation_design_declare_data_id),
-  FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
 );
 
 CREATE TABLE graduation_design_declare_ok(
@@ -135,8 +135,10 @@ CREATE TABLE graduation_design_datum(
   file_id VARCHAR(64) NOT NULL ,
   graduation_design_datum_type_id INT NOT NULL ,
   graduation_design_release_id VARCHAR(64) NOT NULL ,
+  student_id INT NOT NULL ,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id),
-  FOREIGN KEY (file_id) REFERENCES files(file_id)
+  FOREIGN KEY (file_id) REFERENCES files(file_id),
+  FOREIGN KEY (student_id) REFERENCES student(student_id)
 );
 
 CREATE TABLE defense_arrangement(
@@ -172,19 +174,19 @@ CREATE TABLE defense_group(
   defense_group_number INT NOT NULL ,
   schoolroom_id INT NOT NULL ,
   note VARCHAR(100) ,
-  group_leader INT NOT NULL ,
+  group_leader VARCHAR(64) NOT NULL ,
   defense_arrangement_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (schoolroom_id) REFERENCES schoolroom(schoolroom_id),
-  FOREIGN KEY (group_leader) REFERENCES staff(staff_id),
+  FOREIGN KEY (group_leader) REFERENCES graduation_design_teacher(graduation_design_teacher_id),
   FOREIGN KEY (defense_arrangement_id) REFERENCES defense_arrangement(defense_arrangement_id)
 );
 
 CREATE TABLE defense_group_member(
   group_member_id VARCHAR(64) PRIMARY KEY ,
-  staff_id INT NOT NULL ,
+  graduation_design_teacher_id VARCHAR(64) NOT NULL ,
   defense_group_id VARCHAR(64) NOT NULL ,
   note VARCHAR(100),
-  FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+  FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher(graduation_design_teacher_id),
   FOREIGN KEY (defense_group_id) REFERENCES defense_group(defense_group_id)
 );
 
@@ -196,11 +198,9 @@ CREATE TABLE defense_order(
   defense_date DATE NOT NULL ,
   defense_time VARCHAR(20) NOT NULL ,
   staff_name VARCHAR(30) NOT NULL ,
-  student_id INT NOT NULL ,
-  staff_id INT NOT NULL ,
+  graduation_design_tutor_id VARCHAR(64) NOT NULL ,
   group_member_id VARCHAR(64) NOT NULL ,
-  FOREIGN KEY (student_id) REFERENCES student(student_id),
-  FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id),
   FOREIGN KEY (group_member_id) REFERENCES defense_group_member(group_member_id)
 );
 

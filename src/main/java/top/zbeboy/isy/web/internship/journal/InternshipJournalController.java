@@ -250,7 +250,7 @@ public class InternshipJournalController {
         InternshipJournalBean otherCondition = new InternshipJournalBean();
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
-            otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            otherCondition.setInternshipReleaseId(internshipReleaseId);
             String studentId = request.getParameter("studentId");
             String staffId = request.getParameter("staffId");
             if (StringUtils.hasLength(studentId)) {

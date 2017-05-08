@@ -203,20 +203,18 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
             records = selectConditionStep.fetch();
         }
 
-        if (records.isNotEmpty()) {
-            for (Record r : records) {
-                InternshipTeacherDistributionBean internshipTeacherDistributionBeen = new InternshipTeacherDistributionBean();
-                internshipTeacherDistributionBeen.setStudentRealName(r.getValue(USERS.as("T").REAL_NAME));
-                internshipTeacherDistributionBeen.setStudentUsername(r.getValue(USERS.as("T").USERNAME));
-                internshipTeacherDistributionBeen.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
-                internshipTeacherDistributionBeen.setStudentId(r.getValue(STUDENT.STUDENT_ID));
-                internshipTeacherDistributionBeen.setStaffRealName(r.getValue(USERS.as("S").REAL_NAME));
-                internshipTeacherDistributionBeen.setStaffUsername(r.getValue(USERS.as("S").USERNAME));
-                internshipTeacherDistributionBeen.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
-                internshipTeacherDistributionBeen.setRealName(r.getValue(USERS.as("U").REAL_NAME));
-                internshipTeacherDistributionBeen.setUsername(r.getValue(USERS.as("U").USERNAME));
-                internshipTeacherDistributionBeens.add(internshipTeacherDistributionBeen);
-            }
+        for (Record r : records) {
+            InternshipTeacherDistributionBean internshipTeacherDistributionBeen = new InternshipTeacherDistributionBean();
+            internshipTeacherDistributionBeen.setStudentRealName(r.getValue(USERS.as("T").REAL_NAME));
+            internshipTeacherDistributionBeen.setStudentUsername(r.getValue(USERS.as("T").USERNAME));
+            internshipTeacherDistributionBeen.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
+            internshipTeacherDistributionBeen.setStudentId(r.getValue(STUDENT.STUDENT_ID));
+            internshipTeacherDistributionBeen.setStaffRealName(r.getValue(USERS.as("S").REAL_NAME));
+            internshipTeacherDistributionBeen.setStaffUsername(r.getValue(USERS.as("S").USERNAME));
+            internshipTeacherDistributionBeen.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
+            internshipTeacherDistributionBeen.setRealName(r.getValue(USERS.as("U").REAL_NAME));
+            internshipTeacherDistributionBeen.setUsername(r.getValue(USERS.as("U").USERNAME));
+            internshipTeacherDistributionBeens.add(internshipTeacherDistributionBeen);
         }
 
         return internshipTeacherDistributionBeens;
@@ -321,7 +319,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     /**
-     * 院数据排序
+     * 数据排序
      *
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件

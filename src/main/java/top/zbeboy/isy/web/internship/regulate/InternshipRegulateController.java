@@ -187,7 +187,7 @@ public class InternshipRegulateController {
         InternshipRegulateBean otherCondition = new InternshipRegulateBean();
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
-            otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            otherCondition.setInternshipReleaseId(internshipReleaseId);
             String staffId = request.getParameter("staffId");
             if (StringUtils.hasLength(staffId)) {
                 if (NumberUtils.isDigits(staffId)) {
