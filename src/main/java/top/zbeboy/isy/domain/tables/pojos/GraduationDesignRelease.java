@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignRelease implements Serializable {
 
-    private static final long serialVersionUID = 3727311;
+    private static final long serialVersionUID = 1426004769;
 
     private String    graduationDesignReleaseId;
     private String    graduationDesignTitle;
@@ -37,6 +37,7 @@ public class GraduationDesignRelease implements Serializable {
     private Timestamp fillTeacherEndTime;
     private Byte      graduationDesignIsDel;
     private String    allowGrade;
+    private Byte      isOkTeacher;
     private Integer   departmentId;
     private Integer   scienceId;
 
@@ -53,6 +54,7 @@ public class GraduationDesignRelease implements Serializable {
         this.fillTeacherEndTime = value.fillTeacherEndTime;
         this.graduationDesignIsDel = value.graduationDesignIsDel;
         this.allowGrade = value.allowGrade;
+        this.isOkTeacher = value.isOkTeacher;
         this.departmentId = value.departmentId;
         this.scienceId = value.scienceId;
     }
@@ -68,6 +70,7 @@ public class GraduationDesignRelease implements Serializable {
         Timestamp fillTeacherEndTime,
         Byte      graduationDesignIsDel,
         String    allowGrade,
+        Byte      isOkTeacher,
         Integer   departmentId,
         Integer   scienceId
     ) {
@@ -81,6 +84,7 @@ public class GraduationDesignRelease implements Serializable {
         this.fillTeacherEndTime = fillTeacherEndTime;
         this.graduationDesignIsDel = graduationDesignIsDel;
         this.allowGrade = allowGrade;
+        this.isOkTeacher = isOkTeacher;
         this.departmentId = departmentId;
         this.scienceId = scienceId;
     }
@@ -178,6 +182,14 @@ public class GraduationDesignRelease implements Serializable {
         this.allowGrade = allowGrade;
     }
 
+    public Byte getIsOkTeacher() {
+        return this.isOkTeacher;
+    }
+
+    public void setIsOkTeacher(Byte isOkTeacher) {
+        this.isOkTeacher = isOkTeacher;
+    }
+
     @NotNull
     public Integer getDepartmentId() {
         return this.departmentId;
@@ -210,6 +222,7 @@ public class GraduationDesignRelease implements Serializable {
         sb.append(", ").append(fillTeacherEndTime);
         sb.append(", ").append(graduationDesignIsDel);
         sb.append(", ").append(allowGrade);
+        sb.append(", ").append(isOkTeacher);
         sb.append(", ").append(departmentId);
         sb.append(", ").append(scienceId);
 

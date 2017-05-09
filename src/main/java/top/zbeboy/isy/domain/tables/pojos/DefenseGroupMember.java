@@ -24,30 +24,30 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroupMember implements Serializable {
 
-    private static final long serialVersionUID = -1331843385;
+    private static final long serialVersionUID = 918611584;
 
-    private String  groupMemberId;
-    private Integer staffId;
-    private String  defenseGroupId;
-    private String  note;
+    private String groupMemberId;
+    private String graduationDesignTeacherId;
+    private String defenseGroupId;
+    private String note;
 
     public DefenseGroupMember() {}
 
     public DefenseGroupMember(DefenseGroupMember value) {
         this.groupMemberId = value.groupMemberId;
-        this.staffId = value.staffId;
+        this.graduationDesignTeacherId = value.graduationDesignTeacherId;
         this.defenseGroupId = value.defenseGroupId;
         this.note = value.note;
     }
 
     public DefenseGroupMember(
-        String  groupMemberId,
-        Integer staffId,
-        String  defenseGroupId,
-        String  note
+        String groupMemberId,
+        String graduationDesignTeacherId,
+        String defenseGroupId,
+        String note
     ) {
         this.groupMemberId = groupMemberId;
-        this.staffId = staffId;
+        this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.defenseGroupId = defenseGroupId;
         this.note = note;
     }
@@ -63,12 +63,13 @@ public class DefenseGroupMember implements Serializable {
     }
 
     @NotNull
-    public Integer getStaffId() {
-        return this.staffId;
+    @Size(max = 64)
+    public String getGraduationDesignTeacherId() {
+        return this.graduationDesignTeacherId;
     }
 
-    public void setStaffId(Integer staffId) {
-        this.staffId = staffId;
+    public void setGraduationDesignTeacherId(String graduationDesignTeacherId) {
+        this.graduationDesignTeacherId = graduationDesignTeacherId;
     }
 
     @NotNull
@@ -95,7 +96,7 @@ public class DefenseGroupMember implements Serializable {
         StringBuilder sb = new StringBuilder("DefenseGroupMember (");
 
         sb.append(groupMemberId);
-        sb.append(", ").append(staffId);
+        sb.append(", ").append(graduationDesignTeacherId);
         sb.append(", ").append(defenseGroupId);
         sb.append(", ").append(note);
 

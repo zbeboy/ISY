@@ -46,6 +46,7 @@ public class WXBizMsgCryptTest {
     }
 
     @Test
+    @Ignore
     public void testNormal() throws ParserConfigurationException, SAXException, IOException {
         try {
             WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
@@ -74,6 +75,7 @@ public class WXBizMsgCryptTest {
     }
 
     @Test
+    @Ignore
     public void testAesEncrypt() {
         try {
             WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
@@ -86,6 +88,7 @@ public class WXBizMsgCryptTest {
     }
 
     @Test
+    @Ignore
     public void testAesEncrypt2() {
         try {
             WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
@@ -100,6 +103,7 @@ public class WXBizMsgCryptTest {
     }
 
     @Test
+    @Ignore
     public void testIllegalAesKey() {
         try {
             new WXBizMsgCrypt(token, "abcde", appId);
@@ -111,6 +115,7 @@ public class WXBizMsgCryptTest {
     }
 
     @Test
+    @Ignore
     public void testValidateSignatureError() throws ParserConfigurationException, SAXException,
             IOException {
         try {
@@ -136,6 +141,7 @@ public class WXBizMsgCryptTest {
     }
 
     @Test
+    @Ignore
     public void testVerifyUrl() throws AesException {
         WXBizMsgCrypt wxcpt = new WXBizMsgCrypt("QDG6eK",
                 "jWmYm7qr5nMoAUwZRjGtBxmz3KA1tkAj3ykkR6q2B2C", "wx5823bf96d3bd56c7");

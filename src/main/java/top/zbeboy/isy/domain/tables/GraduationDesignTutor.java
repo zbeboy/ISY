@@ -14,6 +14,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -34,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignTutorRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignTutor extends TableImpl<GraduationDesignTutorRecord> {
 
-    private static final long serialVersionUID = -1837774068;
+    private static final long serialVersionUID = 1446590704;
 
     /**
      * The reference instance of <code>isy.graduation_design_tutor</code>
@@ -48,6 +49,11 @@ public class GraduationDesignTutor extends TableImpl<GraduationDesignTutorRecord
     public Class<GraduationDesignTutorRecord> getRecordType() {
         return GraduationDesignTutorRecord.class;
     }
+
+    /**
+     * The column <code>isy.graduation_design_tutor.graduation_design_tutor_id</code>.
+     */
+    public final TableField<GraduationDesignTutorRecord, String> GRADUATION_DESIGN_TUTOR_ID = createField("graduation_design_tutor_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_design_tutor.graduation_design_teacher_id</code>.
@@ -87,6 +93,22 @@ public class GraduationDesignTutor extends TableImpl<GraduationDesignTutorRecord
     @Override
     public Schema getSchema() {
         return Isy.ISY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UniqueKey<GraduationDesignTutorRecord> getPrimaryKey() {
+        return Keys.KEY_GRADUATION_DESIGN_TUTOR_PRIMARY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<UniqueKey<GraduationDesignTutorRecord>> getKeys() {
+        return Arrays.<UniqueKey<GraduationDesignTutorRecord>>asList(Keys.KEY_GRADUATION_DESIGN_TUTOR_PRIMARY, Keys.KEY_GRADUATION_DESIGN_TUTOR_GRADUATION_DESIGN_TEACHER_ID);
     }
 
     /**

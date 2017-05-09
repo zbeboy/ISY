@@ -25,7 +25,6 @@ import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclareData;
-import top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk;
 import top.zbeboy.isy.domain.tables.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.GraduationDesignPlan;
 import top.zbeboy.isy.domain.tables.GraduationDesignPresubject;
@@ -185,11 +184,6 @@ public class Tables {
      * The table <code>isy.graduation_design_declare_data</code>.
      */
     public static final GraduationDesignDeclareData GRADUATION_DESIGN_DECLARE_DATA = top.zbeboy.isy.domain.tables.GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA;
-
-    /**
-     * The table <code>isy.graduation_design_declare_ok</code>.
-     */
-    public static final GraduationDesignDeclareOk GRADUATION_DESIGN_DECLARE_OK = top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk.GRADUATION_DESIGN_DECLARE_OK;
 
     /**
      * The table <code>isy.graduation_design_hope_tutor</code>.

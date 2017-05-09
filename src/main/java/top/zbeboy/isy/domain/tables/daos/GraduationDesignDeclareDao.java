@@ -188,6 +188,13 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
     }
 
     /**
+     * Fetch records that have <code>is_ok_apply IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByIsOkApply(Byte... values) {
+        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.IS_OK_APPLY, values);
+    }
+
+    /**
      * Fetch records that have <code>graduation_design_declare_data_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignDeclareDataId(String... values) {
@@ -195,16 +202,9 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
     }
 
     /**
-     * Fetch records that have <code>student_id IN (values)</code>
+     * Fetch records that have <code>graduation_design_tutor_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByStudentId(Integer... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.STUDENT_ID, values);
-    }
-
-    /**
-     * Fetch records that have <code>staff_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByStaffId(Integer... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.STAFF_ID, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignTutorId(String... values) {
+        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_TUTOR_ID, values);
     }
 }

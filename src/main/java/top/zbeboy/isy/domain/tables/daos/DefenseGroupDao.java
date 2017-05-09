@@ -99,7 +99,7 @@ public class DefenseGroupDao extends DAOImpl<DefenseGroupRecord, top.zbeboy.isy.
     /**
      * Fetch records that have <code>group_leader IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchByGroupLeader(Integer... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchByGroupLeader(String... values) {
         return fetch(DefenseGroup.DEFENSE_GROUP.GROUP_LEADER, values);
     }
 

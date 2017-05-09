@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare implements Serializable {
 
-    private static final long serialVersionUID = 511056386;
+    private static final long serialVersionUID = -916587355;
 
     private String  graduationDesignDeclareId;
     private String  graduationDesignTopic;
@@ -44,9 +44,9 @@ public class GraduationDesignDeclare implements Serializable {
     private Integer guidePeoples;
     private String  studentNumber;
     private String  studentName;
+    private Byte    isOkApply;
     private String  graduationDesignDeclareDataId;
-    private Integer studentId;
-    private Integer staffId;
+    private String  graduationDesignTutorId;
 
     public GraduationDesignDeclare() {}
 
@@ -69,9 +69,9 @@ public class GraduationDesignDeclare implements Serializable {
         this.guidePeoples = value.guidePeoples;
         this.studentNumber = value.studentNumber;
         this.studentName = value.studentName;
+        this.isOkApply = value.isOkApply;
         this.graduationDesignDeclareDataId = value.graduationDesignDeclareDataId;
-        this.studentId = value.studentId;
-        this.staffId = value.staffId;
+        this.graduationDesignTutorId = value.graduationDesignTutorId;
     }
 
     public GraduationDesignDeclare(
@@ -93,9 +93,9 @@ public class GraduationDesignDeclare implements Serializable {
         Integer guidePeoples,
         String  studentNumber,
         String  studentName,
+        Byte    isOkApply,
         String  graduationDesignDeclareDataId,
-        Integer studentId,
-        Integer staffId
+        String  graduationDesignTutorId
     ) {
         this.graduationDesignDeclareId = graduationDesignDeclareId;
         this.graduationDesignTopic = graduationDesignTopic;
@@ -115,9 +115,9 @@ public class GraduationDesignDeclare implements Serializable {
         this.guidePeoples = guidePeoples;
         this.studentNumber = studentNumber;
         this.studentName = studentName;
+        this.isOkApply = isOkApply;
         this.graduationDesignDeclareDataId = graduationDesignDeclareDataId;
-        this.studentId = studentId;
-        this.staffId = staffId;
+        this.graduationDesignTutorId = graduationDesignTutorId;
     }
 
     @NotNull
@@ -274,6 +274,14 @@ public class GraduationDesignDeclare implements Serializable {
         this.studentName = studentName;
     }
 
+    public Byte getIsOkApply() {
+        return this.isOkApply;
+    }
+
+    public void setIsOkApply(Byte isOkApply) {
+        this.isOkApply = isOkApply;
+    }
+
     @NotNull
     @Size(max = 64)
     public String getGraduationDesignDeclareDataId() {
@@ -285,21 +293,13 @@ public class GraduationDesignDeclare implements Serializable {
     }
 
     @NotNull
-    public Integer getStudentId() {
-        return this.studentId;
+    @Size(max = 64)
+    public String getGraduationDesignTutorId() {
+        return this.graduationDesignTutorId;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
-    }
-
-    @NotNull
-    public Integer getStaffId() {
-        return this.staffId;
-    }
-
-    public void setStaffId(Integer staffId) {
-        this.staffId = staffId;
+    public void setGraduationDesignTutorId(String graduationDesignTutorId) {
+        this.graduationDesignTutorId = graduationDesignTutorId;
     }
 
     @Override
@@ -324,9 +324,9 @@ public class GraduationDesignDeclare implements Serializable {
         sb.append(", ").append(guidePeoples);
         sb.append(", ").append(studentNumber);
         sb.append(", ").append(studentName);
+        sb.append(", ").append(isOkApply);
         sb.append(", ").append(graduationDesignDeclareDataId);
-        sb.append(", ").append(studentId);
-        sb.append(", ").append(staffId);
+        sb.append(", ").append(graduationDesignTutorId);
 
         sb.append(")");
         return sb.toString();

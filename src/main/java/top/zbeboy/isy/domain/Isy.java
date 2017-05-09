@@ -33,7 +33,6 @@ import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclareData;
-import top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk;
 import top.zbeboy.isy.domain.tables.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.GraduationDesignPlan;
 import top.zbeboy.isy.domain.tables.GraduationDesignPresubject;
@@ -99,7 +98,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = 872195968;
+    private static final long serialVersionUID = 822122334;
 
     /**
      * The reference instance of <code>isy</code>
@@ -200,11 +199,6 @@ public class Isy extends SchemaImpl {
      * The table <code>isy.graduation_design_declare_data</code>.
      */
     public final GraduationDesignDeclareData GRADUATION_DESIGN_DECLARE_DATA = top.zbeboy.isy.domain.tables.GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA;
-
-    /**
-     * The table <code>isy.graduation_design_declare_ok</code>.
-     */
-    public final GraduationDesignDeclareOk GRADUATION_DESIGN_DECLARE_OK = top.zbeboy.isy.domain.tables.GraduationDesignDeclareOk.GRADUATION_DESIGN_DECLARE_OK;
 
     /**
      * The table <code>isy.graduation_design_hope_tutor</code>.
@@ -500,7 +494,6 @@ public class Isy extends SchemaImpl {
             GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE,
             GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE,
             GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA,
-            GraduationDesignDeclareOk.GRADUATION_DESIGN_DECLARE_OK,
             GraduationDesignHopeTutor.GRADUATION_DESIGN_HOPE_TUTOR,
             GraduationDesignPlan.GRADUATION_DESIGN_PLAN,
             GraduationDesignPresubject.GRADUATION_DESIGN_PRESUBJECT,

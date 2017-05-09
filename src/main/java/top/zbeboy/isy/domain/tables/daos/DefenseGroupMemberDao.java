@@ -69,10 +69,10 @@ public class DefenseGroupMemberDao extends DAOImpl<DefenseGroupMemberRecord, top
     }
 
     /**
-     * Fetch records that have <code>staff_id IN (values)</code>
+     * Fetch records that have <code>graduation_design_teacher_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroupMember> fetchByStaffId(Integer... values) {
-        return fetch(DefenseGroupMember.DEFENSE_GROUP_MEMBER.STAFF_ID, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroupMember> fetchByGraduationDesignTeacherId(String... values) {
+        return fetch(DefenseGroupMember.DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID, values);
     }
 
     /**

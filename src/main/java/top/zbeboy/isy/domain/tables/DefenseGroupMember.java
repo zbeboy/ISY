@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroupMember extends TableImpl<DefenseGroupMemberRecord> {
 
-    private static final long serialVersionUID = 1305646089;
+    private static final long serialVersionUID = -467855240;
 
     /**
      * The reference instance of <code>isy.defense_group_member</code>
@@ -56,9 +56,9 @@ public class DefenseGroupMember extends TableImpl<DefenseGroupMemberRecord> {
     public final TableField<DefenseGroupMemberRecord, String> GROUP_MEMBER_ID = createField("group_member_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.defense_group_member.staff_id</code>.
+     * The column <code>isy.defense_group_member.graduation_design_teacher_id</code>.
      */
-    public final TableField<DefenseGroupMemberRecord, Integer> STAFF_ID = createField("staff_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<DefenseGroupMemberRecord, String> GRADUATION_DESIGN_TEACHER_ID = createField("graduation_design_teacher_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.defense_group_member.defense_group_id</code>.

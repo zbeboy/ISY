@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDatumRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord> {
 
-    private static final long serialVersionUID = 1080002407;
+    private static final long serialVersionUID = 573298184;
 
     /**
      * The reference instance of <code>isy.graduation_design_datum</code>
@@ -75,6 +75,11 @@ public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord
     public final TableField<GraduationDesignDatumRecord, String> GRADUATION_DESIGN_RELEASE_ID = createField("graduation_design_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
+     * The column <code>isy.graduation_design_datum.student_id</code>.
+     */
+    public final TableField<GraduationDesignDatumRecord, Integer> STUDENT_ID = createField("student_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
      * Create a <code>isy.graduation_design_datum</code> table reference
      */
     public GraduationDesignDatum() {
@@ -109,7 +114,7 @@ public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord
      */
     @Override
     public List<ForeignKey<GraduationDesignDatumRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GraduationDesignDatumRecord, ?>>asList(Keys.GRADUATION_DESIGN_DATUM_IBFK_2, Keys.GRADUATION_DESIGN_DATUM_IBFK_1);
+        return Arrays.<ForeignKey<GraduationDesignDatumRecord, ?>>asList(Keys.GRADUATION_DESIGN_DATUM_IBFK_2, Keys.GRADUATION_DESIGN_DATUM_IBFK_1, Keys.GRADUATION_DESIGN_DATUM_IBFK_3);
     }
 
     /**

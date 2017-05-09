@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRecord> {
 
-    private static final long serialVersionUID = -819744483;
+    private static final long serialVersionUID = -934778253;
 
     /**
      * The reference instance of <code>isy.graduation_design_declare</code>
@@ -141,19 +141,19 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
     public final TableField<GraduationDesignDeclareRecord, String> STUDENT_NAME = createField("student_name", org.jooq.impl.SQLDataType.VARCHAR.length(30), this, "");
 
     /**
+     * The column <code>isy.graduation_design_declare.is_ok_apply</code>.
+     */
+    public final TableField<GraduationDesignDeclareRecord, Byte> IS_OK_APPLY = createField("is_ok_apply", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
+
+    /**
      * The column <code>isy.graduation_design_declare.graduation_design_declare_data_id</code>.
      */
     public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_DECLARE_DATA_ID = createField("graduation_design_declare_data_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_declare.student_id</code>.
+     * The column <code>isy.graduation_design_declare.graduation_design_tutor_id</code>.
      */
-    public final TableField<GraduationDesignDeclareRecord, Integer> STUDENT_ID = createField("student_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>isy.graduation_design_declare.staff_id</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, Integer> STAFF_ID = createField("staff_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_TUTOR_ID = createField("graduation_design_tutor_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_declare</code> table reference
@@ -206,7 +206,7 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
      */
     @Override
     public List<ForeignKey<GraduationDesignDeclareRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GraduationDesignDeclareRecord, ?>>asList(Keys.GRADUATION_DESIGN_DECLARE_IBFK_1, Keys.GRADUATION_DESIGN_DECLARE_IBFK_2, Keys.GRADUATION_DESIGN_DECLARE_IBFK_3);
+        return Arrays.<ForeignKey<GraduationDesignDeclareRecord, ?>>asList(Keys.GRADUATION_DESIGN_DECLARE_IBFK_1, Keys.GRADUATION_DESIGN_DECLARE_IBFK_2);
     }
 
     /**

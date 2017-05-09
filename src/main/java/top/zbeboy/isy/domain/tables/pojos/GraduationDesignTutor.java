@@ -24,24 +24,38 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignTutor implements Serializable {
 
-    private static final long serialVersionUID = 1236729026;
+    private static final long serialVersionUID = 1679171866;
 
+    private String  graduationDesignTutorId;
     private String  graduationDesignTeacherId;
     private Integer studentId;
 
     public GraduationDesignTutor() {}
 
     public GraduationDesignTutor(GraduationDesignTutor value) {
+        this.graduationDesignTutorId = value.graduationDesignTutorId;
         this.graduationDesignTeacherId = value.graduationDesignTeacherId;
         this.studentId = value.studentId;
     }
 
     public GraduationDesignTutor(
+        String  graduationDesignTutorId,
         String  graduationDesignTeacherId,
         Integer studentId
     ) {
+        this.graduationDesignTutorId = graduationDesignTutorId;
         this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.studentId = studentId;
+    }
+
+    @NotNull
+    @Size(max = 64)
+    public String getGraduationDesignTutorId() {
+        return this.graduationDesignTutorId;
+    }
+
+    public void setGraduationDesignTutorId(String graduationDesignTutorId) {
+        this.graduationDesignTutorId = graduationDesignTutorId;
     }
 
     @NotNull
@@ -67,7 +81,8 @@ public class GraduationDesignTutor implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignTutor (");
 
-        sb.append(graduationDesignTeacherId);
+        sb.append(graduationDesignTutorId);
+        sb.append(", ").append(graduationDesignTeacherId);
         sb.append(", ").append(studentId);
 
         sb.append(")");

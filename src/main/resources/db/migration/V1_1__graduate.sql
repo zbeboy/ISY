@@ -9,6 +9,7 @@ CREATE TABLE graduation_design_release(
   fill_teacher_end_time DATETIME NOT NULL ,
   graduation_design_is_del BOOLEAN NOT NULL ,
   allow_grade VARCHAR(5) NOT NULL ,
+  is_ok_teacher BOOLEAN DEFAULT 0 ,
   department_id INT NOT NULL ,
   science_id INT NOT NULL ,
   FOREIGN KEY (username) REFERENCES users(username),
@@ -112,16 +113,11 @@ CREATE TABLE graduation_design_declare(
   guide_peoples INT,
   student_number VARCHAR(20),
   student_name VARCHAR(30),
+  is_ok_apply BOOLEAN DEFAULT 0 ,
   graduation_design_declare_data_id VARCHAR(64) NOT NULL ,
   graduation_design_tutor_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_declare_data_id) REFERENCES graduation_design_declare_data(graduation_design_declare_data_id),
   FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
-);
-
-CREATE TABLE graduation_design_declare_ok(
-  graduation_design_declare_ok_id VARCHAR(64) PRIMARY KEY ,
-  graduation_design_declare_id VARCHAR(64) NOT NULL ,
-  FOREIGN KEY (graduation_design_declare_id) REFERENCES graduation_design_declare(graduation_design_declare_id)
 );
 
 CREATE TABLE graduation_design_datum_type(

@@ -24,13 +24,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDatum implements Serializable {
 
-    private static final long serialVersionUID = 1710623084;
+    private static final long serialVersionUID = -608283432;
 
     private String  graduationDesignDatumId;
     private String  version;
     private String  fileId;
     private Integer graduationDesignDatumTypeId;
     private String  graduationDesignReleaseId;
+    private Integer studentId;
 
     public GraduationDesignDatum() {}
 
@@ -40,6 +41,7 @@ public class GraduationDesignDatum implements Serializable {
         this.fileId = value.fileId;
         this.graduationDesignDatumTypeId = value.graduationDesignDatumTypeId;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
+        this.studentId = value.studentId;
     }
 
     public GraduationDesignDatum(
@@ -47,13 +49,15 @@ public class GraduationDesignDatum implements Serializable {
         String  version,
         String  fileId,
         Integer graduationDesignDatumTypeId,
-        String  graduationDesignReleaseId
+        String  graduationDesignReleaseId,
+        Integer studentId
     ) {
         this.graduationDesignDatumId = graduationDesignDatumId;
         this.version = version;
         this.fileId = fileId;
         this.graduationDesignDatumTypeId = graduationDesignDatumTypeId;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
+        this.studentId = studentId;
     }
 
     @NotNull
@@ -104,6 +108,15 @@ public class GraduationDesignDatum implements Serializable {
         this.graduationDesignReleaseId = graduationDesignReleaseId;
     }
 
+    @NotNull
+    public Integer getStudentId() {
+        return this.studentId;
+    }
+
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignDatum (");
@@ -113,6 +126,7 @@ public class GraduationDesignDatum implements Serializable {
         sb.append(", ").append(fileId);
         sb.append(", ").append(graduationDesignDatumTypeId);
         sb.append(", ").append(graduationDesignReleaseId);
+        sb.append(", ").append(studentId);
 
         sb.append(")");
         return sb.toString();
