@@ -76,6 +76,13 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     }
 
     @Override
+    public Result<OrganizeRecord> findByScienceIdAndGradeAndIsDel(int scienceId, String grade, Byte b) {
+        return create.selectFrom(ORGANIZE)
+                .where(ORGANIZE.SCIENCE_ID.eq(scienceId).and(ORGANIZE.GRADE.eq(grade)).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
+                .fetch();
+    }
+
+    @Override
     public List<Organize> findByScienceId(int scienceId) {
         return organizeDao.fetchByScienceId(scienceId);
     }

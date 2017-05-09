@@ -10,10 +10,19 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         function getAjaxUrl() {
             return {
                 datas: '/web/graduate/design/tutor/look/data',
-                add:'/web/graduate/design/tutor/add',
-                del:'/web/graduate/design/tutor/del'
+                add: '/web/graduate/design/tutor/add',
+                edit: '/web/graduate/design/tutor/edit',
+                del: '/web/graduate/design/tutor/del',
+                back:'/web/menu/graduate/design/tutor'
             };
         }
+
+        /*
+         返回
+         */
+        $('#page_back').click(function () {
+            $.address.value(getAjaxUrl().back);
+        });
 
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -82,6 +91,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                         {
                             func: [
                                 {
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.graduationDesignTeacherId,
+                                    "realName": c.realName
+                                },
+                                {
                                     "name": "删除",
                                     "css": "del",
                                     "type": "danger",
@@ -122,6 +138,10 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
+                tableElement.delegate('.edit', "click", function () {
+                    edit($(this).attr('data-id'));
+                });
+
                 tableElement.delegate('.del', "click", function () {
                     teacher_del($(this).attr('data-id'), $(this).attr('data-realName'));
                 });
@@ -139,8 +159,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         function getParamId() {
             return {
                 realName: '#search_staff_real_name',
-                staffUsername:'#search_staff_username',
-                staffNumber:'#search_staff_number'
+                staffUsername: '#search_staff_username',
+                staffNumber: '#search_staff_number'
             };
         }
 
@@ -149,8 +169,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         var param = {
             realName: '',
-            staffUsername:'',
-            staffNumber:''
+            staffUsername: '',
+            staffNumber: ''
         };
 
         /*
@@ -218,7 +238,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          添加页面
          */
         $('#teacher_add').click(function () {
-            $.address.value(getAjaxUrl().add);
+            $.address.value(getAjaxUrl().add + '?rId=' + init_page_param.graduationDesignReleaseId);
         });
 
         /*
@@ -256,6 +276,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 Messenger().post("未发现有选中的教职工!");
             }
         });
+
+        /*
+         编辑页面
+         */
+        function edit(graduationDesignTeacherId) {
+            $.address.value(getAjaxUrl().edit + '?id=' + graduationDesignTeacherId + '&rId=' + init_page_param.graduationDesignReleaseId);
+        }
 
         /*
          删除
@@ -304,7 +331,10 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {graduationDesignTeacherId: graduationDesignTeacherId},
+                data: {
+                    graduationDesignTeacherId: graduationDesignTeacherId,
+                    rId: init_page_param.graduationDesignReleaseId
+                },
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

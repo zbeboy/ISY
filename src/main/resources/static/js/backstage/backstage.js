@@ -45,7 +45,8 @@ requirejs.config({
         "jquery.cropper": web_path + "/plugin/jquery_cropper/cropper.min",
         "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload.min",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min"
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
+        "icheck": web_path + "/plugin/icheck/icheck.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -106,6 +107,9 @@ requirejs.config({
         },
         "jquery.entropizer": {
             deps: ["css!" + web_path + "/plugin/jquery_entropizer/css/jquery-entropizer.min"]
+        },
+        "icheck": {
+            deps: ["jquery", "css!" + web_path + "/plugin/icheck/icheck.min"]
         }
     }
 });
@@ -185,7 +189,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             }
 
             var thirdParent = parent.parent();
-            if(thirdParent.is('ul')){
+            if (thirdParent.is('ul')) {
                 thirdParent.addClass('in');
                 thirdParent.parent().addClass('active');
             }

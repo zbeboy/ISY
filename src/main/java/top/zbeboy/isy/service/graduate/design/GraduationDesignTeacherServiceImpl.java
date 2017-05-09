@@ -10,11 +10,16 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.domain.tables.daos.GraduationDesignTeacherDao;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
+import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignTeacherRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,9 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
     private final Logger log = LoggerFactory.getLogger(GraduationDesignTeacherServiceImpl.class);
 
     private final DSLContext create;
+
+    @Resource
+    private GraduationDesignTeacherDao graduationDesignTeacherDao;
 
     @Autowired
     public GraduationDesignTeacherServiceImpl(DSLContext dslContext) {
@@ -80,6 +88,34 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
         }
 
         return graduationDesignTeacherBeens;
+    }
+
+    @Override
+    public Result<Record> findByDepartmentIdAndEnabledRelationExistsAuthoritiesNotExistsDesignTeacher(int departmentId, Byte b, String graduationDesignReleaseId) {
+        Select<AuthoritiesRecord> authoritiesRecordSelect =
+                create.selectFrom(AUTHORITIES)
+                        .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
+        Select<GraduationDesignTeacherRecord> designTeacherRecordSelect =
+                create.selectFrom(GRADUATION_DESIGN_TEACHER)
+                        .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)));
+        return create.select()
+                .from(STAFF)
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(STAFF.DEPARTMENT_ID.eq(departmentId).and(USERS.ENABLED.eq(b))).andExists(authoritiesRecordSelect).andNotExists(designTeacherRecordSelect)
+                .fetch();
+    }
+
+    @Override
+    public void deleteByGraduationDesignReleaseId(String graduationDesignReleaseId) {
+        create.deleteFrom(GRADUATION_DESIGN_TEACHER).where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
+                .execute();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationDesignTeacher graduationDesignTeacher) {
+        graduationDesignTeacherDao.insert(graduationDesignTeacher);
     }
 
     @Override

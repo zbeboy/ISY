@@ -109,7 +109,6 @@ public class StaffServiceImpl implements StaffService {
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(STAFF.DEPARTMENT_ID.eq(departmentId).and(USERS.ENABLED.eq(b))).andExists(authoritiesRecordSelect)
                 .fetch();
-
     }
 
     @Override

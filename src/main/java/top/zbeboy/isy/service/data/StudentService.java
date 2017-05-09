@@ -183,4 +183,13 @@ public interface StudentService {
      * @return 数量
      */
     int countByConditionNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
+
+    /**
+     * 根据班级id，状态 统计有权限用户
+     *
+     * @param organizeId 班级id
+     * @param b          状态
+     * @return 数量
+     */
+    int countByOrganizeIdAndEnabledExistsAuthorities(int organizeId, Byte b);
 }

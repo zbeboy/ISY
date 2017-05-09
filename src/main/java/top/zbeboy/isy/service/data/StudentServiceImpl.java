@@ -764,6 +764,20 @@ public class StudentServiceImpl implements StudentService {
         return 0;
     }
 
+    @Override
+    public int countByOrganizeIdAndEnabledExistsAuthorities(int organizeId, Byte b) {
+        Select<AuthoritiesRecord> authoritiesRecordSelect =
+                create.selectFrom(AUTHORITIES)
+                        .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
+        Record1<Integer> count = create.selectCount()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(USERS.ENABLED.eq(b).and(STUDENT.ORGANIZE_ID.eq(organizeId)).andExists(authoritiesRecordSelect))
+                .fetchOne();
+        return count.value1();
+    }
+
     /**
      * 全局搜索条件
      *

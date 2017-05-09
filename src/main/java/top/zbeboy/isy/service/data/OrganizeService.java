@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface OrganizeService {
 
     /**
-     * 根据专业id查询全部年级
+     * 根据专业id，状态查询全部年级
      *
      * @param scienceId 专业id
      * @param b         状态
@@ -27,7 +27,7 @@ public interface OrganizeService {
     Result<Record1<String>> findByScienceIdAndDistinctGradeAndIsDel(int scienceId, Byte b);
 
     /**
-     * 根据专业ids查询
+     * 根据专业ids，年级，状态查询
      *
      * @param scienceIds 专业ids
      * @param grade      年级
@@ -35,6 +35,16 @@ public interface OrganizeService {
      * @return 班级
      */
     Result<OrganizeRecord> findInScienceIdsAndGradeAndIsDel(List<Integer> scienceIds, String grade, Byte b);
+
+    /**
+     * 根据专业id，年级，状态关联查询
+     *
+     * @param scienceId 专业id
+     * @param grade     年级
+     * @param b         班级状态
+     * @return 班级
+     */
+    Result<OrganizeRecord> findByScienceIdAndGradeAndIsDel(int scienceId, String grade, Byte b);
 
     /**
      * 通过专业查询
