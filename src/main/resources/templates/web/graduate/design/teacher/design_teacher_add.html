@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -35,10 +35,18 @@
         </footer>
         <script id="teacher-template" type="text/x-handlebars-template">
             {{#each listResult}}
+            {{#if checked}}
+            <div class="{{column_class}}">
+                <input type="checkbox" name="{{input_name}}" value="{{teacher_value}}" checked="checked"/>
+                <label>{{teacher_name}}</label>
+            </div>
+            {{else}}
             <div class="{{column_class}}">
                 <input type="checkbox" name="{{input_name}}" value="{{teacher_value}}"/>
                 <label>{{teacher_name}}</label>
             </div>
+            {{/if}}
+
             {{/each}}
         </script>
         <!-- /.footer -->

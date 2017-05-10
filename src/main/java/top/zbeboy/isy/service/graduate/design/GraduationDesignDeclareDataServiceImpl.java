@@ -12,6 +12,8 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+
 import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by zbeboy on 2017/5/9.
@@ -30,6 +32,11 @@ public class GraduationDesignDeclareDataServiceImpl implements GraduationDesignD
     @Autowired
     public GraduationDesignDeclareDataServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public GraduationDesignDeclareData findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
+        return graduationDesignDeclareDataDao.fetchOne(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID,graduationDesignReleaseId);
     }
 
     @Override

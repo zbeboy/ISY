@@ -36,7 +36,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          我的实习参数id
          */
         var myParamId = {
-            internshipTitle: '#my_search_internship_title',
+            internshipTitle: '#my_search_internship_title'
         };
 
         /*

@@ -30,6 +30,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             startTime: '#startTime',
             endTime: '#endTime',
             fillTeacherTime: '#fillTeacherTime',
+            isOkTeacher: '#isOkTeacher',
+            fillTeacherStartTimeStr: '#fillTeacherStartTimeStr',
+            fillTeacherEndTimeStr: '#fillTeacherEndTimeStr',
             schoolId: '#schoolId',
             collegeId: '#collegeId',
             departmentId: '#departmentId',
@@ -161,28 +164,40 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         // 结束时间
         $(paramId.endTime).datetimepicker({format: 'yyyy-mm-dd hh:ii:ss', language: 'zh-CN'});
 
-        // 学生申报教师时间
-        $(paramId.fillTeacherTime).daterangepicker({
-            "startDate": $('#fillTeacherStartTime').val(),
-            "endDate": $('#fillTeacherEndTime').val(),
-            "timePicker": true,
-            "timePicker24Hour": true,
-            "timePickerIncrement": 30,
-            "locale": {
-                format: 'YYYY-MM-DD HH:mm:ss',
-                applyLabel: '确定',
-                cancelLabel: '取消',
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
-                customRangeLabel: '自定义',
-                separator: ' 至 ',
-                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月']
+        /**
+         * 初始化申报时间
+         */
+        function initFillTeacherTime() {
+            // 确认教师填报后，不允许再编辑该时间
+            if ($(paramId.isOkTeacher).val() != null && Number($(paramId.isOkTeacher).val()) == 1) {
+                $(paramId.fillTeacherTime).prop('readonly', true);
+                $(paramId.fillTeacherTime).val($(paramId.fillTeacherStartTimeStr).val() + ' 至 ' + $(paramId.fillTeacherEndTimeStr).val());
+            } else {
+                // 学生申报教师时间
+                $(paramId.fillTeacherTime).daterangepicker({
+                    "startDate": $('#fillTeacherStartTime').val(),
+                    "endDate": $('#fillTeacherEndTime').val(),
+                    "timePicker": true,
+                    "timePicker24Hour": true,
+                    "timePickerIncrement": 30,
+                    "locale": {
+                        format: 'YYYY-MM-DD HH:mm:ss',
+                        applyLabel: '确定',
+                        cancelLabel: '取消',
+                        fromLabel: '起始时间',
+                        toLabel: '结束时间',
+                        customRangeLabel: '自定义',
+                        separator: ' 至 ',
+                        daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                        monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                            '七月', '八月', '九月', '十月', '十一月', '十二月']
+                    }
+                }, function (start, end, label) {
+                    console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
+                });
             }
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
-        });
+        }
+
 
         init();
 
@@ -191,10 +206,11 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             startLoading();
             $.get(web_path + ajax_url.graduate_design_release_files_url,
                 {graduationDesignReleaseId: param.graduationDesignReleaseId}, function (data) {
-                endLoading();
-                initFileShow(data);
-            });
+                    endLoading();
+                    initFileShow(data);
+                });
 
+            initFillTeacherTime();
             initMaxLength();
         }
 

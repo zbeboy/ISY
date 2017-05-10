@@ -20,6 +20,7 @@ import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.data.ScienceService;
+import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareDataService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
@@ -39,6 +40,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -71,6 +73,9 @@ public class GraduationDesignTeacherController {
     private StudentService studentService;
 
     @Resource
+    private StaffService staffService;
+
+    @Resource
     private UsersService usersService;
 
     /**
@@ -90,6 +95,8 @@ public class GraduationDesignTeacherController {
      */
     @RequestMapping(value = "/web/graduate/design/tutor/look", method = RequestMethod.GET)
     public String teacherList(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        modelMap.addAttribute("graduationDesignDeclareData",
+                graduationDesignDeclareDataService.findByGraduationDesignReleaseId(graduationDesignReleaseId));
         modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
         return "web/graduate/design/teacher/design_teacher_look::#page-wrapper";
     }
@@ -123,12 +130,11 @@ public class GraduationDesignTeacherController {
     public DataTablesUtils<GraduationDesignTeacherBean> listData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
-        headers.add("select");
         headers.add("real_name");
         headers.add("staff_number");
         headers.add("staff_username");
+        headers.add("student_count");
         headers.add("assigner_name");
-        headers.add("operator");
         DataTablesUtils<GraduationDesignTeacherBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         GraduationDesignTeacherBean otherCondition = new GraduationDesignTeacherBean();
         String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");
@@ -161,11 +167,18 @@ public class GraduationDesignTeacherController {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             List<StaffBean> staffs = new ArrayList<>();
             Byte enabled = 1;
-            Result<Record> staffRecords =
-                    graduationDesignTeacherService.findByDepartmentIdAndEnabledRelationExistsAuthoritiesNotExistsDesignTeacher(graduationDesignRelease.getDepartmentId(),
-                            enabled, graduationDesignReleaseId);
+            Result<Record> staffRecords = staffService.findByDepartmentIdAndEnabledRelationExistsAuthorities(graduationDesignRelease.getDepartmentId(), enabled);
             if (staffRecords.isNotEmpty()) {
                 staffs = staffRecords.into(StaffBean.class);
+                List<GraduationDesignTeacher> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+                for (GraduationDesignTeacher graduationDesignTeacher : graduationDesignTeachers) {
+                    for (StaffBean staff : staffs) {
+                        if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
+                            staff.setChecked(true);
+                            break;
+                        }
+                    }
+                }
             }
             ajaxUtils.success().msg("获取教师数据成功").listData(staffs);
         } else {
@@ -258,6 +271,25 @@ public class GraduationDesignTeacherController {
     }
 
     /**
+     * 进入页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/tutor/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils canUse(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = new AjaxUtils();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("在条件范围，允许使用");
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入指导教师入口条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -279,12 +311,12 @@ public class GraduationDesignTeacherController {
                     errorBean.setHasError(true);
                     errorBean.setErrorMsg("不在毕业设计时间范围，无法进入");
                 }
-                // 学生填报教师时间
-                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getFillTeacherStartTime(), graduationDesignRelease.getFillTeacherEndTime())) {
-                    errorBean.setHasError(false);
-                } else {
+                // 是否已确认
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("学生申报指导教师已开始，操作锁定");
+                    errorBean.setErrorMsg("已确认毕业设计指导教师，无法进行操作");
+                } else {
+                    errorBean.setHasError(false);
                 }
             }
         } else {

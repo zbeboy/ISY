@@ -1,7 +1,5 @@
 package top.zbeboy.isy.service.graduate.design;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -15,14 +13,12 @@ public interface GraduationDesignTeacherService {
 
 
     /**
-     * 查询指导教师数据
+     * 根据毕业设计发布id查询
      *
-     * @param departmentId              系id
-     * @param b                         用户状态
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return 数据
      */
-    Result<Record> findByDepartmentIdAndEnabledRelationExistsAuthoritiesNotExistsDesignTeacher(int departmentId, Byte b, String graduationDesignReleaseId);
+    List<GraduationDesignTeacher> findByGraduationDesignReleaseId(String graduationDesignReleaseId);
 
     /**
      * 根据毕业设计发布id删除

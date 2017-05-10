@@ -42,6 +42,7 @@
                     <div class="form-group" id="valid_fill_teacher_time">
                         <label>学生申报教师时间</label>
                         <input class="form-control" name="fillTeacherTime" id="fillTeacherTime" placeholder="学生申报教师时间"/>
+                        <p class="help-block">注意：此字段确认指导教师后不可编辑</p>
                         <p class="text-danger hidden" id="fill_teacher_time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_school" sec:authorize="hasRole('ROLE_SYSTEM')">

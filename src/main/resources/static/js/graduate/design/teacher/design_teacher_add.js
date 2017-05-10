@@ -180,7 +180,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "i
             },
             success: function (data) {
                 if (data.state) {
-                    $.address.value(ajax_url.back);
+                    $.address.value(ajax_url.back + '?id=' + init_page_param.graduationDesignReleaseId);
                 } else {
                     Messenger().post({
                         message: data.msg,

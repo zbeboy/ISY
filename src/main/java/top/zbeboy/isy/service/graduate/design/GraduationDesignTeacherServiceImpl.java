@@ -12,8 +12,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.GraduationDesignTeacherDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
-import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.domain.tables.records.GraduationDesignTeacherRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
@@ -91,19 +89,8 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
     }
 
     @Override
-    public Result<Record> findByDepartmentIdAndEnabledRelationExistsAuthoritiesNotExistsDesignTeacher(int departmentId, Byte b, String graduationDesignReleaseId) {
-        Select<AuthoritiesRecord> authoritiesRecordSelect =
-                create.selectFrom(AUTHORITIES)
-                        .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
-        Select<GraduationDesignTeacherRecord> designTeacherRecordSelect =
-                create.selectFrom(GRADUATION_DESIGN_TEACHER)
-                        .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)));
-        return create.select()
-                .from(STAFF)
-                .join(USERS)
-                .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                .where(STAFF.DEPARTMENT_ID.eq(departmentId).and(USERS.ENABLED.eq(b))).andExists(authoritiesRecordSelect).andNotExists(designTeacherRecordSelect)
-                .fetch();
+    public List<GraduationDesignTeacher> findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
+        return graduationDesignTeacherDao.fetchByGraduationDesignReleaseId(graduationDesignReleaseId);
     }
 
     @Override
@@ -225,6 +212,17 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
                     sortField[0] = STAFF.USERNAME.asc();
                 } else {
                     sortField[0] = STAFF.USERNAME.desc();
+                }
+            }
+
+            if ("student_count".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STUDENT_COUNT.asc();
+                    sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc();
+                } else {
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STUDENT_COUNT.desc();
+                    sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc();
                 }
             }
 

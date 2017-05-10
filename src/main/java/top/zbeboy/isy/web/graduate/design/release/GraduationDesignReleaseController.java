@@ -165,6 +165,8 @@ public class GraduationDesignReleaseController {
             graduationDesignRelease = records.get().into(GraduationDesignReleaseBean.class);
             graduationDesignRelease.setStartTimeStr(DateTimeUtils.formatDate(graduationDesignRelease.getStartTime()));
             graduationDesignRelease.setEndTimeStr(DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
+            graduationDesignRelease.setFillTeacherStartTimeStr(DateTimeUtils.formatDate(graduationDesignRelease.getFillTeacherStartTime()));
+            graduationDesignRelease.setFillTeacherEndTimeStr(DateTimeUtils.formatDate(graduationDesignRelease.getFillTeacherEndTime()));
         }
         modelMap.addAttribute("graduationDesignRelease", graduationDesignRelease);
         return "web/graduate/design/release/design_release_edit::#page-wrapper";
@@ -294,7 +296,7 @@ public class GraduationDesignReleaseController {
      * 更新毕业设计发布状态
      *
      * @param graduationDesignReleaseId 毕业设计发布id
-     * @param isDel               注销参数
+     * @param isDel                     注销参数
      * @return true or false
      */
     @RequestMapping(value = "/web/graduate/design/release/update/del", method = RequestMethod.POST)
@@ -317,9 +319,12 @@ public class GraduationDesignReleaseController {
     private void saveOrUpdateTime(GraduationDesignRelease graduationDesignRelease, String startTime, String endTime, String fillTeacherTime) {
         try {
             String format = "yyyy-MM-dd HH:mm:ss";
-            String[] teacherDistributionArr = DateTimeUtils.splitDateTime("至", fillTeacherTime);
-            graduationDesignRelease.setFillTeacherStartTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[0], format));
-            graduationDesignRelease.setFillTeacherEndTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[1], format));
+            // 确认后不允许编辑
+            if (ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) || graduationDesignRelease.getIsOkTeacher() != 1) {
+                String[] teacherDistributionArr = DateTimeUtils.splitDateTime("至", fillTeacherTime);
+                graduationDesignRelease.setFillTeacherStartTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[0], format));
+                graduationDesignRelease.setFillTeacherEndTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[1], format));
+            }
             graduationDesignRelease.setStartTime(DateTimeUtils.formatDateToTimestamp(startTime, format));
             graduationDesignRelease.setEndTime(DateTimeUtils.formatDateToTimestamp(endTime, format));
         } catch (ParseException e) {

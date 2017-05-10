@@ -11,9 +11,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             return {
                 datas: '/web/graduate/design/tutor/look/data',
                 add: '/web/graduate/design/tutor/add',
-                edit: '/web/graduate/design/tutor/edit',
-                del: '/web/graduate/design/tutor/del',
-                back:'/web/menu/graduate/design/tutor'
+                back: '/web/menu/graduate/design/tutor',
+                condition: '/web/graduate/design/tutor/condition'
             };
         }
 
@@ -23,6 +22,26 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         $('#page_back').click(function () {
             $.address.value(getAjaxUrl().back);
         });
+
+        init();
+
+        function init() {
+            if (init_page_param.graduationDesignDeclareData != null
+                && init_page_param.graduationDesignDeclareData !== '') {
+                $('#overview').removeClass('hidden');
+                $('#overview_department').text(init_page_param.graduationDesignDeclareData.departmentName);
+                $('#overview_science').text(init_page_param.graduationDesignDeclareData.scienceName);
+                var organizeNames = init_page_param.graduationDesignDeclareData.organizeNames.split("###");
+                var organizePeoples = init_page_param.graduationDesignDeclareData.organizePeoples.split("###");
+                var totalPeoples = 0;
+                for (var i = 0; i < organizeNames.length; i++) {
+                    totalPeoples += Number(organizePeoples[i]);
+                    $('#overview_organize').append($('<div>').append($('<span>').text(organizeNames[i])).append($('<span>').text('  人数:' + organizePeoples[i] + '人')));
+                }
+
+                $('#overview_total').text(totalPeoples + '人');
+            }
+        }
 
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -55,7 +74,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[1, 'desc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().datas,
                 "dataSrc": "data",
@@ -67,48 +85,11 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 }
             },
             "columns": [
-                {"data": null},
                 {"data": "realName"},
                 {"data": "staffNumber"},
                 {"data": "staffUsername"},
-                {"data": "assignerName"},
-                {"data": null}
-            ],
-            columnDefs: [
-                {
-                    targets: 0,
-                    orderable: false,
-                    render: function (a, b, c, d) {
-                        return '<input type="checkbox" value="' + c.graduationDesignTeacherId + '" name="check"/>';
-                    }
-                },
-                {
-                    targets: 5,
-                    orderable: false,
-                    render: function (a, b, c, d) {
-
-                        var context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.graduationDesignTeacherId,
-                                    "realName": c.realName
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.graduationDesignTeacherId,
-                                    "realName": c.realName
-                                }
-                            ]
-                        };
-                        return template(context);
-                    }
-                }
+                {"data": "studentCount"},
+                {"data": "assignerName"}
             ],
             "language": {
                 "sProcessing": "处理中...",
@@ -136,20 +117,10 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             },
             "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-8'>r>" +
             "t" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-            initComplete: function () {
-                tableElement.delegate('.edit', "click", function () {
-                    edit($(this).attr('data-id'));
-                });
-
-                tableElement.delegate('.del', "click", function () {
-                    teacher_del($(this).attr('data-id'), $(this).attr('data-realName'));
-                });
-            }
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>"
         });
 
         var global_button = '<button type="button" id="teacher_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-            '  <button type="button" id="teachers_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -238,114 +209,16 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          添加页面
          */
         $('#teacher_add').click(function () {
-            $.address.value(getAjaxUrl().add + '?rId=' + init_page_param.graduationDesignReleaseId);
-        });
-
-        /*
-         批量删除
-         */
-        $('#teachers_dels').click(function () {
-            var graduationDesignTeacherIds = [];
-            var ids = $('input[name="check"]:checked');
-            for (var i = 0; i < ids.length; i++) {
-                graduationDesignTeacherIds.push($(ids[i]).val());
-            }
-
-            if (graduationDesignTeacherIds.length > 0) {
-                var msg;
-                msg = Messenger().post({
-                    message: "确定删除选中的教职工吗?",
-                    actions: {
-                        retry: {
-                            label: '确定',
-                            phrase: 'Retrying TIME',
-                            action: function () {
-                                msg.cancel();
-                                dels(graduationDesignTeacherIds);
-                            }
-                        },
-                        cancel: {
-                            label: '取消',
-                            action: function () {
-                                return msg.cancel();
-                            }
-                        }
-                    }
-                });
-            } else {
-                Messenger().post("未发现有选中的教职工!");
-            }
-        });
-
-        /*
-         编辑页面
-         */
-        function edit(graduationDesignTeacherId) {
-            $.address.value(getAjaxUrl().edit + '?id=' + graduationDesignTeacherId + '&rId=' + init_page_param.graduationDesignReleaseId);
-        }
-
-        /*
-         删除
-         */
-        function teacher_del(graduationDesignTeacherId, realName) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定删除教职工 '" + realName + "' 吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            del(graduationDesignTeacherId);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
+            $.post(getAjaxUrl().condition,{id:init_page_param.graduationDesignReleaseId},function(data){
+                if(data.state){
+                    $.address.value(getAjaxUrl().add + '?rId=' + init_page_param.graduationDesignReleaseId);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             });
-        }
-
-        function del(graduationDesignTeacherId) {
-            sendDelAjax(graduationDesignTeacherId, '删除');
-        }
-
-        function dels(graduationDesignTeacherIds) {
-            sendDelAjax(graduationDesignTeacherIds.join(","), '批量删除');
-        }
-
-        /**
-         * 删除ajax
-         * @param graduationDesignTeacherId
-         * @param message
-         */
-        function sendDelAjax(graduationDesignTeacherId, message) {
-            Messenger().run({
-                successMessage: message + '成功',
-                errorMessage: message + '失败',
-                progressMessage: '正在' + message + '....'
-            }, {
-                url: web_path + getAjaxUrl().del,
-                type: 'post',
-                data: {
-                    graduationDesignTeacherId: graduationDesignTeacherId,
-                    rId: init_page_param.graduationDesignReleaseId
-                },
-                success: function (data) {
-                    if (data.state) {
-                        myTable.ajax.reload();
-                    }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
-        }
+        });
     });

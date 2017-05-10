@@ -42,6 +42,9 @@ public class StaffBean extends Staff{
 
     private String academicTitleName;
 
+    // 用于checkbox 选中使用
+    private boolean checked;
+
     public Integer getSchoolId() {
         return schoolId;
     }
@@ -240,5 +243,13 @@ public class StaffBean extends Staff{
 
     public void setAcademicTitleName(String academicTitleName) {
         this.academicTitleName = academicTitleName;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }
