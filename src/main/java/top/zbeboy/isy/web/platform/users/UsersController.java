@@ -816,23 +816,26 @@ public class UsersController {
                     ajaxUtils.fail().msg("用户存在角色关联，无法删除");
                 } else {
                     Users users = usersService.findByUsername(id);
-                    UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-                    switch (usersType.getUsersTypeName()) {
-                        case Workbook.STUDENT_USERS_TYPE:  // 学生
-                            studentService.deleteByUsername(id);
-                            usersService.deleteById(id);
-                            ajaxUtils.success().msg("删除用户成功");
-                            break;
-                        case Workbook.STAFF_USERS_TYPE:  // 教职工
-                            staffService.deleteByUsername(id);
-                            usersService.deleteById(id);
-                            ajaxUtils.success().msg("删除用户成功");
-                            break;
-                        default:
-                            ajaxUtils.fail().msg("未获取到用户类型");
-                            break;
+                    if(!ObjectUtils.isEmpty(users)){
+                        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+                        switch (usersType.getUsersTypeName()) {
+                            case Workbook.STUDENT_USERS_TYPE:  // 学生
+                                studentService.deleteByUsername(id);
+                                usersService.deleteById(id);
+                                ajaxUtils.success().msg("删除用户成功");
+                                break;
+                            case Workbook.STAFF_USERS_TYPE:  // 教职工
+                                staffService.deleteByUsername(id);
+                                usersService.deleteById(id);
+                                ajaxUtils.success().msg("删除用户成功");
+                                break;
+                            default:
+                                ajaxUtils.fail().msg("未获取到用户类型");
+                                break;
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未查询到用户");
                     }
-
                 }
             });
         } else {
