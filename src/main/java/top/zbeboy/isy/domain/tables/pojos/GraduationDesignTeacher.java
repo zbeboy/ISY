@@ -24,12 +24,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignTeacher implements Serializable {
 
-    private static final long serialVersionUID = -919345417;
+    private static final long serialVersionUID = 1189054836;
 
     private String  graduationDesignTeacherId;
     private String  graduationDesignReleaseId;
     private Integer staffId;
     private Integer studentCount;
+    private Integer residue;
     private String  username;
 
     public GraduationDesignTeacher() {}
@@ -39,6 +40,7 @@ public class GraduationDesignTeacher implements Serializable {
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
         this.staffId = value.staffId;
         this.studentCount = value.studentCount;
+        this.residue = value.residue;
         this.username = value.username;
     }
 
@@ -47,12 +49,14 @@ public class GraduationDesignTeacher implements Serializable {
         String  graduationDesignReleaseId,
         Integer staffId,
         Integer studentCount,
+        Integer residue,
         String  username
     ) {
         this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
         this.staffId = staffId;
         this.studentCount = studentCount;
+        this.residue = residue;
         this.username = username;
     }
 
@@ -94,6 +98,14 @@ public class GraduationDesignTeacher implements Serializable {
         this.studentCount = studentCount;
     }
 
+    public Integer getResidue() {
+        return this.residue;
+    }
+
+    public void setResidue(Integer residue) {
+        this.residue = residue;
+    }
+
     @NotNull
     @Size(max = 64)
     public String getUsername() {
@@ -112,6 +124,7 @@ public class GraduationDesignTeacher implements Serializable {
         sb.append(", ").append(graduationDesignReleaseId);
         sb.append(", ").append(staffId);
         sb.append(", ").append(studentCount);
+        sb.append(", ").append(residue);
         sb.append(", ").append(username);
 
         sb.append(")");

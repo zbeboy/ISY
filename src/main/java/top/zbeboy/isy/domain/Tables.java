@@ -67,6 +67,7 @@ import top.zbeboy.isy.domain.tables.Science;
 import top.zbeboy.isy.domain.tables.ScoreType;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
+import top.zbeboy.isy.domain.tables.SyncElastic;
 import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemLog;
@@ -394,6 +395,11 @@ public class Tables {
      * The table <code>isy.student</code>.
      */
     public static final Student STUDENT = top.zbeboy.isy.domain.tables.Student.STUDENT;
+
+    /**
+     * The table <code>isy.sync_elastic</code>.
+     */
+    public static final SyncElastic SYNC_ELASTIC = top.zbeboy.isy.domain.tables.SyncElastic.SYNC_ELASTIC;
 
     /**
      * The table <code>isy.system_alert</code>.

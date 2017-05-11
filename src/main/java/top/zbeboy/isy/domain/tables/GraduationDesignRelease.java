@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignRelease extends TableImpl<GraduationDesignReleaseRecord> {
 
-    private static final long serialVersionUID = -1466876113;
+    private static final long serialVersionUID = 641089512;
 
     /**
      * The reference instance of <code>isy.graduation_design_release</code>
@@ -105,6 +105,11 @@ public class GraduationDesignRelease extends TableImpl<GraduationDesignReleaseRe
      * The column <code>isy.graduation_design_release.is_ok_teacher</code>.
      */
     public final TableField<GraduationDesignReleaseRecord, Byte> IS_OK_TEACHER = createField("is_ok_teacher", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_release.is_ok_teacher_adjust</code>.
+     */
+    public final TableField<GraduationDesignReleaseRecord, Byte> IS_OK_TEACHER_ADJUST = createField("is_ok_teacher_adjust", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
 
     /**
      * The column <code>isy.graduation_design_release.department_id</code>.

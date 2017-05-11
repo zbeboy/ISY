@@ -140,6 +140,13 @@ public class GraduationDesignReleaseDao extends DAOImpl<GraduationDesignReleaseR
     }
 
     /**
+     * Fetch records that have <code>is_ok_teacher_adjust IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease> fetchByIsOkTeacherAdjust(Byte... values) {
+        return fetch(GraduationDesignRelease.GRADUATION_DESIGN_RELEASE.IS_OK_TEACHER_ADJUST, values);
+    }
+
+    /**
      * Fetch records that have <code>department_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease> fetchByDepartmentId(Integer... values) {

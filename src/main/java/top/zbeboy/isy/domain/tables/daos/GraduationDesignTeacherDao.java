@@ -90,6 +90,13 @@ public class GraduationDesignTeacherDao extends DAOImpl<GraduationDesignTeacherR
     }
 
     /**
+     * Fetch records that have <code>residue IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher> fetchByResidue(Integer... values) {
+        return fetch(GraduationDesignTeacher.GRADUATION_DESIGN_TEACHER.RESIDUE, values);
+    }
+
+    /**
      * Fetch records that have <code>username IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher> fetchByUsername(String... values) {

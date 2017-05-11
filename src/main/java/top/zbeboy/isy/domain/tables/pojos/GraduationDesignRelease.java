@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignRelease implements Serializable {
 
-    private static final long serialVersionUID = 1426004769;
+    private static final long serialVersionUID = -1901731876;
 
     private String    graduationDesignReleaseId;
     private String    graduationDesignTitle;
@@ -38,6 +38,7 @@ public class GraduationDesignRelease implements Serializable {
     private Byte      graduationDesignIsDel;
     private String    allowGrade;
     private Byte      isOkTeacher;
+    private Byte      isOkTeacherAdjust;
     private Integer   departmentId;
     private Integer   scienceId;
 
@@ -55,6 +56,7 @@ public class GraduationDesignRelease implements Serializable {
         this.graduationDesignIsDel = value.graduationDesignIsDel;
         this.allowGrade = value.allowGrade;
         this.isOkTeacher = value.isOkTeacher;
+        this.isOkTeacherAdjust = value.isOkTeacherAdjust;
         this.departmentId = value.departmentId;
         this.scienceId = value.scienceId;
     }
@@ -71,6 +73,7 @@ public class GraduationDesignRelease implements Serializable {
         Byte      graduationDesignIsDel,
         String    allowGrade,
         Byte      isOkTeacher,
+        Byte      isOkTeacherAdjust,
         Integer   departmentId,
         Integer   scienceId
     ) {
@@ -85,6 +88,7 @@ public class GraduationDesignRelease implements Serializable {
         this.graduationDesignIsDel = graduationDesignIsDel;
         this.allowGrade = allowGrade;
         this.isOkTeacher = isOkTeacher;
+        this.isOkTeacherAdjust = isOkTeacherAdjust;
         this.departmentId = departmentId;
         this.scienceId = scienceId;
     }
@@ -190,6 +194,14 @@ public class GraduationDesignRelease implements Serializable {
         this.isOkTeacher = isOkTeacher;
     }
 
+    public Byte getIsOkTeacherAdjust() {
+        return this.isOkTeacherAdjust;
+    }
+
+    public void setIsOkTeacherAdjust(Byte isOkTeacherAdjust) {
+        this.isOkTeacherAdjust = isOkTeacherAdjust;
+    }
+
     @NotNull
     public Integer getDepartmentId() {
         return this.departmentId;
@@ -223,6 +235,7 @@ public class GraduationDesignRelease implements Serializable {
         sb.append(", ").append(graduationDesignIsDel);
         sb.append(", ").append(allowGrade);
         sb.append(", ").append(isOkTeacher);
+        sb.append(", ").append(isOkTeacherAdjust);
         sb.append(", ").append(departmentId);
         sb.append(", ").append(scienceId);
 

@@ -527,7 +527,7 @@ CREATE TABLE system_message(
   is_see BOOLEAN
 );
 
-create table oauth_client_details (
+CREATE TABLE oauth_client_details (
   client_id VARCHAR(256) PRIMARY KEY,
   resource_ids VARCHAR(256),
   client_secret VARCHAR(256),
@@ -541,7 +541,7 @@ create table oauth_client_details (
   autoapprove VARCHAR(256)
 );
 
-create table oauth_client_token (
+CREATE TABLE oauth_client_token (
   token_id VARCHAR(256),
   token BLOB,
   authentication_id VARCHAR(256) PRIMARY KEY,
@@ -549,7 +549,7 @@ create table oauth_client_token (
   client_id VARCHAR(256)
 );
 
-create table oauth_access_token (
+CREATE TABLE oauth_access_token (
   token_id VARCHAR(256),
   token BLOB,
   authentication_id VARCHAR(256) PRIMARY KEY,
@@ -559,14 +559,23 @@ create table oauth_access_token (
   refresh_token VARCHAR(256)
 );
 
-create table oauth_refresh_token (
+CREATE TABLE oauth_refresh_token (
   token_id VARCHAR(256),
   token BLOB,
   authentication BLOB
 );
 
-create table oauth_code (
+CREATE TABLE oauth_code (
   code VARCHAR(256), authentication BLOB
+);
+
+CREATE TABLE sync_elastic(
+  sync_elastic INT PRIMARY KEY AUTO_INCREMENT,
+  application_name VARCHAR(30) NOT NULL ,
+  sync_time DATETIME NOT NULL ,
+  sync_url  VARCHAR(200) NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
+  FOREIGN KEY (username) REFERENCES users(username)
 );
 
 INSERT INTO users_type(users_type_name) VALUES ('学生');
@@ -664,23 +673,35 @@ VALUES ('班级数据',805,3,'/web/menu/data/organize','data_organize','data_org
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('教职工数据',806,3,'/web/menu/data/staff','data_staff','data_staff','','/web/data/staff');
+VALUES ('楼数据',806,3,'/web/menu/data/building','data_building','data_building','','/web/data/building');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('学生数据',807,3,'/web/menu/data/student','data_student','data_student','','/web/data/student');
+VALUES ('教室数据',807,3,'/web/menu/data/schoolroom','data_schoolroom','data_schoolroom','','/web/data/schoolroom');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('民族数据',808,3,'/web/menu/data/nation','data_nation','data_nation','','/web/data/nation');
+VALUES ('教职工数据',808,3,'/web/menu/data/staff','data_staff','data_staff','','/web/data/staff');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('政治面貌数据',809,3,'/web/menu/data/politics','data_politics','data_politics','','/web/data/politics');
+VALUES ('学生数据',809,3,'/web/menu/data/student','data_student','data_student','','/web/data/student');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('职称数据',809,3,'/web/menu/data/academic','data_academic','data_academic','','/web/data/academic');
+VALUES ('民族数据',810,3,'/web/menu/data/nation','data_nation','data_nation','','/web/data/nation');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('政治面貌数据',811,3,'/web/menu/data/politics','data_politics','data_politics','','/web/data/politics');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('职称数据',812,3,'/web/menu/data/academic','data_academic','data_academic','','/web/data/academic');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('Elastic同步',813,3,'/web/menu/data/elastic','data_elastic','data_elastic','','/web/data/elastic');
 
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,

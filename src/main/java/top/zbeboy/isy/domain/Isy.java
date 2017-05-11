@@ -75,6 +75,7 @@ import top.zbeboy.isy.domain.tables.Science;
 import top.zbeboy.isy.domain.tables.ScoreType;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
+import top.zbeboy.isy.domain.tables.SyncElastic;
 import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemLog;
@@ -98,7 +99,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = 822122334;
+    private static final long serialVersionUID = 1815720388;
 
     /**
      * The reference instance of <code>isy</code>
@@ -411,6 +412,11 @@ public class Isy extends SchemaImpl {
     public final Student STUDENT = top.zbeboy.isy.domain.tables.Student.STUDENT;
 
     /**
+     * The table <code>isy.sync_elastic</code>.
+     */
+    public final SyncElastic SYNC_ELASTIC = top.zbeboy.isy.domain.tables.SyncElastic.SYNC_ELASTIC;
+
+    /**
      * The table <code>isy.system_alert</code>.
      */
     public final SystemAlert SYSTEM_ALERT = top.zbeboy.isy.domain.tables.SystemAlert.SYSTEM_ALERT;
@@ -536,6 +542,7 @@ public class Isy extends SchemaImpl {
             ScoreType.SCORE_TYPE,
             Staff.STAFF,
             Student.STUDENT,
+            SyncElastic.SYNC_ELASTIC,
             SystemAlert.SYSTEM_ALERT,
             SystemAlertType.SYSTEM_ALERT_TYPE,
             SystemLog.SYSTEM_LOG,
