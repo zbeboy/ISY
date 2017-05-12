@@ -115,6 +115,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
@@ -132,7 +133,7 @@ public class InternshipReviewController {
             r.setBasicFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 5));
             r.setCompanyFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 7));
         });
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -144,7 +145,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/condition", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
@@ -474,6 +475,7 @@ public class InternshipReviewController {
      * @return 数据
      */
     private AjaxUtils<InternshipReviewBean> internshipReviewData(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean) {
+        AjaxUtils<InternshipReviewBean> ajaxUtils = AjaxUtils.of();
         List<InternshipReviewBean> internshipReviewBeens = internshipReviewService.findAllByPage(paginationUtils, internshipApplyBean);
         if (!ObjectUtils.isEmpty(internshipReviewBeens)) {
             for (int i = 0; i < internshipReviewBeens.size(); i++) {
@@ -481,7 +483,7 @@ public class InternshipReviewController {
                 internshipReviewBeens.set(i, fillInternshipReviewBean(internshipReviewBean));
             }
         }
-        return new AjaxUtils<InternshipReviewBean>().success().msg("获取数据成功").listData(internshipReviewBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReviewBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -493,7 +495,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditSave(InternshipReviewBean internshipReviewBean) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReviewBean.getInternshipReleaseId());
             if (!errorBean.isHasError()) {
@@ -519,7 +521,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/pass", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditPass(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
@@ -729,7 +731,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/agree", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditAgree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
@@ -791,7 +793,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/disagree", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditDisagree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
@@ -837,7 +839,7 @@ public class InternshipReviewController {
     @ResponseBody
     public AjaxUtils auditFail(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
                                @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
@@ -876,7 +878,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/delete", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditDelete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (!ObjectUtils.isEmpty(internshipRelease)) {
             commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(), internshipReleaseId, studentId);
@@ -994,7 +996,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/anyone/internship/sciences", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Science> auditSciences(@RequestParam("internshipReleaseId") String internshipReleaseId) {
-        AjaxUtils<Science> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<Science> ajaxUtils = AjaxUtils.of();
         List<Science> sciences = new ArrayList<>();
         Science science = new Science();
         science.setScienceId(0);
@@ -1016,13 +1018,14 @@ public class InternshipReviewController {
     @RequestMapping(value = "/anyone/internship/organizes", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Organize> auditOrganizes(@RequestParam("scienceId") int scienceId) {
+        AjaxUtils<Organize> ajaxUtils = AjaxUtils.of();
         List<Organize> organizes = new ArrayList<>();
         Organize organize = new Organize();
         organize.setOrganizeId(0);
         organize.setOrganizeName("请选择班级");
         organizes.add(organize);
         organizes.addAll(organizeService.findByScienceId(scienceId));
-        return new AjaxUtils<Organize>().success().msg("获取班级数据成功").listData(organizes);
+        return ajaxUtils.success().msg("获取班级数据成功").listData(organizes);
     }
 
     /**

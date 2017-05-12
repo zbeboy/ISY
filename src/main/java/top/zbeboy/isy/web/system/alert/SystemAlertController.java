@@ -91,11 +91,12 @@ public class SystemAlertController {
     @RequestMapping(value = "/anyone/alert/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<SystemAlertBean> alertDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<SystemAlertBean> ajaxUtils = AjaxUtils.of();
         SystemAlertBean systemAlertBean = new SystemAlertBean();
         Users users = usersService.getUserFromSession();
         systemAlertBean.setUsername(users.getUsername());
         Result<Record> records = systemAlertService.findAllByPage(paginationUtils, systemAlertBean);
         List<SystemAlertBean> systemAlertBeans = systemAlertService.dealData(paginationUtils, records, systemAlertBean);
-        return new AjaxUtils<SystemAlertBean>().success().msg("获取数据成功").listData(systemAlertBeans).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(systemAlertBeans).paginationUtils(paginationUtils);
     }
 }

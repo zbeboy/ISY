@@ -189,6 +189,7 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
@@ -203,7 +204,7 @@ public class InternshipStatisticsController {
             r.setSubmittedTotalData(internshipStatisticsService.submittedCountAll(internshipStatisticsBean));
             r.setUnsubmittedTotalData(internshipStatisticsService.unsubmittedCountAll(internshipStatisticsBean));
         });
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -254,13 +255,14 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/record/apply/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipChangeHistoryBean> changeHistoryDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+        AjaxUtils<InternshipChangeHistoryBean> ajaxUtils = AjaxUtils.of();
         List<InternshipChangeHistoryBean> internshipChangeHistoryBeans = new ArrayList<>();
         Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeHistoryBeans = records.into(InternshipChangeHistoryBean.class);
             internshipChangeHistoryBeans.forEach(i -> i.setApplyTimeStr(DateTimeUtils.formatDate(i.getApplyTime())));
         }
-        return new AjaxUtils<InternshipChangeHistoryBean>().success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
     }
 
     /**
@@ -273,13 +275,14 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/record/company/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipChangeCompanyHistoryBean> changeCompanyDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+        AjaxUtils<InternshipChangeCompanyHistoryBean> ajaxUtils = AjaxUtils.of();
         List<InternshipChangeCompanyHistoryBean> internshipChangeCompanyHistoryBeans = new ArrayList<>();
         Result<Record> records = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeCompanyHistoryBeans = records.into(InternshipChangeCompanyHistoryBean.class);
             internshipChangeCompanyHistoryBeans.forEach(i -> i.setChangeTimeStr(DateTimeUtils.formatDate(i.getChangeTime())));
         }
-        return new AjaxUtils<InternshipChangeCompanyHistoryBean>().success().msg("获取数据成功").listData(internshipChangeCompanyHistoryBeans);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipChangeCompanyHistoryBeans);
     }
 
     /**
@@ -388,7 +391,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<InternshipCollege> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<InternshipCollege> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -493,7 +496,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<InternshipCompany> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<InternshipCompany> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -598,7 +601,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<GraduationPracticeCompany> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<GraduationPracticeCompany> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -703,7 +706,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<GraduationPracticeCollege> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<GraduationPracticeCollege> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -808,7 +811,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<GraduationPracticeUnify> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<GraduationPracticeUnify> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }

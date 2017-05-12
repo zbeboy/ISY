@@ -54,6 +54,7 @@ public class ScienceController {
     @RequestMapping(value = "/user/sciences", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Science> sciences(@RequestParam("departmentId") int departmentId) {
+        AjaxUtils<Science> ajaxUtils = AjaxUtils.of();
         List<Science> sciences = new ArrayList<>();
         Byte isDel = 0;
         Science science = new Science(0, "请选择专业", null, isDel, 0);
@@ -63,7 +64,7 @@ public class ScienceController {
             Science tempScience = new Science(r.getScienceId(), r.getScienceName(), r.getScienceCode(), r.getScienceIsDel(), r.getDepartmentId());
             sciences.add(tempScience);
         }
-        return new AjaxUtils<Science>().success().msg("获取专业数据成功！").listData(sciences);
+        return ajaxUtils.success().msg("获取专业数据成功！").listData(sciences);
     }
 
     /**
@@ -75,9 +76,10 @@ public class ScienceController {
     @RequestMapping(value = "/user/grade/sciences", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Science> gradeSciences(@RequestParam("grade") String grade, @RequestParam("departmentId") int departmentId) {
+        AjaxUtils<Science> ajaxUtils = AjaxUtils.of();
         Result<Record2<String, Integer>> scienceRecords = scienceService.findByGradeAndDepartmentId(grade, departmentId);
         List<Science> sciences = scienceRecords.into(Science.class);
-        return new AjaxUtils<Science>().success().msg("获取专业数据成功！").listData(sciences);
+        return ajaxUtils.success().msg("获取专业数据成功！").listData(sciences);
     }
 
     /**
@@ -168,12 +170,12 @@ public class ScienceController {
         if (StringUtils.hasLength(scienceName)) {
             Result<ScienceRecord> scienceRecords = scienceService.findByScienceNameAndDepartmentId(scienceName, departmentId);
             if (ObjectUtils.isEmpty(scienceRecords)) {
-                return new AjaxUtils().success().msg("专业名不存在");
+                return AjaxUtils.of().success().msg("专业名不存在");
             } else {
-                return new AjaxUtils().fail().msg("专业名已存在");
+                return AjaxUtils.of().fail().msg("专业名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("专业名不能为空");
+        return AjaxUtils.of().fail().msg("专业名不能为空");
     }
 
     /**
@@ -188,12 +190,12 @@ public class ScienceController {
         if (StringUtils.hasLength(scienceCode)) {
             Result<ScienceRecord> scienceRecords = scienceService.findByScienceCode(scienceCode);
             if (ObjectUtils.isEmpty(scienceRecords)) {
-                return new AjaxUtils().success().msg("专业代码不存在");
+                return AjaxUtils.of().success().msg("专业代码不存在");
             } else {
-                return new AjaxUtils().fail().msg("专业代码已存在");
+                return AjaxUtils.of().fail().msg("专业代码已存在");
             }
         }
-        return new AjaxUtils().fail().msg("专业代码不能为空");
+        return AjaxUtils.of().fail().msg("专业代码不能为空");
     }
 
     /**
@@ -209,10 +211,10 @@ public class ScienceController {
     public AjaxUtils updateValidName(@RequestParam("scienceId") int id, @RequestParam("scienceName") String scienceName, @RequestParam("departmentId") int departmentId) {
         Result<ScienceRecord> scienceRecords = scienceService.findByScienceNameAndDepartmentIdNeScienceId(scienceName, id, departmentId);
         if (scienceRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("专业名不重复");
+            return AjaxUtils.of().success().msg("专业名不重复");
         }
 
-        return new AjaxUtils().fail().msg("专业名重复");
+        return AjaxUtils.of().fail().msg("专业名重复");
     }
 
     /**
@@ -227,10 +229,10 @@ public class ScienceController {
     public AjaxUtils updateValidCode(@RequestParam("scienceId") int id, @RequestParam("scienceCode") String scienceCode) {
         Result<ScienceRecord> scienceRecords = scienceService.findByScienceCodeNeScienceId(scienceCode, id);
         if (scienceRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("专业代码不重复");
+            return AjaxUtils.of().success().msg("专业代码不重复");
         }
 
-        return new AjaxUtils().fail().msg("专业代码重复");
+        return AjaxUtils.of().fail().msg("专业代码重复");
     }
 
     /**
@@ -254,9 +256,9 @@ public class ScienceController {
             science.setScienceCode(scienceVo.getScienceCode());
             science.setDepartmentId(scienceVo.getDepartmentId());
             scienceService.save(science);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -281,10 +283,10 @@ public class ScienceController {
                 science.setScienceCode(scienceVo.getScienceCode());
                 science.setDepartmentId(scienceVo.getDepartmentId());
                 scienceService.update(science);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 
     /**
@@ -299,8 +301,8 @@ public class ScienceController {
     public AjaxUtils scienceUpdateDel(String scienceIds, Byte isDel) {
         if (StringUtils.hasLength(scienceIds) && SmallPropsUtils.StringIdsIsNumber(scienceIds)) {
             scienceService.updateIsDel(SmallPropsUtils.StringIdsToList(scienceIds), isDel);
-            return new AjaxUtils().success().msg("更改专业状态成功");
+            return AjaxUtils.of().success().msg("更改专业状态成功");
         }
-        return new AjaxUtils().fail().msg("更改专业状态失败");
+        return AjaxUtils.of().fail().msg("更改专业状态失败");
     }
 }

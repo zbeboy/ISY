@@ -60,6 +60,7 @@ public class CollegeController {
     @RequestMapping(value = "/user/colleges", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<College> colleges(@RequestParam("schoolId") int schoolId) {
+        AjaxUtils<College> ajaxUtils = AjaxUtils.of();
         List<College> colleges = new ArrayList<>();
         Byte isDel = 0;
         College college = new College(0, "请选择院", null, null, isDel, 0);
@@ -69,7 +70,7 @@ public class CollegeController {
             College tempCollege = new College(r.getCollegeId(), r.getCollegeName(), r.getCollegeAddress(), r.getCollegeCode(), r.getCollegeIsDel(), r.getSchoolId());
             colleges.add(tempCollege);
         }
-        return new AjaxUtils<College>().success().msg("获取院数据成功！").listData(colleges);
+        return ajaxUtils.success().msg("获取院数据成功！").listData(colleges);
     }
 
     /**
@@ -150,12 +151,12 @@ public class CollegeController {
         if (StringUtils.hasLength(collegeName)) {
             Result<CollegeRecord> collegeRecords = collegeService.findByCollegeNameAndSchoolId(collegeName, schoolId);
             if (collegeRecords.isEmpty()) {
-                return new AjaxUtils().success().msg("院名不存在");
+                return AjaxUtils.of().success().msg("院名不存在");
             } else {
-                return new AjaxUtils().fail().msg("院名已存在");
+                return AjaxUtils.of().fail().msg("院名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("院名不能为空");
+        return AjaxUtils.of().fail().msg("院名不能为空");
     }
 
     /**
@@ -170,12 +171,12 @@ public class CollegeController {
         if (StringUtils.hasLength(collegeCode)) {
             Result<CollegeRecord> collegeRecords = collegeService.findByCollegeCode(collegeCode);
             if (collegeRecords.isEmpty()) {
-                return new AjaxUtils().success().msg("院代码不存在");
+                return AjaxUtils.of().success().msg("院代码不存在");
             } else {
-                return new AjaxUtils().fail().msg("院代码已存在");
+                return AjaxUtils.of().fail().msg("院代码已存在");
             }
         }
-        return new AjaxUtils().fail().msg("院代码不能为空");
+        return AjaxUtils.of().fail().msg("院代码不能为空");
     }
 
     /**
@@ -191,10 +192,10 @@ public class CollegeController {
     public AjaxUtils updateValidName(@RequestParam("collegeId") int id, @RequestParam("collegeName") String collegeName, @RequestParam("schoolId") int schoolId) {
         Result<CollegeRecord> collegeRecords = collegeService.findByCollegeNameAndSchoolIdNeCollegeId(collegeName, id, schoolId);
         if (collegeRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("院名不重复");
+            return AjaxUtils.of().success().msg("院名不重复");
         }
 
-        return new AjaxUtils().fail().msg("院名重复");
+        return AjaxUtils.of().fail().msg("院名重复");
     }
 
     /**
@@ -209,10 +210,10 @@ public class CollegeController {
     public AjaxUtils updateValidName(@RequestParam("collegeId") int id, @RequestParam("collegeCode") String collegeCode) {
         Result<CollegeRecord> collegeRecords = collegeService.findByCollegeCodeNeCollegeId(collegeCode, id);
         if (collegeRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("院代码不重复");
+            return AjaxUtils.of().success().msg("院代码不重复");
         }
 
-        return new AjaxUtils().fail().msg("院代码重复");
+        return AjaxUtils.of().fail().msg("院代码重复");
     }
 
     /**
@@ -238,10 +239,10 @@ public class CollegeController {
                 college.setCollegeAddress(collegeVo.getCollegeAddress());
                 college.setSchoolId(collegeVo.getSchoolId());
                 collegeService.update(college);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 
     /**
@@ -266,9 +267,9 @@ public class CollegeController {
             college.setCollegeAddress(collegeVo.getCollegeAddress());
             college.setSchoolId(collegeVo.getSchoolId());
             collegeService.save(college);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -283,9 +284,9 @@ public class CollegeController {
     public AjaxUtils collegeUpdateDel(String collegeIds, Byte isDel) {
         if (StringUtils.hasLength(collegeIds) && SmallPropsUtils.StringIdsIsNumber(collegeIds)) {
             collegeService.updateIsDel(SmallPropsUtils.StringIdsToList(collegeIds), isDel);
-            return new AjaxUtils().success().msg("更改院状态成功");
+            return AjaxUtils.of().success().msg("更改院状态成功");
         }
-        return new AjaxUtils().fail().msg("更改院状态失败");
+        return AjaxUtils.of().fail().msg("更改院状态失败");
     }
 
     /**
@@ -313,12 +314,13 @@ public class CollegeController {
     @RequestMapping(value = "/web/data/college/application/data", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<CollegeApplication> collegeApplicationData(@RequestParam("collegeId") int collegeId) {
+        AjaxUtils<CollegeApplication> ajaxUtils = AjaxUtils.of();
         Result<CollegeApplicationRecord> collegeApplicationRecords = collegeApplicationService.findByCollegeId(collegeId);
         List<CollegeApplication> collegeApplications = new ArrayList<>();
         if (collegeApplicationRecords.isNotEmpty()) {
             collegeApplications = collegeApplicationRecords.into(CollegeApplication.class);
         }
-        return new AjaxUtils<CollegeApplication>().success().listData(collegeApplications);
+        return ajaxUtils.success().listData(collegeApplications);
     }
 
     /**
@@ -341,7 +343,7 @@ public class CollegeController {
                 });
             }
         }
-        return new AjaxUtils().success().msg("更新成功");
+        return AjaxUtils.of().success().msg("更新成功");
     }
 
     /**
@@ -352,7 +354,8 @@ public class CollegeController {
     @RequestMapping(value = "/web/data/college/application/json", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson() {
+        AjaxUtils<TreeBean> ajaxUtils = AjaxUtils.of();
         List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
-        return new AjaxUtils<TreeBean>().success().listData(treeBeens);
+        return ajaxUtils.success().listData(treeBeens);
     }
 }

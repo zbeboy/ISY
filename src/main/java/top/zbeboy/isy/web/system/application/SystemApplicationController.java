@@ -157,7 +157,7 @@ public class SystemApplicationController {
 
         Map<String, Object> data = new HashMap<>();
         data.put("applicationPids", applicationPids);
-        return new AjaxUtils().success().mapData(data);
+        return AjaxUtils.of().success().mapData(data);
     }
 
     /**
@@ -172,12 +172,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationName)) {
             List<Application> applications = applicationService.findByApplicationName(applicationName);
             if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用名不存在");
+                return AjaxUtils.of().success().msg("应用名不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用名已存在");
+                return AjaxUtils.of().fail().msg("应用名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用名不能为空");
+        return AjaxUtils.of().fail().msg("应用名不能为空");
     }
 
     /**
@@ -193,12 +193,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationName)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationNameNeApplicationId(applicationName, applicationId);
             if (applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用名不存在");
+                return AjaxUtils.of().success().msg("应用名不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用名已存在");
+                return AjaxUtils.of().fail().msg("应用名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用名不能为空");
+        return AjaxUtils.of().fail().msg("应用名不能为空");
     }
 
     /**
@@ -213,12 +213,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationEnName)) {
             List<Application> applications = applicationService.findByApplicationEnName(applicationEnName);
             if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用英文名不存在");
+                return AjaxUtils.of().success().msg("应用英文名不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用英文名已存在");
+                return AjaxUtils.of().fail().msg("应用英文名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用英文名不能为空");
+        return AjaxUtils.of().fail().msg("应用英文名不能为空");
     }
 
     /**
@@ -234,12 +234,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationEnName)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationEnNameNeApplicationId(applicationEnName, applicationId);
             if (applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用英文名不存在");
+                return AjaxUtils.of().success().msg("应用英文名不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用英文名已存在");
+                return AjaxUtils.of().fail().msg("应用英文名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用英文名不能为空");
+        return AjaxUtils.of().fail().msg("应用英文名不能为空");
     }
 
     /**
@@ -254,12 +254,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationUrl)) {
             List<Application> applications = applicationService.findByApplicationUrl(applicationUrl);
             if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用链接不存在");
+                return AjaxUtils.of().success().msg("应用链接不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用链接已存在");
+                return AjaxUtils.of().fail().msg("应用链接已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用链接不能为空");
+        return AjaxUtils.of().fail().msg("应用链接不能为空");
     }
 
     /**
@@ -275,12 +275,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationUrl)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationUrlNeApplicationId(applicationUrl, applicationId);
             if (applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用链接不存在");
+                return AjaxUtils.of().success().msg("应用链接不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用链接已存在");
+                return AjaxUtils.of().fail().msg("应用链接已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用链接不能为空");
+        return AjaxUtils.of().fail().msg("应用链接不能为空");
     }
 
     /**
@@ -295,12 +295,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationCode)) {
             List<Application> applications = applicationService.findByApplicationCode(applicationCode);
             if (ObjectUtils.isEmpty(applications) && applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用识别码不存在");
+                return AjaxUtils.of().success().msg("应用识别码不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用识别码已存在");
+                return AjaxUtils.of().fail().msg("应用识别码已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用识别码不能为空");
+        return AjaxUtils.of().fail().msg("应用识别码不能为空");
     }
 
     /**
@@ -316,12 +316,12 @@ public class SystemApplicationController {
         if (StringUtils.hasLength(applicationCode)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationCodeNeApplicationId(applicationCode, applicationId);
             if (applications.isEmpty()) {
-                return new AjaxUtils().success().msg("应用识别码不存在");
+                return AjaxUtils.of().success().msg("应用识别码不存在");
             } else {
-                return new AjaxUtils().fail().msg("应用识别码已存在");
+                return AjaxUtils.of().fail().msg("应用识别码已存在");
             }
         }
-        return new AjaxUtils().fail().msg("应用识别码不能为空");
+        return AjaxUtils.of().fail().msg("应用识别码不能为空");
     }
 
     /**
@@ -348,9 +348,9 @@ public class SystemApplicationController {
             Role role = roleService.findByRoleEnName(Workbook.SYSTEM_AUTHORITIES);
             RoleApplication roleApplication = new RoleApplication(role.getRoleId(), applicationId);
             roleApplicationService.save(roleApplication);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -374,9 +374,9 @@ public class SystemApplicationController {
             application.setIcon(applicationVo.getIcon());
             application.setApplicationDataUrlStartWith(applicationVo.getApplicationDataUrlStartWith());
             applicationService.update(application);
-            return new AjaxUtils().success().msg("更新成功");
+            return AjaxUtils.of().success().msg("更新成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -395,8 +395,8 @@ public class SystemApplicationController {
                 collegeApplicationService.deleteByApplicationId(id);
             });
             applicationService.deletes(ids);
-            return new AjaxUtils().success().msg("删除应用成功");
+            return AjaxUtils.of().success().msg("删除应用成功");
         }
-        return new AjaxUtils().fail().msg("删除应用失败");
+        return AjaxUtils.of().fail().msg("删除应用失败");
     }
 }

@@ -70,6 +70,7 @@ public class OrganizeController {
     @RequestMapping(value = "/user/grades", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<SelectUtils> grades(@RequestParam("scienceId") int scienceId) {
+        AjaxUtils<SelectUtils> ajaxUtils = AjaxUtils.of();
         List<SelectUtils> grades = new ArrayList<>();
         SelectUtils selectUtils = new SelectUtils(0, "0", "请选择年级", true);
         grades.add(selectUtils);
@@ -79,7 +80,7 @@ public class OrganizeController {
             SelectUtils tempGrade = new SelectUtils(0, r.getValue("grade").toString(), r.getValue("grade").toString(), false);
             grades.add(tempGrade);
         }
-        return new AjaxUtils<SelectUtils>().success().msg("获取年级数据成功！").listData(grades);
+        return ajaxUtils.success().msg("获取年级数据成功！").listData(grades);
     }
 
     /**
@@ -91,6 +92,7 @@ public class OrganizeController {
     @RequestMapping(value = "/user/department/grades", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<SelectUtils> departmentGrades(@RequestParam("departmentId") int departmentId) {
+        AjaxUtils<SelectUtils> ajaxUtils = AjaxUtils.of();
         List<SelectUtils> grades = new ArrayList<>();
         SelectUtils selectUtils = new SelectUtils(0, "0", "请选择年级", true);
         grades.add(selectUtils);
@@ -99,7 +101,7 @@ public class OrganizeController {
             SelectUtils tempGrade = new SelectUtils(0, r.getValue("grade").toString(), r.getValue("grade").toString(), false);
             grades.add(tempGrade);
         }
-        return new AjaxUtils<SelectUtils>().success().msg("获取年级数据成功！").listData(grades);
+        return ajaxUtils.success().msg("获取年级数据成功！").listData(grades);
     }
 
     /**
@@ -112,6 +114,7 @@ public class OrganizeController {
     @RequestMapping(value = "/user/organizes", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Organize> organizes(@RequestParam("grade") String grade, @RequestParam("scienceId") int scienceId) {
+        AjaxUtils<Organize> ajaxUtils = AjaxUtils.of();
         List<Organize> organizes = new ArrayList<>();
         Byte isDel = 0;
         Organize organize = new Organize(0, "请选择班级", isDel, 0, "");
@@ -121,7 +124,7 @@ public class OrganizeController {
             Organize tempOrganize = new Organize(r.getOrganizeId(), r.getOrganizeName(), r.getOrganizeIsDel(), r.getScienceId(), r.getGrade());
             organizes.add(tempOrganize);
         }
-        return new AjaxUtils<Organize>().success().msg("获取班级数据成功！").listData(organizes);
+        return ajaxUtils.success().msg("获取班级数据成功！").listData(organizes);
     }
 
     /**
@@ -208,12 +211,12 @@ public class OrganizeController {
         if (StringUtils.hasLength(organizeName)) {
             Result<OrganizeRecord> scienceRecords = organizeService.findByOrganizeNameAndScienceId(organizeName, scienceId);
             if (ObjectUtils.isEmpty(scienceRecords)) {
-                return new AjaxUtils().success().msg("班级名不存在");
+                return AjaxUtils.of().success().msg("班级名不存在");
             } else {
-                return new AjaxUtils().fail().msg("班级名已存在");
+                return AjaxUtils.of().fail().msg("班级名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("班级名不能为空");
+        return AjaxUtils.of().fail().msg("班级名不能为空");
     }
 
     /**
@@ -229,10 +232,10 @@ public class OrganizeController {
     public AjaxUtils updateValid(@RequestParam("organizeId") int id, @RequestParam("organizeName") String organizeName, @RequestParam("scienceId") int scienceId) {
         Result<OrganizeRecord> organizeRecords = organizeService.findByOrganizeNameAndScienceIdNeOrganizeId(organizeName, id, scienceId);
         if (organizeRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("班级名不重复");
+            return AjaxUtils.of().success().msg("班级名不重复");
         }
 
-        return new AjaxUtils().fail().msg("班级名重复");
+        return AjaxUtils.of().fail().msg("班级名重复");
     }
 
     /**
@@ -245,7 +248,7 @@ public class OrganizeController {
     @RequestMapping(value = "/web/data/organize/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils organizeSave(@Valid OrganizeVo organizeVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             OrganizeElastic organizeElastic = new OrganizeElastic();
             Byte isDel = 0;
@@ -310,10 +313,10 @@ public class OrganizeController {
                 organize.setScienceId(organizeVo.getScienceId());
                 organize.setGrade(organizeVo.getGrade());
                 organizeService.update(organize);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 
     /**
@@ -329,8 +332,8 @@ public class OrganizeController {
         if (StringUtils.hasLength(organizeIds) && SmallPropsUtils.StringIdsIsNumber(organizeIds)) {
             log.debug(" ids : {}", organizeIds);
             organizeService.updateIsDel(SmallPropsUtils.StringIdsToList(organizeIds), isDel);
-            return new AjaxUtils().success().msg("更改班级状态成功");
+            return AjaxUtils.of().success().msg("更改班级状态成功");
         }
-        return new AjaxUtils().fail().msg("更改班级状态失败");
+        return AjaxUtils.of().fail().msg("更改班级状态失败");
     }
 }

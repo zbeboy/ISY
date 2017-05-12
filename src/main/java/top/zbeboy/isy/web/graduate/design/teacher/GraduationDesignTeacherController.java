@@ -161,7 +161,7 @@ public class GraduationDesignTeacherController {
     @RequestMapping(value = "/web/graduate/design/tutor/teachers", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<StaffBean> teachers(@RequestParam("id") String graduationDesignReleaseId) {
-        AjaxUtils<StaffBean> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<StaffBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
@@ -197,7 +197,7 @@ public class GraduationDesignTeacherController {
     @RequestMapping(value = "/web/graduate/design/tutor/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils add(String staffId, String graduationDesignReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(staffId) && SmallPropsUtils.StringIdsIsNumber(staffId)) {
@@ -279,7 +279,7 @@ public class GraduationDesignTeacherController {
     @RequestMapping(value = "/web/graduate/design/tutor/condition", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String graduationDesignReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");

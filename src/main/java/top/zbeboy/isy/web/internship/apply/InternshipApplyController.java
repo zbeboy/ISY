@@ -135,6 +135,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> applyDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
@@ -161,7 +162,7 @@ public class InternshipApplyController {
         }
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -173,6 +174,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/my/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipApplyBean> myApplyDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipApplyBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipApplyBean internshipApplyBean = new InternshipApplyBean();
         internshipApplyBean.setInternshipReleaseIsDel(isDel);
@@ -193,7 +195,7 @@ public class InternshipApplyController {
                     }
             );
         }
-        return new AjaxUtils<InternshipApplyBean>().success().msg("获取数据成功").listData(internshipApplyBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipApplyBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -371,7 +373,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/college/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils applyCollegeSave(@Valid InternshipCollegeVo internshipCollegeVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipCollegeVo.getInternshipReleaseId(), internshipCollegeVo.getStudentId());
             if (!errorBean.isHasError()) {
@@ -396,7 +398,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/college/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils applyCollegeUpdate(@Valid InternshipCollegeVo internshipCollegeVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipCollegeVo.getInternshipCollegeId())) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(internshipCollegeVo.getInternshipReleaseId(), internshipCollegeVo.getStudentId());
@@ -511,7 +513,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/company/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils applyCompanySave(@Valid InternshipCompanyVo internshipCompanyVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipCompanyVo.getInternshipReleaseId(), internshipCompanyVo.getStudentId());
             if (!errorBean.isHasError()) {
@@ -536,7 +538,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/company/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils applyCompanyUpdate(@Valid InternshipCompanyVo internshipCompanyVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipCompanyVo.getInternshipCompanyId())) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(internshipCompanyVo.getInternshipReleaseId(), internshipCompanyVo.getStudentId());
@@ -650,7 +652,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/graduation/college/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils graduationCollegeSave(@Valid GraduationPracticeCollegeVo graduationPracticeCollegeVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeCollegeVo.getInternshipReleaseId(), graduationPracticeCollegeVo.getStudentId());
             if (!errorBean.isHasError()) {
@@ -675,7 +677,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/graduation/college/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils graduationCollegeUpdate(@Valid GraduationPracticeCollegeVo graduationPracticeCollegeVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(graduationPracticeCollegeVo.getGraduationPracticeCollegeId())) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeCollegeVo.getInternshipReleaseId(), graduationPracticeCollegeVo.getStudentId());
@@ -789,7 +791,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/graduation/unify/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils graduationUnifySave(@Valid GraduationPracticeUnifyVo graduationPracticeUnifyVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeUnifyVo.getInternshipReleaseId(), graduationPracticeUnifyVo.getStudentId());
             if (!errorBean.isHasError()) {
@@ -814,7 +816,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/graduation/unify/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils graduationUnifyUpdate(@Valid GraduationPracticeUnifyVo graduationPracticeUnifyVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(graduationPracticeUnifyVo.getGraduationPracticeUnifyId())) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeUnifyVo.getInternshipReleaseId(), graduationPracticeUnifyVo.getStudentId());
@@ -928,7 +930,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/graduation/company/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils graduationCompanySave(@Valid GraduationPracticeCompanyVo graduationPracticeCompanyVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeCompanyVo.getInternshipReleaseId(), graduationPracticeCompanyVo.getStudentId());
             if (!errorBean.isHasError()) {
@@ -953,7 +955,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/graduation/company/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils graduationCompanyUpdate(@Valid GraduationPracticeCompanyVo graduationPracticeCompanyVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(graduationPracticeCompanyVo.getGraduationPracticeCompanyId())) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(graduationPracticeCompanyVo.getInternshipReleaseId(), graduationPracticeCompanyVo.getStudentId());
@@ -1108,7 +1110,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/condition", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId, int studentId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
@@ -1128,7 +1130,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/valid/student", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStudent(@RequestParam("student") String info, int type) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Student student = null;
         if (type == 0) {
             student = studentService.findByUsername(info);
@@ -1153,7 +1155,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/teachers", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<StaffBean> teachers(@RequestParam("id") String internshipReleaseId, @RequestParam("studentId") int studentId) {
-        AjaxUtils<StaffBean> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<StaffBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, studentId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
@@ -1179,7 +1181,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/recall", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils applyRecall(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Users users = usersService.getUserFromSession();
         Student student = studentService.findByUsername(users.getUsername());
         if(Objects.isNull(student)){
@@ -1245,7 +1247,7 @@ public class InternshipApplyController {
     @ResponseBody
     public AjaxUtils applyState(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
                                 @RequestParam("internshipReleaseId") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Users users = usersService.getUserFromSession();
         Student student = studentService.findByUsername(users.getUsername());
         if(Objects.isNull(student)){
@@ -1292,7 +1294,7 @@ public class InternshipApplyController {
     @RequestMapping("/web/internship/apply/upload")
     @ResponseBody
     public AjaxUtils<FileBean> usersUpload(@RequestParam("internshipReleaseId") String internshipReleaseId, MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
-        AjaxUtils<FileBean> data = new AjaxUtils<>();
+        AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
             Users users = usersService.getUserFromSession();
             Student student = studentService.findByUsername(users.getUsername());
@@ -1352,7 +1354,7 @@ public class InternshipApplyController {
     @RequestMapping(value = "/web/internship/apply/delete/file", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils deleteFile(@RequestParam("id") String internshipReleaseId, HttpServletRequest request) {
-        AjaxUtils data = new AjaxUtils();
+        AjaxUtils data = AjaxUtils.of();
         try {
             Users users = usersService.getUserFromSession();
             Student student = studentService.findByUsername(users.getUsername());

@@ -78,11 +78,12 @@ public class SystemMessageController {
     @RequestMapping(value = "/anyone/message/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<SystemMessageBean> messageDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<SystemMessageBean> ajaxUtils = AjaxUtils.of();
         SystemMessageBean systemMessageBean = new SystemMessageBean();
         Users users = usersService.getUserFromSession();
         systemMessageBean.setAcceptUsers(users.getUsername());
         Result<Record> records = systemMessageService.findAllByPage(paginationUtils, systemMessageBean);
         List<SystemMessageBean> systemMessageBeens = systemMessageService.dealData(paginationUtils, records, systemMessageBean);
-        return new AjaxUtils<SystemMessageBean>().success().msg("获取数据成功").listData(systemMessageBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(systemMessageBeens).paginationUtils(paginationUtils);
     }
 }

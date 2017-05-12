@@ -44,11 +44,12 @@ public class PoliticalLandscapeController {
     @RequestMapping(value = "/user/political_landscapes", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<PoliticalLandscape> politicalLandscapes() {
+        AjaxUtils<PoliticalLandscape> ajaxUtils = AjaxUtils.of();
         List<PoliticalLandscape> politicalLandscapes = new ArrayList<>();
         PoliticalLandscape politicalLandscape = new PoliticalLandscape(0, "请选择政治面貌");
         politicalLandscapes.add(politicalLandscape);
         politicalLandscapes.addAll(politicalLandscapeService.findAll());
-        return new AjaxUtils<PoliticalLandscape>().success().msg("获取政治面貌数据成功！").listData(politicalLandscapes);
+        return ajaxUtils.success().msg("获取政治面貌数据成功！").listData(politicalLandscapes);
     }
 
     /**
@@ -99,12 +100,12 @@ public class PoliticalLandscapeController {
         if (StringUtils.hasLength(politicalLandscapeName)) {
             List<PoliticalLandscape> nations = politicalLandscapeService.findByPoliticalLandscapeName(politicalLandscapeName);
             if (ObjectUtils.isEmpty(nations)) {
-                return new AjaxUtils().success().msg("政治面貌不存在");
+                return AjaxUtils.of().success().msg("政治面貌不存在");
             } else {
-                return new AjaxUtils().fail().msg("政治面貌已存在");
+                return AjaxUtils.of().fail().msg("政治面貌已存在");
             }
         }
-        return new AjaxUtils().fail().msg("政治面貌不能为空");
+        return AjaxUtils.of().fail().msg("政治面貌不能为空");
     }
 
     /**
@@ -121,9 +122,9 @@ public class PoliticalLandscapeController {
             PoliticalLandscape politicalLandscape = new PoliticalLandscape();
             politicalLandscape.setPoliticalLandscapeName(politicsVo.getPoliticalLandscapeName());
             politicalLandscapeService.save(politicalLandscape);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -138,9 +139,9 @@ public class PoliticalLandscapeController {
     public AjaxUtils updateValid(@RequestParam("politicalLandscapeId") int id, @RequestParam("politicalLandscapeName") String politicalLandscapeName) {
         Result<PoliticalLandscapeRecord> politicalLandscapeRecords = politicalLandscapeService.findByNationNameNePoliticalLandscapeId(politicalLandscapeName, id);
         if (politicalLandscapeRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("政治面貌不重复");
+            return AjaxUtils.of().success().msg("政治面貌不重复");
         }
-        return new AjaxUtils().fail().msg("政治面貌重复");
+        return AjaxUtils.of().fail().msg("政治面貌重复");
     }
 
     /**
@@ -158,9 +159,9 @@ public class PoliticalLandscapeController {
             if (!ObjectUtils.isEmpty(politicalLandscape)) {
                 politicalLandscape.setPoliticalLandscapeName(politicsVo.getPoliticalLandscapeName());
                 politicalLandscapeService.update(politicalLandscape);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 }

@@ -224,7 +224,7 @@ public class InternshipRegulateController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<InternshipRegulateBean> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<InternshipRegulateBean> dataTablesUtils = DataTablesUtils.of();
             if (org.apache.commons.lang3.StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -340,7 +340,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/list/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils regulateListDel(String regulateIds, @RequestParam("staffId") int staffId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         // 强制身份判断
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
@@ -375,7 +375,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/students", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<StudentBean> regulateStudents(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("staffId") int staffId) {
-        AjaxUtils<StudentBean> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<StudentBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staffId);
         if (!errorBean.isHasError()) {
             List<StudentBean> studentBeens = new ArrayList<>();
@@ -400,7 +400,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/student/info", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<StudentBean> studentInfo(@RequestParam("studentId") int studentId) {
-        AjaxUtils<StudentBean> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<StudentBean> ajaxUtils = AjaxUtils.of();
         Optional<Record> record = studentService.findByIdRelationForUsers(studentId);
         if (record.isPresent()) {
             StudentBean studentBean = record.get().into(StudentBean.class);
@@ -424,7 +424,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/my/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils regulateSave(@Valid InternshipRegulateVo internshipRegulateVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulateVo.getInternshipReleaseId(), internshipRegulateVo.getStaffId());
             if (!errorBean.isHasError()) {
@@ -473,7 +473,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/my/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils regulateUpdate(@Valid InternshipRegulateVo internshipRegulateVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipRegulateVo.getInternshipRegulateId())) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulateVo.getInternshipReleaseId(), internshipRegulateVo.getStaffId());
             if (!errorBean.isHasError()) {
@@ -505,7 +505,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/valid/staff", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStaff(@RequestParam("staff") String info, @RequestParam("internshipReleaseId") String internshipReleaseId, int type) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Staff staff = null;
         if (type == 0) {
             staff = staffService.findByUsername(info);

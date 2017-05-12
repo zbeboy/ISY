@@ -134,12 +134,12 @@ public class SystemRoleController {
         if (StringUtils.hasLength(roleName)) {
             Result<Record> records = roleService.findByRoleNameAndRoleTypeNeRoleId(name, 1, roleId);
             if (records.isEmpty()) {
-                return new AjaxUtils().success().msg("角色名不重复");
+                return AjaxUtils.of().success().msg("角色名不重复");
             } else {
-                return new AjaxUtils().fail().msg("角色名重复");
+                return AjaxUtils.of().fail().msg("角色名重复");
             }
         }
-        return new AjaxUtils().fail().msg("角色名不能为空");
+        return AjaxUtils.of().fail().msg("角色名不能为空");
     }
 
     /**
@@ -159,9 +159,9 @@ public class SystemRoleController {
         if (roleId > 0) {
             roleApplicationService.deleteByRoleId(roleId);
             commonControllerMethodService.batchSaveRoleApplication(applicationIds,roleId);
-            return new AjaxUtils().success().msg("更新成功");
+            return AjaxUtils.of().success().msg("更新成功");
         }
-        return new AjaxUtils().fail().msg("更新失败");
+        return AjaxUtils.of().fail().msg("更新失败");
     }
 
     /**
@@ -173,12 +173,13 @@ public class SystemRoleController {
     @RequestMapping(value = "/web/system/role/application/data", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<RoleApplication> roleApplicationData(@RequestParam("roleId") int roleId) {
+        AjaxUtils<RoleApplication> ajaxUtils = AjaxUtils.of();
         Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findByRoleId(roleId);
         List<RoleApplication> roleApplications = new ArrayList<>();
         if (roleApplicationRecords.isNotEmpty()) {
             roleApplications = roleApplicationRecords.into(RoleApplication.class);
         }
-        return new AjaxUtils<RoleApplication>().success().listData(roleApplications);
+        return ajaxUtils.success().listData(roleApplications);
     }
 
     /**
@@ -189,7 +190,8 @@ public class SystemRoleController {
     @RequestMapping(value = "/web/system/role/application/json", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson() {
+        AjaxUtils<TreeBean> ajaxUtils = AjaxUtils.of();
         List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
-        return new AjaxUtils<TreeBean>().success().listData(treeBeens);
+        return ajaxUtils.success().listData(treeBeens);
     }
 }

@@ -89,9 +89,9 @@ public class StaffController {
     public AjaxUtils validStaff(@RequestParam("staffNumber") String staffNumber) {
         Staff staff = staffService.findByStaffNumber(staffNumber);
         if (!ObjectUtils.isEmpty(staff)) {
-            return new AjaxUtils().fail();
+            return AjaxUtils.of().fail();
         }
-        return new AjaxUtils().success();
+        return AjaxUtils.of().success();
     }
 
     /**
@@ -106,9 +106,9 @@ public class StaffController {
     public AjaxUtils validAnyoneStudent(@RequestParam("username") String username, @RequestParam("staffNumber") String staffNumber) {
         Result<StaffRecord> staffRecords = staffService.findByStaffNumberNeUsername(username, staffNumber);
         if (staffRecords.isEmpty()) {
-            return new AjaxUtils().success();
+            return AjaxUtils.of().success();
         }
-        return new AjaxUtils().fail();
+        return AjaxUtils.of().fail();
     }
 
     /**
@@ -129,23 +129,23 @@ public class StaffController {
             if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
                 String tempMobile = (String) session.getAttribute("mobile");
                 if (!staffVo.getMobile().equals(tempMobile)) {
-                    return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
+                    return AjaxUtils.of().fail().msg("发现手机号不一致，请重新获取验证码");
                 } else {
                     if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
                         Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
                         Date now = new Date();
                         if (!now.before(mobileExpiry)) {
-                            return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
+                            return AjaxUtils.of().fail().msg("验证码已过有效期(30分钟)");
                         } else {
                             if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
                                 String mobileCode = (String) session.getAttribute("mobileCode");
                                 if (!staffVo.getPhoneVerifyCode().equals(mobileCode)) {
-                                    return new AjaxUtils().fail().msg("验证码错误");
+                                    return AjaxUtils.of().fail().msg("验证码错误");
                                 } else {
                                     String password = StringUtils.trimWhitespace(staffVo.getPassword());
                                     String confirmPassword = StringUtils.trimWhitespace(staffVo.getConfirmPassword());
                                     if (!password.equals(confirmPassword)) {
-                                        return new AjaxUtils().fail().msg("密码不一致");
+                                        return AjaxUtils.of().fail().msg("密码不一致");
                                     } else {
                                         // 注册成功
                                         Users saveUsers = new Users();
@@ -200,25 +200,25 @@ public class StaffController {
                                             users.setMailboxVerifyCode(saveUsers.getMailboxVerifyCode());
                                             users.setMailboxVerifyValid(saveUsers.getMailboxVerifyValid());
                                             mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
-                                            return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
+                                            return AjaxUtils.of().success().msg("恭喜注册成功，请验证邮箱");
                                         } else {
-                                            return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
+                                            return AjaxUtils.of().fail().msg("邮件推送已被管理员关闭");
                                         }
                                     }
                                 }
                             } else {
-                                return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
+                                return AjaxUtils.of().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
                             }
                         }
                     } else {
-                        return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
+                        return AjaxUtils.of().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
                     }
                 }
             } else {
-                return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
+                return AjaxUtils.of().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
             }
         } else {
-            return new AjaxUtils().fail().msg("参数异常，请检查输入内容是否正确");
+            return AjaxUtils.of().fail().msg("参数异常，请检查输入内容是否正确");
         }
     }
 
@@ -315,7 +315,7 @@ public class StaffController {
         Staff staff = staffService.findByUsername(users.getUsername());
         staff.setDepartmentId(department);
         staffService.update(staff);
-        return new AjaxUtils().success().msg("更新学校信息成功");
+        return AjaxUtils.of().success().msg("更新学校信息成功");
     }
 
     /**
@@ -364,12 +364,12 @@ public class StaffController {
                 staff.setFamilyResidence(staffVo.getFamilyResidence());
                 staff.setPost(staffVo.getPost());
                 staffService.update(staff);
-                return new AjaxUtils().success();
+                return AjaxUtils.of().success();
             } catch (ParseException e) {
                 log.error("Birthday to sql date is exception : {}", e.getMessage());
-                return new AjaxUtils().fail().msg("时间转换异常");
+                return AjaxUtils.of().fail().msg("时间转换异常");
             }
         }
-        return new AjaxUtils().fail().msg("参数检验错误");
+        return AjaxUtils.of().fail().msg("参数检验错误");
     }
 }

@@ -1,16 +1,21 @@
 package top.zbeboy.isy.web.util;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by lenovo on 2016-01-22.
  * 分页数据
  */
+@Slf4j
+@RequiredArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@ToString
 public class PaginationUtils {
-
-    private final Logger log = LoggerFactory.getLogger(PaginationUtils.class);
 
     private int totalPages;// 总页数
     private int totalDatas;// 数据总数
@@ -19,17 +24,6 @@ public class PaginationUtils {
     private int displayedPages;// 显示按钮数
     private String searchParams;// 搜索参数
 
-    public PaginationUtils() {
-    }
-
-    public PaginationUtils(int totalPages, int totalDatas, int pageNum, int pageSize, int displayedPages, String searchParams) {
-        this.totalPages = totalPages;
-        this.totalDatas = totalDatas;
-        this.pageNum = pageNum;
-        this.pageSize = pageSize;
-        this.displayedPages = displayedPages;
-        this.searchParams = searchParams;
-    }
 
     public int getTotalPages() {
         totalPages = totalDatas % pageSize == 0 ? totalDatas / pageSize : totalDatas / pageSize + 1;
@@ -86,17 +80,5 @@ public class PaginationUtils {
 
     public void setSearchParams(String searchParams) {
         this.searchParams = searchParams;
-    }
-
-    @Override
-    public String toString() {
-        return "PaginationUtils{" +
-                "totalPages=" + totalPages +
-                ", totalDatas=" + totalDatas +
-                ", pageNum=" + pageNum +
-                ", pageSize=" + pageSize +
-                ", displayedPages=" + displayedPages +
-                ", searchParams='" + searchParams + '\'' +
-                '}';
     }
 }

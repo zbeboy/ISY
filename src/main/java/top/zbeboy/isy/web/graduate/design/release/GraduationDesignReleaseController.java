@@ -107,13 +107,14 @@ public class GraduationDesignReleaseController {
     @RequestMapping(value = "/web/graduate/design/release/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<GraduationDesignReleaseBean> ajaxUtils = AjaxUtils.of();
         GraduationDesignReleaseBean graduationDesignReleaseBean = new GraduationDesignReleaseBean();
         Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
         graduationDesignReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         graduationDesignReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
         List<GraduationDesignReleaseBean> graduationDesignReleaseBeans = graduationDesignReleaseService.dealData(paginationUtils, records, graduationDesignReleaseBean);
-        return new AjaxUtils<GraduationDesignReleaseBean>().success().msg("获取数据成功").listData(graduationDesignReleaseBeans).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignReleaseBeans).paginationUtils(paginationUtils);
     }
 
     /**
@@ -125,6 +126,7 @@ public class GraduationDesignReleaseController {
     @RequestMapping(value = "/anyone/graduate/design/release/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignReleaseBean> commonDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<GraduationDesignReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         GraduationDesignReleaseBean graduationDesignReleaseBean = new GraduationDesignReleaseBean();
         graduationDesignReleaseBean.setGraduationDesignIsDel(isDel);
@@ -133,7 +135,7 @@ public class GraduationDesignReleaseController {
         graduationDesignReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
         List<GraduationDesignReleaseBean> graduationDesignReleaseBeens = graduationDesignReleaseService.dealData(paginationUtils, records, graduationDesignReleaseBean);
-        return new AjaxUtils<GraduationDesignReleaseBean>().success().msg("获取数据成功").listData(graduationDesignReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -181,12 +183,13 @@ public class GraduationDesignReleaseController {
     @RequestMapping(value = "/user/graduate/design/files", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<Files> internshipFiles(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId) {
+        AjaxUtils<Files> ajaxUtils = AjaxUtils.of();
         List<Files> files = new ArrayList<>();
         Result<Record> records = graduationDesignReleaseFileService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
         if (records.isNotEmpty()) {
             files = records.into(Files.class);
         }
-        return new AjaxUtils<Files>().success().msg("获取毕业设计附件数据成功").listData(files);
+        return ajaxUtils.success().msg("获取毕业设计附件数据成功").listData(files);
     }
 
     /**
@@ -202,10 +205,10 @@ public class GraduationDesignReleaseController {
         if (StringUtils.hasLength(graduationDesignTitle)) {
             List<GraduationDesignRelease> graduationDesignReleases = graduationDesignReleaseService.findByGraduationDesignTitle(graduationDesignTitle);
             if (ObjectUtils.isEmpty(graduationDesignReleases) && graduationDesignReleases.isEmpty()) {
-                return new AjaxUtils().success().msg("标题不重复");
+                return AjaxUtils.of().success().msg("标题不重复");
             }
         }
-        return new AjaxUtils().fail().msg("标题重复");
+        return AjaxUtils.of().fail().msg("标题重复");
     }
 
     /**
@@ -223,10 +226,10 @@ public class GraduationDesignReleaseController {
             Result<GraduationDesignReleaseRecord> graduationDesignReleaseRecords =
                     graduationDesignReleaseService.findByGraduationDesignTitleNeGraduationDesignReleaseId(releaseTitle, graduationDesignReleaseId);
             if (ObjectUtils.isEmpty(graduationDesignReleaseRecords) && graduationDesignReleaseRecords.isEmpty()) {
-                return new AjaxUtils().success().msg("标题不重复");
+                return AjaxUtils.of().success().msg("标题不重复");
             }
         }
-        return new AjaxUtils().fail().msg("标题重复");
+        return AjaxUtils.of().fail().msg("标题重复");
     }
 
     /**
@@ -256,9 +259,9 @@ public class GraduationDesignReleaseController {
             graduationDesignRelease.setGraduationDesignIsDel(graduationDesignReleaseAddVo.getGraduationDesignIsDel());
             graduationDesignReleaseService.save(graduationDesignRelease);
             saveOrUpdateFiles(files, graduationDesignReleaseId);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("保存失败");
+        return AjaxUtils.of().fail().msg("保存失败");
     }
 
     /**
@@ -287,9 +290,9 @@ public class GraduationDesignReleaseController {
                 graduationDesignReleaseFiles.forEach(f -> filesService.deleteById(f.getFileId()));
             }
             saveOrUpdateFiles(files, graduationDesignReleaseId);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("保存失败");
+        return AjaxUtils.of().fail().msg("保存失败");
     }
 
     /**
@@ -305,7 +308,7 @@ public class GraduationDesignReleaseController {
         GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
         graduationDesignRelease.setGraduationDesignIsDel(isDel);
         graduationDesignReleaseService.update(graduationDesignRelease);
-        return new AjaxUtils().success().msg("更新状态成功");
+        return AjaxUtils.of().success().msg("更新状态成功");
     }
 
     /**
@@ -364,7 +367,7 @@ public class GraduationDesignReleaseController {
     @ResponseBody
     public AjaxUtils<FileBean> upload(int schoolId, int collegeId, @RequestParam("departmentId") int departmentId,
                                       MultipartHttpServletRequest multipartHttpServletRequest) {
-        AjaxUtils<FileBean> data = new AjaxUtils<>();
+        AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
             School school = null;
             College college = null;
@@ -417,7 +420,7 @@ public class GraduationDesignReleaseController {
     @ResponseBody
     public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId,
                                           @RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
                 graduationDesignReleaseFileService.deleteByFileIdAndGraduationDesignReleaseId(fileId, graduationDesignReleaseId);

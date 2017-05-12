@@ -178,20 +178,20 @@ public class RoleController {
             if (collegeId > 0) {
                 Result<Record> records = roleService.findByRoleNameAndCollegeId(roleName, collegeId);
                 if (records.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
+                    return AjaxUtils.of().success().msg("角色名不重复");
                 } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
+                    return AjaxUtils.of().fail().msg("角色名重复");
                 }
             } else {
                 Result<RoleRecord> roleRecords = roleService.findByRoleNameNotExistsCollegeRole(roleName);
                 if (roleRecords.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
+                    return AjaxUtils.of().success().msg("角色名不重复");
                 } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
+                    return AjaxUtils.of().fail().msg("角色名重复");
                 }
             }
         }
-        return new AjaxUtils().fail().msg("角色名不能为空");
+        return AjaxUtils.of().fail().msg("角色名不能为空");
     }
 
     /**
@@ -216,20 +216,20 @@ public class RoleController {
             if (collegeId > 0) {
                 Result<Record> records = roleService.findByRoleNameAndCollegeIdNeRoleId(roleName, collegeId, roleId);
                 if (records.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
+                    return AjaxUtils.of().success().msg("角色名不重复");
                 } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
+                    return AjaxUtils.of().fail().msg("角色名重复");
                 }
             } else {
                 Result<RoleRecord> roleRecords = roleService.findByRoleNameNotExistsCollegeRoleNeRoleId(roleName, roleId);
                 if (roleRecords.isEmpty()) {
-                    return new AjaxUtils().success().msg("角色名不重复");
+                    return AjaxUtils.of().success().msg("角色名不重复");
                 } else {
-                    return new AjaxUtils().fail().msg("角色名重复");
+                    return AjaxUtils.of().fail().msg("角色名重复");
                 }
             }
         }
-        return new AjaxUtils().fail().msg("角色名不能为空");
+        return AjaxUtils.of().fail().msg("角色名不能为空");
     }
 
     /**
@@ -250,9 +250,9 @@ public class RoleController {
         int roleId = roleService.saveAndReturnId(role);
         if (roleId > 0) {
             saveOrUpdate(collegeId, applicationIds, roleId);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("保存失败");
+        return AjaxUtils.of().fail().msg("保存失败");
     }
 
     /**
@@ -274,9 +274,9 @@ public class RoleController {
             roleApplicationService.deleteByRoleId(roleId);
             collegeRoleService.deleteByRoleId(roleId);
             saveOrUpdate(collegeId, applicationIds, roleId);
-            return new AjaxUtils().success().msg("更新成功");
+            return AjaxUtils.of().success().msg("更新成功");
         }
-        return new AjaxUtils().fail().msg("更新失败");
+        return AjaxUtils.of().fail().msg("更新失败");
     }
 
     /**
@@ -315,7 +315,7 @@ public class RoleController {
             authoritiesService.deleteByAuthorities(role.getRoleEnName());
             roleService.deleteById(roleId);
         }
-        return new AjaxUtils().success().msg("删除成功");
+        return AjaxUtils.of().success().msg("删除成功");
     }
 
     /**
@@ -327,12 +327,13 @@ public class RoleController {
     @RequestMapping(value = "/web/platform/role/application/data", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<RoleApplication> roleApplicationData(@RequestParam("roleId") int roleId) {
+        AjaxUtils<RoleApplication> ajaxUtils = AjaxUtils.of();
         Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findByRoleId(roleId);
         List<RoleApplication> roleApplications = new ArrayList<>();
         if (roleApplicationRecords.isNotEmpty()) {
             roleApplications = roleApplicationRecords.into(RoleApplication.class);
         }
-        return new AjaxUtils<RoleApplication>().success().listData(roleApplications);
+        return ajaxUtils.success().listData(roleApplications);
     }
 
     /**
@@ -344,7 +345,8 @@ public class RoleController {
     @RequestMapping(value = "/web/platform/role/application/json", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson(@RequestParam("collegeId") int collegeId) {
+        AjaxUtils<TreeBean> ajaxUtils = AjaxUtils.of();
         List<TreeBean> treeBeens = applicationService.getApplicationJsonByCollegeId(0, collegeId);
-        return new AjaxUtils<TreeBean>().success().listData(treeBeens);
+        return ajaxUtils.success().listData(treeBeens);
     }
 }

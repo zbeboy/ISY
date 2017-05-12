@@ -512,7 +512,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/list/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils journalListDel(String journalIds, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             boolean canDel = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES);
             Users users = usersService.getUserFromSession();
@@ -560,7 +560,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/my/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils journalSave(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournalVo.getInternshipReleaseId(), internshipJournalVo.getStudentId());
             if (!errorBean.isHasError()) {
@@ -615,7 +615,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/my/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils journalUpdate(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!bindingResult.hasErrors() && StringUtils.hasLength(internshipJournalVo.getInternshipJournalId())) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournalVo.getInternshipReleaseId(), internshipJournalVo.getStudentId());
@@ -666,7 +666,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/valid/student", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStudent(@RequestParam("student") String info, @RequestParam("internshipReleaseId") String internshipReleaseId, int type) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Student student = null;
         if (type == 0) {
             student = studentService.findByUsername(info);

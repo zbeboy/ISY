@@ -47,11 +47,12 @@ public class AcademicTitleController {
     @RequestMapping(value = "/user/academic", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<AcademicTitle> academic() {
+        AjaxUtils<AcademicTitle> ajaxUtils = AjaxUtils.of();
         List<AcademicTitle> academicTitles = new ArrayList<>();
         AcademicTitle academicTitle = new AcademicTitle(0, "请选择职称");
         academicTitles.add(academicTitle);
         academicTitles.addAll(academicTitleService.findAll());
-        return new AjaxUtils<AcademicTitle>().success().msg("获取职称数据成功！").listData(academicTitles);
+        return ajaxUtils.success().msg("获取职称数据成功！").listData(academicTitles);
     }
 
     /**
@@ -102,12 +103,12 @@ public class AcademicTitleController {
         if (StringUtils.hasLength(academicTitleName)) {
             List<AcademicTitle> academicTitles = academicTitleService.findByAcademicTitleName(academicTitleName);
             if (ObjectUtils.isEmpty(academicTitles)) {
-                return new AjaxUtils().success().msg("职称不存在");
+                return AjaxUtils.of().success().msg("职称不存在");
             } else {
-                return new AjaxUtils().fail().msg("职称已存在");
+                return AjaxUtils.of().fail().msg("职称已存在");
             }
         }
-        return new AjaxUtils().fail().msg("职称不能为空");
+        return AjaxUtils.of().fail().msg("职称不能为空");
     }
 
     /**
@@ -124,9 +125,9 @@ public class AcademicTitleController {
             AcademicTitle academicTitle = new AcademicTitle();
             academicTitle.setAcademicTitleName(academicTitleVo.getAcademicTitleName());
             academicTitleService.save(academicTitle);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -141,10 +142,10 @@ public class AcademicTitleController {
     public AjaxUtils updateValid(@RequestParam("academicTitleId") int id, @RequestParam("academicTitleName") String academicTitleName) {
         Result<AcademicTitleRecord> academicTitleRecords = academicTitleService.findByAcademicTitleNameNeAcademicTitleId(academicTitleName, id);
         if (academicTitleRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("职称不重复");
+            return AjaxUtils.of().success().msg("职称不重复");
         }
 
-        return new AjaxUtils().fail().msg("职称重复");
+        return AjaxUtils.of().fail().msg("职称重复");
     }
 
 
@@ -163,9 +164,9 @@ public class AcademicTitleController {
             if (!ObjectUtils.isEmpty(academicTitle)) {
                 academicTitle.setAcademicTitleName(academicTitleVo.getAcademicTitleName());
                 academicTitleService.update(academicTitle);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 }

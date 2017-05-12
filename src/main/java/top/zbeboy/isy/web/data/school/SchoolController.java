@@ -46,6 +46,7 @@ public class SchoolController {
     @RequestMapping(value = "/user/schools", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<School> schools() {
+        AjaxUtils<School> ajaxUtils = AjaxUtils.of();
         List<School> schools = new ArrayList<>();
         Byte isDel = 0;
         School school = new School(0, "请选择学校", isDel);
@@ -55,7 +56,7 @@ public class SchoolController {
             School tempSchool = new School(r.getSchoolId(), r.getSchoolName(), r.getSchoolIsDel());
             schools.add(tempSchool);
         }
-        return new AjaxUtils<School>().success().msg("获取学校数据成功！").listData(schools);
+        return ajaxUtils.success().msg("获取学校数据成功！").listData(schools);
     }
 
     /**
@@ -132,12 +133,12 @@ public class SchoolController {
         if (StringUtils.hasLength(schoolName)) {
             List<School> schools = schoolService.findBySchoolName(schoolName);
             if (ObjectUtils.isEmpty(schools)) {
-                return new AjaxUtils().success().msg("学校名不存在");
+                return AjaxUtils.of().success().msg("学校名不存在");
             } else {
-                return new AjaxUtils().fail().msg("学校名已存在");
+                return AjaxUtils.of().fail().msg("学校名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("学校名不能为空");
+        return AjaxUtils.of().fail().msg("学校名不能为空");
     }
 
     /**
@@ -159,9 +160,9 @@ public class SchoolController {
             school.setSchoolIsDel(isDel);
             school.setSchoolName(schoolVo.getSchoolName());
             schoolService.save(school);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -176,10 +177,10 @@ public class SchoolController {
     public AjaxUtils updateValid(@RequestParam("schoolId") int id, @RequestParam("schoolName") String schoolName) {
         Result<SchoolRecord> schoolRecords = schoolService.findBySchoolNameNeSchoolId(schoolName, id);
         if (schoolRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("学校名不重复");
+            return AjaxUtils.of().success().msg("学校名不重复");
         }
 
-        return new AjaxUtils().fail().msg("学校名重复");
+        return AjaxUtils.of().fail().msg("学校名重复");
     }
 
     /**
@@ -202,10 +203,10 @@ public class SchoolController {
                 school.setSchoolIsDel(isDel);
                 school.setSchoolName(schoolVo.getSchoolName());
                 schoolService.update(school);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 
     /**
@@ -220,8 +221,8 @@ public class SchoolController {
     public AjaxUtils schoolUpdateDel(String schoolIds, Byte isDel) {
         if (StringUtils.hasLength(schoolIds) && SmallPropsUtils.StringIdsIsNumber(schoolIds)) {
             schoolService.updateIsDel(SmallPropsUtils.StringIdsToList(schoolIds), isDel);
-            return new AjaxUtils().success().msg("更改学校状态成功");
+            return AjaxUtils.of().success().msg("更改学校状态成功");
         }
-        return new AjaxUtils().fail().msg("更改学校状态失败");
+        return AjaxUtils.of().fail().msg("更改学校状态失败");
     }
 }

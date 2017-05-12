@@ -168,7 +168,7 @@ public class MainController {
     @RequestMapping("/anyone/users/delete/file")
     @ResponseBody
     public AjaxUtils deleteFile(@RequestParam("filePath") String filePath, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
                 ajaxUtils.success().msg("删除文件成功");

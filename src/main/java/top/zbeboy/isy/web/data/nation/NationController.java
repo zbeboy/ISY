@@ -44,11 +44,12 @@ public class NationController {
     @RequestMapping(value = "/user/nations", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<Nation> nations() {
+        AjaxUtils<Nation> ajaxUtils = AjaxUtils.of();
         List<Nation> nations = new ArrayList<>();
         Nation nation = new Nation(0, "请选择民族");
         nations.add(nation);
         nations.addAll(nationService.findAll());
-        return new AjaxUtils<Nation>().success().msg("获取民族数据成功！").listData(nations);
+        return ajaxUtils.success().msg("获取民族数据成功！").listData(nations);
     }
 
     /**
@@ -99,12 +100,12 @@ public class NationController {
         if (StringUtils.hasLength(nationName)) {
             List<Nation> nations = nationService.findByNationName(nationName);
             if (ObjectUtils.isEmpty(nations)) {
-                return new AjaxUtils().success().msg("民族名不存在");
+                return AjaxUtils.of().success().msg("民族名不存在");
             } else {
-                return new AjaxUtils().fail().msg("民族名已存在");
+                return AjaxUtils.of().fail().msg("民族名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("民族名不能为空");
+        return AjaxUtils.of().fail().msg("民族名不能为空");
     }
 
     /**
@@ -121,9 +122,9 @@ public class NationController {
             Nation nation = new Nation();
             nation.setNationName(nationVo.getNationName());
             nationService.save(nation);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -138,10 +139,10 @@ public class NationController {
     public AjaxUtils updateValid(@RequestParam("nationId") int id, @RequestParam("nationName") String nationName) {
         Result<NationRecord> nationRecords = nationService.findByNationNameNeNationId(nationName, id);
         if (nationRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("民族名不重复");
+            return AjaxUtils.of().success().msg("民族名不重复");
         }
 
-        return new AjaxUtils().fail().msg("民族名重复");
+        return AjaxUtils.of().fail().msg("民族名重复");
     }
 
 
@@ -160,9 +161,9 @@ public class NationController {
             if (!ObjectUtils.isEmpty(nation)) {
                 nation.setNationName(nationVo.getNationName());
                 nationService.update(nation);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 }

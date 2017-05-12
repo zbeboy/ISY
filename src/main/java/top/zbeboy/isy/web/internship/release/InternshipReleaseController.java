@@ -116,13 +116,14 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/web/internship/release/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
         internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -134,6 +135,7 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/anyone/internship/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
@@ -142,7 +144,7 @@ public class InternshipReleaseController {
         internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -191,11 +193,12 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/user/internship/types", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipType> internshipTypes() {
+        AjaxUtils<InternshipType> ajaxUtils = AjaxUtils.of();
         List<InternshipType> internshipTypes = new ArrayList<>();
         InternshipType internshipType = new InternshipType(0, "请选择实习类型");
         internshipTypes.add(internshipType);
         internshipTypes.addAll(internshipTypeService.findAll());
-        return new AjaxUtils<InternshipType>().success().msg("获取实习类型数据成功").listData(internshipTypes);
+        return ajaxUtils.success().msg("获取实习类型数据成功").listData(internshipTypes);
     }
 
     /**
@@ -207,12 +210,13 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/user/internship/files", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<Files> internshipFiles(@RequestParam("internshipReleaseId") String internshipReleaseId) {
+        AjaxUtils<Files> ajaxUtils = AjaxUtils.of();
         List<Files> files = new ArrayList<>();
         Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
         if (records.isNotEmpty()) {
             files = records.into(Files.class);
         }
-        return new AjaxUtils<Files>().success().msg("获取实习附件数据成功").listData(files);
+        return ajaxUtils.success().msg("获取实习附件数据成功").listData(files);
     }
 
     /**
@@ -228,10 +232,10 @@ public class InternshipReleaseController {
         if (StringUtils.hasLength(releaseTitle)) {
             List<InternshipRelease> internshipReleases = internshipReleaseService.findByReleaseTitle(releaseTitle);
             if (ObjectUtils.isEmpty(internshipReleases) && internshipReleases.isEmpty()) {
-                return new AjaxUtils().success().msg("标题不重复");
+                return AjaxUtils.of().success().msg("标题不重复");
             }
         }
-        return new AjaxUtils().fail().msg("标题重复");
+        return AjaxUtils.of().fail().msg("标题重复");
     }
 
     /**
@@ -248,10 +252,10 @@ public class InternshipReleaseController {
         if (StringUtils.hasLength(releaseTitle)) {
             Result<InternshipReleaseRecord> internshipReleases = internshipReleaseService.findByReleaseTitleNeInternshipReleaseId(releaseTitle, internshipReleaseId);
             if (ObjectUtils.isEmpty(internshipReleases) && internshipReleases.isEmpty()) {
-                return new AjaxUtils().success().msg("标题不重复");
+                return AjaxUtils.of().success().msg("标题不重复");
             }
         }
-        return new AjaxUtils().fail().msg("标题重复");
+        return AjaxUtils.of().fail().msg("标题重复");
     }
 
     /**
@@ -289,9 +293,9 @@ public class InternshipReleaseController {
                 }
             }
             saveOrUpdateFiles(files, internshipReleaseId);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("保存失败");
+        return AjaxUtils.of().fail().msg("保存失败");
     }
 
     /**
@@ -321,9 +325,9 @@ public class InternshipReleaseController {
                 internshipFiles.forEach(f -> filesService.deleteById(f.getFileId()));
             }
             saveOrUpdateFiles(files, internshipReleaseId);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("保存失败");
+        return AjaxUtils.of().fail().msg("保存失败");
     }
 
     /**
@@ -339,7 +343,7 @@ public class InternshipReleaseController {
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         internshipRelease.setInternshipReleaseIsDel(isDel);
         internshipReleaseService.update(internshipRelease);
-        return new AjaxUtils().success().msg("更新状态成功");
+        return AjaxUtils.of().success().msg("更新状态成功");
     }
 
     /**
@@ -395,7 +399,7 @@ public class InternshipReleaseController {
     @ResponseBody
     public AjaxUtils<FileBean> usersUploadInternship(int schoolId, int collegeId, @RequestParam("departmentId") int departmentId,
                                                      MultipartHttpServletRequest multipartHttpServletRequest) {
-        AjaxUtils<FileBean> data = new AjaxUtils<>();
+        AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
             School school = null;
             College college = null;
@@ -448,7 +452,7 @@ public class InternshipReleaseController {
     @ResponseBody
     public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId,
                                           @RequestParam("internshipReleaseId") String internshipReleaseId, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
                 internshipFileService.deleteByFileIdAndInternshipReleaseId(fileId, internshipReleaseId);

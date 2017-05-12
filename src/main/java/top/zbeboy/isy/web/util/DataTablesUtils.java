@@ -2,6 +2,10 @@ package top.zbeboy.isy.web.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.util.ObjectUtils;
@@ -12,6 +16,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-09-14.
  */
+@Slf4j
+@RequiredArgsConstructor(staticName = "of")
+@ToString
 public class DataTablesUtils<T> {
     /*
     返回的数据
@@ -79,10 +86,6 @@ public class DataTablesUtils<T> {
     object extraSearch
      */
     private JSONObject search;
-
-    public DataTablesUtils() {
-
-    }
 
     public DataTablesUtils(HttpServletRequest request, List<String> headers) {
         String startParam = request.getParameter("start");
@@ -244,24 +247,5 @@ public class DataTablesUtils<T> {
 
     public void setSearch(JSONObject search) {
         this.search = search;
-    }
-
-    @Override
-    public String toString() {
-        return "DataTablesUtils{" +
-                "data=" + data +
-                ", draw=" + draw +
-                ", iTotalRecords=" + iTotalRecords +
-                ", iTotalDisplayRecords=" + iTotalDisplayRecords +
-                ", start=" + start +
-                ", length=" + length +
-                ", orderColumn=" + orderColumn +
-                ", headers=" + headers +
-                ", orderColumnName='" + orderColumnName + '\'' +
-                ", orderDir='" + orderDir + '\'' +
-                ", searchValue='" + searchValue + '\'' +
-                ", extraSearch='" + extraSearch + '\'' +
-                ", search=" + search +
-                '}';
     }
 }

@@ -74,6 +74,6 @@ public class MessageController {
         }
         data.put("messages", systemMessageBeens);
         data.put("messagesCount", systemMessageService.countAllForShow(username, false));
-        return new AjaxUtils().success().msg("获取数据成功").mapData(data);
+        return AjaxUtils.of().success().msg("获取数据成功").mapData(data);
     }
 }

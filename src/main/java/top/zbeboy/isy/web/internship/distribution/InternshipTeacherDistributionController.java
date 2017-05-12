@@ -90,7 +90,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/condition", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
@@ -275,7 +275,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/save/valid/student", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStudent(@RequestParam("id") String internshipReleaseId, @RequestParam("student") String info, int type) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
@@ -312,7 +312,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/organizes", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<Organize> batchDistributionOrganizes(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils<Organize> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<Organize> ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             List<Organize> organizes = new ArrayList<>();
@@ -351,7 +351,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/teachers", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<StaffBean> batchDistributionTeachers(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils<StaffBean> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<StaffBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
@@ -378,7 +378,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/releases", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipRelease> batchDistributionInternshipReleases(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils<InternshipRelease> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<InternshipRelease> ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             List<InternshipRelease> internshipReleases = new ArrayList<>();
@@ -413,7 +413,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/batch/distribution/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils batchDistributionSave(@RequestParam("id") String internshipReleaseId, String organizeId, String staffId, String excludeInternshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(organizeId) && StringUtils.hasLength(staffId)
@@ -474,7 +474,7 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils save(@RequestParam("student") String info, @RequestParam("staffId") int staffId,
                           @RequestParam("id") String internshipReleaseId, int type) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
@@ -513,7 +513,7 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils update(@RequestParam("studentId") int studentId, @RequestParam("staffId") int staffId,
                             @RequestParam("id") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
@@ -541,7 +541,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils del(String studentIds, @RequestParam("id") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(studentIds) && SmallPropsUtils.StringIdsIsNumber(studentIds)) {
@@ -567,7 +567,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/comparison_del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils comparisonDel(@RequestParam("id") String internshipReleaseId, String excludeInternships) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(excludeInternships)) {
@@ -591,7 +591,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/condition/copy", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils copyData(@RequestParam("id") String internshipReleaseId, String copyInternships) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(copyInternships)) {
@@ -626,7 +626,7 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils deleteNotApply(@RequestParam("id") String internshipReleaseId) {
         internshipTeacherDistributionService.deleteNotApply(internshipReleaseId);
-        return new AjaxUtils().success().msg("删除成功");
+        return AjaxUtils.of().success().msg("删除成功");
     }
 
 }
