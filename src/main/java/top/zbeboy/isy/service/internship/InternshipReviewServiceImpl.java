@@ -2,6 +2,7 @@ package top.zbeboy.isy.service.internship;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.slf4j.Logger;
@@ -26,11 +27,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by zbeboy on 2016/12/7.
  */
+@Slf4j
 @Service("internshipReviewService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipReviewServiceImpl implements InternshipReviewService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipReviewServiceImpl.class);
 
     private final DSLContext create;
 

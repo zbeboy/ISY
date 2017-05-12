@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.data.politics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -28,10 +29,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-10-30.
  */
+@Slf4j
 @Controller
 public class PoliticalLandscapeController {
-
-    private final Logger log = LoggerFactory.getLogger(PoliticalLandscapeController.class);
 
     @Resource
     private PoliticalLandscapeService politicalLandscapeService;

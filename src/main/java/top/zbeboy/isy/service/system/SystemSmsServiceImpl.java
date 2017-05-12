@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.system;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +28,10 @@ import static top.zbeboy.isy.domain.Tables.SYSTEM_SMS;
 /**
  * Created by lenovo on 2016-08-22.
  */
+@Slf4j
 @Service("systemSmsService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class SystemSmsServiceImpl extends DataTablesPlugin<SystemSmsBean> implements SystemSmsService {
-
-    private final Logger log = LoggerFactory.getLogger(SystemSmsServiceImpl.class);
 
     private final DSLContext create;
 

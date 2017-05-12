@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.graduate.design;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -17,11 +18,10 @@ import static top.zbeboy.isy.domain.Tables.GRADUATION_DESIGN_RELEASE_FILE;
 /**
  * Created by zbeboy on 2017/5/5.
  */
+@Slf4j
 @Service("graduationDesignReleaseFileService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class GraduationDesignReleaseFileServiceImpl implements GraduationDesignReleaseFileService {
-
-    private final Logger log = LoggerFactory.getLogger(GraduationDesignReleaseFileServiceImpl.class);
 
     private final DSLContext create;
 

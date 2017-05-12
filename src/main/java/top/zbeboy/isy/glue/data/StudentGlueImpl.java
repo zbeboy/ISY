@@ -1,6 +1,7 @@
 package top.zbeboy.isy.glue.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -28,10 +29,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2017-04-16.
  */
+@Slf4j
 @Repository("studentGlue")
 public class StudentGlueImpl implements StudentGlue {
-
-    private final Logger log = LoggerFactory.getLogger(StudentGlueImpl.class);
 
     @Resource
     private StudentElasticRepository studentElasticRepository;
@@ -43,7 +43,7 @@ public class StudentGlueImpl implements StudentGlue {
     @Override
     public ResultUtils<List<StudentBean>> findAllByPageExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StudentBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<StudentBean>> resultUtils = ResultUtils.of();
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
@@ -60,7 +60,7 @@ public class StudentGlueImpl implements StudentGlue {
     @Override
     public ResultUtils<List<StudentBean>> findAllByPageNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StudentBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<StudentBean>> resultUtils = ResultUtils.of();
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search, -1));
         Page<StudentElastic> studentElasticPage = studentElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build());
         return resultUtils.data(dataBuilder(studentElasticPage)).totalElements(studentElasticPage.getTotalElements());

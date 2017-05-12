@@ -5,6 +5,7 @@ package top.zbeboy.isy.service.util;
  */
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -20,10 +21,8 @@ import java.security.NoSuchAlgorithmException;
  * @version 1.0
  * @since 1.0
  */
-
+@Slf4j
 public class MD5Utils {
-
-    private final Logger log = LoggerFactory.getLogger(MD5Utils.class);
 
     /**
      * md5加密

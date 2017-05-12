@@ -1,6 +1,7 @@
 package top.zbeboy.isy.glue.system;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -33,10 +34,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2017-04-08.
  */
+@Slf4j
 @Repository("systemSmsGlue")
 public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements SystemSmsGlue {
-
-    private final Logger log = LoggerFactory.getLogger(SystemLogGlueImpl.class);
 
     @Resource
     private SystemSmsService systemSmsService;
@@ -47,7 +47,7 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     @Override
     public ResultUtils<List<SystemSmsBean>> findAllByPage(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<SystemSmsBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<SystemSmsBean>> resultUtils = ResultUtils.of();
         Page<SystemSmsElastic> systemSmsElasticPage = systemSmsElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
         return resultUtils.data(dataBuilder(systemSmsElasticPage)).totalElements(systemSmsElasticPage.getTotalElements());
     }

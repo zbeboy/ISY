@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.graduate.design.release;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -53,10 +54,9 @@ import java.util.Optional;
 /**
  * Created by zbeboy on 2017/5/5.
  */
+@Slf4j
 @Controller
 public class GraduationDesignReleaseController {
-
-    private final Logger log = LoggerFactory.getLogger(GraduationDesignReleaseController.class);
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;

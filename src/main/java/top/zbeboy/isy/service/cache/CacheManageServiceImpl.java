@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.cache;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -42,11 +43,10 @@ import static top.zbeboy.isy.domain.tables.UsersType.USERS_TYPE;
 /**
  * Created by lenovo on 2017-03-11.
  */
+@Slf4j
 @Service("cacheManageService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CacheManageServiceImpl implements CacheManageService {
-
-    private final Logger log = LoggerFactory.getLogger(CacheManageServiceImpl.class);
 
     private final DSLContext create;
 

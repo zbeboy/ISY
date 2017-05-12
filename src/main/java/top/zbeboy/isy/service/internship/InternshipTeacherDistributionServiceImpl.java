@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.internship;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +28,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by zbeboy on 2016/11/21.
  */
+@Slf4j
 @Service("internshipTeacherDistributionService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<InternshipTeacherDistributionBean> implements InternshipTeacherDistributionService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipTeacherDistributionServiceImpl.class);
 
     private final DSLContext create;
 

@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.system;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +31,10 @@ import static top.zbeboy.isy.domain.Tables.COLLEGE_APPLICATION;
 /**
  * Created by lenovo on 2016-09-28.
  */
+@Slf4j
 @Service("applicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> implements ApplicationService {
-
-    private final Logger log = LoggerFactory.getLogger(ApplicationServiceImpl.class);
 
     private final DSLContext create;
 

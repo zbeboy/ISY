@@ -1,6 +1,7 @@
 package top.zbeboy.isy.glue.system;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -29,10 +30,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2017-03-27.
  */
+@Slf4j
 @Repository("systemLogGlue")
 public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements SystemLogGlue {
-
-    private final Logger log = LoggerFactory.getLogger(SystemLogGlueImpl.class);
 
     @Resource
     private SystemLogService systemLogService;
@@ -43,7 +43,7 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
     @Override
     public ResultUtils<List<SystemLogBean>> findAllByPage(DataTablesUtils<SystemLogBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<SystemLogBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<SystemLogBean>> resultUtils = ResultUtils.of();
         Page<SystemLogElastic> systemLogElasticPage = systemLogElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
         return resultUtils.data(dataBuilder(systemLogElasticPage)).totalElements(systemLogElasticPage.getTotalElements());
     }

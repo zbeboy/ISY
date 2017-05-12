@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.data.academic;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -31,10 +32,9 @@ import java.util.List;
 /**
  * Created by zbeboy on 2017/4/21.
  */
+@Slf4j
 @Controller
 public class AcademicTitleController {
-
-    private final Logger log = LoggerFactory.getLogger(AcademicTitleController.class);
 
     @Resource
     private AcademicTitleService academicTitleService;

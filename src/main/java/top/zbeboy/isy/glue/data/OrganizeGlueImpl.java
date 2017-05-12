@@ -1,6 +1,7 @@
 package top.zbeboy.isy.glue.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -32,10 +33,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2017-04-09.
  */
+@Slf4j
 @Repository("organizeGlue")
 public class OrganizeGlueImpl extends ElasticPlugin<OrganizeBean> implements OrganizeGlue {
-
-    private final Logger log = LoggerFactory.getLogger(OrganizeGlueImpl.class);
 
     @Resource
     private OrganizeElasticRepository organizeElasticRepository;
@@ -49,7 +49,7 @@ public class OrganizeGlueImpl extends ElasticPlugin<OrganizeBean> implements Org
     @Override
     public ResultUtils<List<OrganizeBean>> findAllByPage(DataTablesUtils<OrganizeBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<OrganizeBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<OrganizeBean>> resultUtils = ResultUtils.of();
         // 分权限显示用户数据
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             Page<OrganizeElastic> organizeElasticPage = organizeElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));

@@ -1,8 +1,7 @@
 package top.zbeboy.isy.service.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,20 +15,20 @@ import top.zbeboy.isy.service.util.RequestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lenovo on 2016-11-13.
  */
+@Slf4j
 @Service("filesService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class FilesServiceImpl implements FilesService {
-
-    private final Logger log = LoggerFactory.getLogger(FilesServiceImpl.class);
 
     @Resource
     private FilesDao filesDao;
@@ -112,7 +111,7 @@ public class FilesServiceImpl implements FilesService {
             }
 
             String path = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users);
-            String filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))+ ".docx";
+            String filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
                 saveFile.mkdirs();
@@ -142,7 +141,7 @@ public class FilesServiceImpl implements FilesService {
             try {
                 is.close();
             } catch (IOException e) {
-                log.error("Close file is error, error {}",e);
+                log.error("Close file is error, error {}", e);
             }
         }
     }
@@ -157,7 +156,7 @@ public class FilesServiceImpl implements FilesService {
             try {
                 os.close();
             } catch (IOException e) {
-                log.error("Close file is error, error {}",e);
+                log.error("Close file is error, error {}", e);
             }
         }
     }

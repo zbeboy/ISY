@@ -1,5 +1,6 @@
 package top.zbeboy.isy.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,9 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 @Component
 public class InitConfiguration implements CommandLineRunner {
-
-    private final Logger logger = LoggerFactory.getLogger(InitConfiguration.class);
 
     private final CacheManager cacheManager;
 
@@ -36,7 +36,7 @@ public class InitConfiguration implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        logger.info("\n\n" + "=========================================================\n"
+        log.info("\n\n" + "=========================================================\n"
                 + "Using cache manager: " + this.cacheManager.getClass().getName() + "\n"
                 + "=========================================================\n\n");
     }

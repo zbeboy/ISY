@@ -1,5 +1,6 @@
 package top.zbeboy.isy.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -47,11 +48,10 @@ import java.time.Clock;
  *          <p>
  *          注：不支持字符L等等字符
  */
+@Slf4j
 @Configuration
 @EnableScheduling
 public class ScheduledConfiguration {
-
-    private final Logger log = LoggerFactory.getLogger(ScheduledConfiguration.class);
 
     @Resource
     private SystemLogService systemLogService;

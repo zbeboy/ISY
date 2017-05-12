@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.internship.regulate;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -55,10 +56,9 @@ import java.util.*;
 /**
  * Created by zbeboy on 2016/12/21.
  */
+@Slf4j
 @Controller
 public class InternshipRegulateController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipJournalController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -533,7 +533,7 @@ public class InternshipRegulateController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int staffId) {
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        ErrorBean<InternshipRelease> errorBean = ErrorBean.of();
         // 强制身份判断
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {

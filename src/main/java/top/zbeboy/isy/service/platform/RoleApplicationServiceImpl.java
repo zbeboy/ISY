@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.platform;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -21,11 +22,10 @@ import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
 /**
  * Created by lenovo on 2016/9/29.
  */
+@Slf4j
 @Service("roleApplicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RoleApplicationServiceImpl implements RoleApplicationService {
-
-    private final Logger log = LoggerFactory.getLogger(RoleApplicationServiceImpl.class);
 
     private final DSLContext create;
 

@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.data.organize;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
@@ -41,10 +42,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Controller
 public class OrganizeController {
-
-    private final Logger log = LoggerFactory.getLogger(OrganizeController.class);
 
     @Resource
     private OrganizeService organizeService;

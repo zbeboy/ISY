@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.data;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +18,10 @@ import static top.zbeboy.isy.domain.Tables.COLLEGE_ROLE;
 /**
  * Created by lenovo on 2016-10-12.
  */
+@Slf4j
 @Service("collegeRoleService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CollegeRoleServiceImpl implements CollegeRoleService {
-
-    private final Logger log = LoggerFactory.getLogger(CollegeRoleServiceImpl.class);
 
     private final DSLContext create;
 

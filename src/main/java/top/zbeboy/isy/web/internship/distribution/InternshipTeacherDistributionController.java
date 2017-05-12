@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.internship.distribution;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Record2;
@@ -42,10 +43,9 @@ import java.util.*;
 /**
  * Created by zbeboy on 2016/11/21.
  */
+@Slf4j
 @Controller
 public class InternshipTeacherDistributionController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipTeacherDistributionController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -139,7 +139,7 @@ public class InternshipTeacherDistributionController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId) {
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        ErrorBean<InternshipRelease> errorBean = ErrorBean.of();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (!ObjectUtils.isEmpty(internshipRelease)) {
             errorBean.setData(internshipRelease);

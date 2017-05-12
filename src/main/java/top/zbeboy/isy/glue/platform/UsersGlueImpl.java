@@ -1,6 +1,7 @@
 package top.zbeboy.isy.glue.platform;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -29,10 +30,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2017-04-11.
  */
+@Slf4j
 @Repository("usersGlue")
 public class UsersGlueImpl implements UsersGlue {
-
-    private final Logger log = LoggerFactory.getLogger(UsersGlueImpl.class);
 
     @Resource
     private UsersElasticRepository usersElasticRepository;
@@ -43,7 +43,7 @@ public class UsersGlueImpl implements UsersGlue {
     @Override
     public ResultUtils<List<UsersBean>> findAllByPageExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<UsersBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<UsersBean>> resultUtils = ResultUtils.of();
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
@@ -60,7 +60,7 @@ public class UsersGlueImpl implements UsersGlue {
     @Override
     public ResultUtils<List<UsersBean>> findAllByPageNotExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<UsersBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<UsersBean>> resultUtils = ResultUtils.of();
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search, -1));
         Page<UsersElastic> usersElasticPage = usersElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build());
         return resultUtils.data(dataBuilder(usersElasticPage)).totalElements(usersElasticPage.getTotalElements());

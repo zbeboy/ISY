@@ -1,6 +1,7 @@
 package top.zbeboy.isy.glue.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -28,10 +29,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2017-04-16.
  */
+@Slf4j
 @Repository("staffGlue")
 public class StaffGlueImpl implements StaffGlue {
-
-    private final Logger log = LoggerFactory.getLogger(StaffGlueImpl.class);
 
     @Resource
     private StaffElasticRepository staffElasticRepository;
@@ -42,7 +42,7 @@ public class StaffGlueImpl implements StaffGlue {
     @Override
     public ResultUtils<List<StaffBean>> findAllByPageExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StaffBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<StaffBean>> resultUtils = ResultUtils.of();
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
@@ -59,7 +59,7 @@ public class StaffGlueImpl implements StaffGlue {
     @Override
     public ResultUtils<List<StaffBean>> findAllByPageNotExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StaffBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<StaffBean>> resultUtils = ResultUtils.of();
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search, -1));
         Page<StaffElastic> staffElasticPage = staffElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build());
         return resultUtils.data(dataBuilder(staffElasticPage)).totalElements(staffElasticPage.getTotalElements());

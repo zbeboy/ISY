@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.data.staff;
 
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -49,10 +50,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-08-28.
  */
+@Slf4j
 @Controller
 public class StaffController {
-
-    private final Logger log = LoggerFactory.getLogger(StaffController.class);
 
     @Resource
     private StaffService staffService;

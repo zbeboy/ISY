@@ -4,6 +4,7 @@ package top.zbeboy.isy.service.system;
 import io.jstack.sendcloud4j.SendCloud;
 import io.jstack.sendcloud4j.mail.Email;
 import io.jstack.sendcloud4j.mail.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,9 @@ import java.util.Properties;
 /**
  * Created by Administrator on 2016/3/29.
  */
+@Slf4j
 @Service("mailService")
 public class MailServiceImpl implements MailService {
-
-    private final Logger log = LoggerFactory.getLogger(MailService.class);
 
     @Resource
     private JavaMailSenderImpl javaMailSender;

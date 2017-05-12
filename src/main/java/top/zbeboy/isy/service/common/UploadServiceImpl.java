@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,9 +22,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-01-10.
  */
+@Slf4j
 @Service("uploadService")
 public class UploadServiceImpl implements UploadService {
-    private final Logger log = LoggerFactory.getLogger(UploadServiceImpl.class);
 
     @Override
     public List<FileBean> upload(MultipartHttpServletRequest request, String path, String address) {

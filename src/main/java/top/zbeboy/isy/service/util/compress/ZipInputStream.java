@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.util.compress;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.parallel.InputStreamSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,8 @@ import java.io.InputStream;
  * Created by zbeboy on 2016/12/19.
  * compress zip builder.
  */
+@Slf4j
 public class ZipInputStream implements InputStreamSupplier {
-
-    private final Logger log = LoggerFactory.getLogger(ZipInputStream.class);
 
     private File file;
 

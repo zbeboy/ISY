@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.internship.journal;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -54,10 +55,9 @@ import java.util.*;
 /**
  * Created by zbeboy on 2016/12/14.
  */
+@Slf4j
 @Controller
 public class InternshipJournalController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipJournalController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -712,7 +712,7 @@ public class InternshipJournalController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        ErrorBean<InternshipRelease> errorBean = ErrorBean.of();
         if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
             errorBean.setHasError(true);
             errorBean.setErrorMsg("您的个人信息有误");

@@ -1,5 +1,6 @@
 package top.zbeboy.isy.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -23,10 +24,9 @@ import java.time.Clock;
 /**
  * Spring Security success handler, specialized for Ajax requests.
  */
+@Slf4j
 @Component
 public class AjaxAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
-    private final Logger log = LoggerFactory.getLogger(AjaxAuthenticationSuccessHandler.class);
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

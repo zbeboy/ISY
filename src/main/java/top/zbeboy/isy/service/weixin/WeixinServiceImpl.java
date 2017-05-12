@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.weixin;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,9 @@ import java.util.Arrays;
 /**
  * Created by zbeboy on 2016/11/15.
  */
+@Slf4j
 @Service("weixinService")
 public class WeixinServiceImpl implements WeixinService {
-
-    private final Logger log = LoggerFactory.getLogger(WeixinServiceImpl.class);
 
     @Autowired
     private ISYProperties isyProperties;

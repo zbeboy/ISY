@@ -1,6 +1,7 @@
 package top.zbeboy.isy.aop.logging;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -35,10 +36,9 @@ import java.util.Arrays;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 @Aspect
 public class LoggingAspect {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Inject
     private Environment env;

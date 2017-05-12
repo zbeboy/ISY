@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.system;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,10 @@ import static top.zbeboy.isy.domain.Tables.AUTHORITIES;
 /**
  * Created by lenovo on 2016-02-21.
  */
+@Slf4j
 @Service("authoritiesService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class AuthoritiesServiceImpl implements AuthoritiesService {
-
-    private final Logger log = LoggerFactory.getLogger(AuthoritiesServiceImpl.class);
 
     private final DSLContext create;
 

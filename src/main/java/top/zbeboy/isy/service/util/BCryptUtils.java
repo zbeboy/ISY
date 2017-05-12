@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,9 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 public class BCryptUtils {
-
-    private final Logger log = LoggerFactory.getLogger(BCryptUtils.class);
 
     /**
      * BCryptPassword 方式生成密码

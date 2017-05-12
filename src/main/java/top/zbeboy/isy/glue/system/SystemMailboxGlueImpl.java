@@ -1,6 +1,7 @@
 package top.zbeboy.isy.glue.system;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -31,10 +32,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2017-04-08.
  */
+@Slf4j
 @Repository("systemMailboxGlue")
 public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> implements SystemMailboxGlue {
-
-    private final Logger log = LoggerFactory.getLogger(SystemMailboxGlueImpl.class);
 
     @Resource
     private SystemMailboxElasticRepository systemMailboxElasticRepository;
@@ -42,7 +42,7 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
     @Override
     public ResultUtils<List<SystemMailboxBean>> findAllByPage(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<SystemMailboxBean>> resultUtils = new ResultUtils<>();
+        ResultUtils<List<SystemMailboxBean>> resultUtils = ResultUtils.of();
         Page<SystemMailboxElastic> systemMailboxElasticPage = systemMailboxElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
         return resultUtils.data(dataBuilder(systemMailboxElasticPage)).totalElements(systemMailboxElasticPage.getTotalElements());
     }

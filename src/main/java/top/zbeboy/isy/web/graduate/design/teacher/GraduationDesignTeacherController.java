@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.graduate.design.teacher;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -46,10 +47,9 @@ import java.util.Optional;
 /**
  * Created by zbeboy on 2017/5/8.
  */
+@Slf4j
 @Controller
 public class GraduationDesignTeacherController {
-
-    private final Logger log = LoggerFactory.getLogger(GraduationDesignTeacherController.class);
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
@@ -296,7 +296,7 @@ public class GraduationDesignTeacherController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = new ErrorBean<>();
+        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
         GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
         if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
             errorBean.setData(graduationDesignRelease);

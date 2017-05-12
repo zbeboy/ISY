@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.internship.release;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -56,10 +57,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-11-08.
  */
+@Slf4j
 @Controller
 public class InternshipReleaseController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipReleaseController.class);
 
     @Resource
     private InternshipTypeService internshipTypeService;

@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.util;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +16,8 @@ import java.util.Random;
  * @version 1.0
  * @since 1.0
  */
-
+@Slf4j
 public class IPTimeStamp {
-
-    private final Logger log = LoggerFactory.getLogger(IPTimeStamp.class);
 
     private String ip = null;
 

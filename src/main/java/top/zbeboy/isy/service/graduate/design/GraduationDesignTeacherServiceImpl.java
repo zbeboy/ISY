@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.graduate.design;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by zbeboy on 2017/5/8.
  */
+@Slf4j
 @Service("graduationDesignTeacherService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<GraduationDesignTeacherBean> implements GraduationDesignTeacherService {
-
-    private final Logger log = LoggerFactory.getLogger(GraduationDesignTeacherServiceImpl.class);
 
     private final DSLContext create;
 

@@ -1,5 +1,6 @@
 package top.zbeboy.isy.interceptor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -22,9 +23,8 @@ import java.util.List;
  * Created by lenovo on 2016-09-28.
  * 菜单权限配置
  */
+@Slf4j
 public class MenuInterceptor implements HandlerInterceptor {
-
-    private final Logger log = LoggerFactory.getLogger(MenuInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

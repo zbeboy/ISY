@@ -1,5 +1,6 @@
 package top.zbeboy.isy.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,9 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 @Service("myUserDetailsService")
 public class MyUserDetailsServiceImpl implements UserDetailsService {
-
-    private final Logger log = LoggerFactory.getLogger(MyUserDetailsServiceImpl.class);
 
     @Autowired
     private UsersService usersService;

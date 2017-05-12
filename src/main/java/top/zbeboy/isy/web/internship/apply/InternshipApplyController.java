@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.internship.apply;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -51,10 +52,9 @@ import java.util.*;
 /**
  * Created by zbeboy on 2016/11/25.
  */
+@Slf4j
 @Controller
 public class InternshipApplyController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipApplyController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -1387,7 +1387,7 @@ public class InternshipApplyController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
+        ErrorBean<InternshipRelease> errorBean = ErrorBean.of();
 
         if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
             errorBean.setHasError(true);

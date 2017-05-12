@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.system.alert;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -29,10 +30,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-12-30.
  */
+@Slf4j
 @Controller
 public class SystemAlertController {
-
-    private final Logger log = LoggerFactory.getLogger(SystemAlertController.class);
 
     @Resource
     private UsersService usersService;

@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.system.log;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,10 @@ import java.util.List;
  * Created by lenovo on 2016-09-13.
  * 系统日志模块
  */
+@Slf4j
 @Controller
 @RequestMapping("/web")
 public class SystemLogController {
-
-    private final Logger log = LoggerFactory.getLogger(SystemLogController.class);
 
     @Resource
     private SystemLogGlue systemLogGlue;

@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +38,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-08-22.
  */
+@Slf4j
 @Service("studentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class StudentServiceImpl implements StudentService {
-
-    private final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     private final DSLContext create;
 

@@ -1,5 +1,6 @@
 package top.zbeboy.isy.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -21,6 +22,7 @@ import java.time.Clock;
 /**
  * Returns a 401 error code (Unauthorized) to the client, when Ajax authentication fails.
  */
+@Slf4j
 @Component
 public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 

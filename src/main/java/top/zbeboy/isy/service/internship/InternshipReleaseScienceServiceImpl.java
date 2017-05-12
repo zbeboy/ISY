@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.internship;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -21,11 +22,10 @@ import static top.zbeboy.isy.domain.Tables.SCIENCE;
 /**
  * Created by lenovo on 2016-11-12.
  */
+@Slf4j
 @Service("internshipReleaseScienceService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipReleaseScienceServiceImpl implements InternshipReleaseScienceService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipReleaseScienceServiceImpl.class);
 
     private final DSLContext create;
 

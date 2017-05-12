@@ -1,5 +1,6 @@
 package top.zbeboy.isy.async;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -16,10 +17,9 @@ import java.util.concurrent.Future;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor,
         InitializingBean, DisposableBean {
-
-    private final Logger log = LoggerFactory.getLogger(ExceptionHandlingAsyncTaskExecutor.class);
 
     private final AsyncTaskExecutor executor;
 

@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.system.sms;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,10 @@ import java.util.List;
  * Created by lenovo on 2016-09-17.
  * 系统短信模块
  */
+@Slf4j
 @Controller
 @RequestMapping("/web")
 public class SystemSmsController {
-
-    private final Logger log = LoggerFactory.getLogger(SystemSmsController.class);
 
     @Resource
     private SystemSmsGlue systemSmsGlue;

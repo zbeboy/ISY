@@ -2,6 +2,7 @@ package top.zbeboy.isy.web.platform.users;
 
 import com.alibaba.fastjson.JSON;
 import com.octo.captcha.service.CaptchaServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Record1;
@@ -82,10 +83,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-08-22.
  */
+@Slf4j
 @Controller
 public class UsersController {
-
-    private final Logger log = LoggerFactory.getLogger(UsersController.class);
 
     /*
     检验邮箱使用

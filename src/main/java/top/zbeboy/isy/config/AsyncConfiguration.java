@@ -1,6 +1,7 @@
 package top.zbeboy.isy.config;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -23,12 +24,11 @@ import java.util.concurrent.Executor;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 @Configuration
 @EnableAsync
 @EnableScheduling
 public class AsyncConfiguration implements AsyncConfigurer {
-
-    private final Logger log = LoggerFactory.getLogger(AsyncConfiguration.class);
 
     @Autowired
     private ISYProperties isyProperties;

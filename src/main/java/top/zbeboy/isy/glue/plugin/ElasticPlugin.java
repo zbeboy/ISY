@@ -30,7 +30,7 @@ public class ElasticPlugin<T> {
      * @param hasPreposition  是否有前置条件
      * @return 条件
      */
-    public SearchQuery buildSearchQuery(JSONObject search, DataTablesUtils<T> dataTablesUtils, boolean hasPreposition) {
+    protected SearchQuery buildSearchQuery(JSONObject search, DataTablesUtils<T> dataTablesUtils, boolean hasPreposition) {
         NativeSearchQueryBuilder nativeSearchQueryBuilder;
         if (hasPreposition) {
             nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search));

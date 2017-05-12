@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.data.science;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Record2;
 import org.jooq.Result;
@@ -34,10 +35,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Controller
 public class ScienceController {
-
-    private final Logger log = LoggerFactory.getLogger(ScienceController.class);
 
     @Resource
     private ScienceService scienceService;

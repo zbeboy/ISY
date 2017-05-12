@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.internship;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.slf4j.Logger;
@@ -22,11 +23,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-12-10.
  */
+@Slf4j
 @Service("internshipStatisticsService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipStatisticsServiceImpl extends DataTablesPlugin<InternshipStatisticsBean> implements InternshipStatisticsService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipStatisticsServiceImpl.class);
 
     private final DSLContext create;
 

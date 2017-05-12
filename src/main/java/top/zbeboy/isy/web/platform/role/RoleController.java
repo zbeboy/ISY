@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.platform.role;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -44,10 +45,9 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-10-16.
  */
+@Slf4j
 @Controller
 public class RoleController {
-
-    private final Logger log = LoggerFactory.getLogger(RoleController.class);
 
     @Resource
     private RoleService roleService;

@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.internship;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
@@ -30,11 +31,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-11-27.
  */
+@Slf4j
 @Service("internshipCompanyService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipCompanyServiceImpl extends DataTablesPlugin<InternshipCompany> implements InternshipCompanyService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipCompanyServiceImpl.class);
 
     private final DSLContext create;
 

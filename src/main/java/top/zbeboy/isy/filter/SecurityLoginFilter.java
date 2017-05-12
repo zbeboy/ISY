@@ -1,5 +1,6 @@
 package top.zbeboy.isy.filter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -20,10 +21,8 @@ import java.io.IOException;
  * Created by lenovo on 2016-09-03.
  * 安全登录配置
  */
+@Slf4j
 public class SecurityLoginFilter implements Filter {
-
-    private final Logger log = LoggerFactory.getLogger(SecurityLoginFilter.class);
-
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

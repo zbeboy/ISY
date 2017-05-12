@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.graduate.design;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by zbeboy on 2017/5/9.
  */
+@Slf4j
 @Service("graduationDesignDeclareDataService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class GraduationDesignDeclareDataServiceImpl implements GraduationDesignDeclareDataService {
-
-    private final Logger log = LoggerFactory.getLogger(GraduationDesignDeclareDataServiceImpl.class);
 
     private final DSLContext create;
 
