@@ -2,8 +2,6 @@ package top.zbeboy.isy.service.graduate.design;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,9 +11,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 
 import javax.annotation.Resource;
 
-import java.util.List;
-
-import static top.zbeboy.isy.domain.Tables.*;
+import static top.zbeboy.isy.domain.Tables.GRADUATION_DESIGN_DECLARE_DATA;
 /**
  * Created by zbeboy on 2017/5/9.
  */

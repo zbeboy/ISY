@@ -7,8 +7,6 @@ import org.jooq.Result;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -38,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static top.zbeboy.isy.domain.Tables.*;
-import static top.zbeboy.isy.domain.tables.UsersType.USERS_TYPE;
 
 /**
  * Created by lenovo on 2017-03-11.

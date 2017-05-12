@@ -1,8 +1,6 @@
 package top.zbeboy.isy.security;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,8 +12,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.service.system.AuthoritiesService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.system.AuthoritiesService;
 
 import java.util.ArrayList;
 import java.util.HashSet;

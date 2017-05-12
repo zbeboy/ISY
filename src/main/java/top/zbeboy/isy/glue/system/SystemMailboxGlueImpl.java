@@ -8,8 +8,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.WildcardQueryBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Repository;

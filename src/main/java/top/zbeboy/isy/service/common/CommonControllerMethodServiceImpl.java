@@ -2,8 +2,6 @@ package top.zbeboy.isy.service.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,7 +24,6 @@ import top.zbeboy.isy.service.system.SystemAlertTypeService;
 import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;

@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,9 +13,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE;
-import static top.zbeboy.isy.domain.Tables.INTERNSHIP_RELEASE_SCIENCE;
-import static top.zbeboy.isy.domain.Tables.SCIENCE;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by lenovo on 2016-11-12.

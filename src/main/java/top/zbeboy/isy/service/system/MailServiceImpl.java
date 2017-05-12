@@ -6,8 +6,6 @@ import io.jstack.sendcloud4j.mail.Email;
 import io.jstack.sendcloud4j.mail.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.CharEncoding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;

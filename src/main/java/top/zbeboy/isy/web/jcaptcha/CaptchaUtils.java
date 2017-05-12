@@ -2,8 +2,6 @@ package top.zbeboy.isy.web.jcaptcha;
 
 import com.octo.captcha.service.CaptchaServiceException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 

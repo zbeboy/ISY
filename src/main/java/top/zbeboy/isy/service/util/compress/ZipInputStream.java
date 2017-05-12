@@ -2,8 +2,6 @@ package top.zbeboy.isy.service.util.compress;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.parallel.InputStreamSupplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
