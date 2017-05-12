@@ -2,16 +2,24 @@
 校园协作平台
 # 开发环境
 1.jdk 1.8.*;  
-2.Intellij IDEA 2015或更高;  
-3.MySQL 5.7或更高;  
-4.Maven 3.5.0或更高;  
-5.Node 6或更高;  
+2.Intellij IDEA 2015 +;
+3.MySQL 5.7 +;
+4.Maven 3.5.0 +;
+5.Node 6 +;
+6.Elasticsearch 2.4.4;
+7.Redis last version;
 # 安装
-1.clone 代码.  
-2.需要配置application.properties(主要配置开发环境本地数据库链接即可),因本项目为安全性,仅提供开发者使用.  
-3.增加额外配置文件在settings目录,额外配置文件仅提供开发者使用.  
-4.启动方式为 application.class main方法,可在Intellij IDEA中配置 Spring boot 启动.  
-# 若期望参与项目开发,需要具备以下条件
-1.有一定程度对Spring了解;  
-2.熟悉基本maven命令;  
-3.了解requireJs.  
+1.clone 代码;
+2.配置application.properties(开发环境),仅供开发者使用;
+3.额外配置(settings目录),仅供开发者使用;
+# 启动
+1.Elasticsearch;
+2.Redis;
+4.Intellij IDEA run Spring boot 或 Maven .
+# 参与条件
+1.Known Spring;
+2.Known Git;
+2.Known Maven;
+3.Known RequireJs;
+4.Known Thymeleaf;
+5.Known Nodejs -> gulp.

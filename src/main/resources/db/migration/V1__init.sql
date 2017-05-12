@@ -748,35 +748,39 @@ VALUES ('填报指导教师',234,13,'/web/menu/graduate/design/pharmtech','gradu
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业设计规划',235,13,'/web/menu/graduate/design/project','graduate_design_project','graduate_design_project','','/web/graduate/design/project');
+VALUES ('调整填报教师',235,13,'/web/menu/graduate/design/adjustech','graduate_design_adjustech','graduate_design_adjustech','','/web/graduate/design/adjustech');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业设计题目',236,13,'/web/menu/graduate/design/subject','graduate_design_subject','graduate_design_subject','','/web/graduate/design/subject');
+VALUES ('毕业设计规划',236,13,'/web/menu/graduate/design/project','graduate_design_project','graduate_design_project','','/web/graduate/design/project');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业设计申报',237,13,'/web/menu/graduate/design/declare','graduate_design_declare','graduate_design_declare','','/web/graduate/design/declare');
+VALUES ('毕业设计题目',237,13,'/web/menu/graduate/design/subject','graduate_design_subject','graduate_design_subject','','/web/graduate/design/subject');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业设计资料',238,13,'/web/menu/graduate/design/proposal','graduate_design_proposal','graduate_design_proposal','','/web/graduate/design/proposal');
+VALUES ('毕业设计申报',238,13,'/web/menu/graduate/design/declare','graduate_design_declare','graduate_design_declare','','/web/graduate/design/declare');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业答辩安排',239,13,'/web/menu/graduate/design/replan','graduate_design_replan','graduate_design_replan','','/web/graduate/design/replan');
+VALUES ('毕业设计资料',239,13,'/web/menu/graduate/design/proposal','graduate_design_proposal','graduate_design_proposal','','/web/graduate/design/proposal');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业答辩顺序',240,13,'/web/menu/graduate/design/reorder','graduate_design_reorder','graduate_design_reorder','','/web/graduate/design/reorder');
+VALUES ('毕业答辩安排',240,13,'/web/menu/graduate/design/replan','graduate_design_replan','graduate_design_replan','','/web/graduate/design/replan');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业设计清单',241,13,'/web/menu/graduate/design/manifest','graduate_design_manifest','graduate_design_manifest','','/web/graduate/design/manifest');
+VALUES ('毕业答辩顺序',241,13,'/web/menu/graduate/design/reorder','graduate_design_reorder','graduate_design_reorder','','/web/graduate/design/reorder');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业设计归档',242,13,'/web/menu/graduate/design/archive','graduate_design_archive','graduate_design_archive','','/web/graduate/design/archive');
+VALUES ('毕业设计清单',242,13,'/web/menu/graduate/design/manifest','graduate_design_manifest','graduate_design_manifest','','/web/graduate/design/manifest');
+INSERT INTO application(application_name, application_sort,
+                        application_pid, application_url,
+                        application_code, application_en_name, icon,application_data_url_start_with)
+VALUES ('毕业设计归档',243,13,'/web/menu/graduate/design/archive','graduate_design_archive','graduate_design_archive','','/web/graduate/design/archive');
 
 INSERT INTO internship_type(internship_type_name) VALUES ('顶岗实习(留学院)');
 INSERT INTO internship_type(internship_type_name) VALUES ('校外自主实习(去单位)');
@@ -828,6 +832,7 @@ INSERT INTO role_application(role_id, application_id) VALUES (1,41);
 INSERT INTO role_application(role_id, application_id) VALUES (1,42);
 INSERT INTO role_application(role_id, application_id) VALUES (1,43);
 INSERT INTO role_application(role_id, application_id) VALUES (1,44);
+INSERT INTO role_application(role_id, application_id) VALUES (1,45);
 
 INSERT INTO role_application(role_id, application_id) VALUES (2,1);
 INSERT INTO role_application(role_id, application_id) VALUES (2,2);
@@ -863,6 +868,7 @@ INSERT INTO role_application(role_id, application_id) VALUES (2,41);
 INSERT INTO role_application(role_id, application_id) VALUES (2,42);
 INSERT INTO role_application(role_id, application_id) VALUES (2,43);
 INSERT INTO role_application(role_id, application_id) VALUES (2,44);
+INSERT INTO role_application(role_id, application_id) VALUES (2,45);
 
 INSERT INTO political_landscape(political_landscape_name) VALUES ('群众');
 INSERT INTO political_landscape(political_landscape_name) VALUES ('共青团员');
