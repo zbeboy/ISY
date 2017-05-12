@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import top.zbeboy.isy.config.CacheBook;
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
@@ -30,6 +33,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -55,26 +59,45 @@ public class CacheManageServiceImpl implements CacheManageService {
     @Resource
     private UsersTypeDao usersTypeDao;
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, List<Application>> applicationValueOperations;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, List<String>> stringListValueOperations;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, List<RoleApplication>> roleApplicationValueOperations;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, List<Role>> roleValueOperations;
+
     @Autowired
     public CacheManageServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
     }
 
-    @Cacheable(cacheNames = "queryUsersTypeByName", key = "#usersTypeName")
+    @Cacheable(cacheNames = CacheBook.QUERY_USER_TYPE_BY_NAME, key = "#usersTypeName")
     @Override
     public UsersType findByUsersTypeName(String usersTypeName) {
         return usersTypeDao.fetchOne(USERS_TYPE.USERS_TYPE_NAME, usersTypeName);
     }
 
-    @Cacheable(cacheNames = "queryUsersTypeById", key = "#usersTypeId")
+    @Cacheable(cacheNames = CacheBook.QUERY_USER_TYPE_BY_ID, key = "#usersTypeId")
     @Override
     public UsersType findByUsersTypeId(int usersTypeId) {
         return usersTypeDao.findById(usersTypeId);
     }
 
-    @Cacheable(cacheNames = "menuHtml", key = "#username")
     @Override
     public String menuHtml(List<Role> roles, String username) {
+        String cacheKey = CacheBook.MENU_HTML + username;
+        ValueOperations<String, String> ops = this.stringRedisTemplate.opsForValue();
+        if (this.stringRedisTemplate.hasKey(cacheKey)) {
+            return ops.get(cacheKey);
+        }
         List<Integer> roleIds = new ArrayList<>();
         String html = "";
         roleIds.addAll(roles.stream().map(Role::getRoleId).collect(Collectors.toList()));
@@ -89,12 +112,16 @@ public class CacheManageServiceImpl implements CacheManageService {
             Result<ApplicationRecord> applicationRecords = applicationService.findInIdsAndPid(applicationIds, 0);
             html = firstLevelHtml(applicationRecords, applicationIds);
         }
+        ops.set(cacheKey, html, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES);
         return html;
     }
 
-    @Cacheable(cacheNames = "userApplicationId", key = "#username")
     @Override
     public List<Application> findInIdsWithUsername(List<Integer> ids, String username) {
+        String cacheKey = CacheBook.USER_APPLICATION_ID + username;
+        if (applicationValueOperations.getOperations().hasKey(cacheKey)) {
+            return applicationValueOperations.get(cacheKey);
+        }
         List<Application> applications = new ArrayList<>();
         Result<ApplicationRecord> applicationRecords = create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_ID.in(ids))
@@ -102,23 +129,31 @@ public class CacheManageServiceImpl implements CacheManageService {
         if (applicationRecords.isNotEmpty()) {
             applications = applicationRecords.into(Application.class);
         }
+        applicationValueOperations.set(cacheKey, applications, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES);
         return applications;
     }
 
-    @Cacheable(cacheNames = "urlMapping", key = "#application.getApplicationId()")
     @Override
     public List<String> urlMapping(Application application) {
+        String cacheKey = CacheBook.URL_MAPPING + application.getApplicationId();
+        if (stringListValueOperations.getOperations().hasKey(cacheKey)) {
+            return stringListValueOperations.get(cacheKey);
+        }
         List<String> urlMapping = new ArrayList<>();
         if (!ObjectUtils.isEmpty(application)) {
             List<String> urlMappingAll = getUrlMapping();
             urlMappingAll.stream().filter(url -> url.startsWith(application.getApplicationDataUrlStartWith())).forEach(urlMapping::add);
         }
+        stringListValueOperations.set(cacheKey, urlMapping, CacheBook.EXPIRES_APPLICATION_ID_DAYS, TimeUnit.DAYS);
         return urlMapping;
     }
 
-    @Cacheable(cacheNames = "userRoleId", key = "#username")
     @Override
     public List<RoleApplication> findInRoleIdsWithUsername(List<Integer> roleIds, String username) {
+        String cacheKey = CacheBook.USER_ROLE_ID + username;
+        if (roleApplicationValueOperations.getOperations().hasKey(cacheKey)) {
+            return roleApplicationValueOperations.get(cacheKey);
+        }
         List<RoleApplication> roleApplications = new ArrayList<>();
         Result<RoleApplicationRecord> roleApplicationRecords = create.selectFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.in(roleIds))
@@ -126,12 +161,16 @@ public class CacheManageServiceImpl implements CacheManageService {
         if (roleApplicationRecords.isNotEmpty()) {
             roleApplications = roleApplicationRecords.into(RoleApplication.class);
         }
+        roleApplicationValueOperations.set(cacheKey, roleApplications, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES);
         return roleApplications;
     }
 
-    @Cacheable(cacheNames = "userRole", key = "#username")
     @Override
     public List<Role> findByUsernameWithRole(String username) {
+        String cacheKey = CacheBook.USER_ROLE + username;
+        if (roleValueOperations.getOperations().hasKey(cacheKey)) {
+            return roleValueOperations.get(cacheKey);
+        }
         List<Role> roleList = new ArrayList<>();
         Result<Record> records = create.select()
                 .from(USERS)
@@ -144,6 +183,7 @@ public class CacheManageServiceImpl implements CacheManageService {
         if (records.isNotEmpty()) {
             roleList = records.into(Role.class);
         }
+        roleValueOperations.set(cacheKey, roleList, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES);
         return roleList;
     }
 
@@ -226,7 +266,7 @@ public class CacheManageServiceImpl implements CacheManageService {
      *
      * @return urls
      */
-    public List<String> getUrlMapping() {
+    private List<String> getUrlMapping() {
         List<String> urlMapping = new ArrayList<>();
         Map<RequestMappingInfo, HandlerMethod> map = this.handlerMapping.getHandlerMethods();
         final String[] url = {""};
