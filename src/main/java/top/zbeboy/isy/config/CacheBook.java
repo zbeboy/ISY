@@ -16,11 +16,12 @@ public final class CacheBook {
     public static final long EXPIRES_HOURS = 4;
     public static final long EXPIRES_DAYS = 1;
 
+
     /*
     特殊到期时间
      */
     public static final long EXPIRES_APPLICATION_ID_DAYS = 2;
-
+    public static final long EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_COUNT = 30;
     /*
     配置 KEY
      */
@@ -37,4 +38,6 @@ public final class CacheBook {
     public static final String USER_ROLE_ID = "USER_ROLE_ID_";
 
     public static final String USER_ROLE = "USER_ROLE_";
+
+    public static final String GRADUATION_DESIGN_TEACHER_STUDENT_COUNT = "GRADUATION_DESIGN_TEACHER_STUDENT_COUNT_";
 }

@@ -3,8 +3,7 @@ package top.zbeboy.isy.web.graduate.design.teacher;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.CacheBook;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by zbeboy on 2017/5/8.
@@ -77,6 +78,9 @@ public class GraduationDesignTeacherController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, Integer> integerValueOperations;
 
     /**
      * 毕业指导教师
@@ -266,6 +270,37 @@ public class GraduationDesignTeacherController {
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 确认毕业设计指导教师
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/tutor/ok", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils tutorOk(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
+        // 是否已确认
+        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+            ajaxUtils.fail().msg("已确认毕业设计指导教师");
+        } else {
+            List<GraduationDesignTeacher> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            graduationDesignTeachers.forEach(graduationDesignTeacher ->
+                    integerValueOperations.set(
+                            CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.getGraduationDesignTeacherId(),
+                            graduationDesignTeacher.getStudentCount(),
+                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_COUNT,
+                            TimeUnit.DAYS)
+            );
+            Byte b = 1;
+            graduationDesignRelease.setIsOkTeacher(b);
+            graduationDesignReleaseService.update(graduationDesignRelease);
+            ajaxUtils.success().msg("确认毕业设计指导教师成功");
         }
         return ajaxUtils;
     }

@@ -35,6 +35,13 @@ public interface GraduationDesignTeacherService {
     void save(GraduationDesignTeacher graduationDesignTeacher);
 
     /**
+     * 更新
+     *
+     * @param graduationDesignTeacher 数据
+     */
+    void update(GraduationDesignTeacher graduationDesignTeacher);
+
+    /**
      * 分页查询 数据
      *
      * @param dataTablesUtils datatables工具类
