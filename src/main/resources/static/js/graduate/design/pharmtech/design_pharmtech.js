@@ -1,7 +1,10 @@
 /**
+ * Created by zbeboy on 2017/5/15.
+ */
+/**
  * Created by lenovo on 2017/5/8.
  */
-//# sourceURL=graduate_design_teacher.js
+//# sourceURL=graduate_design_pharmtech.js
 require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
     function ($, Handlebars) {
 
@@ -10,8 +13,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
-            look: '/web/graduate/design/tutor/look',
-            is_ok: '/web/graduate/design/tutor/ok'
+            wish:'/web/graduate/design/pharmtech/wish',
+            use: '/web/graduate/design/pharmtech/use'
         };
 
         /*
@@ -124,62 +127,18 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-         查看
+         志愿
          */
-        $(tableData).delegate('.design_teacher_look', "click", function () {
-            $.address.value(ajax_url.look + '?id=' + $(this).attr('data-id'));
+        $(tableData).delegate('.design_pharmtech_wish', "click", function () {
+            $.address.value(ajax_url.wish + '?id=' + $(this).attr('data-id'));
         });
 
         /*
-         确认
+         填报
          */
-        $(tableData).delegate('.design_teacher_ok', "click", function () {
-            var id = $(this).attr('data-id');
-            var msg;
-            msg = Messenger().post({
-                message: "确认毕业设计教师后，相关操作将无法进行",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            sendOkAjax(id);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-
+        $(tableData).delegate('.design_pharmtech_use', "click", function () {
+            $.address.value(ajax_url.use + '?id=' + $(this).attr('data-id'));
         });
-
-        /**
-         * 发送确认请求
-         * @param id 发布id
-         */
-        function sendOkAjax(id) {
-            $.post(web_path + ajax_url.is_ok, {id: id}, function (data) {
-                if (data.state) {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'success',
-                        showCloseButton: true
-                    });
-                    init();
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
-        }
 
         init();
 
