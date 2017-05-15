@@ -1,8 +1,6 @@
 package top.zbeboy.isy.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -11,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.system.ApplicationService;
 import top.zbeboy.isy.service.platform.UsersService;
 
 import javax.servlet.ServletContext;

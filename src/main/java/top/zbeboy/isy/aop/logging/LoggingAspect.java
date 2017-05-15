@@ -8,15 +8,13 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import top.zbeboy.isy.annotation.logging.RecordSystemLogging;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.SystemLog;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.system.SystemLogService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.system.SystemLogService;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 

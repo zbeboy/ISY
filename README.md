@@ -12,10 +12,11 @@
 1.clone 代码;  
 2.配置application.properties(开发环境),仅供开发者使用;  
 3.额外配置(settings目录),仅供开发者使用;  
+4.安装lombok插件.
 # 启动
 1.Elasticsearch;  
 2.Redis;  
-4.Intellij IDEA run Spring boot 或 Maven .  
+3.Intellij IDEA run Spring boot 或 Maven .  
 # 参与条件
 1.Known Spring;  
 2.Known Git;  

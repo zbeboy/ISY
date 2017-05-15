@@ -1,8 +1,6 @@
 package top.zbeboy.isy.security;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.ObjectUtils;
@@ -12,9 +10,9 @@ import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.system.ApplicationService;
 import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.system.ApplicationService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

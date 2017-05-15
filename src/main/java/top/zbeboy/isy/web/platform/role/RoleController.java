@@ -3,8 +3,6 @@ package top.zbeboy.isy.web.platform.role;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -32,7 +30,6 @@ import top.zbeboy.isy.web.bean.platform.role.RoleBean;
 import top.zbeboy.isy.web.bean.tree.TreeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
-import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
