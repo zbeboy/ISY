@@ -94,6 +94,34 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
     }
 
     @Override
+    public List<GraduationDesignTeacherBean> findByGraduationDesignReleaseIdRelationForStaff(String graduationDesignReleaseId) {
+        List<GraduationDesignTeacherBean> graduationDesignTeacherBeens = new ArrayList<>();
+        Result<Record> records = create.select()
+                    .from(GRADUATION_DESIGN_TEACHER)
+                    .join(STAFF)
+                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
+                    .fetch();
+
+        for (Record r : records) {
+            GraduationDesignTeacherBean temp = new GraduationDesignTeacherBean();
+            temp.setGraduationDesignTeacherId(r.getValue(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID));
+            temp.setGraduationDesignReleaseId(r.getValue(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID));
+            temp.setStaffId(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_ID));
+            temp.setStudentCount(r.getValue(GRADUATION_DESIGN_TEACHER.STUDENT_COUNT));
+            temp.setUsername(r.getValue(GRADUATION_DESIGN_TEACHER.USERNAME));
+            temp.setRealName(r.getValue(USERS.REAL_NAME));
+            temp.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
+            temp.setStaffMobile(r.getValue(USERS.MOBILE));
+            graduationDesignTeacherBeens.add(temp);
+        }
+
+        return graduationDesignTeacherBeens;
+    }
+
+    @Override
     public void deleteByGraduationDesignReleaseId(String graduationDesignReleaseId) {
         create.deleteFrom(GRADUATION_DESIGN_TEACHER).where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
                 .execute();

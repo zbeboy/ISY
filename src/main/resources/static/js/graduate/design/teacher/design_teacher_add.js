@@ -1,7 +1,7 @@
 /**
  * Created by zbeboy on 2017/5/9.
  */
-require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "icheck"], function ($, nav_active, Handlebars) {
+require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "jquery.showLoading", "icheck"], function ($, nav_active, Handlebars) {
 
     /*
      ajax url.

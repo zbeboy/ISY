@@ -46,7 +46,8 @@ requirejs.config({
         "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload.min",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
-        "icheck": web_path + "/plugin/icheck/icheck.min"
+        "icheck": web_path + "/plugin/icheck/icheck.min",
+        "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -110,6 +111,9 @@ requirejs.config({
         },
         "icheck": {
             deps: ["jquery", "css!" + web_path + "/plugin/icheck/icheck.min"]
+        },
+        "tablesaw": {
+            deps: ["jquery", "css!" + web_path + "/plugin/tablesaw/tablesaw.min"]
         }
     }
 });

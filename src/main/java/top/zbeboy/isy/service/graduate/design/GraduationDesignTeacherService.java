@@ -21,6 +21,14 @@ public interface GraduationDesignTeacherService {
     List<GraduationDesignTeacher> findByGraduationDesignReleaseId(String graduationDesignReleaseId);
 
     /**
+     * 根据毕业设计发布id关联查询 教职工
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 数据
+     */
+    List<GraduationDesignTeacherBean> findByGraduationDesignReleaseIdRelationForStaff(String graduationDesignReleaseId);
+
+    /**
      * 根据毕业设计发布id删除
      *
      * @param graduationDesignReleaseId 毕业设计发布id

@@ -9,9 +9,12 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class GraduationDesignTeacherBean  extends GraduationDesignTeacher {
+public class GraduationDesignTeacherBean extends GraduationDesignTeacher {
     private String realName;
     private String staffNumber;
     private String staffUsername;
+    private String staffMobile;
     private String assignerName;
+    // 用于选中
+    private boolean selected;
 }
