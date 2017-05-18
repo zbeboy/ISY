@@ -341,17 +341,16 @@ public class GraduationDesignTeacherController {
             } else {
                 // 毕业时间范围
                 if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                    errorBean.setHasError(false);
+                    // 是否已确认
+                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                        errorBean.setHasError(true);
+                        errorBean.setErrorMsg("已确认毕业设计指导教师，无法进行操作");
+                    } else {
+                        errorBean.setHasError(false);
+                    }
                 } else {
                     errorBean.setHasError(true);
                     errorBean.setErrorMsg("不在毕业设计时间范围，无法进入");
-                }
-                // 是否已确认
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                    errorBean.setHasError(true);
-                    errorBean.setErrorMsg("已确认毕业设计指导教师，无法进行操作");
-                } else {
-                    errorBean.setHasError(false);
                 }
             }
         } else {

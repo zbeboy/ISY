@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignHopeTutorRecord;
 
 import static top.zbeboy.isy.domain.Tables.GRADUATION_DESIGN_HOPE_TUTOR;
@@ -41,5 +42,22 @@ public class GraduationDesignHopeTutorServiceImpl implements GraduationDesignHop
         return create.selectFrom(GRADUATION_DESIGN_HOPE_TUTOR)
                 .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId))
                 .fetch();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationDesignHopeTutor graduationDesignHopeTutor) {
+        create.insertInto(GRADUATION_DESIGN_HOPE_TUTOR)
+                .set(GRADUATION_DESIGN_HOPE_TUTOR.GRADUATION_DESIGN_TEACHER_ID, graduationDesignHopeTutor.getGraduationDesignTeacherId())
+                .set(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID, graduationDesignHopeTutor.getStudentId())
+                .execute();
+    }
+
+    @Override
+    public void delete(GraduationDesignHopeTutor graduationDesignHopeTutor) {
+        create.deleteFrom(GRADUATION_DESIGN_HOPE_TUTOR)
+                .where(GRADUATION_DESIGN_HOPE_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignHopeTutor.getGraduationDesignTeacherId())
+                        .and(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(graduationDesignHopeTutor.getStudentId())))
+                .execute();
     }
 }

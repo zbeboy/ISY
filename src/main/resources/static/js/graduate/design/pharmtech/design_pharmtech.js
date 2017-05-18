@@ -13,7 +13,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
-            wish:'/web/graduate/design/pharmtech/wish',
+            condition: '/web/graduate/design/pharmtech/condition',
+            wish: '/web/graduate/design/pharmtech/wish',
             use: '/web/graduate/design/pharmtech/use'
         };
 
@@ -130,7 +131,18 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          志愿
          */
         $(tableData).delegate('.design_pharmtech_wish', "click", function () {
-            $.address.value(ajax_url.wish + '?id=' + $(this).attr('data-id'));
+            var id = $(this).attr('data-id');
+            $.post(ajax_url.condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.wish + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         /*

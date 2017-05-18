@@ -34,7 +34,7 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <script id="teacher-template" type="text/x-handlebars-template">
-            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" id="teacherTable">
+            <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="teacherTable">
                 <thead>
                 <tr>
                     <th scope="col" data-tablesaw-priority="persist">姓名</th>
@@ -51,10 +51,10 @@
                     <td>{{studentCount}}</td>
                     <td>
                         {{#if selected}}
-                        <button type="button" class="btn btn-default btn-sm cancelTeacher" data-id="{{graduationDesignTeacherId}}">取消
+                        <button type="button" class="btn btn-default btn-sm cancelTeacher" data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">取消
                         </button>
                         {{else}}
-                        <button type="button" class="btn btn-primary btn-sm selectTeacher" data-id="{{graduationDesignTeacherId}}">选择
+                        <button type="button" class="btn btn-primary btn-sm selectTeacher" data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">选择
                         </button>
                         {{/if}}
                     </td>
