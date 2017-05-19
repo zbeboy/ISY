@@ -11,6 +11,13 @@ import java.util.List;
  */
 public interface GraduationDesignTeacherService {
 
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    GraduationDesignTeacher findById(String id);
 
     /**
      * 根据毕业设计发布id查询

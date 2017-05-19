@@ -89,6 +89,11 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
     }
 
     @Override
+    public GraduationDesignTeacher findById(String id) {
+        return graduationDesignTeacherDao.findById(id);
+    }
+
+    @Override
     public List<GraduationDesignTeacher> findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
         return graduationDesignTeacherDao.fetchByGraduationDesignReleaseId(graduationDesignReleaseId);
     }

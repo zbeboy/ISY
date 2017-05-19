@@ -80,7 +80,10 @@ public class GraduationDesignTeacherController {
     private UsersService usersService;
 
     @Resource(name = "redisTemplate")
-    private ValueOperations<String, Integer> integerValueOperations;
+    private ValueOperations<String, Long> longValueOperations;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, List<GraduationDesignTeacherBean>> stringListValueOperations;
 
     /**
      * 毕业指导教师
@@ -289,13 +292,21 @@ public class GraduationDesignTeacherController {
         if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
             ajaxUtils.fail().msg("已确认毕业设计指导教师");
         } else {
-            List<GraduationDesignTeacher> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            List<GraduationDesignTeacherBean> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+            // 初始化人数到缓存
             graduationDesignTeachers.forEach(graduationDesignTeacher ->
-                    integerValueOperations.set(
+                    longValueOperations.set(
                             CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.getGraduationDesignTeacherId(),
-                            graduationDesignTeacher.getStudentCount(),
-                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_COUNT,
+                            0L,
+                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
                             TimeUnit.DAYS)
+            );
+            // 列表刷到缓存
+            stringListValueOperations.set(
+                    CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId,
+                    graduationDesignTeachers,
+                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
+                    TimeUnit.DAYS
             );
             Byte b = 1;
             graduationDesignRelease.setIsOkTeacher(b);
