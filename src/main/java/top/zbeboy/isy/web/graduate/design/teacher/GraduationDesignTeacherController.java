@@ -297,7 +297,7 @@ public class GraduationDesignTeacherController {
             graduationDesignTeachers.forEach(graduationDesignTeacher ->
                     longValueOperations.set(
                             CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.getGraduationDesignTeacherId(),
-                            0L,
+                            Long.valueOf(graduationDesignTeacher.getStudentCount()),
                             CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
                             TimeUnit.DAYS)
             );

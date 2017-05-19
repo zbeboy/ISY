@@ -286,10 +286,10 @@ public class GraduationDesignPharmtechController {
             if (!ObjectUtils.isEmpty(student)) {
                 // 计数器
                 String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
-                GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(graduationDesignTeacherId);
                 if (longValueOperations.getOperations().hasKey(countKey)) {
-                    long count = longValueOperations.increment(countKey, 1);
-                    if (count < graduationDesignTeacher.getStudentCount()) {
+                    long count = longValueOperations.get(countKey);
+                    if (--count > 0) {
+                        longValueOperations.set(countKey, count);
                         // 存储 指导教师id , 学生id
                         String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
                         if (stringValueOperations.getOperations().hasKey(studentKey)) {
@@ -383,8 +383,7 @@ public class GraduationDesignPharmtechController {
                 // 计数器
                 String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
                 if (longValueOperations.getOperations().hasKey(countKey)) {
-                    long curCount = longValueOperations.get(countKey);
-                    longValueOperations.set(countKey, curCount - 1);
+                    longValueOperations.increment(countKey, 1);
                     // 存储 指导教师id , 学生id
                     String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
                     if (stringValueOperations.getOperations().hasKey(studentKey)) {
