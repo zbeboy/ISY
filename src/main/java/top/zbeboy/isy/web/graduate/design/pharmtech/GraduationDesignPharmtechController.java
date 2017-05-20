@@ -202,7 +202,7 @@ public class GraduationDesignPharmtechController {
                         // 装填剩余人数
                         String studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + designTeacherBean.getGraduationDesignTeacherId();
                         if (longValueOperations.getOperations().hasKey(studentCountKey)) {
-                            designTeacherBean.setApplyCount(longValueOperations.get(studentCountKey));
+                            designTeacherBean.setResidueCount(longValueOperations.get(studentCountKey));
                         }
                         // 选中当前用户已选择
                         if (!selectedTeacher && stringValueOperations.getOperations().hasKey(studentKey)) {
