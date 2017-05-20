@@ -3,6 +3,7 @@ package top.zbeboy.isy.web.graduate.design.teacher;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -79,8 +80,8 @@ public class GraduationDesignTeacherController {
     @Resource
     private UsersService usersService;
 
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, Long> longValueOperations;
+    @Resource
+    private StringRedisTemplate template;
 
     @Resource(name = "redisTemplate")
     private ValueOperations<String, List<GraduationDesignTeacherBean>> stringListValueOperations;
@@ -293,11 +294,12 @@ public class GraduationDesignTeacherController {
             ajaxUtils.fail().msg("已确认毕业设计指导教师");
         } else {
             List<GraduationDesignTeacherBean> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+            ValueOperations<String, String> ops = this.template.opsForValue();
             // 初始化人数到缓存
             graduationDesignTeachers.forEach(graduationDesignTeacher ->
-                    longValueOperations.set(
+                    ops.set(
                             CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.getGraduationDesignTeacherId(),
-                            Long.valueOf(graduationDesignTeacher.getStudentCount()),
+                            graduationDesignTeacher.getStudentCount() + "",
                             CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
                             TimeUnit.DAYS)
             );

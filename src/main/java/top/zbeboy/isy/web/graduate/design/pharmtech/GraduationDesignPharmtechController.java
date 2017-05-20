@@ -2,8 +2,10 @@ package top.zbeboy.isy.web.graduate.design.pharmtech;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Result;
 import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.CacheBook;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
+import top.zbeboy.isy.domain.tables.pojos.Student;
+import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignHopeTutorRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.StudentService;
@@ -61,8 +66,8 @@ public class GraduationDesignPharmtechController {
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
 
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, Long> longValueOperations;
+    @Resource
+    private StringRedisTemplate template;
 
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> stringValueOperations;
@@ -201,8 +206,9 @@ public class GraduationDesignPharmtechController {
                     for (GraduationDesignTeacherBean designTeacherBean : graduationDesignTeacherBeens) {
                         // 装填剩余人数
                         String studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + designTeacherBean.getGraduationDesignTeacherId();
-                        if (longValueOperations.getOperations().hasKey(studentCountKey)) {
-                            designTeacherBean.setResidueCount(longValueOperations.get(studentCountKey));
+                        if (template.hasKey(studentCountKey)) {
+                            ValueOperations<String, String> ops = this.template.opsForValue();
+                            designTeacherBean.setResidueCount(NumberUtils.toInt(ops.get(studentCountKey)));
                         }
                         // 选中当前用户已选择
                         if (!selectedTeacher && stringValueOperations.getOperations().hasKey(studentKey)) {
@@ -284,44 +290,70 @@ public class GraduationDesignPharmtechController {
             Users users = usersService.getUserFromSession();
             Student student = studentService.findByUsername(users.getUsername());
             if (!ObjectUtils.isEmpty(student)) {
-                // 计数器
-                String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
-                if (longValueOperations.getOperations().hasKey(countKey)) {
-                    long count = longValueOperations.get(countKey);
-                    if (--count > 0) {
-                        longValueOperations.set(countKey, count);
-                        // 存储 指导教师id , 学生id
-                        String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
-                        if (stringValueOperations.getOperations().hasKey(studentKey)) {
-                            stringValueOperations.set(studentKey,
-                                    graduationDesignTeacherId + "," + student.getStudentId());
-                        } else {
-                            stringValueOperations.set(studentKey,
-                                    graduationDesignTeacherId + "," + student.getStudentId(),
-                                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT, TimeUnit.DAYS);
-                        }
-                        // 存储学生key
-                        // 是否已经存在当前学生key
-                        String listKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT_LIST + graduationDesignReleaseId;
-                        List<String> keys = listOperations.range(listKey, 0, listOperations.size(listKey));
-                        boolean hasKey = false;
-                        for (String key : keys) {
-                            // 已经存在 无需添加
-                            if (key.equals(studentKey)) {
-                                hasKey = true;
-                                break;
+                // 判断是否已选择过教师
+                boolean canSelect = false;
+                String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
+                if (stringValueOperations.getOperations().hasKey(studentKey)) {
+                    // 已选择过，不能重复选
+                    String str = stringValueOperations.get(studentKey);
+                    if (StringUtils.isNotBlank(str)) {
+                        String[] arr = str.split(",");
+                        if (arr.length >= 2) {
+                            // 已经取消
+                            if (arr[0].equals("-1")) {
+                                canSelect = true;
+                                // 存储 指导教师id , 学生id
+                                stringValueOperations.set(studentKey,
+                                        graduationDesignTeacherId + "," + student.getStudentId());
+                            } else { // 未取消
+                                canSelect = false;
                             }
+                        } else {
+                            canSelect = false;
                         }
-                        // 不存在，需要添加
-                        if (!hasKey) {
-                            listOperations.rightPush(listKey, studentKey);
-                        }
-                        ajaxUtils.success().msg("保存成功");
                     } else {
-                        ajaxUtils.fail().msg("已达当前指导教师人数上限");
+                        canSelect = false;
                     }
                 } else {
-                    ajaxUtils.fail().msg("未发现确认数据");
+                    canSelect = true;
+                    // 未选择过，可以选择
+                    stringValueOperations.set(studentKey,
+                            graduationDesignTeacherId + "," + student.getStudentId(),
+                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT, TimeUnit.DAYS);
+                }
+                if (canSelect) {
+                    // 计数器
+                    String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
+                    if (template.hasKey(countKey)) {
+                        ValueOperations<String, String> ops = this.template.opsForValue();
+                        int count = NumberUtils.toInt(ops.get(countKey));
+                        if (--count > 0) {
+                            ops.set(countKey, count + "");
+                            // 存储学生key
+                            // 是否已经存在当前学生key
+                            String listKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT_LIST + graduationDesignReleaseId;
+                            List<String> keys = listOperations.range(listKey, 0, listOperations.size(listKey));
+                            boolean hasKey = false;
+                            for (String key : keys) {
+                                // 已经存在 无需添加
+                                if (key.equals(studentKey)) {
+                                    hasKey = true;
+                                    break;
+                                }
+                            }
+                            // 不存在，需要添加
+                            if (!hasKey) {
+                                listOperations.rightPush(listKey, studentKey);
+                            }
+                            ajaxUtils.success().msg("保存成功");
+                        } else {
+                            ajaxUtils.fail().msg("已达当前指导教师人数上限");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未发现确认数据");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("仅能选择一位指导教师");
                 }
             } else {
                 ajaxUtils.fail().msg("未查询到相关学生信息");
@@ -382,8 +414,9 @@ public class GraduationDesignPharmtechController {
             if (!ObjectUtils.isEmpty(student)) {
                 // 计数器
                 String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
-                if (longValueOperations.getOperations().hasKey(countKey)) {
-                    longValueOperations.increment(countKey, 1);
+                if (template.hasKey(countKey)) {
+                    ValueOperations<String, String> ops = this.template.opsForValue();
+                    ops.increment(countKey, 1L);
                     // 存储 指导教师id , 学生id
                     String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
                     if (stringValueOperations.getOperations().hasKey(studentKey)) {
