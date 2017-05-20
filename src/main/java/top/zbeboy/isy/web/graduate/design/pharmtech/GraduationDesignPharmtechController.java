@@ -3,6 +3,7 @@ package top.zbeboy.isy.web.graduate.design.pharmtech;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -26,16 +27,19 @@ import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignHopeTutorService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,6 +69,9 @@ public class GraduationDesignPharmtechController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private GraduationDesignTutorService graduationDesignTutorService;
 
     @Resource
     private StringRedisTemplate template;
@@ -467,6 +474,43 @@ public class GraduationDesignPharmtechController {
     }
 
     /**
+     * 获取我的毕业指导教师信息
+     *
+     * @param graduationDesignReleaseId 毕业发布id
+     * @return 指导教师信息
+     */
+    @RequestMapping(value = "/web/graduate/design/pharmtech/my/teacher", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myTeacher(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
+        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
+            // 是否为学生用户
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Student student = studentService.findByUsername(users.getUsername());
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(student.getStudentId(), graduationDesignReleaseId);
+                    if (record.isPresent()) {
+                        GraduationDesignTutorBean graduationDesignTutorBean = record.get().into(GraduationDesignTutorBean.class);
+                        ajaxUtils.success().msg("获取数据成功").obj(graduationDesignTutorBean);
+                    } else {
+                        ajaxUtils.fail().msg("未获取到任何信息");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("请等待调整完成后，进行查看");
+                }
+            } else {
+                ajaxUtils.fail().msg("您的注册类型不是学生用户");
+            }
+        } else {
+            ajaxUtils.fail().msg("未查询到相关毕业设计信息");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -506,7 +550,13 @@ public class GraduationDesignPharmtechController {
                     if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
                         // 是否已确认
                         if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                            errorBean.setHasError(false);
+                            // 是否已确认调整
+                            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                                errorBean.setHasError(true);
+                                errorBean.setErrorMsg("已确认毕业设计指导教师调整，无法进行操作");
+                            } else {
+                                errorBean.setHasError(false);
+                            }
                         } else {
                             errorBean.setHasError(true);
                             errorBean.setErrorMsg("未确认毕业设计指导教师，无法进行操作");
