@@ -1,7 +1,7 @@
 /**
- * Created by lenovo on 2017/5/8.
+ * Created by lenovo on 2017-05-21.
  */
-//# sourceURL=graduate_design_teacher.js
+//# sourceURL=graduate_design_adjustech.js
 require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
     function ($, Handlebars) {
 
@@ -9,9 +9,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            release_data_url: '/anyone/graduate/design/release/data',
-            look: '/web/graduate/design/tutor/look',
-            is_ok: '/web/graduate/design/tutor/ok'
+            release_data_url: '/web/graduate/design/adjustech/data',
+            not_fill: '/web/graduate/design/adjustech/student/not',
+            is_ok: '/web/graduate/design/adjustech/ok'
         };
 
         /*

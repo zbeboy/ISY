@@ -22,4 +22,9 @@ public class GraduationDesignReleaseBean extends GraduationDesignRelease {
     private String startTimeStr;
     private String endTimeStr;
     private String releaseTimeStr;
+
+    // 未填报学生数
+    private int studentNotFillCount;
+    // 填报学生数
+    private int studentFillCount;
 }
