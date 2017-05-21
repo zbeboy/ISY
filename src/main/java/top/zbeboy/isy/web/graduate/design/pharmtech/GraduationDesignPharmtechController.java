@@ -299,43 +299,39 @@ public class GraduationDesignPharmtechController {
             if (!ObjectUtils.isEmpty(student)) {
                 // 判断是否已选择过教师
                 boolean canSelect = false;
+                // 第一次选择
+                boolean isNewSelect = false;
                 String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
                 if (stringValueOperations.getOperations().hasKey(studentKey)) {
                     // 已选择过，不能重复选
                     String str = stringValueOperations.get(studentKey);
                     if (StringUtils.isNotBlank(str)) {
                         String[] arr = str.split(",");
-                        if (arr.length >= 2) {
-                            // 已经取消
-                            if (arr[0].equals("-1")) {
-                                canSelect = true;
-                                // 存储 指导教师id , 学生id
-                                stringValueOperations.set(studentKey,
-                                        graduationDesignTeacherId + "," + student.getStudentId());
-                            } else { // 未取消
-                                canSelect = false;
-                            }
-                        } else {
-                            canSelect = false;
-                        }
+                        canSelect = arr.length >= 2 && arr[0].equals("-1");
                     } else {
                         canSelect = false;
                     }
                 } else {
                     canSelect = true;
-                    // 未选择过，可以选择
-                    stringValueOperations.set(studentKey,
-                            graduationDesignTeacherId + "," + student.getStudentId(),
-                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT, TimeUnit.DAYS);
+                    isNewSelect = true;
                 }
                 if (canSelect) {
                     // 计数器
                     String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
                     if (template.hasKey(countKey)) {
                         ValueOperations<String, String> ops = this.template.opsForValue();
-                        int count = NumberUtils.toInt(ops.get(countKey));
-                        if (--count > 0) {
+                        int count = NumberUtils.toInt(ops.get(countKey)) - 1;
+                        if (count >= 0) {
                             ops.set(countKey, count + "");
+                            // 存储 指导教师id , 学生id
+                            if (isNewSelect) {
+                                stringValueOperations.set(studentKey,
+                                        graduationDesignTeacherId + "," + student.getStudentId(),
+                                        CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT, TimeUnit.DAYS);
+                            } else {
+                                stringValueOperations.set(studentKey,
+                                        graduationDesignTeacherId + "," + student.getStudentId());
+                            }
                             // 存储学生key
                             // 是否已经存在当前学生key
                             String listKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT_LIST + graduationDesignReleaseId;
