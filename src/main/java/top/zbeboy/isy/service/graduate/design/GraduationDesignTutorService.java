@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.graduate.design;
 
 import org.jooq.Record;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 
@@ -35,4 +36,18 @@ public interface GraduationDesignTutorService {
      * @return 学生数
      */
     int countFillStudent(GraduationDesignReleaseBean graduationDesignReleaseBean);
+
+    /**
+     * 根据 指导教师id删除
+     *
+     * @param graduationDesignTeacherId 指导教师id
+     */
+    void deleteByGraduationDesignTeacherId(String graduationDesignTeacherId);
+
+    /**
+     * 保存
+     *
+     * @param graduationDesignTutor 数据
+     */
+    void save(GraduationDesignTutor graduationDesignTutor);
 }

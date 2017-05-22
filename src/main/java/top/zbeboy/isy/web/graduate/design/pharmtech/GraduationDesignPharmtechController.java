@@ -544,22 +544,28 @@ public class GraduationDesignPharmtechController {
                 if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                     // 毕业时间范围
                     if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                        // 是否已确认
-                        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                            // 是否已确认调整
-                            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                                errorBean.setHasError(true);
-                                errorBean.setErrorMsg("已确认毕业设计指导教师调整，无法进行操作");
+                        // 填报时间范围
+                        if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getFillTeacherStartTime(), graduationDesignRelease.getFillTeacherEndTime())) {
+                            // 是否已确认
+                            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                                // 是否已确认调整
+                                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                                    errorBean.setHasError(true);
+                                    errorBean.setErrorMsg("已确认毕业设计指导教师调整，无法进行操作");
+                                } else {
+                                    errorBean.setHasError(false);
+                                }
                             } else {
-                                errorBean.setHasError(false);
+                                errorBean.setHasError(true);
+                                errorBean.setErrorMsg("未确认毕业设计指导教师，无法进行操作");
                             }
                         } else {
                             errorBean.setHasError(true);
-                            errorBean.setErrorMsg("未确认毕业设计指导教师，无法进行操作");
+                            errorBean.setErrorMsg("不在填报时间范围，无法操作");
                         }
                     } else {
                         errorBean.setHasError(true);
-                        errorBean.setErrorMsg("不在毕业设计时间范围，无法进入");
+                        errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
                     }
                 } else {
                     errorBean.setHasError(true);

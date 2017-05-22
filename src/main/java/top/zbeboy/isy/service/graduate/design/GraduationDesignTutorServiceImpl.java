@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.daos.GraduationDesignTutorDao;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -24,6 +27,9 @@ import static top.zbeboy.isy.domain.Tables.*;
 public class GraduationDesignTutorServiceImpl implements GraduationDesignTutorService {
 
     private final DSLContext create;
+
+    @Resource
+    private GraduationDesignTutorDao graduationDesignTutorDao;
 
     @Autowired
     public GraduationDesignTutorServiceImpl(DSLContext dslContext) {
@@ -72,5 +78,17 @@ public class GraduationDesignTutorServiceImpl implements GraduationDesignTutorSe
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseBean.getGraduationDesignReleaseId()))
                 .fetchOne();
         return count.value1();
+    }
+
+    @Override
+    public void deleteByGraduationDesignTeacherId(String graduationDesignTeacherId) {
+        create.deleteFrom(GRADUATION_DESIGN_TUTOR)
+                .where(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId))
+                .execute();
+    }
+
+    @Override
+    public void save(GraduationDesignTutor graduationDesignTutor) {
+        graduationDesignTutorDao.insert(graduationDesignTutor);
     }
 }

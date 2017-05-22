@@ -144,6 +144,11 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
     }
 
     @Override
+    public void update(List<GraduationDesignTeacher> graduationDesignTeachers) {
+        graduationDesignTeacherDao.update(graduationDesignTeachers);
+    }
+
+    @Override
     public int countAll(GraduationDesignTeacherBean graduationDesignTeacherBean) {
         Record1<Integer> count = create.selectCount()
                 .from(GRADUATION_DESIGN_TEACHER)

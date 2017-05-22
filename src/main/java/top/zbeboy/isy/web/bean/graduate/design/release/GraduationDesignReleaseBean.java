@@ -27,4 +27,7 @@ public class GraduationDesignReleaseBean extends GraduationDesignRelease {
     private int studentNotFillCount;
     // 填报学生数
     private int studentFillCount;
+    // 同步时间
+    private String syncDate;
+    private boolean hasSyncDate;
 }

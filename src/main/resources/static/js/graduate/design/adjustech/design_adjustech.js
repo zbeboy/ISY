@@ -10,6 +10,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/web/graduate/design/adjustech/data',
+            sync_data:'/web/graduate/design/adjustech/sync/data',
+            yes_fill:'/web/graduate/design/adjustech/student/yes',
             not_fill: '/web/graduate/design/adjustech/student/not',
             is_ok: '/web/graduate/design/adjustech/ok'
         };
@@ -124,10 +126,25 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-         查看
+         同步数据
          */
-        $(tableData).delegate('.design_teacher_look', "click", function () {
-            $.address.value(ajax_url.look + '?id=' + $(this).attr('data-id'));
+        $(tableData).delegate('.design_sync_adjust', "click", function () {
+            $.post(ajax_url.sync_data,{id:$(this).attr('data-id')},function(data){
+               if(data.state){
+                   Messenger().post({
+                       message: data.msg,
+                       type: 'success',
+                       showCloseButton: true
+                   });
+                   init();
+               } else {
+                   Messenger().post({
+                       message: data.msg,
+                       type: 'error',
+                       showCloseButton: true
+                   });
+               }
+            });
         });
 
         /*

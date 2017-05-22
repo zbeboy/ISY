@@ -86,9 +86,14 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <button type="button" class="btn btn-info design_sync_adjust"
-                            data-id="{{graduationDesignReleaseId}}">同步数据(2017-05-21 20:04:00后可同步)
+                    {{#if hasSyncDate}}
+                    <button type="button" class="btn btn-info" disabled="disabled">同步数据({{syncDate}}后可同步)
                     </button>
+                    {{else}}
+                    <button type="button" class="btn btn-info design_sync_adjust"
+                            data-id="{{graduationDesignReleaseId}}">同步数据
+                    </button>
+                    {{/if}}
                     <button type="button" class="btn btn-default design_adjust"
                             data-id="{{graduationDesignReleaseId}}">调整
                     </button>

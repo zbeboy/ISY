@@ -363,7 +363,7 @@ public class GraduationDesignTeacherController {
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("不在毕业设计时间范围，无法进入");
+                    errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
                 }
             }
         } else {
