@@ -25,8 +25,18 @@
                     <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
                     </button>
                 </div>
-                <div id="tableData">
-                </div>
+                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="teacherTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" data-tablesaw-priority="persist">姓名</th>
+                        <th scope="col" data-tablesaw-priority="persist">联系方式</th>
+                        <th scope="col">指导人数</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableData">
+                    </tbody>
+                </table>
             </div>
         </div>
         <!-- /.row -->
@@ -34,34 +44,24 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <script id="teacher-template" type="text/x-handlebars-template">
-            <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="teacherTable">
-                <thead>
-                <tr>
-                    <th scope="col" data-tablesaw-priority="persist">姓名</th>
-                    <th scope="col" data-tablesaw-priority="persist">联系方式</th>
-                    <th scope="col">指导人数</th>
-                    <th scope="col">操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each listResult}}
-                <tr>
-                    <td>{{realName}}</td>
-                    <td>{{staffMobile}}</td>
-                    <td>{{studentCount}}</td>
-                    <td>
-                        {{#if selected}}
-                        <button type="button" class="btn btn-default btn-sm cancelTeacher" data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">取消
-                        </button>
-                        {{else}}
-                        <button type="button" class="btn btn-primary btn-sm selectTeacher" data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">选择
-                        </button>
-                        {{/if}}
-                    </td>
-                </tr>
-                {{/each}}
-                </tbody>
-            </table>
+            {{#each listResult}}
+            <tr>
+                <td>{{realName}}</td>
+                <td>{{staffMobile}}</td>
+                <td>{{studentCount}}</td>
+                <td>
+                    {{#if selected}}
+                    <button type="button" class="btn btn-default btn-sm cancelTeacher"
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">取消
+                    </button>
+                    {{else}}
+                    <button type="button" class="btn btn-primary btn-sm selectTeacher"
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">选择
+                    </button>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
         </script>
         <!-- /.footer -->
         <script th:inline="javascript">
