@@ -129,7 +129,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          同步数据
          */
         $(tableData).delegate('.design_sync_adjust', "click", function () {
+            startLoading();
             $.post(ajax_url.sync_data,{id:$(this).attr('data-id')},function(data){
+                endLoading();
                if(data.state){
                    Messenger().post({
                        message: data.msg,
