@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">调整填报教师 -
+                    <small>调整</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="text-right" style="margin-bottom: 10px;">
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
+                    </button>
+                </div>
+                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="teacherTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" data-tablesaw-priority="persist">姓名</th>
+                        <th scope="col" data-tablesaw-priority="persist">联系方式</th>
+                        <th scope="col">指导人数</th>
+                        <th scope="col">可报人数</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="teacherData">
+                    </tbody>
+                </table>
+                <h3>学生</h3>
+                <p>当前选择 : <span id="teacherName"></span>  <span id="teacherMobile"></span></p>
+                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="studentTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" data-tablesaw-priority="persist">姓名</th>
+                        <th scope="col" data-tablesaw-priority="persist">学号</th>
+                        <th scope="col">班级</th>
+                        <th scope="col">邮箱</th>
+                        <th scope="col">联系方式</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="studentData">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- 指导教师Modal -->
+        <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="teacherModalLabel">选择指导教师</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <form role="form" id="teacher_form" style="height: 300px;overflow: auto">
+                            <div class="form-group" id="teachers"></div>
+                            <input name="graduationDesignTutorId" type="hidden" id="teacherGraduationDesignTutorId"/>
+                            <input name="graduationDesignReleaseId" type="hidden" th:value="${graduationDesignReleaseId}"/>
+                            <input type="hidden" id="teacherGraduationDesignTeacherId"/>
+                        </form>
+                        <p id="teacher_error_msg" class="hidden"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveTeacher">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script id="teacher-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <tr>
+                <td>{{realName}}</td>
+                <td>{{staffMobile}}</td>
+                <td>{{studentCount}}</td>
+                <td>{{residue}}</td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm teacher_detail"
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}" data-mobile="{{staffMobile}}">详情
+                    </button>
+                </td>
+            </tr>
+            {{/each}}
+        </script>
+        <script id="student-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <tr>
+                <td>{{realName}}</td>
+                <td>{{studentNumber}}</td>
+                <td>{{organizeName}}</td>
+                <td>{{username}}</td>
+                <td>{{mobile}}</td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm adjust_teacher"
+                            data-id="{{graduationDesignTutorId}}" data-teacher="{{graduationDesignTeacherId}}">调整
+                    </button>
+                </td>
+            </tr>
+            {{/each}}
+        </script>
+        <script id="adjust-teacher-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="radio">
+                <label>
+                    {{#if selected}}
+                    <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" checked="checked"/>
+                    {{else}}
+                    <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" />
+                    {{/if}}
+                    {{realName}}  {{staffMobile}}
+                </label>
+            </div>
+            {{/each}}
+        </script>
+        <!-- /.footer -->
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/adjustech/design_adjustech_adjust.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

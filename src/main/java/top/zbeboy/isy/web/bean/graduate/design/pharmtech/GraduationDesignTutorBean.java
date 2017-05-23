@@ -12,4 +12,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
 public class GraduationDesignTutorBean extends GraduationDesignTutor {
     private String realName;
     private String mobile;
+    private String username;
+    private String organizeName;
+    private String studentNumber;
 }

@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             release_data_url: '/web/graduate/design/adjustech/data',
             sync_data:'/web/graduate/design/adjustech/sync/data',
+            adjust_url:'/web/graduate/design/adjustech/adjust',
             yes_fill:'/web/graduate/design/adjustech/student/yes',
             not_fill: '/web/graduate/design/adjustech/student/not',
             is_ok: '/web/graduate/design/adjustech/ok'
@@ -147,6 +148,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                    });
                }
             });
+        });
+
+        /*
+         调整
+         */
+        $(tableData).delegate('.design_adjust', "click", function () {
+            $.address.value(ajax_url.adjust_url + '?id=' + $(this).attr('data-id'));
         });
 
         /*

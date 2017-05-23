@@ -1,9 +1,6 @@
 /**
  * Created by zbeboy on 2017/5/19.
  */
-/**
- * Created by zbeboy on 2017/5/15.
- */
 //# sourceURL=design_pharmtech_wish.js
 require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "jquery.showLoading", "tablesaw"], function ($, nav_active, Handlebars) {
     /*
@@ -66,7 +63,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     function listData(data) {
         var template = Handlebars.compile($("#teacher-template").html());
-        $('#tableData').html(template(data));
+        $(tableData).html(template(data));
         $('#teacherTable').tablesaw().data("tablesaw").refresh();
     }
 

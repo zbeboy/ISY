@@ -63,7 +63,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     function listData(data) {
         var template = Handlebars.compile($("#teacher-template").html());
-        $('#tableData').html(template(data));
+        $(tableData).html(template(data));
         $('#teacherTable').tablesaw().data("tablesaw").refresh();
     }
 

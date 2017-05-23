@@ -120,6 +120,7 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
             temp.setRealName(r.getValue(USERS.REAL_NAME));
             temp.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
             temp.setStaffMobile(r.getValue(USERS.MOBILE));
+            temp.setResidue(r.getValue(GRADUATION_DESIGN_TEACHER.RESIDUE));
             graduationDesignTeacherBeens.add(temp);
         }
 

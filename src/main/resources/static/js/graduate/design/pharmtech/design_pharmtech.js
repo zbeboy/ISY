@@ -1,9 +1,6 @@
 /**
  * Created by zbeboy on 2017/5/15.
  */
-/**
- * Created by lenovo on 2017/5/8.
- */
 //# sourceURL=graduate_design_pharmtech.js
 require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
     function ($, Handlebars) {

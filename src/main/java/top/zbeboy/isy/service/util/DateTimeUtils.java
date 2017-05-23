@@ -139,6 +139,17 @@ public class DateTimeUtils {
     }
 
     /**
+     * 当前时间大于某一时间
+     *
+     * @param after 某一时间
+     * @return true or false
+     */
+    public static boolean timestampAfterDecide(java.sql.Timestamp after) {
+        java.sql.Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
+        return now.after(after);
+    }
+
+    /**
      * 拆分时间
      *
      * @param splitSymbol 分隔符

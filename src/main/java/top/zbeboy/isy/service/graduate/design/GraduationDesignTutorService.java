@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.graduate.design;
 
 import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
@@ -13,6 +14,14 @@ import java.util.Optional;
 public interface GraduationDesignTutorService {
 
     /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 结果
+     */
+    GraduationDesignTutor findById(String id);
+
+    /**
      * 通过学生id与发布id查询指导教师信息
      *
      * @param studentId                 学生id
@@ -20,6 +29,15 @@ public interface GraduationDesignTutorService {
      * @return 指导教师信息
      */
     Optional<Record> findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(int studentId, String graduationDesignReleaseId);
+
+    /**
+     * 通过指导教师id与发布id关联查询学生信息
+     *
+     * @param graduationDesignTeacherId 指导教师id
+     * @param graduationDesignReleaseId 毕业发布id
+     * @return 数据
+     */
+    Result<Record> findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(String graduationDesignTeacherId, String graduationDesignReleaseId);
 
     /**
      * 统计未填报学生数
@@ -50,4 +68,11 @@ public interface GraduationDesignTutorService {
      * @param graduationDesignTutor 数据
      */
     void save(GraduationDesignTutor graduationDesignTutor);
+
+    /**
+     * 更新
+     *
+     * @param graduationDesignTutor 数据
+     */
+    void update(GraduationDesignTutor graduationDesignTutor);
 }
