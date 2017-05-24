@@ -355,11 +355,17 @@ public class GraduationDesignAdjustechController {
         return ajaxUtils;
     }
 
+    /**
+     * 删除
+     *
+     * @param graduationDesignReleaseId 毕业发布id
+     * @param graduationDesignTutorIds  关联id
+     * @return true or false
+     */
     @RequestMapping(value = "/web/graduate/design/adjustech/delete", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils delete(@RequestParam("id") String graduationDesignReleaseId, String graduationDesignTutorIds) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
@@ -373,7 +379,6 @@ public class GraduationDesignAdjustechController {
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
-
         return ajaxUtils;
     }
 
