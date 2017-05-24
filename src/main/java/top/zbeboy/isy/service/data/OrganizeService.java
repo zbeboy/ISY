@@ -73,13 +73,22 @@ public interface OrganizeService {
     Result<OrganizeRecord> findByOrganizeNameAndScienceIdNeOrganizeId(String organizeName, int organizeId, int scienceId);
 
     /**
-     * 根据年级查询全部班级
+     * 根据年级查询全部班级 注：默认状态为 未注销
      *
      * @param grade     年级
      * @param scienceId 专业id
      * @return 年级下全部班级
      */
     Result<OrganizeRecord> findByGradeAndScienceId(String grade, int scienceId);
+
+    /**
+     * 根据年级查询全部班级 注：不带状态，用于搜索选择用
+     *
+     * @param grade     年级
+     * @param scienceId 专业id
+     * @return 年级下全部班级
+     */
+    Result<OrganizeRecord> findByGradeAndScienceIdNotIsDel(String grade, int scienceId);
 
     /**
      * 保存

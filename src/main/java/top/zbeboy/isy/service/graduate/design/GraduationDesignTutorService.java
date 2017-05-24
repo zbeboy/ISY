@@ -3,9 +3,11 @@ package top.zbeboy.isy.service.graduate.design;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
+import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,4 +77,34 @@ public interface GraduationDesignTutorService {
      * @param graduationDesignTutor 数据
      */
     void update(GraduationDesignTutor graduationDesignTutor);
+
+    /**
+     * 根据主键删除
+     *
+     * @param ids 主键
+     */
+    void deleteByIds(List<String> ids);
+
+    /**
+     * 已填报学生数据
+     *
+     * @param dataTablesUtils datatables 工具
+     * @return 数据
+     */
+    List<GraduationDesignTutorBean> findAllFillByPage(DataTablesUtils<GraduationDesignTutorBean> dataTablesUtils, GraduationDesignTutorBean condition);
+
+    /**
+     * 统计已填报学生
+     *
+     * @return 结果
+     */
+    int countAllFill(GraduationDesignTutorBean condition);
+
+    /**
+     * 根据条件统计已填报学生
+     *
+     * @param dataTablesUtils datatables 工具
+     * @return 结果
+     */
+    int countFillByCondition(DataTablesUtils<GraduationDesignTutorBean> dataTablesUtils, GraduationDesignTutorBean condition);
 }

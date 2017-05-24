@@ -12,8 +12,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             release_data_url: '/web/graduate/design/adjustech/data',
             sync_data:'/web/graduate/design/adjustech/sync/data',
             adjust_url:'/web/graduate/design/adjustech/adjust',
-            yes_fill:'/web/graduate/design/adjustech/student/yes',
-            not_fill: '/web/graduate/design/adjustech/student/not',
+            yes_fill:'/web/graduate/design/adjustech/student/submit',
+            not_fill: '/web/graduate/design/adjustech/student/unsubmit',
             is_ok: '/web/graduate/design/adjustech/ok'
         };
 
@@ -155,6 +155,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_adjust', "click", function () {
             $.address.value(ajax_url.adjust_url + '?id=' + $(this).attr('data-id'));
+        });
+
+        /*
+         已填报学生
+         */
+        $(tableData).delegate('.design_fill', "click", function () {
+            $.address.value(ajax_url.yes_fill + '?id=' + $(this).attr('data-id'));
         });
 
         /*

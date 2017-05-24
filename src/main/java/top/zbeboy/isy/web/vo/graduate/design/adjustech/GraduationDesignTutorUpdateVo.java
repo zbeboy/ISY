@@ -14,9 +14,10 @@ public class GraduationDesignTutorUpdateVo {
     @Size(max = 64)
     private String graduationDesignReleaseId;
     @NotNull
-    @Size(max = 64)
     private String graduationDesignTutorId;
     @NotNull
     @Size(max = 64)
     private String graduationDesignTeacherId;
+    @NotNull
+    private int saveType;
 }

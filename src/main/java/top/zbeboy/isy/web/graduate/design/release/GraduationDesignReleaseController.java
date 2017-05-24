@@ -17,11 +17,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
+import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.CollegeService;
 import top.zbeboy.isy.service.data.DepartmentService;
+import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.data.SchoolService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseFileService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
@@ -86,6 +88,9 @@ public class GraduationDesignReleaseController {
     @Resource
     private RoleService roleService;
 
+    @Resource
+    private OrganizeService organizeService;
+
     /**
      * 毕业设计发布
      *
@@ -134,6 +139,29 @@ public class GraduationDesignReleaseController {
         Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
         List<GraduationDesignReleaseBean> graduationDesignReleaseBeens = graduationDesignReleaseService.dealData(paginationUtils, records, graduationDesignReleaseBean);
         return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignReleaseBeens).paginationUtils(paginationUtils);
+    }
+
+    /**
+     * 获取毕业设计 专业，年级下所有班级数据
+     *
+     * @param graduationDesignReleaseId 毕业发布id
+     * @return 班级数据
+     */
+    @RequestMapping(value = "/anyone/graduate/design/release/organizes", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<Organize> organizes(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils<Organize> ajaxUtils = AjaxUtils.of();
+        List<Organize> organizes = new ArrayList<>();
+        Byte isDel = 0;
+        Organize organize = new Organize(0, "请选择班级", isDel, 0, "");
+        organizes.add(organize);
+        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
+        Result<OrganizeRecord> organizeRecords = organizeService.findByGradeAndScienceIdNotIsDel(graduationDesignRelease.getAllowGrade(), graduationDesignRelease.getScienceId());
+        for (OrganizeRecord r : organizeRecords) {
+            Organize tempOrganize = new Organize(r.getOrganizeId(), r.getOrganizeName(), r.getOrganizeIsDel(), r.getScienceId(), r.getGrade());
+            organizes.add(tempOrganize);
+        }
+        return ajaxUtils.success().msg("获取班级数据成功！").listData(organizes);
     }
 
     /**

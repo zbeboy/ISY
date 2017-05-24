@@ -115,6 +115,13 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 .fetch();
     }
 
+    @Override
+    public Result<OrganizeRecord> findByGradeAndScienceIdNotIsDel(String grade, int scienceId) {
+        return create.selectFrom(ORGANIZE)
+                .where(ORGANIZE.GRADE.eq(grade).and(ORGANIZE.SCIENCE_ID.eq(scienceId)))
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(OrganizeElastic organizeElastic) {

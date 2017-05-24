@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
->
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -10,7 +9,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">调整填报教师 -
-                    <small>调整</small>
+                    <small>已填报学生</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -21,45 +20,65 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                <div class="text-right" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
-                    </button>
+                <div class="well">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" id="search_student_name" class="form-control input-sm" placeholder="学生姓名"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="search_student_number" class="form-control input-sm" placeholder="学号"/>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control" id="select_organize">
+                                <option>请选择班级</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top:4px;">
+                        <button type="button" id="search" class="btn btn-outline btn-default"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline btn-default"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
                 </div>
-                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="teacherTable">
+                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th scope="col" data-tablesaw-priority="persist">姓名</th>
-                        <th scope="col" data-tablesaw-priority="persist">联系方式</th>
-                        <th scope="col">指导人数</th>
-                        <th scope="col">可报人数</th>
-                        <th scope="col">操作</th>
+                        <th>
+                            <input type="checkbox" name="checkall" id="checkall"/>
+                        </th>
+                        <th data-class="expand">姓名</th>
+                        <th data-hide="phone">学号</th>
+                        <th data-hide="phone">班级</th>
+                        <th>指导教师</th>
+                        <th data-hide="phone">操作</th>
                     </tr>
                     </thead>
-                    <tbody id="teacherData">
-                    </tbody>
-                </table>
-                <h3>学生</h3>
-                <p>当前选择 : <span id="teacherName"></span>  <span id="teacherMobile"></span></p>
-                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="studentTable">
-                    <thead>
+
+                    <tfoot>
                     <tr>
-                        <th scope="col" data-tablesaw-priority="persist">姓名</th>
-                        <th scope="col" data-tablesaw-priority="persist">学号</th>
-                        <th scope="col">班级</th>
-                        <th scope="col">邮箱</th>
-                        <th scope="col">联系方式</th>
-                        <th scope="col">操作</th>
+                        <th></th>
+                        <th>姓名</th>
+                        <th>学号</th>
+                        <th>班级</th>
+                        <th>指导教师</th>
+                        <th>操作</th>
                     </tr>
-                    </thead>
-                    <tbody id="studentData">
+                    </tfoot>
+
+                    <tbody>
                     </tbody>
                 </table>
+
             </div>
         </div>
         <!-- /.row -->
         <footer class="footer" th:include="footer::footer">
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
+        <!-- /.footer -->
         <!-- 指导教师Modal -->
         <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel"
              aria-hidden="true">
@@ -76,7 +95,7 @@
                             <input name="graduationDesignTutorId" type="hidden" id="teacherGraduationDesignTutorId"/>
                             <input name="graduationDesignReleaseId" type="hidden" th:value="${graduationDesignReleaseId}"/>
                             <input type="hidden" id="teacherGraduationDesignTeacherId"/>
-                            <input type="hidden" name="saveType" id="saveType" value="0"/>
+                            <input type="hidden" name="saveType" id="saveType"/>
                         </form>
                         <p id="teacher_error_msg" class="hidden"></p>
                     </div>
@@ -87,38 +106,17 @@
                 </div>
             </div>
         </div>
-        <script id="teacher-template" type="text/x-handlebars-template">
-            {{#each listResult}}
-            <tr>
-                <td>{{realName}}</td>
-                <td>{{staffMobile}}</td>
-                <td>{{studentCount}}</td>
-                <td>{{residue}}</td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-sm teacher_detail"
-                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}" data-mobile="{{staffMobile}}">详情
-                    </button>
-                </td>
-            </tr>
+        <!--定义操作列按钮模板-->
+        <script id="operator_button" type="text/x-handlebars-template">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-student="{{this.studentName}}" data-teacher="{{this.graduationDesignTeacherId}}">{{this.name}}
+            </button>
             {{/each}}
         </script>
-        <script id="student-template" type="text/x-handlebars-template">
+        <script id="organize-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <tr>
-                <td>{{realName}}</td>
-                <td>{{studentNumber}}</td>
-                <td>{{organizeName}}</td>
-                <td>{{username}}</td>
-                <td>{{mobile}}</td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-sm adjust_teacher"
-                            data-id="{{graduationDesignTutorId}}" data-teacher="{{graduationDesignTeacherId}}">调整
-                    </button>
-                    <button type="button" class="btn btn-danger btn-sm delete_teacher"
-                            data-id="{{graduationDesignTutorId}}" data-teacher="{{graduationDesignTeacherId}}" data-student="{{realName}}">删除
-                    </button>
-                </td>
-            </tr>
+            <option value="{{organize_value}}">{{organize_name}}</option>
             {{/each}}
         </script>
         <script id="adjust-teacher-template" type="text/x-handlebars-template">
@@ -135,14 +133,13 @@
             </div>
             {{/each}}
         </script>
-        <!-- /.footer -->
         <script th:inline="javascript">
             /*页面参数*/
             var init_page_param = {
                 'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
             };
         </script>
-        <input type="hidden" class="dy_script" value="/js/graduate/design/adjustech/design_adjustech_adjust.js"/>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/adjustech/design_adjustech_submit.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

@@ -10,7 +10,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         teacher_data_url: '/web/graduate/design/adjustech/teacher/data',
         student_data_url: '/web/graduate/design/adjustech/student/data',
         adjust_teacher: '/web/graduate/design/adjustech/teachers',
-        update:'/web/graduate/design/adjustech/update',
+        update: '/web/graduate/design/adjustech/update',
+        delete: '/web/graduate/design/adjustech/delete',
         back: '/web/menu/graduate/design/adjustech'
     };
 
@@ -130,7 +131,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
             id: init_page_param.graduationDesignReleaseId,
             graduationDesignTeacherId: graduationDesignTeacherId
         }, function (data) {
-            if(data.state){
+            if (data.state) {
                 teachersData(data);
                 $('#teacherGraduationDesignTutorId').val(graduationDesignTutorId);
                 $('#teacherGraduationDesignTeacherId').val(graduationDesignTeacherId);
@@ -145,19 +146,84 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         });
     });
 
+    /*
+     删除
+     */
+    $(studentData).delegate('.delete_teacher', "click", function () {
+        var graduationDesignTutorId = $(this).attr('data-id');
+        var studentName = $(this).attr('data-student');
+        var graduationDesignTeacherId = $(this).attr('data-teacher');
+        var msg;
+        msg = Messenger().post({
+            message: "确定删除 '" + studentName + "' 吗?",
+            actions: {
+                retry: {
+                    label: '确定',
+                    phrase: 'Retrying TIME',
+                    action: function () {
+                        msg.cancel();
+                        del(graduationDesignTutorId, graduationDesignTeacherId);
+                    }
+                },
+                cancel: {
+                    label: '取消',
+                    action: function () {
+                        return msg.cancel();
+                    }
+                }
+            }
+        });
+    });
+
     /**
      * 保存调整
      */
-    $('#saveTeacher').click(function(){
-        $.post(ajax_url.update,$('#teacher_form').serialize(),function (data) {
-           if(data.state){
-               $('#teacherModal').modal('hide');
-               $('#teacher_error_msg').addClass('hidden').removeClass('text-danger').text('');
-               initStudentData($('#teacherGraduationDesignTeacherId').val());
-           } else {
-               $('#teacher_error_msg').removeClass('hidden').addClass('text-danger').text(data.msg);
-           }
+    $('#saveTeacher').click(function () {
+        $.post(ajax_url.update, $('#teacher_form').serialize(), function (data) {
+            if (data.state) {
+                $('#teacherModal').modal('hide');
+                $('#teacher_error_msg').addClass('hidden').removeClass('text-danger').text('');
+                initStudentData($('#teacherGraduationDesignTeacherId').val());
+            } else {
+                $('#teacher_error_msg').removeClass('hidden').addClass('text-danger').text(data.msg);
+            }
         });
     });
+
+    function del(graduationDesignTutorId, graduationDesignTeacherId) {
+        sendDelAjax(graduationDesignTutorId, graduationDesignTeacherId, '删除');
+    }
+
+    /**
+     * 删除ajax
+     * @param graduationDesignTutorId
+     * @param graduationDesignTeacherId
+     * @param message
+     */
+    function sendDelAjax(graduationDesignTutorId, graduationDesignTeacherId, message) {
+        Messenger().run({
+            successMessage: message + '学生成功',
+            errorMessage: message + '学生失败',
+            progressMessage: '正在' + message + '学生....'
+        }, {
+            url: web_path + ajax_url.delete,
+            type: 'post',
+            data: {
+                id: init_page_param.graduationDesignReleaseId,
+                graduationDesignTutorIds: graduationDesignTutorId
+            },
+            success: function (data) {
+                if (data.state) {
+                    initStudentData(graduationDesignTeacherId);
+                }
+            },
+            error: function (xhr) {
+                if ((xhr != null ? xhr.status : void 0) === 404) {
+                    return "请求失败";
+                }
+                return true;
+            }
+        });
+    }
 
 });

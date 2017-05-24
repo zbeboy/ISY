@@ -32,12 +32,14 @@ import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBe
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
+import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.adjustech.GraduationDesignTutorUpdateVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +92,17 @@ public class GraduationDesignAdjustechController {
     public String adjust(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
         return "web/graduate/design/adjustech/design_adjustech_adjust::#page-wrapper";
+    }
+
+    /**
+     * 已填报学生
+     *
+     * @return 已填报学生页面
+     */
+    @RequestMapping(value = "/web/graduate/design/adjustech/student/submit", method = RequestMethod.GET)
+    public String fill(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+        return "web/graduate/design/adjustech/design_adjustech_submit::#page-wrapper";
     }
 
     /**
@@ -248,11 +261,13 @@ public class GraduationDesignAdjustechController {
             if (DateTimeUtils.timestampAfterDecide(graduationDesignRelease.getFillTeacherEndTime())) {
                 List<GraduationDesignTeacherBean> graduationDesignTeacherBeens =
                         graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
-                graduationDesignTeacherBeens.forEach(graduationDesignTeacherBean -> {
-                    if (graduationDesignTeacherId.equals(graduationDesignTeacherBean.getGraduationDesignTeacherId())) {
-                        graduationDesignTeacherBean.setSelected(true);
-                    }
-                });
+                if (!graduationDesignTeacherId.equals("-1")) {
+                    graduationDesignTeacherBeens.forEach(graduationDesignTeacherBean -> {
+                        if (graduationDesignTeacherId.equals(graduationDesignTeacherBean.getGraduationDesignTeacherId())) {
+                            graduationDesignTeacherBean.setSelected(true);
+                        }
+                    });
+                }
                 ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
             } else {
                 ajaxUtils.fail().msg("请在填报时间结束后操作");
@@ -261,6 +276,40 @@ public class GraduationDesignAdjustechController {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 获取已填报学生数据
+     *
+     * @param request 请求
+     * @return 已填报学生数据
+     */
+    @RequestMapping(value = "/web/graduate/design/adjustech/student/submit/data", method = RequestMethod.GET)
+    @ResponseBody
+    public DataTablesUtils<GraduationDesignTutorBean> fillData(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("select");
+        headers.add("student_name");
+        headers.add("student_number");
+        headers.add("organize_name");
+        headers.add("staff_name");
+        headers.add("operator");
+        DataTablesUtils<GraduationDesignTutorBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        GraduationDesignTutorBean condition = new GraduationDesignTutorBean();
+        String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");
+        if (!ObjectUtils.isEmpty(graduationDesignReleaseId)) {
+            condition.setGraduationDesignReleaseId(request.getParameter("graduationDesignReleaseId"));
+            List<GraduationDesignTutorBean> graduationDesignTutorBeens = graduationDesignTutorService.findAllFillByPage(dataTablesUtils, condition);
+            dataTablesUtils.setData(graduationDesignTutorBeens);
+            dataTablesUtils.setiTotalRecords(graduationDesignTutorService.countAllFill(condition));
+            dataTablesUtils.setiTotalDisplayRecords(graduationDesignTutorService.countFillByCondition(dataTablesUtils, condition));
+        } else {
+            dataTablesUtils.setData(null);
+            dataTablesUtils.setiTotalRecords(0);
+            dataTablesUtils.setiTotalDisplayRecords(0);
+        }
+        return dataTablesUtils;
     }
 
     /**
@@ -280,9 +329,19 @@ public class GraduationDesignAdjustechController {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 仅允许在填报时间之后调整
                 if (DateTimeUtils.timestampAfterDecide(graduationDesignRelease.getFillTeacherEndTime())) {
-                    GraduationDesignTutor graduationDesignTutor = graduationDesignTutorService.findById(graduationDesignTutorUpdateVo.getGraduationDesignTutorId());
-                    graduationDesignTutor.setGraduationDesignTeacherId(graduationDesignTutorUpdateVo.getGraduationDesignTeacherId());
-                    graduationDesignTutorService.update(graduationDesignTutor);
+                    // saveType 0:单个调整  1:批量调整
+                    if (graduationDesignTutorUpdateVo.getSaveType() == 0) {
+                        GraduationDesignTutor graduationDesignTutor = graduationDesignTutorService.findById(graduationDesignTutorUpdateVo.getGraduationDesignTutorId());
+                        graduationDesignTutor.setGraduationDesignTeacherId(graduationDesignTutorUpdateVo.getGraduationDesignTeacherId());
+                        graduationDesignTutorService.update(graduationDesignTutor);
+                    } else if (graduationDesignTutorUpdateVo.getSaveType() == 1) {
+                        List<String> graduationDesignTutorIds = SmallPropsUtils.StringIdsToStringList(graduationDesignTutorUpdateVo.getGraduationDesignTutorId());
+                        graduationDesignTutorIds.forEach(graduationDesignTutorId -> {
+                            GraduationDesignTutor graduationDesignTutor = graduationDesignTutorService.findById(graduationDesignTutorId);
+                            graduationDesignTutor.setGraduationDesignTeacherId(graduationDesignTutorUpdateVo.getGraduationDesignTeacherId());
+                            graduationDesignTutorService.update(graduationDesignTutor);
+                        });
+                    }
                     ajaxUtils.success().msg("保存成功");
                 } else {
                     ajaxUtils.fail().msg("请在填报时间结束后操作");
@@ -293,6 +352,28 @@ public class GraduationDesignAdjustechController {
         } else {
             ajaxUtils.fail().msg("参数异常");
         }
+        return ajaxUtils;
+    }
+
+    @RequestMapping(value = "/web/graduate/design/adjustech/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils delete(@RequestParam("id") String graduationDesignReleaseId, String graduationDesignTutorIds) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 仅允许在填报时间之后调整
+            if (DateTimeUtils.timestampAfterDecide(graduationDesignRelease.getFillTeacherEndTime())) {
+                graduationDesignTutorService.deleteByIds(SmallPropsUtils.StringIdsToStringList(graduationDesignTutorIds));
+                ajaxUtils.success().msg("删除成功");
+            } else {
+                ajaxUtils.fail().msg("请在填报时间结束后操作");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+
         return ajaxUtils;
     }
 
