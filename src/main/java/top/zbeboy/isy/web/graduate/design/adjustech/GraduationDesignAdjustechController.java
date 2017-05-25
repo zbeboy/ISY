@@ -467,6 +467,52 @@ public class GraduationDesignAdjustechController {
     }
 
     /**
+     * 确认调整
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/adjustech/ok", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils adjustechOk(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
+        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
+            if (ObjectUtils.isEmpty(graduationDesignRelease.getGraduationDesignIsDel()) || graduationDesignRelease.getGraduationDesignIsDel() != 1) {
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    // 仅允许在填报时间之后调整
+                    if (DateTimeUtils.timestampAfterDecide(graduationDesignRelease.getFillTeacherEndTime())) {
+                        // 是否已确认
+                        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                            // 是否已确认调整
+                            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                                ajaxUtils.fail().msg("已确认调整");
+                            } else {
+                                Byte b = 1;
+                                graduationDesignRelease.setIsOkTeacherAdjust(b);
+                                graduationDesignReleaseService.update(graduationDesignRelease);
+                                ajaxUtils.success().msg("确认调整成功");
+                            }
+                        } else {
+                            ajaxUtils.fail().msg("未确认毕业设计指导教师，无法进行操作");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("请在填报时间结束后操作");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("不在毕业设计时间范围，无法操作");
+                }
+            } else {
+                ajaxUtils.fail().msg("该毕业设计已被注销");
+            }
+        } else {
+            ajaxUtils.fail().msg("未查询到相关信息");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id

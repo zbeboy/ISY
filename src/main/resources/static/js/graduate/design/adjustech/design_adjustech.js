@@ -174,11 +174,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /*
          确认
          */
-        $(tableData).delegate('.design_teacher_ok', "click", function () {
+        $(tableData).delegate('.design_teacher_ok_adjust', "click", function () {
             var id = $(this).attr('data-id');
             var msg;
             msg = Messenger().post({
-                message: "确认毕业设计教师后，相关操作将无法进行",
+                message: "确认调整后，相关操作将无法进行",
                 actions: {
                     retry: {
                         label: '确定',

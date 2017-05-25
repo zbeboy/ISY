@@ -289,31 +289,49 @@ public class GraduationDesignTeacherController {
     public AjaxUtils tutorOk(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        // 是否已确认
-        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-            ajaxUtils.fail().msg("已确认毕业设计指导教师");
+        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
+            if (ObjectUtils.isEmpty(graduationDesignRelease.getGraduationDesignIsDel()) || graduationDesignRelease.getGraduationDesignIsDel() != 1) {
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    // 在填报时间之前调整
+                    if (DateTimeUtils.timestampBeforeDecide(graduationDesignRelease.getFillTeacherEndTime())) {
+                        // 是否已确认
+                        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                            ajaxUtils.fail().msg("已确认毕业设计指导教师");
+                        } else {
+                            List<GraduationDesignTeacherBean> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+                            ValueOperations<String, String> ops = this.template.opsForValue();
+                            // 初始化人数到缓存
+                            graduationDesignTeachers.forEach(graduationDesignTeacher ->
+                                    ops.set(
+                                            CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.getGraduationDesignTeacherId(),
+                                            graduationDesignTeacher.getStudentCount() + "",
+                                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
+                                            TimeUnit.DAYS)
+                            );
+                            // 列表刷到缓存
+                            stringListValueOperations.set(
+                                    CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId,
+                                    graduationDesignTeachers,
+                                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
+                                    TimeUnit.DAYS
+                            );
+                            Byte b = 1;
+                            graduationDesignRelease.setIsOkTeacher(b);
+                            graduationDesignReleaseService.update(graduationDesignRelease);
+                            ajaxUtils.success().msg("确认毕业设计指导教师成功");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("已过学生填报时间");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("不在毕业设计时间范围，无法操作");
+                }
+            } else {
+                ajaxUtils.fail().msg("该毕业设计已被注销");
+            }
         } else {
-            List<GraduationDesignTeacherBean> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
-            ValueOperations<String, String> ops = this.template.opsForValue();
-            // 初始化人数到缓存
-            graduationDesignTeachers.forEach(graduationDesignTeacher ->
-                    ops.set(
-                            CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.getGraduationDesignTeacherId(),
-                            graduationDesignTeacher.getStudentCount() + "",
-                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
-                            TimeUnit.DAYS)
-            );
-            // 列表刷到缓存
-            stringListValueOperations.set(
-                    CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId,
-                    graduationDesignTeachers,
-                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
-                    TimeUnit.DAYS
-            );
-            Byte b = 1;
-            graduationDesignRelease.setIsOkTeacher(b);
-            graduationDesignReleaseService.update(graduationDesignRelease);
-            ajaxUtils.success().msg("确认毕业设计指导教师成功");
+            ajaxUtils.fail().msg("未查询到相关信息");
         }
         return ajaxUtils;
     }

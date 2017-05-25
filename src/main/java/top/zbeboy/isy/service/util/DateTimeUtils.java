@@ -150,6 +150,17 @@ public class DateTimeUtils {
     }
 
     /**
+     * 当前时间小于某一时间
+     *
+     * @param before 某一时间
+     * @return true or false
+     */
+    public static boolean timestampBeforeDecide(java.sql.Timestamp before) {
+        java.sql.Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
+        return now.before(before);
+    }
+
+    /**
      * 拆分时间
      *
      * @param splitSymbol 分隔符
