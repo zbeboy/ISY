@@ -177,7 +177,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
             }
         });
 
-        var global_button = '<button type="button" id="student_adjust" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>批量调整</button>' +
+        var global_button = '<button type="button" id="student_adjust" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-retweet"></i>批量调整</button>' +
             '  <button type="button" id="student_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
