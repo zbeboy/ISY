@@ -1,5 +1,5 @@
 /**
- * Created by zbeboy on 2017/5/24.
+ * Created by zbeboy on 2017/5/25.
  */
 require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
     function ($, nav_active, Handlebars) {
@@ -9,11 +9,10 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
          */
         function getAjaxUrl() {
             return {
-                data_url: '/web/graduate/design/adjustech/student/submit/data',
+                data_url: '/web/graduate/design/adjustech/student/unsubmit/data',
                 organizes: '/anyone/graduate/design/release/organizes',
                 adjust_teacher: '/web/graduate/design/adjustech/teachers',
-                update: '/web/graduate/design/adjustech/update',
-                delete: '/web/graduate/design/adjustech/delete',
+                save: '/web/graduate/design/adjustech/save',
                 back: '/web/menu/graduate/design/adjustech'
             };
         }
@@ -94,10 +93,9 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
             },
             "columns": [
                 {"data": null},
-                {"data": "studentName"},
+                {"data": "realName"},
                 {"data": "studentNumber"},
                 {"data": "organizeName"},
-                {"data": "staffName"},
                 {"data": null}
             ],
             columnDefs: [
@@ -105,11 +103,11 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                     targets: 0,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        return '<input type="checkbox" value="' + c.graduationDesignTutorId + '" name="check"/>';
+                        return '<input type="checkbox" value="' + c.studentId + '" name="check"/>';
                     }
                 },
                 {
-                    targets: 5,
+                    targets: 4,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -120,17 +118,8 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                                     "name": "调整",
                                     "css": "edit",
                                     "type": "primary",
-                                    "id": c.graduationDesignTutorId,
-                                    "studentName": c.studentName,
-                                    "graduationDesignTeacherId": c.graduationDesignTeacherId
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.graduationDesignTutorId,
-                                    "studentName": c.studentName,
-                                    "graduationDesignTeacherId": c.graduationDesignTeacherId
+                                    "id": c.studentId,
+                                    "studentName": c.studentName
                                 }
                             ]
                         };
@@ -170,15 +159,10 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'), $(this).attr('data-teacher'));
                 });
-
-                tableElement.delegate('.del', "click", function () {
-                    student_del($(this).attr('data-id'), $(this).attr('data-student'));
-                });
             }
         });
 
         var global_button = '<button type="button" id="student_adjust" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-retweet"></i>批量调整</button>' +
-            '  <button type="button" id="student_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -265,48 +249,13 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
          批量调整
          */
         $('#student_adjust').click(function () {
-            var graduationDesignTutorIds = [];
+            var studentIds = [];
             var ids = $('input[name="check"]:checked');
             for (var i = 0; i < ids.length; i++) {
-                graduationDesignTutorIds.push($(ids[i]).val());
+                studentIds.push($(ids[i]).val());
             }
-            if (graduationDesignTutorIds.length > 0) {
-                adjustStudent(init_page_param.graduationDesignReleaseId, graduationDesignTutorIds.join(','), -1);
-            } else {
-                Messenger().post("未发现有选中的学生!");
-            }
-        });
-
-        /*
-         批量删除
-         */
-        $('#student_dels').click(function () {
-            var graduationDesignTutorIds = [];
-            var ids = $('input[name="check"]:checked');
-            for (var i = 0; i < ids.length; i++) {
-                graduationDesignTutorIds.push($(ids[i]).val());
-            }
-            if (graduationDesignTutorIds.length > 0) {
-                var msg;
-                msg = Messenger().post({
-                    message: "确定删除选中的学生吗?",
-                    actions: {
-                        retry: {
-                            label: '确定',
-                            phrase: 'Retrying TIME',
-                            action: function () {
-                                msg.cancel();
-                                dels(graduationDesignTutorIds);
-                            }
-                        },
-                        cancel: {
-                            label: '取消',
-                            action: function () {
-                                return msg.cancel();
-                            }
-                        }
-                    }
-                });
+            if (studentIds.length > 0) {
+                adjustStudent(init_page_param.graduationDesignReleaseId, studentIds.join(','));
             } else {
                 Messenger().post("未发现有选中的学生!");
             }
@@ -315,25 +264,23 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         /*
          调整
          */
-        function edit(id, graduationDesignTeacherId) {
-            adjustStudent(init_page_param.graduationDesignReleaseId, id, graduationDesignTeacherId);
+        function edit(id) {
+            adjustStudent(init_page_param.graduationDesignReleaseId, id);
         }
 
         /**
          * 进行调整
          * @param graduationDesignReleaseId 毕业发布id
-         * @param graduationDesignTutorId 教师与学生关联表 id
-         * @param graduationDesignTeacherId 指导老师id
+         * @param studentId 教师与学生关联表 id
          */
-        function adjustStudent(graduationDesignReleaseId, graduationDesignTutorId, graduationDesignTeacherId) {
+        function adjustStudent(graduationDesignReleaseId, studentId) {
             $.get(getAjaxUrl().adjust_teacher, {
                 id: graduationDesignReleaseId,
-                graduationDesignTeacherId: graduationDesignTeacherId
+                graduationDesignTeacherId: '-1'
             }, function (data) {
                 if (data.state) {
                     teachersData(data);
-                    $('#teacherGraduationDesignTutorId').val(graduationDesignTutorId);
-                    $('#teacherGraduationDesignTeacherId').val(graduationDesignTeacherId);
+                    $('#teacherStudentId').val(studentId);
                     $('#teacherModal').modal('show');
                 } else {
                     $('#teacher_error_msg').removeClass('hidden').addClass('text-danger').text(data.msg);
@@ -355,7 +302,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
          */
         $('#saveTeacher').click(function () {
             if ($("input[name='graduationDesignTeacherId']:checked").length > 0) {
-                $.post(getAjaxUrl().update, $('#teacher_form').serialize(), function (data) {
+                $.post(getAjaxUrl().save, $('#teacher_form').serialize(), function (data) {
                     if (data.state) {
                         $('#teacherModal').modal('hide');
                         $('#teacher_error_msg').addClass('hidden').removeClass('text-danger').text('');
@@ -368,70 +315,5 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                 $('#teacher_error_msg').removeClass('hidden').addClass('text-danger').text('请选择指导教师');
             }
         });
-
-        /*
-         删除
-         */
-        function student_del(graduationDesignTutorId, studentName) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定删除 '" + studentName + "' 吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            del(graduationDesignTutorId);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-        }
-
-        function del(graduationDesignTutorId) {
-            sendDelAjax(graduationDesignTutorId, '删除');
-        }
-
-        function dels(graduationDesignTutorIds) {
-            sendDelAjax(graduationDesignTutorIds.join(","), '批量删除');
-        }
-
-        /**
-         * 删除ajax
-         * @param graduationDesignTutorId
-         * @param message
-         */
-        function sendDelAjax(graduationDesignTutorId, message) {
-            Messenger().run({
-                successMessage: message + '学生成功',
-                errorMessage: message + '学生失败',
-                progressMessage: '正在' + message + '学生....'
-            }, {
-                url: web_path + getAjaxUrl().delete,
-                type: 'post',
-                data: {
-                    id: init_page_param.graduationDesignReleaseId,
-                    graduationDesignTutorIds: graduationDesignTutorId
-                },
-                success: function (data) {
-                    if (data.state) {
-                        myTable.ajax.reload();
-                    }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
-        }
 
     });

@@ -165,6 +165,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         /*
+         未填报学生
+         */
+        $(tableData).delegate('.design_not_fill', "click", function () {
+            $.address.value(ajax_url.not_fill + '?id=' + $(this).attr('data-id'));
+        });
+
+        /*
          确认
          */
         $(tableData).delegate('.design_teacher_ok', "click", function () {

@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">调整填报教师 -
-                    <small>已填报学生</small>
+                    <small>未填报学生</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -50,9 +50,8 @@
                             <input type="checkbox" name="checkall" id="checkall"/>
                         </th>
                         <th data-class="expand">姓名</th>
-                        <th data-hide="phone">学号</th>
+                        <th>学号</th>
                         <th data-hide="phone">班级</th>
-                        <th>指导教师</th>
                         <th data-hide="phone">操作</th>
                     </tr>
                     </thead>
@@ -63,7 +62,6 @@
                         <th>姓名</th>
                         <th>学号</th>
                         <th>班级</th>
-                        <th>指导教师</th>
                         <th>操作</th>
                     </tr>
                     </tfoot>
@@ -92,9 +90,8 @@
                     <div class="modal-body text-center">
                         <form role="form" id="teacher_form" style="height: 300px;overflow: auto">
                             <div class="form-group" id="teachers"></div>
-                            <input name="graduationDesignTutorId" type="hidden" id="teacherGraduationDesignTutorId"/>
                             <input name="graduationDesignReleaseId" type="hidden" th:value="${graduationDesignReleaseId}"/>
-                            <input type="hidden" id="teacherGraduationDesignTeacherId"/>
+                            <input type="hidden" name="studentId" id="teacherStudentId"/>
                         </form>
                         <p id="teacher_error_msg" class="hidden"></p>
                     </div>
@@ -109,7 +106,7 @@
         <script id="operator_button" type="text/x-handlebars-template">
             {{#each func}}
             <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
-                    data-student="{{this.studentName}}" data-teacher="{{this.graduationDesignTeacherId}}">{{this.name}}
+                    data-student="{{this.studentName}}">{{this.name}}
             </button>
             {{/each}}
         </script>
@@ -122,11 +119,7 @@
             {{#each listResult}}
             <div class="radio">
                 <label>
-                    {{#if selected}}
-                    <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" checked="checked"/>
-                    {{else}}
                     <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" />
-                    {{/if}}
                     {{realName}}  {{staffMobile}}
                 </label>
             </div>
@@ -138,7 +131,7 @@
                 'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
             };
         </script>
-        <input type="hidden" class="dy_script" value="/js/graduate/design/adjustech/design_adjustech_submit.js"/>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/adjustech/design_adjustech_unsubmit.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

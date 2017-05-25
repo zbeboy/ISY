@@ -6,15 +6,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Created by zbeboy on 2017/5/23.
+ * Created by zbeboy on 2017/5/25.
  */
 @Data
-public class GraduationDesignTutorUpdateVo {
+public class GraduationDesignTutorAddVo {
     @NotNull
     @Size(max = 64)
     private String graduationDesignReleaseId;
     @NotNull
-    private String graduationDesignTutorId;
+    private String studentId;
     @NotNull
     @Size(max = 64)
     private String graduationDesignTeacherId;
