@@ -1,7 +1,7 @@
 # ISY
 校园协作平台  
-[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/zbeboy/ISY/blob/v11/LICENSE)
-[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)](https://github.com/zbeboy/ISY)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zbeboy/ISY/v11/LICENSE) 
+[![GitHub stars](https://img.shields.io/github/stars/zbeboy/ISY.svg)](https://github.com/zbeboy/ISY/stargazers)
 # 开发环境
 1.jdk 1.8.*;  
 2.Intellij IDEA 2015 +;  
