@@ -60,6 +60,7 @@ CREATE TABLE graduation_design_plan(
   guide_location VARCHAR(100) NOT NULL ,
   guide_content VARCHAR(150) NOT NULL ,
   note VARCHAR(100) NOT NULL ,
+  add_time DATETIME NOT NULL ,
   graduation_design_teacher_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_teacher_id) REFERENCES  graduation_design_teacher(graduation_design_teacher_id)
 );

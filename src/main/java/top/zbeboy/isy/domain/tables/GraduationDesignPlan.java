@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables;
 
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> {
 
-    private static final long serialVersionUID = 1800775208;
+    private static final long serialVersionUID = -202310631;
 
     /**
      * The reference instance of <code>isy.graduation_design_plan</code>
@@ -84,6 +85,11 @@ public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> 
      * The column <code>isy.graduation_design_plan.graduation_design_teacher_id</code>.
      */
     public final TableField<GraduationDesignPlanRecord, String> GRADUATION_DESIGN_TEACHER_ID = createField("graduation_design_teacher_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_plan.add_time</code>.
+     */
+    public final TableField<GraduationDesignPlanRecord, Timestamp> ADD_TIME = createField("add_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_plan</code> table reference

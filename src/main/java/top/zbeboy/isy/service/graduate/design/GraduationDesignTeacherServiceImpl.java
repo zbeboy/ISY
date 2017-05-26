@@ -21,6 +21,7 @@ import top.zbeboy.isy.web.util.DataTablesUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -94,6 +95,14 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
     }
 
     @Override
+    public Optional<Record> findByGraduationDesignReleaseIdAndStaffId(String graduationDesignReleaseId, int staffId) {
+        return create.select()
+                .from(GRADUATION_DESIGN_TEACHER)
+                .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId).and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId)))
+                .fetchOptional();
+    }
+
+    @Override
     public List<GraduationDesignTeacher> findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
         return graduationDesignTeacherDao.fetchByGraduationDesignReleaseId(graduationDesignReleaseId);
     }
@@ -102,13 +111,13 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
     public List<GraduationDesignTeacherBean> findByGraduationDesignReleaseIdRelationForStaff(String graduationDesignReleaseId) {
         List<GraduationDesignTeacherBean> graduationDesignTeacherBeens = new ArrayList<>();
         Result<Record> records = create.select()
-                    .from(GRADUATION_DESIGN_TEACHER)
-                    .join(STAFF)
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                    .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
-                    .fetch();
+                .from(GRADUATION_DESIGN_TEACHER)
+                .join(STAFF)
+                .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
+                .fetch();
 
         for (Record r : records) {
             GraduationDesignTeacherBean temp = new GraduationDesignTeacherBean();

@@ -1,10 +1,12 @@
 package top.zbeboy.isy.service.graduate.design;
 
+import org.jooq.Record;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by zbeboy on 2017/5/8.
@@ -18,6 +20,15 @@ public interface GraduationDesignTeacherService {
      * @return 数据
      */
     GraduationDesignTeacher findById(String id);
+
+    /**
+     * 通过毕业设计发布id与教职工id查询
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param staffId                   教职工id
+     * @return 数据
+     */
+    Optional<Record> findByGraduationDesignReleaseIdAndStaffId(String graduationDesignReleaseId, int staffId);
 
     /**
      * 根据毕业设计发布id查询

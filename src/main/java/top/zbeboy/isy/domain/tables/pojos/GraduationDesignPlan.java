@@ -5,6 +5,7 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,15 +25,16 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan implements Serializable {
 
-    private static final long serialVersionUID = 2108183708;
+    private static final long serialVersionUID = 745917194;
 
-    private String graduationDesignPlanId;
-    private String scheduling;
-    private String supervisionTime;
-    private String guideLocation;
-    private String guideContent;
-    private String note;
-    private String graduationDesignTeacherId;
+    private String    graduationDesignPlanId;
+    private String    scheduling;
+    private String    supervisionTime;
+    private String    guideLocation;
+    private String    guideContent;
+    private String    note;
+    private String    graduationDesignTeacherId;
+    private Timestamp addTime;
 
     public GraduationDesignPlan() {}
 
@@ -44,16 +46,18 @@ public class GraduationDesignPlan implements Serializable {
         this.guideContent = value.guideContent;
         this.note = value.note;
         this.graduationDesignTeacherId = value.graduationDesignTeacherId;
+        this.addTime = value.addTime;
     }
 
     public GraduationDesignPlan(
-        String graduationDesignPlanId,
-        String scheduling,
-        String supervisionTime,
-        String guideLocation,
-        String guideContent,
-        String note,
-        String graduationDesignTeacherId
+        String    graduationDesignPlanId,
+        String    scheduling,
+        String    supervisionTime,
+        String    guideLocation,
+        String    guideContent,
+        String    note,
+        String    graduationDesignTeacherId,
+        Timestamp addTime
     ) {
         this.graduationDesignPlanId = graduationDesignPlanId;
         this.scheduling = scheduling;
@@ -62,6 +66,7 @@ public class GraduationDesignPlan implements Serializable {
         this.guideContent = guideContent;
         this.note = note;
         this.graduationDesignTeacherId = graduationDesignTeacherId;
+        this.addTime = addTime;
     }
 
     @NotNull
@@ -134,6 +139,15 @@ public class GraduationDesignPlan implements Serializable {
         this.graduationDesignTeacherId = graduationDesignTeacherId;
     }
 
+    @NotNull
+    public Timestamp getAddTime() {
+        return this.addTime;
+    }
+
+    public void setAddTime(Timestamp addTime) {
+        this.addTime = addTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignPlan (");
@@ -145,6 +159,7 @@ public class GraduationDesignPlan implements Serializable {
         sb.append(", ").append(guideContent);
         sb.append(", ").append(note);
         sb.append(", ").append(graduationDesignTeacherId);
+        sb.append(", ").append(addTime);
 
         sb.append(")");
         return sb.toString();

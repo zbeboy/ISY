@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -108,5 +109,12 @@ public class GraduationDesignPlanDao extends DAOImpl<GraduationDesignPlanRecord,
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByGraduationDesignTeacherId(String... values) {
         return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>add_time IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByAddTime(Timestamp... values) {
+        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.ADD_TIME, values);
     }
 }

@@ -1,7 +1,7 @@
 /**
  * Created by zbeboy on 2017/5/19.
  */
-//# sourceURL=design_pharmtech_wish.js
+//# sourceURL=design_pharmtech_apply.js
 require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "jquery.showLoading", "tablesaw"], function ($, nav_active, Handlebars) {
     /*
      ajax url.
