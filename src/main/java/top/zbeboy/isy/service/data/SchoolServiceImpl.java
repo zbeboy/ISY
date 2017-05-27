@@ -36,8 +36,6 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
     @Resource
     private SchoolDao schoolDao;
 
-    @Resource
-    private OrganizeService organizeService;
 
     @Resource
     private OrganizeElasticRepository organizeElasticRepository;

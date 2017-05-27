@@ -81,4 +81,11 @@ public class SchoolroomDao extends DAOImpl<SchoolroomRecord, top.zbeboy.isy.doma
     public List<top.zbeboy.isy.domain.tables.pojos.Schoolroom> fetchByBuildingCode(String... values) {
         return fetch(Schoolroom.SCHOOLROOM.BUILDING_CODE, values);
     }
+
+    /**
+     * Fetch records that have <code>schoolroom_is_del IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.Schoolroom> fetchBySchoolroomIsDel(Byte... values) {
+        return fetch(Schoolroom.SCHOOLROOM.SCHOOLROOM_IS_DEL, values);
+    }
 }

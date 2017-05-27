@@ -40,9 +40,6 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     private CollegeDao collegeDao;
 
     @Resource
-    private OrganizeService organizeService;
-
-    @Resource
     private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired

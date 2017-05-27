@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.SchoolroomRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Schoolroom extends TableImpl<SchoolroomRecord> {
 
-    private static final long serialVersionUID = -2071622939;
+    private static final long serialVersionUID = -922413079;
 
     /**
      * The reference instance of <code>isy.schoolroom</code>
@@ -65,6 +65,11 @@ public class Schoolroom extends TableImpl<SchoolroomRecord> {
      * The column <code>isy.schoolroom.building_code</code>.
      */
     public final TableField<SchoolroomRecord, String> BUILDING_CODE = createField("building_code", org.jooq.impl.SQLDataType.VARCHAR.length(10).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.schoolroom.schoolroom_is_del</code>.
+     */
+    public final TableField<SchoolroomRecord, Byte> SCHOOLROOM_IS_DEL = createField("schoolroom_is_del", org.jooq.impl.SQLDataType.TINYINT, this, "");
 
     /**
      * Create a <code>isy.schoolroom</code> table reference

@@ -1,6 +1,7 @@
 CREATE TABLE building(
   building_id INT PRIMARY KEY AUTO_INCREMENT,
   building_name VARCHAR(30) NOT NULL ,
+  building_is_del BOOLEAN ,
   college_id INT NOT NULL ,
   FOREIGN KEY (college_id) REFERENCES college(college_id)
 );
@@ -9,6 +10,7 @@ CREATE TABLE schoolroom(
   schoolroom_id INT PRIMARY KEY AUTO_INCREMENT,
   building_id INT NOT NULL ,
   building_code VARCHAR(10) NOT NULL ,
+  schoolroom_is_del BOOLEAN,
   FOREIGN KEY (building_id) REFERENCES building(building_id)
 );
 

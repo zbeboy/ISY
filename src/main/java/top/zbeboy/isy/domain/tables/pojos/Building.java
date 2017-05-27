@@ -24,10 +24,11 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Building implements Serializable {
 
-    private static final long serialVersionUID = -2126468966;
+    private static final long serialVersionUID = -1499422277;
 
     private Integer buildingId;
     private String  buildingName;
+    private Byte    buildingIsDel;
     private Integer collegeId;
 
     public Building() {}
@@ -35,16 +36,19 @@ public class Building implements Serializable {
     public Building(Building value) {
         this.buildingId = value.buildingId;
         this.buildingName = value.buildingName;
+        this.buildingIsDel = value.buildingIsDel;
         this.collegeId = value.collegeId;
     }
 
     public Building(
         Integer buildingId,
         String  buildingName,
+        Byte    buildingIsDel,
         Integer collegeId
     ) {
         this.buildingId = buildingId;
         this.buildingName = buildingName;
+        this.buildingIsDel = buildingIsDel;
         this.collegeId = collegeId;
     }
 
@@ -67,6 +71,14 @@ public class Building implements Serializable {
         this.buildingName = buildingName;
     }
 
+    public Byte getBuildingIsDel() {
+        return this.buildingIsDel;
+    }
+
+    public void setBuildingIsDel(Byte buildingIsDel) {
+        this.buildingIsDel = buildingIsDel;
+    }
+
     @NotNull
     public Integer getCollegeId() {
         return this.collegeId;
@@ -82,6 +94,7 @@ public class Building implements Serializable {
 
         sb.append(buildingId);
         sb.append(", ").append(buildingName);
+        sb.append(", ").append(buildingIsDel);
         sb.append(", ").append(collegeId);
 
         sb.append(")");

@@ -24,11 +24,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Schoolroom implements Serializable {
 
-    private static final long serialVersionUID = 1164768508;
+    private static final long serialVersionUID = 1887184534;
 
     private Integer schoolroomId;
     private Integer buildingId;
     private String  buildingCode;
+    private Byte    schoolroomIsDel;
 
     public Schoolroom() {}
 
@@ -36,16 +37,19 @@ public class Schoolroom implements Serializable {
         this.schoolroomId = value.schoolroomId;
         this.buildingId = value.buildingId;
         this.buildingCode = value.buildingCode;
+        this.schoolroomIsDel = value.schoolroomIsDel;
     }
 
     public Schoolroom(
         Integer schoolroomId,
         Integer buildingId,
-        String  buildingCode
+        String  buildingCode,
+        Byte    schoolroomIsDel
     ) {
         this.schoolroomId = schoolroomId;
         this.buildingId = buildingId;
         this.buildingCode = buildingCode;
+        this.schoolroomIsDel = schoolroomIsDel;
     }
 
     @NotNull
@@ -76,6 +80,14 @@ public class Schoolroom implements Serializable {
         this.buildingCode = buildingCode;
     }
 
+    public Byte getSchoolroomIsDel() {
+        return this.schoolroomIsDel;
+    }
+
+    public void setSchoolroomIsDel(Byte schoolroomIsDel) {
+        this.schoolroomIsDel = schoolroomIsDel;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Schoolroom (");
@@ -83,6 +95,7 @@ public class Schoolroom implements Serializable {
         sb.append(schoolroomId);
         sb.append(", ").append(buildingId);
         sb.append(", ").append(buildingCode);
+        sb.append(", ").append(schoolroomIsDel);
 
         sb.append(")");
         return sb.toString();

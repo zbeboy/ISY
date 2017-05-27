@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.BuildingRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Building extends TableImpl<BuildingRecord> {
 
-    private static final long serialVersionUID = -1659117412;
+    private static final long serialVersionUID = 220185297;
 
     /**
      * The reference instance of <code>isy.building</code>
@@ -60,6 +60,11 @@ public class Building extends TableImpl<BuildingRecord> {
      * The column <code>isy.building.building_name</code>.
      */
     public final TableField<BuildingRecord, String> BUILDING_NAME = createField("building_name", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.building.building_is_del</code>.
+     */
+    public final TableField<BuildingRecord, Byte> BUILDING_IS_DEL = createField("building_is_del", org.jooq.impl.SQLDataType.TINYINT, this, "");
 
     /**
      * The column <code>isy.building.college_id</code>.
