@@ -2,6 +2,7 @@ package top.zbeboy.isy.web.graduate.design.project;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -9,12 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
-import top.zbeboy.isy.domain.tables.pojos.Staff;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.StaffService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignPlanService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.platform.UsersService;
@@ -23,9 +23,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by zbeboy on 2017/5/26.
@@ -48,6 +46,9 @@ public class GraduationDesignProjectController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private GraduationDesignPlanService graduationDesignPlanService;
 
     /**
      * 毕业设计规划
@@ -98,6 +99,49 @@ public class GraduationDesignProjectController {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
+    }
+
+    /**
+     * 规划添加
+     *
+     * @return 规划添加页面
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/add", method = RequestMethod.GET)
+    public String projectListAdd(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            page = "web/graduate/design/project/design_project_add::#page-wrapper";
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 获取列表数据
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 列表数据
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignPlan> listData(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils<GraduationDesignPlan> ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
+            List<GraduationDesignPlan> graduationDesignPlans = new ArrayList<>();
+            Result<GraduationDesignPlanRecord> records = graduationDesignPlanService.findByGraduationDesignTeacherIdOrderByAddTime(graduationDesignTeacher.getGraduationDesignTeacherId());
+            if (records.isNotEmpty()) {
+                graduationDesignPlans = records.into(GraduationDesignPlan.class);
+            }
+            ajaxUtils.success().msg("获取数据成功").listData(graduationDesignPlans);
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
     }
 
     /**
@@ -165,6 +209,7 @@ public class GraduationDesignProjectController {
                     Users users = usersService.getUserFromSession();
                     Staff staff = staffService.findByUsername(users.getUsername());
                     if (!ObjectUtils.isEmpty(staff)) {
+                        mapData.put("staff", staff);
                         Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
                         if (record.isPresent()) {
                             GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);

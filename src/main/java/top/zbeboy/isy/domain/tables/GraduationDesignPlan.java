@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> {
 
-    private static final long serialVersionUID = -202310631;
+    private static final long serialVersionUID = 1209100801;
 
     /**
      * The reference instance of <code>isy.graduation_design_plan</code>
@@ -67,11 +67,6 @@ public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> 
     public final TableField<GraduationDesignPlanRecord, String> SUPERVISION_TIME = createField("supervision_time", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_plan.guide_location</code>.
-     */
-    public final TableField<GraduationDesignPlanRecord, String> GUIDE_LOCATION = createField("guide_location", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
-
-    /**
      * The column <code>isy.graduation_design_plan.guide_content</code>.
      */
     public final TableField<GraduationDesignPlanRecord, String> GUIDE_CONTENT = createField("guide_content", org.jooq.impl.SQLDataType.VARCHAR.length(150).nullable(false), this, "");
@@ -82,14 +77,24 @@ public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> 
     public final TableField<GraduationDesignPlanRecord, String> NOTE = createField("note", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
 
     /**
+     * The column <code>isy.graduation_design_plan.add_time</code>.
+     */
+    public final TableField<GraduationDesignPlanRecord, Timestamp> ADD_TIME = createField("add_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+    /**
      * The column <code>isy.graduation_design_plan.graduation_design_teacher_id</code>.
      */
     public final TableField<GraduationDesignPlanRecord, String> GRADUATION_DESIGN_TEACHER_ID = createField("graduation_design_teacher_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_plan.add_time</code>.
+     * The column <code>isy.graduation_design_plan.building_id</code>.
      */
-    public final TableField<GraduationDesignPlanRecord, Timestamp> ADD_TIME = createField("add_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<GraduationDesignPlanRecord, Integer> BUILDING_ID = createField("building_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_plan.schoolroom_id</code>.
+     */
+    public final TableField<GraduationDesignPlanRecord, Integer> SCHOOLROOM_ID = createField("schoolroom_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_plan</code> table reference
@@ -142,7 +147,7 @@ public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> 
      */
     @Override
     public List<ForeignKey<GraduationDesignPlanRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GraduationDesignPlanRecord, ?>>asList(Keys.GRADUATION_DESIGN_PLAN_IBFK_1);
+        return Arrays.<ForeignKey<GraduationDesignPlanRecord, ?>>asList(Keys.GRADUATION_DESIGN_PLAN_IBFK_1, Keys.GRADUATION_DESIGN_PLAN_IBFK_2, Keys.GRADUATION_DESIGN_PLAN_IBFK_3);
     }
 
     /**

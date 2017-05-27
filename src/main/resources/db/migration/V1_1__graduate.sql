@@ -1,3 +1,22 @@
+CREATE TABLE building(
+  building_id INT PRIMARY KEY AUTO_INCREMENT,
+  building_name VARCHAR(30) NOT NULL ,
+  college_id INT NOT NULL ,
+  FOREIGN KEY (college_id) REFERENCES college(college_id)
+);
+
+CREATE TABLE schoolroom(
+  schoolroom_id INT PRIMARY KEY AUTO_INCREMENT,
+  building_id INT NOT NULL ,
+  building_code VARCHAR(10) NOT NULL ,
+  FOREIGN KEY (building_id) REFERENCES building(building_id)
+);
+
+CREATE TABLE score_type(
+  score_type_id INT PRIMARY KEY AUTO_INCREMENT,
+  score_type_name VARCHAR(20) NOT NULL
+);
+
 CREATE TABLE graduation_design_release(
   graduation_design_release_id VARCHAR(64) PRIMARY KEY ,
   graduation_design_title VARCHAR(100) NOT NULL ,
@@ -57,12 +76,15 @@ CREATE TABLE graduation_design_plan(
   graduation_design_plan_id VARCHAR(64) PRIMARY KEY ,
   scheduling VARCHAR(100) NOT NULL ,
   supervision_time VARCHAR(100) NOT NULL ,
-  guide_location VARCHAR(100) NOT NULL ,
   guide_content VARCHAR(150) NOT NULL ,
   note VARCHAR(100) NOT NULL ,
   add_time DATETIME NOT NULL ,
   graduation_design_teacher_id VARCHAR(64) NOT NULL ,
-  FOREIGN KEY (graduation_design_teacher_id) REFERENCES  graduation_design_teacher(graduation_design_teacher_id)
+  building_id INT NOT NULL ,
+  schoolroom_id INT NOT NULL ,
+  FOREIGN KEY (graduation_design_teacher_id) REFERENCES  graduation_design_teacher(graduation_design_teacher_id),
+  FOREIGN KEY (building_id) REFERENCES building(building_id),
+  FOREIGN KEY (schoolroom_id) REFERENCES schoolroom(schoolroom_id)
 );
 
 CREATE TABLE graduation_design_presubject(
@@ -153,20 +175,6 @@ CREATE TABLE defense_arrangement(
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id)
 );
 
-CREATE TABLE building(
-  building_id INT PRIMARY KEY AUTO_INCREMENT,
-  building_name VARCHAR(30) NOT NULL ,
-  college_id INT NOT NULL ,
-  FOREIGN KEY (college_id) REFERENCES college(college_id)
-);
-
-CREATE TABLE schoolroom(
-  schoolroom_id INT PRIMARY KEY AUTO_INCREMENT,
-  building_id INT NOT NULL ,
-  building_code VARCHAR(10) NOT NULL ,
-  FOREIGN KEY (building_id) REFERENCES building(building_id)
-);
-
 CREATE TABLE defense_group(
   defense_group_id VARCHAR(64) PRIMARY KEY ,
   defense_group_name VARCHAR(20) NOT NULL ,
@@ -201,11 +209,6 @@ CREATE TABLE defense_order(
   group_member_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id),
   FOREIGN KEY (group_member_id) REFERENCES defense_group_member(group_member_id)
-);
-
-CREATE TABLE score_type(
-  score_type_id INT PRIMARY KEY AUTO_INCREMENT,
-  score_type_name VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE graduate_bill(

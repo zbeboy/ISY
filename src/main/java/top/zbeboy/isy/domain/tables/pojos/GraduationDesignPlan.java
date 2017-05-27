@@ -25,16 +25,17 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan implements Serializable {
 
-    private static final long serialVersionUID = 745917194;
+    private static final long serialVersionUID = 692908966;
 
     private String    graduationDesignPlanId;
     private String    scheduling;
     private String    supervisionTime;
-    private String    guideLocation;
     private String    guideContent;
     private String    note;
-    private String    graduationDesignTeacherId;
     private Timestamp addTime;
+    private String    graduationDesignTeacherId;
+    private Integer   buildingId;
+    private Integer   schoolroomId;
 
     public GraduationDesignPlan() {}
 
@@ -42,31 +43,34 @@ public class GraduationDesignPlan implements Serializable {
         this.graduationDesignPlanId = value.graduationDesignPlanId;
         this.scheduling = value.scheduling;
         this.supervisionTime = value.supervisionTime;
-        this.guideLocation = value.guideLocation;
         this.guideContent = value.guideContent;
         this.note = value.note;
-        this.graduationDesignTeacherId = value.graduationDesignTeacherId;
         this.addTime = value.addTime;
+        this.graduationDesignTeacherId = value.graduationDesignTeacherId;
+        this.buildingId = value.buildingId;
+        this.schoolroomId = value.schoolroomId;
     }
 
     public GraduationDesignPlan(
         String    graduationDesignPlanId,
         String    scheduling,
         String    supervisionTime,
-        String    guideLocation,
         String    guideContent,
         String    note,
+        Timestamp addTime,
         String    graduationDesignTeacherId,
-        Timestamp addTime
+        Integer   buildingId,
+        Integer   schoolroomId
     ) {
         this.graduationDesignPlanId = graduationDesignPlanId;
         this.scheduling = scheduling;
         this.supervisionTime = supervisionTime;
-        this.guideLocation = guideLocation;
         this.guideContent = guideContent;
         this.note = note;
-        this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.addTime = addTime;
+        this.graduationDesignTeacherId = graduationDesignTeacherId;
+        this.buildingId = buildingId;
+        this.schoolroomId = schoolroomId;
     }
 
     @NotNull
@@ -100,16 +104,6 @@ public class GraduationDesignPlan implements Serializable {
     }
 
     @NotNull
-    @Size(max = 100)
-    public String getGuideLocation() {
-        return this.guideLocation;
-    }
-
-    public void setGuideLocation(String guideLocation) {
-        this.guideLocation = guideLocation;
-    }
-
-    @NotNull
     @Size(max = 150)
     public String getGuideContent() {
         return this.guideContent;
@@ -130,6 +124,15 @@ public class GraduationDesignPlan implements Serializable {
     }
 
     @NotNull
+    public Timestamp getAddTime() {
+        return this.addTime;
+    }
+
+    public void setAddTime(Timestamp addTime) {
+        this.addTime = addTime;
+    }
+
+    @NotNull
     @Size(max = 64)
     public String getGraduationDesignTeacherId() {
         return this.graduationDesignTeacherId;
@@ -140,12 +143,21 @@ public class GraduationDesignPlan implements Serializable {
     }
 
     @NotNull
-    public Timestamp getAddTime() {
-        return this.addTime;
+    public Integer getBuildingId() {
+        return this.buildingId;
     }
 
-    public void setAddTime(Timestamp addTime) {
-        this.addTime = addTime;
+    public void setBuildingId(Integer buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    @NotNull
+    public Integer getSchoolroomId() {
+        return this.schoolroomId;
+    }
+
+    public void setSchoolroomId(Integer schoolroomId) {
+        this.schoolroomId = schoolroomId;
     }
 
     @Override
@@ -155,11 +167,12 @@ public class GraduationDesignPlan implements Serializable {
         sb.append(graduationDesignPlanId);
         sb.append(", ").append(scheduling);
         sb.append(", ").append(supervisionTime);
-        sb.append(", ").append(guideLocation);
         sb.append(", ").append(guideContent);
         sb.append(", ").append(note);
-        sb.append(", ").append(graduationDesignTeacherId);
         sb.append(", ").append(addTime);
+        sb.append(", ").append(graduationDesignTeacherId);
+        sb.append(", ").append(buildingId);
+        sb.append(", ").append(schoolroomId);
 
         sb.append(")");
         return sb.toString();

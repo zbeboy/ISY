@@ -84,13 +84,6 @@ public class GraduationDesignPlanDao extends DAOImpl<GraduationDesignPlanRecord,
     }
 
     /**
-     * Fetch records that have <code>guide_location IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByGuideLocation(String... values) {
-        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.GUIDE_LOCATION, values);
-    }
-
-    /**
      * Fetch records that have <code>guide_content IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByGuideContent(String... values) {
@@ -105,6 +98,13 @@ public class GraduationDesignPlanDao extends DAOImpl<GraduationDesignPlanRecord,
     }
 
     /**
+     * Fetch records that have <code>add_time IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByAddTime(Timestamp... values) {
+        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.ADD_TIME, values);
+    }
+
+    /**
      * Fetch records that have <code>graduation_design_teacher_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByGraduationDesignTeacherId(String... values) {
@@ -112,9 +112,16 @@ public class GraduationDesignPlanDao extends DAOImpl<GraduationDesignPlanRecord,
     }
 
     /**
-     * Fetch records that have <code>add_time IN (values)</code>
+     * Fetch records that have <code>building_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByAddTime(Timestamp... values) {
-        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.ADD_TIME, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByBuildingId(Integer... values) {
+        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.BUILDING_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>schoolroom_id IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchBySchoolroomId(Integer... values) {
+        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.SCHOOLROOM_ID, values);
     }
 }
