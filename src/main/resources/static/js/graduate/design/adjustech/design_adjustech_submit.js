@@ -13,7 +13,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                 organizes: '/anyone/graduate/design/release/organizes',
                 adjust_teacher: '/web/graduate/design/adjustech/teachers',
                 update: '/web/graduate/design/adjustech/update',
-                delete: '/web/graduate/design/adjustech/delete',
+                del: '/web/graduate/design/adjustech/delete',
                 back: '/web/menu/graduate/design/adjustech'
             };
         }
@@ -414,7 +414,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                 errorMessage: message + '学生失败',
                 progressMessage: '正在' + message + '学生....'
             }, {
-                url: web_path + getAjaxUrl().delete,
+                url: web_path + getAjaxUrl().del,
                 type: 'post',
                 data: {
                     id: init_page_param.graduationDesignReleaseId,

@@ -11,7 +11,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         student_data_url: '/web/graduate/design/adjustech/student/data',
         adjust_teacher: '/web/graduate/design/adjustech/teachers',
         update: '/web/graduate/design/adjustech/update',
-        delete: '/web/graduate/design/adjustech/delete',
+        del: '/web/graduate/design/adjustech/delete',
         back: '/web/menu/graduate/design/adjustech'
     };
 
@@ -206,7 +206,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
             errorMessage: message + '学生失败',
             progressMessage: '正在' + message + '学生....'
         }, {
-            url: web_path + ajax_url.delete,
+            url: web_path + ajax_url.del,
             type: 'post',
             data: {
                 id: init_page_param.graduationDesignReleaseId,
