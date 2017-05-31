@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.daos.BuildingDao;
-import top.zbeboy.isy.domain.tables.pojos.Building;
+import top.zbeboy.isy.domain.tables.daos.SchoolroomDao;
+import top.zbeboy.isy.domain.tables.pojos.Schoolroom;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.domain.tables.records.BuildingRecord;
+import top.zbeboy.isy.domain.tables.records.SchoolroomRecord;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.data.building.BuildingBean;
+import top.zbeboy.isy.web.bean.data.schoolroom.SchoolroomBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
@@ -28,17 +28,14 @@ import java.util.Optional;
 import static top.zbeboy.isy.domain.Tables.*;
 
 /**
- * Created by zbeboy on 2017/5/27.
+ * Created by zbeboy on 2017/5/31.
  */
 @Slf4j
-@Service("buildingService")
+@Service("schoolroomService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implements BuildingService {
+public class SchoolroomServiceImpl extends DataTablesPlugin<SchoolroomBean> implements SchoolroomService {
 
     private final DSLContext create;
-
-    @Resource
-    private BuildingDao buildingDao;
 
     @Resource
     private RoleService roleService;
@@ -46,37 +43,58 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private SchoolroomDao schoolroomDao;
+
     @Autowired
-    public BuildingServiceImpl(DSLContext dslContext) {
+    public SchoolroomServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
     }
 
     @Override
-    public Building findById(int id) {
-        return buildingDao.findById(id);
+    public Schoolroom findById(int id) {
+        return schoolroomDao.findById(id);
     }
 
     @Override
     public Optional<Record> findByIdRelation(int id) {
         return create.select()
-                .from(BUILDING)
+                .from(SCHOOLROOM)
+                .join(BUILDING)
+                .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                 .join(COLLEGE)
                 .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                .where(BUILDING.BUILDING_ID.eq(id))
+                .where(SCHOOLROOM.SCHOOLROOM_ID.eq(id))
                 .fetchOptional();
     }
 
     @Override
-    public Result<Record> findAllByPage(DataTablesUtils<BuildingBean> dataTablesUtils) {
+    public Result<SchoolroomRecord> findByBuildingCodeAndBuildingId(String buildingCode, int buildingId) {
+        return create.selectFrom(SCHOOLROOM)
+                .where(SCHOOLROOM.BUILDING_CODE.eq(buildingCode).and(SCHOOLROOM.BUILDING_ID.eq(buildingId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<SchoolroomRecord> findByBuildingCodeAndBuildingIdNeSchoolroomId(String buildingCode, int schoolroomId, int buildingId) {
+        return create.selectFrom(SCHOOLROOM)
+                .where(SCHOOLROOM.BUILDING_CODE.eq(buildingCode).and(SCHOOLROOM.BUILDING_ID.eq(buildingId).and(SCHOOLROOM.SCHOOLROOM_ID.ne(schoolroomId))))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findAllByPage(DataTablesUtils<SchoolroomBean> dataTablesUtils) {
         Result<Record> records = null;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
             if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record> selectJoinStep = create.select()
-                        .from(BUILDING)
+                        .from(SCHOOLROOM)
+                        .join(BUILDING)
+                        .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                         .join(COLLEGE)
                         .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
@@ -89,7 +107,9 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
                 int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
-                        .from(BUILDING)
+                        .from(SCHOOLROOM)
+                        .join(BUILDING)
+                        .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                         .join(COLLEGE)
                         .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
@@ -103,7 +123,9 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
             // 分权限显示用户数据
             if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record> selectConditionStep = create.select()
-                        .from(BUILDING)
+                        .from(SCHOOLROOM)
+                        .join(BUILDING)
+                        .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                         .join(COLLEGE)
                         .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
@@ -117,7 +139,9 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
                 int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record> selectConditionStep = create.select()
-                        .from(BUILDING)
+                        .from(SCHOOLROOM)
+                        .join(BUILDING)
+                        .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                         .join(COLLEGE)
                         .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
@@ -127,44 +151,28 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                 pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
                 records = selectConditionStep.fetch();
             }
+
         }
         return records;
-    }
-
-    @Override
-    public Result<BuildingRecord> findByBuildingNameAndCollegeId(String buildingName, int collegeId) {
-        return create.selectFrom(BUILDING)
-                .where(BUILDING.BUILDING_NAME.eq(buildingName).and(BUILDING.COLLEGE_ID.eq(collegeId)))
-                .fetch();
-    }
-
-    @Override
-    public Result<BuildingRecord> findByCollegeIdAndIsDel(int collegeId, Byte isDel) {
-        return create.selectFrom(BUILDING)
-                .where(BUILDING.COLLEGE_ID.eq(collegeId).and(BUILDING.BUILDING_IS_DEL.eq(isDel)))
-                .fetch();
-    }
-
-    @Override
-    public Result<BuildingRecord> findByBuildingNameAndCollegeIdNeBuildingId(String buildingName, int collegeId, int buildingId) {
-        return create.selectFrom(BUILDING)
-                .where(BUILDING.BUILDING_NAME.eq(buildingName).and(BUILDING.COLLEGE_ID.eq(collegeId)).and(BUILDING.BUILDING_ID.ne(buildingId)))
-                .fetch();
     }
 
     @Override
     public int countAll() {
         // 分权限显示用户数据
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
-            return statisticsAll(create, BUILDING);
+            return statisticsAll(create, SCHOOLROOM);
         } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int collegeId = roleService.getRoleCollegeId(record);
             Record1<Integer> count = create.selectCount()
-                    .from(BUILDING)
+                    .from(SCHOOLROOM)
+                    .join(BUILDING)
+                    .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                     .join(COLLEGE)
                     .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .join(SCHOOL)
+                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .where(COLLEGE.COLLEGE_ID.eq(collegeId))
                     .fetchOne();
             return count.value1();
@@ -173,31 +181,38 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
     }
 
     @Override
-    public int countByCondition(DataTablesUtils<BuildingBean> dataTablesUtils) {
+    public int countByCondition(DataTablesUtils<SchoolroomBean> dataTablesUtils) {
         Record1<Integer> count = null;
         Condition a = searchCondition(dataTablesUtils);
         if (ObjectUtils.isEmpty(a)) {
             // 分权限显示用户数据
             if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
-                        .from(BUILDING);
+                        .from(SCHOOLROOM);
                 count = selectJoinStep.fetchOne();
             } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
                 Users users = usersService.getUserFromSession();
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
                 int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                        .from(BUILDING)
+                        .from(SCHOOLROOM)
+                        .join(BUILDING)
+                        .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                         .join(COLLEGE)
                         .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                        .join(SCHOOL)
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId));
                 count = selectConditionStep.fetchOne();
             }
+
         } else {
             // 分权限显示用户数据
             if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                        .from(BUILDING)
+                        .from(SCHOOLROOM)
+                        .join(BUILDING)
+                        .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                         .join(COLLEGE)
                         .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
@@ -209,7 +224,9 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                 Optional<Record> record = usersService.findUserSchoolInfo(users);
                 int collegeId = roleService.getRoleCollegeId(record);
                 SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                        .from(BUILDING)
+                        .from(SCHOOLROOM)
+                        .join(BUILDING)
+                        .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                         .join(COLLEGE)
                         .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
@@ -217,6 +234,7 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                         .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a));
                 count = selectConditionStep.fetchOne();
             }
+
         }
         if (!ObjectUtils.isEmpty(count)) {
             return count.value1();
@@ -226,19 +244,19 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(Building building) {
-        buildingDao.insert(building);
+    public void save(Schoolroom schoolroom) {
+        schoolroomDao.insert(schoolroom);
     }
 
     @Override
-    public void update(Building building) {
-        buildingDao.update(building);
+    public void update(Schoolroom schoolroom) {
+        schoolroomDao.update(schoolroom);
     }
 
     @Override
     public void updateIsDel(List<Integer> ids, Byte isDel) {
         for (int id : ids) {
-            create.update(BUILDING).set(BUILDING.BUILDING_IS_DEL, isDel).where(BUILDING.BUILDING_ID.eq(id)).execute();
+            create.update(SCHOOLROOM).set(SCHOOLROOM.SCHOOLROOM_IS_DEL, isDel).where(SCHOOLROOM.SCHOOLROOM_ID.eq(id)).execute();
         }
     }
 
@@ -249,7 +267,7 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
      * @return 搜索条件
      */
     @Override
-    public Condition searchCondition(DataTablesUtils<BuildingBean> dataTablesUtils) {
+    public Condition searchCondition(DataTablesUtils<SchoolroomBean> dataTablesUtils) {
         Condition a = null;
 
         JSONObject search = dataTablesUtils.getSearch();
@@ -257,6 +275,7 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
             String schoolName = StringUtils.trimWhitespace(search.getString("schoolName"));
             String collegeName = StringUtils.trimWhitespace(search.getString("collegeName"));
             String buildingName = StringUtils.trimWhitespace(search.getString("buildingName"));
+            String buildingCode = StringUtils.trimWhitespace(search.getString("buildingCode"));
             if (StringUtils.hasLength(schoolName)) {
                 a = SCHOOL.SCHOOL_NAME.like(SQLQueryUtils.likeAllParam(schoolName));
             }
@@ -276,6 +295,15 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                     a = a.and(BUILDING.BUILDING_NAME.like(SQLQueryUtils.likeAllParam(buildingName)));
                 }
             }
+
+            if (StringUtils.hasLength(buildingCode)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = SCHOOLROOM.BUILDING_CODE.like(SQLQueryUtils.likeAllParam(buildingCode));
+                } else {
+                    a = a.and(SCHOOLROOM.BUILDING_CODE.like(SQLQueryUtils.likeAllParam(buildingCode)));
+                }
+            }
+
         }
         return a;
     }
@@ -287,18 +315,18 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
      * @param selectConditionStep 条件
      */
     @Override
-    public void sortCondition(DataTablesUtils<BuildingBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
+    public void sortCondition(DataTablesUtils<SchoolroomBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
         String orderColumnName = dataTablesUtils.getOrderColumnName();
         String orderDir = dataTablesUtils.getOrderDir();
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
-            if ("building_id".equalsIgnoreCase(orderColumnName)) {
+            if ("schoolroom_id".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[1];
                 if (isAsc) {
-                    sortField[0] = BUILDING.BUILDING_ID.asc();
+                    sortField[0] = SCHOOLROOM.SCHOOLROOM_ID.asc();
                 } else {
-                    sortField[0] = BUILDING.BUILDING_ID.desc();
+                    sortField[0] = SCHOOLROOM.SCHOOLROOM_ID.desc();
                 }
             }
 
@@ -306,10 +334,10 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = SCHOOL.SCHOOL_NAME.asc();
-                    sortField[1] = BUILDING.BUILDING_ID.asc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.asc();
                 } else {
                     sortField[0] = SCHOOL.SCHOOL_NAME.desc();
-                    sortField[1] = BUILDING.BUILDING_ID.desc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.desc();
                 }
             }
 
@@ -317,10 +345,10 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = COLLEGE.COLLEGE_NAME.asc();
-                    sortField[1] = BUILDING.BUILDING_ID.asc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.asc();
                 } else {
                     sortField[0] = COLLEGE.COLLEGE_NAME.desc();
-                    sortField[1] = BUILDING.BUILDING_ID.desc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.desc();
                 }
             }
 
@@ -328,21 +356,30 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = BUILDING.BUILDING_NAME.asc();
-                    sortField[1] = BUILDING.BUILDING_ID.asc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.asc();
                 } else {
                     sortField[0] = BUILDING.BUILDING_NAME.desc();
-                    sortField[1] = BUILDING.BUILDING_ID.desc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.desc();
                 }
             }
 
-            if ("building_is_del".equalsIgnoreCase(orderColumnName)) {
+            if ("building_code".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = SCHOOLROOM.BUILDING_CODE.asc();
+                } else {
+                    sortField[0] = SCHOOLROOM.BUILDING_CODE.desc();
+                }
+            }
+
+            if ("schoolroom_is_del".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {
-                    sortField[0] = BUILDING.BUILDING_IS_DEL.asc();
-                    sortField[1] = BUILDING.BUILDING_ID.asc();
+                    sortField[0] = SCHOOLROOM.SCHOOLROOM_IS_DEL.asc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.asc();
                 } else {
-                    sortField[0] = BUILDING.BUILDING_IS_DEL.desc();
-                    sortField[1] = BUILDING.BUILDING_ID.desc();
+                    sortField[0] = SCHOOLROOM.SCHOOLROOM_IS_DEL.desc();
+                    sortField[1] = SCHOOLROOM.SCHOOLROOM_ID.desc();
                 }
             }
 

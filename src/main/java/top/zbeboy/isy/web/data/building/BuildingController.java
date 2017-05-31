@@ -49,6 +49,28 @@ public class BuildingController {
     private UsersService usersService;
 
     /**
+     * 通过院id获取全部楼
+     *
+     * @param collegeId 院id
+     * @return 院下全部楼
+     */
+    @RequestMapping(value = "/user/buildings", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<Building> colleges(@RequestParam("collegeId") int collegeId) {
+        AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
+        List<Building> buildings = new ArrayList<>();
+        Byte isDel = 0;
+        Building building = new Building(0, "请选择楼", isDel, 0);
+        buildings.add(building);
+        Result<BuildingRecord> buildingRecords = buildingService.findByCollegeIdAndIsDel(collegeId, isDel);
+        for (BuildingRecord r : buildingRecords) {
+            Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getBuildingIsDel(), r.getCollegeId());
+            buildings.add(tempBuilding);
+        }
+        return ajaxUtils.success().msg("获取楼数据成功！").listData(buildings);
+    }
+
+    /**
      * 楼数据
      *
      * @return 楼数据页面
@@ -217,7 +239,7 @@ public class BuildingController {
     /**
      * 保存楼更改
      *
-     * @param buildingVo  楼
+     * @param buildingVo    楼
      * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
@@ -268,7 +290,7 @@ public class BuildingController {
      * 批量更改楼状态
      *
      * @param buildingIds 楼ids
-     * @param isDel         is_del
+     * @param isDel       is_del
      * @return true注销成功
      */
     @RequestMapping(value = "/web/data/building/update/del", method = RequestMethod.POST)

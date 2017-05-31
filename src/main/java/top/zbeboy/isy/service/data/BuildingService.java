@@ -49,6 +49,15 @@ public interface BuildingService {
     Result<BuildingRecord> findByBuildingNameAndCollegeId(String buildingName, int collegeId);
 
     /**
+     * 根据院id和状态查询全部楼
+     *
+     * @param collegeId 院id
+     * @param isDel     状态
+     * @return 数据
+     */
+    Result<BuildingRecord> findByCollegeIdAndIsDel(int collegeId, Byte isDel);
+
+    /**
      * 查找院下不等于该楼id的楼名
      *
      * @param buildingName 楼名
