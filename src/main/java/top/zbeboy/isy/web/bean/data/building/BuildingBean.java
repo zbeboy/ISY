@@ -12,4 +12,5 @@ import top.zbeboy.isy.domain.tables.pojos.Building;
 public class BuildingBean extends Building{
     private String schoolName;
     private String collegeName;
+    private int schoolId;
 }

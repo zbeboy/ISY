@@ -11,7 +11,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.BuildingDao;
+import top.zbeboy.isy.domain.tables.pojos.Building;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.records.BuildingRecord;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -20,6 +22,7 @@ import top.zbeboy.isy.web.bean.data.building.BuildingBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -46,6 +49,23 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
     @Autowired
     public BuildingServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public Building findById(int id) {
+        return buildingDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(BUILDING)
+                .join(COLLEGE)
+                .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(BUILDING.BUILDING_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override
@@ -109,6 +129,20 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
             }
         }
         return records;
+    }
+
+    @Override
+    public Result<BuildingRecord> findByBuildingNameAndCollegeId(String buildingName, int collegeId) {
+        return create.selectFrom(BUILDING)
+                .where(BUILDING.BUILDING_NAME.eq(buildingName).and(BUILDING.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<BuildingRecord> findByBuildingNameAndCollegeIdNeBuildingId(String buildingName, int collegeId, int buildingId) {
+        return create.selectFrom(BUILDING)
+                .where(BUILDING.BUILDING_NAME.eq(buildingName).and(BUILDING.COLLEGE_ID.eq(collegeId)).and(BUILDING.BUILDING_ID.ne(buildingId)))
+                .fetch();
     }
 
     @Override
@@ -181,6 +215,24 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
             return count.value1();
         }
         return 0;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(Building building) {
+        buildingDao.insert(building);
+    }
+
+    @Override
+    public void update(Building building) {
+        buildingDao.update(building);
+    }
+
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        for (int id : ids) {
+            create.update(BUILDING).set(BUILDING.BUILDING_IS_DEL, isDel).where(BUILDING.BUILDING_ID.eq(id)).execute();
+        }
     }
 
     /**
