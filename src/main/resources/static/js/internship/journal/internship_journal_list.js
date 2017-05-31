@@ -291,7 +291,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             var temp = '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp + global_button;
         }
-        global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-trash-plus"></i>添加</button>' +
+        global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
             global_button;
         $('#global_button').append(global_button);
 
