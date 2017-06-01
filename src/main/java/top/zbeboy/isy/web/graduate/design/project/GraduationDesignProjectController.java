@@ -125,7 +125,12 @@ public class GraduationDesignProjectController {
             GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
             Record record =
                     graduationDesignPlanService.findByGraduationDesignTeacherIdAndLeAddTime(graduationDesignTeacher.getGraduationDesignTeacherId(), DateTimeUtils.getNow());
-            GraduationDesignPlanBean graduationDesignPlan = record.into(GraduationDesignPlanBean.class);
+            GraduationDesignPlanBean graduationDesignPlan;
+            if (!ObjectUtils.isEmpty(record)) {
+                graduationDesignPlan = record.into(GraduationDesignPlanBean.class);
+            } else {
+                graduationDesignPlan = new GraduationDesignPlanBean();
+            }
             page = "web/graduate/design/project/design_project_add::#page-wrapper";
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("graduationDesignPlanRecently", graduationDesignPlan);
@@ -168,7 +173,7 @@ public class GraduationDesignProjectController {
      */
     @RequestMapping(value = "/web/graduate/design/project/buildings", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<Building> buildings(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId) {
+    public AjaxUtils<Building> buildings(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
@@ -182,7 +187,7 @@ public class GraduationDesignProjectController {
                 College college = record.get().into(College.class);
                 Result<BuildingRecord> buildingRecords = buildingService.findByCollegeIdAndIsDel(college.getCollegeId(), isDel);
                 for (BuildingRecord r : buildingRecords) {
-                    Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(),r.getCollegeId(), r.getBuildingIsDel());
+                    Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getCollegeId(), r.getBuildingIsDel());
                     buildings.add(tempBuilding);
                 }
             }
