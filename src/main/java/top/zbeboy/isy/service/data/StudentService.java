@@ -124,6 +124,16 @@ public interface StudentService {
     Optional<Record> findByUsernameRelation(String username);
 
     /**
+     * 通过用户账号,专业id,年级关联查询
+     *
+     * @param username  用户账号
+     * @param scienceId 专业id
+     * @param grade     年级
+     * @return 关联信息
+     */
+    Optional<Record> findByUsernameAndScienceIdAndGradeRelation(String username, int scienceId, String grade);
+
+    /**
      * 通过用户账号查询
      *
      * @param username 用户账号

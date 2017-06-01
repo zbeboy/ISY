@@ -43,6 +43,28 @@ public class SchoolroomController {
     private CommonControllerMethodService commonControllerMethodService;
 
     /**
+     * 通过楼id获取全部教室
+     *
+     * @param buildingId 楼id
+     * @return 楼下全部教室
+     */
+    @RequestMapping(value = "/user/schoolrooms", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<Schoolroom> schoolrooms(@RequestParam("buildingId") int buildingId) {
+        AjaxUtils<Schoolroom> ajaxUtils = AjaxUtils.of();
+        List<Schoolroom> schoolrooms = new ArrayList<>();
+        Byte isDel = 0;
+        Schoolroom schoolroom = new Schoolroom(0, 0, "请选择教室", isDel);
+        schoolrooms.add(schoolroom);
+        Result<SchoolroomRecord> schoolroomRecords = schoolroomService.findByBuildingIdAndIsDel(buildingId, isDel);
+        for (SchoolroomRecord r : schoolroomRecords) {
+            Schoolroom tempSchoolroom = new Schoolroom(r.getSchoolroomId(), r.getBuildingId(), r.getBuildingCode(), r.getSchoolroomIsDel());
+            schoolrooms.add(tempSchoolroom);
+        }
+        return ajaxUtils.success().msg("获取楼数据成功！").listData(schoolrooms);
+    }
+
+    /**
      * 教室数据
      *
      * @return 教室数据页面
@@ -212,7 +234,7 @@ public class SchoolroomController {
      * 批量更改教室状态
      *
      * @param schoolroomIds 教室ids
-     * @param isDel      is_del
+     * @param isDel         is_del
      * @return true注销成功
      */
     @RequestMapping(value = "/web/data/schoolroom/update/del", method = RequestMethod.POST)

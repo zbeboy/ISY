@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.CacheBook;
-import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.Student;
@@ -29,7 +28,6 @@ import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
@@ -37,9 +35,7 @@ import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBe
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,9 +47,6 @@ public class GraduationDesignPharmtechController {
 
     @Resource
     private GraduationDesignTeacherService graduationDesignTeacherService;
-
-    @Resource
-    private UsersTypeService usersTypeService;
 
     @Resource
     private GraduationDesignHopeTutorService graduationDesignHopeTutorService;
@@ -127,18 +120,13 @@ public class GraduationDesignPharmtechController {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
-                if (count > 0) {
-                    modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
-                    page = "web/graduate/design/pharmtech/design_pharmtech_apply::#page-wrapper";
-                } else {
-                    page = commonControllerMethodService.showTip(modelMap, "请先填写志愿");
-                }
+            Student student = (Student) errorBean.getMapData().get("student");
+            int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
+            if (count > 0) {
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                page = "web/graduate/design/pharmtech/design_pharmtech_apply::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到相关学生信息");
+                page = commonControllerMethodService.showTip(modelMap, "请先填写志愿");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -158,25 +146,21 @@ public class GraduationDesignPharmtechController {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                Result<GraduationDesignHopeTutorRecord> designHopeTutorRecords = graduationDesignHopeTutorService.findByStudentId(student.getStudentId());
-                List<GraduationDesignTeacherBean> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
-                for (GraduationDesignTeacherBean designTeacherBean : graduationDesignTeachers) {
-                    boolean selectedTeacher = false;
-                    for (GraduationDesignHopeTutorRecord record : designHopeTutorRecords) {
-                        if (designTeacherBean.getGraduationDesignTeacherId().equals(record.getGraduationDesignTeacherId())) {
-                            selectedTeacher = true;
-                            break;
-                        }
+            Student student = (Student) errorBean.getMapData().get("student");
+            Result<GraduationDesignHopeTutorRecord> designHopeTutorRecords = graduationDesignHopeTutorService.findByStudentId(student.getStudentId());
+            List<GraduationDesignTeacherBean> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+            for (GraduationDesignTeacherBean designTeacherBean : graduationDesignTeachers) {
+                boolean selectedTeacher = false;
+                for (GraduationDesignHopeTutorRecord record : designHopeTutorRecords) {
+                    if (designTeacherBean.getGraduationDesignTeacherId().equals(record.getGraduationDesignTeacherId())) {
+                        selectedTeacher = true;
+                        break;
                     }
-                    designTeacherBean.setSelected(selectedTeacher);
                 }
-                ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeachers);
-            } else {
-                ajaxUtils.fail().msg("查询学生信息失败");
+                designTeacherBean.setSelected(selectedTeacher);
             }
+            ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeachers);
+
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -195,48 +179,43 @@ public class GraduationDesignPharmtechController {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                List<GraduationDesignTeacherBean> graduationDesignTeacherBeens;
-                String cacheKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId;
-                String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
-                // 从缓存中得到列表
-                if (stringListValueOperations.getOperations().hasKey(cacheKey)) {
-                    graduationDesignTeacherBeens = stringListValueOperations.get(cacheKey);
-                } else {
-                    graduationDesignTeacherBeens = new ArrayList<>();
-                }
-                // 处理列表
-                if (!ObjectUtils.isEmpty(graduationDesignTeacherBeens) && graduationDesignTeacherBeens.size() > 0) {
-                    boolean selectedTeacher = false;
-                    for (GraduationDesignTeacherBean designTeacherBean : graduationDesignTeacherBeens) {
-                        // 装填剩余人数
-                        String studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + designTeacherBean.getGraduationDesignTeacherId();
-                        if (template.hasKey(studentCountKey)) {
-                            ValueOperations<String, String> ops = this.template.opsForValue();
-                            designTeacherBean.setResidueCount(NumberUtils.toInt(ops.get(studentCountKey)));
-                        }
-                        // 选中当前用户已选择
-                        if (!selectedTeacher && stringValueOperations.getOperations().hasKey(studentKey)) {
-                            // 解除逗号分隔的字符   指导教师id , 学生id
-                            String str = stringValueOperations.get(studentKey);
-                            if (StringUtils.isNotBlank(str)) {
-                                String[] arr = str.split(",");
-                                if (arr.length >= 2) {
-                                    if (designTeacherBean.getGraduationDesignTeacherId().equals(arr[0])) {
-                                        selectedTeacher = true;
-                                        designTeacherBean.setSelected(true);
-                                    }
+            Student student = (Student) errorBean.getMapData().get("student");
+            List<GraduationDesignTeacherBean> graduationDesignTeacherBeens;
+            String cacheKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId;
+            String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
+            // 从缓存中得到列表
+            if (stringListValueOperations.getOperations().hasKey(cacheKey)) {
+                graduationDesignTeacherBeens = stringListValueOperations.get(cacheKey);
+            } else {
+                graduationDesignTeacherBeens = new ArrayList<>();
+            }
+            // 处理列表
+            if (!ObjectUtils.isEmpty(graduationDesignTeacherBeens) && graduationDesignTeacherBeens.size() > 0) {
+                boolean selectedTeacher = false;
+                for (GraduationDesignTeacherBean designTeacherBean : graduationDesignTeacherBeens) {
+                    // 装填剩余人数
+                    String studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + designTeacherBean.getGraduationDesignTeacherId();
+                    if (template.hasKey(studentCountKey)) {
+                        ValueOperations<String, String> ops = this.template.opsForValue();
+                        designTeacherBean.setResidueCount(NumberUtils.toInt(ops.get(studentCountKey)));
+                    }
+                    // 选中当前用户已选择
+                    if (!selectedTeacher && stringValueOperations.getOperations().hasKey(studentKey)) {
+                        // 解除逗号分隔的字符   指导教师id , 学生id
+                        String str = stringValueOperations.get(studentKey);
+                        if (StringUtils.isNotBlank(str)) {
+                            String[] arr = str.split(",");
+                            if (arr.length >= 2) {
+                                if (designTeacherBean.getGraduationDesignTeacherId().equals(arr[0])) {
+                                    selectedTeacher = true;
+                                    designTeacherBean.setSelected(true);
                                 }
                             }
                         }
                     }
                 }
-                ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
-            } else {
-                ajaxUtils.fail().msg("未查询到相关学生信息");
             }
+            ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -257,22 +236,17 @@ public class GraduationDesignPharmtechController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                // 是否已达到志愿数量
-                int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
-                if (count < 3) {
-                    GraduationDesignHopeTutor graduationDesignHopeTutor = new GraduationDesignHopeTutor();
-                    graduationDesignHopeTutor.setGraduationDesignTeacherId(graduationDesignTeacherId);
-                    graduationDesignHopeTutor.setStudentId(student.getStudentId());
-                    graduationDesignHopeTutorService.save(graduationDesignHopeTutor);
-                    ajaxUtils.success().msg("保存成功");
-                } else {
-                    ajaxUtils.fail().msg("仅支持志愿三位指导教师");
-                }
+            Student student = (Student) errorBean.getMapData().get("student");
+            // 是否已达到志愿数量
+            int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
+            if (count < 3) {
+                GraduationDesignHopeTutor graduationDesignHopeTutor = new GraduationDesignHopeTutor();
+                graduationDesignHopeTutor.setGraduationDesignTeacherId(graduationDesignTeacherId);
+                graduationDesignHopeTutor.setStudentId(student.getStudentId());
+                graduationDesignHopeTutorService.save(graduationDesignHopeTutor);
+                ajaxUtils.success().msg("保存成功");
             } else {
-                ajaxUtils.fail().msg("未查询相关学生信息");
+                ajaxUtils.fail().msg("仅支持志愿三位指导教师");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -294,72 +268,67 @@ public class GraduationDesignPharmtechController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                // 判断是否已选择过教师
-                boolean canSelect = false;
-                // 第一次选择
-                boolean isNewSelect = false;
-                String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
-                if (stringValueOperations.getOperations().hasKey(studentKey)) {
-                    // 已选择过，不能重复选
-                    String str = stringValueOperations.get(studentKey);
-                    if (StringUtils.isNotBlank(str)) {
-                        String[] arr = str.split(",");
-                        canSelect = arr.length >= 2 && arr[0].equals("-1");
-                    } else {
-                        canSelect = false;
-                    }
+            Student student = (Student) errorBean.getMapData().get("student");
+            // 判断是否已选择过教师
+            boolean canSelect;
+            // 第一次选择
+            boolean isNewSelect = false;
+            String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
+            if (stringValueOperations.getOperations().hasKey(studentKey)) {
+                // 已选择过，不能重复选
+                String str = stringValueOperations.get(studentKey);
+                if (StringUtils.isNotBlank(str)) {
+                    String[] arr = str.split(",");
+                    canSelect = arr.length >= 2 && arr[0].equals("-1");
                 } else {
-                    canSelect = true;
-                    isNewSelect = true;
-                }
-                if (canSelect) {
-                    // 计数器
-                    String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
-                    if (template.hasKey(countKey)) {
-                        ValueOperations<String, String> ops = this.template.opsForValue();
-                        int count = NumberUtils.toInt(ops.get(countKey)) - 1;
-                        if (count >= 0) {
-                            ops.set(countKey, count + "");
-                            // 存储 指导教师id , 学生id
-                            if (isNewSelect) {
-                                stringValueOperations.set(studentKey,
-                                        graduationDesignTeacherId + "," + student.getStudentId(),
-                                        CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT, TimeUnit.DAYS);
-                            } else {
-                                stringValueOperations.set(studentKey,
-                                        graduationDesignTeacherId + "," + student.getStudentId());
-                            }
-                            // 存储学生key
-                            // 是否已经存在当前学生key
-                            String listKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT_LIST + graduationDesignReleaseId;
-                            List<String> keys = listOperations.range(listKey, 0, listOperations.size(listKey));
-                            boolean hasKey = false;
-                            for (String key : keys) {
-                                // 已经存在 无需添加
-                                if (key.equals(studentKey)) {
-                                    hasKey = true;
-                                    break;
-                                }
-                            }
-                            // 不存在，需要添加
-                            if (!hasKey) {
-                                listOperations.rightPush(listKey, studentKey);
-                            }
-                            ajaxUtils.success().msg("保存成功");
-                        } else {
-                            ajaxUtils.fail().msg("已达当前指导教师人数上限");
-                        }
-                    } else {
-                        ajaxUtils.fail().msg("未发现确认数据");
-                    }
-                } else {
-                    ajaxUtils.fail().msg("仅能选择一位指导教师");
+                    canSelect = false;
                 }
             } else {
-                ajaxUtils.fail().msg("未查询到相关学生信息");
+                canSelect = true;
+                isNewSelect = true;
+            }
+            if (canSelect) {
+                // 计数器
+                String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
+                if (template.hasKey(countKey)) {
+                    ValueOperations<String, String> ops = this.template.opsForValue();
+                    int count = NumberUtils.toInt(ops.get(countKey)) - 1;
+                    if (count >= 0) {
+                        ops.set(countKey, count + "");
+                        // 存储 指导教师id , 学生id
+                        if (isNewSelect) {
+                            stringValueOperations.set(studentKey,
+                                    graduationDesignTeacherId + "," + student.getStudentId(),
+                                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT, TimeUnit.DAYS);
+                        } else {
+                            stringValueOperations.set(studentKey,
+                                    graduationDesignTeacherId + "," + student.getStudentId());
+                        }
+                        // 存储学生key
+                        // 是否已经存在当前学生key
+                        String listKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT_LIST + graduationDesignReleaseId;
+                        List<String> keys = listOperations.range(listKey, 0, listOperations.size(listKey));
+                        boolean hasKey = false;
+                        for (String key : keys) {
+                            // 已经存在 无需添加
+                            if (key.equals(studentKey)) {
+                                hasKey = true;
+                                break;
+                            }
+                        }
+                        // 不存在，需要添加
+                        if (!hasKey) {
+                            listOperations.rightPush(listKey, studentKey);
+                        }
+                        ajaxUtils.success().msg("保存成功");
+                    } else {
+                        ajaxUtils.fail().msg("已达当前指导教师人数上限");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("未发现确认数据");
+                }
+            } else {
+                ajaxUtils.fail().msg("仅能选择一位指导教师");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -381,17 +350,12 @@ public class GraduationDesignPharmtechController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                GraduationDesignHopeTutor graduationDesignHopeTutor = new GraduationDesignHopeTutor();
-                graduationDesignHopeTutor.setGraduationDesignTeacherId(graduationDesignTeacherId);
-                graduationDesignHopeTutor.setStudentId(student.getStudentId());
-                graduationDesignHopeTutorService.delete(graduationDesignHopeTutor);
-                ajaxUtils.success().msg("取消成功");
-            } else {
-                ajaxUtils.fail().msg("未查询相关学生信息");
-            }
+            Student student = (Student) errorBean.getMapData().get("student");
+            GraduationDesignHopeTutor graduationDesignHopeTutor = new GraduationDesignHopeTutor();
+            graduationDesignHopeTutor.setGraduationDesignTeacherId(graduationDesignTeacherId);
+            graduationDesignHopeTutor.setStudentId(student.getStudentId());
+            graduationDesignHopeTutorService.delete(graduationDesignHopeTutor);
+            ajaxUtils.success().msg("取消成功");
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -412,26 +376,21 @@ public class GraduationDesignPharmtechController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                // 计数器
-                String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
-                if (template.hasKey(countKey)) {
-                    ValueOperations<String, String> ops = this.template.opsForValue();
-                    ops.increment(countKey, 1L);
-                    // 存储 指导教师id , 学生id
-                    String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
-                    if (stringValueOperations.getOperations().hasKey(studentKey)) {
-                        stringValueOperations.set(studentKey,
-                                -1 + "," + student.getStudentId());
-                    }
-                    ajaxUtils.success().msg("取消成功");
-                } else {
-                    ajaxUtils.fail().msg("未发现确认数据");
+            Student student = (Student) errorBean.getMapData().get("student");
+            // 计数器
+            String countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId;
+            if (template.hasKey(countKey)) {
+                ValueOperations<String, String> ops = this.template.opsForValue();
+                ops.increment(countKey, 1L);
+                // 存储 指导教师id , 学生id
+                String studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.getStudentId();
+                if (stringValueOperations.getOperations().hasKey(studentKey)) {
+                    stringValueOperations.set(studentKey,
+                            -1 + "," + student.getStudentId());
                 }
+                ajaxUtils.success().msg("取消成功");
             } else {
-                ajaxUtils.fail().msg("未查询相关学生信息");
+                ajaxUtils.fail().msg("未发现确认数据");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -451,17 +410,12 @@ public class GraduationDesignPharmtechController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
-                if (count > 0) {
-                    ajaxUtils.success().msg("在条件范围，允许使用");
-                } else {
-                    ajaxUtils.fail().msg("请先填写志愿");
-                }
+            Student student = (Student) errorBean.getMapData().get("student");
+            int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
+            if (count > 0) {
+                ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
-                ajaxUtils.fail().msg("未查询到相关学生信息");
+                ajaxUtils.fail().msg("请先填写志愿");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -481,10 +435,11 @@ public class GraduationDesignPharmtechController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
         if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            // 是否为学生用户
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                Users users = usersService.getUserFromSession();
-                Student student = studentService.findByUsername(users.getUsername());
+            // 查询学生
+            Users users = usersService.getUserFromSession();
+            Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+            if (studentRecord.isPresent()) {
+                Student student = studentRecord.get().into(Student.class);
                 // 是否已确认调整
                 if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                     Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(student.getStudentId(), graduationDesignReleaseId);
@@ -498,7 +453,7 @@ public class GraduationDesignPharmtechController {
                     ajaxUtils.fail().msg("请等待调整完成后，进行查看");
                 }
             } else {
-                ajaxUtils.fail().msg("您的注册类型不是学生用户");
+                ajaxUtils.fail().msg("毕业设计专业下未查询到该学生");
             }
         } else {
             ajaxUtils.fail().msg("未查询到相关毕业设计信息");
@@ -533,6 +488,7 @@ public class GraduationDesignPharmtechController {
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
         ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
+        Map<String, Object> mapData = new HashMap<>();
         GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
         if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
             errorBean.setData(graduationDesignRelease);
@@ -540,8 +496,12 @@ public class GraduationDesignPharmtechController {
                 errorBean.setHasError(true);
                 errorBean.setErrorMsg("该毕业设计已被注销");
             } else {
-                // 是否为学生用户
-                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                // 是否学生在该毕业设计专业下
+                Users users = usersService.getUserFromSession();
+                Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                if (studentRecord.isPresent()) {
+                    Student student = studentRecord.get().into(Student.class);
+                    mapData.put("student", student);
                     // 毕业时间范围
                     if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
                         // 填报时间范围
@@ -569,13 +529,14 @@ public class GraduationDesignPharmtechController {
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("您的注册类型不是学生用户");
+                    errorBean.setErrorMsg("毕业设计专业下未查询到该学生");
                 }
             }
         } else {
             errorBean.setHasError(true);
             errorBean.setErrorMsg("未查询到相关毕业设计信息");
         }
+        errorBean.setMapData(mapData);
         return errorBean;
     }
 }

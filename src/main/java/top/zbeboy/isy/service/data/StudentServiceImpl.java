@@ -275,6 +275,18 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Optional<Record> findByUsernameAndScienceIdAndGradeRelation(String username, int scienceId, String grade) {
+        return create.select()
+                .from(STUDENT)
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(SCIENCE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .where(STUDENT.USERNAME.eq(username).and(SCIENCE.SCIENCE_ID.eq(scienceId)).and(ORGANIZE.GRADE.eq(grade)))
+                .fetchOptional();
+    }
+
+    @Override
     public Student findByUsername(String username) {
         return studentDao.fetchOne(STUDENT.USERNAME, username);
     }

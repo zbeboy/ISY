@@ -85,6 +85,13 @@ public class SchoolroomServiceImpl extends DataTablesPlugin<SchoolroomBean> impl
     }
 
     @Override
+    public Result<SchoolroomRecord> findByBuildingIdAndIsDel(int buildingId, Byte b) {
+        return create.selectFrom(SCHOOLROOM)
+                .where(SCHOOLROOM.BUILDING_ID.eq(buildingId).and(SCHOOLROOM.SCHOOLROOM_IS_DEL.eq(b)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtils<SchoolroomBean> dataTablesUtils) {
         Result<Record> records = null;
         Condition a = searchCondition(dataTablesUtils);

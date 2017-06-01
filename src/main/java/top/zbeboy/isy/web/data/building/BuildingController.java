@@ -56,7 +56,7 @@ public class BuildingController {
      */
     @RequestMapping(value = "/user/buildings", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<Building> colleges(@RequestParam("collegeId") int collegeId) {
+    public AjaxUtils<Building> buildings(@RequestParam("collegeId") int collegeId) {
         AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
         List<Building> buildings = new ArrayList<>();
         Byte isDel = 0;

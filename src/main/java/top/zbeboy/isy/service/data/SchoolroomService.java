@@ -51,6 +51,15 @@ public interface SchoolroomService {
     Result<SchoolroomRecord> findByBuildingCodeAndBuildingIdNeSchoolroomId(String buildingCode, int schoolroomId, int buildingId);
 
     /**
+     * 通过楼id与状态查询
+     *
+     * @param buildingId 楼id
+     * @param b          状态
+     * @return 数据
+     */
+    Result<SchoolroomRecord> findByBuildingIdAndIsDel(int buildingId, Byte b);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtils datatables工具类
