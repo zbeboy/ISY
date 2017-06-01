@@ -60,11 +60,11 @@ public class BuildingController {
         AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
         List<Building> buildings = new ArrayList<>();
         Byte isDel = 0;
-        Building building = new Building(0, "请选择楼", isDel, 0);
+        Building building = new Building(0, "请选择楼", 0, isDel);
         buildings.add(building);
         Result<BuildingRecord> buildingRecords = buildingService.findByCollegeIdAndIsDel(collegeId, isDel);
         for (BuildingRecord r : buildingRecords) {
-            Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getBuildingIsDel(), r.getCollegeId());
+            Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getCollegeId(), r.getBuildingIsDel());
             buildings.add(tempBuilding);
         }
         return ajaxUtils.success().msg("获取楼数据成功！").listData(buildings);

@@ -24,32 +24,32 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Building implements Serializable {
 
-    private static final long serialVersionUID = -1499422277;
+    private static final long serialVersionUID = -1979841689;
 
     private Integer buildingId;
     private String  buildingName;
-    private Byte    buildingIsDel;
     private Integer collegeId;
+    private Byte    buildingIsDel;
 
     public Building() {}
 
     public Building(Building value) {
         this.buildingId = value.buildingId;
         this.buildingName = value.buildingName;
-        this.buildingIsDel = value.buildingIsDel;
         this.collegeId = value.collegeId;
+        this.buildingIsDel = value.buildingIsDel;
     }
 
     public Building(
         Integer buildingId,
         String  buildingName,
-        Byte    buildingIsDel,
-        Integer collegeId
+        Integer collegeId,
+        Byte    buildingIsDel
     ) {
         this.buildingId = buildingId;
         this.buildingName = buildingName;
-        this.buildingIsDel = buildingIsDel;
         this.collegeId = collegeId;
+        this.buildingIsDel = buildingIsDel;
     }
 
     @NotNull
@@ -71,14 +71,6 @@ public class Building implements Serializable {
         this.buildingName = buildingName;
     }
 
-    public Byte getBuildingIsDel() {
-        return this.buildingIsDel;
-    }
-
-    public void setBuildingIsDel(Byte buildingIsDel) {
-        this.buildingIsDel = buildingIsDel;
-    }
-
     @NotNull
     public Integer getCollegeId() {
         return this.collegeId;
@@ -88,14 +80,22 @@ public class Building implements Serializable {
         this.collegeId = collegeId;
     }
 
+    public Byte getBuildingIsDel() {
+        return this.buildingIsDel;
+    }
+
+    public void setBuildingIsDel(Byte buildingIsDel) {
+        this.buildingIsDel = buildingIsDel;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Building (");
 
         sb.append(buildingId);
         sb.append(", ").append(buildingName);
-        sb.append(", ").append(buildingIsDel);
         sb.append(", ").append(collegeId);
+        sb.append(", ").append(buildingIsDel);
 
         sb.append(")");
         return sb.toString();

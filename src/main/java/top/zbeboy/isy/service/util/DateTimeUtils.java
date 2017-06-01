@@ -161,6 +161,15 @@ public class DateTimeUtils {
     }
 
     /**
+     * 得到当前时间
+     *
+     * @return 当前时间
+     */
+    public static Timestamp getNow() {
+        return new Timestamp(Clock.systemDefaultZone().millis());
+    }
+
+    /**
      * 拆分时间
      *
      * @param splitSymbol 分隔符

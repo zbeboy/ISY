@@ -23,6 +23,7 @@ import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
@@ -120,8 +121,14 @@ public class GraduationDesignProjectController {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
+            // 查询最近的一条件记录，时间为当前
+            GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
+            Record record =
+                    graduationDesignPlanService.findByGraduationDesignTeacherIdAndLeAddTime(graduationDesignTeacher.getGraduationDesignTeacherId(), DateTimeUtils.getNow());
+            GraduationDesignPlanBean graduationDesignPlan = record.into(GraduationDesignPlanBean.class);
             page = "web/graduate/design/project/design_project_add::#page-wrapper";
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("graduationDesignPlanRecently", graduationDesignPlan);
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
@@ -167,7 +174,7 @@ public class GraduationDesignProjectController {
         if (!errorBean.isHasError()) {
             List<Building> buildings = new ArrayList<>();
             Byte isDel = 0;
-            Building building = new Building(0, "请选择楼", isDel, 0);
+            Building building = new Building(0, "请选择楼", 0, isDel);
             buildings.add(building);
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             Optional<Record> record = departmentService.findByIdRelation(graduationDesignRelease.getDepartmentId());
@@ -175,7 +182,7 @@ public class GraduationDesignProjectController {
                 College college = record.get().into(College.class);
                 Result<BuildingRecord> buildingRecords = buildingService.findByCollegeIdAndIsDel(college.getCollegeId(), isDel);
                 for (BuildingRecord r : buildingRecords) {
-                    Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getBuildingIsDel(), r.getCollegeId());
+                    Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(),r.getCollegeId(), r.getBuildingIsDel());
                     buildings.add(tempBuilding);
                 }
             }

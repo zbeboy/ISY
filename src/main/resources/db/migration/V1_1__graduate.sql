@@ -82,10 +82,8 @@ CREATE TABLE graduation_design_plan(
   note VARCHAR(100) NOT NULL ,
   add_time DATETIME NOT NULL ,
   graduation_design_teacher_id VARCHAR(64) NOT NULL ,
-  building_id INT NOT NULL ,
   schoolroom_id INT NOT NULL ,
   FOREIGN KEY (graduation_design_teacher_id) REFERENCES  graduation_design_teacher(graduation_design_teacher_id),
-  FOREIGN KEY (building_id) REFERENCES building(building_id),
   FOREIGN KEY (schoolroom_id) REFERENCES schoolroom(schoolroom_id)
 );
 

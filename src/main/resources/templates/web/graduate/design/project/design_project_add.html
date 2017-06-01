@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <p>最近一次
-                    <input type="button" id="copy_all" class="btn btn-default" value="复制全部>>" />
+                    <input type="button" id="copy_all" class="btn btn-default" value="复制全部>>"/>
                 </p>
                 <div class="row">
                     <div class="col-md-7">
@@ -31,7 +31,8 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <input class="form-control" name="scheduling" id="recently_scheduling"
-                                               placeholder="进度安排" maxlength="100" disabled="disabled"/>
+                                               placeholder="进度安排" maxlength="100" disabled="disabled"
+                                               th:value="${graduationDesignPlanRecently.scheduling}"/>
                                     </div>
                                     <div class="col-md-2">
                                         <input type="button" value="复制 >" class="btn btn-default" id="copy_scheduling"/>
@@ -43,7 +44,8 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <input class="form-control" name="supervisionTime" id="recently_supervisionTime"
-                                               placeholder="指导时间" maxlength="100" disabled="disabled"/>
+                                               placeholder="指导时间" maxlength="100" disabled="disabled"
+                                               th:value="${graduationDesignPlanRecently.supervisionTime}"/>
                                     </div>
                                     <div class="col-md-2">
                                         <input type="button" value="复制 >" class="btn btn-default"
@@ -57,16 +59,22 @@
                                     <div class="col-md-8">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <select class="form-control" name="building"
-                                                        id="recently_select_building" disabled="disabled">
-                                                    <option>请选择楼</option>
-                                                </select>
+                                                <input class="form-control" name="building"
+                                                       id="recently_select_building"
+                                                       th:value="${graduationDesignPlanRecently.buildingName}"
+                                                       disabled="disabled"/>
+                                                <input type="hidden"
+                                                       th:value="${graduationDesignPlanRecently.buildingId}"
+                                                       id="recently_building_id"/>
                                             </div>
                                             <div class="col-md-6">
-                                                <select class="form-control" name="schoolroom"
-                                                        id="recently_select_schoolroom" disabled="disabled">
-                                                    <option>请选择教室</option>
-                                                </select>
+                                                <input class="form-control" name="schoolroom"
+                                                       id="recently_select_schoolroom"
+                                                       th:value="${graduationDesignPlanRecently.buildingCode}"
+                                                       disabled="disabled"/>
+                                                <input type="hidden"
+                                                       th:value="${graduationDesignPlanRecently.schoolroomId}"
+                                                       id="recently_schoolroom_id"/>
                                             </div>
                                         </div>
                                     </div>
@@ -81,7 +89,9 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <input class="form-control" name="guideContent" id="recently_guideContent"
-                                               placeholder="指导内容" maxlength="150" disabled="disabled"/>
+                                               placeholder="指导内容" maxlength="150"
+                                               th:value="${graduationDesignPlanRecently.guideContent}"
+                                               disabled="disabled"/>
                                     </div>
                                     <div class="col-md-2">
                                         <input type="button" value="复制 >" class="btn btn-default"
@@ -94,7 +104,8 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <input class="form-control" name="note" id="recently_note"
-                                               placeholder="备注" maxlength="100" disabled="disabled"/>
+                                               placeholder="备注" maxlength="100"
+                                               th:value="${graduationDesignPlanRecently.note}" disabled="disabled"/>
                                     </div>
                                     <div class="col-md-2">
                                         <input type="button" value="复制 >" class="btn btn-default" id="copy_note"/>
