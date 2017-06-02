@@ -1,7 +1,7 @@
 /**
  * Created by zbeboy on 2017/5/27.
  */
-require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "jquery.showLoading"], function ($, nav_active, Handlebars) {
+require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"], function ($, nav_active, Handlebars) {
 
     /*
      ajax url.
@@ -22,6 +22,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     var paramId = {
         copy_all: '#copy_all',
+        clean_all: '#clean_all',
         copy_scheduling: '#copy_scheduling',
         copy_supervision_time: '#copy_supervision_time',
         copy_guide_location: '#copy_guide_location',
@@ -155,6 +156,40 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
                 $('#operator_button').removeClass('hidden');
             }
         });
+        initMaxLength();
+    }
+
+    /**
+     * 初始化Input max length
+     */
+    function initMaxLength() {
+        $(paramId.scheduling).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+
+        $(paramId.supervisionTime).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+
+        $(paramId.guideContent).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+
+        $(paramId.note).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
     }
 
     /**
@@ -181,6 +216,23 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         var building = param.select_building;
         global_schoolroom_id = 0;
         changeSchoolroom(building);// 根据楼重新加载教室数据
+
+        if (Number(building) > 0) {
+            validSuccessDom(validId.guideLocation, errorMsgId.guideLocation);
+        } else {
+            validErrorDom(validId.guideLocation, errorMsgId.guideLocation, '请选择楼');
+        }
+    });
+
+    $(paramId.select_schoolroom).change(function () {
+        initParam();
+        var schoolroom = param.select_schoolroom;
+
+        if (Number(schoolroom) > 0) {
+            validSuccessDom(validId.guideLocation, errorMsgId.guideLocation);
+        } else {
+            validErrorDom(validId.guideLocation, errorMsgId.guideLocation, '请选择教室');
+        }
     });
 
     var global_schoolroom_id = 0;
@@ -240,12 +292,53 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
     function selectedSchoolroom() {
         var schoolroomChildrens = $(paramId.select_schoolroom).children();
         for (var i = 0; i < schoolroomChildrens.length; i++) {
-            if ($(schoolroomChildrens[i]).val() === global_schoolroom_id) {
+            if (Number($(schoolroomChildrens[i]).val()) === global_schoolroom_id) {
                 $(schoolroomChildrens[i]).prop('selected', true);
                 break;
             }
         }
     }
+
+    // 即时验证
+    $(paramId.scheduling).blur(function () {
+        initParam();
+        var scheduling = param.scheduling;
+        if (scheduling.length <= 0 || scheduling.length > 100) {
+            validErrorDom(validId.scheduling, errorMsgId.scheduling, '进度安排100个字符以内');
+        } else {
+            validSuccessDom(validId.scheduling, errorMsgId.scheduling);
+        }
+    });
+
+    $(paramId.supervisionTime).blur(function () {
+        initParam();
+        var supervisionTime = param.supervisionTime;
+        if (supervisionTime.length <= 0 || supervisionTime.length > 100) {
+            validErrorDom(validId.supervisionTime, errorMsgId.supervisionTime, '指导时间100个字符以内');
+        } else {
+            validSuccessDom(validId.supervisionTime, errorMsgId.supervisionTime);
+        }
+    });
+
+    $(paramId.guideContent).blur(function () {
+        initParam();
+        var guideContent = param.guideContent;
+        if (guideContent.length <= 0 || guideContent.length > 100) {
+            validErrorDom(validId.guideContent, errorMsgId.guideContent, '指导内容150个字符以内');
+        } else {
+            validSuccessDom(validId.guideContent, errorMsgId.guideContent);
+        }
+    });
+
+    $(paramId.note).blur(function () {
+        initParam();
+        var note = param.note;
+        if (note.length <= 0 || note.length > 100) {
+            validErrorDom(validId.note, errorMsgId.note, '备注100个字符以内');
+        } else {
+            validSuccessDom(validId.note, errorMsgId.note);
+        }
+    });
 
     /*
      返回
@@ -254,12 +347,22 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         $.address.value(ajax_url.back + '?id=' + init_page_param.graduationDesignReleaseId);
     });
 
+    // 复制内容
     function copyScheduling() {
         $(paramId.scheduling).val($(paramId.recently_scheduling).val());
     }
 
+    // 清空内容
+    function cleanScheduling() {
+        $(paramId.scheduling).val('');
+    }
+
     function copySupervisionTime() {
         $(paramId.supervisionTime).val($(paramId.recently_supervisionTime).val());
+    }
+
+    function cleanSupervisionTime() {
+        $(paramId.supervisionTime).val('');
     }
 
     function copyGuideLocation() {
@@ -275,12 +378,33 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         changeSchoolroom(realBuildingId);
     }
 
-    function copyGuideContent(){
+    function cleanGuideLocation() {
+        var realBuildingId = 0;
+        var buildingChildrens = $(paramId.select_building).children();
+        for (var i = 0; i < buildingChildrens.length; i++) {
+            if (Number($(buildingChildrens[i]).val()) === realBuildingId) {
+                $(buildingChildrens[i]).prop('selected', true);
+                break;
+            }
+        }
+        global_schoolroom_id = 0;
+        changeSchoolroom(realBuildingId);
+    }
+
+    function copyGuideContent() {
         $(paramId.guideContent).val($(paramId.recently_guideContent).val());
     }
 
-    function copyNote(){
+    function cleanGuideContent() {
+        $(paramId.guideContent).val('');
+    }
+
+    function copyNote() {
         $(paramId.note).val($(paramId.recently_note).val());
+    }
+
+    function cleanNote() {
+        $(paramId.note).val('');
     }
 
     $(paramId.copy_all).click(function () {
@@ -289,6 +413,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         copyGuideLocation();
         copyGuideContent();
         copyNote();
+    });
+
+    $(paramId.clean_all).click(function () {
+        cleanScheduling();
+        cleanSupervisionTime();
+        cleanGuideLocation();
+        cleanGuideContent();
+        cleanNote();
     });
 
     $(paramId.copy_scheduling).click(function () {
@@ -323,7 +455,132 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     function add() {
         initParam();
+        var msg;
+        msg = Messenger().post({
+            message: "确定保存吗?",
+            actions: {
+                retry: {
+                    label: '确定',
+                    phrase: 'Retrying TIME',
+                    action: function () {
+                        msg.cancel();
+                        validScheduling();
+                    }
+                },
+                cancel: {
+                    label: '取消',
+                    action: function () {
+                        return msg.cancel();
+                    }
+                }
+            }
+        });
+    }
 
+    function validScheduling() {
+        var scheduling = param.scheduling;
+        if (scheduling.length <= 0 || scheduling.length > 100) {
+            Messenger().post({
+                message: '进度安排100个字符以内',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validSupervisionTime();
+        }
+    }
+
+    function validSupervisionTime(){
+        var supervisionTime = param.supervisionTime;
+        if (supervisionTime.length <= 0 || supervisionTime.length > 100) {
+            Messenger().post({
+                message: '指导时间100个字符以内',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validGuideLocation();
+        }
+    }
+
+    function validGuideLocation(){
+        var building = param.select_building;
+        var schoolroom = param.select_schoolroom;
+        if (Number(building) <= 0) {
+            Messenger().post({
+                message: '请选择楼',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            if(Number(schoolroom) <= 0){
+                Messenger().post({
+                    message: '请选择教室',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                validGuideContent();
+            }
+        }
+    }
+
+    function validGuideContent(){
+        var guideContent = param.guideContent;
+        if (guideContent.length <= 0 || guideContent.length > 100) {
+            Messenger().post({
+                message: '指导内容150个字符以内',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validNote();
+        }
+    }
+
+    function validNote(){
+        var note = param.note;
+        if (note.length <= 0 || note.length > 100) {
+            Messenger().post({
+                message: '备注100个字符以内',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            sendAjax();
+        }
+    }
+
+    /**
+     * 发送数据到后台
+     */
+    function sendAjax() {
+        Messenger().run({
+            successMessage: '保存数据成功',
+            errorMessage: '保存数据失败',
+            progressMessage: '正在保存数据....'
+        }, {
+            url: web_path + ajax_url.save,
+            type: 'post',
+            data: $('#add_form').serialize(),
+            success: function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.back + '?id=' + init_page_param.graduationDesignReleaseId);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            },
+            error: function (xhr) {
+                if ((xhr != null ? xhr.status : void 0) === 404) {
+                    return "请求失败";
+                }
+                return true;
+            }
+        });
     }
 
 });

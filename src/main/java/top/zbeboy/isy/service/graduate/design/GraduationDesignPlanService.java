@@ -19,7 +19,7 @@ public interface GraduationDesignPlanService {
      * @param graduationDesignTeacherId 毕业设计指导教师id
      * @return 数据
      */
-    Result<GraduationDesignPlanRecord> findByGraduationDesignTeacherIdOrderByAddTime(String graduationDesignTeacherId);
+    Result<Record> findByGraduationDesignTeacherIdOrderByAddTime(String graduationDesignTeacherId);
 
     /**
      * 查询最近一条记录
@@ -29,4 +29,11 @@ public interface GraduationDesignPlanService {
      * @return 数据
      */
     Record findByGraduationDesignTeacherIdAndLeAddTime(String graduationDesignTeacherId, Timestamp addTime);
+
+    /**
+     * 保存
+     *
+     * @param graduationDesignPlan 数据
+     */
+    void save(GraduationDesignPlan graduationDesignPlan);
 }

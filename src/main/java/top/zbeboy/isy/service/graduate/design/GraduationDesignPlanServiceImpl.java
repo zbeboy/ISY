@@ -38,8 +38,13 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
 
 
     @Override
-    public Result<GraduationDesignPlanRecord> findByGraduationDesignTeacherIdOrderByAddTime(String graduationDesignTeacherId) {
-        return create.selectFrom(GRADUATION_DESIGN_PLAN)
+    public Result<Record> findByGraduationDesignTeacherIdOrderByAddTime(String graduationDesignTeacherId) {
+        return create.select()
+                .from(GRADUATION_DESIGN_PLAN)
+                .join(SCHOOLROOM)
+                .on(GRADUATION_DESIGN_PLAN.SCHOOLROOM_ID.eq(SCHOOLROOM.SCHOOLROOM_ID))
+                .join(BUILDING)
+                .on(BUILDING.BUILDING_ID.eq(SCHOOLROOM.BUILDING_ID))
                 .where(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId))
                 .orderBy(GRADUATION_DESIGN_PLAN.ADD_TIME.asc())
                 .fetch();
@@ -56,5 +61,11 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
                 .where(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId)
                 .and(GRADUATION_DESIGN_PLAN.ADD_TIME.lessThan(addTime)))
                 .fetchOne();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationDesignPlan graduationDesignPlan) {
+        graduationDesignPlanDao.insert(graduationDesignPlan);
     }
 }

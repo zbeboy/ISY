@@ -6,6 +6,7 @@ import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,11 +23,14 @@ import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectAddVo;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.*;
 
 /**
@@ -148,15 +152,15 @@ public class GraduationDesignProjectController {
      */
     @RequestMapping(value = "/web/graduate/design/project/list/data", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<GraduationDesignPlan> listData(@RequestParam("id") String graduationDesignReleaseId) {
-        AjaxUtils<GraduationDesignPlan> ajaxUtils = AjaxUtils.of();
+    public AjaxUtils<GraduationDesignPlanBean> listData(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils<GraduationDesignPlanBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
-            List<GraduationDesignPlan> graduationDesignPlans = new ArrayList<>();
-            Result<GraduationDesignPlanRecord> records = graduationDesignPlanService.findByGraduationDesignTeacherIdOrderByAddTime(graduationDesignTeacher.getGraduationDesignTeacherId());
+            List<GraduationDesignPlanBean> graduationDesignPlans = new ArrayList<>();
+            Result<Record> records = graduationDesignPlanService.findByGraduationDesignTeacherIdOrderByAddTime(graduationDesignTeacher.getGraduationDesignTeacherId());
             if (records.isNotEmpty()) {
-                graduationDesignPlans = records.into(GraduationDesignPlan.class);
+                graduationDesignPlans = records.into(GraduationDesignPlanBean.class);
             }
             ajaxUtils.success().msg("获取数据成功").listData(graduationDesignPlans);
         } else {
@@ -194,6 +198,41 @@ public class GraduationDesignProjectController {
             ajaxUtils.success().msg("获取楼数据成功！").listData(buildings);
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 保存
+     *
+     * @param graduationDesignProjectAddVo 数据
+     * @param bindingResult                检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/project/save", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils save(@Valid GraduationDesignProjectAddVo graduationDesignProjectAddVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignProjectAddVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                GraduationDesignPlan graduationDesignPlan = new GraduationDesignPlan();
+                GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
+                graduationDesignPlan.setGraduationDesignPlanId(UUIDUtils.getUUID());
+                graduationDesignPlan.setGraduationDesignTeacherId(graduationDesignTeacher.getGraduationDesignTeacherId());
+                graduationDesignPlan.setScheduling(graduationDesignProjectAddVo.getScheduling());
+                graduationDesignPlan.setSupervisionTime(graduationDesignProjectAddVo.getSupervisionTime());
+                graduationDesignPlan.setGuideContent(graduationDesignProjectAddVo.getGuideContent());
+                graduationDesignPlan.setNote(graduationDesignProjectAddVo.getNote());
+                graduationDesignPlan.setSchoolroomId(graduationDesignProjectAddVo.getSchoolroomId());
+                graduationDesignPlan.setAddTime(DateTimeUtils.getNow());
+                graduationDesignPlanService.save(graduationDesignPlan);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
         }
         return ajaxUtils;
     }

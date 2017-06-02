@@ -21,16 +21,23 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                <div class="text-right" style="margin-bottom: 10px;">
-                    <input type="button" name="checkall" value="全选" class="btn btn-outline btn-default btn-sm"/>
-                    <button type="button" id="project_add" class="btn btn-outline btn-primary btn-sm"><i
-                            class="fa fa-plus"></i>添加
-                    </button>
-                    <button type="button" id="project_dels" class="btn btn-outline btn-danger btn-sm"><i
-                            class="fa fa-trash-o"></i>批量删除
-                    </button>
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
-                    </button>
+                <div style="margin-bottom: 10px;">
+                    <div class="pull-left">
+                        <label><input type="checkbox" name="checkall"/> 全选</label>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" id="project_add" class="btn btn-outline btn-primary btn-sm"><i
+                                class="fa fa-plus"></i>添加
+                        </button>
+                        <button type="button" id="project_dels" class="btn btn-outline btn-danger btn-sm"><i
+                                class="fa fa-trash-o"></i>批量删除
+                        </button>
+                        <button type="button" id="project_down" class="btn btn-outline btn-default btn-sm"><i
+                                class="fa fa-cloud-download"></i>下载
+                        </button>
+                        <button type="button" class="btn btn-outline btn-default btn-sm" id="refresh"><i class="fa fa-refresh"></i>刷新
+                        </button>
+                    </div>
                 </div>
                 <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack"
                        id="tablesawTable">
@@ -60,14 +67,14 @@
                 <td><input type="checkbox" value="{{graduationDesignPlanId}}" name="check"/></td>
                 <td>{{scheduling}}</td>
                 <td>{{supervisionTime}}</td>
-                <td>{{guideLocation}}</td>
+                <td>{{buildingName}}  {{buildingCode}}</td>
                 <td>{{guideContent}}</td>
                 <td>{{note}}</td>
                 <td>
-                    <button type="button" class="btn btn-default btn-sm edit"
+                    <button type="button" class="btn btn-primary btn-sm edit"
                             data-id="{{graduationDesignPlanId}}">编辑
                     </button>
-                    <button type="button" class="btn btn-primary btn-sm del"
+                    <button type="button" class="btn btn-danger btn-sm del"
                             data-id="{{graduationDesignPlanId}}">删除
                     </button>
                 </td>
