@@ -59,4 +59,11 @@ public interface GraduationDesignPlanService {
      * @param graduationDesignPlan 数据
      */
     void update(GraduationDesignPlan graduationDesignPlan);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(List<String> id);
 }

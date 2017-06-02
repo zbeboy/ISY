@@ -6,6 +6,7 @@ import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,7 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectAddVo;
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectUpdateVo;
 
@@ -303,6 +305,31 @@ public class GraduationDesignProjectController {
             }
         } else {
             ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 删除
+     *
+     * @param graduationDesignPlanIds   规划id
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils collegeUpdateDel(String graduationDesignPlanIds, @RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            if (StringUtils.hasLength(graduationDesignPlanIds)) {
+                graduationDesignPlanService.deleteById(SmallPropsUtils.StringIdsToStringList(graduationDesignPlanIds));
+                ajaxUtils.success().msg("删除成功");
+            } else {
+                ajaxUtils.fail().msg("未发现选中信息");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
     }

@@ -93,4 +93,9 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
     public void update(GraduationDesignPlan graduationDesignPlan) {
         graduationDesignPlanDao.update(graduationDesignPlan);
     }
+
+    @Override
+    public void deleteById(List<String> id) {
+        graduationDesignPlanDao.deleteById(id);
+    }
 }
