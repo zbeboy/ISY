@@ -28,6 +28,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectAddVo;
+import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectUpdateVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -128,7 +129,7 @@ public class GraduationDesignProjectController {
             // 查询最近的一条件记录，时间为当前
             GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
             Record record =
-                    graduationDesignPlanService.findByGraduationDesignTeacherIdAndLeAddTime(graduationDesignTeacher.getGraduationDesignTeacherId(), DateTimeUtils.getNow());
+                    graduationDesignPlanService.findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacher.getGraduationDesignTeacherId(), DateTimeUtils.getNow());
             GraduationDesignPlanBean graduationDesignPlan;
             if (!ObjectUtils.isEmpty(record)) {
                 graduationDesignPlan = record.into(GraduationDesignPlanBean.class);
@@ -138,6 +139,44 @@ public class GraduationDesignProjectController {
             page = "web/graduate/design/project/design_project_add::#page-wrapper";
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("graduationDesignPlanRecently", graduationDesignPlan);
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 规划编辑
+     *
+     * @return 规划添加页面
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/edit", method = RequestMethod.GET)
+    public String projectListEdit(@RequestParam("id") String graduationDesignReleaseId,
+                                  @RequestParam("graduationDesignPlanId") String graduationDesignPlanId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> graduationDesignPlanRecord = graduationDesignPlanService.findByIdRelation(graduationDesignPlanId);
+            if (graduationDesignPlanRecord.isPresent()) {
+                GraduationDesignPlanBean graduationDesignPlan = graduationDesignPlanRecord.get().into(GraduationDesignPlanBean.class);
+                // 查询最近的一条件记录，时间为当前
+                GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
+                Record record =
+                        graduationDesignPlanService.findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacher.getGraduationDesignTeacherId(), graduationDesignPlan.getAddTime());
+                GraduationDesignPlanBean graduationDesignPlanRecently;
+                if (!ObjectUtils.isEmpty(record)) {
+                    graduationDesignPlanRecently = record.into(GraduationDesignPlanBean.class);
+                } else {
+                    graduationDesignPlanRecently = new GraduationDesignPlanBean();
+                }
+                page = "web/graduate/design/project/design_project_edit::#page-wrapper";
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                modelMap.addAttribute("graduationDesignPlanRecently", graduationDesignPlanRecently);
+                modelMap.addAttribute("graduationDesignPlan", graduationDesignPlan);
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "未查询到相关信息");
+            }
+
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
@@ -227,6 +266,37 @@ public class GraduationDesignProjectController {
                 graduationDesignPlan.setSchoolroomId(graduationDesignProjectAddVo.getSchoolroomId());
                 graduationDesignPlan.setAddTime(DateTimeUtils.getNow());
                 graduationDesignPlanService.save(graduationDesignPlan);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 更新
+     *
+     * @param graduationDesignProjectUpdateVo 数据
+     * @param bindingResult                   检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/project/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils save(@Valid GraduationDesignProjectUpdateVo graduationDesignProjectUpdateVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignProjectUpdateVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                GraduationDesignPlan graduationDesignPlan = graduationDesignPlanService.findById(graduationDesignProjectUpdateVo.getGraduationDesignPlanId());
+                graduationDesignPlan.setScheduling(graduationDesignProjectUpdateVo.getScheduling());
+                graduationDesignPlan.setSupervisionTime(graduationDesignProjectUpdateVo.getSupervisionTime());
+                graduationDesignPlan.setGuideContent(graduationDesignProjectUpdateVo.getGuideContent());
+                graduationDesignPlan.setNote(graduationDesignProjectUpdateVo.getNote());
+                graduationDesignPlan.setSchoolroomId(graduationDesignProjectUpdateVo.getSchoolroomId());
+                graduationDesignPlanService.update(graduationDesignPlan);
                 ajaxUtils.success().msg("保存成功");
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());

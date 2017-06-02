@@ -10,6 +10,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         data_url: '/web/graduate/design/project/list/data',
         condition:'/web/graduate/design/project/condition',
         add:'/web/graduate/design/project/list/add',
+        edit:'/web/graduate/design/project/list/edit',
         back: '/web/menu/graduate/design/project'
     };
 
@@ -90,7 +91,18 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      编辑
      */
     $(tableData).delegate('.edit', "click", function () {
-
+        var graduationDesignPlanId = $(this).attr('data-id');
+        $.post(ajax_url.condition,{id:init_page_param.graduationDesignReleaseId},function(data){
+            if(data.state){
+                $.address.value(ajax_url.edit + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPlanId=' + graduationDesignPlanId);
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
     });
 
     /*

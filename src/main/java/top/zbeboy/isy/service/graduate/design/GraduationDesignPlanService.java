@@ -7,11 +7,27 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by zbeboy on 2017/5/27.
  */
 public interface GraduationDesignPlanService {
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    GraduationDesignPlan findById(String id);
+
+    /**
+     * 通过主键关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(String id);
 
     /**
      * 根据毕业设计指导教师id查询
@@ -28,7 +44,7 @@ public interface GraduationDesignPlanService {
      * @param addTime                   添加时间
      * @return 数据
      */
-    Record findByGraduationDesignTeacherIdAndLeAddTime(String graduationDesignTeacherId, Timestamp addTime);
+    Record findByGraduationDesignTeacherIdAndLessThanAddTime(String graduationDesignTeacherId, Timestamp addTime);
 
     /**
      * 保存
@@ -36,4 +52,11 @@ public interface GraduationDesignPlanService {
      * @param graduationDesignPlan 数据
      */
     void save(GraduationDesignPlan graduationDesignPlan);
+
+    /**
+     * 更新
+     *
+     * @param graduationDesignPlan 数据
+     */
+    void update(GraduationDesignPlan graduationDesignPlan);
 }

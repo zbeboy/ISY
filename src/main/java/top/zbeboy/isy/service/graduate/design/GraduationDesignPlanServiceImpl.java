@@ -15,6 +15,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -38,6 +39,23 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
 
 
     @Override
+    public GraduationDesignPlan findById(String id) {
+        return graduationDesignPlanDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(GRADUATION_DESIGN_PLAN)
+                .join(SCHOOLROOM)
+                .on(GRADUATION_DESIGN_PLAN.SCHOOLROOM_ID.eq(SCHOOLROOM.SCHOOLROOM_ID))
+                .join(BUILDING)
+                .on(BUILDING.BUILDING_ID.eq(SCHOOLROOM.BUILDING_ID))
+                .where(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_PLAN_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findByGraduationDesignTeacherIdOrderByAddTime(String graduationDesignTeacherId) {
         return create.select()
                 .from(GRADUATION_DESIGN_PLAN)
@@ -51,7 +69,7 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
     }
 
     @Override
-    public Record findByGraduationDesignTeacherIdAndLeAddTime(String graduationDesignTeacherId, Timestamp addTime) {
+    public Record findByGraduationDesignTeacherIdAndLessThanAddTime(String graduationDesignTeacherId, Timestamp addTime) {
         return create.select()
                 .from(GRADUATION_DESIGN_PLAN)
                 .join(SCHOOLROOM)
@@ -60,6 +78,8 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
                 .on(BUILDING.BUILDING_ID.eq(SCHOOLROOM.BUILDING_ID))
                 .where(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId)
                 .and(GRADUATION_DESIGN_PLAN.ADD_TIME.lessThan(addTime)))
+                .orderBy(GRADUATION_DESIGN_PLAN.ADD_TIME.desc())
+                .limit(0,1)
                 .fetchOne();
     }
 
@@ -67,5 +87,10 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
     @Override
     public void save(GraduationDesignPlan graduationDesignPlan) {
         graduationDesignPlanDao.insert(graduationDesignPlan);
+    }
+
+    @Override
+    public void update(GraduationDesignPlan graduationDesignPlan) {
+        graduationDesignPlanDao.update(graduationDesignPlan);
     }
 }
