@@ -12,6 +12,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         add: '/web/graduate/design/project/list/add',
         edit: '/web/graduate/design/project/list/edit',
         del: '/web/graduate/design/project/list/delete',
+        download:'/web/graduate/design/project/list/download',
         back: '/web/menu/graduate/design/project'
     };
 
@@ -132,8 +133,25 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         } else {
             Messenger().post("未发现有选中的!");
         }
+    });
 
-
+    /*
+     下载
+     */
+    $('#project_down').click(function () {
+        startLoading();
+        $.post(ajax_url.condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+            endLoading();
+            if (data.state) {
+                window.location.href = web_path + ajax_url.download + '?id=' + init_page_param.graduationDesignReleaseId;
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
     });
 
     /*

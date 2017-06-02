@@ -205,4 +205,14 @@ public final class Workbook {
     public static String graduateDesignPath(String schoolName, String collegeName, String departmentName) {
         return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "graduate/design/";
     }
+
+    /**
+     * 保存毕业设计规划文件路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String graduationDesignPlanPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "graduate/design/project/";
+    }
 }

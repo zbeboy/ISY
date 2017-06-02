@@ -14,18 +14,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.BuildingRecord;
-import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.common.FilesService;
+import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.BuildingService;
 import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignPlanService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -33,6 +36,8 @@ import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectAddV
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectUpdateVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -62,10 +67,19 @@ public class GraduationDesignProjectController {
     private GraduationDesignPlanService graduationDesignPlanService;
 
     @Resource
+    private GraduationDesignTutorService graduationDesignTutorService;
+
+    @Resource
     private BuildingService buildingService;
 
     @Resource
     private DepartmentService departmentService;
+
+    @Resource
+    private FilesService filesService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 毕业设计规划
@@ -183,6 +197,31 @@ public class GraduationDesignProjectController {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
+    }
+
+    /**
+     * 规划下载
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/download", method = RequestMethod.GET)
+    public void projectListDownload(@RequestParam("id") String graduationDesignReleaseId, HttpServletRequest request, HttpServletResponse response) {
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
+            Result<Record> graduationDesignTutorRecord =
+                    graduationDesignTutorService.findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(graduationDesignTeacher.getGraduationDesignTeacherId(), graduationDesignReleaseId);
+            List<GraduationDesignTutorBean> graduationDesignTutorBeanList = new ArrayList<>();
+            if (graduationDesignTutorRecord.isNotEmpty()) {
+                graduationDesignTutorBeanList = graduationDesignTutorRecord.into(GraduationDesignTutorBean.class);
+            }
+            List<GraduationDesignPlanBean> graduationDesignPlanBeanList = new ArrayList<>();
+            Result<Record> graduationDesignPlanRecord = graduationDesignPlanService.findByGraduationDesignTeacherIdOrderByAddTime(graduationDesignTeacher.getGraduationDesignTeacherId());
+            if (graduationDesignPlanRecord.isNotEmpty()) {
+                graduationDesignPlanBeanList = graduationDesignPlanRecord.into(GraduationDesignPlanBean.class);
+            }
+            Users users = usersService.getUserFromSession();
+            String path = filesService.saveGraduationDesignPlan(users, request, graduationDesignTutorBeanList, graduationDesignPlanBeanList);
+            uploadService.download("毕业设计指导计划（" + users.getRealName() + "）", "/" + path, response, request);
+        }
     }
 
     /**
