@@ -121,7 +121,7 @@ public class GraduationDesignProjectController {
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                page = "web/graduate/design/project/design_project_list::#page-wrapper";
+                page = "web/graduate/design/project/design_project_students::#page-wrapper";
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "未确认学生填报，无法操作");
@@ -248,6 +248,38 @@ public class GraduationDesignProjectController {
         }
         return ajaxUtils;
     }
+
+    /**
+     * 获取学生列表数据
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 学生列表数据
+     */
+    @RequestMapping(value = "/web/graduate/design/project/students/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignTutorBean> studentListData(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils<GraduationDesignTutorBean> ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
+                Result<Record> records =
+                        graduationDesignTutorService.findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(graduationDesignTeacher.getGraduationDesignTeacherId(), graduationDesignReleaseId);
+                List<GraduationDesignTutorBean> graduationDesignTutorBeans = new ArrayList<>();
+                if (records.isNotEmpty()) {
+                    graduationDesignTutorBeans = records.into(GraduationDesignTutorBean.class);
+                }
+                ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTutorBeans);
+            } else {
+                ajaxUtils.fail().msg("请等待指导教师调整确定后查看");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
 
     /**
      * 获取全部楼
