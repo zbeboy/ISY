@@ -25,15 +25,15 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan implements Serializable {
 
-    private static final long serialVersionUID = 671906977;
+    private static final long serialVersionUID = 679983575;
 
     private String    graduationDesignPlanId;
     private String    scheduling;
     private String    supervisionTime;
     private String    guideContent;
     private String    note;
-    private String    graduationDesignTeacherId;
     private Timestamp addTime;
+    private String    graduationDesignTeacherId;
     private Integer   schoolroomId;
 
     public GraduationDesignPlan() {}
@@ -44,8 +44,8 @@ public class GraduationDesignPlan implements Serializable {
         this.supervisionTime = value.supervisionTime;
         this.guideContent = value.guideContent;
         this.note = value.note;
-        this.graduationDesignTeacherId = value.graduationDesignTeacherId;
         this.addTime = value.addTime;
+        this.graduationDesignTeacherId = value.graduationDesignTeacherId;
         this.schoolroomId = value.schoolroomId;
     }
 
@@ -55,8 +55,8 @@ public class GraduationDesignPlan implements Serializable {
         String    supervisionTime,
         String    guideContent,
         String    note,
-        String    graduationDesignTeacherId,
         Timestamp addTime,
+        String    graduationDesignTeacherId,
         Integer   schoolroomId
     ) {
         this.graduationDesignPlanId = graduationDesignPlanId;
@@ -64,8 +64,8 @@ public class GraduationDesignPlan implements Serializable {
         this.supervisionTime = supervisionTime;
         this.guideContent = guideContent;
         this.note = note;
-        this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.addTime = addTime;
+        this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.schoolroomId = schoolroomId;
     }
 
@@ -120,6 +120,15 @@ public class GraduationDesignPlan implements Serializable {
     }
 
     @NotNull
+    public Timestamp getAddTime() {
+        return this.addTime;
+    }
+
+    public void setAddTime(Timestamp addTime) {
+        this.addTime = addTime;
+    }
+
+    @NotNull
     @Size(max = 64)
     public String getGraduationDesignTeacherId() {
         return this.graduationDesignTeacherId;
@@ -127,15 +136,6 @@ public class GraduationDesignPlan implements Serializable {
 
     public void setGraduationDesignTeacherId(String graduationDesignTeacherId) {
         this.graduationDesignTeacherId = graduationDesignTeacherId;
-    }
-
-    @NotNull
-    public Timestamp getAddTime() {
-        return this.addTime;
-    }
-
-    public void setAddTime(Timestamp addTime) {
-        this.addTime = addTime;
     }
 
     @NotNull
@@ -156,8 +156,8 @@ public class GraduationDesignPlan implements Serializable {
         sb.append(", ").append(supervisionTime);
         sb.append(", ").append(guideContent);
         sb.append(", ").append(note);
-        sb.append(", ").append(graduationDesignTeacherId);
         sb.append(", ").append(addTime);
+        sb.append(", ").append(graduationDesignTeacherId);
         sb.append(", ").append(schoolroomId);
 
         sb.append(")");

@@ -92,10 +92,12 @@ CREATE TABLE graduation_design_presubject(
   presubject_title VARCHAR(100) NOT NULL ,
   presubject_plan TEXT NOT NULL ,
   update_time DATETIME NOT NULL ,
+  public_level INT NOT NULL ,
   graduation_design_release_id VARCHAR(64) NOT NULL ,
   student_id INT NOT NULL ,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id),
-  FOREIGN KEY (student_id) REFERENCES student(student_id)
+  FOREIGN KEY (student_id) REFERENCES student(student_id),
+  UNIQUE (graduation_design_release_id,student_id)
 );
 
 CREATE TABLE graduation_design_declare_data(

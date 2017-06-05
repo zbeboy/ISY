@@ -98,17 +98,17 @@ public class GraduationDesignPlanDao extends DAOImpl<GraduationDesignPlanRecord,
     }
 
     /**
-     * Fetch records that have <code>graduation_design_teacher_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByGraduationDesignTeacherId(String... values) {
-        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID, values);
-    }
-
-    /**
      * Fetch records that have <code>add_time IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByAddTime(Timestamp... values) {
         return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.ADD_TIME, values);
+    }
+
+    /**
+     * Fetch records that have <code>graduation_design_teacher_id IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan> fetchByGraduationDesignTeacherId(String... values) {
+        return fetch(GraduationDesignPlan.GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID, values);
     }
 
     /**

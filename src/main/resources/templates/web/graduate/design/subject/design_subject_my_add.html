@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业设计发布 -
+                    <small>添加</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="add_form">
+                    <div class="form-group" id="valid_presubject_title">
+                        <label>题目</label>
+                        <input class="form-control" name="presubjectTitle" id="presubjectTitle"
+                               placeholder="题目" maxlength="100"/>
+                        <p class="text-danger hidden" id="presubject_title_error_msg"></p>
+                        <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId"/>
+                    </div>
+                    <div class="form-group" id="valid_presubject_plan">
+                        <label>计划</label>
+                        <div id="presubjectPlanHtml" style="height:500px;"></div>
+                        <input type="hidden" id="presubjectPlan" name="presubjectPlan" />
+                        <p class="text-danger hidden" id="presubject_plan_error_msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>权限</label>
+                        <div class="checkbox">
+                            <label>
+                                <input type="radio" name="publicLevel"
+                                       value="1"/>仅允许教职工及管理员查看(完全保密)
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="radio" name="publicLevel"
+                                       value="2" checked="checked"/>毕业设计结束后允许任何人查看，结束前仅允许教职工及管理员查看(半公开)
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="radio" name="publicLevel"
+                                       value="3"/>任何人任何时候都允许查看(完全公开)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/subject/design_subject_my_add.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

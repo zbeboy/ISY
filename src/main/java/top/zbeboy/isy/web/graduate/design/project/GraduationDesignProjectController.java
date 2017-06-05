@@ -295,7 +295,7 @@ public class GraduationDesignProjectController {
         if (!errorBean.isHasError()) {
             List<Building> buildings = new ArrayList<>();
             Byte isDel = 0;
-            Building building = new Building(0, "请选择楼", 0, isDel);
+            Building building = new Building(0, "请选择楼", isDel, 0);
             buildings.add(building);
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             Optional<Record> record = departmentService.findByIdRelation(graduationDesignRelease.getDepartmentId());
@@ -303,7 +303,7 @@ public class GraduationDesignProjectController {
                 College college = record.get().into(College.class);
                 Result<BuildingRecord> buildingRecords = buildingService.findByCollegeIdAndIsDel(college.getCollegeId(), isDel);
                 for (BuildingRecord r : buildingRecords) {
-                    Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getCollegeId(), r.getBuildingIsDel());
+                    Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getBuildingIsDel(), r.getCollegeId());
                     buildings.add(tempBuilding);
                 }
             }

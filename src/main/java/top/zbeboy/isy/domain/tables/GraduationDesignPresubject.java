@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPresubject extends TableImpl<GraduationDesignPresubjectRecord> {
 
-    private static final long serialVersionUID = 2037792894;
+    private static final long serialVersionUID = -1647506577;
 
     /**
      * The reference instance of <code>isy.graduation_design_presubject</code>
@@ -70,6 +70,11 @@ public class GraduationDesignPresubject extends TableImpl<GraduationDesignPresub
      * The column <code>isy.graduation_design_presubject.update_time</code>.
      */
     public final TableField<GraduationDesignPresubjectRecord, Timestamp> UPDATE_TIME = createField("update_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_presubject.public_level</code>.
+     */
+    public final TableField<GraduationDesignPresubjectRecord, Integer> PUBLIC_LEVEL = createField("public_level", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_design_presubject.graduation_design_release_id</code>.
@@ -124,7 +129,7 @@ public class GraduationDesignPresubject extends TableImpl<GraduationDesignPresub
      */
     @Override
     public List<UniqueKey<GraduationDesignPresubjectRecord>> getKeys() {
-        return Arrays.<UniqueKey<GraduationDesignPresubjectRecord>>asList(Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_PRIMARY);
+        return Arrays.<UniqueKey<GraduationDesignPresubjectRecord>>asList(Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_PRIMARY, Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_GRADUATION_DESIGN_RELEASE_ID);
     }
 
     /**

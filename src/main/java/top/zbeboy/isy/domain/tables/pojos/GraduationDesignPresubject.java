@@ -25,12 +25,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPresubject implements Serializable {
 
-    private static final long serialVersionUID = 1282060454;
+    private static final long serialVersionUID = 1089073057;
 
     private String    graduationDesignPresubjectId;
     private String    presubjectTitle;
     private String    presubjectPlan;
     private Timestamp updateTime;
+    private Integer   publicLevel;
     private String    graduationDesignReleaseId;
     private Integer   studentId;
 
@@ -41,6 +42,7 @@ public class GraduationDesignPresubject implements Serializable {
         this.presubjectTitle = value.presubjectTitle;
         this.presubjectPlan = value.presubjectPlan;
         this.updateTime = value.updateTime;
+        this.publicLevel = value.publicLevel;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
         this.studentId = value.studentId;
     }
@@ -50,6 +52,7 @@ public class GraduationDesignPresubject implements Serializable {
         String    presubjectTitle,
         String    presubjectPlan,
         Timestamp updateTime,
+        Integer   publicLevel,
         String    graduationDesignReleaseId,
         Integer   studentId
     ) {
@@ -57,6 +60,7 @@ public class GraduationDesignPresubject implements Serializable {
         this.presubjectTitle = presubjectTitle;
         this.presubjectPlan = presubjectPlan;
         this.updateTime = updateTime;
+        this.publicLevel = publicLevel;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
         this.studentId = studentId;
     }
@@ -101,6 +105,15 @@ public class GraduationDesignPresubject implements Serializable {
     }
 
     @NotNull
+    public Integer getPublicLevel() {
+        return this.publicLevel;
+    }
+
+    public void setPublicLevel(Integer publicLevel) {
+        this.publicLevel = publicLevel;
+    }
+
+    @NotNull
     @Size(max = 64)
     public String getGraduationDesignReleaseId() {
         return this.graduationDesignReleaseId;
@@ -127,6 +140,7 @@ public class GraduationDesignPresubject implements Serializable {
         sb.append(", ").append(presubjectTitle);
         sb.append(", ").append(presubjectPlan);
         sb.append(", ").append(updateTime);
+        sb.append(", ").append(publicLevel);
         sb.append(", ").append(graduationDesignReleaseId);
         sb.append(", ").append(studentId);
 

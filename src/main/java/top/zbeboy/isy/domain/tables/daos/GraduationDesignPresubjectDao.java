@@ -91,6 +91,13 @@ public class GraduationDesignPresubjectDao extends DAOImpl<GraduationDesignPresu
     }
 
     /**
+     * Fetch records that have <code>public_level IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPresubject> fetchByPublicLevel(Integer... values) {
+        return fetch(GraduationDesignPresubject.GRADUATION_DESIGN_PRESUBJECT.PUBLIC_LEVEL, values);
+    }
+
+    /**
      * Fetch records that have <code>graduation_design_release_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPresubject> fetchByGraduationDesignReleaseId(String... values) {

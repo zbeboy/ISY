@@ -76,16 +76,16 @@ public class BuildingDao extends DAOImpl<BuildingRecord, top.zbeboy.isy.domain.t
     }
 
     /**
-     * Fetch records that have <code>college_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.Building> fetchByCollegeId(Integer... values) {
-        return fetch(Building.BUILDING.COLLEGE_ID, values);
-    }
-
-    /**
      * Fetch records that have <code>building_is_del IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.Building> fetchByBuildingIsDel(Byte... values) {
         return fetch(Building.BUILDING.BUILDING_IS_DEL, values);
+    }
+
+    /**
+     * Fetch records that have <code>college_id IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.Building> fetchByCollegeId(Integer... values) {
+        return fetch(Building.BUILDING.COLLEGE_ID, values);
     }
 }

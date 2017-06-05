@@ -1,5 +1,5 @@
 /*!
- * Quill Editor v1.1.10
+ * Quill Editor v1.2.5
  * https://quilljs.com/
  * Copyright (c) 2014, Jason Chen
  * Copyright (c) 2013, salesforce.com
@@ -14,6 +14,9 @@
 }
 .ql-container.ql-disabled .ql-tooltip {
   visibility: hidden;
+}
+.ql-container.ql-disabled .ql-editor ul[data-checked] > li::before {
+  pointer-events: none;
 }
 .ql-clipboard {
   left: -100000px;
@@ -64,11 +67,15 @@
   list-style-type: none;
 }
 .ql-editor ul > li::before {
-  content: '\25CF';
+  content: '\2022';
 }
 .ql-editor ul[data-checked=true],
 .ql-editor ul[data-checked=false] {
   pointer-events: none;
+}
+.ql-editor ul[data-checked=true] > li *,
+.ql-editor ul[data-checked=false] > li * {
+  pointer-events: all;
 }
 .ql-editor ul[data-checked=true] > li::before,
 .ql-editor ul[data-checked=false] > li::before {
@@ -471,6 +478,24 @@
 .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
 .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
   stroke: #06c;
+}
+@media (pointer: coarse) {
+  .ql-snow.ql-toolbar button:hover:not(.ql-active),
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) {
+    color: #444;
+  }
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-fill,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-fill,
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill {
+    fill: #444;
+  }
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke,
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter {
+    stroke: #444;
+  }
 }
 .ql-snow {
   box-sizing: border-box;

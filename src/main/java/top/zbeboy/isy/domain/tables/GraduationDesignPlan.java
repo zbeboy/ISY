@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> {
 
-    private static final long serialVersionUID = 418695126;
+    private static final long serialVersionUID = 1520980397;
 
     /**
      * The reference instance of <code>isy.graduation_design_plan</code>
@@ -77,14 +77,14 @@ public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> 
     public final TableField<GraduationDesignPlanRecord, String> NOTE = createField("note", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_plan.graduation_design_teacher_id</code>.
-     */
-    public final TableField<GraduationDesignPlanRecord, String> GRADUATION_DESIGN_TEACHER_ID = createField("graduation_design_teacher_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
-
-    /**
      * The column <code>isy.graduation_design_plan.add_time</code>.
      */
     public final TableField<GraduationDesignPlanRecord, Timestamp> ADD_TIME = createField("add_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_plan.graduation_design_teacher_id</code>.
+     */
+    public final TableField<GraduationDesignPlanRecord, String> GRADUATION_DESIGN_TEACHER_ID = createField("graduation_design_teacher_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_design_plan.schoolroom_id</code>.
@@ -142,7 +142,7 @@ public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> 
      */
     @Override
     public List<ForeignKey<GraduationDesignPlanRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GraduationDesignPlanRecord, ?>>asList(Keys.GRADUATION_DESIGN_PLAN_IBFK_1);
+        return Arrays.<ForeignKey<GraduationDesignPlanRecord, ?>>asList(Keys.GRADUATION_DESIGN_PLAN_IBFK_1, Keys.GRADUATION_DESIGN_PLAN_IBFK_2);
     }
 
     /**
