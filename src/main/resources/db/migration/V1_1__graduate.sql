@@ -147,21 +147,15 @@ CREATE TABLE graduation_design_declare(
   FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
 );
 
-CREATE TABLE graduation_design_datum_type(
-  graduation_design_datum_type_id INT PRIMARY KEY AUTO_INCREMENT,
-  graduation_design_datum_type_name VARCHAR(25) NOT NULL
-);
-
 CREATE TABLE graduation_design_datum(
   graduation_design_datum_id VARCHAR(64) NOT NULL ,
   version VARCHAR(10) ,
   file_id VARCHAR(64) NOT NULL ,
-  graduation_design_datum_type_id INT NOT NULL ,
   graduation_design_release_id VARCHAR(64) NOT NULL ,
-  student_id INT NOT NULL ,
+  username VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id),
   FOREIGN KEY (file_id) REFERENCES files(file_id),
-  FOREIGN KEY (student_id) REFERENCES student(student_id)
+  FOREIGN KEY (username) REFERENCES users(username)
 );
 
 CREATE TABLE defense_arrangement(

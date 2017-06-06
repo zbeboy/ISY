@@ -760,10 +760,6 @@ VALUES ('毕业设计题目',237,13,'/web/menu/graduate/design/subject','graduat
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
                         application_code, application_en_name, icon,application_data_url_start_with)
-VALUES ('毕业设计申报',238,13,'/web/menu/graduate/design/declare','graduate_design_declare','graduate_design_declare','','/web/graduate/design/declare');
-INSERT INTO application(application_name, application_sort,
-                        application_pid, application_url,
-                        application_code, application_en_name, icon,application_data_url_start_with)
 VALUES ('毕业设计资料',239,13,'/web/menu/graduate/design/proposal','graduate_design_proposal','graduate_design_proposal','','/web/graduate/design/proposal');
 INSERT INTO application(application_name, application_sort,
                         application_pid, application_url,
@@ -832,7 +828,6 @@ INSERT INTO role_application(role_id, application_id) VALUES (1,41);
 INSERT INTO role_application(role_id, application_id) VALUES (1,42);
 INSERT INTO role_application(role_id, application_id) VALUES (1,43);
 INSERT INTO role_application(role_id, application_id) VALUES (1,44);
-INSERT INTO role_application(role_id, application_id) VALUES (1,45);
 
 INSERT INTO role_application(role_id, application_id) VALUES (2,1);
 INSERT INTO role_application(role_id, application_id) VALUES (2,2);
@@ -868,7 +863,6 @@ INSERT INTO role_application(role_id, application_id) VALUES (2,41);
 INSERT INTO role_application(role_id, application_id) VALUES (2,42);
 INSERT INTO role_application(role_id, application_id) VALUES (2,43);
 INSERT INTO role_application(role_id, application_id) VALUES (2,44);
-INSERT INTO role_application(role_id, application_id) VALUES (2,45);
 
 INSERT INTO political_landscape(political_landscape_name) VALUES ('群众');
 INSERT INTO political_landscape(political_landscape_name) VALUES ('共青团员');
