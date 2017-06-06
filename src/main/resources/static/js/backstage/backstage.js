@@ -40,7 +40,7 @@ requirejs.config({
         "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload.min",
         "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate.min",
         "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination.min",
-        "quill.bubble": web_path + "/plugin/quill/quill.min",
+        "quill": web_path + "/plugin/quill/quill.min",
         "jquery.print": web_path + "/plugin/jquery_print/jquery.print.min",
         "jquery.cropper": web_path + "/plugin/jquery_cropper/cropper.min",
         "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload.min",
@@ -97,8 +97,8 @@ requirejs.config({
         "jquery.simple-pagination": {
             deps: ["jquery"]
         },
-        "quill.bubble": {
-            deps: ["css!" + web_path + "/plugin/quill/quill.bubble.min"]
+        "quill": {
+            deps: ["css!" + web_path + "/plugin/quill/quill.bubble.min", "css!" + web_path + "/plugin/quill/quill.snow.min"]
         },
         "jquery.print": {
             deps: ["jquery"]

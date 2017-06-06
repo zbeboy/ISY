@@ -1,7 +1,7 @@
 /**
  * Created by zbeboy on 2017/6/5.
  */
-require(["jquery", "handlebars", "nav_active", "quill.bubble", "jquery.address"],
+require(["jquery", "handlebars", "nav_active", "quill", "jquery.address"],
     function ($, Handlebars, nav_active, Quill) {
 
         /*

@@ -1,7 +1,7 @@
 /**
  * Created by zbeboy on 2017/6/5.
  */
-require(["jquery", "handlebars", "nav_active", "quill.bubble", "messenger", "jquery.address", "bootstrap-maxlength"],
+require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.address", "bootstrap-maxlength"],
     function ($, Handlebars, nav_active, Quill) {
 
         /*
