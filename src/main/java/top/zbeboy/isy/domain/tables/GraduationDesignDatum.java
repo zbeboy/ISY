@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDatumRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord> {
 
-    private static final long serialVersionUID = 573298184;
+    private static final long serialVersionUID = -652593722;
 
     /**
      * The reference instance of <code>isy.graduation_design_datum</code>
@@ -65,19 +65,14 @@ public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord
     public final TableField<GraduationDesignDatumRecord, String> FILE_ID = createField("file_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_datum.graduation_design_datum_type_id</code>.
-     */
-    public final TableField<GraduationDesignDatumRecord, Integer> GRADUATION_DESIGN_DATUM_TYPE_ID = createField("graduation_design_datum_type_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
      * The column <code>isy.graduation_design_datum.graduation_design_release_id</code>.
      */
     public final TableField<GraduationDesignDatumRecord, String> GRADUATION_DESIGN_RELEASE_ID = createField("graduation_design_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_datum.student_id</code>.
+     * The column <code>isy.graduation_design_datum.username</code>.
      */
-    public final TableField<GraduationDesignDatumRecord, Integer> STUDENT_ID = createField("student_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<GraduationDesignDatumRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_datum</code> table reference

@@ -27,7 +27,6 @@ import top.zbeboy.isy.domain.tables.Files;
 import top.zbeboy.isy.domain.tables.GraduateArchives;
 import top.zbeboy.isy.domain.tables.GraduateBill;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
-import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclareData;
 import top.zbeboy.isy.domain.tables.GraduationDesignHopeTutor;
@@ -95,7 +94,6 @@ import top.zbeboy.isy.domain.tables.records.FilesRecord;
 import top.zbeboy.isy.domain.tables.records.GraduateArchivesRecord;
 import top.zbeboy.isy.domain.tables.records.GraduateBillRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignDatumRecord;
-import top.zbeboy.isy.domain.tables.records.GraduationDesignDatumTypeRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareDataRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignHopeTutorRecord;
@@ -172,7 +170,6 @@ public class Keys {
     public static final Identity<BuildingRecord, Integer> IDENTITY_BUILDING = Identities0.IDENTITY_BUILDING;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
     public static final Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Identities0.IDENTITY_DEPARTMENT;
-    public static final Identity<GraduationDesignDatumTypeRecord, Integer> IDENTITY_GRADUATION_DESIGN_DATUM_TYPE = Identities0.IDENTITY_GRADUATION_DESIGN_DATUM_TYPE;
     public static final Identity<GraduationDesignSubjectOriginTypeRecord, Integer> IDENTITY_GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE = Identities0.IDENTITY_GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE;
     public static final Identity<GraduationDesignSubjectTypeRecord, Integer> IDENTITY_GRADUATION_DESIGN_SUBJECT_TYPE = Identities0.IDENTITY_GRADUATION_DESIGN_SUBJECT_TYPE;
     public static final Identity<InternshipTypeRecord, Integer> IDENTITY_INTERNSHIP_TYPE = Identities0.IDENTITY_INTERNSHIP_TYPE;
@@ -210,7 +207,6 @@ public class Keys {
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
     public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_PRIMARY = UniqueKeys0.KEY_GRADUATE_ARCHIVES_PRIMARY;
     public static final UniqueKey<GraduateBillRecord> KEY_GRADUATE_BILL_PRIMARY = UniqueKeys0.KEY_GRADUATE_BILL_PRIMARY;
-    public static final UniqueKey<GraduationDesignDatumTypeRecord> KEY_GRADUATION_DESIGN_DATUM_TYPE_PRIMARY = UniqueKeys0.KEY_GRADUATION_DESIGN_DATUM_TYPE_PRIMARY;
     public static final UniqueKey<GraduationDesignDeclareRecord> KEY_GRADUATION_DESIGN_DECLARE_PRIMARY = UniqueKeys0.KEY_GRADUATION_DESIGN_DECLARE_PRIMARY;
     public static final UniqueKey<GraduationDesignDeclareDataRecord> KEY_GRADUATION_DESIGN_DECLARE_DATA_PRIMARY = UniqueKeys0.KEY_GRADUATION_DESIGN_DECLARE_DATA_PRIMARY;
     public static final UniqueKey<GraduationDesignPlanRecord> KEY_GRADUATION_DESIGN_PLAN_PRIMARY = UniqueKeys0.KEY_GRADUATION_DESIGN_PLAN_PRIMARY;
@@ -301,7 +297,7 @@ public class Keys {
     public static final ForeignKey<GraduateBillRecord, GraduationDesignDeclareRecord> GRADUATE_BILL_IBFK_2 = ForeignKeys0.GRADUATE_BILL_IBFK_2;
     public static final ForeignKey<GraduationDesignDatumRecord, FilesRecord> GRADUATION_DESIGN_DATUM_IBFK_2 = ForeignKeys0.GRADUATION_DESIGN_DATUM_IBFK_2;
     public static final ForeignKey<GraduationDesignDatumRecord, GraduationDesignReleaseRecord> GRADUATION_DESIGN_DATUM_IBFK_1 = ForeignKeys0.GRADUATION_DESIGN_DATUM_IBFK_1;
-    public static final ForeignKey<GraduationDesignDatumRecord, StudentRecord> GRADUATION_DESIGN_DATUM_IBFK_3 = ForeignKeys0.GRADUATION_DESIGN_DATUM_IBFK_3;
+    public static final ForeignKey<GraduationDesignDatumRecord, UsersRecord> GRADUATION_DESIGN_DATUM_IBFK_3 = ForeignKeys0.GRADUATION_DESIGN_DATUM_IBFK_3;
     public static final ForeignKey<GraduationDesignDeclareRecord, GraduationDesignDeclareDataRecord> GRADUATION_DESIGN_DECLARE_IBFK_1 = ForeignKeys0.GRADUATION_DESIGN_DECLARE_IBFK_1;
     public static final ForeignKey<GraduationDesignDeclareRecord, GraduationDesignTutorRecord> GRADUATION_DESIGN_DECLARE_IBFK_2 = ForeignKeys0.GRADUATION_DESIGN_DECLARE_IBFK_2;
     public static final ForeignKey<GraduationDesignDeclareDataRecord, GraduationDesignReleaseRecord> GRADUATION_DESIGN_DECLARE_DATA_IBFK_1 = ForeignKeys0.GRADUATION_DESIGN_DECLARE_DATA_IBFK_1;
@@ -377,7 +373,6 @@ public class Keys {
         public static Identity<BuildingRecord, Integer> IDENTITY_BUILDING = createIdentity(Building.BUILDING, Building.BUILDING.BUILDING_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
         public static Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = createIdentity(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
-        public static Identity<GraduationDesignDatumTypeRecord, Integer> IDENTITY_GRADUATION_DESIGN_DATUM_TYPE = createIdentity(GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE, GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE.GRADUATION_DESIGN_DATUM_TYPE_ID);
         public static Identity<GraduationDesignSubjectOriginTypeRecord, Integer> IDENTITY_GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE = createIdentity(GraduationDesignSubjectOriginType.GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE, GraduationDesignSubjectOriginType.GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID);
         public static Identity<GraduationDesignSubjectTypeRecord, Integer> IDENTITY_GRADUATION_DESIGN_SUBJECT_TYPE = createIdentity(GraduationDesignSubjectType.GRADUATION_DESIGN_SUBJECT_TYPE, GraduationDesignSubjectType.GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID);
         public static Identity<InternshipTypeRecord, Integer> IDENTITY_INTERNSHIP_TYPE = createIdentity(InternshipType.INTERNSHIP_TYPE, InternshipType.INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID);
@@ -413,7 +408,6 @@ public class Keys {
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);
         public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_PRIMARY = createUniqueKey(GraduateArchives.GRADUATE_ARCHIVES, "KEY_graduate_archives_PRIMARY", GraduateArchives.GRADUATE_ARCHIVES.GRADUATE_ARCHIVES_ID);
         public static final UniqueKey<GraduateBillRecord> KEY_GRADUATE_BILL_PRIMARY = createUniqueKey(GraduateBill.GRADUATE_BILL, "KEY_graduate_bill_PRIMARY", GraduateBill.GRADUATE_BILL.GRADUATE_BILL_ID);
-        public static final UniqueKey<GraduationDesignDatumTypeRecord> KEY_GRADUATION_DESIGN_DATUM_TYPE_PRIMARY = createUniqueKey(GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE, "KEY_graduation_design_datum_type_PRIMARY", GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE.GRADUATION_DESIGN_DATUM_TYPE_ID);
         public static final UniqueKey<GraduationDesignDeclareRecord> KEY_GRADUATION_DESIGN_DECLARE_PRIMARY = createUniqueKey(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE, "KEY_graduation_design_declare_PRIMARY", GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_DECLARE_ID);
         public static final UniqueKey<GraduationDesignDeclareDataRecord> KEY_GRADUATION_DESIGN_DECLARE_DATA_PRIMARY = createUniqueKey(GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA, "KEY_graduation_design_declare_data_PRIMARY", GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_DECLARE_DATA_ID);
         public static final UniqueKey<GraduationDesignPlanRecord> KEY_GRADUATION_DESIGN_PLAN_PRIMARY = createUniqueKey(GraduationDesignPlan.GRADUATION_DESIGN_PLAN, "KEY_graduation_design_plan_PRIMARY", GraduationDesignPlan.GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_PLAN_ID);
@@ -502,7 +496,7 @@ public class Keys {
         public static final ForeignKey<GraduateBillRecord, GraduationDesignDeclareRecord> GRADUATE_BILL_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_DECLARE_PRIMARY, GraduateBill.GRADUATE_BILL, "graduate_bill_ibfk_2", GraduateBill.GRADUATE_BILL.GRADUATION_DESIGN_DECLARE_ID);
         public static final ForeignKey<GraduationDesignDatumRecord, FilesRecord> GRADUATION_DESIGN_DATUM_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_FILES_PRIMARY, GraduationDesignDatum.GRADUATION_DESIGN_DATUM, "graduation_design_datum_ibfk_2", GraduationDesignDatum.GRADUATION_DESIGN_DATUM.FILE_ID);
         public static final ForeignKey<GraduationDesignDatumRecord, GraduationDesignReleaseRecord> GRADUATION_DESIGN_DATUM_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_RELEASE_PRIMARY, GraduationDesignDatum.GRADUATION_DESIGN_DATUM, "graduation_design_datum_ibfk_1", GraduationDesignDatum.GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_RELEASE_ID);
-        public static final ForeignKey<GraduationDesignDatumRecord, StudentRecord> GRADUATION_DESIGN_DATUM_IBFK_3 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_STUDENT_PRIMARY, GraduationDesignDatum.GRADUATION_DESIGN_DATUM, "graduation_design_datum_ibfk_3", GraduationDesignDatum.GRADUATION_DESIGN_DATUM.STUDENT_ID);
+        public static final ForeignKey<GraduationDesignDatumRecord, UsersRecord> GRADUATION_DESIGN_DATUM_IBFK_3 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, GraduationDesignDatum.GRADUATION_DESIGN_DATUM, "graduation_design_datum_ibfk_3", GraduationDesignDatum.GRADUATION_DESIGN_DATUM.USERNAME);
         public static final ForeignKey<GraduationDesignDeclareRecord, GraduationDesignDeclareDataRecord> GRADUATION_DESIGN_DECLARE_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_DECLARE_DATA_PRIMARY, GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE, "graduation_design_declare_ibfk_1", GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_DECLARE_DATA_ID);
         public static final ForeignKey<GraduationDesignDeclareRecord, GraduationDesignTutorRecord> GRADUATION_DESIGN_DECLARE_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_TUTOR_PRIMARY, GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE, "graduation_design_declare_ibfk_2", GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_TUTOR_ID);
         public static final ForeignKey<GraduationDesignDeclareDataRecord, GraduationDesignReleaseRecord> GRADUATION_DESIGN_DECLARE_DATA_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_RELEASE_PRIMARY, GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA, "graduation_design_declare_data_ibfk_1", GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID);

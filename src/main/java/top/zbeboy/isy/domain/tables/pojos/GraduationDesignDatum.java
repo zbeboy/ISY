@@ -24,14 +24,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDatum implements Serializable {
 
-    private static final long serialVersionUID = -608283432;
+    private static final long serialVersionUID = 1715707983;
 
-    private String  graduationDesignDatumId;
-    private String  version;
-    private String  fileId;
-    private Integer graduationDesignDatumTypeId;
-    private String  graduationDesignReleaseId;
-    private Integer studentId;
+    private String graduationDesignDatumId;
+    private String version;
+    private String fileId;
+    private String graduationDesignReleaseId;
+    private String username;
 
     public GraduationDesignDatum() {}
 
@@ -39,25 +38,22 @@ public class GraduationDesignDatum implements Serializable {
         this.graduationDesignDatumId = value.graduationDesignDatumId;
         this.version = value.version;
         this.fileId = value.fileId;
-        this.graduationDesignDatumTypeId = value.graduationDesignDatumTypeId;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
-        this.studentId = value.studentId;
+        this.username = value.username;
     }
 
     public GraduationDesignDatum(
-        String  graduationDesignDatumId,
-        String  version,
-        String  fileId,
-        Integer graduationDesignDatumTypeId,
-        String  graduationDesignReleaseId,
-        Integer studentId
+        String graduationDesignDatumId,
+        String version,
+        String fileId,
+        String graduationDesignReleaseId,
+        String username
     ) {
         this.graduationDesignDatumId = graduationDesignDatumId;
         this.version = version;
         this.fileId = fileId;
-        this.graduationDesignDatumTypeId = graduationDesignDatumTypeId;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
-        this.studentId = studentId;
+        this.username = username;
     }
 
     @NotNull
@@ -90,15 +86,6 @@ public class GraduationDesignDatum implements Serializable {
     }
 
     @NotNull
-    public Integer getGraduationDesignDatumTypeId() {
-        return this.graduationDesignDatumTypeId;
-    }
-
-    public void setGraduationDesignDatumTypeId(Integer graduationDesignDatumTypeId) {
-        this.graduationDesignDatumTypeId = graduationDesignDatumTypeId;
-    }
-
-    @NotNull
     @Size(max = 64)
     public String getGraduationDesignReleaseId() {
         return this.graduationDesignReleaseId;
@@ -109,12 +96,13 @@ public class GraduationDesignDatum implements Serializable {
     }
 
     @NotNull
-    public Integer getStudentId() {
-        return this.studentId;
+    @Size(max = 64)
+    public String getUsername() {
+        return this.username;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -124,9 +112,8 @@ public class GraduationDesignDatum implements Serializable {
         sb.append(graduationDesignDatumId);
         sb.append(", ").append(version);
         sb.append(", ").append(fileId);
-        sb.append(", ").append(graduationDesignDatumTypeId);
         sb.append(", ").append(graduationDesignReleaseId);
-        sb.append(", ").append(studentId);
+        sb.append(", ").append(username);
 
         sb.append(")");
         return sb.toString();
