@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
             subject: '/web/graduate/design/subject/list',
+            team:'/web/graduate/design/subject/team',
             my_subject: '/web/graduate/design/subject/my',
             my_condition:'/web/graduate/design/subject/my/condition'
         };
@@ -130,6 +131,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(tableData).delegate('.design_subject_list', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(ajax_url.subject + '?id=' + id);
+        });
+
+        /*
+         小组
+         */
+        $(tableData).delegate('.design_subject_team', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.team + '?id=' + id);
         });
 
         /*

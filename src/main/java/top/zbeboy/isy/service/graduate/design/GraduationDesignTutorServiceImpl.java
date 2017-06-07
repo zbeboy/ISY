@@ -65,6 +65,16 @@ public class GraduationDesignTutorServiceImpl implements GraduationDesignTutorSe
     }
 
     @Override
+    public Optional<Record> findByStudentIdAndGraduationDesignReleaseIdRelation(int studentId, String graduationDesignReleaseId) {
+        return create.select()
+                .from(GRADUATION_DESIGN_TUTOR)
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .where(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(studentId).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(String graduationDesignTeacherId, String graduationDesignReleaseId) {
         return create.select()
                 .from(GRADUATION_DESIGN_TUTOR)

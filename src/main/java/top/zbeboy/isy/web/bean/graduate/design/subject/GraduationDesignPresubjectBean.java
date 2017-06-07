@@ -14,4 +14,5 @@ public class GraduationDesignPresubjectBean extends GraduationDesignPresubject {
     private String realName;
     private String studentNumber;
     private String organizeName;
+    private int staffId;
 }

@@ -35,6 +35,15 @@ public interface GraduationDesignTutorService {
     Optional<Record> findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(int studentId, String graduationDesignReleaseId);
 
     /**
+     * 通过学生id与发布id查询指导教师信息
+     *
+     * @param studentId                 学生id
+     * @param graduationDesignReleaseId 毕业发布id
+     * @return 指导教师信息
+     */
+    Optional<Record> findByStudentIdAndGraduationDesignReleaseIdRelation(int studentId, String graduationDesignReleaseId);
+
+    /**
      * 通过指导教师id与发布id关联查询学生信息
      *
      * @param graduationDesignTeacherId 指导教师id
