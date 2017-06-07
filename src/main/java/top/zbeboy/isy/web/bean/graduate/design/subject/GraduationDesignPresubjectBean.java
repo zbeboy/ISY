@@ -11,4 +11,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignPresubject;
 @Data
 public class GraduationDesignPresubjectBean extends GraduationDesignPresubject {
     private String updateTimeStr;
+    private String realName;
+    private String studentNumber;
+    private String organizeName;
 }

@@ -15,7 +15,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
-                nav: '/web/menu/internship/journal',
                 add: '/web/internship/journal/list/add',
                 valid_is_student: '/anyone/valid/cur/is/student',
                 valid_student: '/web/internship/journal/valid/student',
@@ -24,7 +23,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         }
 
         // 刷新时选中菜单
-        nav_active(getAjaxUrl().nav);
+        nav_active(getAjaxUrl().back);
 
         /*
          检验id

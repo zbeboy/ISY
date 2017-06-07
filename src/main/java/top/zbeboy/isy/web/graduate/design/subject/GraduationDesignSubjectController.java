@@ -2,6 +2,7 @@ package top.zbeboy.isy.web.graduate.design.subject;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -10,25 +11,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignPresubjectService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
+import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.subject.GraduationDesignPresubjectBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.graduate.design.subject.GraduationDesignPresubjectAddVo;
 import top.zbeboy.isy.web.vo.graduate.design.subject.GraduationDesignPresubjectUpdateVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -48,10 +58,25 @@ public class GraduationDesignSubjectController {
     private GraduationDesignPresubjectService graduationDesignPresubjectService;
 
     @Resource
+    private GraduationDesignTeacherService graduationDesignTeacherService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private CacheManageService cacheManageService;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private StaffService staffService;
 
     /**
      * 毕业设计题目
@@ -64,14 +89,180 @@ public class GraduationDesignSubjectController {
     }
 
     /**
+     * 列表
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/list", method = RequestMethod.GET)
+    public String list(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            Users users = usersService.getUserFromSession();
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Student student = studentService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(student)) {
+                    modelMap.addAttribute("studentId", student.getStudentId());
+                } else {
+                    modelMap.addAttribute("studentId", null);
+                }
+            }
+            UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+            modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+                modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
+            }
+            modelMap.addAttribute("graduationDesignReleaseId",graduationDesignReleaseId);
+            modelMap.addAttribute("endTime", DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
+            page = "web/graduate/design/subject/design_subject_list::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 列表数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/list/data", method = RequestMethod.GET)
+    @ResponseBody
+    public DataTablesUtils<GraduationDesignPresubjectBean> listData(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("select");
+        headers.add("presubject_title");
+        headers.add("student_name");
+        headers.add("student_number");
+        headers.add("organize_name");
+        headers.add("update_time");
+        headers.add("operator");
+        DataTablesUtils<GraduationDesignPresubjectBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        GraduationDesignPresubjectBean otherCondition = new GraduationDesignPresubjectBean();
+        String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");
+        if (!ObjectUtils.isEmpty(graduationDesignReleaseId)) {
+            otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
+            Result<Record> records = graduationDesignPresubjectService.findAllByPage(dataTablesUtils, otherCondition);
+            List<GraduationDesignPresubjectBean> graduationDesignPresubjectBeens = new ArrayList<>();
+            if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                graduationDesignPresubjectBeens = records.into(GraduationDesignPresubjectBean.class);
+                graduationDesignPresubjectBeens.forEach(i -> i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime())));
+            }
+            dataTablesUtils.setData(graduationDesignPresubjectBeens);
+            dataTablesUtils.setiTotalRecords(graduationDesignPresubjectService.countAll(otherCondition));
+            dataTablesUtils.setiTotalDisplayRecords(graduationDesignPresubjectService.countByCondition(dataTablesUtils, otherCondition));
+        } else {
+            dataTablesUtils.setData(null);
+            dataTablesUtils.setiTotalRecords(0);
+            dataTablesUtils.setiTotalDisplayRecords(0);
+        }
+        return dataTablesUtils;
+    }
+
+    /**
+     * 查看
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/list/look", method = RequestMethod.GET)
+    public String look(@RequestParam("id") String graduationDesignReleaseId,
+                       @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            boolean canLook = false;
+            Optional<Record> graduationDesignPresubjectRecord = graduationDesignPresubjectService.findByIdRelation(graduationDesignPresubjectId);
+            if(graduationDesignPresubjectRecord.isPresent()){
+                GraduationDesignPresubjectBean graduationDesignPresubject = graduationDesignPresubjectRecord.get().into(GraduationDesignPresubjectBean.class);
+                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                Users users = usersService.getUserFromSession();
+                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                    Student student = studentService.findByUsername(users.getUsername());
+                    if (Objects.equals(graduationDesignPresubject.getStudentId(), student.getStudentId())) {
+                        canLook = true;
+                    }
+                } else {
+                    if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                        canLook = true;
+                    } else {
+                        // 仅允许教职工查看
+                        if (graduationDesignPresubject.getPublicLevel() == 1) {
+                            UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+                            if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
+                                canLook = true;
+                            }
+                        } else if (graduationDesignPresubject.getPublicLevel() == 2) {
+                            // 毕业设计结束后允许任何人查看，结束前仅允许教职工及管理员查看(半公开)
+                            if (DateTimeUtils.timestampAfterDecide(graduationDesignRelease.getEndTime())) {
+                                canLook = true;
+                            }
+                        } else if (graduationDesignPresubject.getPublicLevel() == 3) {
+                            canLook = true;
+                        }
+                    }
+                }
+                if (canLook) {
+                    graduationDesignPresubject.setUpdateTimeStr(DateTimeUtils.formatDate(graduationDesignPresubject.getUpdateTime()));
+                    modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
+                    modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                    page = "web/graduate/design/subject/design_subject_look::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "您不符合查看条件");
+                }
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "未查询到相关信息");
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/list/edit", method = RequestMethod.GET)
+    public String edit(@RequestParam("id") String graduationDesignReleaseId,
+                       @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectId);
+            if (canEditCondition(graduationDesignPresubject)) {
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
+                page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "您不符合编辑条件");
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
      * 我的题目
      *
      * @param graduationDesignReleaseId 毕业设计发布id
-     * @param modelMap                  页面c对象
+     * @param modelMap                  页面对象
      * @return 页面
      */
     @RequestMapping(value = "/web/graduate/design/subject/my", method = RequestMethod.GET)
-    public String students(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+    public String my(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
@@ -190,11 +381,8 @@ public class GraduationDesignSubjectController {
         if (!bindingResult.hasErrors()) {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
-                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                Users users = usersService.getUserFromSession();
-                Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-                if (studentRecord.isPresent()) {
-                    GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
+                GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
+                if (canEditCondition(graduationDesignPresubject)) {
                     graduationDesignPresubject.setPresubjectTitle(graduationDesignPresubjectUpdateVo.getPresubjectTitle());
                     graduationDesignPresubject.setPresubjectPlan(graduationDesignPresubjectUpdateVo.getPresubjectPlan());
                     graduationDesignPresubject.setPublicLevel(graduationDesignPresubjectUpdateVo.getPublicLevel());
@@ -202,7 +390,7 @@ public class GraduationDesignSubjectController {
                     graduationDesignPresubjectService.update(graduationDesignPresubject);
                     ajaxUtils.success().msg("保存成功");
                 } else {
-                    ajaxUtils.fail().msg("未在该毕业设计条件下查询到学生信息");
+                    ajaxUtils.fail().msg("您不允许编辑该题目");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -211,6 +399,39 @@ public class GraduationDesignSubjectController {
             ajaxUtils.fail().msg("参数异常");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 编辑条件
+     *
+     * @param graduationDesignPresubject 数据
+     * @return true or false
+     */
+    private boolean canEditCondition(GraduationDesignPresubject graduationDesignPresubject) {
+        boolean canEdit = false;
+        Users users = usersService.getUserFromSession();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
+            if (Objects.equals(graduationDesignPresubject.getStudentId(), student.getStudentId())) {
+                canEdit = true;
+            }
+        } else {
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                canEdit = true;
+            } else {
+                // 教职工并且是指导教师可编辑
+                UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+                if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
+                    Staff staff = staffService.findByUsername(users.getUsername());
+                    Optional<Record> record =
+                            graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignPresubject.getGraduationDesignReleaseId(),staff.getStaffId());
+                    if(record.isPresent()){
+                        canEdit = true;
+                    }
+                }
+            }
+        }
+        return canEdit;
     }
 
     /**
