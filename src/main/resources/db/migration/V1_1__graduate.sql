@@ -123,7 +123,7 @@ CREATE TABLE graduation_design_subject_origin_type(
 
 CREATE TABLE graduation_design_declare(
   graduation_design_declare_id VARCHAR(64) PRIMARY KEY ,
-  graduation_design_topic VARCHAR(100),
+  graduation_design_presubject_id VARCHAR(64) NOT NULL ,
   subject_type_id INT,
   origin_type_id INT,
   is_new_subject BOOLEAN,
@@ -144,7 +144,8 @@ CREATE TABLE graduation_design_declare(
   graduation_design_declare_data_id VARCHAR(64) NOT NULL ,
   graduation_design_tutor_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_declare_data_id) REFERENCES graduation_design_declare_data(graduation_design_declare_data_id),
-  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
+  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id),
+  FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject(graduation_design_presubject_id)
 );
 
 CREATE TABLE graduation_design_datum(
@@ -223,3 +224,14 @@ CREATE TABLE graduate_archives(
   archive_number VARCHAR(100)  NOT NULL ,
   note VARCHAR(100)
 );
+
+INSERT INTO graduation_design_subject_type(subject_type_name) VALUES ('软件型');
+INSERT INTO graduation_design_subject_type(subject_type_name) VALUES ('论文型');
+INSERT INTO graduation_design_subject_type(subject_type_name) VALUES ('工程技术研究型');
+INSERT INTO graduation_design_subject_type(subject_type_name) VALUES ('工程设计型');
+INSERT INTO graduation_design_subject_type(subject_type_name) VALUES ('分理工论文型');
+
+INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('生产');
+INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('科研');
+INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('教学');
+INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('其他');

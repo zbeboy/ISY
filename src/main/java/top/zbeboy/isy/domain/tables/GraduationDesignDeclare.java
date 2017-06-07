@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRecord> {
 
-    private static final long serialVersionUID = -934778253;
+    private static final long serialVersionUID = -1820979662;
 
     /**
      * The reference instance of <code>isy.graduation_design_declare</code>
@@ -56,9 +56,9 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
     public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_DECLARE_ID = createField("graduation_design_declare_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_declare.graduation_design_topic</code>.
+     * The column <code>isy.graduation_design_declare.graduation_design_presubject_id</code>.
      */
-    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_TOPIC = createField("graduation_design_topic", org.jooq.impl.SQLDataType.VARCHAR.length(100), this, "");
+    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_PRESUBJECT_ID = createField("graduation_design_presubject_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_design_declare.subject_type_id</code>.
@@ -206,7 +206,7 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
      */
     @Override
     public List<ForeignKey<GraduationDesignDeclareRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GraduationDesignDeclareRecord, ?>>asList(Keys.GRADUATION_DESIGN_DECLARE_IBFK_1, Keys.GRADUATION_DESIGN_DECLARE_IBFK_2);
+        return Arrays.<ForeignKey<GraduationDesignDeclareRecord, ?>>asList(Keys.GRADUATION_DESIGN_DECLARE_IBFK_3, Keys.GRADUATION_DESIGN_DECLARE_IBFK_1, Keys.GRADUATION_DESIGN_DECLARE_IBFK_2);
     }
 
     /**

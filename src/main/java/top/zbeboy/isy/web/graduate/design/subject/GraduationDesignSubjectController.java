@@ -403,6 +403,20 @@ public class GraduationDesignSubjectController {
     }
 
     /**
+     * 题目申报
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/declare", method = RequestMethod.GET)
+    public String declare(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        page = "web/graduate/design/subject/design_subject_declare::#page-wrapper";
+        return page;
+    }
+
+    /**
      * 编辑我的题目
      *
      * @param graduationDesignReleaseId 毕业设计发布id

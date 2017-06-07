@@ -12,6 +12,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             release_data_url: '/anyone/graduate/design/release/data',
             subject: '/web/graduate/design/subject/list',
             team:'/web/graduate/design/subject/team',
+            declare:'/web/graduate/design/subject/declare',
             my_subject: '/web/graduate/design/subject/my',
             my_condition:'/web/graduate/design/subject/my/condition'
         };
@@ -157,6 +158,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                     });
                 }
             });
+        });
+
+        /*
+         题目申报
+         */
+        $(tableData).delegate('.design_subject_declare', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.declare + '?id=' + id);
         });
 
         init();

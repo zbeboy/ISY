@@ -69,10 +69,10 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
     }
 
     /**
-     * Fetch records that have <code>graduation_design_topic IN (values)</code>
+     * Fetch records that have <code>graduation_design_presubject_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignTopic(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_TOPIC, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignPresubjectId(String... values) {
+        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID, values);
     }
 
     /**

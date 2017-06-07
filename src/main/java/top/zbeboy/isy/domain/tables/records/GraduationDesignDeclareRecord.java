@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclareRecord extends UpdatableRecordImpl<GraduationDesignDeclareRecord> implements Record21<String, String, Integer, Integer, Byte, Byte, Byte, Byte, Byte, String, String, String, String, String, Integer, Integer, String, String, Byte, String, String> {
 
-    private static final long serialVersionUID = 378707237;
+    private static final long serialVersionUID = -1456790452;
 
     /**
      * Setter for <code>isy.graduation_design_declare.graduation_design_declare_id</code>.
@@ -49,17 +49,18 @@ public class GraduationDesignDeclareRecord extends UpdatableRecordImpl<Graduatio
     }
 
     /**
-     * Setter for <code>isy.graduation_design_declare.graduation_design_topic</code>.
+     * Setter for <code>isy.graduation_design_declare.graduation_design_presubject_id</code>.
      */
-    public void setGraduationDesignTopic(String value) {
+    public void setGraduationDesignPresubjectId(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>isy.graduation_design_declare.graduation_design_topic</code>.
+     * Getter for <code>isy.graduation_design_declare.graduation_design_presubject_id</code>.
      */
-    @Size(max = 100)
-    public String getGraduationDesignTopic() {
+    @NotNull
+    @Size(max = 64)
+    public String getGraduationDesignPresubjectId() {
         return (String) get(1);
     }
 
@@ -385,7 +386,7 @@ public class GraduationDesignDeclareRecord extends UpdatableRecordImpl<Graduatio
      */
     @Override
     public Field<String> field2() {
-        return GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_TOPIC;
+        return GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID;
     }
 
     /**
@@ -553,7 +554,7 @@ public class GraduationDesignDeclareRecord extends UpdatableRecordImpl<Graduatio
      */
     @Override
     public String value2() {
-        return getGraduationDesignTopic();
+        return getGraduationDesignPresubjectId();
     }
 
     /**
@@ -722,7 +723,7 @@ public class GraduationDesignDeclareRecord extends UpdatableRecordImpl<Graduatio
      */
     @Override
     public GraduationDesignDeclareRecord value2(String value) {
-        setGraduationDesignTopic(value);
+        setGraduationDesignPresubjectId(value);
         return this;
     }
 
@@ -940,11 +941,11 @@ public class GraduationDesignDeclareRecord extends UpdatableRecordImpl<Graduatio
     /**
      * Create a detached, initialised GraduationDesignDeclareRecord
      */
-    public GraduationDesignDeclareRecord(String graduationDesignDeclareId, String graduationDesignTopic, Integer subjectTypeId, Integer originTypeId, Byte isNewSubject, Byte isNewTeacherMake, Byte isNewSubjectMake, Byte isOldSubjectChange, Byte oldSubjectUsesTimes, String planPeriod, String guideTeacher, String academicTitleName, String assistantTeacher, String assistantTeacherAcademic, Integer guideTimes, Integer guidePeoples, String studentNumber, String studentName, Byte isOkApply, String graduationDesignDeclareDataId, String graduationDesignTutorId) {
+    public GraduationDesignDeclareRecord(String graduationDesignDeclareId, String graduationDesignPresubjectId, Integer subjectTypeId, Integer originTypeId, Byte isNewSubject, Byte isNewTeacherMake, Byte isNewSubjectMake, Byte isOldSubjectChange, Byte oldSubjectUsesTimes, String planPeriod, String guideTeacher, String academicTitleName, String assistantTeacher, String assistantTeacherAcademic, Integer guideTimes, Integer guidePeoples, String studentNumber, String studentName, Byte isOkApply, String graduationDesignDeclareDataId, String graduationDesignTutorId) {
         super(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE);
 
         set(0, graduationDesignDeclareId);
-        set(1, graduationDesignTopic);
+        set(1, graduationDesignPresubjectId);
         set(2, subjectTypeId);
         set(3, originTypeId);
         set(4, isNewSubject);
