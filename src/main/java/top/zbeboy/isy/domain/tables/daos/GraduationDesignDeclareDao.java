@@ -69,13 +69,6 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
     }
 
     /**
-     * Fetch records that have <code>graduation_design_presubject_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignPresubjectId(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID, values);
-    }
-
-    /**
      * Fetch records that have <code>subject_type_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchBySubjectTypeId(Integer... values) {
@@ -120,7 +113,7 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
     /**
      * Fetch records that have <code>old_subject_uses_times IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByOldSubjectUsesTimes(Byte... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByOldSubjectUsesTimes(Integer... values) {
         return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.OLD_SUBJECT_USES_TIMES, values);
     }
 
@@ -129,20 +122,6 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByPlanPeriod(String... values) {
         return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.PLAN_PERIOD, values);
-    }
-
-    /**
-     * Fetch records that have <code>guide_teacher IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGuideTeacher(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GUIDE_TEACHER, values);
-    }
-
-    /**
-     * Fetch records that have <code>academic_title_name IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByAcademicTitleName(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.ACADEMIC_TITLE_NAME, values);
     }
 
     /**
@@ -174,20 +153,6 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
     }
 
     /**
-     * Fetch records that have <code>student_number IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByStudentNumber(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.STUDENT_NUMBER, values);
-    }
-
-    /**
-     * Fetch records that have <code>student_name IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByStudentName(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.STUDENT_NAME, values);
-    }
-
-    /**
      * Fetch records that have <code>is_ok_apply IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByIsOkApply(Byte... values) {
@@ -195,16 +160,9 @@ public class GraduationDesignDeclareDao extends DAOImpl<GraduationDesignDeclareR
     }
 
     /**
-     * Fetch records that have <code>graduation_design_declare_data_id IN (values)</code>
+     * Fetch records that have <code>graduation_design_presubject_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignDeclareDataId(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_DECLARE_DATA_ID, values);
-    }
-
-    /**
-     * Fetch records that have <code>graduation_design_tutor_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignTutorId(String... values) {
-        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_TUTOR_ID, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare> fetchByGraduationDesignPresubjectId(String... values) {
+        return fetch(GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID, values);
     }
 }

@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRecord> {
 
-    private static final long serialVersionUID = -1820979662;
+    private static final long serialVersionUID = 1062555625;
 
     /**
      * The reference instance of <code>isy.graduation_design_declare</code>
@@ -54,11 +54,6 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
      * The column <code>isy.graduation_design_declare.graduation_design_declare_id</code>.
      */
     public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_DECLARE_ID = createField("graduation_design_declare_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
-
-    /**
-     * The column <code>isy.graduation_design_declare.graduation_design_presubject_id</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_PRESUBJECT_ID = createField("graduation_design_presubject_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_design_declare.subject_type_id</code>.
@@ -93,22 +88,12 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
     /**
      * The column <code>isy.graduation_design_declare.old_subject_uses_times</code>.
      */
-    public final TableField<GraduationDesignDeclareRecord, Byte> OLD_SUBJECT_USES_TIMES = createField("old_subject_uses_times", org.jooq.impl.SQLDataType.TINYINT, this, "");
+    public final TableField<GraduationDesignDeclareRecord, Integer> OLD_SUBJECT_USES_TIMES = createField("old_subject_uses_times", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>isy.graduation_design_declare.plan_period</code>.
      */
     public final TableField<GraduationDesignDeclareRecord, String> PLAN_PERIOD = createField("plan_period", org.jooq.impl.SQLDataType.VARCHAR.length(10), this, "");
-
-    /**
-     * The column <code>isy.graduation_design_declare.guide_teacher</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, String> GUIDE_TEACHER = createField("guide_teacher", org.jooq.impl.SQLDataType.VARCHAR.length(30), this, "");
-
-    /**
-     * The column <code>isy.graduation_design_declare.academic_title_name</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, String> ACADEMIC_TITLE_NAME = createField("academic_title_name", org.jooq.impl.SQLDataType.VARCHAR.length(30), this, "");
 
     /**
      * The column <code>isy.graduation_design_declare.assistant_teacher</code>.
@@ -131,29 +116,14 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
     public final TableField<GraduationDesignDeclareRecord, Integer> GUIDE_PEOPLES = createField("guide_peoples", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>isy.graduation_design_declare.student_number</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, String> STUDENT_NUMBER = createField("student_number", org.jooq.impl.SQLDataType.VARCHAR.length(20), this, "");
-
-    /**
-     * The column <code>isy.graduation_design_declare.student_name</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, String> STUDENT_NAME = createField("student_name", org.jooq.impl.SQLDataType.VARCHAR.length(30), this, "");
-
-    /**
      * The column <code>isy.graduation_design_declare.is_ok_apply</code>.
      */
     public final TableField<GraduationDesignDeclareRecord, Byte> IS_OK_APPLY = createField("is_ok_apply", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
 
     /**
-     * The column <code>isy.graduation_design_declare.graduation_design_declare_data_id</code>.
+     * The column <code>isy.graduation_design_declare.graduation_design_presubject_id</code>.
      */
-    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_DECLARE_DATA_ID = createField("graduation_design_declare_data_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
-
-    /**
-     * The column <code>isy.graduation_design_declare.graduation_design_tutor_id</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_TUTOR_ID = createField("graduation_design_tutor_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_PRESUBJECT_ID = createField("graduation_design_presubject_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_declare</code> table reference
@@ -206,7 +176,7 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
      */
     @Override
     public List<ForeignKey<GraduationDesignDeclareRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GraduationDesignDeclareRecord, ?>>asList(Keys.GRADUATION_DESIGN_DECLARE_IBFK_3, Keys.GRADUATION_DESIGN_DECLARE_IBFK_1, Keys.GRADUATION_DESIGN_DECLARE_IBFK_2);
+        return Arrays.<ForeignKey<GraduationDesignDeclareRecord, ?>>asList(Keys.GRADUATION_DESIGN_DECLARE_IBFK_1);
     }
 
     /**

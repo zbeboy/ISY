@@ -123,28 +123,20 @@ CREATE TABLE graduation_design_subject_origin_type(
 
 CREATE TABLE graduation_design_declare(
   graduation_design_declare_id VARCHAR(64) PRIMARY KEY ,
-  graduation_design_presubject_id VARCHAR(64) NOT NULL ,
   subject_type_id INT,
   origin_type_id INT,
   is_new_subject BOOLEAN,
   is_new_teacher_make BOOLEAN,
   is_new_subject_make BOOLEAN,
   is_old_subject_change BOOLEAN,
-  old_subject_uses_times BOOLEAN,
+  old_subject_uses_times INT,
   plan_period VARCHAR(10),
-  guide_teacher VARCHAR(30),
-  academic_title_name VARCHAR(30),
   assistant_teacher VARCHAR(30),
   assistant_teacher_academic VARCHAR(30),
   guide_times INT,
   guide_peoples INT,
-  student_number VARCHAR(20),
-  student_name VARCHAR(30),
   is_ok_apply BOOLEAN DEFAULT 0 ,
-  graduation_design_declare_data_id VARCHAR(64) NOT NULL ,
-  graduation_design_tutor_id VARCHAR(64) NOT NULL ,
-  FOREIGN KEY (graduation_design_declare_data_id) REFERENCES graduation_design_declare_data(graduation_design_declare_data_id),
-  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id),
+  graduation_design_presubject_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject(graduation_design_presubject_id)
 );
 

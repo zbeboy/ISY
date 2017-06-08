@@ -84,7 +84,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                     render: function (a, b, c, d) {
                         var context = null;
                         var html = '<i class="fa fa-lock"></i>';
-                        // 当前用户查看自己的实习日志
                         if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
                             context =
                             {

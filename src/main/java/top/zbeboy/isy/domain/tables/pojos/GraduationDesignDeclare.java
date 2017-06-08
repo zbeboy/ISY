@@ -24,35 +24,28 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare implements Serializable {
 
-    private static final long serialVersionUID = 1350308707;
+    private static final long serialVersionUID = 1053611272;
 
     private String  graduationDesignDeclareId;
-    private String  graduationDesignPresubjectId;
     private Integer subjectTypeId;
     private Integer originTypeId;
     private Byte    isNewSubject;
     private Byte    isNewTeacherMake;
     private Byte    isNewSubjectMake;
     private Byte    isOldSubjectChange;
-    private Byte    oldSubjectUsesTimes;
+    private Integer oldSubjectUsesTimes;
     private String  planPeriod;
-    private String  guideTeacher;
-    private String  academicTitleName;
     private String  assistantTeacher;
     private String  assistantTeacherAcademic;
     private Integer guideTimes;
     private Integer guidePeoples;
-    private String  studentNumber;
-    private String  studentName;
     private Byte    isOkApply;
-    private String  graduationDesignDeclareDataId;
-    private String  graduationDesignTutorId;
+    private String  graduationDesignPresubjectId;
 
     public GraduationDesignDeclare() {}
 
     public GraduationDesignDeclare(GraduationDesignDeclare value) {
         this.graduationDesignDeclareId = value.graduationDesignDeclareId;
-        this.graduationDesignPresubjectId = value.graduationDesignPresubjectId;
         this.subjectTypeId = value.subjectTypeId;
         this.originTypeId = value.originTypeId;
         this.isNewSubject = value.isNewSubject;
@@ -61,44 +54,32 @@ public class GraduationDesignDeclare implements Serializable {
         this.isOldSubjectChange = value.isOldSubjectChange;
         this.oldSubjectUsesTimes = value.oldSubjectUsesTimes;
         this.planPeriod = value.planPeriod;
-        this.guideTeacher = value.guideTeacher;
-        this.academicTitleName = value.academicTitleName;
         this.assistantTeacher = value.assistantTeacher;
         this.assistantTeacherAcademic = value.assistantTeacherAcademic;
         this.guideTimes = value.guideTimes;
         this.guidePeoples = value.guidePeoples;
-        this.studentNumber = value.studentNumber;
-        this.studentName = value.studentName;
         this.isOkApply = value.isOkApply;
-        this.graduationDesignDeclareDataId = value.graduationDesignDeclareDataId;
-        this.graduationDesignTutorId = value.graduationDesignTutorId;
+        this.graduationDesignPresubjectId = value.graduationDesignPresubjectId;
     }
 
     public GraduationDesignDeclare(
         String  graduationDesignDeclareId,
-        String  graduationDesignPresubjectId,
         Integer subjectTypeId,
         Integer originTypeId,
         Byte    isNewSubject,
         Byte    isNewTeacherMake,
         Byte    isNewSubjectMake,
         Byte    isOldSubjectChange,
-        Byte    oldSubjectUsesTimes,
+        Integer oldSubjectUsesTimes,
         String  planPeriod,
-        String  guideTeacher,
-        String  academicTitleName,
         String  assistantTeacher,
         String  assistantTeacherAcademic,
         Integer guideTimes,
         Integer guidePeoples,
-        String  studentNumber,
-        String  studentName,
         Byte    isOkApply,
-        String  graduationDesignDeclareDataId,
-        String  graduationDesignTutorId
+        String  graduationDesignPresubjectId
     ) {
         this.graduationDesignDeclareId = graduationDesignDeclareId;
-        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
         this.subjectTypeId = subjectTypeId;
         this.originTypeId = originTypeId;
         this.isNewSubject = isNewSubject;
@@ -107,17 +88,12 @@ public class GraduationDesignDeclare implements Serializable {
         this.isOldSubjectChange = isOldSubjectChange;
         this.oldSubjectUsesTimes = oldSubjectUsesTimes;
         this.planPeriod = planPeriod;
-        this.guideTeacher = guideTeacher;
-        this.academicTitleName = academicTitleName;
         this.assistantTeacher = assistantTeacher;
         this.assistantTeacherAcademic = assistantTeacherAcademic;
         this.guideTimes = guideTimes;
         this.guidePeoples = guidePeoples;
-        this.studentNumber = studentNumber;
-        this.studentName = studentName;
         this.isOkApply = isOkApply;
-        this.graduationDesignDeclareDataId = graduationDesignDeclareDataId;
-        this.graduationDesignTutorId = graduationDesignTutorId;
+        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
     }
 
     @NotNull
@@ -128,16 +104,6 @@ public class GraduationDesignDeclare implements Serializable {
 
     public void setGraduationDesignDeclareId(String graduationDesignDeclareId) {
         this.graduationDesignDeclareId = graduationDesignDeclareId;
-    }
-
-    @NotNull
-    @Size(max = 64)
-    public String getGraduationDesignPresubjectId() {
-        return this.graduationDesignPresubjectId;
-    }
-
-    public void setGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
-        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
     }
 
     public Integer getSubjectTypeId() {
@@ -188,11 +154,11 @@ public class GraduationDesignDeclare implements Serializable {
         this.isOldSubjectChange = isOldSubjectChange;
     }
 
-    public Byte getOldSubjectUsesTimes() {
+    public Integer getOldSubjectUsesTimes() {
         return this.oldSubjectUsesTimes;
     }
 
-    public void setOldSubjectUsesTimes(Byte oldSubjectUsesTimes) {
+    public void setOldSubjectUsesTimes(Integer oldSubjectUsesTimes) {
         this.oldSubjectUsesTimes = oldSubjectUsesTimes;
     }
 
@@ -203,24 +169,6 @@ public class GraduationDesignDeclare implements Serializable {
 
     public void setPlanPeriod(String planPeriod) {
         this.planPeriod = planPeriod;
-    }
-
-    @Size(max = 30)
-    public String getGuideTeacher() {
-        return this.guideTeacher;
-    }
-
-    public void setGuideTeacher(String guideTeacher) {
-        this.guideTeacher = guideTeacher;
-    }
-
-    @Size(max = 30)
-    public String getAcademicTitleName() {
-        return this.academicTitleName;
-    }
-
-    public void setAcademicTitleName(String academicTitleName) {
-        this.academicTitleName = academicTitleName;
     }
 
     @Size(max = 30)
@@ -257,24 +205,6 @@ public class GraduationDesignDeclare implements Serializable {
         this.guidePeoples = guidePeoples;
     }
 
-    @Size(max = 20)
-    public String getStudentNumber() {
-        return this.studentNumber;
-    }
-
-    public void setStudentNumber(String studentNumber) {
-        this.studentNumber = studentNumber;
-    }
-
-    @Size(max = 30)
-    public String getStudentName() {
-        return this.studentName;
-    }
-
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
-    }
-
     public Byte getIsOkApply() {
         return this.isOkApply;
     }
@@ -285,22 +215,12 @@ public class GraduationDesignDeclare implements Serializable {
 
     @NotNull
     @Size(max = 64)
-    public String getGraduationDesignDeclareDataId() {
-        return this.graduationDesignDeclareDataId;
+    public String getGraduationDesignPresubjectId() {
+        return this.graduationDesignPresubjectId;
     }
 
-    public void setGraduationDesignDeclareDataId(String graduationDesignDeclareDataId) {
-        this.graduationDesignDeclareDataId = graduationDesignDeclareDataId;
-    }
-
-    @NotNull
-    @Size(max = 64)
-    public String getGraduationDesignTutorId() {
-        return this.graduationDesignTutorId;
-    }
-
-    public void setGraduationDesignTutorId(String graduationDesignTutorId) {
-        this.graduationDesignTutorId = graduationDesignTutorId;
+    public void setGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
+        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
     }
 
     @Override
@@ -308,7 +228,6 @@ public class GraduationDesignDeclare implements Serializable {
         StringBuilder sb = new StringBuilder("GraduationDesignDeclare (");
 
         sb.append(graduationDesignDeclareId);
-        sb.append(", ").append(graduationDesignPresubjectId);
         sb.append(", ").append(subjectTypeId);
         sb.append(", ").append(originTypeId);
         sb.append(", ").append(isNewSubject);
@@ -317,17 +236,12 @@ public class GraduationDesignDeclare implements Serializable {
         sb.append(", ").append(isOldSubjectChange);
         sb.append(", ").append(oldSubjectUsesTimes);
         sb.append(", ").append(planPeriod);
-        sb.append(", ").append(guideTeacher);
-        sb.append(", ").append(academicTitleName);
         sb.append(", ").append(assistantTeacher);
         sb.append(", ").append(assistantTeacherAcademic);
         sb.append(", ").append(guideTimes);
         sb.append(", ").append(guidePeoples);
-        sb.append(", ").append(studentNumber);
-        sb.append(", ").append(studentName);
         sb.append(", ").append(isOkApply);
-        sb.append(", ").append(graduationDesignDeclareDataId);
-        sb.append(", ").append(graduationDesignTutorId);
+        sb.append(", ").append(graduationDesignPresubjectId);
 
         sb.append(")");
         return sb.toString();

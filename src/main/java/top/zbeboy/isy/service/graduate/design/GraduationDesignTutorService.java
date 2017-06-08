@@ -141,4 +141,12 @@ public interface GraduationDesignTutorService {
      * @return 结果
      */
     int countNotFillByCondition(DataTablesUtils<StudentBean> dataTablesUtils, GraduationDesignRelease condition);
+
+    /**
+     * 教师指导人数
+     *
+     * @param staffId 教师id
+     * @return 人数
+     */
+    int countByStaffId(int staffId);
 }

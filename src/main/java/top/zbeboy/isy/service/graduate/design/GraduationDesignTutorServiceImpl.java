@@ -313,6 +313,17 @@ public class GraduationDesignTutorServiceImpl implements GraduationDesignTutorSe
         return count.value1();
     }
 
+    @Override
+    public int countByStaffId(int staffId) {
+        Record1<Integer> count = create.selectCount()
+                .from(GRADUATION_DESIGN_TUTOR)
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId))
+                .fetchOne();
+        return count.value1();
+    }
+
     private Select<Record> selectTutor(GraduationDesignRelease condition) {
         return create.select()
                 .from(GRADUATION_DESIGN_TUTOR)
