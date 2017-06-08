@@ -394,7 +394,7 @@ public class GraduationDesignSubjectController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/subject/design_subject_my::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未在该毕业设计条件下查询到学生信息");
+                page = commonControllerMethodService.showTip(modelMap, "您的账号不符合此次毕业设计条件");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -445,7 +445,7 @@ public class GraduationDesignSubjectController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未在该毕业设计条件下查询到学生信息");
+                page = commonControllerMethodService.showTip(modelMap, "您的账号不符合此次毕业设计条件");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -483,7 +483,7 @@ public class GraduationDesignSubjectController {
                     graduationDesignPresubjectService.save(graduationDesignPresubject);
                     ajaxUtils.success().msg("保存成功");
                 } else {
-                    ajaxUtils.fail().msg("未在该毕业设计条件下查询到学生信息");
+                    ajaxUtils.fail().msg("您的账号不符合此次毕业设计条件");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -562,6 +562,64 @@ public class GraduationDesignSubjectController {
     }
 
     /**
+     * 小组进入条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/team/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils teamCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                Users users = usersService.getUserFromSession();
+                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                    Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                    if (studentRecord.isPresent()) {
+                        Student student = studentRecord.get().into(Student.class);
+                        if (!ObjectUtils.isEmpty(student)) {
+                            Optional<Record> staffRecord = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignReleaseId);
+                            if (staffRecord.isPresent()) {
+                                ajaxUtils.success().msg("在条件范围，允许使用");
+                            } else {
+                                ajaxUtils.fail().msg("您的账号未分配毕业设计指导教师");
+                            }
+
+                        } else {
+                            ajaxUtils.fail().msg("未查询到您的账号信息");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("您的账号不符合此次毕业设计条件");
+                    }
+                } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                    Staff staff = staffService.findByUsername(users.getUsername());
+                    if (!ObjectUtils.isEmpty(staff)) {
+                        Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
+                        if (staffRecord.isPresent()) {
+                            ajaxUtils.success().msg("在条件范围，允许使用");
+                        } else {
+                            ajaxUtils.fail().msg("您的账号不是该毕业设计指导教师");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未查询到您的账号信息");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("您的注册类型不符合进入条件");
+                }
+            } else {
+                ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入我的题目页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -579,7 +637,7 @@ public class GraduationDesignSubjectController {
             if (studentRecord.isPresent()) {
                 ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
-                ajaxUtils.fail().msg("未在该毕业设计条件下查询到学生信息");
+                ajaxUtils.fail().msg("您的账号不符合此次毕业设计条件");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());

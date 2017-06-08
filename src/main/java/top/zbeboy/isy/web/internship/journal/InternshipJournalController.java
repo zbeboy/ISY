@@ -706,6 +706,76 @@ public class InternshipJournalController {
     }
 
     /**
+     * 小组日志列表条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/journal/team/list/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils teamJournalListCondition(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        Users users = usersService.getUserFromSession();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(student)) {
+                Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.getStudentId());
+                if (record.isPresent()) {
+                    ajaxUtils.success().msg("在条件范围，允许使用");
+                } else {
+                    ajaxUtils.fail().msg("您的账号未分配指导教师");
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到您的账号信息");
+            }
+        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(staff)) {
+                Result<InternshipTeacherDistributionRecord> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staff.getStaffId());
+                if (records.isNotEmpty()) {
+                    ajaxUtils.success().msg("在条件范围，允许使用");
+                } else {
+                    ajaxUtils.fail().msg("您的账号不是指导老师");
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到您的账号信息");
+            }
+        } else {
+            ajaxUtils.fail().msg("您的注册类型不符合进入条件");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 我的日志列表条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/journal/my/list/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myJournalListCondition(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        Users users = usersService.getUserFromSession();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(student)) {
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
+                if (!errorBean.isHasError()) {
+                    ajaxUtils.success().msg("在条件范围，允许使用");
+                } else {
+                    ajaxUtils.fail().msg(errorBean.getErrorMsg());
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到您的账号信息");
+            }
+        } else {
+            ajaxUtils.fail().msg("您的注册类型不符合进入条件");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入实习日志入口条件
      *
      * @param internshipReleaseId 实习发布id

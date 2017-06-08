@@ -12,7 +12,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             internship_journal_data_url: '/anyone/internship/data',
             journal_url: '/web/internship/journal/list',
             team_journal: '/web/internship/journal/team/list',
+            team_condition: '/web/internship/journal/team/list/condition',
             my_journal: '/web/internship/journal/my/list',
+            my_condition: '/web/internship/journal/my/list/condition',
             add: '/web/internship/journal/list/add',
             valid_is_student: '/anyone/valid/cur/is/student',
             valid_student: '/web/internship/journal/valid/student'
@@ -161,7 +163,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.team_journal', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.team_journal + "?id=" + id);
+            $.post(web_path + ajax_url.team_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.team_journal + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            })
         });
 
         /*
@@ -169,7 +181,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.my_journal', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.my_journal + "?id=" + id);
+            $.post(web_path + ajax_url.my_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.my_journal + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            })
         });
 
         /*

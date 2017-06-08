@@ -453,7 +453,7 @@ public class GraduationDesignPharmtechController {
                     ajaxUtils.fail().msg("请等待调整完成后，进行查看");
                 }
             } else {
-                ajaxUtils.fail().msg("毕业设计专业下未查询到该学生");
+                ajaxUtils.fail().msg("您的账号不符合此次毕业设计条件");
             }
         } else {
             ajaxUtils.fail().msg("未查询到相关毕业设计信息");
@@ -529,7 +529,7 @@ public class GraduationDesignPharmtechController {
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("毕业设计专业下未查询到该学生");
+                    errorBean.setErrorMsg("您的账号不符合此次毕业设计条件");
                 }
             }
         } else {
