@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.CacheBook;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
@@ -239,6 +240,7 @@ public class GraduationDesignTeacherController {
                     graduationDesignDeclareData.setOrganizeNames(organizeNames.substring(0, organizeNames.lastIndexOf(sp)));
                     graduationDesignDeclareData.setOrganizePeoples(organizePeoples.substring(0, organizePeoples.lastIndexOf(sp)));
                     graduationDesignDeclareData.setGraduationDesignReleaseId(graduationDesignReleaseId);
+                    graduationDesignDeclareData.setGraduationDate(Workbook.graduationDate());
                     graduationDesignDeclareDataService.save(graduationDesignDeclareData);
 
                     // 保存指导教师数据

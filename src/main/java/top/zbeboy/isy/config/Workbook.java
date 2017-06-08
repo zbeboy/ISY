@@ -1,6 +1,10 @@
 package top.zbeboy.isy.config;
 
+import org.joda.time.DateTime;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Application constants.
@@ -214,5 +218,14 @@ public final class Workbook {
      */
     public static String graduationDesignPlanPath(Users users) {
         return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "graduate/design/project/";
+    }
+
+    /**
+     * 毕业时间
+     *
+     * @return 时间
+     */
+    public static String graduationDate() {
+        return DateTime.now().getYear() + "年7月";
     }
 }
