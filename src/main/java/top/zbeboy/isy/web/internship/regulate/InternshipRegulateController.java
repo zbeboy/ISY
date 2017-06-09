@@ -23,7 +23,9 @@ import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.export.InternshipRegulateExport;
-import top.zbeboy.isy.service.internship.*;
+import top.zbeboy.isy.service.internship.InternshipRegulateService;
+import top.zbeboy.isy.service.internship.InternshipReleaseService;
+import top.zbeboy.isy.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
@@ -61,13 +63,7 @@ public class InternshipRegulateController {
     private InternshipReleaseService internshipReleaseService;
 
     @Resource
-    private InternshipApplyService internshipApplyService;
-
-    @Resource
     private InternshipTeacherDistributionService internshipTeacherDistributionService;
-
-    @Resource
-    private InternshipTypeService internshipTypeService;
 
     @Resource
     private UsersService usersService;
@@ -118,7 +114,7 @@ public class InternshipRegulateController {
         Users users = usersService.getUserFromSession();
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
             Staff staff = staffService.findByUsername(users.getUsername());
-            if(!ObjectUtils.isEmpty(staff)){
+            if (!ObjectUtils.isEmpty(staff)) {
                 modelMap.addAttribute("staffId", staff.getStaffId());
             } else {
                 modelMap.addAttribute("staffId", null);
@@ -147,7 +143,7 @@ public class InternshipRegulateController {
         Users users = usersService.getUserFromSession();
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
             Staff staff = staffService.findByUsername(users.getUsername());
-            if(!ObjectUtils.isEmpty(staff)){
+            if (!ObjectUtils.isEmpty(staff)) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staff.getStaffId());
                 canUse = !errorBean.isHasError();
                 modelMap.addAttribute("staffId", staff.getStaffId());
@@ -155,7 +151,7 @@ public class InternshipRegulateController {
             }
         }
         if (canUse) {
-            page = "web/internship/regulate/internship_my_regulate::#page-wrapper";
+            page = "web/internship/regulate/internship_regulate_my::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }

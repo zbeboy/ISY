@@ -65,6 +65,19 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     @Override
+    public Result<Record3<Integer, String, String>> findByInternshipReleaseIdDistinctStaffId(String internshipReleaseId) {
+        return create.selectDistinct(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID,
+                USERS.REAL_NAME,USERS.MOBILE)
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .join(STAFF)
+                .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findByInternshipReleaseIdAndStaffIdForStudent(String internshipReleaseId, int staffId) {
         return create.select()
                 .from(INTERNSHIP_TEACHER_DISTRIBUTION)

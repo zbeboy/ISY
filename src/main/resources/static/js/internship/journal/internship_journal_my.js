@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016/12/14.
  */
-//# sourceURL=internship_my_journal.js
+//# sourceURL=internship_journal_my.js
 require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
     function ($, Handlebars, nav_active, moment) {
 

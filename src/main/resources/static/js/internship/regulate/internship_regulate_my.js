@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016/12/14.
  */
-//# sourceURL=internship_my_regulate.js
+//# sourceURL=internship_regulate_my.js
 require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
     function ($, Handlebars, nav_active) {
 

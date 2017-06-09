@@ -1,9 +1,6 @@
 package top.zbeboy.isy.service.internship;
 
-import org.jooq.Record;
-import org.jooq.Record1;
-import org.jooq.Record2;
-import org.jooq.Result;
+import org.jooq.*;
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -41,6 +38,14 @@ public interface InternshipTeacherDistributionService {
      * @return 数据
      */
     Result<Record2<Integer, Integer>> findInInternshipReleaseIdsDistinctStudentId(List<String> internshipReleaseIds);
+
+    /**
+     * 根据发布id查询所有指导教师
+     *
+     * @param internshipReleaseId 发布id
+     * @return 教师们
+     */
+    Result<Record3<Integer, String, String>> findByInternshipReleaseIdDistinctStaffId(String internshipReleaseId);
 
     /**
      * 通过实习发布id 和指导教师id查询 学生信息

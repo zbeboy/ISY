@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/3/23.
  */
-//# sourceURL=internship_team_journal.js
+//# sourceURL=internship_journal_team_list.js
 require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatables.responsive", "check.all", "jquery.address", "messenger", "bootstrap-daterangepicker"],
     function ($, Handlebars, constants, nav_active, moment) {
 
@@ -20,7 +20,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 add: '/web/internship/journal/list/add',
                 valid_is_student: '/anyone/valid/cur/is/student',
                 valid_student: '/web/internship/journal/valid/student',
-                back: '/web/menu/internship/journal'
+                back: '/web/internship/journal/team'
             };
         }
 
@@ -86,7 +86,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
          返回
          */
         $('#page_back').click(function () {
-            $.address.value(getAjaxUrl().back);
+            $.address.value(getAjaxUrl().back + '?id=' + init_page_param.internshipReleaseId);
         });
 
         // 预编译模板
@@ -188,8 +188,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                 ]
                             };
                         } else { // 该实习日志不属于当前用户
-                            // 当前用户角色为管理员
-                            if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                            // 当前用户角色为管理员 或系统
+                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                                 context =
                                 {
                                     func: [
@@ -318,15 +319,18 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         });
 
         var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
-        if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role
+            || init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
             var temp1 = '  <button type="button" id="journal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp1 + global_button;
         }
-        if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
+        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role
+            || init_page_param.currentUserRoleName === constants.global_role_name.admin_role
+            || init_page_param.usersTypeName === constants.global_users_type.staff_type) {
             var temp2 = '  <button type="button" id="journal_download_all" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>下载全部</button>';
             global_button = temp2 + global_button;
         }
-        global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-trash-plus"></i>添加</button>' +
+        global_button = '<button type="button" id="journal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
             global_button;
         $('#global_button').append(global_button);
 

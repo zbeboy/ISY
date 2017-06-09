@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">实习日志 -
+                    <small>小组</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="text-right" style="margin-bottom: 10px;">
+                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
+                    </button>
+                </div>
+                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="teacherTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" data-tablesaw-priority="persist">姓名</th>
+                        <th scope="col" data-tablesaw-priority="persist">联系方式</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableData">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <script id="teacher-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <tr>
+                <td>{{realName}}</td>
+                <td>{{mobile}}</td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm detail"
+                            data-id="{{staffId}}">详情
+                    </button>
+                </td>
+            </tr>
+            {{/each}}
+        </script>
+        <!-- /.footer -->
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'internshipReleaseId': /*[[${internshipReleaseId}]]*/ ''
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/internship/journal/internship_journal_team.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

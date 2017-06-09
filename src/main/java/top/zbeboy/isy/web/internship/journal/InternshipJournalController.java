@@ -3,9 +3,8 @@ package top.zbeboy.isy.web.internship.journal;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
+import org.jooq.Record3;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
-import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
@@ -33,6 +31,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
+import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -171,11 +170,24 @@ public class InternshipJournalController {
             }
         }
         if (canUse) {
-            page = "web/internship/journal/internship_my_journal::#page-wrapper";
+            page = "web/internship/journal/internship_journal_my::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
+    }
+
+    /**
+     * 小组日志页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/journal/team", method = RequestMethod.GET)
+    public String teamJournal(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        return "web/internship/journal/internship_journal_team::#page-wrapper";
     }
 
     /**
@@ -186,46 +198,26 @@ public class InternshipJournalController {
      * @return 页面
      */
     @RequestMapping(value = "/web/internship/journal/team/list", method = RequestMethod.GET)
-    public String teamJournalList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page;
-        boolean canUse = false;
+    public String teamJournalList(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
             Student student = studentService.findByUsername(users.getUsername());
             if (!ObjectUtils.isEmpty(student)) {
-                Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.getStudentId());
-                if (record.isPresent()) {
-                    InternshipTeacherDistribution internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
-                    canUse = true;
-                    modelMap.addAttribute("studentId", student.getStudentId());
-                    modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
-                    modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                    modelMap.addAttribute("usersTypeName", Workbook.STUDENT_USERS_TYPE);
-                } else {
-                    canUse = false;
-                }
+                modelMap.addAttribute("studentId", student.getStudentId());
+                modelMap.addAttribute("usersTypeName", Workbook.STUDENT_USERS_TYPE);
             }
         } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            Staff staff = staffService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(staff)) {
-                Result<InternshipTeacherDistributionRecord> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staff.getStaffId());
-                canUse = records.isNotEmpty();
-                modelMap.addAttribute("staffId", staff.getStaffId());
-                modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                modelMap.addAttribute("usersTypeName", Workbook.STAFF_USERS_TYPE);
-            }
+            modelMap.addAttribute("usersTypeName", Workbook.STAFF_USERS_TYPE);
         }
 
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
-
-        if (canUse) {
-            page = "web/internship/journal/internship_team_journal::#page-wrapper";
-        } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
-        }
-        return page;
+        modelMap.addAttribute("staffId", staffId);
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        return "web/internship/journal/internship_journal_team_list::#page-wrapper";
     }
 
     /**
@@ -278,6 +270,24 @@ public class InternshipJournalController {
             dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 小组教师数据
+     *
+     * @param internshipReleaseId 发布id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/journal/team/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<StaffBean> teamData(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils<StaffBean> ajaxUtils = AjaxUtils.of();
+        Result<Record3<Integer, String, String>> record3s = internshipTeacherDistributionService.findByInternshipReleaseIdDistinctStaffId(internshipReleaseId);
+        List<StaffBean> staffBeen = new ArrayList<>();
+        if (record3s.isNotEmpty()) {
+            staffBeen = record3s.into(StaffBean.class);
+        }
+        return ajaxUtils.success().msg("获取数据成功").listData(staffBeen);
     }
 
     /**
@@ -452,7 +462,7 @@ public class InternshipJournalController {
                     Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
                     if (studentRecord.isPresent()) {
                         Users users = studentRecord.get().into(Users.class);
-                        String downloadFileName = StringUtils.hasLength(users.getRealName()) ? users.getRealName() : "实习日志";
+                        String downloadFileName = "小组实习日志";
                         String zipName = downloadFileName + ".zip";
                         String downloadFilePath = Workbook.internshipJournalPath(users) + zipName;
                         String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
@@ -701,47 +711,6 @@ public class InternshipJournalController {
             }
         } else {
             ajaxUtils.fail().msg("查询学生数据失败");
-        }
-        return ajaxUtils;
-    }
-
-    /**
-     * 小组日志列表条件
-     *
-     * @param internshipReleaseId 实习发布id
-     * @return true or false
-     */
-    @RequestMapping(value = "/web/internship/journal/team/list/condition", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils teamJournalListCondition(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = AjaxUtils.of();
-        Users users = usersService.getUserFromSession();
-        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.getStudentId());
-                if (record.isPresent()) {
-                    ajaxUtils.success().msg("在条件范围，允许使用");
-                } else {
-                    ajaxUtils.fail().msg("您的账号未分配指导教师");
-                }
-            } else {
-                ajaxUtils.fail().msg("未查询到您的账号信息");
-            }
-        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            Staff staff = staffService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(staff)) {
-                Result<InternshipTeacherDistributionRecord> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staff.getStaffId());
-                if (records.isNotEmpty()) {
-                    ajaxUtils.success().msg("在条件范围，允许使用");
-                } else {
-                    ajaxUtils.fail().msg("您的账号不是指导老师");
-                }
-            } else {
-                ajaxUtils.fail().msg("未查询到您的账号信息");
-            }
-        } else {
-            ajaxUtils.fail().msg("您的注册类型不符合进入条件");
         }
         return ajaxUtils;
     }
