@@ -520,6 +520,35 @@ public class InternshipRegulateController {
     }
 
     /**
+     * 我的监管 进入条件
+     *
+     * @param internshipReleaseId 发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/regulate/my/list/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myRegulateListCondition(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        Users users = usersService.getUserFromSession();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(staff)) {
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staff.getStaffId());
+                if (!errorBean.isHasError()) {
+                    ajaxUtils.success().msg("在条件范围，允许进入");
+                } else {
+                    ajaxUtils.fail().msg(errorBean.getErrorMsg());
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到相关教职工信息");
+            }
+        } else {
+            ajaxUtils.fail().msg("您的注册类型不符合进入条件");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入实习监管入口条件
      *
      * @param internshipReleaseId 实习发布id
