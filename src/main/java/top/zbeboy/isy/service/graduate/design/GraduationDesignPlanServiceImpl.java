@@ -56,14 +56,17 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
     }
 
     @Override
-    public Result<Record> findByGraduationDesignTeacherIdOrderByAddTime(String graduationDesignTeacherId) {
+    public Result<Record> findByGraduationDesignReleaseIdAndStaffIdOrderByAddTime(String graduationDesignReleaseId, int staffId) {
         return create.select()
                 .from(GRADUATION_DESIGN_PLAN)
                 .join(SCHOOLROOM)
                 .on(GRADUATION_DESIGN_PLAN.SCHOOLROOM_ID.eq(SCHOOLROOM.SCHOOLROOM_ID))
                 .join(BUILDING)
                 .on(BUILDING.BUILDING_ID.eq(SCHOOLROOM.BUILDING_ID))
-                .where(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId))
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)
+                .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId)))
                 .orderBy(GRADUATION_DESIGN_PLAN.ADD_TIME.asc())
                 .fetch();
     }

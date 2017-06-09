@@ -10,9 +10,10 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
-            project: '/web/graduate/design/project/list',
-            students: '/web/graduate/design/project/students',
+            project_list:'/web/graduate/design/project/list',
+            my_project: '/web/graduate/design/project/my/list',
             condition:'/web/graduate/design/project/condition',
+            students: '/web/graduate/design/project/students',
             student_condition:'/web/graduate/design/project/student/condition'
         };
 
@@ -126,13 +127,21 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-         规划
+         列表
          */
-        $(tableData).delegate('.design_project', "click", function () {
+        $(tableData).delegate('.design_project_list', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.project_list + '?id=' + id);
+        });
+
+        /*
+         我的规划
+         */
+        $(tableData).delegate('.design_project_my', "click", function () {
             var id = $(this).attr('data-id');
             $.post(ajax_url.condition,{id:id},function (data) {
                 if(data.state){
-                    $.address.value(ajax_url.project + '?id=' + id);
+                    $.address.value(ajax_url.my_project + '?id=' + id);
                 } else {
                     Messenger().post({
                         message: data.msg,

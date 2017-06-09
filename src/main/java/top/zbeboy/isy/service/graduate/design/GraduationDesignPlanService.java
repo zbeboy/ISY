@@ -3,7 +3,6 @@ package top.zbeboy.isy.service.graduate.design;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan;
-import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -30,12 +29,13 @@ public interface GraduationDesignPlanService {
     Optional<Record> findByIdRelation(String id);
 
     /**
-     * 根据毕业设计指导教师id查询
+     * 根据教师id查询
      *
-     * @param graduationDesignTeacherId 毕业设计指导教师id
+     * @param graduationDesignReleaseId 发布id
+     * @param staffId                   教职工id
      * @return 数据
      */
-    Result<Record> findByGraduationDesignTeacherIdOrderByAddTime(String graduationDesignTeacherId);
+    Result<Record> findByGraduationDesignReleaseIdAndStaffIdOrderByAddTime(String graduationDesignReleaseId, int staffId);
 
     /**
      * 查询最近一条记录

@@ -30,6 +30,7 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
+import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectAddVo;
@@ -92,17 +93,56 @@ public class GraduationDesignProjectController {
     }
 
     /**
-     * 规划
+     * 列表
      *
-     * @return 规划页面
+     * @return 列表页面
      */
     @RequestMapping(value = "/web/graduate/design/project/list", method = RequestMethod.GET)
     public String projectList(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            page = "web/graduate/design/project/design_project_list::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 详情
+     *
+     * @return 详情页面
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/detail", method = RequestMethod.GET)
+    public String projectDetail(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("staffId", staffId);
+            page = "web/graduate/design/project/design_project_my::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 我的规划
+     *
+     * @return 我的规划页面
+     */
+    @RequestMapping(value = "/web/graduate/design/project/my/list", method = RequestMethod.GET)
+    public String myProjectList(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            page = "web/graduate/design/project/design_project_list::#page-wrapper";
+            Staff staff = (Staff) errorBean.getMapData().get("graduationDesignTeacher");
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("staffId", staff.getStaffId());
+            page = "web/graduate/design/project/design_project_my::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
@@ -130,6 +170,20 @@ public class GraduationDesignProjectController {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
+    }
+
+    /**
+     * 教师数据
+     *
+     * @param graduationDesignReleaseId 发布id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignTeacherBean> listData(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
+        List<GraduationDesignTeacherBean> graduationDesignTeacherBeen = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeen);
     }
 
     /**
@@ -214,7 +268,7 @@ public class GraduationDesignProjectController {
                 graduationDesignTutorBeanList = graduationDesignTutorRecord.into(GraduationDesignTutorBean.class);
             }
             List<GraduationDesignPlanBean> graduationDesignPlanBeanList = new ArrayList<>();
-            Result<Record> graduationDesignPlanRecord = graduationDesignPlanService.findByGraduationDesignTeacherIdOrderByAddTime(graduationDesignTeacher.getGraduationDesignTeacherId());
+            Result<Record> graduationDesignPlanRecord = graduationDesignPlanService.findByGraduationDesignReleaseIdAndStaffIdOrderByAddTime(graduationDesignReleaseId, graduationDesignTeacher.getStaffId());
             if (graduationDesignPlanRecord.isNotEmpty()) {
                 graduationDesignPlanBeanList = graduationDesignPlanRecord.into(GraduationDesignPlanBean.class);
             }
@@ -225,20 +279,19 @@ public class GraduationDesignProjectController {
     }
 
     /**
-     * 获取列表数据
+     * 获取我的列表数据
      *
      * @param graduationDesignReleaseId 毕业设计发布id
-     * @return 列表数据
+     * @return 我的列表数据
      */
-    @RequestMapping(value = "/web/graduate/design/project/list/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/graduate/design/project/my/list/data", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<GraduationDesignPlanBean> listData(@RequestParam("id") String graduationDesignReleaseId) {
+    public AjaxUtils<GraduationDesignPlanBean> listData(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId) {
         AjaxUtils<GraduationDesignPlanBean> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
             List<GraduationDesignPlanBean> graduationDesignPlans = new ArrayList<>();
-            Result<Record> records = graduationDesignPlanService.findByGraduationDesignTeacherIdOrderByAddTime(graduationDesignTeacher.getGraduationDesignTeacherId());
+            Result<Record> records = graduationDesignPlanService.findByGraduationDesignReleaseIdAndStaffIdOrderByAddTime(graduationDesignReleaseId, staffId);
             if (records.isNotEmpty()) {
                 graduationDesignPlans = records.into(GraduationDesignPlanBean.class);
             }
@@ -446,6 +499,38 @@ public class GraduationDesignProjectController {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 简单条件
+     *
+     * @param graduationDesignReleaseId 发布id
+     * @return true or false
+     */
+    private ErrorBean<GraduationDesignRelease> simpleCondition(String graduationDesignReleaseId) {
+        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
+        Map<String, Object> mapData = new HashMap<>();
+        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
+        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
+            errorBean.setData(graduationDesignRelease);
+            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("该毕业设计已被注销");
+            } else {
+                // 是否已确认毕业设计指导教师
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                    errorBean.setHasError(false);
+                } else {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
+                }
+            }
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("未查询到相关毕业设计信息");
+        }
+        errorBean.setMapData(mapData);
+        return errorBean;
     }
 
     /**
