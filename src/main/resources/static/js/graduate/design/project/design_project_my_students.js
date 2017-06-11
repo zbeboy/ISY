@@ -7,11 +7,11 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     var ajax_url = {
         data_url: '/web/graduate/design/project/students/data',
-        nav: '/web/menu/graduate/design/project'
+        back: '/web/menu/graduate/design/project'
     };
 
     // 刷新时选中菜单
-    nav_active(ajax_url.nav);
+    nav_active(ajax_url.back);
 
     function startLoading() {
         // 显示遮罩
@@ -33,7 +33,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      返回
      */
     $('#page_back').click(function () {
-        window.history.go(-1);
+        $.address.value(ajax_url.back);
     });
 
     init();

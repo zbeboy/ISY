@@ -10,7 +10,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         detail: '/web/graduate/design/project/list/detail',
         list_condition: '/web/graduate/design/project/list/condition',
         students:'/web/graduate/design/project/list/students',
-        student_condition:'/web/graduate/design/project/student/condition',
+        student_condition:'/web/graduate/design/project/students/condition',
         download:'/web/graduate/design/project/list/download',
         back: '/web/menu/graduate/design/project'
     };

@@ -450,7 +450,7 @@ public class GraduationDesignSubjectController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/subject/design_subject_my::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "您的账号不符合此次毕业设计条件");
+                page = commonControllerMethodService.showTip(modelMap, "您的账号不符合毕业设计条件");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());

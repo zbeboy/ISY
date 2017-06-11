@@ -96,9 +96,9 @@ require(["jquery", "requirejs-domready", "bootstrap", "csrf", "com", "bootstrap-
          消息
          */
         var msg = {
-            email: '邮箱格式不正确',
-            password: '密码不能为空',
-            captcha: '验证码不能为空'
+            email: '邮箱不正确',
+            password: '密码不正确',
+            captcha: '验证码不正确'
         };
 
         /**
@@ -202,19 +202,19 @@ require(["jquery", "requirejs-domready", "bootstrap", "csrf", "com", "bootstrap-
         });
 
         $(paramId.email).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 validEmail();
             }
         });
 
         $(paramId.password).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 validEmail();
             }
         });
 
         $(paramId.captcha).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 validEmail();
             }
         });

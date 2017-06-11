@@ -14,7 +14,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             my_project: '/web/graduate/design/project/my/list',
             condition:'/web/graduate/design/project/condition',
             students: '/web/graduate/design/project/my/students',
-            student_condition:'/web/graduate/design/project/student/condition'
+            student_condition:'/web/graduate/design/project/my/students/condition'
         };
 
         /*

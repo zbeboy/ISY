@@ -126,7 +126,7 @@ public class GraduationDesignProjectController {
         ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             // 当前毕业设计指导教师查看自己的规划
-            if (isOwner(graduationDesignReleaseId, staffId)) {
+            if (isOwner(staffId)) {
                 page = "web/graduate/design/project/design_project_my::#page-wrapper";
             } else {
                 page = "web/graduate/design/project/design_project_detail::#page-wrapper";
@@ -150,7 +150,7 @@ public class GraduationDesignProjectController {
         ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             // 当前毕业设计指导教师查看自己的规划
-            if (isOwner(graduationDesignReleaseId, staffId)) {
+            if (isOwner(staffId)) {
                 page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
             } else {
                 page = "web/graduate/design/project/design_project_students::#page-wrapper";
@@ -166,22 +166,17 @@ public class GraduationDesignProjectController {
     /**
      * 检测当前用户
      *
-     * @param graduationDesignReleaseId 发布id
-     * @param staffId                   教职工id
+     * @param staffId 教职工id
      * @return true or false
      */
-    private boolean isOwner(String graduationDesignReleaseId, int staffId) {
+    private boolean isOwner(int staffId) {
         boolean isOwner = false;
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
             Users users = usersService.getUserFromSession();
             Staff staff = staffService.findByUsername(users.getUsername());
             if (!ObjectUtils.isEmpty(staff)) {
-                Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                if (record.isPresent()) {
-                    GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
-                    if (graduationDesignTeacher.getStaffId() == staffId) {
-                        isOwner = true;
-                    }
+                if (staff.getStaffId() == staffId) {
+                    isOwner = true;
                 }
             }
         }
@@ -196,10 +191,9 @@ public class GraduationDesignProjectController {
     @RequestMapping(value = "/web/graduate/design/project/my/list", method = RequestMethod.GET)
     public String myProjectList(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Users users = usersService.getUserFromSession();
-            Staff staff = staffService.findByUsername(users.getUsername());
+            Staff staff = (Staff) errorBean.getMapData().get("staff");
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("staffId", staff.getStaffId());
             page = "web/graduate/design/project/design_project_my::#page-wrapper";
@@ -217,11 +211,10 @@ public class GraduationDesignProjectController {
     @RequestMapping(value = "/web/graduate/design/project/my/students", method = RequestMethod.GET)
     public String students(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            Users users = usersService.getUserFromSession();
-            Staff staff = staffService.findByUsername(users.getUsername());
+            Staff staff = (Staff) errorBean.getMapData().get("staff");
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                 page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
@@ -245,8 +238,14 @@ public class GraduationDesignProjectController {
     @ResponseBody
     public AjaxUtils<GraduationDesignTeacherBean> listData(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
-        List<GraduationDesignTeacherBean> graduationDesignTeacherBeen = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
-        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeen);
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            List<GraduationDesignTeacherBean> graduationDesignTeacherBeen = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+            ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeen);
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
     }
 
     /**
@@ -335,7 +334,7 @@ public class GraduationDesignProjectController {
                 graduationDesignPlanBeanList = graduationDesignPlanRecord.into(GraduationDesignPlanBean.class);
             }
             Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
-            if(staffRecord.isPresent()){
+            if (staffRecord.isPresent()) {
                 Users users = staffRecord.get().into(Users.class);
                 String path = filesService.saveGraduationDesignPlan(users, request, graduationDesignTutorBeanList, graduationDesignPlanBeanList);
                 uploadService.download("毕业设计指导计划（" + users.getRealName() + "）", "/" + path, response, request);
@@ -445,18 +444,24 @@ public class GraduationDesignProjectController {
         if (!bindingResult.hasErrors()) {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignProjectAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
-                GraduationDesignPlan graduationDesignPlan = new GraduationDesignPlan();
-                GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
-                graduationDesignPlan.setGraduationDesignPlanId(UUIDUtils.getUUID());
-                graduationDesignPlan.setGraduationDesignTeacherId(graduationDesignTeacher.getGraduationDesignTeacherId());
-                graduationDesignPlan.setScheduling(graduationDesignProjectAddVo.getScheduling());
-                graduationDesignPlan.setSupervisionTime(graduationDesignProjectAddVo.getSupervisionTime());
-                graduationDesignPlan.setGuideContent(graduationDesignProjectAddVo.getGuideContent());
-                graduationDesignPlan.setNote(graduationDesignProjectAddVo.getNote());
-                graduationDesignPlan.setSchoolroomId(graduationDesignProjectAddVo.getSchoolroomId());
-                graduationDesignPlan.setAddTime(DateTimeUtils.getNow());
-                graduationDesignPlanService.save(graduationDesignPlan);
-                ajaxUtils.success().msg("保存成功");
+                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    GraduationDesignPlan graduationDesignPlan = new GraduationDesignPlan();
+                    GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
+                    graduationDesignPlan.setGraduationDesignPlanId(UUIDUtils.getUUID());
+                    graduationDesignPlan.setGraduationDesignTeacherId(graduationDesignTeacher.getGraduationDesignTeacherId());
+                    graduationDesignPlan.setScheduling(graduationDesignProjectAddVo.getScheduling());
+                    graduationDesignPlan.setSupervisionTime(graduationDesignProjectAddVo.getSupervisionTime());
+                    graduationDesignPlan.setGuideContent(graduationDesignProjectAddVo.getGuideContent());
+                    graduationDesignPlan.setNote(graduationDesignProjectAddVo.getNote());
+                    graduationDesignPlan.setSchoolroomId(graduationDesignProjectAddVo.getSchoolroomId());
+                    graduationDesignPlan.setAddTime(DateTimeUtils.getNow());
+                    graduationDesignPlanService.save(graduationDesignPlan);
+                    ajaxUtils.success().msg("保存成功");
+                } else {
+                    ajaxUtils.fail().msg("不在毕业设计时间范围，无法操作");
+                }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
             }
@@ -480,14 +485,20 @@ public class GraduationDesignProjectController {
         if (!bindingResult.hasErrors()) {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignProjectUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
-                GraduationDesignPlan graduationDesignPlan = graduationDesignPlanService.findById(graduationDesignProjectUpdateVo.getGraduationDesignPlanId());
-                graduationDesignPlan.setScheduling(graduationDesignProjectUpdateVo.getScheduling());
-                graduationDesignPlan.setSupervisionTime(graduationDesignProjectUpdateVo.getSupervisionTime());
-                graduationDesignPlan.setGuideContent(graduationDesignProjectUpdateVo.getGuideContent());
-                graduationDesignPlan.setNote(graduationDesignProjectUpdateVo.getNote());
-                graduationDesignPlan.setSchoolroomId(graduationDesignProjectUpdateVo.getSchoolroomId());
-                graduationDesignPlanService.update(graduationDesignPlan);
-                ajaxUtils.success().msg("保存成功");
+                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    GraduationDesignPlan graduationDesignPlan = graduationDesignPlanService.findById(graduationDesignProjectUpdateVo.getGraduationDesignPlanId());
+                    graduationDesignPlan.setScheduling(graduationDesignProjectUpdateVo.getScheduling());
+                    graduationDesignPlan.setSupervisionTime(graduationDesignProjectUpdateVo.getSupervisionTime());
+                    graduationDesignPlan.setGuideContent(graduationDesignProjectUpdateVo.getGuideContent());
+                    graduationDesignPlan.setNote(graduationDesignProjectUpdateVo.getNote());
+                    graduationDesignPlan.setSchoolroomId(graduationDesignProjectUpdateVo.getSchoolroomId());
+                    graduationDesignPlanService.update(graduationDesignPlan);
+                    ajaxUtils.success().msg("保存成功");
+                } else {
+                    ajaxUtils.fail().msg("不在毕业设计时间范围，无法操作");
+                }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
             }
@@ -510,11 +521,17 @@ public class GraduationDesignProjectController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            if (StringUtils.hasLength(graduationDesignPlanIds)) {
-                graduationDesignPlanService.deleteById(SmallPropsUtils.StringIdsToStringList(graduationDesignPlanIds));
-                ajaxUtils.success().msg("删除成功");
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                if (StringUtils.hasLength(graduationDesignPlanIds)) {
+                    graduationDesignPlanService.deleteById(SmallPropsUtils.StringIdsToStringList(graduationDesignPlanIds));
+                    ajaxUtils.success().msg("删除成功");
+                } else {
+                    ajaxUtils.fail().msg("未发现选中信息");
+                }
             } else {
-                ajaxUtils.fail().msg("未发现选中信息");
+                ajaxUtils.fail().msg("不在毕业设计时间范围，无法操作");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -542,27 +559,56 @@ public class GraduationDesignProjectController {
     }
 
     /**
+     * 进入Ta的学生页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/project/students/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils studentsCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            isOkTeacherAdjust(ajaxUtils, errorBean);
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入我的学生页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return true or false
      */
-    @RequestMapping(value = "/web/graduate/design/project/student/condition", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/graduate/design/project/my/students/condition", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils studentCondition(@RequestParam("id") String graduationDesignReleaseId) {
+    public AjaxUtils myStudentsCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                ajaxUtils.success().msg("在条件范围，允许使用");
-            } else {
-                ajaxUtils.fail().msg("未确认学生填报，无法操作");
-            }
+            isOkTeacherAdjust(ajaxUtils, errorBean);
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 是否已确认指导教师调整
+     *
+     * @param ajaxUtils ajax
+     * @param errorBean error检测
+     */
+    private void isOkTeacherAdjust(AjaxUtils ajaxUtils, ErrorBean<GraduationDesignRelease> errorBean) {
+        GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+            ajaxUtils.success().msg("在条件范围，允许使用");
+        } else {
+            ajaxUtils.fail().msg("未确认学生填报，无法操作");
+        }
     }
 
     /**
@@ -643,16 +689,10 @@ public class GraduationDesignProjectController {
                         if (record.isPresent()) {
                             GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
                             mapData.put("graduationDesignTeacher", graduationDesignTeacher);
-                            // 毕业时间范围
-                            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                                errorBean.setHasError(false);
-                            } else {
-                                errorBean.setHasError(true);
-                                errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
-                            }
+                            errorBean.setHasError(false);
                         } else {
                             errorBean.setHasError(true);
-                            errorBean.setErrorMsg("您不是该次毕业设计的指导教师");
+                            errorBean.setErrorMsg("您不是该毕业设计的指导教师");
                         }
                     } else {
                         errorBean.setHasError(true);

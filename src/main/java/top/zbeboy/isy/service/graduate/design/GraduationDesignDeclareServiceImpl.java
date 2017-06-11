@@ -200,7 +200,7 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
      */
     public Condition otherCondition(Condition a, GraduationDesignDeclareBean graduationDesignDeclareBean) {
         if (graduationDesignDeclareBean.getStaffId() > 0) {
-            if (!ObjectUtils.isEmpty(a)) {
+            if (ObjectUtils.isEmpty(a)) {
                 a = GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignDeclareBean.getStaffId());
             } else {
                 a = a.and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignDeclareBean.getStaffId()));
