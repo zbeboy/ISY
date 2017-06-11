@@ -46,11 +46,19 @@ public interface GraduationDesignTutorService {
     /**
      * 通过指导教师id与发布id关联查询学生信息
      *
-     * @param graduationDesignTeacherId 指导教师id
+     * @param staffId                   教师id
      * @param graduationDesignReleaseId 毕业发布id
      * @return 数据
      */
-    Result<Record> findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(String graduationDesignTeacherId, String graduationDesignReleaseId);
+    Result<Record> findByStaffIdAndGraduationDesignReleaseIdRelationForStudent(int staffId, String graduationDesignReleaseId);
+
+    /**
+     * 通过指导教师id与发布id关联查询学生信息
+     *
+     * @param graduationDesignTeacherId 指导教师id
+     * @return 数据
+     */
+    Result<Record> findByGraduationDesignTeacherIdRelationForStudent(String graduationDesignTeacherId);
 
     /**
      * 统计未填报学生数

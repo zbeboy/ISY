@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.BuildingRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
@@ -25,6 +26,7 @@ import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
@@ -82,6 +84,9 @@ public class GraduationDesignProjectController {
     @Resource
     private UploadService uploadService;
 
+    @Resource
+    private UsersTypeService usersTypeService;
+
     /**
      * 毕业设计规划
      *
@@ -111,22 +116,76 @@ public class GraduationDesignProjectController {
     }
 
     /**
-     * 详情
+     * Ta的规划
      *
-     * @return 详情页面
+     * @return Ta的规划页面
      */
     @RequestMapping(value = "/web/graduate/design/project/list/detail", method = RequestMethod.GET)
     public String projectDetail(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
+            // 当前毕业设计指导教师查看自己的规划
+            if (isOwner(graduationDesignReleaseId, staffId)) {
+                page = "web/graduate/design/project/design_project_my::#page-wrapper";
+            } else {
+                page = "web/graduate/design/project/design_project_detail::#page-wrapper";
+            }
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("staffId", staffId);
-            page = "web/graduate/design/project/design_project_my::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
+    }
+
+    /**
+     * Ta的学生
+     *
+     * @return Ta的学生页面
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/students", method = RequestMethod.GET)
+    public String projectStudents(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            // 当前毕业设计指导教师查看自己的规划
+            if (isOwner(graduationDesignReleaseId, staffId)) {
+                page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
+            } else {
+                page = "web/graduate/design/project/design_project_students::#page-wrapper";
+            }
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("staffId", staffId);
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 检测当前用户
+     *
+     * @param graduationDesignReleaseId 发布id
+     * @param staffId                   教职工id
+     * @return true or false
+     */
+    private boolean isOwner(String graduationDesignReleaseId, int staffId) {
+        boolean isOwner = false;
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Users users = usersService.getUserFromSession();
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(staff)) {
+                Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
+                if (record.isPresent()) {
+                    GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
+                    if (graduationDesignTeacher.getStaffId() == staffId) {
+                        isOwner = true;
+                    }
+                }
+            }
+        }
+        return isOwner;
     }
 
     /**
@@ -137,9 +196,10 @@ public class GraduationDesignProjectController {
     @RequestMapping(value = "/web/graduate/design/project/my/list", method = RequestMethod.GET)
     public String myProjectList(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            Staff staff = (Staff) errorBean.getMapData().get("graduationDesignTeacher");
+            Users users = usersService.getUserFromSession();
+            Staff staff = staffService.findByUsername(users.getUsername());
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("staffId", staff.getStaffId());
             page = "web/graduate/design/project/design_project_my::#page-wrapper";
@@ -154,15 +214,18 @@ public class GraduationDesignProjectController {
      *
      * @return 我的学生页面
      */
-    @RequestMapping(value = "/web/graduate/design/project/students", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/graduate/design/project/my/students", method = RequestMethod.GET)
     public String students(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            Users users = usersService.getUserFromSession();
+            Staff staff = staffService.findByUsername(users.getUsername());
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                page = "web/graduate/design/project/design_project_students::#page-wrapper";
+                page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                modelMap.addAttribute("staffId", staff.getStaffId());
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "未确认学生填报，无法操作");
             }
@@ -178,7 +241,7 @@ public class GraduationDesignProjectController {
      * @param graduationDesignReleaseId 发布id
      * @return 数据
      */
-    @RequestMapping(value = "/web/graduate/design/project/list/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/graduate/design/project/list/teachers", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignTeacherBean> listData(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
@@ -257,34 +320,36 @@ public class GraduationDesignProjectController {
      * 规划下载
      */
     @RequestMapping(value = "/web/graduate/design/project/list/download", method = RequestMethod.GET)
-    public void projectListDownload(@RequestParam("id") String graduationDesignReleaseId, HttpServletRequest request, HttpServletResponse response) {
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+    public void projectListDownload(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId, HttpServletRequest request, HttpServletResponse response) {
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
             Result<Record> graduationDesignTutorRecord =
-                    graduationDesignTutorService.findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(graduationDesignTeacher.getGraduationDesignTeacherId(), graduationDesignReleaseId);
+                    graduationDesignTutorService.findByStaffIdAndGraduationDesignReleaseIdRelationForStudent(staffId, graduationDesignReleaseId);
             List<GraduationDesignTutorBean> graduationDesignTutorBeanList = new ArrayList<>();
             if (graduationDesignTutorRecord.isNotEmpty()) {
                 graduationDesignTutorBeanList = graduationDesignTutorRecord.into(GraduationDesignTutorBean.class);
             }
             List<GraduationDesignPlanBean> graduationDesignPlanBeanList = new ArrayList<>();
-            Result<Record> graduationDesignPlanRecord = graduationDesignPlanService.findByGraduationDesignReleaseIdAndStaffIdOrderByAddTime(graduationDesignReleaseId, graduationDesignTeacher.getStaffId());
+            Result<Record> graduationDesignPlanRecord = graduationDesignPlanService.findByGraduationDesignReleaseIdAndStaffIdOrderByAddTime(graduationDesignReleaseId, staffId);
             if (graduationDesignPlanRecord.isNotEmpty()) {
                 graduationDesignPlanBeanList = graduationDesignPlanRecord.into(GraduationDesignPlanBean.class);
             }
-            Users users = usersService.getUserFromSession();
-            String path = filesService.saveGraduationDesignPlan(users, request, graduationDesignTutorBeanList, graduationDesignPlanBeanList);
-            uploadService.download("毕业设计指导计划（" + users.getRealName() + "）", "/" + path, response, request);
+            Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
+            if(staffRecord.isPresent()){
+                Users users = staffRecord.get().into(Users.class);
+                String path = filesService.saveGraduationDesignPlan(users, request, graduationDesignTutorBeanList, graduationDesignPlanBeanList);
+                uploadService.download("毕业设计指导计划（" + users.getRealName() + "）", "/" + path, response, request);
+            }
         }
     }
 
     /**
-     * 获取我的列表数据
+     * 获取列表数据
      *
      * @param graduationDesignReleaseId 毕业设计发布id
-     * @return 我的列表数据
+     * @return 列表数据
      */
-    @RequestMapping(value = "/web/graduate/design/project/my/list/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/graduate/design/project/list/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignPlanBean> listData(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId) {
         AjaxUtils<GraduationDesignPlanBean> ajaxUtils = AjaxUtils.of();
@@ -310,15 +375,14 @@ public class GraduationDesignProjectController {
      */
     @RequestMapping(value = "/web/graduate/design/project/students/data", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<GraduationDesignTutorBean> studentListData(@RequestParam("id") String graduationDesignReleaseId) {
+    public AjaxUtils<GraduationDesignTutorBean> studentListData(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId) {
         AjaxUtils<GraduationDesignTutorBean> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                GraduationDesignTeacher graduationDesignTeacher = (GraduationDesignTeacher) errorBean.getMapData().get("graduationDesignTeacher");
                 Result<Record> records =
-                        graduationDesignTutorService.findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(graduationDesignTeacher.getGraduationDesignTeacherId(), graduationDesignReleaseId);
+                        graduationDesignTutorService.findByStaffIdAndGraduationDesignReleaseIdRelationForStudent(staffId, graduationDesignReleaseId);
                 List<GraduationDesignTutorBean> graduationDesignTutorBeans = new ArrayList<>();
                 if (records.isNotEmpty()) {
                     graduationDesignTutorBeans = records.into(GraduationDesignTutorBean.class);
@@ -459,6 +523,25 @@ public class GraduationDesignProjectController {
     }
 
     /**
+     * 列表判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/project/list/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils listCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("在条件范围，允许使用");
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入我的学生页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -468,7 +551,7 @@ public class GraduationDesignProjectController {
     @ResponseBody
     public AjaxUtils studentCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {

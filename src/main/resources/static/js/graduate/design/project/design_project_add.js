@@ -10,7 +10,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         building_data_url: '/web/graduate/design/project/buildings',
         schoolroom_data_url: '/user/schoolrooms',
         save: '/web/graduate/design/project/save',
-        back: '/web/graduate/design/project/list',
+        back: '/web/graduate/design/project/my/list',
         nav: '/web/menu/graduate/design/project'
     };
 
@@ -242,7 +242,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
      * @param building_id 楼id
      */
     function changeSchoolroom(building_id) {
-        if (Number(building_id) == 0) {
+        if (Number(building_id) === 0) {
             var source = $("#schoolroom-template").html();
             var template = Handlebars.compile(source);
 

@@ -1,5 +1,5 @@
 /**
- * Created by lenovo on 2017-06-11.
+ * Created by lenovo on 2017-06-04.
  */
 require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "jquery.showLoading", "tablesaw"], function ($, nav_active, Handlebars) {
     /*
@@ -7,8 +7,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     var ajax_url = {
         data_url: '/web/graduate/design/project/students/data',
-        nav: '/web/menu/graduate/design/project',
-        back: '/web/graduate/design/project/list'
+        nav: '/web/menu/graduate/design/project'
     };
 
     // 刷新时选中菜单
@@ -34,7 +33,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      返回
      */
     $('#page_back').click(function () {
-        $.address.value(ajax_url.back + '?id=' + init_page_param.graduationDesignReleaseId);
+        window.history.go(-1);
     });
 
     init();

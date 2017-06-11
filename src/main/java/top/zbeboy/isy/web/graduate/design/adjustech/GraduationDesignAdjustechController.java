@@ -237,18 +237,16 @@ public class GraduationDesignAdjustechController {
     /**
      * 获取学生数据
      *
-     * @param graduationDesignReleaseId 毕业发布id
      * @param graduationDesignTeacherId 毕业指导教师id
      * @return 数据
      */
     @RequestMapping(value = "/web/graduate/design/adjustech/student/data", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<GraduationDesignTutorBean> adjustStudentData(@RequestParam("id") String graduationDesignReleaseId,
-                                                                  @RequestParam("graduationDesignTeacherId") String graduationDesignTeacherId) {
+    public AjaxUtils<GraduationDesignTutorBean> adjustStudentData(@RequestParam("graduationDesignTeacherId") String graduationDesignTeacherId) {
         AjaxUtils<GraduationDesignTutorBean> ajaxUtils = AjaxUtils.of();
         List<GraduationDesignTutorBean> graduationDesignTutorBeens = new ArrayList<>();
         Result<Record> records =
-                graduationDesignTutorService.findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(graduationDesignTeacherId, graduationDesignReleaseId);
+                graduationDesignTutorService.findByGraduationDesignTeacherIdRelationForStudent(graduationDesignTeacherId);
         if (records.isNotEmpty()) {
             graduationDesignTutorBeens = records.into(GraduationDesignTutorBean.class);
         }

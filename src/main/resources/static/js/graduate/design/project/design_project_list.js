@@ -6,8 +6,12 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      ajax url.
      */
     var ajax_url = {
-        data_url: '/web/graduate/design/project/list/data',
+        data_url: '/web/graduate/design/project/list/teachers',
         detail: '/web/graduate/design/project/list/detail',
+        list_condition: '/web/graduate/design/project/list/condition',
+        students:'/web/graduate/design/project/list/students',
+        student_condition:'/web/graduate/design/project/student/condition',
+        download:'/web/graduate/design/project/list/download',
         back: '/web/menu/graduate/design/project'
     };
 
@@ -66,10 +70,60 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
     }
 
     /*
-     详情
+     Ta的规划
      */
-    $(tableData).delegate('.detail', "click", function () {
+    $(tableData).delegate('.project', "click", function () {
         var staffId = $(this).attr('data-id');
-        $.address.value(ajax_url.detail + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + staffId);
+        var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
+        $.post(web_path + ajax_url.list_condition, {id: graduationDesignReleaseId}, function (data) {
+            if (data.state) {
+                $.address.value(ajax_url.detail + '?id=' + graduationDesignReleaseId + '&staffId=' + staffId);
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    /*
+     Ta的学生
+     */
+    $(tableData).delegate('.students', "click", function () {
+        var staffId = $(this).attr('data-id');
+        var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
+        $.post(web_path + ajax_url.student_condition, {id: graduationDesignReleaseId}, function (data) {
+            if (data.state) {
+                $.address.value(ajax_url.students + '?id=' + graduationDesignReleaseId + '&staffId=' + staffId);
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    /*
+     下载
+     */
+    $(tableData).delegate('.download', "click", function () {
+        var staffId = $(this).attr('data-id');
+        var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
+        $.post(web_path + ajax_url.list_condition, {id: graduationDesignReleaseId}, function (data) {
+            if (data.state) {
+                window.location.href = web_path + ajax_url.download + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + staffId;
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+
     });
 });

@@ -6,7 +6,9 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      ajax url.
      */
     var ajax_url = {
-        data_url: '/web/graduate/design/project/students/data',
+        data_url: '/web/graduate/design/project/list/data',
+        download: '/web/graduate/design/project/list/download',
+        download_condition:'/web/graduate/design/project/list/condition',
         nav: '/web/menu/graduate/design/project',
         back: '/web/graduate/design/project/list'
     };
@@ -63,8 +65,25 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      * @param data 数据
      */
     function listData(data) {
-        var template = Handlebars.compile($("#student-template").html());
+        var template = Handlebars.compile($("#project-template").html());
         $(tableData).html(template(data));
-        $('#dataTable').tablesaw().data("tablesaw").refresh();
+        $('#tablesawTable').tablesaw().data("tablesaw").refresh();
     }
+
+    /*
+     下载
+     */
+    $('#project_down').click(function () {
+        $.post(web_path + ajax_url.download_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+            if (data.state) {
+                window.location.href = web_path + ajax_url.download + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + init_page_param.staffId;
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
 });

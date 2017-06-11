@@ -10,7 +10,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         building_data_url: '/web/graduate/design/project/buildings',
         schoolroom_data_url: '/user/schoolrooms',
         update: '/web/graduate/design/project/update',
-        back: '/web/graduate/design/project/list',
+        back: '/web/graduate/design/project/my/list',
         nav: '/web/menu/graduate/design/project'
     };
 

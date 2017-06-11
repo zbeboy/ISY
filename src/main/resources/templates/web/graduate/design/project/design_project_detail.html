@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">毕业设计规划 -
-                    <small>学生</small>
+                    <small>规划</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -21,18 +21,25 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                <div class="text-right" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-outline btn-default" id="refresh"><i class="fa fa-refresh"></i>刷新
-                    </button>
+                <div style="margin-bottom: 10px;">
+                    <div class="pull-right">
+                        <button type="button" id="project_down" class="btn btn-outline btn-default btn-sm"><i
+                                class="fa fa-cloud-download"></i>下载
+                        </button>
+                        <button type="button" class="btn btn-outline btn-default btn-sm" id="refresh"><i
+                                class="fa fa-refresh"></i>刷新
+                        </button>
+                    </div>
                 </div>
-                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="dataTable">
+                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack"
+                       id="tablesawTable">
                     <thead>
                     <tr>
-                        <th scope="col" data-tablesaw-priority="persist">姓名</th>
-                        <th scope="col">学号</th>
-                        <th scope="col">班级</th>
-                        <th scope="col">账号</th>
-                        <th scope="col">联系方式</th>
+                        <th scope="col">进度安排</th>
+                        <th scope="col">指导时间</th>
+                        <th scope="col">指导地点</th>
+                        <th scope="col">指导内容</th>
+                        <th scope="col">备注</th>
                     </tr>
                     </thead>
                     <tbody id="tableData">
@@ -44,14 +51,14 @@
         <footer class="footer" th:include="footer::footer">
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
-        <script id="student-template" type="text/x-handlebars-template">
+        <script id="project-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>
-                <td>{{realName}}</td>
-                <td>{{studentNumber}}</td>
-                <td>{{organizeName}}</td>
-                <td>{{username}}</td>
-                <td>{{mobile}}</td>
+                <td>{{scheduling}}</td>
+                <td>{{supervisionTime}}</td>
+                <td>{{buildingName}} {{buildingCode}}</td>
+                <td>{{guideContent}}</td>
+                <td>{{note}}</td>
             </tr>
             {{/each}}
         </script>
@@ -63,7 +70,7 @@
                 'staffId': /*[[${staffId}]]*/ 0
             };
         </script>
-        <input type="hidden" class="dy_script" value="/js/graduate/design/project/design_project_students.js"/>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/project/design_project_detail.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>

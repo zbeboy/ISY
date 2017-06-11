@@ -67,7 +67,6 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
     function initStudentData(graduationDesignTeacherId) {
         startLoading();
         $.get(web_path + ajax_url.student_data_url, {
-            id: init_page_param.graduationDesignReleaseId,
             graduationDesignTeacherId: graduationDesignTeacherId
         }, function (data) {
             endLoading();

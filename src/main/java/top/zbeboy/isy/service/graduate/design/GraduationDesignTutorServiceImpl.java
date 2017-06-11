@@ -75,7 +75,7 @@ public class GraduationDesignTutorServiceImpl implements GraduationDesignTutorSe
     }
 
     @Override
-    public Result<Record> findByGraduationDesignTeacherIdAndGraduationDesignReleaseIdRelationForStudent(String graduationDesignTeacherId, String graduationDesignReleaseId) {
+    public Result<Record> findByStaffIdAndGraduationDesignReleaseIdRelationForStudent(int staffId, String graduationDesignReleaseId) {
         return create.select()
                 .from(GRADUATION_DESIGN_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
@@ -86,8 +86,22 @@ public class GraduationDesignTutorServiceImpl implements GraduationDesignTutorSe
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .join(ORGANIZE)
                 .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                .where(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId)
+                .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId)
                         .and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findByGraduationDesignTeacherIdRelationForStudent(String graduationDesignTeacherId) {
+        return create.select()
+                .from(GRADUATION_DESIGN_TUTOR)
+                .join(STUDENT)
+                .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .where(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId))
                 .fetch();
     }
 

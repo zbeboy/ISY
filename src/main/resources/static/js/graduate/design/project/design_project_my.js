@@ -7,13 +7,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      ajax url.
      */
     var ajax_url = {
-        data_url: '/web/graduate/design/project/my/list/data',
+        data_url: '/web/graduate/design/project/list/data',
         condition: '/web/graduate/design/project/condition',
         add: '/web/graduate/design/project/list/add',
         edit: '/web/graduate/design/project/list/edit',
         del: '/web/graduate/design/project/list/delete',
         download: '/web/graduate/design/project/list/download',
-        back: '/web/menu/graduate/design/project'
+        download_condition:'/web/graduate/design/project/list/condition'
     };
 
     // 刷新时选中菜单
@@ -39,7 +39,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      返回
      */
     $('#page_back').click(function () {
-        $.address.value(ajax_url.back);
+        window.history.go(-1);
     });
 
     init();
@@ -142,11 +142,9 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      下载
      */
     $('#project_down').click(function () {
-        startLoading();
-        $.post(ajax_url.condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
-            endLoading();
+        $.post(web_path + ajax_url.download_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
             if (data.state) {
-                window.location.href = web_path + ajax_url.download + '?id=' + init_page_param.graduationDesignReleaseId;
+                window.location.href = web_path + ajax_url.download + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + init_page_param.staffId;
             } else {
                 Messenger().post({
                     message: data.msg,
