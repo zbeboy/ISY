@@ -49,10 +49,10 @@
                 <td>{{staffMobile}}</td>
                 <td>
                     <button type="button" class="btn btn-default btn-sm project"
-                            data-id="{{staffId}}">Ta的规划
+                            data-id="{{staffId}}">{{placeholder}}的规划
                     </button>
                     <button type="button" class="btn btn-default btn-sm students"
-                            data-id="{{staffId}}">Ta的学生
+                            data-id="{{staffId}}">{{placeholder}}的学生
                     </button>
                     <button type="button" class="btn btn-default btn-sm download"
                             data-id="{{staffId}}">下载
@@ -65,7 +65,8 @@
         <script th:inline="javascript">
             /*页面参数*/
             var init_page_param = {
-                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ '',
+                'staffId':/*[[${staffId}]]*/ 0
             };
         </script>
         <input type="hidden" class="dy_script" value="/js/graduate/design/project/design_project_list.js"/>

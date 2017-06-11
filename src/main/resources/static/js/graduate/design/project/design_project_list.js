@@ -65,6 +65,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     function listData(data) {
         var template = Handlebars.compile($("#teacher-template").html());
+        Handlebars.registerHelper('placeholder', function () {
+            var v = 'Ta';
+            if(this.staffId === init_page_param.staffId){
+                v = '我的';
+            }
+            return new Handlebars.SafeString(Handlebars.escapeExpression(v));
+        });
         $(tableData).html(template(data));
         $('#teacherTable').tablesaw().data("tablesaw").refresh();
     }

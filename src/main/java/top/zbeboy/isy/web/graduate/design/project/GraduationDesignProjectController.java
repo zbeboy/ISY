@@ -107,6 +107,13 @@ public class GraduationDesignProjectController {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                Users users = usersService.getUserFromSession();
+                Staff staff = staffService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(staff)) {
+                    modelMap.addAttribute("staffId", staff.getStaffId());
+                }
+            }
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             page = "web/graduate/design/project/design_project_list::#page-wrapper";
         } else {
