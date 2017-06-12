@@ -435,8 +435,13 @@ public class GraduationDesignSubjectController {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                List<GraduationDesignTeacherBean> graduationDesignTeacherBeens =
-                        graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+                List<GraduationDesignTeacherBean> graduationDesignTeacherBeens = new ArrayList<>();
+                GraduationDesignTeacherBean graduationDesignTeacherBean = new GraduationDesignTeacherBean();
+                graduationDesignTeacherBean.setStaffId(0);
+                graduationDesignTeacherBean.setRealName("全部");
+                graduationDesignTeacherBean.setStaffMobile("");
+                graduationDesignTeacherBeens.add(graduationDesignTeacherBean);
+                graduationDesignTeacherBeens.addAll(graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId));
                 ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
             } else {
                 ajaxUtils.fail().msg("请等待确认调整后查看");

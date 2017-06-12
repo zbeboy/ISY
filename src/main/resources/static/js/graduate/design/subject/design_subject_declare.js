@@ -10,6 +10,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         function getAjaxUrl() {
             return {
                 data_url: '/web/graduate/design/subject/declare/data',
+                teachers: '/web/graduate/design/subject/teachers',
                 back: '/web/menu/graduate/design/subject'
             };
         }
@@ -92,7 +93,14 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             ],
             columnDefs: [
                 {
-                    targets: 5,
+                    targets: 0,
+                    orderable: false,
+                    render: function (a, b, c, d) {
+                        return '<input type="checkbox" value="' + c.graduationDesignPresubjectId + '" name="check"/>';
+                    }
+                },
+                {
+                    targets: 20,
                     orderable: false,
                     render: function (a, b, c, d) {
                         var context = null;
@@ -340,4 +348,70 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         $('#refresh').click(function () {
             myTable.ajax.reload();
         });
+
+        init();
+
+        function init() {
+            initTeachers();
+        }
+
+        /*
+         初始化选中教师
+         */
+        var selectedTeacherCount = true;
+
+        function initTeachers() {
+            $.get(web_path + getAjaxUrl().teachers, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
+                    teacherData(data);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 教师数据
+         * @param data 数据
+         */
+        function teacherData(data) {
+            var template = Handlebars.compile($("#staff-template").html());
+            Handlebars.registerHelper('staff_value', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffId));
+            });
+            Handlebars.registerHelper('staff_name', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.staffMobile));
+            });
+            $(getParamId().staffId).html(template(data));
+
+            // 只在页面初始化加载一次
+            if (selectedTeacherCount) {
+                selectedTeacher();
+                selectedTeacherCount = false;
+            }
+        }
+
+        /**
+         * 选中教师
+         */
+        function selectedTeacher() {
+            var realStaffId = init_page_param.staffId;
+            var staffChildrens = $(getParamId().staffId).children();
+            for (var i = 0; i < staffChildrens.length; i++) {
+                if (Number($(staffChildrens[i]).val()) === realStaffId) {
+                    $(staffChildrens[i]).prop('selected', true);
+                    break;
+                }
+            }
+
+            // 选择教师
+            $(getParamId().staffId).selectpicker({
+                liveSearch: true
+            });
+        }
+
     });
