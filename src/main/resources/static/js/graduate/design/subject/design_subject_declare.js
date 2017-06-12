@@ -15,6 +15,41 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             };
         }
 
+        /*
+         参数id
+         */
+        function getParamId() {
+            return {
+                staffId: '#select_staff',
+                presubjectTitle: '#search_presubject_title',
+                studentName: '#search_student_name',
+                studentNumber: '#search_student_number',
+                organize: '#search_organize',
+                subjectType: '#subject_type',
+                originType: '#origin_type'
+            };
+        }
+
+        /*
+         参数
+         */
+        var param = {
+            staffId: init_page_param.staffId,
+            presubjectTitle: '',
+            studentName: '',
+            studentNumber: '',
+            organize: '',
+            subjectType: '',
+            originType: ''
+        };
+
+        /*
+         得到参数
+         */
+        function getParam() {
+            return param;
+        }
+
         // 刷新时选中菜单
         nav_active(getAjaxUrl().back);
 
@@ -65,7 +100,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-                    d.staffId = init_page_param.staffId;
+                    console.log(getParam());
+                    d.staffId = getParam().staffId;
                 }
             },
             "columns": [
@@ -231,41 +267,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         $('#global_button').append(global_button);
 
         /*
-         参数id
-         */
-        function getParamId() {
-            return {
-                staffId: '#select_staff',
-                presubjectTitle: '#search_presubject_title',
-                studentName: '#search_student_name',
-                studentNumber: '#search_student_number',
-                organize: '#search_organize',
-                subjectType: '#subject_type',
-                originType: '#origin_type'
-            };
-        }
-
-        /*
-         参数
-         */
-        var param = {
-            staffId: '',
-            presubjectTitle: '',
-            studentName: '',
-            studentNumber: '',
-            organize: '',
-            subjectType: '',
-            originType: ''
-        };
-
-        /*
-         得到参数
-         */
-        function getParam() {
-            return param;
-        }
-
-        /*
          初始化参数
          */
         function initParam() {
@@ -291,7 +292,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             $(getParamId().originType).val('');
         }
 
-        $(getParamId().staffId).change(function () {
+        $(getParamId().staffId).on('changed.bs.select', function (e) {
             initParam();
             myTable.ajax.reload();
         });
