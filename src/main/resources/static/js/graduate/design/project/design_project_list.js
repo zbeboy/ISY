@@ -68,7 +68,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         Handlebars.registerHelper('placeholder', function () {
             var v = 'Ta';
             if(this.staffId === init_page_param.staffId){
-                v = '我的';
+                v = '我';
             }
             return new Handlebars.SafeString(Handlebars.escapeExpression(v));
         });

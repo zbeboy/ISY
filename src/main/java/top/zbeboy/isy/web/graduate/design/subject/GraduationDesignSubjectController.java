@@ -116,8 +116,6 @@ public class GraduationDesignSubjectController {
                 Student student = studentService.findByUsername(users.getUsername());
                 if (!ObjectUtils.isEmpty(student)) {
                     modelMap.addAttribute("studentId", student.getStudentId());
-                } else {
-                    modelMap.addAttribute("studentId", null);
                 }
             }
             UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
@@ -130,72 +128,6 @@ public class GraduationDesignSubjectController {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("endTime", DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
             page = "web/graduate/design/subject/design_subject_list::#page-wrapper";
-        } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
-        }
-        return page;
-    }
-
-    /**
-     * 小组
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @param modelMap                  页面对象
-     * @return 页面
-     */
-    @RequestMapping(value = "/web/graduate/design/subject/team", method = RequestMethod.GET)
-    public String team(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
-        String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 是否已确认调整
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                Users users = usersService.getUserFromSession();
-                boolean canUse = false;
-                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                    Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-                    if (studentRecord.isPresent()) {
-                        Student student = studentRecord.get().into(Student.class);
-                        if (!ObjectUtils.isEmpty(student)) {
-                            Optional<Record> staffRecord = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignReleaseId);
-                            if (staffRecord.isPresent()) {
-                                GraduationDesignTeacher graduationDesignTeacher = staffRecord.get().into(GraduationDesignTeacher.class);
-                                modelMap.addAttribute("studentId", student.getStudentId());
-                                modelMap.addAttribute("staffId", graduationDesignTeacher.getStaffId());
-                                canUse = true;
-                            }
-
-                        }
-                    }
-                } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                    Staff staff = staffService.findByUsername(users.getUsername());
-                    if (!ObjectUtils.isEmpty(staff)) {
-                        Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                        if (staffRecord.isPresent()) {
-                            modelMap.addAttribute("staffId", staff.getStaffId());
-                            canUse = true;
-                        }
-                    }
-                }
-
-                if (canUse) {
-                    UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-                    modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
-                    if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-                        modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-                    } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                        modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
-                    }
-                    modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
-                    modelMap.addAttribute("endTime", DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
-                    page = "web/graduate/design/subject/design_subject_team::#page-wrapper";
-                } else {
-                    page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
-                }
-            } else {
-                page = commonControllerMethodService.showTip(modelMap, "请等待确认调整后查看");
-            }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
@@ -243,48 +175,6 @@ public class GraduationDesignSubjectController {
     }
 
     /**
-     * 小组数据
-     *
-     * @param request 请求
-     * @return 数据
-     */
-    @RequestMapping(value = "/web/graduate/design/subject/team/data", method = RequestMethod.GET)
-    @ResponseBody
-    public DataTablesUtils<GraduationDesignPresubjectBean> teamData(HttpServletRequest request) {
-        // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
-        headers.add("select");
-        headers.add("presubject_title");
-        headers.add("student_name");
-        headers.add("student_number");
-        headers.add("organize_name");
-        headers.add("update_time");
-        headers.add("operator");
-        DataTablesUtils<GraduationDesignPresubjectBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        GraduationDesignPresubjectBean otherCondition = new GraduationDesignPresubjectBean();
-        String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");
-        if (!ObjectUtils.isEmpty(graduationDesignReleaseId)) {
-            int staffId = NumberUtils.toInt(request.getParameter("staffId"));
-            otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
-            otherCondition.setStaffId(staffId);
-            Result<Record> records = graduationDesignPresubjectService.findTeamByPage(dataTablesUtils, otherCondition);
-            List<GraduationDesignPresubjectBean> graduationDesignPresubjectBeens = new ArrayList<>();
-            if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-                graduationDesignPresubjectBeens = records.into(GraduationDesignPresubjectBean.class);
-                graduationDesignPresubjectBeens.forEach(i -> i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime())));
-            }
-            dataTablesUtils.setData(graduationDesignPresubjectBeens);
-            dataTablesUtils.setiTotalRecords(graduationDesignPresubjectService.countTeam(otherCondition));
-            dataTablesUtils.setiTotalDisplayRecords(graduationDesignPresubjectService.countTeamByCondition(dataTablesUtils, otherCondition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
-        }
-        return dataTablesUtils;
-    }
-
-    /**
      * 申报数据
      *
      * @param request 请求
@@ -293,44 +183,48 @@ public class GraduationDesignSubjectController {
     @RequestMapping(value = "/web/graduate/design/subject/declare/data", method = RequestMethod.GET)
     @ResponseBody
     public DataTablesUtils<GraduationDesignDeclareBean> declareData(HttpServletRequest request) {
-        // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
-        headers.add("select");
-        headers.add("presubject_title");
-        headers.add("subject_type_name");
-        headers.add("origin_type_name");
-        headers.add("is_new_subject");
-        headers.add("is_new_teacher_make");
-        headers.add("is_new_subject_make");
-        headers.add("is_old_subject_change");
-        headers.add("old_subject_uses_times");
-        headers.add("plan_period");
-        headers.add("guide_teacher");
-        headers.add("academic_title_name");
-        headers.add("assistant_teacher");
-        headers.add("assistant_teacher_academic");
-        headers.add("guide_times");
-        headers.add("guide_peoples");
-        headers.add("student_number");
-        headers.add("student_name");
-        headers.add("organize_name");
-        headers.add("is_ok_apply");
-        headers.add("operator");
-        DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        GraduationDesignDeclareBean otherCondition = new GraduationDesignDeclareBean();
         String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");
+        DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils = DataTablesUtils.of();
         if (!ObjectUtils.isEmpty(graduationDesignReleaseId)) {
-            int staffId = NumberUtils.toInt(request.getParameter("staffId"));
-            otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
-            otherCondition.setStaffId(staffId);
-            List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignDeclareService.findAllByPage(dataTablesUtils, otherCondition);
-            dataTablesUtils.setData(graduationDesignDeclareBeens);
-            dataTablesUtils.setiTotalRecords(graduationDesignDeclareService.countAll(otherCondition));
-            dataTablesUtils.setiTotalDisplayRecords(graduationDesignDeclareService.countByCondition(dataTablesUtils, otherCondition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+            if (!errorBean.isHasError()) {
+                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    // 前台数据标题 注：要和前台标题顺序一致，获取order用
+                    List<String> headers = new ArrayList<>();
+                    headers.add("select");
+                    headers.add("presubject_title");
+                    headers.add("subject_type_name");
+                    headers.add("origin_type_name");
+                    headers.add("is_new_subject");
+                    headers.add("is_new_teacher_make");
+                    headers.add("is_new_subject_make");
+                    headers.add("is_old_subject_change");
+                    headers.add("old_subject_uses_times");
+                    headers.add("plan_period");
+                    headers.add("guide_teacher");
+                    headers.add("academic_title_name");
+                    headers.add("assistant_teacher");
+                    headers.add("assistant_teacher_academic");
+                    headers.add("guide_times");
+                    headers.add("guide_peoples");
+                    headers.add("student_number");
+                    headers.add("student_name");
+                    headers.add("organize_name");
+                    headers.add("is_ok_apply");
+                    headers.add("operator");
+                    dataTablesUtils = new DataTablesUtils<>(request, headers);
+                    GraduationDesignDeclareBean otherCondition = new GraduationDesignDeclareBean();
+                    int staffId = NumberUtils.toInt(request.getParameter("staffId"));
+                    otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
+                    otherCondition.setStaffId(staffId);
+                    List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignDeclareService.findAllByPage(dataTablesUtils, otherCondition);
+                    dataTablesUtils.setData(graduationDesignDeclareBeens);
+                    dataTablesUtils.setiTotalRecords(graduationDesignDeclareService.countAll(otherCondition));
+                    dataTablesUtils.setiTotalDisplayRecords(graduationDesignDeclareService.countByCondition(dataTablesUtils, otherCondition));
+                }
+            }
         }
         return dataTablesUtils;
     }
@@ -538,9 +432,15 @@ public class GraduationDesignSubjectController {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            List<GraduationDesignTeacherBean> graduationDesignTeacherBeens =
-                    graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
-            ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                List<GraduationDesignTeacherBean> graduationDesignTeacherBeens =
+                        graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
+                ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
+            } else {
+                ajaxUtils.fail().msg("请等待确认调整后查看");
+            }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -559,8 +459,14 @@ public class GraduationDesignSubjectController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            GraduationDesignDeclareData graduationDesignDeclareData = graduationDesignDeclareDataService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
-            ajaxUtils.success().msg("获取数据成功").obj(graduationDesignDeclareData);
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                GraduationDesignDeclareData graduationDesignDeclareData = graduationDesignDeclareDataService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+                ajaxUtils.success().msg("获取数据成功").obj(graduationDesignDeclareData);
+            } else {
+                ajaxUtils.fail().msg("请等待确认调整后查看");
+            }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -579,8 +485,14 @@ public class GraduationDesignSubjectController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            int peoples = graduationDesignTutorService.countByStaffId(staffId);
-            ajaxUtils.success().msg("获取数据成功").obj(peoples);
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                int peoples = graduationDesignTutorService.countByStaffId(staffId);
+                ajaxUtils.success().msg("获取数据成功").obj(peoples);
+            } else {
+                ajaxUtils.fail().msg("请等待确认调整后查看");
+            }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -591,7 +503,7 @@ public class GraduationDesignSubjectController {
      * 编辑我的题目
      *
      * @param graduationDesignReleaseId 毕业设计发布id
-     * @param modelMap                  页面c对象
+     * @param modelMap                  页面对象
      * @return 页面
      */
     @RequestMapping(value = "/web/graduate/design/subject/my/edit", method = RequestMethod.GET)
@@ -741,56 +653,23 @@ public class GraduationDesignSubjectController {
     }
 
     /**
-     * 小组进入条件
+     * 进入题目申报判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return true or false
      */
-    @RequestMapping(value = "/web/graduate/design/subject/team/condition", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/graduate/design/subject/declare/condition", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils teamCondition(@RequestParam("id") String graduationDesignReleaseId) {
+    public AjaxUtils declareCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                Users users = usersService.getUserFromSession();
-                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                    Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-                    if (studentRecord.isPresent()) {
-                        Student student = studentRecord.get().into(Student.class);
-                        if (!ObjectUtils.isEmpty(student)) {
-                            Optional<Record> staffRecord = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignReleaseId);
-                            if (staffRecord.isPresent()) {
-                                ajaxUtils.success().msg("在条件范围，允许使用");
-                            } else {
-                                ajaxUtils.fail().msg("您的账号未分配毕业设计指导教师");
-                            }
-
-                        } else {
-                            ajaxUtils.fail().msg("未查询到您的账号信息");
-                        }
-                    } else {
-                        ajaxUtils.fail().msg("未查询到您的学生信息");
-                    }
-                } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                    Staff staff = staffService.findByUsername(users.getUsername());
-                    if (!ObjectUtils.isEmpty(staff)) {
-                        Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                        if (staffRecord.isPresent()) {
-                            ajaxUtils.success().msg("在条件范围，允许使用");
-                        } else {
-                            ajaxUtils.fail().msg("您不是该毕业设计指导教师");
-                        }
-                    } else {
-                        ajaxUtils.fail().msg("未查询到您的账号信息");
-                    }
-                } else {
-                    ajaxUtils.fail().msg("您的注册类型不符合进入条件");
-                }
+                ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
-                ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
+                ajaxUtils.fail().msg("请等待确认调整后查看");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());

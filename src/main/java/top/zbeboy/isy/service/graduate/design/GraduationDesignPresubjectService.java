@@ -7,7 +7,6 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 import top.zbeboy.isy.web.bean.graduate.design.subject.GraduationDesignPresubjectBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,26 +74,4 @@ public interface GraduationDesignPresubjectService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<GraduationDesignPresubjectBean> dataTablesUtils, GraduationDesignPresubjectBean graduationDesignPresubjectBean);
-
-    /**
-     * 分页查询 数据
-     *
-     * @param dataTablesUtils datatables工具类
-     * @return 分页数据
-     */
-    Result<Record> findTeamByPage(DataTablesUtils<GraduationDesignPresubjectBean> dataTablesUtils, GraduationDesignPresubjectBean graduationDesignPresubjectBean);
-
-    /**
-     * 数据 总数
-     *
-     * @return 总数
-     */
-    int countTeam(GraduationDesignPresubjectBean graduationDesignPresubjectBean);
-
-    /**
-     * 根据条件查询总数 数据
-     *
-     * @return 条件查询总数
-     */
-    int countTeamByCondition(DataTablesUtils<GraduationDesignPresubjectBean> dataTablesUtils, GraduationDesignPresubjectBean graduationDesignPresubjectBean);
 }

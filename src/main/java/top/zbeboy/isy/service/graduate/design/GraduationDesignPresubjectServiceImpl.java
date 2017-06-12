@@ -15,18 +15,12 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.subject.GraduationDesignPresubjectBean;
-import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
-import static top.zbeboy.isy.domain.Tables.GRADUATION_DESIGN_TEACHER;
-import static top.zbeboy.isy.domain.Tables.USERS;
 
 /**
  * Created by zbeboy on 2017/6/5.
@@ -139,98 +133,6 @@ public class GraduationDesignPresubjectServiceImpl extends DataTablesPlugin<Grad
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                     .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignPresubjectBean.getGraduationDesignReleaseId()).and(a));
-            count = selectConditionStep.fetchOne();
-        }
-        return count.value1();
-    }
-
-    @Override
-    public Result<Record> findTeamByPage(DataTablesUtils<GraduationDesignPresubjectBean> dataTablesUtils, GraduationDesignPresubjectBean graduationDesignPresubjectBean) {
-        Result<Record> records;
-        Condition a = searchCondition(dataTablesUtils);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(GRADUATION_DESIGN_PRESUBJECT)
-                    .join(STUDENT)
-                    .on(STUDENT.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(USERS)
-                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                    .join(ORGANIZE)
-                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(GRADUATION_DESIGN_TUTOR)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID.eq(GRADUATION_DESIGN_TUTOR.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignPresubjectBean.getGraduationDesignReleaseId())
-                            .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignPresubjectBean.getStaffId())));
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
-        } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(GRADUATION_DESIGN_PRESUBJECT)
-                    .join(STUDENT)
-                    .on(STUDENT.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(USERS)
-                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                    .join(ORGANIZE)
-                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(GRADUATION_DESIGN_TUTOR)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID.eq(GRADUATION_DESIGN_TUTOR.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignPresubjectBean.getGraduationDesignReleaseId())
-                            .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignPresubjectBean.getStaffId())).and(a));
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
-        }
-        return records;
-    }
-
-    @Override
-    public int countTeam(GraduationDesignPresubjectBean graduationDesignPresubjectBean) {
-        Record1<Integer> count = create.selectCount()
-                .from(GRADUATION_DESIGN_PRESUBJECT)
-                .join(GRADUATION_DESIGN_TUTOR)
-                .on(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID.eq(GRADUATION_DESIGN_TUTOR.STUDENT_ID))
-                .join(GRADUATION_DESIGN_TEACHER)
-                .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignPresubjectBean.getGraduationDesignReleaseId())
-                .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignPresubjectBean.getStaffId())))
-                .fetchOne();
-        return count.value1();
-    }
-
-    @Override
-    public int countTeamByCondition(DataTablesUtils<GraduationDesignPresubjectBean> dataTablesUtils, GraduationDesignPresubjectBean graduationDesignPresubjectBean) {
-        Record1<Integer> count;
-        Condition a = searchCondition(dataTablesUtils);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(GRADUATION_DESIGN_PRESUBJECT)
-                    .join(GRADUATION_DESIGN_TUTOR)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID.eq(GRADUATION_DESIGN_TUTOR.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignPresubjectBean.getGraduationDesignReleaseId())
-                            .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignPresubjectBean.getStaffId())));
-            count = selectConditionStep.fetchOne();
-        } else {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(GRADUATION_DESIGN_PRESUBJECT)
-                    .join(STUDENT)
-                    .on(STUDENT.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(USERS)
-                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                    .join(ORGANIZE)
-                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(GRADUATION_DESIGN_TUTOR)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID.eq(GRADUATION_DESIGN_TUTOR.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignPresubjectBean.getGraduationDesignReleaseId())
-                            .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignPresubjectBean.getStaffId())).and(a));
             count = selectConditionStep.fetchOne();
         }
         return count.value1();
