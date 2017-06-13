@@ -328,12 +328,12 @@ public class GraduationDesignTutorServiceImpl implements GraduationDesignTutorSe
     }
 
     @Override
-    public int countByStaffId(int staffId) {
+    public int countByGraduationDesignReleaseIdAndStaffId(String graduationDesignReleaseId, int staffId) {
         Record1<Integer> count = create.selectCount()
                 .from(GRADUATION_DESIGN_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId))
+                .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
                 .fetchOne();
         return count.value1();
     }

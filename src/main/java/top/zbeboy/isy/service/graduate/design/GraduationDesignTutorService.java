@@ -153,8 +153,9 @@ public interface GraduationDesignTutorService {
     /**
      * 教师指导人数
      *
-     * @param staffId 教师id
+     * @param graduationDesignReleaseId 发布id
+     * @param staffId                   教师id
      * @return 人数
      */
-    int countByStaffId(int staffId);
+    int countByGraduationDesignReleaseIdAndStaffId(String graduationDesignReleaseId, int staffId);
 }

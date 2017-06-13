@@ -11,6 +11,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             return {
                 data_url: '/web/graduate/design/subject/declare/data',
                 teachers: '/web/graduate/design/subject/teachers',
+                subject_type: '/user/subject/types',
+                subject_origin_type: '/user/subject/origin_types',
+                declare_basic: '/web/graduate/design/subject/declare/basic',
+                declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
                 back: '/web/menu/graduate/design/subject'
             };
         }
@@ -100,7 +104,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-                    console.log(getParam());
                     d.staffId = getParam().staffId;
                 }
             },
@@ -261,10 +264,31 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             }
         });
 
-        var global_button = '<button type="button" id="all_edit" class="btn btn-outline btn-default btn-sm"><i class="fa fa-tags"></i>统一设置</button>' +
-            '  <button type="button" id="all_apply" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-unlock-alt"></i>批量确认</button>' +
-            '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
-        $('#global_button').append(global_button);
+        /**
+         * 初始化按钮
+         */
+        function initGlobalButton() {
+            var global_button = '';
+
+            // 当前用户角色为系统或管理员
+            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                global_button = '<button type="button" id="all_edit" class="btn btn-outline btn-default btn-sm"><i class="fa fa-tags"></i>统一设置</button>' +
+                    '  <button type="button" id="all_apply" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-unlock-alt"></i>批量确认</button>';
+            } else {
+                if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {// 教师
+                    if (init_page_param.staffId === Number(getParam().staffId)) {
+                        global_button = '<button type="button" id="all_edit" class="btn btn-outline btn-default btn-sm"><i class="fa fa-tags"></i>统一设置</button>' +
+                            '  <button type="button" id="all_apply" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-unlock-alt"></i>批量确认</button>';
+                    }
+                }
+            }
+
+            global_button = global_button +
+                '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+            $('#global_button').html(global_button);
+        }
+
 
         /*
          初始化参数
@@ -294,6 +318,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
 
         $(getParamId().staffId).on('changed.bs.select', function (e) {
             initParam();
+            initDeclareBasicPeoples();
+            initGlobalButton();
             myTable.ajax.reload();
         });
 
@@ -354,6 +380,11 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
 
         function init() {
             initTeachers();
+            initSubjectType();
+            initSubjectOriginType();
+            initDeclareBasic();
+            initDeclareBasicPeoples();
+            initGlobalButton();
         }
 
         /*
@@ -361,10 +392,84 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          */
         var selectedTeacherCount = true;
 
+        /**
+         * 初始化教师数据
+         */
         function initTeachers() {
             $.get(web_path + getAjaxUrl().teachers, {id: init_page_param.graduationDesignReleaseId}, function (data) {
                 if (data.state) {
                     teacherData(data);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 初始题目类型数据
+         */
+        function initSubjectType() {
+            $.get(web_path + getAjaxUrl().subject_type, function (data) {
+                if (data.state) {
+                    subjectTypeData(data);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 初始化课题来源数据
+         */
+        function initSubjectOriginType() {
+            $.get(web_path + getAjaxUrl().subject_origin_type, function (data) {
+                if (data.state) {
+                    subjectOriginTypeData(data);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 初始化基础信息
+         */
+        function initDeclareBasic() {
+            $.get(web_path + getAjaxUrl().declare_basic, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
+                    declareBasicData(data);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 初始化指导人数
+         */
+        function initDeclareBasicPeoples() {
+            $.get(web_path + getAjaxUrl().declare_basic_peoples, {
+                id: init_page_param.graduationDesignReleaseId,
+                staffId: getParam().staffId
+            }, function (data) {
+                if (data.state) {
+                    declareBasicPeoplesData(data);
                 } else {
                     Messenger().post({
                         message: data.msg,
@@ -413,6 +518,53 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             $(getParamId().staffId).selectpicker({
                 liveSearch: true
             });
+        }
+
+        /**
+         * 题目类型数据
+         * @param data 数据
+         */
+        function subjectTypeData(data) {
+            var template = Handlebars.compile($("#subject-type-template").html());
+            $(getParamId().subjectType).html(template(data));
+        }
+
+        /**
+         * 题目来源数据
+         * @param data 数据
+         */
+        function subjectOriginTypeData(data) {
+            var template = Handlebars.compile($("#origin-type-template").html());
+            $(getParamId().originType).html(template(data));
+        }
+
+        /**
+         * 基础信息
+         * @param data 数据
+         */
+        function declareBasicData(data) {
+            $('#graduationDate').text(isNull(data.objectResult.graduationDate));
+            $('#departmentName').text(isNull(data.objectResult.departmentName));
+            $('#scienceName').text(isNull(data.objectResult.scienceName));
+            $('#organizeNames').text(isNull(data.objectResult.organizeNames));
+            $('#organizePeoples').text(isNull(data.objectResult.organizePeoples));
+        }
+
+        /**
+         * 指导人数
+         * @param data 数据
+         */
+        function declareBasicPeoplesData(data) {
+            $('#guidePeoples').text(isNull(data.objectResult));
+        }
+
+        /**
+         * 空值处理
+         * @param param
+         * @returns {string}
+         */
+        function isNull(param) {
+            return param == null ? "" : param;
         }
 
     });

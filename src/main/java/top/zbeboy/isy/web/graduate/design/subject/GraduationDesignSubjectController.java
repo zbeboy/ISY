@@ -71,6 +71,12 @@ public class GraduationDesignSubjectController {
     private GraduationDesignDeclareService graduationDesignDeclareService;
 
     @Resource
+    private GraduationDesignSubjectTypeService graduationDesignSubjectTypeService;
+
+    @Resource
+    private GraduationDesignSubjectOriginTypeService graduationDesignSubjectOriginTypeService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
@@ -493,7 +499,10 @@ public class GraduationDesignSubjectController {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                int peoples = graduationDesignTutorService.countByStaffId(staffId);
+                int peoples = 0;
+                if (staffId > 0) {
+                    peoples = graduationDesignTutorService.countByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staffId);
+                }
                 ajaxUtils.success().msg("获取数据成功").obj(peoples);
             } else {
                 ajaxUtils.fail().msg("请等待确认调整后查看");
@@ -502,6 +511,38 @@ public class GraduationDesignSubjectController {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 获取题目类型
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = "/user/subject/types", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignSubjectType> subjectTypes() {
+        AjaxUtils<GraduationDesignSubjectType> ajaxUtils = AjaxUtils.of();
+        List<GraduationDesignSubjectType> graduationDesignSubjectTypes = new ArrayList<>();
+        GraduationDesignSubjectType graduationDesignSubjectType = new GraduationDesignSubjectType(0, "题目类型");
+        graduationDesignSubjectTypes.add(graduationDesignSubjectType);
+        graduationDesignSubjectTypes.addAll(graduationDesignSubjectTypeService.findAll());
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignSubjectTypes);
+    }
+
+    /**
+     * 获取课题来源
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = "/user/subject/origin_types", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignSubjectOriginType> subjectOriginTypes() {
+        AjaxUtils<GraduationDesignSubjectOriginType> ajaxUtils = AjaxUtils.of();
+        List<GraduationDesignSubjectOriginType> graduationDesignSubjectOriginTypes = new ArrayList<>();
+        GraduationDesignSubjectOriginType graduationDesignSubjectOriginType = new GraduationDesignSubjectOriginType(0, "课题来源");
+        graduationDesignSubjectOriginTypes.add(graduationDesignSubjectOriginType);
+        graduationDesignSubjectOriginTypes.addAll(graduationDesignSubjectOriginTypeService.findAll());
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignSubjectOriginTypes);
     }
 
     /**
