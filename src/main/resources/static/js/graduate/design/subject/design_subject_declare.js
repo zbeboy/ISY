@@ -15,6 +15,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 subject_origin_type: '/user/subject/origin_types',
                 declare_basic: '/web/graduate/design/subject/declare/basic',
                 declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
+                update_title: '/web/graduate/design/subject/declare/edit/title',
                 back: '/web/menu/graduate/design/subject'
             };
         }
@@ -260,7 +261,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
-
+                tableElement.delegate('.update_title', "click", function () {
+                    updateTitle($(this).attr('data-id'));
+                });
             }
         });
 
@@ -565,6 +568,14 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          */
         function isNull(param) {
             return param == null ? "" : param;
+        }
+
+        /*
+         编辑页面
+         */
+        function updateTitle(graduationDesignPresubjectId) {
+            console.log(graduationDesignPresubjectId);
+            $.address.value(getAjaxUrl().update_title + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId + '&staffId=' + init_page_param.staffId );
         }
 
     });

@@ -427,6 +427,32 @@ public class GraduationDesignSubjectController {
     }
 
     /**
+     * 修改题目
+     *
+     * @param graduationDesignReleaseId    发布id
+     * @param graduationDesignPresubjectId 题目id
+     * @param staffId                      教职工id
+     * @param modelMap                     页面对象
+     * @return 编辑页面
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/declare/edit/title", method = RequestMethod.GET)
+    public String declareEditTtile(@RequestParam("id") String graduationDesignReleaseId,
+                                   @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId,
+                                   @RequestParam("staffId") int staffId, ModelMap modelMap) {
+        String page;
+        GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectId);
+        if (updateTitleCondition(graduationDesignReleaseId, graduationDesignPresubject, staffId)) {
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
+            modelMap.addAttribute("staffId", staffId);
+            page = "web/graduate/design/subject/design_subject_declare_title::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+        }
+        return page;
+    }
+
+    /**
      * 教师数据
      *
      * @param graduationDesignReleaseId 毕业发布id
@@ -644,11 +670,7 @@ public class GraduationDesignSubjectController {
             if (!errorBean.isHasError()) {
                 GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
                 if (canEditCondition(graduationDesignPresubject)) {
-                    graduationDesignPresubject.setPresubjectTitle(graduationDesignPresubjectUpdateVo.getPresubjectTitle());
-                    graduationDesignPresubject.setPresubjectPlan(graduationDesignPresubjectUpdateVo.getPresubjectPlan());
-                    graduationDesignPresubject.setPublicLevel(graduationDesignPresubjectUpdateVo.getPublicLevel());
-                    graduationDesignPresubject.setUpdateTime(DateTimeUtils.getNow());
-                    graduationDesignPresubjectService.update(graduationDesignPresubject);
+                    updatePresubject(graduationDesignPresubjectUpdateVo, graduationDesignPresubject);
                     ajaxUtils.success().msg("保存成功");
                 } else {
                     ajaxUtils.fail().msg("您不允许编辑该题目");
@@ -660,6 +682,45 @@ public class GraduationDesignSubjectController {
             ajaxUtils.fail().msg("参数异常");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 修改题目
+     *
+     * @param graduationDesignPresubjectUpdateVo 数据
+     * @param bindingResult                      检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/declare/edit/title/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils updateTitle(@Valid GraduationDesignPresubjectUpdateVo graduationDesignPresubjectUpdateVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
+            if (updateTitleCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId(), graduationDesignPresubject, graduationDesignPresubjectUpdateVo.getStaffId())) {
+                updatePresubject(graduationDesignPresubjectUpdateVo, graduationDesignPresubject);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg("不符合编辑条件");
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 更新题目
+     *
+     * @param graduationDesignPresubjectUpdateVo 数据
+     * @param graduationDesignPresubject         原题
+     */
+    private void updatePresubject(GraduationDesignPresubjectUpdateVo graduationDesignPresubjectUpdateVo, GraduationDesignPresubject graduationDesignPresubject) {
+        graduationDesignPresubject.setPresubjectTitle(graduationDesignPresubjectUpdateVo.getPresubjectTitle());
+        graduationDesignPresubject.setPresubjectPlan(graduationDesignPresubjectUpdateVo.getPresubjectPlan());
+        graduationDesignPresubject.setPublicLevel(graduationDesignPresubjectUpdateVo.getPublicLevel());
+        graduationDesignPresubject.setUpdateTime(DateTimeUtils.getNow());
+        graduationDesignPresubjectService.update(graduationDesignPresubject);
     }
 
     /**
@@ -690,6 +751,52 @@ public class GraduationDesignSubjectController {
                                 graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignPresubject.getGraduationDesignReleaseId(), staff.getStaffId());
                         if (record.isPresent()) {
                             canEdit = true;
+                        }
+                    }
+                }
+            }
+        }
+        return canEdit;
+    }
+
+    /**
+     * 修改题目条件
+     *
+     * @param graduationDesignReleaseId  发布id
+     * @param graduationDesignPresubject 题目
+     * @param staffId                    教职工id
+     * @return true or false
+     */
+    private boolean updateTitleCondition(String graduationDesignReleaseId, GraduationDesignPresubject graduationDesignPresubject, int staffId) {
+        boolean canEdit = false;
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                Users users = usersService.getUserFromSession();
+                GraduationDesignDeclare graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
+                // 未确认申报
+                if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
+                    // 如果是管理员或系统
+                    if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                        canEdit = true;
+                    } else {
+                        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                            Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                            if (studentRecord.isPresent()) {
+                                Student student = studentRecord.get().into(Student.class);
+                                canEdit = Objects.equals(student.getStudentId(), graduationDesignPresubject.getStudentId());
+                            }
+                        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                            Staff staff = staffService.findByUsername(users.getUsername());
+                            if (!ObjectUtils.isEmpty(staff)) {
+                                Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
+                                if (staffRecord.isPresent()) {
+                                    Staff tempStaff = staffRecord.get().into(Staff.class);
+                                    canEdit = tempStaff.getStaffId() == staffId;
+                                }
+                            }
                         }
                     }
                 }

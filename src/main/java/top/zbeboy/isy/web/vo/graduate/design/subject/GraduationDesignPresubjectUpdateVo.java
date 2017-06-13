@@ -24,4 +24,6 @@ public class GraduationDesignPresubjectUpdateVo {
     private String presubjectPlan;
     @NotNull
     private Integer publicLevel;
+
+    private int staffId;
 }
