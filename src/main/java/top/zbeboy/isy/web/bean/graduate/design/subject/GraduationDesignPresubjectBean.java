@@ -15,4 +15,17 @@ public class GraduationDesignPresubjectBean extends GraduationDesignPresubject {
     private String studentNumber;
     private String organizeName;
     private int staffId;
+    private int subjectTypeId;
+    private int originTypeId;
+    private Byte isNewSubject;
+    private Byte isNewTeacherMake;
+    private Byte isNewSubjectMake;
+    private Byte isOldSubjectChange;
+    private Integer oldSubjectUsesTimes;
+    private String planPeriod;
+    private String assistantTeacher;
+    private String assistantTeacherAcademic;
+    private int guideTimes;
+    private int guidePeoples;
+    private Byte isOkApply;
 }

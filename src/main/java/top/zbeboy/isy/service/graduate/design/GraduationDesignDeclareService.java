@@ -44,4 +44,11 @@ public interface GraduationDesignDeclareService {
      */
     int countByCondition(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean);
 
+    /**
+     * 保存 或 更新 根据题目id判断
+     *
+     * @param graduationDesignDeclare 数据
+     */
+    void saveOrUpdate(GraduationDesignDeclare graduationDesignDeclare);
+
 }

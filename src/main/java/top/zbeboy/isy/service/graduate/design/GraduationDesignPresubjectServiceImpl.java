@@ -49,6 +49,8 @@ public class GraduationDesignPresubjectServiceImpl extends DataTablesPlugin<Grad
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
                 .from(GRADUATION_DESIGN_PRESUBJECT)
+                .leftJoin(GRADUATION_DESIGN_DECLARE)
+                .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
                 .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(id))
                 .fetchOptional();
     }

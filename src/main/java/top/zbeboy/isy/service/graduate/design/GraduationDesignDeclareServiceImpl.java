@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -185,6 +186,57 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
             count = selectConditionStep.fetchOne();
         }
         return count.value1();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void saveOrUpdate(GraduationDesignDeclare graduationDesignDeclare) {
+        create.insertInto(GRADUATION_DESIGN_DECLARE,
+                GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID,
+                GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID,
+                GRADUATION_DESIGN_DECLARE.IS_NEW_SUBJECT,
+                GRADUATION_DESIGN_DECLARE.IS_NEW_TEACHER_MAKE,
+                GRADUATION_DESIGN_DECLARE.IS_NEW_SUBJECT_MAKE,
+                GRADUATION_DESIGN_DECLARE.IS_OLD_SUBJECT_CHANGE,
+                GRADUATION_DESIGN_DECLARE.OLD_SUBJECT_USES_TIMES,
+                GRADUATION_DESIGN_DECLARE.PLAN_PERIOD,
+                GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER,
+                GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC,
+                GRADUATION_DESIGN_DECLARE.GUIDE_TIMES,
+                GRADUATION_DESIGN_DECLARE.GUIDE_PEOPLES,
+                GRADUATION_DESIGN_DECLARE.IS_OK_APPLY,
+                GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID)
+                .values(
+                        graduationDesignDeclare.getSubjectTypeId(),
+                        graduationDesignDeclare.getOriginTypeId(),
+                        graduationDesignDeclare.getIsNewSubject(),
+                        graduationDesignDeclare.getIsNewTeacherMake(),
+                        graduationDesignDeclare.getIsNewSubjectMake(),
+                        graduationDesignDeclare.getIsOldSubjectChange(),
+                        graduationDesignDeclare.getOldSubjectUsesTimes(),
+                        graduationDesignDeclare.getPlanPeriod(),
+                        graduationDesignDeclare.getAssistantTeacher(),
+                        graduationDesignDeclare.getAssistantTeacherAcademic(),
+                        graduationDesignDeclare.getGuideTimes(),
+                        graduationDesignDeclare.getGuidePeoples(),
+                        graduationDesignDeclare.getIsOkApply(),
+                        graduationDesignDeclare.getGraduationDesignPresubjectId()
+                )
+                .onDuplicateKeyUpdate()
+                .set(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID, graduationDesignDeclare.getSubjectTypeId())
+                .set(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID, graduationDesignDeclare.getOriginTypeId())
+                .set(GRADUATION_DESIGN_DECLARE.IS_NEW_SUBJECT, graduationDesignDeclare.getIsNewSubject())
+                .set(GRADUATION_DESIGN_DECLARE.IS_NEW_TEACHER_MAKE, graduationDesignDeclare.getIsNewTeacherMake())
+                .set(GRADUATION_DESIGN_DECLARE.IS_NEW_SUBJECT_MAKE, graduationDesignDeclare.getIsNewSubjectMake())
+                .set(GRADUATION_DESIGN_DECLARE.IS_OLD_SUBJECT_CHANGE, graduationDesignDeclare.getIsOldSubjectChange())
+                .set(GRADUATION_DESIGN_DECLARE.OLD_SUBJECT_USES_TIMES, graduationDesignDeclare.getOldSubjectUsesTimes())
+                .set(GRADUATION_DESIGN_DECLARE.PLAN_PERIOD, graduationDesignDeclare.getPlanPeriod())
+                .set(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER, graduationDesignDeclare.getAssistantTeacher())
+                .set(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC, graduationDesignDeclare.getAssistantTeacherAcademic())
+                .set(GRADUATION_DESIGN_DECLARE.GUIDE_TIMES, graduationDesignDeclare.getGuideTimes())
+                .set(GRADUATION_DESIGN_DECLARE.GUIDE_PEOPLES, graduationDesignDeclare.getGuidePeoples())
+                .set(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY, graduationDesignDeclare.getIsOkApply())
+                .execute();
     }
 
     /**

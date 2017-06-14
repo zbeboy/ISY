@@ -18,4 +18,5 @@ public class GraduationDesignTutorBean extends GraduationDesignTutor {
     private String studentName;
     private String staffName;
     private String graduationDesignReleaseId;
+    private int staffId;
 }
