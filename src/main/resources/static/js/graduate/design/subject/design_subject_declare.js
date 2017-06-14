@@ -574,7 +574,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          编辑页面
          */
         function updateTitle(graduationDesignPresubjectId) {
-            console.log(graduationDesignPresubjectId);
             $.address.value(getAjaxUrl().update_title + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId + '&staffId=' + init_page_param.staffId );
         }
 
