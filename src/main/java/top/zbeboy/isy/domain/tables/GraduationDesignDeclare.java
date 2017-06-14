@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRecord> {
 
-    private static final long serialVersionUID = 1062555625;
+    private static final long serialVersionUID = 1019288338;
 
     /**
      * The reference instance of <code>isy.graduation_design_declare</code>
@@ -49,11 +49,6 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
     public Class<GraduationDesignDeclareRecord> getRecordType() {
         return GraduationDesignDeclareRecord.class;
     }
-
-    /**
-     * The column <code>isy.graduation_design_declare.graduation_design_declare_id</code>.
-     */
-    public final TableField<GraduationDesignDeclareRecord, String> GRADUATION_DESIGN_DECLARE_ID = createField("graduation_design_declare_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_design_declare.subject_type_id</code>.
@@ -159,16 +154,8 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
      * {@inheritDoc}
      */
     @Override
-    public UniqueKey<GraduationDesignDeclareRecord> getPrimaryKey() {
-        return Keys.KEY_GRADUATION_DESIGN_DECLARE_PRIMARY;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<UniqueKey<GraduationDesignDeclareRecord>> getKeys() {
-        return Arrays.<UniqueKey<GraduationDesignDeclareRecord>>asList(Keys.KEY_GRADUATION_DESIGN_DECLARE_PRIMARY);
+        return Arrays.<UniqueKey<GraduationDesignDeclareRecord>>asList(Keys.KEY_GRADUATION_DESIGN_DECLARE_GRADUATION_DESIGN_PRESUBJECT_ID);
     }
 
     /**

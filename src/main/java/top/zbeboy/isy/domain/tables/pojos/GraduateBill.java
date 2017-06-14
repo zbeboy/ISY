@@ -24,12 +24,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateBill implements Serializable {
 
-    private static final long serialVersionUID = 396155780;
+    private static final long serialVersionUID = 1740083107;
 
     private String  graduateBillId;
     private Integer scoreTypeId;
     private String  graduationDesignReleaseId;
-    private String  graduationDesignDeclareId;
+    private String  graduationDesignPresubjectId;
 
     public GraduateBill() {}
 
@@ -37,19 +37,19 @@ public class GraduateBill implements Serializable {
         this.graduateBillId = value.graduateBillId;
         this.scoreTypeId = value.scoreTypeId;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
-        this.graduationDesignDeclareId = value.graduationDesignDeclareId;
+        this.graduationDesignPresubjectId = value.graduationDesignPresubjectId;
     }
 
     public GraduateBill(
         String  graduateBillId,
         Integer scoreTypeId,
         String  graduationDesignReleaseId,
-        String  graduationDesignDeclareId
+        String  graduationDesignPresubjectId
     ) {
         this.graduateBillId = graduateBillId;
         this.scoreTypeId = scoreTypeId;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
-        this.graduationDesignDeclareId = graduationDesignDeclareId;
+        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
     }
 
     @NotNull
@@ -83,12 +83,12 @@ public class GraduateBill implements Serializable {
 
     @NotNull
     @Size(max = 64)
-    public String getGraduationDesignDeclareId() {
-        return this.graduationDesignDeclareId;
+    public String getGraduationDesignPresubjectId() {
+        return this.graduationDesignPresubjectId;
     }
 
-    public void setGraduationDesignDeclareId(String graduationDesignDeclareId) {
-        this.graduationDesignDeclareId = graduationDesignDeclareId;
+    public void setGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
+        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class GraduateBill implements Serializable {
         sb.append(graduateBillId);
         sb.append(", ").append(scoreTypeId);
         sb.append(", ").append(graduationDesignReleaseId);
-        sb.append(", ").append(graduationDesignDeclareId);
+        sb.append(", ").append(graduationDesignPresubjectId);
 
         sb.append(")");
         return sb.toString();

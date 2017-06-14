@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduateBillRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateBill extends TableImpl<GraduateBillRecord> {
 
-    private static final long serialVersionUID = -313037348;
+    private static final long serialVersionUID = 991079118;
 
     /**
      * The reference instance of <code>isy.graduate_bill</code>
@@ -66,9 +66,9 @@ public class GraduateBill extends TableImpl<GraduateBillRecord> {
     public final TableField<GraduateBillRecord, String> GRADUATION_DESIGN_RELEASE_ID = createField("graduation_design_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduate_bill.graduation_design_declare_id</code>.
+     * The column <code>isy.graduate_bill.graduation_design_presubject_id</code>.
      */
-    public final TableField<GraduateBillRecord, String> GRADUATION_DESIGN_DECLARE_ID = createField("graduation_design_declare_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<GraduateBillRecord, String> GRADUATION_DESIGN_PRESUBJECT_ID = createField("graduation_design_presubject_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduate_bill</code> table reference
@@ -113,7 +113,7 @@ public class GraduateBill extends TableImpl<GraduateBillRecord> {
      */
     @Override
     public List<UniqueKey<GraduateBillRecord>> getKeys() {
-        return Arrays.<UniqueKey<GraduateBillRecord>>asList(Keys.KEY_GRADUATE_BILL_PRIMARY);
+        return Arrays.<UniqueKey<GraduateBillRecord>>asList(Keys.KEY_GRADUATE_BILL_PRIMARY, Keys.KEY_GRADUATE_BILL_GRADUATION_DESIGN_PRESUBJECT_ID);
     }
 
     /**

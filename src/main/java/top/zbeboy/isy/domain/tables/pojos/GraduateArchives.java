@@ -24,9 +24,8 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateArchives implements Serializable {
 
-    private static final long serialVersionUID = -239841917;
+    private static final long serialVersionUID = 1448691113;
 
-    private String graduateArchivesId;
     private String graduateBillId;
     private Byte   isExcellent;
     private String archiveNumber;
@@ -35,7 +34,6 @@ public class GraduateArchives implements Serializable {
     public GraduateArchives() {}
 
     public GraduateArchives(GraduateArchives value) {
-        this.graduateArchivesId = value.graduateArchivesId;
         this.graduateBillId = value.graduateBillId;
         this.isExcellent = value.isExcellent;
         this.archiveNumber = value.archiveNumber;
@@ -43,27 +41,15 @@ public class GraduateArchives implements Serializable {
     }
 
     public GraduateArchives(
-        String graduateArchivesId,
         String graduateBillId,
         Byte   isExcellent,
         String archiveNumber,
         String note
     ) {
-        this.graduateArchivesId = graduateArchivesId;
         this.graduateBillId = graduateBillId;
         this.isExcellent = isExcellent;
         this.archiveNumber = archiveNumber;
         this.note = note;
-    }
-
-    @NotNull
-    @Size(max = 64)
-    public String getGraduateArchivesId() {
-        return this.graduateArchivesId;
-    }
-
-    public void setGraduateArchivesId(String graduateArchivesId) {
-        this.graduateArchivesId = graduateArchivesId;
     }
 
     @NotNull
@@ -107,8 +93,7 @@ public class GraduateArchives implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduateArchives (");
 
-        sb.append(graduateArchivesId);
-        sb.append(", ").append(graduateBillId);
+        sb.append(graduateBillId);
         sb.append(", ").append(isExcellent);
         sb.append(", ").append(archiveNumber);
         sb.append(", ").append(note);

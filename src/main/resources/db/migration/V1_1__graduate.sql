@@ -122,7 +122,6 @@ CREATE TABLE graduation_design_subject_origin_type(
 );
 
 CREATE TABLE graduation_design_declare(
-  graduation_design_declare_id VARCHAR(64) PRIMARY KEY ,
   subject_type_id INT,
   origin_type_id INT,
   is_new_subject BOOLEAN,
@@ -136,7 +135,7 @@ CREATE TABLE graduation_design_declare(
   guide_times INT,
   guide_peoples INT,
   is_ok_apply BOOLEAN DEFAULT 0 ,
-  graduation_design_presubject_id VARCHAR(64) NOT NULL ,
+  graduation_design_presubject_id VARCHAR(64) NOT NULL UNIQUE ,
   FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject(graduation_design_presubject_id)
 );
 
@@ -204,17 +203,17 @@ CREATE TABLE graduate_bill(
   graduate_bill_id VARCHAR(64) PRIMARY KEY ,
   score_type_id INT NOT NULL ,
   graduation_design_release_id VARCHAR(64) NOT NULL ,
-  graduation_design_declare_id VARCHAR(64) NOT NULL ,
+  graduation_design_presubject_id VARCHAR(64) NOT NULL UNIQUE ,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id),
-  FOREIGN KEY (graduation_design_declare_id) REFERENCES graduation_design_declare(graduation_design_declare_id)
+  FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject(graduation_design_presubject_id)
 );
 
 CREATE TABLE graduate_archives(
-  graduate_archives_id VARCHAR(64) PRIMARY KEY ,
-  graduate_bill_id VARCHAR(64) NOT NULL ,
+  graduate_bill_id VARCHAR(64) NOT NULL UNIQUE ,
   is_excellent BOOLEAN NOT NULL DEFAULT 0,
   archive_number VARCHAR(100)  NOT NULL ,
-  note VARCHAR(100)
+  note VARCHAR(100),
+  FOREIGN KEY (graduate_bill_id) REFERENCES graduate_bill(graduate_bill_id)
 );
 
 INSERT INTO graduation_design_subject_type(subject_type_name) VALUES ('软件型');

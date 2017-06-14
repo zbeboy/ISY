@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.GraduateBill;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateBillRecord extends UpdatableRecordImpl<GraduateBillRecord> implements Record4<String, Integer, String, String> {
 
-    private static final long serialVersionUID = -1085993059;
+    private static final long serialVersionUID = -1540023486;
 
     /**
      * Setter for <code>isy.graduate_bill.graduate_bill_id</code>.
@@ -80,18 +80,18 @@ public class GraduateBillRecord extends UpdatableRecordImpl<GraduateBillRecord> 
     }
 
     /**
-     * Setter for <code>isy.graduate_bill.graduation_design_declare_id</code>.
+     * Setter for <code>isy.graduate_bill.graduation_design_presubject_id</code>.
      */
-    public void setGraduationDesignDeclareId(String value) {
+    public void setGraduationDesignPresubjectId(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>isy.graduate_bill.graduation_design_declare_id</code>.
+     * Getter for <code>isy.graduate_bill.graduation_design_presubject_id</code>.
      */
     @NotNull
     @Size(max = 64)
-    public String getGraduationDesignDeclareId() {
+    public String getGraduationDesignPresubjectId() {
         return (String) get(3);
     }
 
@@ -156,7 +156,7 @@ public class GraduateBillRecord extends UpdatableRecordImpl<GraduateBillRecord> 
      */
     @Override
     public Field<String> field4() {
-        return GraduateBill.GRADUATE_BILL.GRADUATION_DESIGN_DECLARE_ID;
+        return GraduateBill.GRADUATE_BILL.GRADUATION_DESIGN_PRESUBJECT_ID;
     }
 
     /**
@@ -188,7 +188,7 @@ public class GraduateBillRecord extends UpdatableRecordImpl<GraduateBillRecord> 
      */
     @Override
     public String value4() {
-        return getGraduationDesignDeclareId();
+        return getGraduationDesignPresubjectId();
     }
 
     /**
@@ -223,7 +223,7 @@ public class GraduateBillRecord extends UpdatableRecordImpl<GraduateBillRecord> 
      */
     @Override
     public GraduateBillRecord value4(String value) {
-        setGraduationDesignDeclareId(value);
+        setGraduationDesignPresubjectId(value);
         return this;
     }
 
@@ -253,12 +253,12 @@ public class GraduateBillRecord extends UpdatableRecordImpl<GraduateBillRecord> 
     /**
      * Create a detached, initialised GraduateBillRecord
      */
-    public GraduateBillRecord(String graduateBillId, Integer scoreTypeId, String graduationDesignReleaseId, String graduationDesignDeclareId) {
+    public GraduateBillRecord(String graduateBillId, Integer scoreTypeId, String graduationDesignReleaseId, String graduationDesignPresubjectId) {
         super(GraduateBill.GRADUATE_BILL);
 
         set(0, graduateBillId);
         set(1, scoreTypeId);
         set(2, graduationDesignReleaseId);
-        set(3, graduationDesignDeclareId);
+        set(3, graduationDesignPresubjectId);
     }
 }

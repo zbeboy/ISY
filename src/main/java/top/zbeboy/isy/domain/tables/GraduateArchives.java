@@ -10,6 +10,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -34,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduateArchivesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
 
-    private static final long serialVersionUID = 959018895;
+    private static final long serialVersionUID = -1055852474;
 
     /**
      * The reference instance of <code>isy.graduate_archives</code>
@@ -48,11 +49,6 @@ public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
     public Class<GraduateArchivesRecord> getRecordType() {
         return GraduateArchivesRecord.class;
     }
-
-    /**
-     * The column <code>isy.graduate_archives.graduate_archives_id</code>.
-     */
-    public final TableField<GraduateArchivesRecord, String> GRADUATE_ARCHIVES_ID = createField("graduate_archives_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduate_archives.graduate_bill_id</code>.
@@ -108,16 +104,16 @@ public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
      * {@inheritDoc}
      */
     @Override
-    public UniqueKey<GraduateArchivesRecord> getPrimaryKey() {
-        return Keys.KEY_GRADUATE_ARCHIVES_PRIMARY;
+    public List<UniqueKey<GraduateArchivesRecord>> getKeys() {
+        return Arrays.<UniqueKey<GraduateArchivesRecord>>asList(Keys.KEY_GRADUATE_ARCHIVES_GRADUATE_BILL_ID);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<UniqueKey<GraduateArchivesRecord>> getKeys() {
-        return Arrays.<UniqueKey<GraduateArchivesRecord>>asList(Keys.KEY_GRADUATE_ARCHIVES_PRIMARY);
+    public List<ForeignKey<GraduateArchivesRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<GraduateArchivesRecord, ?>>asList(Keys.GRADUATE_ARCHIVES_IBFK_1);
     }
 
     /**

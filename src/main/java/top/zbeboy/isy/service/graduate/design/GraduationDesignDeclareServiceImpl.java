@@ -10,14 +10,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import top.zbeboy.isy.domain.tables.daos.GraduationDesignDeclareDao;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import javax.annotation.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +31,16 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
 
     private final DSLContext create;
 
-    @Resource
-    private GraduationDesignDeclareDao graduationDesignDeclareDao;
-
     @Autowired
     public GraduationDesignDeclareServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
     }
 
     @Override
-    public GraduationDesignDeclare findByGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
-        return graduationDesignDeclareDao.fetchOne(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID, graduationDesignPresubjectId);
+    public GraduationDesignDeclareRecord findByGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
+        return  create.selectFrom(GRADUATION_DESIGN_DECLARE)
+                .where(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID.eq(graduationDesignPresubjectId))
+                .fetchOne();
     }
 
     @Override
@@ -106,7 +102,6 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
         }
             for (Record r : records) {
                 GraduationDesignDeclareBean tempGraduationDesignDeclareBean = new GraduationDesignDeclareBean();
-                tempGraduationDesignDeclareBean.setGraduationDesignDeclareId(r.getValue(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_DECLARE_ID));
                 tempGraduationDesignDeclareBean.setSubjectTypeId(r.getValue(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID));
                 tempGraduationDesignDeclareBean.setSubjectTypeName(r.getValue(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME));
                 tempGraduationDesignDeclareBean.setOriginTypeId(r.getValue(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID));

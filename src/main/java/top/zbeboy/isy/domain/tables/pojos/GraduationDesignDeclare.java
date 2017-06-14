@@ -24,9 +24,8 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare implements Serializable {
 
-    private static final long serialVersionUID = 1053611272;
+    private static final long serialVersionUID = 1004047754;
 
-    private String  graduationDesignDeclareId;
     private Integer subjectTypeId;
     private Integer originTypeId;
     private Byte    isNewSubject;
@@ -45,7 +44,6 @@ public class GraduationDesignDeclare implements Serializable {
     public GraduationDesignDeclare() {}
 
     public GraduationDesignDeclare(GraduationDesignDeclare value) {
-        this.graduationDesignDeclareId = value.graduationDesignDeclareId;
         this.subjectTypeId = value.subjectTypeId;
         this.originTypeId = value.originTypeId;
         this.isNewSubject = value.isNewSubject;
@@ -63,7 +61,6 @@ public class GraduationDesignDeclare implements Serializable {
     }
 
     public GraduationDesignDeclare(
-        String  graduationDesignDeclareId,
         Integer subjectTypeId,
         Integer originTypeId,
         Byte    isNewSubject,
@@ -79,7 +76,6 @@ public class GraduationDesignDeclare implements Serializable {
         Byte    isOkApply,
         String  graduationDesignPresubjectId
     ) {
-        this.graduationDesignDeclareId = graduationDesignDeclareId;
         this.subjectTypeId = subjectTypeId;
         this.originTypeId = originTypeId;
         this.isNewSubject = isNewSubject;
@@ -94,16 +90,6 @@ public class GraduationDesignDeclare implements Serializable {
         this.guidePeoples = guidePeoples;
         this.isOkApply = isOkApply;
         this.graduationDesignPresubjectId = graduationDesignPresubjectId;
-    }
-
-    @NotNull
-    @Size(max = 64)
-    public String getGraduationDesignDeclareId() {
-        return this.graduationDesignDeclareId;
-    }
-
-    public void setGraduationDesignDeclareId(String graduationDesignDeclareId) {
-        this.graduationDesignDeclareId = graduationDesignDeclareId;
     }
 
     public Integer getSubjectTypeId() {
@@ -227,8 +213,7 @@ public class GraduationDesignDeclare implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignDeclare (");
 
-        sb.append(graduationDesignDeclareId);
-        sb.append(", ").append(subjectTypeId);
+        sb.append(subjectTypeId);
         sb.append(", ").append(originTypeId);
         sb.append(", ").append(isNewSubject);
         sb.append(", ").append(isNewTeacherMake);

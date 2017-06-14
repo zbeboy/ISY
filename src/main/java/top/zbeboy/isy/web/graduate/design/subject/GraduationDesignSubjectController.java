@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
@@ -592,7 +593,7 @@ public class GraduationDesignSubjectController {
                 GraduationDesignPresubject graduationDesignPresubject;
                 if (!ObjectUtils.isEmpty(record)) {
                     graduationDesignPresubject = record.into(GraduationDesignPresubject.class);
-                    GraduationDesignDeclare graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
+                    GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
                     if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
                         page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
                     } else {
@@ -669,7 +670,7 @@ public class GraduationDesignSubjectController {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
-                if (canEditCondition(graduationDesignPresubject)) {
+                if (!ObjectUtils.isEmpty(graduationDesignPresubject) && canEditCondition(graduationDesignPresubject)) {
                     updatePresubject(graduationDesignPresubjectUpdateVo, graduationDesignPresubject);
                     ajaxUtils.success().msg("保存成功");
                 } else {
@@ -697,7 +698,7 @@ public class GraduationDesignSubjectController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
-            if (updateTitleCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId(), graduationDesignPresubject, graduationDesignPresubjectUpdateVo.getStaffId())) {
+            if (!ObjectUtils.isEmpty(graduationDesignPresubject) && updateTitleCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId(), graduationDesignPresubject, graduationDesignPresubjectUpdateVo.getStaffId())) {
                 updatePresubject(graduationDesignPresubjectUpdateVo, graduationDesignPresubject);
                 ajaxUtils.success().msg("保存成功");
             } else {
@@ -732,7 +733,7 @@ public class GraduationDesignSubjectController {
     private boolean canEditCondition(GraduationDesignPresubject graduationDesignPresubject) {
         boolean canEdit = false;
         Users users = usersService.getUserFromSession();
-        GraduationDesignDeclare graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
+        GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
         if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 Student student = studentService.findByUsername(users.getUsername());
@@ -775,7 +776,7 @@ public class GraduationDesignSubjectController {
             // 是否已确认调整
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                 Users users = usersService.getUserFromSession();
-                GraduationDesignDeclare graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
+                GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
                 // 未确认申报
                 if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
                     // 如果是管理员或系统

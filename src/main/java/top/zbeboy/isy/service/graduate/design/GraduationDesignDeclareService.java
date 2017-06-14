@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.graduate.design;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -19,7 +20,7 @@ public interface GraduationDesignDeclareService {
      * @param graduationDesignPresubjectId 毕业设计学生题目表id
      * @return 申报数据
      */
-    GraduationDesignDeclare findByGraduationDesignPresubjectId(String graduationDesignPresubjectId);
+    GraduationDesignDeclareRecord findByGraduationDesignPresubjectId(String graduationDesignPresubjectId);
 
     /**
      * 分页查询 数据

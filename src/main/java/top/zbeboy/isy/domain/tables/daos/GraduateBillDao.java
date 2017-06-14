@@ -83,9 +83,16 @@ public class GraduateBillDao extends DAOImpl<GraduateBillRecord, top.zbeboy.isy.
     }
 
     /**
-     * Fetch records that have <code>graduation_design_declare_id IN (values)</code>
+     * Fetch records that have <code>graduation_design_presubject_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduateBill> fetchByGraduationDesignDeclareId(String... values) {
-        return fetch(GraduateBill.GRADUATE_BILL.GRADUATION_DESIGN_DECLARE_ID, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduateBill> fetchByGraduationDesignPresubjectId(String... values) {
+        return fetch(GraduateBill.GRADUATE_BILL.GRADUATION_DESIGN_PRESUBJECT_ID, values);
+    }
+
+    /**
+     * Fetch a unique record that has <code>graduation_design_presubject_id = value</code>
+     */
+    public top.zbeboy.isy.domain.tables.pojos.GraduateBill fetchOneByGraduationDesignPresubjectId(String value) {
+        return fetchOne(GraduateBill.GRADUATE_BILL.GRADUATION_DESIGN_PRESUBJECT_ID, value);
     }
 }
