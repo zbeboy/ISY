@@ -9,7 +9,8 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          */
         var ajax_url = {
             update: '/web/graduate/design/subject/declare/edit/title/update',
-            nav: '/web/menu/graduate/design/subject'
+            nav: '/web/menu/graduate/design/subject',
+            back:'/web/graduate/design/subject/declare'
         };
 
         // 刷新时选中菜单
@@ -148,7 +149,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          返回
          */
         $('#page_back').click(function () {
-            window.history.go(-1);
+            $.address.value(ajax_url.back + '?id=' + init_page_param.graduationDesignReleaseId);
         });
 
         /*

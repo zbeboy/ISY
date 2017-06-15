@@ -1,5 +1,5 @@
 /**
- * Created by zbeboy on 2017/6/14.
+ * Created by zbeboy on 2017/6/15.
  */
 require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
     function ($, Handlebars, nav_active) {
@@ -8,7 +8,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
          ajax url.
          */
         var ajax_url = {
-            update: '/web/graduate/design/subject/declare/edit/apply/update',
+            update: '/web/graduate/design/subject/declare/all/update',
             subject_type: '/user/subject/types',
             subject_origin_type: '/user/subject/origin_types',
             declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
@@ -59,8 +59,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         };
 
         /*
-        正则
-        */
+         正则
+         */
         var regex = {
             number_regex:/\d*/
         };
@@ -111,9 +111,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
             initSubjectOriginType();
             initDeclareBasicPeoples();
         }
-
-        var selectedSubjectTypeCount = true;
-        var selectedSubjectOriginTypeCount = true;
 
         /**
          * 初始题目类型数据
@@ -176,25 +173,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         function subjectTypeData(data) {
             var template = Handlebars.compile($("#subject-type-template").html());
             $(paramId.subjectType).html(template(data));
-            // 只在页面初始化加载一次
-            if (selectedSubjectTypeCount) {
-                selectedSubjectType();
-                selectedSubjectTypeCount = false;
-            }
-        }
-
-        /**
-         * 选中题目类型
-         */
-        function selectedSubjectType() {
-            var realSubjectTypeId = $('#subjectTypeId').val();
-            var subjectTypeChildrens = $(paramId.subjectType).children();
-            for (var i = 0; i < subjectTypeChildrens.length; i++) {
-                if ($(subjectTypeChildrens[i]).val() === realSubjectTypeId) {
-                    $(subjectTypeChildrens[i]).prop('selected', true);
-                    break;
-                }
-            }
         }
 
         /**
@@ -204,25 +182,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         function subjectOriginTypeData(data) {
             var template = Handlebars.compile($("#origin-type-template").html());
             $(paramId.originType).html(template(data));
-            // 只在页面初始化加载一次
-            if (selectedSubjectOriginTypeCount) {
-                selectedSubjectOriginType();
-                selectedSubjectOriginTypeCount = false;
-            }
-        }
-
-        /**
-         * 选中课题来源
-         */
-        function selectedSubjectOriginType() {
-            var realSubjectOriginTypeId = $('#originTypeId').val();
-            var subjectOriginTypeChildrens = $(paramId.originType).children();
-            for (var i = 0; i < subjectOriginTypeChildrens.length; i++) {
-                if ($(subjectOriginTypeChildrens[i]).val() === realSubjectOriginTypeId) {
-                    $(subjectOriginTypeChildrens[i]).prop('selected', true);
-                    break;
-                }
-            }
         }
 
         /**

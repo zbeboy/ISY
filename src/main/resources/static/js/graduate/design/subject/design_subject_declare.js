@@ -17,6 +17,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
                 update_title: '/web/graduate/design/subject/declare/edit/title',
                 edit: '/web/graduate/design/subject/declare/edit/apply',
+                ok_apply: '/web/graduate/design/subject/declare/apply/ok',
+                all_settings: '/web/graduate/design/subject/declare/edit/all',
                 back: '/web/menu/graduate/design/subject'
             };
         }
@@ -65,6 +67,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         $('#page_back').click(function () {
             $.address.value(getAjaxUrl().back);
         });
+
+        var pageAop = $('#page-wrapper');
 
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -138,6 +142,38 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                     orderable: false,
                     render: function (a, b, c, d) {
                         return '<input type="checkbox" value="' + c.graduationDesignPresubjectId + '" name="check"/>';
+                    }
+                },
+                {
+                    targets: 4,
+                    render: function (a, b, c, d) {
+                        return c.isNewSubject === 1 ? '是' : '否';
+                    }
+                },
+                {
+                    targets: 5,
+                    render: function (a, b, c, d) {
+                        return c.isNewTeacherMake === 1 ? '是' : '否';
+                    }
+                },
+                {
+                    targets: 6,
+                    render: function (a, b, c, d) {
+                        return c.isNewSubjectMake === 1 ? '是' : '否';
+                    }
+                },
+                {
+                    targets: 7,
+                    render: function (a, b, c, d) {
+                        return c.isOldSubjectChange === 1 ? '是' : '否';
+                    }
+                },
+                {
+                    targets: 19,
+                    render: function (a, b, c, d) {
+                        var successApply = '<span class="text-info">已申报</span>';
+                        var failApply = '<span class="text-danger">未申报</span>';
+                        return c.isOkApply === 1 ? successApply : failApply;
                     }
                 },
                 {
@@ -269,6 +305,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'));
                 });
+
+                tableElement.delegate('.ok_apply', "click", function () {
+                    title_apply($(this).attr('data-id'));
+                });
             }
         });
 
@@ -380,7 +420,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             myTable.ajax.reload();
         });
 
-        $('#refresh').click(function () {
+        pageAop.delegate('#refresh', "click", function () {
             myTable.ajax.reload();
         });
 
@@ -579,15 +619,131 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          编辑页面
          */
         function updateTitle(graduationDesignPresubjectId) {
-            $.address.value(getAjaxUrl().update_title + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId + '&staffId=' + init_page_param.staffId );
+            $.address.value(getAjaxUrl().update_title + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId + '&staffId=' + init_page_param.staffId);
         }
 
         /**
          * 编辑
          * @param graduationDesignPresubjectId
          */
-        function edit(graduationDesignPresubjectId){
-            $.address.value(getAjaxUrl().edit + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId );
+        function edit(graduationDesignPresubjectId) {
+            $.address.value(getAjaxUrl().edit + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId);
+        }
+
+        /**
+         * 申报
+         * @param graduationDesignPresubjectId
+         */
+        function title_apply(graduationDesignPresubjectId) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定申报该题目吗，申报后将不可再编辑?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            apply(graduationDesignPresubjectId);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        function apply(graduationDesignPresubjectId) {
+            sendApplyAjax(graduationDesignPresubjectId);
+        }
+
+        /*
+         批量确认
+         */
+        pageAop.delegate('#all_apply', "click", function () {
+            var graduationDesignPresubjectIds = [];
+            var ids = $('input[name="check"]:checked');
+            for (var i = 0; i < ids.length; i++) {
+                graduationDesignPresubjectIds.push($(ids[i]).val());
+            }
+
+            if (graduationDesignPresubjectIds.length > 0) {
+                var msg;
+                msg = Messenger().post({
+                    message: "确定申报选中的题目吗?",
+                    actions: {
+                        retry: {
+                            label: '确定',
+                            phrase: 'Retrying TIME',
+                            action: function () {
+                                msg.cancel();
+                                applies(graduationDesignPresubjectIds);
+                            }
+                        },
+                        cancel: {
+                            label: '取消',
+                            action: function () {
+                                return msg.cancel();
+                            }
+                        }
+                    }
+                });
+            } else {
+                Messenger().post("未发现有选中的题目!");
+            }
+        });
+
+        function applies(graduationDesignPresubjectIds) {
+            sendApplyAjax(graduationDesignPresubjectIds.join(","));
+        }
+
+        /**
+         * 申报ajax
+         * @param graduationDesignPresubjectId
+         */
+        function sendApplyAjax(graduationDesignPresubjectId) {
+            Messenger().run({
+                successMessage: '确认申报成功',
+                errorMessage: '确认申报失败',
+                progressMessage: '正在确认中....'
+            }, {
+                url: web_path + getAjaxUrl().ok_apply,
+                type: 'post',
+                data: {
+                    graduationDesignPresubjectIds: graduationDesignPresubjectId,
+                    id: init_page_param.graduationDesignReleaseId,
+                    staffId: init_page_param.staffId
+                },
+                success: function (data) {
+                    if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
+        }
+
+        /*
+         统一设置
+         */
+        pageAop.delegate('#all_edit', "click", function () {
+            sendAllSettingsAjax();
+        });
+
+        /**
+         * 统一设置ajax
+         */
+        function sendAllSettingsAjax() {
+            $.address.value(getAjaxUrl().all_settings + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + getParam().staffId);
         }
 
     });

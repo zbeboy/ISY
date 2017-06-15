@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.graduate.design;
 
 import org.jooq.Record;
+import org.jooq.Record1;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
@@ -50,5 +51,21 @@ public interface GraduationDesignDeclareService {
      * @param graduationDesignDeclare 数据
      */
     void saveOrUpdate(GraduationDesignDeclare graduationDesignDeclare);
+
+    /**
+     * 保存 或 更新 状态
+     *
+     * @param graduationDesignDeclare 数据
+     */
+    void saveOrUpdateState(GraduationDesignDeclare graduationDesignDeclare);
+
+    /**
+     * 查询该指导教师下所有未申报的题目id
+     *
+     * @param staffId                   教职工 id
+     * @param graduationDesignReleaseId 发布id
+     * @return 数据
+     */
+    Result<Record1<String>> findByStaffIdRelationNeIsOkApply(int staffId, String graduationDesignReleaseId);
 
 }
