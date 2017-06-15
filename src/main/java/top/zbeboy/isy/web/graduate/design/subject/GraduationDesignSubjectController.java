@@ -476,7 +476,7 @@ public class GraduationDesignSubjectController {
                 GraduationDesignTutorBean graduationDesignTutorBean = graduationDesignTutorRecord.get().into(GraduationDesignTutorBean.class);
                 int staffId = graduationDesignTutorBean.getStaffId();
                 graduationDesignPresubject.setGraduationDesignPresubjectId(graduationDesignPresubjectId);
-                if (editCondition(graduationDesignReleaseId, graduationDesignPresubject, staffId)) {
+                if (updateApplyCondition(graduationDesignReleaseId, graduationDesignPresubject, staffId)) {
                     modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                     modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
                     modelMap.addAttribute("staffId", staffId);
@@ -903,15 +903,8 @@ public class GraduationDesignSubjectController {
                                 Student student = studentRecord.get().into(Student.class);
                                 canEdit = Objects.equals(student.getStudentId(), graduationDesignPresubject.getStudentId());
                             }
-                        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                            Staff staff = staffService.findByUsername(users.getUsername());
-                            if (!ObjectUtils.isEmpty(staff)) {
-                                Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                                if (staffRecord.isPresent()) {
-                                    Staff tempStaff = staffRecord.get().into(Staff.class);
-                                    canEdit = tempStaff.getStaffId() == staffId;
-                                }
-                            }
+                        } else {
+                            canEdit = isCurrentStaff(users, graduationDesignReleaseId, staffId);
                         }
                     }
                 }
@@ -928,7 +921,7 @@ public class GraduationDesignSubjectController {
      * @param staffId                    教职工id
      * @return true or false
      */
-    private boolean editCondition(String graduationDesignReleaseId, GraduationDesignPresubject graduationDesignPresubject, int staffId) {
+    private boolean updateApplyCondition(String graduationDesignReleaseId, GraduationDesignPresubject graduationDesignPresubject, int staffId) {
         boolean canEdit = false;
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
@@ -939,21 +932,31 @@ public class GraduationDesignSubjectController {
                 GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
                 // 未确认申报
                 if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
-                    // 如果是管理员或系统
-                    if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                        canEdit = true;
-                    } else {
-                        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                            Staff staff = staffService.findByUsername(users.getUsername());
-                            if (!ObjectUtils.isEmpty(staff)) {
-                                Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                                if (staffRecord.isPresent()) {
-                                    Staff tempStaff = staffRecord.get().into(Staff.class);
-                                    canEdit = tempStaff.getStaffId() == staffId;
-                                }
-                            }
-                        }
-                    }
+                    // 如果是管理员或系统或教职工
+                    canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignReleaseId, staffId);
+                }
+            }
+        }
+        return canEdit;
+    }
+
+    /**
+     * 判断当前操作用户是否为教职工
+     *
+     * @param users                     当前用户信息
+     * @param graduationDesignReleaseId 发布Id
+     * @param staffId                   教职工id
+     * @return true or false
+     */
+    private boolean isCurrentStaff(Users users, String graduationDesignReleaseId, int staffId) {
+        boolean canEdit = false;
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(staff)) {
+                Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
+                if (staffRecord.isPresent()) {
+                    Staff tempStaff = staffRecord.get().into(Staff.class);
+                    canEdit = tempStaff.getStaffId() == staffId;
                 }
             }
         }
