@@ -743,7 +743,15 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          * 统一设置ajax
          */
         function sendAllSettingsAjax() {
-            $.address.value(getAjaxUrl().all_settings + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + getParam().staffId);
+            if(getParam().staffId > 0){
+                $.address.value(getAjaxUrl().all_settings + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + getParam().staffId);
+            } else {
+                Messenger().post({
+                    message: '请选择指导教师',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
         }
 
     });
