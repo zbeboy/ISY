@@ -396,40 +396,28 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         }
 
         function del(graduationDesignTutorId) {
-            sendDelAjax(graduationDesignTutorId, '删除');
+            sendDelAjax(graduationDesignTutorId);
         }
 
         function dels(graduationDesignTutorIds) {
-            sendDelAjax(graduationDesignTutorIds.join(","), '批量删除');
+            sendDelAjax(graduationDesignTutorIds.join(","));
         }
 
         /**
          * 删除ajax
          * @param graduationDesignTutorId
-         * @param message
          */
-        function sendDelAjax(graduationDesignTutorId, message) {
-            Messenger().run({
-                successMessage: message + '学生成功',
-                errorMessage: message + '学生失败',
-                progressMessage: '正在' + message + '学生....'
-            }, {
-                url: web_path + getAjaxUrl().del,
-                type: 'post',
-                data: {
-                    id: init_page_param.graduationDesignReleaseId,
-                    graduationDesignTutorIds: graduationDesignTutorId
-                },
-                success: function (data) {
-                    if (data.state) {
-                        myTable.ajax.reload();
-                    }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
+        function sendDelAjax(graduationDesignTutorId) {
+            $.post(web_path + getAjaxUrl().del,{id: init_page_param.graduationDesignReleaseId,
+                graduationDesignTutorIds: graduationDesignTutorId},function (data) {
+                if(data.state){
+                    myTable.ajax.reload();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             });
         }

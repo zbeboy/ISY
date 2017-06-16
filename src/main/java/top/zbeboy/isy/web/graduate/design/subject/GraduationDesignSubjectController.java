@@ -315,13 +315,19 @@ public class GraduationDesignSubjectController {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectId);
-            if (canEditCondition(graduationDesignPresubject)) {
-                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
-                modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
-                page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectId);
+                if (canEditCondition(graduationDesignPresubject)) {
+                    modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                    modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
+                    page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "您不符合编辑条件");
+                }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "您不符合编辑条件");
+                page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -637,28 +643,33 @@ public class GraduationDesignSubjectController {
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            Users users = usersService.getUserFromSession();
-            Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-            if (studentRecord.isPresent()) {
-                Student student = studentRecord.get().into(Student.class);
-                GraduationDesignPresubjectRecord record = graduationDesignPresubjectService.findByStudentIdAndGraduationDesignReleaseId(student.getStudentId(), graduationDesignReleaseId);
-                GraduationDesignPresubject graduationDesignPresubject;
-                if (!ObjectUtils.isEmpty(record)) {
-                    graduationDesignPresubject = record.into(GraduationDesignPresubject.class);
-                    GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
-                    if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
-                        page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                Users users = usersService.getUserFromSession();
+                Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                if (studentRecord.isPresent()) {
+                    Student student = studentRecord.get().into(Student.class);
+                    GraduationDesignPresubjectRecord record = graduationDesignPresubjectService.findByStudentIdAndGraduationDesignReleaseId(student.getStudentId(), graduationDesignReleaseId);
+                    GraduationDesignPresubject graduationDesignPresubject;
+                    if (!ObjectUtils.isEmpty(record)) {
+                        graduationDesignPresubject = record.into(GraduationDesignPresubject.class);
+                        GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
+                        if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
+                            page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
+                        } else {
+                            page = commonControllerMethodService.showTip(modelMap, "您的题目已确认申报，无法更改");
+                        }
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "您的题目已确认申报，无法更改");
+                        graduationDesignPresubject = new GraduationDesignPresubject();
+                        page = "web/graduate/design/subject/design_subject_my_add::#page-wrapper";
                     }
+                    modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                    modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
                 } else {
-                    graduationDesignPresubject = new GraduationDesignPresubject();
-                    page = "web/graduate/design/subject/design_subject_my_add::#page-wrapper";
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到您的学生信息");
                 }
-                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
-                modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到您的学生信息");
+                page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -681,22 +692,27 @@ public class GraduationDesignSubjectController {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignPresubjectAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                Users users = usersService.getUserFromSession();
-                Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-                if (studentRecord.isPresent()) {
-                    Student student = studentRecord.get().into(Student.class);
-                    GraduationDesignPresubject graduationDesignPresubject = new GraduationDesignPresubject();
-                    graduationDesignPresubject.setGraduationDesignPresubjectId(UUIDUtils.getUUID());
-                    graduationDesignPresubject.setStudentId(student.getStudentId());
-                    graduationDesignPresubject.setGraduationDesignReleaseId(graduationDesignPresubjectAddVo.getGraduationDesignReleaseId());
-                    graduationDesignPresubject.setPresubjectTitle(graduationDesignPresubjectAddVo.getPresubjectTitle());
-                    graduationDesignPresubject.setPresubjectPlan(graduationDesignPresubjectAddVo.getPresubjectPlan());
-                    graduationDesignPresubject.setPublicLevel(graduationDesignPresubjectAddVo.getPublicLevel());
-                    graduationDesignPresubject.setUpdateTime(DateTimeUtils.getNow());
-                    graduationDesignPresubjectService.save(graduationDesignPresubject);
-                    ajaxUtils.success().msg("保存成功");
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    Users users = usersService.getUserFromSession();
+                    Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                    if (studentRecord.isPresent()) {
+                        Student student = studentRecord.get().into(Student.class);
+                        GraduationDesignPresubject graduationDesignPresubject = new GraduationDesignPresubject();
+                        graduationDesignPresubject.setGraduationDesignPresubjectId(UUIDUtils.getUUID());
+                        graduationDesignPresubject.setStudentId(student.getStudentId());
+                        graduationDesignPresubject.setGraduationDesignReleaseId(graduationDesignPresubjectAddVo.getGraduationDesignReleaseId());
+                        graduationDesignPresubject.setPresubjectTitle(graduationDesignPresubjectAddVo.getPresubjectTitle());
+                        graduationDesignPresubject.setPresubjectPlan(graduationDesignPresubjectAddVo.getPresubjectPlan());
+                        graduationDesignPresubject.setPublicLevel(graduationDesignPresubjectAddVo.getPublicLevel());
+                        graduationDesignPresubject.setUpdateTime(DateTimeUtils.getNow());
+                        graduationDesignPresubjectService.save(graduationDesignPresubject);
+                        ajaxUtils.success().msg("保存成功");
+                    } else {
+                        ajaxUtils.fail().msg("未查询到您的学生信息");
+                    }
                 } else {
-                    ajaxUtils.fail().msg("未查询到您的学生信息");
+                    ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -721,12 +737,18 @@ public class GraduationDesignSubjectController {
         if (!bindingResult.hasErrors()) {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
-                GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
-                if (!ObjectUtils.isEmpty(graduationDesignPresubject) && canEditCondition(graduationDesignPresubject)) {
-                    updatePresubject(graduationDesignPresubjectUpdateVo, graduationDesignPresubject);
-                    ajaxUtils.success().msg("保存成功");
+                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    GraduationDesignPresubject graduationDesignPresubject = graduationDesignPresubjectService.findById(graduationDesignPresubjectUpdateVo.getGraduationDesignPresubjectId());
+                    if (!ObjectUtils.isEmpty(graduationDesignPresubject) && canEditCondition(graduationDesignPresubject)) {
+                        updatePresubject(graduationDesignPresubjectUpdateVo, graduationDesignPresubject);
+                        ajaxUtils.success().msg("保存成功");
+                    } else {
+                        ajaxUtils.fail().msg("您不允许编辑该题目");
+                    }
                 } else {
-                    ajaxUtils.fail().msg("您不允许编辑该题目");
+                    ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -777,40 +799,45 @@ public class GraduationDesignSubjectController {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                // 是否已确认调整
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                    Users users = usersService.getUserFromSession();
-                    GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignDeclareUpdateVo.getGraduationDesignPresubjectId());
-                    // 未确认申报
-                    if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
-                        // 如果是管理员或系统
-                        boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId(), graduationDesignDeclareUpdateVo.getStaffId());
-                        if (canEdit) {
-                            GraduationDesignDeclare tempGraduationDesignDeclare = new GraduationDesignDeclare();
-                            tempGraduationDesignDeclare.setSubjectTypeId(graduationDesignDeclareUpdateVo.getSubjectTypeId());
-                            tempGraduationDesignDeclare.setOriginTypeId(graduationDesignDeclareUpdateVo.getOriginTypeId());
-                            tempGraduationDesignDeclare.setIsNewSubject(graduationDesignDeclareUpdateVo.getIsNewSubject());
-                            tempGraduationDesignDeclare.setIsNewTeacherMake(graduationDesignDeclareUpdateVo.getIsNewTeacherMake());
-                            tempGraduationDesignDeclare.setIsNewSubjectMake(graduationDesignDeclareUpdateVo.getIsNewSubjectMake());
-                            tempGraduationDesignDeclare.setIsOldSubjectChange(graduationDesignDeclareUpdateVo.getIsOldSubjectChange());
-                            tempGraduationDesignDeclare.setOldSubjectUsesTimes(graduationDesignDeclareUpdateVo.getOldSubjectUsesTimes());
-                            tempGraduationDesignDeclare.setPlanPeriod(graduationDesignDeclareUpdateVo.getPlanPeriod());
-                            tempGraduationDesignDeclare.setAssistantTeacher(graduationDesignDeclareUpdateVo.getAssistantTeacher());
-                            tempGraduationDesignDeclare.setAssistantTeacherAcademic(graduationDesignDeclareUpdateVo.getAssistantTeacherAcademic());
-                            tempGraduationDesignDeclare.setGuideTimes(graduationDesignDeclareUpdateVo.getGuideTimes());
-                            tempGraduationDesignDeclare.setGuidePeoples(graduationDesignDeclareUpdateVo.getGuidePeoples());
-                            tempGraduationDesignDeclare.setIsOkApply(graduationDesignDeclareUpdateVo.getIsOkApply());
-                            tempGraduationDesignDeclare.setGraduationDesignPresubjectId(graduationDesignDeclareUpdateVo.getGraduationDesignPresubjectId());
-                            graduationDesignDeclareService.saveOrUpdate(tempGraduationDesignDeclare);
-                            ajaxUtils.success().msg("保存成功");
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    // 是否已确认调整
+                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                        Users users = usersService.getUserFromSession();
+                        GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignDeclareUpdateVo.getGraduationDesignPresubjectId());
+                        // 未确认申报
+                        if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
+                            // 如果是管理员或系统
+                            boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId(), graduationDesignDeclareUpdateVo.getStaffId());
+                            if (canEdit) {
+                                GraduationDesignDeclare tempGraduationDesignDeclare = new GraduationDesignDeclare();
+                                tempGraduationDesignDeclare.setSubjectTypeId(graduationDesignDeclareUpdateVo.getSubjectTypeId());
+                                tempGraduationDesignDeclare.setOriginTypeId(graduationDesignDeclareUpdateVo.getOriginTypeId());
+                                tempGraduationDesignDeclare.setIsNewSubject(graduationDesignDeclareUpdateVo.getIsNewSubject());
+                                tempGraduationDesignDeclare.setIsNewTeacherMake(graduationDesignDeclareUpdateVo.getIsNewTeacherMake());
+                                tempGraduationDesignDeclare.setIsNewSubjectMake(graduationDesignDeclareUpdateVo.getIsNewSubjectMake());
+                                tempGraduationDesignDeclare.setIsOldSubjectChange(graduationDesignDeclareUpdateVo.getIsOldSubjectChange());
+                                tempGraduationDesignDeclare.setOldSubjectUsesTimes(graduationDesignDeclareUpdateVo.getOldSubjectUsesTimes());
+                                tempGraduationDesignDeclare.setPlanPeriod(graduationDesignDeclareUpdateVo.getPlanPeriod());
+                                tempGraduationDesignDeclare.setAssistantTeacher(graduationDesignDeclareUpdateVo.getAssistantTeacher());
+                                tempGraduationDesignDeclare.setAssistantTeacherAcademic(graduationDesignDeclareUpdateVo.getAssistantTeacherAcademic());
+                                tempGraduationDesignDeclare.setGuideTimes(graduationDesignDeclareUpdateVo.getGuideTimes());
+                                tempGraduationDesignDeclare.setGuidePeoples(graduationDesignDeclareUpdateVo.getGuidePeoples());
+                                tempGraduationDesignDeclare.setIsOkApply(graduationDesignDeclareUpdateVo.getIsOkApply());
+                                tempGraduationDesignDeclare.setGraduationDesignPresubjectId(graduationDesignDeclareUpdateVo.getGraduationDesignPresubjectId());
+                                graduationDesignDeclareService.saveOrUpdate(tempGraduationDesignDeclare);
+                                ajaxUtils.success().msg("保存成功");
+                            } else {
+                                ajaxUtils.fail().msg("不符合条件，无法编辑");
+                            }
                         } else {
-                            ajaxUtils.fail().msg("不符合条件，无法编辑");
+                            ajaxUtils.fail().msg("已确认申报，无法编辑");
                         }
                     } else {
-                        ajaxUtils.fail().msg("已确认申报，无法编辑");
+                        ajaxUtils.fail().msg("未确认指导教师调整");
                     }
                 } else {
-                    ajaxUtils.fail().msg("未确认指导教师调整");
+                    ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -838,30 +865,35 @@ public class GraduationDesignSubjectController {
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 是否已确认调整
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                if (StringUtils.hasLength(graduationDesignPresubjectIds)) {
-                    List<String> ids = SmallPropsUtils.StringIdsToStringList(graduationDesignPresubjectIds);
-                    GraduationDesignDeclare tempGraduationDesignDeclare = new GraduationDesignDeclare();
-                    Byte b = 1;
-                    Users users = usersService.getUserFromSession();
-                    // 如果是管理员或系统
-                    boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignReleaseId, staffId);
-                    for (String id : ids) {
-                        GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(id);
-                        // 未确认申报
-                        if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
-                            if (canEdit) {
-                                tempGraduationDesignDeclare.setIsOkApply(b);
-                                tempGraduationDesignDeclare.setGraduationDesignPresubjectId(id);
-                                graduationDesignDeclareService.saveOrUpdateState(tempGraduationDesignDeclare);
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    if (StringUtils.hasLength(graduationDesignPresubjectIds)) {
+                        List<String> ids = SmallPropsUtils.StringIdsToStringList(graduationDesignPresubjectIds);
+                        GraduationDesignDeclare tempGraduationDesignDeclare = new GraduationDesignDeclare();
+                        Byte b = 1;
+                        Users users = usersService.getUserFromSession();
+                        // 如果是管理员或系统
+                        boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignReleaseId, staffId);
+                        for (String id : ids) {
+                            GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(id);
+                            // 未确认申报
+                            if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
+                                if (canEdit) {
+                                    tempGraduationDesignDeclare.setIsOkApply(b);
+                                    tempGraduationDesignDeclare.setGraduationDesignPresubjectId(id);
+                                    graduationDesignDeclareService.saveOrUpdateState(tempGraduationDesignDeclare);
+                                }
                             }
                         }
                     }
+                    ajaxUtils.success().msg("确认成功");
+                } else {
+                    ajaxUtils.fail().msg("未确认指导教师调整");
                 }
-                ajaxUtils.success().msg("确认成功");
             } else {
-                ajaxUtils.fail().msg("未确认指导教师调整");
+                ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -883,30 +915,35 @@ public class GraduationDesignSubjectController {
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 是否已确认调整
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                Result<Record1<String>> records = graduationDesignDeclareService.findByStaffIdRelationNeIsOkApply(staffId, graduationDesignReleaseId);
-                if (records.isNotEmpty()) {
-                    Users users = usersService.getUserFromSession();
-                    // 如果是管理员或系统
-                    boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignReleaseId, staffId);
-                    if (canEdit) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (Record r : records) {
-                            stringBuilder.append(r.get(0).toString()).append(",");
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    Result<Record1<String>> records = graduationDesignDeclareService.findByStaffIdRelationNeIsOkApply(staffId, graduationDesignReleaseId);
+                    if (records.isNotEmpty()) {
+                        Users users = usersService.getUserFromSession();
+                        // 如果是管理员或系统
+                        boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignReleaseId, staffId);
+                        if (canEdit) {
+                            StringBuilder stringBuilder = new StringBuilder();
+                            for (Record r : records) {
+                                stringBuilder.append(r.get(0).toString()).append(",");
+                            }
+                            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                            modelMap.addAttribute("staffId", staffId);
+                            modelMap.addAttribute("graduationDesignPresubjectIds", stringBuilder.substring(0, stringBuilder.lastIndexOf(",")));
+                            page = "web/graduate/design/subject/design_subject_declare_all::#page-wrapper";
+                        } else {
+                            page = commonControllerMethodService.showTip(modelMap, "您不满足条件，无法进入");
                         }
-                        modelMap.addAttribute("graduationDesignReleaseId",graduationDesignReleaseId);
-                        modelMap.addAttribute("staffId",staffId);
-                        modelMap.addAttribute("graduationDesignPresubjectIds", stringBuilder.substring(0, stringBuilder.lastIndexOf(",")));
-                        page = "web/graduate/design/subject/design_subject_declare_all::#page-wrapper";
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "您不满足条件，无法进入");
+                        page = commonControllerMethodService.showTip(modelMap, "未发现未申报的数据");
                     }
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未发现未申报的数据");
+                    page = commonControllerMethodService.showTip(modelMap, "未确认指导教师调整");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未确认指导教师调整");
+                page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -916,7 +953,7 @@ public class GraduationDesignSubjectController {
     }
 
     /**
-     * 统一设计更新
+     * 统一设置更新
      *
      * @param graduationDesignDeclareUpdateVo 数据
      * @param bindingResult                   检验
@@ -930,37 +967,42 @@ public class GraduationDesignSubjectController {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                // 是否已确认调整
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                    Users users = usersService.getUserFromSession();
-                    // 如果是管理员或系统
-                    boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId(), graduationDesignDeclareUpdateVo.getStaffId());
-                    if (canEdit) {
-                        List<String> ids = SmallPropsUtils.StringIdsToStringList(graduationDesignDeclareUpdateVo.getGraduationDesignPresubjectId());
-                        for (String id : ids) {
-                            GraduationDesignDeclare tempGraduationDesignDeclare = new GraduationDesignDeclare();
-                            tempGraduationDesignDeclare.setSubjectTypeId(graduationDesignDeclareUpdateVo.getSubjectTypeId());
-                            tempGraduationDesignDeclare.setOriginTypeId(graduationDesignDeclareUpdateVo.getOriginTypeId());
-                            tempGraduationDesignDeclare.setIsNewSubject(graduationDesignDeclareUpdateVo.getIsNewSubject());
-                            tempGraduationDesignDeclare.setIsNewTeacherMake(graduationDesignDeclareUpdateVo.getIsNewTeacherMake());
-                            tempGraduationDesignDeclare.setIsNewSubjectMake(graduationDesignDeclareUpdateVo.getIsNewSubjectMake());
-                            tempGraduationDesignDeclare.setIsOldSubjectChange(graduationDesignDeclareUpdateVo.getIsOldSubjectChange());
-                            tempGraduationDesignDeclare.setOldSubjectUsesTimes(graduationDesignDeclareUpdateVo.getOldSubjectUsesTimes());
-                            tempGraduationDesignDeclare.setPlanPeriod(graduationDesignDeclareUpdateVo.getPlanPeriod());
-                            tempGraduationDesignDeclare.setAssistantTeacher(graduationDesignDeclareUpdateVo.getAssistantTeacher());
-                            tempGraduationDesignDeclare.setAssistantTeacherAcademic(graduationDesignDeclareUpdateVo.getAssistantTeacherAcademic());
-                            tempGraduationDesignDeclare.setGuideTimes(graduationDesignDeclareUpdateVo.getGuideTimes());
-                            tempGraduationDesignDeclare.setGuidePeoples(graduationDesignDeclareUpdateVo.getGuidePeoples());
-                            tempGraduationDesignDeclare.setIsOkApply(graduationDesignDeclareUpdateVo.getIsOkApply());
-                            tempGraduationDesignDeclare.setGraduationDesignPresubjectId(id);
-                            graduationDesignDeclareService.saveOrUpdate(tempGraduationDesignDeclare);
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    // 是否已确认调整
+                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                        Users users = usersService.getUserFromSession();
+                        // 如果是管理员或系统
+                        boolean canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId(), graduationDesignDeclareUpdateVo.getStaffId());
+                        if (canEdit) {
+                            List<String> ids = SmallPropsUtils.StringIdsToStringList(graduationDesignDeclareUpdateVo.getGraduationDesignPresubjectId());
+                            for (String id : ids) {
+                                GraduationDesignDeclare tempGraduationDesignDeclare = new GraduationDesignDeclare();
+                                tempGraduationDesignDeclare.setSubjectTypeId(graduationDesignDeclareUpdateVo.getSubjectTypeId());
+                                tempGraduationDesignDeclare.setOriginTypeId(graduationDesignDeclareUpdateVo.getOriginTypeId());
+                                tempGraduationDesignDeclare.setIsNewSubject(graduationDesignDeclareUpdateVo.getIsNewSubject());
+                                tempGraduationDesignDeclare.setIsNewTeacherMake(graduationDesignDeclareUpdateVo.getIsNewTeacherMake());
+                                tempGraduationDesignDeclare.setIsNewSubjectMake(graduationDesignDeclareUpdateVo.getIsNewSubjectMake());
+                                tempGraduationDesignDeclare.setIsOldSubjectChange(graduationDesignDeclareUpdateVo.getIsOldSubjectChange());
+                                tempGraduationDesignDeclare.setOldSubjectUsesTimes(graduationDesignDeclareUpdateVo.getOldSubjectUsesTimes());
+                                tempGraduationDesignDeclare.setPlanPeriod(graduationDesignDeclareUpdateVo.getPlanPeriod());
+                                tempGraduationDesignDeclare.setAssistantTeacher(graduationDesignDeclareUpdateVo.getAssistantTeacher());
+                                tempGraduationDesignDeclare.setAssistantTeacherAcademic(graduationDesignDeclareUpdateVo.getAssistantTeacherAcademic());
+                                tempGraduationDesignDeclare.setGuideTimes(graduationDesignDeclareUpdateVo.getGuideTimes());
+                                tempGraduationDesignDeclare.setGuidePeoples(graduationDesignDeclareUpdateVo.getGuidePeoples());
+                                tempGraduationDesignDeclare.setIsOkApply(graduationDesignDeclareUpdateVo.getIsOkApply());
+                                tempGraduationDesignDeclare.setGraduationDesignPresubjectId(id);
+                                graduationDesignDeclareService.saveOrUpdate(tempGraduationDesignDeclare);
+                            }
+                            ajaxUtils.success().msg("保存成功");
+                        } else {
+                            ajaxUtils.fail().msg("不符合条件，无法编辑");
                         }
-                        ajaxUtils.success().msg("保存成功");
                     } else {
-                        ajaxUtils.fail().msg("不符合条件，无法编辑");
+                        ajaxUtils.fail().msg("未确认指导教师调整");
                     }
                 } else {
-                    ajaxUtils.fail().msg("未确认指导教师调整");
+                    ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -1035,24 +1077,27 @@ public class GraduationDesignSubjectController {
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 是否已确认调整
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                Users users = usersService.getUserFromSession();
-                GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
-                // 未确认申报
-                if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
-                    // 如果是管理员或系统
-                    if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                        canEdit = true;
-                    } else {
-                        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                            Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-                            if (studentRecord.isPresent()) {
-                                Student student = studentRecord.get().into(Student.class);
-                                canEdit = Objects.equals(student.getStudentId(), graduationDesignPresubject.getStudentId());
-                            }
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    Users users = usersService.getUserFromSession();
+                    GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
+                    // 未确认申报
+                    if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
+                        // 如果是管理员或系统
+                        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                            canEdit = true;
                         } else {
-                            canEdit = isCurrentStaff(users, graduationDesignReleaseId, staffId);
+                            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                                Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                                if (studentRecord.isPresent()) {
+                                    Student student = studentRecord.get().into(Student.class);
+                                    canEdit = Objects.equals(student.getStudentId(), graduationDesignPresubject.getStudentId());
+                                }
+                            } else {
+                                canEdit = isCurrentStaff(users, graduationDesignReleaseId, staffId);
+                            }
                         }
                     }
                 }
@@ -1074,14 +1119,17 @@ public class GraduationDesignSubjectController {
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 是否已确认调整
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                Users users = usersService.getUserFromSession();
-                GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
-                // 未确认申报
-                if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
-                    // 如果是管理员或系统或教职工
-                    canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignReleaseId, staffId);
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    Users users = usersService.getUserFromSession();
+                    GraduationDesignDeclareRecord graduationDesignDeclare = graduationDesignDeclareService.findByGraduationDesignPresubjectId(graduationDesignPresubject.getGraduationDesignPresubjectId());
+                    // 未确认申报
+                    if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
+                        // 如果是管理员或系统或教职工
+                        canEdit = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) || isCurrentStaff(users, graduationDesignReleaseId, staffId);
+                    }
                 }
             }
         }
@@ -1137,6 +1185,36 @@ public class GraduationDesignSubjectController {
     }
 
     /**
+     * 题目申报操作条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/declare/operator/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils declareOperatorCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    ajaxUtils.success().msg("在条件范围，允许使用");
+                } else {
+                    ajaxUtils.fail().msg("请等待确认调整后查看");
+                }
+            } else {
+                ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入我的题目页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -1155,6 +1233,37 @@ public class GraduationDesignSubjectController {
                 ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
                 ajaxUtils.fail().msg("未查询到您的学生信息");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 我的题目操作条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/my/operator/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myOperatorCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                Users users = usersService.getUserFromSession();
+                Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                if (studentRecord.isPresent()) {
+                    ajaxUtils.success().msg("在条件范围，允许使用");
+                } else {
+                    ajaxUtils.fail().msg("未查询到您的学生信息");
+                }
+            } else {
+                ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());

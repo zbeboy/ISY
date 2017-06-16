@@ -496,16 +496,16 @@ public class GraduationDesignPharmtechController {
                 errorBean.setHasError(true);
                 errorBean.setErrorMsg("该毕业设计已被注销");
             } else {
-                // 是否学生在该毕业设计专业下
-                Users users = usersService.getUserFromSession();
-                Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-                if (studentRecord.isPresent()) {
-                    Student student = studentRecord.get().into(Student.class);
-                    mapData.put("student", student);
-                    // 毕业时间范围
-                    if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                        // 填报时间范围
-                        if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getFillTeacherStartTime(), graduationDesignRelease.getFillTeacherEndTime())) {
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    // 填报时间范围
+                    if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getFillTeacherStartTime(), graduationDesignRelease.getFillTeacherEndTime())) {
+                        // 是否学生在该毕业设计专业下
+                        Users users = usersService.getUserFromSession();
+                        Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
+                        if (studentRecord.isPresent()) {
+                            Student student = studentRecord.get().into(Student.class);
+                            mapData.put("student", student);
                             // 是否已确认
                             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
                                 // 是否已确认调整
@@ -521,15 +521,15 @@ public class GraduationDesignPharmtechController {
                             }
                         } else {
                             errorBean.setHasError(true);
-                            errorBean.setErrorMsg("不在填报时间范围，无法操作");
+                            errorBean.setErrorMsg("您的账号不符合此次毕业设计条件");
                         }
                     } else {
                         errorBean.setHasError(true);
-                        errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
+                        errorBean.setErrorMsg("不在填报时间范围，无法操作");
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("您的账号不符合此次毕业设计条件");
+                    errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
                 }
             }
         } else {

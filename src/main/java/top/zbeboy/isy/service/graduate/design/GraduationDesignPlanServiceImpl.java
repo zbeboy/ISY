@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.GraduationDesignPlanDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan;
-import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -66,7 +65,7 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)
-                .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId)))
+                        .and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId)))
                 .orderBy(GRADUATION_DESIGN_PLAN.ADD_TIME.asc())
                 .fetch();
     }
@@ -80,9 +79,9 @@ public class GraduationDesignPlanServiceImpl implements GraduationDesignPlanServ
                 .join(BUILDING)
                 .on(BUILDING.BUILDING_ID.eq(SCHOOLROOM.BUILDING_ID))
                 .where(GRADUATION_DESIGN_PLAN.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId)
-                .and(GRADUATION_DESIGN_PLAN.ADD_TIME.lessThan(addTime)))
+                        .and(GRADUATION_DESIGN_PLAN.ADD_TIME.lessThan(addTime)))
                 .orderBy(GRADUATION_DESIGN_PLAN.ADD_TIME.desc())
-                .limit(0,1)
+                .limit(0, 1)
                 .fetchOne();
     }
 

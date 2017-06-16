@@ -196,9 +196,9 @@ public class GraduationDesignProjectController {
      * @return 我的规划页面
      */
     @RequestMapping(value = "/web/graduate/design/project/my/list", method = RequestMethod.GET)
-    public String myProjectList(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+    public String myProjects(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = myCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Staff staff = (Staff) errorBean.getMapData().get("staff");
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
@@ -216,18 +216,18 @@ public class GraduationDesignProjectController {
      * @return 我的学生页面
      */
     @RequestMapping(value = "/web/graduate/design/project/my/students", method = RequestMethod.GET)
-    public String students(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+    public String myStudents(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = myCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             Staff staff = (Staff) errorBean.getMapData().get("staff");
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 modelMap.addAttribute("staffId", staff.getStaffId());
+                page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未确认学生填报，无法操作");
+                page = commonControllerMethodService.showTip(modelMap, "未确认指导教师调整，无法操作");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -243,7 +243,7 @@ public class GraduationDesignProjectController {
      */
     @RequestMapping(value = "/web/graduate/design/project/list/teachers", method = RequestMethod.GET)
     @ResponseBody
-    public AjaxUtils<GraduationDesignTeacherBean> listData(@RequestParam("id") String graduationDesignReleaseId) {
+    public AjaxUtils<GraduationDesignTeacherBean> teachers(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = simpleCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
@@ -585,6 +585,25 @@ public class GraduationDesignProjectController {
     }
 
     /**
+     * 进入我的规划页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/project/my/list/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myListCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = myCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("在条件范围，允许使用");
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入我的学生页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -594,7 +613,7 @@ public class GraduationDesignProjectController {
     @ResponseBody
     public AjaxUtils myStudentsCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = myCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             isOkTeacherAdjust(ajaxUtils, errorBean);
         } else {
@@ -670,12 +689,12 @@ public class GraduationDesignProjectController {
     }
 
     /**
-     * 进入入口条件
+     * 我的数据条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return true or false
      */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
+    private ErrorBean<GraduationDesignRelease> myCondition(String graduationDesignReleaseId) {
         ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
         Map<String, Object> mapData = new HashMap<>();
         GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
@@ -708,6 +727,61 @@ public class GraduationDesignProjectController {
                 } else {
                     errorBean.setHasError(true);
                     errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
+                }
+            }
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("未查询到相关毕业设计信息");
+        }
+        errorBean.setMapData(mapData);
+        return errorBean;
+    }
+
+    /**
+     * 进入入口条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
+        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
+        Map<String, Object> mapData = new HashMap<>();
+        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
+        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
+            errorBean.setData(graduationDesignRelease);
+            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("该毕业设计已被注销");
+            } else {
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    // 是否已确认毕业设计指导教师
+                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                        // 是否为该次毕业设计指导教师
+                        Users users = usersService.getUserFromSession();
+                        Staff staff = staffService.findByUsername(users.getUsername());
+                        if (!ObjectUtils.isEmpty(staff)) {
+                            mapData.put("staff", staff);
+                            Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
+                            if (record.isPresent()) {
+                                GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
+                                mapData.put("graduationDesignTeacher", graduationDesignTeacher);
+                                errorBean.setHasError(false);
+                            } else {
+                                errorBean.setHasError(true);
+                                errorBean.setErrorMsg("您不是该毕业设计的指导教师");
+                            }
+                        } else {
+                            errorBean.setHasError(true);
+                            errorBean.setErrorMsg("未查询到相关教职工信息");
+                        }
+                    } else {
+                        errorBean.setHasError(true);
+                        errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
+                    }
+                } else {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("不在毕业时间范围，无法操作");
                 }
             }
         } else {

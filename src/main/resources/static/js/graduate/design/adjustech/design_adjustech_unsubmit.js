@@ -283,6 +283,11 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                     $('#teacherStudentId').val(studentId);
                     $('#teacherModal').modal('show');
                 } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                     $('#teacher_error_msg').removeClass('hidden').addClass('text-danger').text(data.msg);
                 }
             });

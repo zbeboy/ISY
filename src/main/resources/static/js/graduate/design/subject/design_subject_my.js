@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "jquery.address"],
          */
         var ajax_url = {
             edit: '/web/graduate/design/subject/my/edit',
-            my_condition: '/web/graduate/design/subject/my/condition',
+            operator_condition:'/web/graduate/design/subject/my/operator/condition',
             nav: '/web/menu/graduate/design/subject'
         };
 
@@ -51,7 +51,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "jquery.address"],
          */
         $(paramId.edit).click(function () {
             var id = init_page_param.graduationDesignReleaseId;
-            $.post(ajax_url.my_condition, {id: id}, function (data) {
+            $.post(ajax_url.operator_condition, {id: id}, function (data) {
                 if (data.state) {
                     $.address.value(ajax_url.edit + '?id=' + id);
                 } else {

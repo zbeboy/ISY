@@ -19,6 +19,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 edit: '/web/graduate/design/subject/declare/edit/apply',
                 ok_apply: '/web/graduate/design/subject/declare/apply/ok',
                 all_settings: '/web/graduate/design/subject/declare/edit/all',
+                operator_condition: '/web/graduate/design/subject/declare/operator/condition',
                 back: '/web/menu/graduate/design/subject'
             };
         }
@@ -68,7 +69,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             $.address.value(getAjaxUrl().back);
         });
 
-        var pageAop = $('#page-wrapper');
+        var pageAop = $('#dataContent');
 
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -619,7 +620,18 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          编辑页面
          */
         function updateTitle(graduationDesignPresubjectId) {
-            $.address.value(getAjaxUrl().update_title + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId + '&staffId=' + init_page_param.staffId);
+            $.post(getAjaxUrl().operator_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
+                    $.address.value(getAjaxUrl().update_title + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId + '&staffId=' + init_page_param.staffId);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+
         }
 
         /**
@@ -627,7 +639,17 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          * @param graduationDesignPresubjectId
          */
         function edit(graduationDesignPresubjectId) {
-            $.address.value(getAjaxUrl().edit + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId);
+            $.post(getAjaxUrl().operator_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
+                    $.address.value(getAjaxUrl().edit + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         }
 
         /**
@@ -658,7 +680,18 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         }
 
         function apply(graduationDesignPresubjectId) {
-            sendApplyAjax(graduationDesignPresubjectId);
+            $.post(getAjaxUrl().operator_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
+                    sendApplyAjax(graduationDesignPresubjectId);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+
         }
 
         /*
@@ -698,7 +731,18 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         });
 
         function applies(graduationDesignPresubjectIds) {
-            sendApplyAjax(graduationDesignPresubjectIds.join(","));
+            $.post(getAjaxUrl().operator_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
+                    sendApplyAjax(graduationDesignPresubjectIds.join(","));
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+
         }
 
         /**
@@ -736,14 +780,25 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          统一设置
          */
         pageAop.delegate('#all_edit', "click", function () {
-            sendAllSettingsAjax();
+            console.log('hahahah');
+            $.post(getAjaxUrl().operator_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
+                    sendAllSettingsAjax();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         /**
          * 统一设置ajax
          */
         function sendAllSettingsAjax() {
-            if(getParam().staffId > 0){
+            if (getParam().staffId > 0) {
                 $.address.value(getAjaxUrl().all_settings + '?id=' + init_page_param.graduationDesignReleaseId + '&staffId=' + getParam().staffId);
             } else {
                 Messenger().post({

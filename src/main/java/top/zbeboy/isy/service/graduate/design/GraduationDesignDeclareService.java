@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service.graduate.design;
 
-import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare;

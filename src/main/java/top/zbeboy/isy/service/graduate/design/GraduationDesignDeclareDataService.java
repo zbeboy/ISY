@@ -2,8 +2,6 @@ package top.zbeboy.isy.service.graduate.design;
 
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 
-import java.util.List;
-
 /**
  * Created by zbeboy on 2017/5/9.
  */

@@ -190,37 +190,27 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
     });
 
     function del(graduationDesignTutorId, graduationDesignTeacherId) {
-        sendDelAjax(graduationDesignTutorId, graduationDesignTeacherId, '删除');
+        sendDelAjax(graduationDesignTutorId, graduationDesignTeacherId);
     }
 
     /**
      * 删除ajax
      * @param graduationDesignTutorId
      * @param graduationDesignTeacherId
-     * @param message
      */
-    function sendDelAjax(graduationDesignTutorId, graduationDesignTeacherId, message) {
-        Messenger().run({
-            successMessage: message + '学生成功',
-            errorMessage: message + '学生失败',
-            progressMessage: '正在' + message + '学生....'
-        }, {
-            url: web_path + ajax_url.del,
-            type: 'post',
-            data: {
-                id: init_page_param.graduationDesignReleaseId,
-                graduationDesignTutorIds: graduationDesignTutorId
-            },
-            success: function (data) {
-                if (data.state) {
-                    initStudentData(graduationDesignTeacherId);
-                }
-            },
-            error: function (xhr) {
-                if ((xhr != null ? xhr.status : void 0) === 404) {
-                    return "请求失败";
-                }
-                return true;
+    function sendDelAjax(graduationDesignTutorId, graduationDesignTeacherId) {
+        $.post(web_path + ajax_url.del, {
+            id: init_page_param.graduationDesignReleaseId,
+            graduationDesignTutorIds: graduationDesignTutorId
+        }, function (data) {
+            if (data.state) {
+                initStudentData(graduationDesignTeacherId);
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
             }
         });
     }

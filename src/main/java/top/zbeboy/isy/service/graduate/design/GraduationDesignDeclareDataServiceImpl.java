@@ -12,6 +12,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import javax.annotation.Resource;
 
 import static top.zbeboy.isy.domain.Tables.GRADUATION_DESIGN_DECLARE_DATA;
+
 /**
  * Created by zbeboy on 2017/5/9.
  */
@@ -32,7 +33,7 @@ public class GraduationDesignDeclareDataServiceImpl implements GraduationDesignD
 
     @Override
     public GraduationDesignDeclareData findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
-        return graduationDesignDeclareDataDao.fetchOne(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID,graduationDesignReleaseId);
+        return graduationDesignDeclareDataDao.fetchOne(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID, graduationDesignReleaseId);
     }
 
     @Override

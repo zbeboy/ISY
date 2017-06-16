@@ -11,7 +11,6 @@ require(["jquery", "handlebars", "nav_active", "quill", "jquery.address"],
          ajax url.
          */
         var ajax_url = {
-            my_condition: '/web/graduate/design/subject/my/condition',
             nav: '/web/menu/graduate/design/subject'
         };
 
