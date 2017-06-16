@@ -20,9 +20,17 @@ define(["jquery", "sb-admin"], function ($) {
         }
         // end
 
+        // 修复三级菜单用
         var url = window.location;
         var element = $('ul.nav a').filter(function () {
-            return this.href == url || url.href.indexOf(this.href) == 0;
+
+            var subStr = '';
+            if(this.href !== '' && this.href.indexOf('#') !== -1){
+                subStr = this.href.substring(this.href.lastIndexOf('#') + 1);
+            }
+
+            return this.href === url || (subStr === url && subStr !== '');
+
         }).parent().parent().parent();
         var thirdParent = element.parent();
         if (thirdParent.is('ul')) {

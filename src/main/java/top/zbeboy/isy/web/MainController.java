@@ -60,15 +60,6 @@ public class MainController {
         return "index";
     }
 
-    /**
-     * api by spring fox.
-     *
-     * @return api
-     */
-    @RequestMapping("/api")
-    public String api() {
-        return "redirect:swagger-ui.html";
-    }
 
     /**
      * 登录页

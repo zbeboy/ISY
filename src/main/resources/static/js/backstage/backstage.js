@@ -47,7 +47,8 @@ requirejs.config({
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
         "icheck": web_path + "/plugin/icheck/icheck.min",
-        "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min"
+        "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min",
+        "sb-admin":web_path + "/plugin/sb-admin-2/js/sb-admin-2"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -114,6 +115,9 @@ requirejs.config({
         },
         "tablesaw": {
             deps: ["jquery", "css!" + web_path + "/plugin/tablesaw/tablesaw.min"]
+        },
+        "sb-admin": {
+            deps: ["jquery", "metisMenu"]
         }
     }
 });
