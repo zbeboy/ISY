@@ -293,6 +293,133 @@ public class TestExcel {
         cell4.setCellValue("学生姓名");
         cell4.setCellStyle(style4);
 
+        Row row5 = sheet.createRow((short) 4);
+        row5.setHeightInPoints(27);
+
+        Font font5 = wb.createFont();
+        font5.setFontHeightInPoints((short)10);
+        font5.setFontName("宋体");
+
+        CellStyle style5 = wb.createCellStyle();
+        style5.setFont(font5);
+        style5.setAlignment(HorizontalAlignment.CENTER);
+        style5.setVerticalAlignment(VerticalAlignment.CENTER);
+        style5.setWrapText(true);
+
+        Cell cell5 = row5.createCell((short) 0);
+        cell5.setCellValue("1");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 1);
+        cell5.setCellValue("时间超市App——时间商品挑选模块");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 2);
+        cell5.setCellValue("软件型");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 3);
+        cell5.setCellValue("生产");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 4);
+        cell5.setCellValue("是");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 5);
+        cell5.setCellValue("是");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 6);
+        cell5.setCellValue("是");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 7);
+        cell5.setCellValue("是");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 8);
+        cell5.setCellValue("23");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 9);
+        cell5.setCellValue("23");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 10);
+        cell5.setCellValue("阿家酉榀");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 11);
+        cell5.setCellValue("阿家酉榀");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 12);
+        cell5.setCellValue("阿家酉榀");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 13);
+        cell5.setCellValue("阿家酉榀");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 14);
+        cell5.setCellValue("23");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 15);
+        cell5.setCellValue("23");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 16);
+        cell5.setCellValue("2012118505129");
+        cell5.setCellStyle(style5);
+
+        cell5 = row5.createCell((short) 17);
+        cell5.setCellValue("阿家酉榀");
+        cell5.setCellStyle(style5);
+
+        Row row6 = sheet.createRow((short) 5);
+        row6.setHeightInPoints(15);
+
+        Font font6 = wb.createFont();
+        font6.setFontHeightInPoints((short)10);
+        font6.setFontName("宋体");
+
+        CellStyle style6 = wb.createCellStyle();
+        style6.setFont(font6);
+
+        Cell cell6 = row6.createCell((short) 0);
+        cell6.setCellValue("填表说明：");
+        cell6.setCellStyle(style6);
+
+        sheet.addMergedRegion(new CellRangeAddress(
+                5, //first row (0-based)
+                5, //last row  (0-based)
+                0, //first column (0-based)
+                17  //last column  (0-based)
+        ));
+
+        Row row7 = sheet.createRow((short) 6);
+        row7.setHeightInPoints(15);
+
+        Font font7 = wb.createFont();
+        font7.setFontHeightInPoints((short)10);
+        font7.setFontName("宋体");
+
+        CellStyle style7 = wb.createCellStyle();
+        style7.setFont(font7);
+
+        Cell cell7 = row7.createCell((short) 0);
+        cell7.setCellValue("1、由每位教师填写，题目请按主课题、子课题准确填写；");
+        cell7.setCellStyle(style7);
+
+        sheet.addMergedRegion(new CellRangeAddress(
+                6, //first row (0-based)
+                6, //last row  (0-based)
+                0, //first column (0-based)
+                17  //last column  (0-based)
+        ));
+
         // Write the output to a file
         FileOutputStream fileOut = new FileOutputStream("f:/workbook.xls");
         wb.write(fileOut);
