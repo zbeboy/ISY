@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.graduate.design;
 
+import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclare;
@@ -43,6 +44,15 @@ public interface GraduationDesignDeclareService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean);
+
+    /**
+     * 导出
+     *
+     * @param dataTablesUtils             datatables工具类
+     * @param graduationDesignDeclareBean 条件
+     * @return 导出数据
+     */
+    List<GraduationDesignDeclareBean> exportData(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean);
 
     /**
      * 保存 或 更新 根据题目id判断

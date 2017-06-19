@@ -226,6 +226,6 @@ public final class Workbook {
      * @return 时间
      */
     public static String graduationDate() {
-        return DateTime.now().getYear() + "年7月";
+        return DateTime.now().getYear() + "年07月";
     }
 }

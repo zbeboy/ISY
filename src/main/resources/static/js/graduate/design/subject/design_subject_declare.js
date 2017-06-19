@@ -20,6 +20,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 ok_apply: '/web/graduate/design/subject/declare/apply/ok',
                 all_settings: '/web/graduate/design/subject/declare/edit/all',
                 operator_condition: '/web/graduate/design/subject/declare/operator/condition',
+                export_data_url:'/web/graduate/design/subject/declare/data/export',
                 back: '/web/menu/graduate/design/subject'
             };
         }
@@ -808,5 +809,45 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 });
             }
         }
+
+        $('#export_xls').click(function () {
+            initParam();
+            if (getParam().staffId > 0) {
+                var searchParam = JSON.stringify(getParam());
+                var exportFile = {
+                    fileName: $('#export_file_name').val(),
+                    ext: 'xls'
+                };
+                var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
+                window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId;
+            } else {
+                Messenger().post({
+                    message: '请选择指导教师',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            if (getParam().staffId > 0) {
+                var searchParam = JSON.stringify(getParam());
+                var exportFile = {
+                    fileName: $('#export_file_name').val(),
+                    ext: 'xlsx'
+                };
+                var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
+                window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId;
+            } else {
+                Messenger().post({
+                    message: '请选择指导教师',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+
+        });
 
     });

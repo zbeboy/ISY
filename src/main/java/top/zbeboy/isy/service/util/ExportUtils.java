@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.util;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -78,6 +79,17 @@ public class ExportUtils<T> {
      * @param t   对象
      */
     public void createCell(Row row, T t) {
+        // 实现
+    }
+
+    /**
+     * 每行内容
+     *
+     * @param row   列
+     * @param t     对象
+     * @param style 列格式
+     */
+    public void createCell(Row row, T t, CellStyle style) {
         // 实现
     }
 
