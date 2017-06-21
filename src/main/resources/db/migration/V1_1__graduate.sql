@@ -139,15 +139,20 @@ CREATE TABLE graduation_design_declare(
   FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject(graduation_design_presubject_id)
 );
 
+CREATE TABLE graduation_design_datum_type(
+  graduation_design_datum_type_id INT PRIMARY KEY AUTO_INCREMENT,
+  graduation_design_datum_type_name VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE graduation_design_datum(
-  graduation_design_datum_id VARCHAR(64) NOT NULL ,
+  graduation_design_datum_id VARCHAR(64) PRIMARY KEY ,
   version VARCHAR(10) ,
   file_id VARCHAR(64) NOT NULL ,
-  graduation_design_release_id VARCHAR(64) NOT NULL ,
-  username VARCHAR(64) NOT NULL ,
-  FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id),
+  graduation_design_datum_type_id INT NOT NULL ,
+  graduation_design_tutor_id VARCHAR(64) NOT NULL ,
+  FOREIGN KEY (graduation_design_datum_type_id) REFERENCES graduation_design_datum_type(graduation_design_datum_type_id),
   FOREIGN KEY (file_id) REFERENCES files(file_id),
-  FOREIGN KEY (username) REFERENCES users(username)
+  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
 );
 
 CREATE TABLE defense_arrangement(

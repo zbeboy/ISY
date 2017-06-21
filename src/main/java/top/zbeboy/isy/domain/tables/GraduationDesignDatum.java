@@ -14,6 +14,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -34,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDatumRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord> {
 
-    private static final long serialVersionUID = -652593722;
+    private static final long serialVersionUID = -631894185;
 
     /**
      * The reference instance of <code>isy.graduation_design_datum</code>
@@ -65,14 +66,14 @@ public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord
     public final TableField<GraduationDesignDatumRecord, String> FILE_ID = createField("file_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_datum.graduation_design_release_id</code>.
+     * The column <code>isy.graduation_design_datum.graduation_design_datum_type_id</code>.
      */
-    public final TableField<GraduationDesignDatumRecord, String> GRADUATION_DESIGN_RELEASE_ID = createField("graduation_design_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<GraduationDesignDatumRecord, Integer> GRADUATION_DESIGN_DATUM_TYPE_ID = createField("graduation_design_datum_type_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>isy.graduation_design_datum.username</code>.
+     * The column <code>isy.graduation_design_datum.graduation_design_tutor_id</code>.
      */
-    public final TableField<GraduationDesignDatumRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<GraduationDesignDatumRecord, String> GRADUATION_DESIGN_TUTOR_ID = createField("graduation_design_tutor_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_datum</code> table reference
@@ -102,6 +103,22 @@ public class GraduationDesignDatum extends TableImpl<GraduationDesignDatumRecord
     @Override
     public Schema getSchema() {
         return Isy.ISY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UniqueKey<GraduationDesignDatumRecord> getPrimaryKey() {
+        return Keys.KEY_GRADUATION_DESIGN_DATUM_PRIMARY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<UniqueKey<GraduationDesignDatumRecord>> getKeys() {
+        return Arrays.<UniqueKey<GraduationDesignDatumRecord>>asList(Keys.KEY_GRADUATION_DESIGN_DATUM_PRIMARY);
     }
 
     /**

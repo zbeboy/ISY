@@ -337,7 +337,7 @@ public class UsersController {
                 //发送验证邮件
                 if (isyProperties.getMail().isOpen()) {
                     mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
-                    modelMap.put("msg", "验证邮件已发送至您的邮件，请登录邮箱尽快验证！");
+                    modelMap.put("msg", "验证邮件已发送至您邮箱，请登录邮箱进行验证！");
                 } else {
                     modelMap.put("msg", "邮件推送已被管理员关闭，暂时无法验证");
                 }

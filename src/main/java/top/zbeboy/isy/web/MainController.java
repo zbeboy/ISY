@@ -99,7 +99,7 @@ public class MainController {
      */
     @RequestMapping(value = "/register/finish", method = RequestMethod.GET)
     public String registerFinish(ModelMap modelMap) {
-        modelMap.put("msg", "验证邮件已发送至您邮箱，请登录邮箱进行验证。");
+        modelMap.put("msg", "验证邮件已发送至您邮箱，请登录邮箱进行验证！");
         return "msg";
     }
 
