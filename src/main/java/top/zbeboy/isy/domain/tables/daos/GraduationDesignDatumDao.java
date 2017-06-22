@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -94,5 +95,12 @@ public class GraduationDesignDatumDao extends DAOImpl<GraduationDesignDatumRecor
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatum> fetchByGraduationDesignTutorId(String... values) {
         return fetch(GraduationDesignDatum.GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>update_time IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatum> fetchByUpdateTime(Timestamp... values) {
+        return fetch(GraduationDesignDatum.GRADUATION_DESIGN_DATUM.UPDATE_TIME, values);
     }
 }

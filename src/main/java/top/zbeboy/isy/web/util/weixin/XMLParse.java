@@ -6,7 +6,7 @@
 
 // ------------------------------------------------------------------------
 
-package top.zbeboy.isy.weixin;
+package top.zbeboy.isy.web.util.weixin;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

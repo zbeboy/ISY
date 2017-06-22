@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-14.
  */
-define(["jquery", "sb-admin"], function ($) {
+define(["jquery", "nav_active", "sb-admin"], function ($, nav_active) {
         // start 小屏幕修复收缩菜单
         topOffset = 50;
         width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
@@ -20,26 +20,9 @@ define(["jquery", "sb-admin"], function ($) {
         }
         // end
 
-        // 修复三级菜单用
+        // 刷新选中
         var url = window.location.href;
-        var element = $('ul.nav a').filter(function () {
-            url = url.substring(url.lastIndexOf('#') + 1);
-            var subStr = '';
-            if (this.href !== '' && this.href.indexOf('#') !== -1) {
-                subStr = this.href.substring(this.href.lastIndexOf('#') + 1);
-            }
-
-            return this.href === url || (subStr === url && subStr !== '');
-        }).addClass('active').parent().parent().addClass('in').parent();
-        if (element.is('li')) {
-            element.addClass('active');
-        }
-
-        var thirdParent = element.parent();
-        if (thirdParent.is('ul')) {
-            thirdParent.addClass('in');
-            thirdParent.parent().addClass('active');
-        }
+        nav_active(url.substring(url.lastIndexOf('#') + 1));
 
         // 菜单搜索
         /**

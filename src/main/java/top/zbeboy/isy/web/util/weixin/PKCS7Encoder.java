@@ -6,7 +6,7 @@
 
 // ------------------------------------------------------------------------
 
-package top.zbeboy.isy.weixin;
+package top.zbeboy.isy.web.util.weixin;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;

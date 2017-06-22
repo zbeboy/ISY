@@ -1,4 +1,4 @@
-package top.zbeboy.isy.weixin;
+package top.zbeboy.isy.web.util.weixin;
 
 import java.util.ArrayList;
 

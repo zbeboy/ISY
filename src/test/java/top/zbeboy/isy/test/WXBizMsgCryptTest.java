@@ -6,8 +6,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import top.zbeboy.isy.weixin.AesException;
-import top.zbeboy.isy.weixin.WXBizMsgCrypt;
+import top.zbeboy.isy.web.util.weixin.AesException;
+import top.zbeboy.isy.web.util.weixin.WXBizMsgCrypt;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

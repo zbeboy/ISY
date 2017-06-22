@@ -5,6 +5,7 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,13 +25,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDatum implements Serializable {
 
-    private static final long serialVersionUID = 808055643;
+    private static final long serialVersionUID = -342980947;
 
-    private String  graduationDesignDatumId;
-    private String  version;
-    private String  fileId;
-    private Integer graduationDesignDatumTypeId;
-    private String  graduationDesignTutorId;
+    private String    graduationDesignDatumId;
+    private String    version;
+    private String    fileId;
+    private Integer   graduationDesignDatumTypeId;
+    private String    graduationDesignTutorId;
+    private Timestamp updateTime;
 
     public GraduationDesignDatum() {}
 
@@ -40,20 +42,23 @@ public class GraduationDesignDatum implements Serializable {
         this.fileId = value.fileId;
         this.graduationDesignDatumTypeId = value.graduationDesignDatumTypeId;
         this.graduationDesignTutorId = value.graduationDesignTutorId;
+        this.updateTime = value.updateTime;
     }
 
     public GraduationDesignDatum(
-        String  graduationDesignDatumId,
-        String  version,
-        String  fileId,
-        Integer graduationDesignDatumTypeId,
-        String  graduationDesignTutorId
+        String    graduationDesignDatumId,
+        String    version,
+        String    fileId,
+        Integer   graduationDesignDatumTypeId,
+        String    graduationDesignTutorId,
+        Timestamp updateTime
     ) {
         this.graduationDesignDatumId = graduationDesignDatumId;
         this.version = version;
         this.fileId = fileId;
         this.graduationDesignDatumTypeId = graduationDesignDatumTypeId;
         this.graduationDesignTutorId = graduationDesignTutorId;
+        this.updateTime = updateTime;
     }
 
     @NotNull
@@ -104,6 +109,15 @@ public class GraduationDesignDatum implements Serializable {
         this.graduationDesignTutorId = graduationDesignTutorId;
     }
 
+    @NotNull
+    public Timestamp getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignDatum (");
@@ -113,6 +127,7 @@ public class GraduationDesignDatum implements Serializable {
         sb.append(", ").append(fileId);
         sb.append(", ").append(graduationDesignDatumTypeId);
         sb.append(", ").append(graduationDesignTutorId);
+        sb.append(", ").append(updateTime);
 
         sb.append(")");
         return sb.toString();

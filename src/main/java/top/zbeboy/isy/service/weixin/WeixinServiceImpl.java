@@ -12,8 +12,8 @@ import org.xml.sax.SAXException;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.service.util.MD5Utils;
 import top.zbeboy.isy.web.vo.weixin.WeixinVo;
-import top.zbeboy.isy.weixin.AesException;
-import top.zbeboy.isy.weixin.WXBizMsgCrypt;
+import top.zbeboy.isy.web.util.weixin.AesException;
+import top.zbeboy.isy.web.util.weixin.WXBizMsgCrypt;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

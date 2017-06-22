@@ -150,6 +150,7 @@ CREATE TABLE graduation_design_datum(
   file_id VARCHAR(64) NOT NULL ,
   graduation_design_datum_type_id INT NOT NULL ,
   graduation_design_tutor_id VARCHAR(64) NOT NULL ,
+  update_time DATETIME NOT NULL ,
   FOREIGN KEY (graduation_design_datum_type_id) REFERENCES graduation_design_datum_type(graduation_design_datum_type_id),
   FOREIGN KEY (file_id) REFERENCES files(file_id),
   FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)

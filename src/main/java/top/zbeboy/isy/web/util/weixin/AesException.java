@@ -1,4 +1,4 @@
-package top.zbeboy.isy.weixin;
+package top.zbeboy.isy.web.util.weixin;
 
 @SuppressWarnings("serial")
 public class AesException extends Exception {

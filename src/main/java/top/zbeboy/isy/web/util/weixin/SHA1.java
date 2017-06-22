@@ -6,7 +6,7 @@
 
 // ------------------------------------------------------------------------
 
-package top.zbeboy.isy.weixin;
+package top.zbeboy.isy.web.util.weixin;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
