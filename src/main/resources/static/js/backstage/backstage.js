@@ -19,6 +19,7 @@ requirejs.config({
         "com": web_path + "/js/util/com",
         "nav": web_path + "/js/util/nav",
         "nav_active": web_path + "/js/util/nav_active",
+        "files": web_path + "/js/util/files",
         "constants": web_path + "/js/util/constants",
         "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
         "jquery.address": ["https://cdn.bootcss.com/jquery.address/1.6/jquery.address.min",

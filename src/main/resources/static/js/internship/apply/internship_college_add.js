@@ -2,9 +2,9 @@
  * Created by lenovo on 2016/11/25.
  */
 //# sourceURL=internship_college_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", "jquery.address",
+require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "messenger", "jquery.address",
         "bootstrap-select-zh-CN", "bootstrap-daterangepicker", "bootstrap-maxlength", "jquery.showLoading"],
-    function ($, Handlebars, nav_active, moment, D) {
+    function ($, Handlebars, nav_active, moment, D, files) {
         /*
          ajax url.
          */
@@ -286,7 +286,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(transformationFileUnit(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
@@ -316,27 +316,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             var id = $(this).attr('data-file-id');
             window.location.href = web_path + ajax_url.download_file + '?fileId=' + id;
         });
-
-        /**
-         * 转换文件单位
-         *
-         * @param size 文件大小
-         * @return 文件尺寸
-         */
-        function transformationFileUnit(size) {
-            var str = "";
-            if (size < 1024) {
-                str = size + "B";
-            } else if (size >= 1024 && size < 1024 * 1024) {
-                str = (size / 1024) + "KB";
-            } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
-                str = (size / (1024 * 1024)) + "MB";
-            } else {
-                str = (size / (1024 * 1024 * 1024)) + "GB";
-            }
-
-            return str;
-        }
 
         $(paramId.studentName).blur(function () {
             initParam();
@@ -368,7 +347,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(parentalContact)) {
-                if(!isPhone.test(parentalContact)){
+                if (!isPhone.test(parentalContact)) {
                     validErrorDom(validId.parentalContact, errorMsgId.parentalContact, '请填写正确的联系方式');
                 } else {
                     validSuccessDom(validId.parentalContact, errorMsgId.parentalContact);
@@ -424,7 +403,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(internshipCollegeTel)) {
-                if(!isPhone.test(internshipCollegeTel)){
+                if (!isPhone.test(internshipCollegeTel)) {
                     validErrorDom(validId.internshipCollegeTel, errorMsgId.internshipCollegeTel, '请填写正确的联系方式');
                 } else {
                     validSuccessDom(validId.internshipCollegeTel, errorMsgId.internshipCollegeTel);
@@ -507,7 +486,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(parentalContact)) {
-                if(!isPhone.test(parentalContact)){
+                if (!isPhone.test(parentalContact)) {
                     Messenger().post({
                         message: '请正确填写父母联系方式',
                         type: 'error',
@@ -578,7 +557,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "messenger", 
             var regex = /^1[0-9]{10}$/;
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(internshipCollegeTel)) {
-                if(!isPhone.test(internshipCollegeTel)){
+                if (!isPhone.test(internshipCollegeTel)) {
                     Messenger().post({
                         message: '请正确填写实习单位联系人联系方式',
                         type: 'error',

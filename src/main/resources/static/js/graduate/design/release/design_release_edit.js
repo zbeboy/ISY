@@ -1,10 +1,10 @@
 /**
  * Created by lenovo on 2017-05-06.
  */
-//# sourceURL=graduate_design_release_edit.js.js
-require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
+//# sourceURL=graduate_design_release_edit.js
+require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-daterangepicker", "messenger", "jquery.address",
         "bootstrap-datetimepicker-zh-CN", "jquery.fileupload-validate", "bootstrap-maxlength", "jquery.showLoading"],
-    function ($, Handlebars, nav_active, moment) {
+    function ($, Handlebars, nav_active, moment, files) {
 
         /*
          ajax url.
@@ -316,7 +316,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(transformationFileUnit(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
@@ -349,7 +349,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(transformationFileUnit(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
@@ -420,27 +420,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 }
             });
         });
-
-        /**
-         * 转换文件单位
-         *
-         * @param size 文件大小
-         * @return 文件尺寸
-         */
-        function transformationFileUnit(size) {
-            var str = "";
-            if (size < 1024) {
-                str = size + "B";
-            } else if (size >= 1024 && size < 1024 * 1024) {
-                str = (size / 1024) + "KB";
-            } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
-                str = (size / (1024 * 1024)) + "MB";
-            } else {
-                str = (size / (1024 * 1024 * 1024)) + "GB";
-            }
-
-            return str;
-        }
 
         $('#save').click(function () {
             add();
