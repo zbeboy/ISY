@@ -248,6 +248,7 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
             tempGraduationDesignDeclareBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
             tempGraduationDesignDeclareBean.setOrganizeName(r.getValue(ORGANIZE.ORGANIZE_NAME));
             tempGraduationDesignDeclareBean.setPresubjectTitle(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
+            tempGraduationDesignDeclareBean.setPublicLevel(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PUBLIC_LEVEL));
             tempGraduationDesignDeclareBean.setGraduationDesignReleaseId(r.getValue(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID));
             graduationDesignDeclareBeens.add(tempGraduationDesignDeclareBean);
         }

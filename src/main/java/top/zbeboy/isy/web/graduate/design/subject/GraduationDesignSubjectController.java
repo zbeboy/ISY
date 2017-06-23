@@ -332,15 +332,16 @@ public class GraduationDesignSubjectController {
                 GraduationDesignPresubjectBean graduationDesignPresubject = graduationDesignPresubjectRecord.get().into(GraduationDesignPresubjectBean.class);
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 Users users = usersService.getUserFromSession();
-                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                    Student student = studentService.findByUsername(users.getUsername());
-                    if (Objects.equals(graduationDesignPresubject.getStudentId(), student.getStudentId())) {
-                        canLook = true;
-                    }
+                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                    canLook = true;
                 } else {
-                    if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                        canLook = true;
-                    } else {
+                    if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                        Student student = studentService.findByUsername(users.getUsername());
+                        if (Objects.equals(graduationDesignPresubject.getStudentId(), student.getStudentId())) {
+                            canLook = true;
+                        }
+                    }
+                    if (!canLook) {
                         // 仅允许教职工查看
                         if (graduationDesignPresubject.getPublicLevel() == 1) {
                             UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
@@ -357,6 +358,7 @@ public class GraduationDesignSubjectController {
                         }
                     }
                 }
+
                 if (canLook) {
                     graduationDesignPresubject.setUpdateTimeStr(DateTimeUtils.formatDate(graduationDesignPresubject.getUpdateTime()));
                     modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
@@ -506,6 +508,7 @@ public class GraduationDesignSubjectController {
                         modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
                     }
                     modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                    modelMap.addAttribute("endTime", DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
                     page = "web/graduate/design/subject/design_subject_declare::#page-wrapper";
                 } else {
                     page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");

@@ -83,7 +83,7 @@ public class ElasticSyncData {
 
         if (record.isNotEmpty()) {
             List<OrganizeElastic> organizeElastics = record.into(OrganizeElastic.class);
-            organizeElastics.forEach(i -> organizeElasticRepository.save(i));
+            organizeElasticRepository.save(organizeElastics);
         }
     }
 
@@ -96,7 +96,7 @@ public class ElasticSyncData {
 
         if (record.isNotEmpty()) {
             List<SystemLogElastic> systemLogElastics = record.into(SystemLogElastic.class);
-            systemLogElastics.forEach(i -> systemLogElasticRepository.save(i));
+            systemLogElasticRepository.save(systemLogElastics);
         }
     }
 
@@ -109,7 +109,7 @@ public class ElasticSyncData {
 
         if (record.isNotEmpty()) {
             List<SystemMailboxElastic> systemMailboxElastics = record.into(SystemMailboxElastic.class);
-            systemMailboxElastics.forEach(i -> systemMailboxElasticRepository.save(i));
+            systemMailboxElasticRepository.save(systemMailboxElastics);
         }
     }
 
@@ -122,7 +122,7 @@ public class ElasticSyncData {
 
         if (record.isNotEmpty()) {
             List<SystemSmsElastic> systemSmsElastics = record.into(SystemSmsElastic.class);
-            systemSmsElastics.forEach(i -> systemSmsElasticRepository.save(i));
+            systemSmsElasticRepository.save(systemSmsElastics);
         }
     }
 
@@ -168,9 +168,7 @@ public class ElasticSyncData {
             }
             usersElastics.add(usersElastic);
         }
-        usersElastics.forEach(users ->
-                usersElasticRepository.save(users)
-        );
+        usersElasticRepository.save(usersElastics);
     }
 
     @Test
@@ -229,9 +227,7 @@ public class ElasticSyncData {
             }
             studentElastics.add(studentElastic);
         }
-        studentElastics.forEach(users ->
-                studentElasticRepository.save(users)
-        );
+        studentElasticRepository.save(studentElastics);
     }
 
     @Test
@@ -288,8 +284,6 @@ public class ElasticSyncData {
             }
             staffElastics.add(staffElastic);
         }
-        staffElastics.forEach(users ->
-                staffElasticRepository.save(users)
-        );
+        staffElasticRepository.save(staffElastics);
     }
 }

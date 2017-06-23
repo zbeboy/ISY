@@ -1,8 +1,8 @@
 /**
  * Created by zbeboy on 2017/6/7.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh-CN", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap-select-zh-CN", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, constants, nav_active, moment) {
 
         /*
          ajax url
@@ -15,12 +15,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 subject_origin_type: '/user/subject/origin_types',
                 declare_basic: '/web/graduate/design/subject/declare/basic',
                 declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
+                look_url:'/web/graduate/design/subject/list/look',
                 update_title: '/web/graduate/design/subject/declare/edit/title',
                 edit: '/web/graduate/design/subject/declare/edit/apply',
                 ok_apply: '/web/graduate/design/subject/declare/apply/ok',
                 all_settings: '/web/graduate/design/subject/declare/edit/all',
                 operator_condition: '/web/graduate/design/subject/declare/operator/condition',
-                export_data_url:'/web/graduate/design/subject/declare/data/export',
+                export_data_url: '/web/graduate/design/subject/declare/data/export',
                 back: '/web/menu/graduate/design/subject'
             };
         }
@@ -191,28 +192,46 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                             // 未确认申报
                             if (c.isOkApply != 1) {
                                 context =
-                                {
-                                    func: [
-                                        {
-                                            "name": "修改题目",
-                                            "css": "update_title",
-                                            "type": "info",
-                                            "id": c.graduationDesignPresubjectId
-                                        },
-                                        {
-                                            "name": "编辑",
-                                            "css": "edit",
-                                            "type": "primary",
-                                            "id": c.graduationDesignPresubjectId
-                                        },
-                                        {
-                                            "name": "确认申报",
-                                            "css": "ok_apply",
-                                            "type": "warning",
-                                            "id": c.graduationDesignPresubjectId
-                                        }
-                                    ]
-                                };
+                                    {
+                                        func: [
+                                            {
+                                                "name": "查看",
+                                                "css": "look",
+                                                "type": "info",
+                                                "id": c.graduationDesignPresubjectId
+                                            },
+                                            {
+                                                "name": "修改题目",
+                                                "css": "update_title",
+                                                "type": "info",
+                                                "id": c.graduationDesignPresubjectId
+                                            },
+                                            {
+                                                "name": "编辑",
+                                                "css": "edit",
+                                                "type": "primary",
+                                                "id": c.graduationDesignPresubjectId
+                                            },
+                                            {
+                                                "name": "确认申报",
+                                                "css": "ok_apply",
+                                                "type": "warning",
+                                                "id": c.graduationDesignPresubjectId
+                                            }
+                                        ]
+                                    };
+                            } else {
+                                context =
+                                    {
+                                        func: [
+                                            {
+                                                "name": "查看",
+                                                "css": "look",
+                                                "type": "info",
+                                                "id": c.graduationDesignPresubjectId
+                                            }
+                                        ]
+                                    };
                             }
                         } else {
                             // 学生
@@ -221,16 +240,58 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                     // 未确认申报
                                     if (c.isOkApply != 1) {
                                         context =
-                                        {
-                                            func: [
+                                            {
+                                                func: [
+                                                    {
+                                                        "name": "修改题目",
+                                                        "css": "update_title",
+                                                        "type": "info",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    }
+                                                ]
+                                            };
+                                    } else {
+                                        context =
+                                            {
+                                                func: [
+                                                    {
+                                                        "name": "查看",
+                                                        "css": "look",
+                                                        "type": "info",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    }
+                                                ]
+                                            };
+                                    }
+                                } else {
+                                    if (c.publicLevel == 2) {
+                                        // 毕业时间结束后可查看
+                                        if (moment().isAfter(init_page_param.endTime)) {
+                                            context =
                                                 {
-                                                    "name": "修改题目",
-                                                    "css": "update_title",
-                                                    "type": "info",
-                                                    "id": c.graduationDesignPresubjectId
-                                                }
-                                            ]
-                                        };
+                                                    func: [
+                                                        {
+                                                            "name": "查看",
+                                                            "css": "look",
+                                                            "type": "info",
+                                                            "id": c.graduationDesignPresubjectId
+                                                        }
+                                                    ]
+                                                };
+                                        }
+                                    } else if (c.publicLevel == 3) {
+                                        // 随时可查看
+                                        context =
+                                            {
+                                                func: [
+                                                    {
+                                                        "name": "查看",
+                                                        "css": "look",
+                                                        "type": "info",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    }
+                                                ]
+                                            };
                                     }
                                 }
                             } else if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {// 教师
@@ -238,29 +299,59 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                     // 未确认申报
                                     if (c.isOkApply != 1) {
                                         context =
+                                            {
+                                                func: [
+                                                    {
+                                                        "name": "查看",
+                                                        "css": "look",
+                                                        "type": "info",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    },
+                                                    {
+                                                        "name": "修改题目",
+                                                        "css": "update_title",
+                                                        "type": "info",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    },
+                                                    {
+                                                        "name": "编辑",
+                                                        "css": "edit",
+                                                        "type": "primary",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    },
+                                                    {
+                                                        "name": "确认申报",
+                                                        "css": "ok_apply",
+                                                        "type": "warning",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    }
+                                                ]
+                                            };
+                                    } else {
+                                        context =
+                                            {
+                                                func: [
+                                                    {
+                                                        "name": "查看",
+                                                        "css": "look",
+                                                        "type": "info",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    }
+                                                ]
+                                            };
+                                    }
+                                } else {
+                                    context =
                                         {
                                             func: [
                                                 {
-                                                    "name": "修改题目",
-                                                    "css": "update_title",
+                                                    "name": "查看",
+                                                    "css": "look",
                                                     "type": "info",
-                                                    "id": c.graduationDesignPresubjectId
-                                                },
-                                                {
-                                                    "name": "编辑",
-                                                    "css": "edit",
-                                                    "type": "primary",
-                                                    "id": c.graduationDesignPresubjectId
-                                                },
-                                                {
-                                                    "name": "确认申报",
-                                                    "css": "ok_apply",
-                                                    "type": "warning",
                                                     "id": c.graduationDesignPresubjectId
                                                 }
                                             ]
                                         };
-                                    }
                                 }
                             }
                         }
@@ -300,6 +391,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
+                tableElement.delegate('.look', "click", function () {
+                    look($(this).attr('data-id'));
+                });
+
                 tableElement.delegate('.update_title', "click", function () {
                     updateTitle($(this).attr('data-id'));
                 });
@@ -615,6 +710,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          */
         function isNull(param) {
             return param == null ? "" : param;
+        }
+
+        /*
+         查看页面
+         */
+        function look(graduationDesignPresubjectId) {
+            $.address.value(getAjaxUrl().look_url + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignPresubjectId=' + graduationDesignPresubjectId);
         }
 
         /*
