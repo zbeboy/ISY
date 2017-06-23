@@ -44,7 +44,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[1, 'desc']],// 排序
+            "aaSorting": [[4, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().data_url,
                 "dataSrc": "data",
@@ -52,13 +52,15 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     // 添加额外的参数传给服务器
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
+                    d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
                 }
             },
             "columns": [
                 {"data": null},
-                {"data": "schoolId"},
-                {"data": "schoolName"},
-                {"data": "schoolIsDel"},
+                {"data": "originalFileName"},
+                {"data": "graduationDesignDatumTypeName"},
+                {"data": "version"},
+                {"data": "updateTimeStr"},
                 {"data": null}
             ],
             columnDefs: [
@@ -66,72 +68,37 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     targets: 0,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        return '<input type="checkbox" value="' + c.schoolId + '" name="check"/>';
+                        return '<input type="checkbox" value="' + c.graduationDesignDatumId + '" name="check"/>';
                     }
                 },
                 {
-                    targets: 4,
+                    targets: 5,
                     orderable: false,
                     render: function (a, b, c, d) {
 
-                        var context = null;
-
-                        if (c.schoolIsDel == 0 || c.schoolIsDel == null) {
-                            context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    },
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    }
-                                ]
-                            };
-                        } else {
-                            context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    },
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    }
-                                ]
-                            };
-                        }
+                        var context =
+                        {
+                            func: [
+                                {
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.graduationDesignDatumId,
+                                    "fileName": c.originalFileName
+                                },
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.graduationDesignDatumId,
+                                    "fileName": c.originalFileName
+                                }
+                            ]
+                        };
 
                         return template(context);
                     }
-                },
-                {
-                    targets: 3,
-                    render: function (a, b, c, d) {
-                        if (c.schoolIsDel == 0 || c.schoolIsDel == null) {
-                            return "<span class='text-info'>正常</span>";
-                        } else {
-                            return "<span class='text-danger'>已注销</span>";
-                        }
-                    }
                 }
-
             ],
             "language": {
                 "sProcessing": "处理中...",
@@ -162,14 +129,17 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.edit', "click", function () {
+                    edit($(this).attr('data-id'));
+                });
 
+                tableElement.delegate('.del', "click", function () {
+                    proposal_del($(this).attr('data-id'), $(this).attr('data-original-file-name'));
                 });
             }
         });
 
-        var global_button = '<button type="button" id="school_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-            '  <button type="button" id="school_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
-            '  <button type="button" id="school_recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
+        var global_button = '<button type="button" id="proposal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+            '  <button type="button" id="proposal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -178,7 +148,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function getParamId() {
             return {
-                schoolName: '#search_school'
+                originalFileName: '#search_file',
+                graduationDesignDatumTypeName: '#graduation_design_datum_type'
             };
         }
 
@@ -186,7 +157,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          参数
          */
         var param = {
-            schoolName: ''
+            originalFileName: '',
+            graduationDesignDatumTypeName: ''
         };
 
         /*
@@ -200,21 +172,28 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          初始化参数
          */
         function initParam() {
-            param.schoolName = $(getParamId().schoolName).val();
+            param.originalFileName = $(getParamId().originalFileName).val();
+            param.graduationDesignDatumTypeName = $(getParamId().graduationDesignDatumTypeName).val();
         }
 
         /*
          清空参数
          */
         function cleanParam() {
-            $(getParamId().schoolName).val('');
+            $(getParamId().originalFileName).val('');
+            $(getParamId().graduationDesignDatumTypeName).val('');
         }
 
-        $(getParamId().schoolName).keyup(function (event) {
+        $(getParamId().originalFileName).keyup(function (event) {
             if (event.keyCode == 13) {
                 initParam();
                 myTable.ajax.reload();
             }
+        });
+
+        $(getParamId().graduationDesignDatumTypeName).change(function () {
+            initParam();
+            myTable.ajax.reload();
         });
 
         $('#search').click(function () {
@@ -235,31 +214,31 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         /*
          添加页面
          */
-        $('#school_add').click(function () {
-            $.address.value(getAjaxUrl().add);
+        $('#proposal_add').click(function () {
+
         });
 
         /*
-         批量注销
+         批量删除
          */
-        $('#school_dels').click(function () {
-            var schoolIds = [];
+        $('#proposal_dels').click(function () {
+            var graduationDesignDatumIds = [];
             var ids = $('input[name="check"]:checked');
             for (var i = 0; i < ids.length; i++) {
-                schoolIds.push($(ids[i]).val());
+                graduationDesignDatumIds.push($(ids[i]).val());
             }
 
-            if (schoolIds.length > 0) {
+            if (graduationDesignDatumIds.length > 0) {
                 var msg;
                 msg = Messenger().post({
-                    message: "确定注销选中的学校吗?",
+                    message: "确定删除选中的文件吗?",
                     actions: {
                         retry: {
                             label: '确定',
                             phrase: 'Retrying TIME',
                             action: function () {
                                 msg.cancel();
-                                dels(schoolIds);
+                                dels(graduationDesignDatumIds);
                             }
                         },
                         cancel: {
@@ -271,67 +250,32 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     }
                 });
             } else {
-                Messenger().post("未发现有选中的学校!");
+                Messenger().post("未发现有选中的文件!");
             }
         });
 
-        /*
-         批量恢复
-         */
-        $('#school_recoveries').click(function () {
-            var schoolIds = [];
-            var ids = $('input[name="check"]:checked');
-            for (var i = 0; i < ids.length; i++) {
-                schoolIds.push($(ids[i]).val());
-            }
-
-            if (schoolIds.length > 0) {
-                var msg;
-                msg = Messenger().post({
-                    message: "确定恢复选中的学校吗?",
-                    actions: {
-                        retry: {
-                            label: '确定',
-                            phrase: 'Retrying TIME',
-                            action: function () {
-                                msg.cancel();
-                                recoveries(schoolIds);
-                            }
-                        },
-                        cancel: {
-                            label: '取消',
-                            action: function () {
-                                return msg.cancel();
-                            }
-                        }
-                    }
-                });
-            } else {
-                Messenger().post("未发现有选中的学校!");
-            }
-        });
 
         /*
          编辑页面
          */
-        function edit(schoolId) {
-            $.address.value(getAjaxUrl().edit + '?id=' + schoolId);
+        function edit(graduationDesignDatumId) {
+
         }
 
         /*
-         注销
+         删除
          */
-        function school_del(schoolId, schoolName) {
+        function proposal_del(graduationDesignDatumId, originalFileName) {
             var msg;
             msg = Messenger().post({
-                message: "确定注销学校 '" + schoolName + "' 吗?",
+                message: "确定删除文件 '" + originalFileName + "' 吗?",
                 actions: {
                     retry: {
                         label: '确定',
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            del(schoolId);
+                            del(graduationDesignDatumId);
                         }
                     },
                     cancel: {
@@ -344,63 +288,28 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             });
         }
 
-        /*
-         恢复
-         */
-        function school_recovery(schoolId, schoolName) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定恢复学校 '" + schoolName + "' 吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            recovery(schoolId);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
+        function del(graduationDesignDatumId) {
+            sendUpdateDelAjax(graduationDesignDatumId, '删除', 1);
         }
 
-        function del(schoolId) {
-            sendUpdateDelAjax(schoolId, '注销', 1);
-        }
-
-        function recovery(schoolId) {
-            sendUpdateDelAjax(schoolId, '恢复', 0);
-        }
-
-        function dels(schoolIds) {
-            sendUpdateDelAjax(schoolIds.join(","), '批量注销', 1);
-        }
-
-        function recoveries(schoolIds) {
-            sendUpdateDelAjax(schoolIds.join(","), '批量恢复', 0);
+        function dels(graduationDesignDatumIds) {
+            sendUpdateDelAjax(graduationDesignDatumIds.join(","), '批量删除', 1);
         }
 
         /**
          * 注销或恢复ajax
-         * @param schoolId
+         * @param graduationDesignDatumId
          * @param message
-         * @param isDel
          */
-        function sendUpdateDelAjax(schoolId, message, isDel) {
+        function sendUpdateDelAjax(graduationDesignDatumId, message) {
             Messenger().run({
-                successMessage: message + '学校成功',
-                errorMessage: message + '学校失败',
-                progressMessage: '正在' + message + '学校....'
+                successMessage: message + '文件成功',
+                errorMessage: message + '文件失败',
+                progressMessage: '正在' + message + '文件....'
             }, {
                 url: web_path + getAjaxUrl().updateDel,
                 type: 'post',
-                data: {schoolIds: schoolId, isDel: isDel},
+                data: {graduationDesignDatumIds: graduationDesignDatumId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();
