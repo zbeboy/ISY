@@ -1,21 +1,35 @@
 package top.zbeboy.isy.service.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jooq.Record;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.College;
+import top.zbeboy.isy.domain.tables.pojos.Department;
+import top.zbeboy.isy.domain.tables.pojos.School;
+import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.service.data.CollegeService;
+import top.zbeboy.isy.service.data.DepartmentService;
+import top.zbeboy.isy.service.data.SchoolService;
+import top.zbeboy.isy.service.platform.RoleService;
+import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.IPTimeStamp;
 import top.zbeboy.isy.web.bean.file.FileBean;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-01-10.
@@ -23,6 +37,21 @@ import java.util.List;
 @Slf4j
 @Service("uploadService")
 public class UploadServiceImpl implements UploadService {
+
+    @Resource
+    private UsersService usersService;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private SchoolService schoolService;
+
+    @Resource
+    private CollegeService collegeService;
+
+    @Resource
+    private DepartmentService departmentService;
 
     @Override
     public List<FileBean> upload(MultipartHttpServletRequest request, String path, String address) {
@@ -134,5 +163,30 @@ public class UploadServiceImpl implements UploadService {
             log.error(" file is not found exception is {} ", e);
         }
 
+    }
+
+    @Override
+    public String schoolInfoPath(int schoolId, int collegeId, int departmentId) {
+        String path = "temp/";
+        School school = null;
+        College college = null;
+        Department department = null;
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            school = schoolService.findById(schoolId);
+            college = collegeService.findById(collegeId);
+            department = departmentService.findById(departmentId);
+        } else {
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            if (record.isPresent()) {
+                school = record.get().into(School.class);
+                college = record.get().into(College.class);
+                department = record.get().into(Department.class);
+            }
+        }
+        if (!ObjectUtils.isEmpty(school) && !ObjectUtils.isEmpty(college) && !ObjectUtils.isEmpty(department)) {
+            path = school.getSchoolName() + "/" + college.getCollegeName() + "/" + department.getDepartmentName() + "/";
+        }
+        return path;
     }
 }

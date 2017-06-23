@@ -135,7 +135,7 @@ public class GraduationDesignSubjectController {
     @RequestMapping(value = "/web/graduate/design/subject/list", method = RequestMethod.GET)
     public String list(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             Users users = usersService.getUserFromSession();
@@ -193,10 +193,6 @@ public class GraduationDesignSubjectController {
             dataTablesUtils.setData(graduationDesignPresubjectBeens);
             dataTablesUtils.setiTotalRecords(graduationDesignPresubjectService.countAll(otherCondition));
             dataTablesUtils.setiTotalDisplayRecords(graduationDesignPresubjectService.countByCondition(dataTablesUtils, otherCondition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -213,7 +209,7 @@ public class GraduationDesignSubjectController {
         String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");
         DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils = DataTablesUtils.of();
         if (!ObjectUtils.isEmpty(graduationDesignReleaseId)) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 是否已确认调整
@@ -268,7 +264,7 @@ public class GraduationDesignSubjectController {
             int staffId = NumberUtils.toInt(request.getParameter("staffId"));
             if (!ObjectUtils.isEmpty(graduationDesignReleaseId) && staffId > 0) {
                 Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
-                ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+                ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
                 if (!errorBean.isHasError() && staffRecord.isPresent()) {
                     Users users = staffRecord.get().into(Users.class);
                     GraduationDesignRelease graduationDesignRelease = errorBean.getData();
@@ -302,8 +298,9 @@ public class GraduationDesignSubjectController {
                                 if (record.isPresent()) {
                                     DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
                                     GraduationDesignDeclareExport export = new GraduationDesignDeclareExport(graduationDesignDeclareBeens, graduationDesignDeclareData, peoples, year);
-                                    String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
-                                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                                    String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
+                                    String path = Workbook.graduateDesignPath(schoolInfoPath) + fileName + "." + ext;
+                                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.graduateDesignPath(schoolInfoPath), fileName, ext);
                                     uploadService.download(fileName, "/" + path, response, request);
                                 }
                             }
@@ -327,7 +324,7 @@ public class GraduationDesignSubjectController {
     public String look(@RequestParam("id") String graduationDesignReleaseId,
                        @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             boolean canLook = false;
             Optional<Record> graduationDesignPresubjectRecord = graduationDesignPresubjectService.findByIdRelation(graduationDesignPresubjectId);
@@ -388,7 +385,7 @@ public class GraduationDesignSubjectController {
     public String edit(@RequestParam("id") String graduationDesignReleaseId,
                        @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -420,7 +417,7 @@ public class GraduationDesignSubjectController {
     @RequestMapping(value = "/web/graduate/design/subject/my", method = RequestMethod.GET)
     public String my(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             Users users = usersService.getUserFromSession();
@@ -455,7 +452,7 @@ public class GraduationDesignSubjectController {
     @RequestMapping(value = "/web/graduate/design/subject/declare", method = RequestMethod.GET)
     public String declare(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
@@ -596,7 +593,7 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils<GraduationDesignTeacherBean> subjectTeachers(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
@@ -628,7 +625,7 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils declareBasic(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
@@ -654,7 +651,7 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils declareBasicPeoples(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
@@ -715,7 +712,7 @@ public class GraduationDesignSubjectController {
     @RequestMapping(value = "/web/graduate/design/subject/my/edit", method = RequestMethod.GET)
     public String myEdit(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -764,7 +761,7 @@ public class GraduationDesignSubjectController {
     public AjaxUtils mySave(@Valid GraduationDesignPresubjectAddVo graduationDesignPresubjectAddVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignPresubjectAddVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignPresubjectAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 毕业时间范围
@@ -810,7 +807,7 @@ public class GraduationDesignSubjectController {
     public AjaxUtils myUpdate(@Valid GraduationDesignPresubjectUpdateVo graduationDesignPresubjectUpdateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignPresubjectUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 毕业时间范围
@@ -871,7 +868,7 @@ public class GraduationDesignSubjectController {
     public AjaxUtils updateApply(@Valid GraduationDesignDeclareUpdateVo graduationDesignDeclareUpdateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 毕业时间范围
@@ -937,7 +934,7 @@ public class GraduationDesignSubjectController {
     public AjaxUtils okApply(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId,
                              String graduationDesignPresubjectIds) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -987,7 +984,7 @@ public class GraduationDesignSubjectController {
     @RequestMapping(value = "/web/graduate/design/subject/declare/edit/all", method = RequestMethod.GET)
     public String editAll(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -1039,7 +1036,7 @@ public class GraduationDesignSubjectController {
     public AjaxUtils updateAll(@Valid GraduationDesignDeclareUpdateVo graduationDesignDeclareUpdateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignDeclareUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 毕业时间范围
@@ -1149,7 +1146,7 @@ public class GraduationDesignSubjectController {
      */
     private boolean updateTitleCondition(String graduationDesignReleaseId, GraduationDesignPresubject graduationDesignPresubject, int staffId) {
         boolean canEdit = false;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -1191,7 +1188,7 @@ public class GraduationDesignSubjectController {
      */
     private boolean updateApplyCondition(String graduationDesignReleaseId, GraduationDesignPresubject graduationDesignPresubject, int staffId) {
         boolean canEdit = false;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -1244,7 +1241,7 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils declareCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
@@ -1269,7 +1266,7 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils declareOperatorCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -1299,7 +1296,7 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils myCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             Users users = usersService.getUserFromSession();
@@ -1325,7 +1322,7 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils myOperatorCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
@@ -1356,36 +1353,12 @@ public class GraduationDesignSubjectController {
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
-    }
-
-    /**
-     * 进入入口条件
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return true or false
-     */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            errorBean.setData(graduationDesignRelease);
-            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该毕业设计已被注销");
-            } else {
-                errorBean.setHasError(false);
-            }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关毕业设计信息");
-        }
-        return errorBean;
     }
 }

@@ -399,38 +399,10 @@ public class InternshipReleaseController {
                                                      MultipartHttpServletRequest multipartHttpServletRequest) {
         AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
-            School school = null;
-            College college = null;
-            Department department = null;
-            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-                school = schoolService.findById(schoolId);
-                college = collegeService.findById(collegeId);
-                department = departmentService.findById(departmentId);
-            } else {
-                Users users = usersService.getUserFromSession();
-                Optional<Record> record = usersService.findUserSchoolInfo(users);
-                if (record.isPresent()) {
-                    school = record.get().into(School.class);
-                    college = record.get().into(College.class);
-                    department = record.get().into(Department.class);
-                }
-            }
-            if (!ObjectUtils.isEmpty(school)) {
-                if (!ObjectUtils.isEmpty(college)) {
-                    if (!ObjectUtils.isEmpty(department)) {
-                        String path = Workbook.internshipPath(school.getSchoolName(), college.getCollegeName(), department.getDepartmentName());
-                        List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
-                                RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.getRemoteAddr());
-                        data.success().listData(fileBeen).obj(path);
-                    } else {
-                        data.fail().msg("上传失败，未查询到系信息");
-                    }
-                } else {
-                    data.fail().msg("上传失败，未查询到院信息");
-                }
-            } else {
-                data.fail().msg("上传失败，未查询到学校信息");
-            }
+            String path = Workbook.internshipPath(uploadService.schoolInfoPath(schoolId, collegeId, departmentId));
+            List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                    RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.getRemoteAddr());
+            data.success().listData(fileBeen).obj(path);
         } catch (Exception e) {
             log.error("Upload file exception,is {}", e);
         }

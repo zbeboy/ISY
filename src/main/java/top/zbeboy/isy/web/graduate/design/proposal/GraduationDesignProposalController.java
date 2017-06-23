@@ -80,7 +80,7 @@ public class GraduationDesignProposalController {
     @RequestMapping(value = "/web/graduate/design/proposal/affix", method = RequestMethod.GET)
     public String list(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             page = "web/graduate/design/proposal/design_proposal_affix::#page-wrapper";
@@ -105,9 +105,9 @@ public class GraduationDesignProposalController {
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 Users users = usersService.getUserFromSession();
                 Student student = studentService.findByUsername(users.getUsername());
-                ErrorBean<GraduationDesignRelease> errorBean = myCondition(graduationDesignReleaseId, student.getStudentId());
-                if(!errorBean.isHasError()){
-                    GraduationDesignTutor graduationDesignTutor = (GraduationDesignTutor)errorBean.getMapData().get("graduationDesignTutor");
+                ErrorBean<GraduationDesignRelease> errorBean = studentCondition(graduationDesignReleaseId, student.getStudentId());
+                if (!errorBean.isHasError()) {
+                    GraduationDesignTutor graduationDesignTutor = (GraduationDesignTutor) errorBean.getMapData().get("graduationDesignTutor");
                     // 前台数据标题 注：要和前台标题顺序一致，获取order用
                     List<String> headers = new ArrayList<>();
                     headers.add("select");
@@ -145,7 +145,7 @@ public class GraduationDesignProposalController {
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
@@ -155,73 +155,41 @@ public class GraduationDesignProposalController {
     }
 
     /**
-     * 进入入口条件
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return true or false
-     */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            errorBean.setData(graduationDesignRelease);
-            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该毕业设计已被注销");
-            } else {
-                errorBean.setHasError(false);
-            }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关毕业设计信息");
-        }
-        return errorBean;
-    }
-
-    /**
-     * 进入我的资料条件
+     * 进入学生资料条件
      *
      * @param graduationDesignReleaseId 发布
      * @param studentId                 学生id
      * @return true or false
      */
-    private ErrorBean<GraduationDesignRelease> myCondition(String graduationDesignReleaseId, int studentId) {
+    private ErrorBean<GraduationDesignRelease> studentCondition(String graduationDesignReleaseId, int studentId) {
         Map<String, Object> dataMap = new HashMap<>();
-        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            errorBean.setData(graduationDesignRelease);
-            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该毕业设计已被注销");
-            } else {
-                // 毕业时间范围
-                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                    // 是否已确认调整
-                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                        Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(studentId, graduationDesignReleaseId);
-                        if (record.isPresent()) {
-                            GraduationDesignTutor graduationDesignTutor = record.get().into(GraduationDesignTutor.class);
-                            dataMap.put("graduationDesignTutor", graduationDesignTutor);
-                            errorBean.setHasError(false);
-                        } else {
-                            errorBean.setHasError(true);
-                            errorBean.setErrorMsg("未查询到符合该毕业设计条件的学生信息");
-                        }
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(studentId, graduationDesignReleaseId);
+                    if (record.isPresent()) {
+                        GraduationDesignTutor graduationDesignTutor = record.get().into(GraduationDesignTutor.class);
+                        dataMap.put("graduationDesignTutor", graduationDesignTutor);
+                        errorBean.setHasError(false);
                     } else {
                         errorBean.setHasError(true);
-                        errorBean.setErrorMsg("请等待确认调整后查看");
+                        errorBean.setErrorMsg("您不符合该毕业设计条件");
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+                    errorBean.setErrorMsg("请等待确认调整后查看");
                 }
+            } else {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
             }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关毕业设计信息");
+            errorBean.setMapData(dataMap);
         }
-        errorBean.setMapData(dataMap);
+
         return errorBean;
     }
 }

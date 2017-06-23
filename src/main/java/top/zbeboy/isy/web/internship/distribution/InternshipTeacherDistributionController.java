@@ -7,7 +7,6 @@ import org.jooq.Record2;
 import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -124,8 +123,14 @@ public class InternshipTeacherDistributionController {
      */
     @RequestMapping("/web/internship/teacher_distribution/distribution/look")
     public String distributionLook(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page = "web/internship/distribution/internship_distribution_look::#page-wrapper";
-        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        String page;
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            page = "web/internship/distribution/internship_distribution_look::#page-wrapper";
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
         return page;
     }
 
@@ -136,24 +141,15 @@ public class InternshipTeacherDistributionController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId) {
-        ErrorBean<InternshipRelease> errorBean = ErrorBean.of();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if (!ObjectUtils.isEmpty(internshipRelease)) {
-            errorBean.setData(internshipRelease);
-            if (internshipRelease.getInternshipReleaseIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该实习已被注销");
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            InternshipRelease internshipRelease = errorBean.getData();
+            if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
+                errorBean.setHasError(false);
             } else {
-                if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
-                    errorBean.setHasError(false);
-                } else {
-                    errorBean.setHasError(true);
-                    errorBean.setErrorMsg("不在时间范围，无法进入");
-                }
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在时间范围，无法进入");
             }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关实习信息");
         }
         return errorBean;
     }
@@ -168,6 +164,45 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public DataTablesUtils<InternshipTeacherDistributionBean> distributionConditionDatas(HttpServletRequest request) {
         String internshipReleaseId = request.getParameter("internshipReleaseId");
+        DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = DataTablesUtils.of();
+        if (StringUtils.hasLength(internshipReleaseId)) {
+            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+            if (!errorBean.isHasError()) {
+                dataTablesUtils = getData(request, dataTablesUtils, internshipReleaseId);
+            }
+        }
+        return dataTablesUtils;
+    }
+
+    /**
+     * datatables ajax查询数据
+     *
+     * @param request 请求
+     * @return datatables数据
+     */
+    @RequestMapping(value = "/web/internship/teacher_distribution/distribution/look/data", method = RequestMethod.GET)
+    @ResponseBody
+    public DataTablesUtils<InternshipTeacherDistributionBean> lookConditionDatas(HttpServletRequest request) {
+        String internshipReleaseId = request.getParameter("internshipReleaseId");
+        DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = DataTablesUtils.of();
+        if (StringUtils.hasLength(internshipReleaseId)) {
+            ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+            if (!errorBean.isHasError()) {
+                dataTablesUtils = getData(request, dataTablesUtils, internshipReleaseId);
+            }
+        }
+        return dataTablesUtils;
+    }
+
+    /**
+     * 获取数据
+     *
+     * @param request             请求
+     * @param dataTablesUtils     表格工具
+     * @param internshipReleaseId 实习发布id
+     * @return 数据
+     */
+    private DataTablesUtils<InternshipTeacherDistributionBean> getData(HttpServletRequest request, DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, String internshipReleaseId) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("select");
@@ -180,7 +215,7 @@ public class InternshipTeacherDistributionController {
         headers.add("real_name");
         headers.add("username");
         headers.add("operator");
-        DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
+        dataTablesUtils = new DataTablesUtils<>(request, headers);
         List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils, internshipReleaseId);
         dataTablesUtils.setData(internshipTeacherDistributionBeens);
         dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
@@ -597,9 +632,9 @@ public class InternshipTeacherDistributionController {
                 List<String> ids = SmallPropsUtils.StringIdsToStringList(copyInternships);
                 Result<Record2<Integer, Integer>> records = internshipTeacherDistributionService.findInInternshipReleaseIdsDistinctStudentId(ids);
                 Users users = usersService.getUserFromSession();
-                if(records.isNotEmpty()){
+                if (records.isNotEmpty()) {
                     List<InternshipTeacherDistribution> internshipTeacherDistributions = records.into(InternshipTeacherDistribution.class);
-                    internshipTeacherDistributions.forEach(r->{
+                    internshipTeacherDistributions.forEach(r -> {
                         InternshipTeacherDistribution internshipTeacherDistribution =
                                 new InternshipTeacherDistribution(r.getStaffId(), r.getStudentId(), internshipReleaseId, users.getUsername());
                         internshipTeacherDistributionService.save(internshipTeacherDistribution);
@@ -622,8 +657,15 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/internship/teacher_distribution/distribution/delete_not_apply", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils deleteNotApply(@RequestParam("id") String internshipReleaseId) {
-        internshipTeacherDistributionService.deleteNotApply(internshipReleaseId);
-        return AjaxUtils.of().success().msg("删除成功");
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            internshipTeacherDistributionService.deleteNotApply(internshipReleaseId);
+            ajaxUtils.success().msg("删除成功");
+        } else {
+            ajaxUtils.success().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
     }
 
 }

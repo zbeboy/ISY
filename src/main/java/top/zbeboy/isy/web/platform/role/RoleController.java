@@ -289,7 +289,7 @@ public class RoleController {
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             collegeId = roleService.getRoleCollegeId(record);
         }
-        commonControllerMethodService.batchSaveRoleApplication(applicationIds,roleId);
+        roleApplicationService.batchSaveRoleApplication(applicationIds,roleId);
         if (collegeId > 0) {
             CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
             collegeRoleService.save(collegeRole);

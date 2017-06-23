@@ -21,7 +21,6 @@ import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.*;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -87,9 +86,6 @@ public class InternshipJournalController {
 
     @Resource
     private StudentService studentService;
-
-    @Resource
-    private StaffService staffService;
 
     @Resource
     private InternshipCollegeService internshipCollegeService;
@@ -264,10 +260,6 @@ public class InternshipJournalController {
             dataTablesUtils.setData(internshipJournalBeans);
             dataTablesUtils.setiTotalRecords(internshipJournalService.countAll(otherCondition));
             dataTablesUtils.setiTotalDisplayRecords(internshipJournalService.countByCondition(dataTablesUtils, otherCondition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -751,44 +743,34 @@ public class InternshipJournalController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
-        ErrorBean<InternshipRelease> errorBean = ErrorBean.of();
-        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("您的个人信息有误");
-            return errorBean;
-        }
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("您的个人信息有误");
+                return errorBean;
+            }
 
-        Map<String, Object> mapData = new HashMap<>();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if (ObjectUtils.isEmpty(internshipRelease)) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关实习信息");
-            return errorBean;
-        }
-        errorBean.setData(internshipRelease);
-        if (internshipRelease.getInternshipReleaseIsDel() == 1) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("该实习已被注销");
-            return errorBean;
-        }
-        Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-        if (internshipApplyRecord.isPresent()) {
-            InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-            mapData.put("internshipApply", internshipApply);
-            // 状态为 2：已通过；4：基本信息变更申请中；5：基本信息变更填写中；6：单位信息变更申请中；7：单位信息变更填写中 允许进行填写
-            if (internshipApply.getInternshipApplyState() == 2 || internshipApply.getInternshipApplyState() == 4 ||
-                    internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 6 || internshipApply.getInternshipApplyState() == 7) {
-                errorBean.setHasError(false);
-                errorBean.setErrorMsg("允许填写");
+            Map<String, Object> mapData = new HashMap<>();
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                mapData.put("internshipApply", internshipApply);
+                // 状态为 2：已通过；4：基本信息变更申请中；5：基本信息变更填写中；6：单位信息变更申请中；7：单位信息变更填写中 允许进行填写
+                if (internshipApply.getInternshipApplyState() == 2 || internshipApply.getInternshipApplyState() == 4 ||
+                        internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 6 || internshipApply.getInternshipApplyState() == 7) {
+                    errorBean.setHasError(false);
+                    errorBean.setErrorMsg("允许填写");
+                } else {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("检测到您未通过申请，不允许填写");
+                }
             } else {
                 errorBean.setHasError(true);
-                errorBean.setErrorMsg("检测到您未通过申请，不允许填写");
+                errorBean.setErrorMsg("检测到您未申请该实习");
             }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("检测到您未申请该实习");
+            errorBean.setMapData(mapData);
         }
-        errorBean.setMapData(mapData);
         return errorBean;
     }
 }

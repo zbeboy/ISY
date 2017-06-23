@@ -663,28 +663,20 @@ public class GraduationDesignProjectController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> simpleCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
-        Map<String, Object> mapData = new HashMap<>();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            errorBean.setData(graduationDesignRelease);
-            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该毕业设计已被注销");
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Map<String, Object> mapData = new HashMap<>();
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认毕业设计指导教师
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                errorBean.setHasError(false);
             } else {
-                // 是否已确认毕业设计指导教师
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                    errorBean.setHasError(false);
-                } else {
-                    errorBean.setHasError(true);
-                    errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
-                }
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
             }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关毕业设计信息");
+            errorBean.setMapData(mapData);
         }
-        errorBean.setMapData(mapData);
+
         return errorBean;
     }
 
@@ -695,45 +687,12 @@ public class GraduationDesignProjectController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> myCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
-        Map<String, Object> mapData = new HashMap<>();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            errorBean.setData(graduationDesignRelease);
-            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该毕业设计已被注销");
-            } else {
-                // 是否已确认毕业设计指导教师
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                    // 是否为该次毕业设计指导教师
-                    Users users = usersService.getUserFromSession();
-                    Staff staff = staffService.findByUsername(users.getUsername());
-                    if (!ObjectUtils.isEmpty(staff)) {
-                        mapData.put("staff", staff);
-                        Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                        if (record.isPresent()) {
-                            GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
-                            mapData.put("graduationDesignTeacher", graduationDesignTeacher);
-                            errorBean.setHasError(false);
-                        } else {
-                            errorBean.setHasError(true);
-                            errorBean.setErrorMsg("您不是该毕业设计的指导教师");
-                        }
-                    } else {
-                        errorBean.setHasError(true);
-                        errorBean.setErrorMsg("未查询到相关教职工信息");
-                    }
-                } else {
-                    errorBean.setHasError(true);
-                    errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
-                }
-            }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关毕业设计信息");
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Map<String, Object> mapData = new HashMap<>();
+            okCurrentTeacher(errorBean, mapData);
+            errorBean.setMapData(mapData);
         }
-        errorBean.setMapData(mapData);
         return errorBean;
     }
 
@@ -744,51 +703,55 @@ public class GraduationDesignProjectController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
-        Map<String, Object> mapData = new HashMap<>();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            errorBean.setData(graduationDesignRelease);
-            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该毕业设计已被注销");
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Map<String, Object> mapData = new HashMap<>();
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                okCurrentTeacher(errorBean, mapData);
             } else {
-                // 毕业时间范围
-                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                    // 是否已确认毕业设计指导教师
-                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                        // 是否为该次毕业设计指导教师
-                        Users users = usersService.getUserFromSession();
-                        Staff staff = staffService.findByUsername(users.getUsername());
-                        if (!ObjectUtils.isEmpty(staff)) {
-                            mapData.put("staff", staff);
-                            Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                            if (record.isPresent()) {
-                                GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
-                                mapData.put("graduationDesignTeacher", graduationDesignTeacher);
-                                errorBean.setHasError(false);
-                            } else {
-                                errorBean.setHasError(true);
-                                errorBean.setErrorMsg("您不是该毕业设计的指导教师");
-                            }
-                        } else {
-                            errorBean.setHasError(true);
-                            errorBean.setErrorMsg("未查询到相关教职工信息");
-                        }
-                    } else {
-                        errorBean.setHasError(true);
-                        errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
-                    }
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+            }
+            errorBean.setMapData(mapData);
+        }
+        return errorBean;
+    }
+
+    /**
+     * 毕业设计指导教师判断
+     *
+     * @param errorBean 条件
+     * @param mapData   data
+     * @return 条件
+     */
+    private ErrorBean<GraduationDesignRelease> okCurrentTeacher(ErrorBean<GraduationDesignRelease> errorBean, Map<String, Object> mapData) {
+        GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+        // 是否已确认毕业设计指导教师
+        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+            // 是否为该次毕业设计指导教师
+            Users users = usersService.getUserFromSession();
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(staff)) {
+                mapData.put("staff", staff);
+                Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignRelease.getGraduationDesignReleaseId(), staff.getStaffId());
+                if (record.isPresent()) {
+                    GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
+                    mapData.put("graduationDesignTeacher", graduationDesignTeacher);
+                    errorBean.setHasError(false);
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+                    errorBean.setErrorMsg("您不是该毕业设计的指导教师");
                 }
+            } else {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("未查询到相关教职工信息");
             }
         } else {
             errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关毕业设计信息");
+            errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
         }
-        errorBean.setMapData(mapData);
         return errorBean;
     }
 }

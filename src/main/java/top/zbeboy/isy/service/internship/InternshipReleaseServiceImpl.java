@@ -16,6 +16,7 @@ import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -170,6 +171,25 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService {
             count = selectConditionStep.fetchOne();
         }
         return count.value1();
+    }
+
+    @Override
+    public ErrorBean<InternshipRelease> basicCondition(String internshipReleaseId) {
+        ErrorBean<InternshipRelease> errorBean = ErrorBean.of();
+        InternshipRelease internshipRelease = findById(internshipReleaseId);
+        if (!ObjectUtils.isEmpty(internshipRelease)) {
+            errorBean.setData(internshipRelease);
+            if (internshipRelease.getInternshipReleaseIsDel() == 1) {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("该实习已被注销");
+            } else {
+                errorBean.setHasError(false);
+            }
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("未查询到相关实习信息");
+        }
+        return errorBean;
     }
 
     /**

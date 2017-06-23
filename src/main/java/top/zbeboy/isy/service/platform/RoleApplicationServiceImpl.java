@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.RoleApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
+import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.ROLE_APPLICATION;
@@ -68,5 +71,15 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
         return create.selectFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.eq(roleId))
                 .fetch();
+    }
+
+    @Override
+    public void batchSaveRoleApplication(String applicationIds, int roleId) {
+        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
+            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
+            List<RoleApplication> roleApplications = new ArrayList<>();
+            ids.forEach(id -> roleApplications.add(new RoleApplication(roleId, id)));
+            save(roleApplications);
+        }
     }
 }

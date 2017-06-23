@@ -151,7 +151,7 @@ public class SystemRoleController {
         roleService.update(role);
         if (roleId > 0) {
             roleApplicationService.deleteByRoleId(roleId);
-            commonControllerMethodService.batchSaveRoleApplication(applicationIds,roleId);
+            roleApplicationService.batchSaveRoleApplication(applicationIds,roleId);
             return AjaxUtils.of().success().msg("更新成功");
         }
         return AjaxUtils.of().fail().msg("更新失败");

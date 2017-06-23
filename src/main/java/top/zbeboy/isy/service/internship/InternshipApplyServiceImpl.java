@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipApply;
+import top.zbeboy.isy.domain.tables.pojos.InternshipType;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -41,6 +43,24 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
 
     @Resource
     private InternshipReleaseScienceService internshipReleaseScienceService;
+
+    @Resource
+    private InternshipTypeService internshipTypeService;
+
+    @Resource
+    private InternshipCollegeService internshipCollegeService;
+
+    @Resource
+    private InternshipCompanyService internshipCompanyService;
+
+    @Resource
+    private GraduationPracticeCollegeService graduationPracticeCollegeService;
+
+    @Resource
+    private GraduationPracticeCompanyService graduationPracticeCompanyService;
+
+    @Resource
+    private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
     @Autowired
     public InternshipApplyServiceImpl(DSLContext dslContext) {
@@ -92,6 +112,28 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
         create.deleteFrom(INTERNSHIP_APPLY)
                 .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_APPLY.STUDENT_ID.eq(studentId)))
                 .execute();
+    }
+
+    @Override
+    public void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId) {
+        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipTypeId);
+        switch (internshipType.getInternshipTypeName()) {
+            case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                internshipCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.INTERNSHIP_COMPANY_TYPE:
+                internshipCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                graduationPracticeCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                graduationPracticeUnifyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                graduationPracticeCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+        }
     }
 
     @Override

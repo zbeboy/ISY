@@ -15,6 +15,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -127,6 +128,25 @@ public class GraduationDesignReleaseServiceImpl implements GraduationDesignRelea
     @Override
     public void update(GraduationDesignRelease graduationDesignRelease) {
         graduationDesignReleaseDao.update(graduationDesignRelease);
+    }
+
+    @Override
+    public ErrorBean<GraduationDesignRelease> basicCondition(String graduationDesignReleaseId) {
+        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
+        GraduationDesignRelease graduationDesignRelease = findById(graduationDesignReleaseId);
+        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
+            errorBean.setData(graduationDesignRelease);
+            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("该毕业设计已被注销");
+            } else {
+                errorBean.setHasError(false);
+            }
+        } else {
+            errorBean.setHasError(true);
+            errorBean.setErrorMsg("未查询到相关毕业设计信息");
+        }
+        return errorBean;
     }
 
     public int countByCondition(PaginationUtils paginationUtils, GraduationDesignReleaseBean graduationDesignReleaseBean) {

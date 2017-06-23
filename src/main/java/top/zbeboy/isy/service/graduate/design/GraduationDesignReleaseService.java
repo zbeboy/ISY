@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
+import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -80,4 +81,12 @@ public interface GraduationDesignReleaseService {
      * @param graduationDesignRelease 数据
      */
     void update(GraduationDesignRelease graduationDesignRelease);
+
+    /**
+     * 基础条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 条件
+     */
+    ErrorBean<GraduationDesignRelease> basicCondition(String graduationDesignReleaseId);
 }

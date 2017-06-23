@@ -2,7 +2,6 @@ package top.zbeboy.isy.service.common;
 
 import org.springframework.ui.ModelMap;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -25,15 +24,6 @@ public interface CommonControllerMethodService {
      * @return 根据角色返回相应数据
      */
     Map<String, Integer> accessRoleCondition();
-
-    /**
-     * 删除实习相关记录
-     *
-     * @param internshipTypeId    实习类型id
-     * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
-     */
-    void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId);
 
     /**
      * 组装提示信息
@@ -60,12 +50,4 @@ public interface CommonControllerMethodService {
      * @return 是否可操作
      */
     boolean limitCurrentStudent(int studentId);
-
-    /**
-     * 批量保存或更新角色
-     *
-     * @param applicationIds 应用ids
-     * @param roleId         角色id
-     */
-    void batchSaveRoleApplication(String applicationIds, int roleId);
 }

@@ -3,9 +3,6 @@ package top.zbeboy.isy.config;
 import org.joda.time.DateTime;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Application constants.
  * 开发环境配置常量
@@ -189,25 +186,21 @@ public final class Workbook {
     /**
      * 实习文件路径
      *
-     * @param schoolName     学校名
-     * @param collegeName    院名
-     * @param departmentName 系名
+     * @param schoolInfoPath 学校路径
      * @return 路径
      */
-    public static String internshipPath(String schoolName, String collegeName, String departmentName) {
-        return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "internship/";
+    public static String internshipPath(String schoolInfoPath) {
+        return Workbook.FILES_PORTFOLIOS + schoolInfoPath + "internship/";
     }
 
     /**
      * 毕业设计文件路径
      *
-     * @param schoolName     学校名
-     * @param collegeName    院名
-     * @param departmentName 系名
+     * @param schoolInfoPath 学校路径
      * @return 路径
      */
-    public static String graduateDesignPath(String schoolName, String collegeName, String departmentName) {
-        return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "graduate/design/";
+    public static String graduateDesignPath(String schoolInfoPath) {
+        return Workbook.FILES_PORTFOLIOS + schoolInfoPath + "graduate/design/";
     }
 
     /**

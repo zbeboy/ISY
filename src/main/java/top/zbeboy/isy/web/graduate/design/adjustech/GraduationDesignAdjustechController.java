@@ -315,10 +315,6 @@ public class GraduationDesignAdjustechController {
             dataTablesUtils.setData(graduationDesignTutorBeens);
             dataTablesUtils.setiTotalRecords(graduationDesignTutorService.countAllFill(condition));
             dataTablesUtils.setiTotalDisplayRecords(graduationDesignTutorService.countFillByCondition(dataTablesUtils, condition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -351,10 +347,6 @@ public class GraduationDesignAdjustechController {
             dataTablesUtils.setData(studentBeens);
             dataTablesUtils.setiTotalRecords(graduationDesignTutorService.countAllNotFill(condition));
             dataTablesUtils.setiTotalDisplayRecords(graduationDesignTutorService.countNotFillByCondition(dataTablesUtils, condition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -536,37 +528,28 @@ public class GraduationDesignAdjustechController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = ErrorBean.of();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            errorBean.setData(graduationDesignRelease);
-            if (graduationDesignRelease.getGraduationDesignIsDel() == 1) {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("该毕业设计已被注销");
-            } else {
-                // 毕业时间范围
-                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                    // 是否已确认
-                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                        // 是否已确认调整
-                        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                            errorBean.setHasError(true);
-                            errorBean.setErrorMsg("已确认毕业设计指导教师调整，无法进行操作");
-                        } else {
-                            errorBean.setHasError(false);
-                        }
-                    } else {
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                // 是否已确认
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                    // 是否已确认调整
+                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                         errorBean.setHasError(true);
-                        errorBean.setErrorMsg("未确认毕业设计指导教师，无法进行操作");
+                        errorBean.setErrorMsg("已确认毕业设计指导教师调整，无法进行操作");
+                    } else {
+                        errorBean.setHasError(false);
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
+                    errorBean.setErrorMsg("未确认毕业设计指导教师，无法进行操作");
                 }
+            } else {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
             }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关毕业设计信息");
         }
         return errorBean;
     }
