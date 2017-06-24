@@ -20,9 +20,6 @@
         <logger name="io.undertow" level="DEBUG">
             <appender-ref ref="CONSOLE"/>
         </logger>
-        <logger name="io.swagger" level="DEBUG">
-            <appender-ref ref="CONSOLE"/>
-        </logger>
         <logger name="com.alibaba" level="DEBUG">
             <appender-ref ref="CONSOLE"/>
         </logger>
