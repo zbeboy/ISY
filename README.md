@@ -8,7 +8,7 @@
 3.MySQL 5.7 +;  
 4.Maven 3.5.0 +;  
 5.Node 6 +;  
-6.Elasticsearch 2.4.4;  
+6.Elasticsearch 2.4.5;  
 7.Redis last version;  
 # 安装
 1.clone 代码;  
