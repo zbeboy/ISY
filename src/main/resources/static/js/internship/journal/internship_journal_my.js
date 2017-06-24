@@ -17,13 +17,12 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
                 look: '/web/internship/journal/list/look',
                 download: '/web/internship/journal/list/download',
                 downloads: '/web/internship/journal/list/my/downloads',
-                nav: '/web/menu/internship/journal',
                 back: '/web/menu/internship/journal'
             };
         }
 
         // 刷新时选中菜单
-        nav_active(getAjaxUrl().nav);
+        nav_active(getAjaxUrl().back);
 
         /*
          参数id

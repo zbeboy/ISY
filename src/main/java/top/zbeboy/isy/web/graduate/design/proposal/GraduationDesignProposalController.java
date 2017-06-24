@@ -78,7 +78,7 @@ public class GraduationDesignProposalController {
      * @return 页面
      */
     @RequestMapping(value = "/web/graduate/design/proposal/affix", method = RequestMethod.GET)
-    public String list(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+    public String affix(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
@@ -86,6 +86,33 @@ public class GraduationDesignProposalController {
             page = "web/graduate/design/proposal/design_proposal_affix::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 我的资料页面
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/proposal/my", method = RequestMethod.GET)
+    public String my(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Users users = usersService.getUserFromSession();
+            Student student = studentService.findByUsername(users.getUsername());
+            ErrorBean<GraduationDesignRelease> errorBean = studentCondition(graduationDesignReleaseId, student.getStudentId());
+            if (!errorBean.isHasError()) {
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                modelMap.addAttribute("studentId", student.getStudentId());
+                page = "web/graduate/design/proposal/design_proposal_my::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "目前仅提供学生使用");
         }
         return page;
     }
@@ -136,6 +163,31 @@ public class GraduationDesignProposalController {
     }
 
     /**
+     * 我的资料页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/proposal/my/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Users users = usersService.getUserFromSession();
+            Student student = studentService.findByUsername(users.getUsername());
+            ErrorBean<GraduationDesignRelease> errorBean = studentCondition(graduationDesignReleaseId, student.getStudentId());
+            if (!errorBean.isHasError()) {
+                ajaxUtils.success().msg("在条件范围，允许使用");
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("目前仅提供学生使用");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -166,26 +218,20 @@ public class GraduationDesignProposalController {
         ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 毕业时间范围
-            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                // 是否已确认调整
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                    Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(studentId, graduationDesignReleaseId);
-                    if (record.isPresent()) {
-                        GraduationDesignTutor graduationDesignTutor = record.get().into(GraduationDesignTutor.class);
-                        dataMap.put("graduationDesignTutor", graduationDesignTutor);
-                        errorBean.setHasError(false);
-                    } else {
-                        errorBean.setHasError(true);
-                        errorBean.setErrorMsg("您不符合该毕业设计条件");
-                    }
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(studentId, graduationDesignReleaseId);
+                if (record.isPresent()) {
+                    GraduationDesignTutor graduationDesignTutor = record.get().into(GraduationDesignTutor.class);
+                    dataMap.put("graduationDesignTutor", graduationDesignTutor);
+                    errorBean.setHasError(false);
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("请等待确认调整后查看");
+                    errorBean.setErrorMsg("您不符合该毕业设计条件");
                 }
             } else {
                 errorBean.setHasError(true);
-                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+                errorBean.setErrorMsg("请等待确认调整后查看");
             }
             errorBean.setMapData(dataMap);
         }

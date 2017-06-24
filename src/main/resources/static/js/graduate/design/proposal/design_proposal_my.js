@@ -1,17 +1,21 @@
 /**
  * Created by zbeboy on 2017/6/22.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, nav_active) {
 
         /*
          ajax url
          */
         function getAjaxUrl() {
             return {
-                data_url: '/web/graduate/design/proposal/my/data'
+                data_url: '/web/graduate/design/proposal/my/data',
+                back: '/web/menu/graduate/design/proposal'
             };
         }
+
+        // 刷新时选中菜单
+        nav_active(getAjaxUrl().back);
 
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -77,24 +81,23 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.graduationDesignDatumId,
-                                    "fileName": c.originalFileName
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.graduationDesignDatumId,
-                                    "fileName": c.originalFileName
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "删除",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.graduationDesignDatumId,
+                                        "fileName": c.originalFileName
+                                    }, {
+                                        "name": "下载",
+                                        "css": "download",
+                                        "type": "default",
+                                        "id": c.graduationDesignDatumId,
+                                        "fileName": c.originalFileName
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }
@@ -129,7 +132,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.edit', "click", function () {
-                    edit($(this).attr('data-id'));
+                    download($(this).attr('data-id'));
                 });
 
                 tableElement.delegate('.del', "click", function () {
@@ -140,6 +143,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
         var global_button = '<button type="button" id="proposal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
             '  <button type="button" id="proposal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+            '  <button type="button" id="proposal_downloads" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>批量下载</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -212,9 +216,23 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         });
 
         /*
+         返回
+         */
+        $('#page_back').click(function () {
+            $.address.value(getAjaxUrl().back);
+        });
+
+        /*
          添加页面
          */
         $('#proposal_add').click(function () {
+
+        });
+
+        /*
+         下载全部
+         */
+        $('#proposal_downloads').click(function () {
 
         });
 
@@ -256,9 +274,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
 
         /*
-         编辑页面
+         下载
          */
-        function edit(graduationDesignDatumId) {
+        function download(graduationDesignDatumId) {
 
         }
 
@@ -289,11 +307,11 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         function del(graduationDesignDatumId) {
-            sendUpdateDelAjax(graduationDesignDatumId, '删除', 1);
+            sendDelAjax(graduationDesignDatumId, '删除', 1);
         }
 
         function dels(graduationDesignDatumIds) {
-            sendUpdateDelAjax(graduationDesignDatumIds.join(","), '批量删除', 1);
+            sendDelAjax(graduationDesignDatumIds.join(","), '批量删除', 1);
         }
 
         /**
@@ -301,13 +319,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          * @param graduationDesignDatumId
          * @param message
          */
-        function sendUpdateDelAjax(graduationDesignDatumId, message) {
+        function sendDelAjax(graduationDesignDatumId, message) {
             Messenger().run({
                 successMessage: message + '文件成功',
                 errorMessage: message + '文件失败',
                 progressMessage: '正在' + message + '文件....'
             }, {
-                url: web_path + getAjaxUrl().updateDel,
+                url: web_path + getAjaxUrl().del,
                 type: 'post',
                 data: {graduationDesignDatumIds: graduationDesignDatumId},
                 success: function (data) {

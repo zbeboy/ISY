@@ -69,6 +69,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .ignoringAntMatchers("/remind/**")
                 .and()
+                .headers()
+                // allow same origin to frame our site to support iframe SockJS
+                .frameOptions().sameOrigin()
+                .and()
                 .authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**", "/plugin/**", "/files/**", "/webjars/**", "/webjarsjs/**").permitAll()
                 .and().formLogin().loginPage("/login")
                 .successHandler(ajaxAuthenticationSuccessHandler)
