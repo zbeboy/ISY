@@ -76,6 +76,53 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <!-- 添加Modal -->
+        <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="uploadModalLabel">添加</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" id="add_form">
+                            <div class="form-group" id="valid_datum_type">
+                                <select class="form-control" name="graduationDesignDatumTypeId" id="select_datum_type">
+                                    <option>文件类型</option>
+                                </select>
+                                <p class="text-danger hidden" id="datum_type_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_version">
+                                <label>版本</label>
+                                <input class="form-control" name="version" id="version" placeholder="版本"
+                                       maxlength="100"/>
+                                <p class="text-danger hidden" id="version_error_msg"></p>
+                            </div>
+                            <div class="form-group text-center">
+                                <div id="addFile" class="row">
+                                    <div class="col-md-6"><span>文件：</span><span id="fileName"></span></div>
+                                    <div class="col-md-6"><span>大小：</span><span id="fileSize"></span></div>
+                                </div>
+                                <p>
+                                <span class="btn btn-success fileinput-button">
+                                    <span>添加附件</span>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="fileupload" type="file" name="files[]"/>
+                                </span>
+                                </p>
+                            </div>
+                            <small class="text-warning">注意:支持文件后缀类型 doc,docx,xls,xlsx,ppt,pptx, 文件最大100MB</small>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="confirmUpload">确定上传</button>
+                        <button type="button" class="btn btn-default" id="cancelUpload">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--定义操作列按钮模板-->
         <script id="operator_button" type="text/x-handlebars-template">
             {{#each func}}
@@ -93,7 +140,7 @@
             /*页面参数*/
             var init_page_param = {
                 'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ '',
-                'studentId':/*[[${studentId}]]*/ 0
+                'studentId': /*[[${studentId}]]*/ 0
             };
         </script>
         <input type="hidden" class="dy_script" value="/js/graduate/design/proposal/design_proposal_my.js"/>

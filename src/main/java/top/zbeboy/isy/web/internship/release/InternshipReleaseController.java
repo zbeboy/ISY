@@ -21,14 +21,10 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.CollegeService;
-import top.zbeboy.isy.service.data.DepartmentService;
-import top.zbeboy.isy.service.data.SchoolService;
 import top.zbeboy.isy.service.internship.InternshipFileService;
 import top.zbeboy.isy.service.internship.InternshipReleaseScienceService;
 import top.zbeboy.isy.service.internship.InternshipReleaseService;
 import top.zbeboy.isy.service.internship.InternshipTypeService;
-import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.FilesUtils;
@@ -78,22 +74,10 @@ public class InternshipReleaseController {
     private UploadService uploadService;
 
     @Resource
-    private SchoolService schoolService;
-
-    @Resource
-    private CollegeService collegeService;
-
-    @Resource
-    private DepartmentService departmentService;
-
-    @Resource
     private FilesService filesService;
 
     @Resource
     private InternshipFileService internshipFileService;
-
-    @Resource
-    private RoleService roleService;
 
     /**
      * 实习发布数据

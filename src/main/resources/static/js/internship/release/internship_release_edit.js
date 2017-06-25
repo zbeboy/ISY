@@ -277,6 +277,21 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                     progress + '%'
                 );
             }
+        }).on('fileuploadadd', function(evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function(data) {
+                isOk = false;
+                Messenger().post({
+                    message: 'Upload error: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
         });
 
         /**

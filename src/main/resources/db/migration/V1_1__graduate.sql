@@ -153,7 +153,8 @@ CREATE TABLE graduation_design_datum(
   update_time DATETIME NOT NULL ,
   FOREIGN KEY (graduation_design_datum_type_id) REFERENCES graduation_design_datum_type(graduation_design_datum_type_id),
   FOREIGN KEY (file_id) REFERENCES files(file_id),
-  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
+  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id),
+  UNIQUE (graduation_design_datum_type_id,graduation_design_tutor_id)
 );
 
 CREATE TABLE defense_arrangement(
@@ -232,3 +233,7 @@ INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('生
 INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('科研');
 INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('教学');
 INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('其他');
+
+INSERT INTO graduation_design_datum_type(graduation_design_datum_type_name) VALUES ('任务书');
+INSERT INTO graduation_design_datum_type(graduation_design_datum_type_name) VALUES ('开题报告');
+INSERT INTO graduation_design_datum_type(graduation_design_datum_type_name) VALUES ('PPT');

@@ -49,7 +49,7 @@ requirejs.config({
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
         "icheck": web_path + "/plugin/icheck/icheck.min",
         "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min",
-        "sb-admin":web_path + "/plugin/sb-admin-2/js/sb-admin-2.min"
+        "sb-admin": web_path + "/plugin/sb-admin-2/js/sb-admin-2.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -93,8 +93,11 @@ requirejs.config({
         "jquery.fileupload": {
             deps: ["jquery-ui/widget", "jquery.iframe-transport"]
         },
+        "jquery.fileupload-process": {
+            deps: ["jquery.fileupload"]
+        },
         "jquery.fileupload-validate": {
-            deps: ["jquery.fileupload", "jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload.min"]
+            deps: ["jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload.min"]
         },
         "jquery.simple-pagination": {
             deps: ["jquery"]

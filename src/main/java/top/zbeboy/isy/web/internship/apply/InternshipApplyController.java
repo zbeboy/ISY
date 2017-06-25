@@ -1292,7 +1292,7 @@ public class InternshipApplyController {
      */
     @RequestMapping("/web/internship/apply/upload")
     @ResponseBody
-    public AjaxUtils<FileBean> usersUpload(@RequestParam("internshipReleaseId") String internshipReleaseId, MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
+    public AjaxUtils<FileBean> applyUpload(@RequestParam("internshipReleaseId") String internshipReleaseId, MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
         AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
             Users users = usersService.getUserFromSession();
@@ -1309,27 +1309,26 @@ public class InternshipApplyController {
                             RequestUtils.getRealPath(request) + path, request.getRemoteAddr());
                     fileBeen.forEach(fileBean -> {
                         String fileId = UUIDUtils.getUUID();
-                        InternshipApply internshipApply = null;
-                        internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                        InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                         if (StringUtils.hasLength(internshipApply.getInternshipFileId())) {
                             Files oldFile = filesService.findById(internshipApply.getInternshipFileId());
                             try {
                                 FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());
+                                Files files = new Files();
+                                files.setFileId(fileId);
+                                files.setExt(fileBean.getExt());
+                                files.setNewName(fileBean.getNewName());
+                                files.setOriginalFileName(fileBean.getOriginalFileName());
+                                files.setSize(String.valueOf(fileBean.getSize()));
+                                files.setRelativePath(path + fileBean.getNewName());
+                                filesService.save(files);
+                                internshipApply.setInternshipFileId(fileId);
+                                internshipApplyService.update(internshipApply);
+                                filesService.deleteById(oldFile.getFileId());
                             } catch (IOException e) {
                                 log.error("Delete file error, error is {}", e);
                             }
                         }
-                        Files files = new Files();
-                        files.setFileId(fileId);
-                        files.setExt(fileBean.getExt());
-                        files.setNewName(fileBean.getNewName());
-                        files.setOriginalFileName(fileBean.getOriginalFileName());
-                        files.setSize(String.valueOf(fileBean.getSize()));
-                        files.setRelativePath(path + fileBean.getNewName());
-                        filesService.save(files);
-                        internshipApply.setInternshipFileId(fileId);
-                        internshipApplyService.update(internshipApply);
-
                     });
                 }
                 data.success().msg("保存成功");

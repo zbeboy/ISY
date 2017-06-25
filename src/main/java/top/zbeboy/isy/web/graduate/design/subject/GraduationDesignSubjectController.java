@@ -678,7 +678,7 @@ public class GraduationDesignSubjectController {
      *
      * @return 数据
      */
-    @RequestMapping(value = "/user/subject/types", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/graduate/design/subject/types", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignSubjectType> subjectTypes() {
         AjaxUtils<GraduationDesignSubjectType> ajaxUtils = AjaxUtils.of();
@@ -694,7 +694,7 @@ public class GraduationDesignSubjectController {
      *
      * @return 数据
      */
-    @RequestMapping(value = "/user/subject/origin_types", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/graduate/design/subject/origin_types", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignSubjectOriginType> subjectOriginTypes() {
         AjaxUtils<GraduationDesignSubjectOriginType> ajaxUtils = AjaxUtils.of();

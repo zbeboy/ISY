@@ -818,6 +818,21 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 initMyData();// 刷新我的申请
                 closeUploadModal();// 清空信息
             }
+        }).on('fileuploadsubmit', function(evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function(data) {
+                isOk = false;
+                Messenger().post({
+                    message: 'Upload error: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
         });
 
         function validUpload() {

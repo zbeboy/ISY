@@ -6,30 +6,40 @@ import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
-import top.zbeboy.isy.domain.tables.pojos.Student;
-import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.common.FilesService;
+import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignDatumService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignDatumTypeService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.service.util.FilesUtils;
+import top.zbeboy.isy.service.util.RequestUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.vo.graduate.design.proposal.GraduationDesignProposalAddVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -49,6 +59,9 @@ public class GraduationDesignProposalController {
     private GraduationDesignDatumService graduationDesignDatumService;
 
     @Resource
+    private GraduationDesignDatumTypeService graduationDesignDatumTypeService;
+
+    @Resource
     private UsersTypeService usersTypeService;
 
     @Resource
@@ -60,6 +73,12 @@ public class GraduationDesignProposalController {
     @Resource
     private StudentService studentService;
 
+    @Resource
+    private UploadService uploadService;
+
+    @Resource
+    private FilesService filesService;
+
     /**
      * 毕业设计资料
      *
@@ -68,6 +87,22 @@ public class GraduationDesignProposalController {
     @RequestMapping(value = "/web/menu/graduate/design/proposal", method = RequestMethod.GET)
     public String proposal() {
         return "web/graduate/design/proposal/design_proposal::#page-wrapper";
+    }
+
+    /**
+     * 获取文件类型
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = "/use/graduate/design/proposal/datums", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignDatumType> subjectTypes() {
+        AjaxUtils<GraduationDesignDatumType> ajaxUtils = AjaxUtils.of();
+        List<GraduationDesignDatumType> graduationDesignDatumTypes = new ArrayList<>();
+        GraduationDesignDatumType graduationDesignDatumType = new GraduationDesignDatumType(0, "文件类型");
+        graduationDesignDatumTypes.add(graduationDesignDatumType);
+        graduationDesignDatumTypes.addAll(graduationDesignDatumTypeService.findAll());
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignDatumTypes);
     }
 
     /**
@@ -160,6 +195,108 @@ public class GraduationDesignProposalController {
             }
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 保存或更新毕业设计资料
+     *
+     * @param graduationDesignProposalAddVo 数据
+     * @param multipartHttpServletRequest   文件
+     * @param request                       请求
+     * @return true or false
+     */
+    @RequestMapping("/web/graduate/design/proposal/my/save")
+    @ResponseBody
+    public AjaxUtils<FileBean> mySave(@Valid GraduationDesignProposalAddVo graduationDesignProposalAddVo, BindingResult bindingResult,
+                                      MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
+        AjaxUtils<FileBean> ajaxUtils = AjaxUtils.of();
+        try {
+            if (!bindingResult.hasErrors()) {
+                // 学生使用
+                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                    Users users = usersService.getUserFromSession();
+                    Student student = studentService.findByUsername(users.getUsername());
+                    ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignProposalAddVo.getGraduationDesignReleaseId());
+                    if (!errorBean.isHasError()) {
+                        GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                        // 毕业时间范围
+                        if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                            // 是否已确认调整
+                            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                                // 是否符合该毕业设计条件
+                                Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignRelease.getGraduationDesignReleaseId());
+                                if (record.isPresent()) {
+                                    GraduationDesignTutor graduationDesignTutor = record.get().into(GraduationDesignTutor.class);
+                                    // 是否更新
+                                    Optional<Record> recordDatum =
+                                            graduationDesignDatumService.findByGraduationDesignTutorIdAndGraduationDesignDatumTypeId(graduationDesignTutor.getGraduationDesignTutorId(), graduationDesignProposalAddVo.getGraduationDesignDatumTypeId());
+                                    GraduationDesignDatum graduationDesignDatum;
+                                    boolean isUpdate = false;
+                                    if (recordDatum.isPresent()) {
+                                        graduationDesignDatum = recordDatum.get().into(GraduationDesignDatum.class);
+                                        isUpdate = true;
+                                    } else {
+                                        graduationDesignDatum = new GraduationDesignDatum();
+                                    }
+                                    String path = Workbook.graduationDesignProposalPath(users);
+                                    List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                                            RequestUtils.getRealPath(request) + path, request.getRemoteAddr());
+                                    if (!ObjectUtils.isEmpty(fileBeen) && fileBeen.size() > 0) {
+                                        String fileId = UUIDUtils.getUUID();
+                                        FileBean tempFile = fileBeen.get(0);
+                                        Files files = new Files();
+                                        files.setFileId(fileId);
+                                        files.setExt(tempFile.getExt());
+                                        files.setNewName(tempFile.getNewName());
+                                        files.setOriginalFileName(tempFile.getOriginalFileName());
+                                        files.setSize(String.valueOf(tempFile.getSize()));
+                                        files.setRelativePath(path + tempFile.getNewName());
+                                        filesService.save(files);
+                                        if (isUpdate) {
+                                            // 删除旧文件
+                                            Files oldFile = filesService.findById(graduationDesignDatum.getFileId());
+                                            FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());
+                                            graduationDesignDatum.setFileId(fileId);
+                                            graduationDesignDatum.setUpdateTime(DateTimeUtils.getNow());
+                                            graduationDesignDatum.setVersion(graduationDesignProposalAddVo.getVersion());
+                                            graduationDesignDatumService.update(graduationDesignDatum);
+                                            filesService.deleteById(oldFile.getFileId());
+                                        } else {
+                                            graduationDesignDatum.setGraduationDesignDatumId(UUIDUtils.getUUID());
+                                            graduationDesignDatum.setFileId(fileId);
+                                            graduationDesignDatum.setUpdateTime(DateTimeUtils.getNow());
+                                            graduationDesignDatum.setGraduationDesignTutorId(graduationDesignTutor.getGraduationDesignTutorId());
+                                            graduationDesignDatum.setVersion(graduationDesignProposalAddVo.getVersion());
+                                            graduationDesignDatum.setGraduationDesignDatumTypeId(graduationDesignProposalAddVo.getGraduationDesignDatumTypeId());
+                                            graduationDesignDatumService.save(graduationDesignDatum);
+                                        }
+                                        ajaxUtils.success().msg("保存成功");
+                                    } else {
+                                        ajaxUtils.fail().msg("未查询到文件信息");
+                                    }
+                                } else {
+                                    ajaxUtils.fail().msg("您的账号不符合该毕业设计条件");
+                                }
+                            } else {
+                                ajaxUtils.fail().msg("未确认指导教师调整");
+                            }
+                        } else {
+                            ajaxUtils.fail().msg("不在时间范围，无法操作");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg(errorBean.getErrorMsg());
+                    }
+                } else {
+                    ajaxUtils.fail().msg("目前仅提供学生使用");
+                }
+            } else {
+                ajaxUtils.fail().msg("参数异常");
+            }
+        } catch (Exception e) {
+            log.error("Upload graduation design proposal error, error is {}", e);
+            ajaxUtils.fail().msg("保存文件异常");
+        }
+        return ajaxUtils;
     }
 
     /**

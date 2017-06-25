@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.daos.GraduationDesignDatumTypeDao;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatumType;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by zbeboy on 2017/6/23.
@@ -17,8 +22,16 @@ public class GraduationDesignDatumTypeServiceImpl implements GraduationDesignDat
 
     private final DSLContext create;
 
+    @Resource
+    private GraduationDesignDatumTypeDao graduationDesignDatumTypeDao;
+
     @Autowired
     public GraduationDesignDatumTypeServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public List<GraduationDesignDatumType> findAll() {
+        return graduationDesignDatumTypeDao.findAll();
     }
 }

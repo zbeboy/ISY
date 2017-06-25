@@ -214,6 +214,16 @@ public final class Workbook {
     }
 
     /**
+     * 保存毕业设计资料路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String graduationDesignProposalPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "graduate/design/proposal/";
+    }
+
+    /**
      * 毕业时间
      *
      * @return 时间

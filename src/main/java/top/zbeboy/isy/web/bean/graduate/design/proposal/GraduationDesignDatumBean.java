@@ -17,4 +17,5 @@ public class GraduationDesignDatumBean extends GraduationDesignDatum {
     private String ext;
     private String updateTimeStr;
     private String graduationDesignReleaseId;
+    private String graduationDesignDatumTypeName;
 }

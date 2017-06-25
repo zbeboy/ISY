@@ -11,8 +11,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
             return {
                 data_url: '/web/graduate/design/subject/declare/data',
                 teachers: '/web/graduate/design/subject/teachers',
-                subject_type: '/user/subject/types',
-                subject_origin_type: '/user/subject/origin_types',
+                subject_type: '/user/graduate/design/subject/types',
+                subject_origin_type: '/user/graduate/design/subject/origin_types',
                 declare_basic: '/web/graduate/design/subject/declare/basic',
                 declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
                 look_url:'/web/graduate/design/subject/list/look',

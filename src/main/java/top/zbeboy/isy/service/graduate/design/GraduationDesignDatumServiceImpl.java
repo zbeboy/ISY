@@ -10,10 +10,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.domain.tables.daos.GraduationDesignDatumDao;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatum;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+
+import javax.annotation.Resource;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -27,9 +32,20 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
 
     private final DSLContext create;
 
+    @Resource
+    private GraduationDesignDatumDao graduationDesignDatumDao;
+
     @Autowired
     public GraduationDesignDatumServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public Optional<Record> findByGraduationDesignTutorIdAndGraduationDesignDatumTypeId(String graduationDesignTutorId, int graduationDesignDatumTypeId) {
+        return create.select()
+                .from(GRADUATION_DESIGN_DATUM)
+                .where(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(graduationDesignTutorId).and(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_TYPE_ID.eq(graduationDesignDatumTypeId)))
+                .fetchOptional();
     }
 
     @Override
@@ -103,6 +119,17 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
             count = selectConditionStep.fetchOne();
         }
         return count.value1();
+    }
+
+    @Override
+    public void update(GraduationDesignDatum graduationDesignDatum) {
+        graduationDesignDatumDao.update(graduationDesignDatum);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationDesignDatum graduationDesignDatum) {
+        graduationDesignDatumDao.insert(graduationDesignDatum);
     }
 
     /**
