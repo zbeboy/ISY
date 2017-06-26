@@ -5,7 +5,6 @@ import com.octo.captcha.service.CaptchaServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Record;
-import org.jooq.Record1;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -377,21 +376,6 @@ public class UsersController {
         } else {
             return AjaxUtils.of().fail().msg("手机号格式不正确");
         }
-    }
-
-    /**
-     * 登录时账号自动完成
-     *
-     * @param query 查询参数
-     * @return 账号
-     */
-    @RequestMapping(value = "/user/login/autocomplete/email", method = RequestMethod.GET)
-    @ResponseBody
-    public List<String> loginAutoCompleteEmail(@RequestParam("query") String query) {
-        List<String> emails = new ArrayList<>();
-        Result<Record1<String>> emailRecord = usersService.autoCompleteQueryUsername(query);
-        emailRecord.forEach(e -> emails.add(e.value1()));
-        return emails;
     }
 
     /**
@@ -816,7 +800,7 @@ public class UsersController {
                     ajaxUtils.fail().msg("用户存在角色关联，无法删除");
                 } else {
                     Users users = usersService.findByUsername(id);
-                    if(!ObjectUtils.isEmpty(users)){
+                    if (!ObjectUtils.isEmpty(users)) {
                         UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
                         switch (usersType.getUsersTypeName()) {
                             case Workbook.STUDENT_USERS_TYPE:  // 学生

@@ -7,8 +7,11 @@ requirejs.config({
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
+        "emails": web_path + "/js/util/emails",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min"
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
+        "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
+            web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"]
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -20,7 +23,8 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csrf", "com", "bootstrap"], function ($, Handlebars) {
+require(["jquery", "handlebars", "emails",
+    "jquery.entropizer", "jquery.showLoading", "csrf", "com", "bootstrap", "bootstrap-typeahead"], function ($, Handlebars, emails) {
 
     /*
      ajax url
@@ -386,6 +390,24 @@ require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csr
                 }
             });
         }
+    });
+
+    // 自动完成账号
+    $(paramId.email).typeahead({
+        source: function (query, process) {
+            var tempArr = [];
+            for (var i = 0; i < emails.mailArr.length; i++) {
+                tempArr.push(query + emails.mailArr[i])
+            }
+            process(tempArr);
+        },
+        afterSelect: function (item) {
+            //选择项之后的事件 ，item是当前选中的。
+            if (valid_regex.email_valid_regex.test(item)) {
+                validSuccessDom(validId.valid_email, errorMsgId.email_error_msg);
+            }
+        },
+        autoSelect: true
     });
 
     $(paramId.email).blur(function () {

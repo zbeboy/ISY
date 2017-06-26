@@ -6,6 +6,7 @@ requirejs.config({
     paths: {
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
+        "emails": web_path + "/js/util/emails",
         "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
             web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"]
     },
@@ -17,7 +18,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "bootstrap", "csrf", "com", "bootstrap-typeahead"], function ($, domready) {
+require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "bootstrap-typeahead"], function ($, domready, emails) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -33,7 +34,6 @@ require(["jquery", "requirejs-domready", "bootstrap", "csrf", "com", "bootstrap-
             password_forget: '/user/login/password/forget',
             anew_send_verify_mailbox: '/user/register/mailbox/anew',
             login: '/login',
-            autocomplete_email: '/user/login/autocomplete/email',
             backstage: '/web/menu/backstage'
         };
 
@@ -44,7 +44,7 @@ require(["jquery", "requirejs-domready", "bootstrap", "csrf", "com", "bootstrap-
             email: '#email',
             password: '#password',
             captcha: '#j_captcha_response',
-            btnLogin:'#login'
+            btnLogin: '#login'
         };
 
         /*
@@ -126,14 +126,14 @@ require(["jquery", "requirejs-domready", "bootstrap", "csrf", "com", "bootstrap-
          * 开始加载
          */
         function startLoading() {
-            $(paramId.btnLogin).attr('disabled',true).text('登录中...');
+            $(paramId.btnLogin).attr('disabled', true).text('登录中...');
         }
 
         /**
          * 结束加载
          */
         function endLoading() {
-            $(paramId.btnLogin).attr('disabled',false).text('登 录');
+            $(paramId.btnLogin).attr('disabled', false).text('登 录');
         }
 
         $('#student_register').click(function () {
@@ -155,9 +155,11 @@ require(["jquery", "requirejs-domready", "bootstrap", "csrf", "com", "bootstrap-
         // 自动完成账号
         $(paramId.email).typeahead({
             source: function (query, process) {
-                $.get(web_path + ajax_url.autocomplete_email, {query: query}, function (data) {
-                    process(data);
-                });
+                var tempArr = [];
+                for (var i = 0; i < emails.mailArr.length; i++) {
+                    tempArr.push(query + emails.mailArr[i])
+                }
+                process(tempArr);
             },
             afterSelect: function (item) {
                 //选择项之后的事件 ，item是当前选中的。

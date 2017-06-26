@@ -88,14 +88,6 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public Result<Record1<String>> autoCompleteQueryUsername(String username) {
-        return create.select(USERS.USERNAME)
-                .from(USERS)
-                .where(USERS.USERNAME.like(SQLQueryUtils.rightLikeParam(username)))
-                .fetch();
-    }
-
-    @Override
     public Result<UsersRecord> findByJoinDateAndVerifyMailbox(Date joinDate, Byte verifyMailbox) {
         return create.selectFrom(USERS)
                 .where(USERS.JOIN_DATE.le(DateTimeUtils.utilDateToSqlDate(joinDate)).and(USERS.VERIFY_MAILBOX.eq(verifyMailbox)))
