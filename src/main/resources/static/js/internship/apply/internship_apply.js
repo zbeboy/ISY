@@ -801,6 +801,12 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             formAcceptCharset: 'utf-8',
             autoUpload: false,// 关闭自动上传
             maxNumberOfFiles: 1,
+            messages: {
+                maxNumberOfFiles: '超过文件上传数量',
+                acceptFileTypes: '不支持已选择文件类型',
+                maxFileSize: '文件过大',
+                minFileSize: '文件过小'
+            },
             add: function (e, data) {
                 $('#fileName').text(data.files[0].name);
                 $('#fileSize').text(data.files[0].size);
@@ -827,7 +833,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             validation.fail(function(data) {
                 isOk = false;
                 Messenger().post({
-                    message: 'Upload error: ' + data.files[0].error,
+                    message: '上传失败: ' + data.files[0].error,
                     type: 'error',
                     showCloseButton: true
                 });
