@@ -264,10 +264,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             maxFileSize: 100000000,// 100MB
             formAcceptCharset: 'utf-8',
             messages: {
-                maxNumberOfFiles: '超过文件上传数量',
-                acceptFileTypes: '不支持已选择文件类型',
-                maxFileSize: '文件过大',
-                minFileSize: '文件过小'
+                maxFileSize: '单文件上传仅允许100MB大小'
             },
             submit: function (e, data) {
                 initParam();

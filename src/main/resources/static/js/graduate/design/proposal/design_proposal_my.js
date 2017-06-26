@@ -506,10 +506,9 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             autoUpload: false,// 关闭自动上传
             maxNumberOfFiles: 1,
             messages: {
-                maxNumberOfFiles: '超过文件上传数量',
-                acceptFileTypes: '不支持已选择文件类型',
-                maxFileSize: '文件过大',
-                minFileSize: '文件过小'
+                maxNumberOfFiles: '最大支持上传1个文件',
+                acceptFileTypes: '仅支持上传doc,docx,xls,xlsx,ppt,pptx等类型文件',
+                maxFileSize: '单文件上传仅允许100MB大小'
             },
             add: function (e, data) {
                 $(addParamId.fileName).text(data.files[0].name);
