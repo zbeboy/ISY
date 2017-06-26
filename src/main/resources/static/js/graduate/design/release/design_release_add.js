@@ -550,6 +550,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             dataType: 'json',
             maxFileSize: 100000000,// 100MB
             formAcceptCharset: 'utf-8',
+            messages: {
+                maxFileSize: '单文件上传仅允许100MB大小'
+            },
             submit: function (e, data) {
                 initParam();
                 if (init_page_param.departmentId == -1 && init_page_param.collegeId == -1 && Number(param.schoolId) <= 0) {
@@ -623,7 +626,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             validation.fail(function(data) {
                 isOk = false;
                 Messenger().post({
-                    message: 'Upload error: ' + data.files[0].error,
+                    message: '上传失败: ' + data.files[0].error,
                     type: 'error',
                     showCloseButton: true
                 });

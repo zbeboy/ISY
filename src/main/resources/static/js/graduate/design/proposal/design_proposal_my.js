@@ -505,6 +505,11 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             formAcceptCharset: 'utf-8',
             autoUpload: false,// 关闭自动上传
             maxNumberOfFiles: 1,
+            messages: {
+                maxNumberOfFiles: '最大支持上传1个文件',
+                acceptFileTypes: '仅支持上传doc,docx,xls,xlsx,ppt,pptx等类型文件',
+                maxFileSize: '单文件上传仅允许100MB大小'
+            },
             add: function (e, data) {
                 $(addParamId.fileName).text(data.files[0].name);
                 $(addParamId.fileSize).text(data.files[0].size);
@@ -526,7 +531,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             validation.fail(function(data) {
                 isOk = false;
                 Messenger().post({
-                    message: 'Upload error: ' + data.files[0].error,
+                    message: '上传失败: ' + data.files[0].error,
                     type: 'error',
                     showCloseButton: true
                 });
