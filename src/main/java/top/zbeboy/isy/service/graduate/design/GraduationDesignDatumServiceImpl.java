@@ -41,6 +41,11 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
     }
 
     @Override
+    public GraduationDesignDatum findById(String id) {
+        return graduationDesignDatumDao.findById(id);
+    }
+
+    @Override
     public Optional<Record> findByGraduationDesignTutorIdAndGraduationDesignDatumTypeId(String graduationDesignTutorId, int graduationDesignDatumTypeId) {
         return create.select()
                 .from(GRADUATION_DESIGN_DATUM)
@@ -130,6 +135,11 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
     @Override
     public void save(GraduationDesignDatum graduationDesignDatum) {
         graduationDesignDatumDao.insert(graduationDesignDatum);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        graduationDesignDatumDao.deleteById(id);
     }
 
     /**

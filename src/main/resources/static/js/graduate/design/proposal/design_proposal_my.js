@@ -14,6 +14,8 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 data_url: '/web/graduate/design/proposal/my/data',
                 datum_type: '/use/graduate/design/proposal/datums',
                 file_upload_url: '/web/graduate/design/proposal/my/save',
+                del: '/web/graduate/design/proposal/my/del',
+                download:'/web/graduate/design/proposal/my/download',
                 back: '/web/menu/graduate/design/proposal'
             };
         }
@@ -141,7 +143,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
-                tableElement.delegate('.edit', "click", function () {
+                tableElement.delegate('.download', "click", function () {
                     download($(this).attr('data-id'));
                 });
 
@@ -152,8 +154,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
         });
 
         var global_button = '<button type="button" id="proposal_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-            '  <button type="button" id="proposal_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
-            '  <button type="button" id="proposal_downloads" class="btn btn-outline btn-default btn-sm"><i class="fa fa-download"></i>批量下载</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -240,54 +240,10 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
         });
 
         /*
-         下载全部
-         */
-        $('#proposal_downloads').click(function () {
-
-        });
-
-        /*
-         批量删除
-         */
-        $('#proposal_dels').click(function () {
-            var graduationDesignDatumIds = [];
-            var ids = $('input[name="check"]:checked');
-            for (var i = 0; i < ids.length; i++) {
-                graduationDesignDatumIds.push($(ids[i]).val());
-            }
-
-            if (graduationDesignDatumIds.length > 0) {
-                var msg;
-                msg = Messenger().post({
-                    message: "确定删除选中的文件吗?",
-                    actions: {
-                        retry: {
-                            label: '确定',
-                            phrase: 'Retrying TIME',
-                            action: function () {
-                                msg.cancel();
-                                dels(graduationDesignDatumIds);
-                            }
-                        },
-                        cancel: {
-                            label: '取消',
-                            action: function () {
-                                return msg.cancel();
-                            }
-                        }
-                    }
-                });
-            } else {
-                Messenger().post("未发现有选中的文件!");
-            }
-        });
-
-
-        /*
          下载
          */
         function download(graduationDesignDatumId) {
-
+            window.location.href = getAjaxUrl().download + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignDatumId=' + graduationDesignDatumId;
         }
 
         /*
@@ -320,12 +276,8 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             sendDelAjax(graduationDesignDatumId, '删除', 1);
         }
 
-        function dels(graduationDesignDatumIds) {
-            sendDelAjax(graduationDesignDatumIds.join(","), '批量删除', 1);
-        }
-
         /**
-         * 注销或恢复ajax
+         * 删除ajax
          * @param graduationDesignDatumId
          * @param message
          */
@@ -337,10 +289,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {graduationDesignDatumIds: graduationDesignDatumId},
+                data: {
+                    id: init_page_param.graduationDesignReleaseId,
+                    graduationDesignDatumId: graduationDesignDatumId
+                },
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();
+                        console.log('haha')
                     }
                 },
                 error: function (xhr) {
@@ -522,13 +478,13 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 closeUploadModal();// 清空信息
                 myTable.ajax.reload();
             }
-        }).on('fileuploadsubmit', function(evt, data) {
+        }).on('fileuploadsubmit', function (evt, data) {
             var isOk = true;
             var $this = $(this);
             var validation = data.process(function () {
                 return $this.fileupload('process', data);
             });
-            validation.fail(function(data) {
+            validation.fail(function (data) {
                 isOk = false;
                 Messenger().post({
                     message: '上传失败: ' + data.files[0].error,

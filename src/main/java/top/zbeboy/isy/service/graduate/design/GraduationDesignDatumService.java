@@ -14,6 +14,14 @@ import java.util.Optional;
 public interface GraduationDesignDatumService {
 
     /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 毕业设计资料
+     */
+    GraduationDesignDatum findById(String id);
+
+    /**
      * 通过教职工与学生关联表id与文件类型id查询
      *
      * @param graduationDesignTutorId     教职工与学生关联表id
@@ -57,4 +65,11 @@ public interface GraduationDesignDatumService {
      * @param graduationDesignDatum 数据
      */
     void save(GraduationDesignDatum graduationDesignDatum);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }
