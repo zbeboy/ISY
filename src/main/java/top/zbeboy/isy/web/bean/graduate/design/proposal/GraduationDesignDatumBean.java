@@ -21,4 +21,6 @@ public class GraduationDesignDatumBean extends GraduationDesignDatum {
     private String realName;
     private String studentNumber;
     private int staffId;
+    private int studentId;
+    private String organizeName;
 }

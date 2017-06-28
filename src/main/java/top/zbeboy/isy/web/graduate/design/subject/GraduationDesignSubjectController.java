@@ -582,7 +582,7 @@ public class GraduationDesignSubjectController {
      * @param graduationDesignReleaseId 毕业发布id
      * @return 数据
      */
-    @RequestMapping(value = "/web/graduate/design/subject/teachers", method = RequestMethod.GET)
+    @RequestMapping(value = "/anyone/graduate/design/subject/teachers", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignTeacherBean> subjectTeachers(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();

@@ -59,7 +59,7 @@ public interface GraduationDesignDatumService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    List<GraduationDesignDatumBean> findTeamAllByPage(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean);
+    Result<Record> findTeamAllByPage(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean);
 
     /**
      * 总数

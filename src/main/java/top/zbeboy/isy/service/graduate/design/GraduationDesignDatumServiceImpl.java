@@ -128,18 +128,116 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
     }
 
     @Override
-    public List<GraduationDesignDatumBean> findTeamAllByPage(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean) {
-        return null;
+    public Result<Record> findTeamAllByPage(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean) {
+        Result<Record> records;
+        Condition a = searchCondition(dataTablesUtils);
+        a = otherCondition(a, graduationDesignDatumBean);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectJoinStep<Record> selectJoinStep = create.select()
+                    .from(GRADUATION_DESIGN_DATUM)
+                    .join(FILES)
+                    .on(GRADUATION_DESIGN_DATUM.FILE_ID.eq(FILES.FILE_ID))
+                    .join(GRADUATION_DESIGN_DATUM_TYPE)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_TYPE_ID.eq(GRADUATION_DESIGN_DATUM_TYPE.GRADUATION_DESIGN_DATUM_TYPE_ID))
+                    .join(GRADUATION_DESIGN_TUTOR)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID))
+                    .join(GRADUATION_DESIGN_TEACHER)
+                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(STUDENT)
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .join(ORGANIZE)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
+            sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
+            pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
+            records = selectJoinStep.fetch();
+        } else {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(GRADUATION_DESIGN_DATUM)
+                    .join(FILES)
+                    .on(GRADUATION_DESIGN_DATUM.FILE_ID.eq(FILES.FILE_ID))
+                    .join(GRADUATION_DESIGN_DATUM_TYPE)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_TYPE_ID.eq(GRADUATION_DESIGN_DATUM_TYPE.GRADUATION_DESIGN_DATUM_TYPE_ID))
+                    .join(GRADUATION_DESIGN_TUTOR)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID))
+                    .join(GRADUATION_DESIGN_TEACHER)
+                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(STUDENT)
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .join(ORGANIZE)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .where(a);
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
+            records = selectConditionStep.fetch();
+        }
+        return records;
     }
 
     @Override
     public int countTeamAll(GraduationDesignDatumBean graduationDesignDatumBean) {
-        return 0;
+        Record1<Integer> count;
+        Condition a = otherCondition(null, graduationDesignDatumBean);
+        if (ObjectUtils.isEmpty(a)) {
+            count = create.selectCount()
+                    .from(GRADUATION_DESIGN_DATUM)
+                    .fetchOne();
+        } else {
+            count = create.selectCount()
+                    .from(GRADUATION_DESIGN_DATUM)
+                    .join(FILES)
+                    .on(GRADUATION_DESIGN_DATUM.FILE_ID.eq(FILES.FILE_ID))
+                    .join(GRADUATION_DESIGN_DATUM_TYPE)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_TYPE_ID.eq(GRADUATION_DESIGN_DATUM_TYPE.GRADUATION_DESIGN_DATUM_TYPE_ID))
+                    .join(GRADUATION_DESIGN_TUTOR)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID))
+                    .join(GRADUATION_DESIGN_TEACHER)
+                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(STUDENT)
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .join(ORGANIZE)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .where(a)
+                    .fetchOne();
+        }
+        return count.value1();
     }
 
     @Override
     public int countTeamByCondition(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean) {
-        return 0;
+        Record1<Integer> count;
+        Condition a = searchCondition(dataTablesUtils);
+        a = otherCondition(a, graduationDesignDatumBean);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
+                    .from(GRADUATION_DESIGN_DATUM);
+            count = selectJoinStep.fetchOne();
+        } else {
+            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+                    .from(GRADUATION_DESIGN_DATUM)
+                    .join(FILES)
+                    .on(GRADUATION_DESIGN_DATUM.FILE_ID.eq(FILES.FILE_ID))
+                    .join(GRADUATION_DESIGN_DATUM_TYPE)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_TYPE_ID.eq(GRADUATION_DESIGN_DATUM_TYPE.GRADUATION_DESIGN_DATUM_TYPE_ID))
+                    .join(GRADUATION_DESIGN_TUTOR)
+                    .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID))
+                    .join(GRADUATION_DESIGN_TEACHER)
+                    .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(STUDENT)
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .join(ORGANIZE)
+                    .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                    .where(a);
+            count = selectConditionStep.fetchOne();
+        }
+        return count.value1();
     }
 
     @Override
@@ -173,6 +271,22 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
                     a = GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(graduationDesignDatumBean.getGraduationDesignTutorId());
                 }
             }
+
+            if (StringUtils.hasLength(graduationDesignDatumBean.getGraduationDesignReleaseId())) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignDatumBean.getGraduationDesignReleaseId()));
+                } else {
+                    a = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignDatumBean.getGraduationDesignReleaseId());
+                }
+            }
+
+            if (!ObjectUtils.isEmpty(graduationDesignDatumBean.getStaffId()) && graduationDesignDatumBean.getStaffId() > 0) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignDatumBean.getStaffId()));
+                } else {
+                    a = GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(graduationDesignDatumBean.getStaffId());
+                }
+            }
         }
         return a;
     }
@@ -190,6 +304,8 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
         if (!ObjectUtils.isEmpty(search)) {
             String originalFileName = StringUtils.trimWhitespace(search.getString("originalFileName"));
             String graduationDesignDatumTypeName = StringUtils.trimWhitespace(search.getString("graduationDesignDatumTypeName"));
+            String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
+            String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
             if (StringUtils.hasLength(originalFileName)) {
                 a = FILES.ORIGINAL_FILE_NAME.like(SQLQueryUtils.likeAllParam(originalFileName));
             }
@@ -202,6 +318,22 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
                     } else {
                         a = a.and(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_TYPE_ID.eq(graduationDesignDatumTypeId));
                     }
+                }
+            }
+
+            if (StringUtils.hasLength(studentName)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
+                } else {
+                    a = a.and(USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName)));
+                }
+            }
+
+            if (StringUtils.hasLength(studentNumber)) {
+                if (ObjectUtils.isEmpty(a)) {
+                    a = STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
+                } else {
+                    a = a.and(STUDENT.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
                 }
             }
         }
@@ -221,6 +353,38 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
         boolean isAsc = "asc".equalsIgnoreCase(orderDir);
         SortField[] sortField = null;
         if (StringUtils.hasLength(orderColumnName)) {
+
+            if ("real_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = USERS.REAL_NAME.asc();
+                    sortField[1] = GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_ID.asc();
+                } else {
+                    sortField[0] = USERS.REAL_NAME.desc();
+                    sortField[1] = GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_ID.desc();
+                }
+            }
+
+            if ("student_number".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = STUDENT.STUDENT_NUMBER.asc();
+                } else {
+                    sortField[0] = STUDENT.STUDENT_NUMBER.desc();
+                }
+            }
+
+            if ("organize_name".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.asc();
+                    sortField[1] = GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_ID.asc();
+                } else {
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortField[1] = GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_ID.desc();
+                }
+            }
+
             if ("original_file_name".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {

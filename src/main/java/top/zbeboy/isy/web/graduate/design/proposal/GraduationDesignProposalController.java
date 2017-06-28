@@ -260,7 +260,6 @@ public class GraduationDesignProposalController {
                     GraduationDesignDatumBean otherCondition = new GraduationDesignDatumBean();
                     dataTablesUtils = new DataTablesUtils<>(request, headers);
                     List<GraduationDesignDatumBean> graduationDesignDatumBeens = new ArrayList<>();
-                    otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
                     otherCondition.setGraduationDesignTutorId(graduationDesignTutor.getGraduationDesignTutorId());
                     Result<Record> records = graduationDesignDatumService.findAllByPage(dataTablesUtils, otherCondition);
                     if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
@@ -297,6 +296,7 @@ public class GraduationDesignProposalController {
                     List<String> headers = new ArrayList<>();
                     headers.add("real_name");
                     headers.add("student_number");
+                    headers.add("organize_name");
                     headers.add("original_file_name");
                     headers.add("version");
                     headers.add("update_time");
@@ -306,7 +306,12 @@ public class GraduationDesignProposalController {
                     int staffId = NumberUtils.toInt(request.getParameter("staffId"));
                     otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
                     otherCondition.setStaffId(staffId);
-                    List<GraduationDesignDatumBean> graduationDesignDatumBeens = graduationDesignDatumService.findTeamAllByPage(dataTablesUtils, otherCondition);
+                    List<GraduationDesignDatumBean> graduationDesignDatumBeens = new ArrayList<>();
+                    Result<Record> records = graduationDesignDatumService.findTeamAllByPage(dataTablesUtils, otherCondition);
+                    if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
+                        graduationDesignDatumBeens = records.into(GraduationDesignDatumBean.class);
+                        graduationDesignDatumBeens.forEach(i -> i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime())));
+                    }
                     dataTablesUtils.setData(graduationDesignDatumBeens);
                     dataTablesUtils.setiTotalRecords(graduationDesignDatumService.countTeamAll(otherCondition));
                     dataTablesUtils.setiTotalDisplayRecords(graduationDesignDatumService.countTeamByCondition(dataTablesUtils, otherCondition));
@@ -495,19 +500,16 @@ public class GraduationDesignProposalController {
             ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                // 毕业时间范围
-                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                    // 是否已确认调整
-                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                        // 是否符合该毕业设计条件
-                        Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignRelease.getGraduationDesignReleaseId());
-                        if (record.isPresent()) {
-                            GraduationDesignDatum graduationDesignDatum = graduationDesignDatumService.findById(graduationDesignDatumId);
-                            if (!ObjectUtils.isEmpty(graduationDesignDatum)) {
-                                Files files = filesService.findById(graduationDesignDatum.getFileId());
-                                if (!ObjectUtils.isEmpty(files)) {
-                                    uploadService.download(files.getOriginalFileName() + "V" + graduationDesignDatum.getVersion(), "/" + files.getRelativePath(), response, request);
-                                }
+                // 是否已确认调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    // 是否符合该毕业设计条件
+                    Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignRelease.getGraduationDesignReleaseId());
+                    if (record.isPresent()) {
+                        GraduationDesignDatum graduationDesignDatum = graduationDesignDatumService.findById(graduationDesignDatumId);
+                        if (!ObjectUtils.isEmpty(graduationDesignDatum)) {
+                            Files files = filesService.findById(graduationDesignDatum.getFileId());
+                            if (!ObjectUtils.isEmpty(files)) {
+                                uploadService.download(files.getOriginalFileName() + "V" + graduationDesignDatum.getVersion(), "/" + files.getRelativePath(), response, request);
                             }
                         }
                     }

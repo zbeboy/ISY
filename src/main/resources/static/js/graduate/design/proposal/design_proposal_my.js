@@ -51,7 +51,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[4, 'desc']],// 排序
+            "aaSorting": [[3, 'desc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().data_url,
                 "dataSrc": "data",
@@ -77,7 +77,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                     }
                 },
                 {
-                    targets: 5,
+                    targets: 4,
                     orderable: false,
                     render: function (a, b, c, d) {
 

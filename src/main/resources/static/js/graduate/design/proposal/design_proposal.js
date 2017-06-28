@@ -150,6 +150,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             });
         });
 
+        /*
+         小组
+         */
+        $(tableData).delegate('.design_proposal_team', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.team_url + '?id=' + id);
+        });
+
         init();
 
         /**

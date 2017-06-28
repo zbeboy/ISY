@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
         function getAjaxUrl() {
             return {
                 data_url: '/web/graduate/design/subject/declare/data',
-                teachers: '/web/graduate/design/subject/teachers',
+                teachers: '/anyone/graduate/design/subject/teachers',
                 subject_type: '/user/graduate/design/subject/types',
                 subject_origin_type: '/user/graduate/design/subject/origin_types',
                 declare_basic: '/web/graduate/design/subject/declare/basic',
@@ -452,13 +452,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
          清空参数
          */
         function cleanParam() {
-            $(getParamId().staffId).val('');
             $(getParamId().presubjectTitle).val('');
             $(getParamId().studentName).val('');
             $(getParamId().studentNumber).val('');
             $(getParamId().organize).val('');
-            $(getParamId().subjectType).val('');
-            $(getParamId().originType).val('');
+            $(getParamId().subjectType).val(0);
+            $(getParamId().originType).val(0);
         }
 
         $(getParamId().staffId).on('changed.bs.select', function (e) {
