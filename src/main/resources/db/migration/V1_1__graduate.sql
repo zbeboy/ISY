@@ -236,4 +236,5 @@ INSERT INTO graduation_design_subject_origin_type(origin_type_name) VALUES ('其
 
 INSERT INTO graduation_design_datum_type(graduation_design_datum_type_name) VALUES ('任务书');
 INSERT INTO graduation_design_datum_type(graduation_design_datum_type_name) VALUES ('开题报告');
+INSERT INTO graduation_design_datum_type(graduation_design_datum_type_name) VALUES ('论文');
 INSERT INTO graduation_design_datum_type(graduation_design_datum_type_name) VALUES ('PPT');
