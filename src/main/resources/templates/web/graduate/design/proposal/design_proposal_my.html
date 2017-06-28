@@ -43,9 +43,6 @@
                 <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" name="checkall" id="checkall"/>
-                        </th>
                         <th data-class="expand">文件名</th>
                         <th>类型</th>
                         <th data-hide="phone">版本</th>
@@ -56,7 +53,6 @@
 
                     <tfoot>
                     <tr>
-                        <th></th>
                         <th>文件名</th>
                         <th>类型</th>
                         <th>版本</th>
@@ -139,8 +135,7 @@
         <script th:inline="javascript">
             /*页面参数*/
             var init_page_param = {
-                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ '',
-                'studentId': /*[[${studentId}]]*/ 0
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
             };
         </script>
         <input type="hidden" class="dy_script" value="/js/graduate/design/proposal/design_proposal_my.js"/>

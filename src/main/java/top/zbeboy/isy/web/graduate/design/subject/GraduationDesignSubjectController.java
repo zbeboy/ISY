@@ -460,7 +460,7 @@ public class GraduationDesignSubjectController {
             // 是否已确认调整
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                 Users users = usersService.getUserFromSession();
-                boolean canUse = false;
+                boolean hasValue = false;
                 if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                     Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
                     if (studentRecord.isPresent()) {
@@ -471,11 +471,7 @@ public class GraduationDesignSubjectController {
                                 GraduationDesignTeacher graduationDesignTeacher = staffRecord.get().into(GraduationDesignTeacher.class);
                                 modelMap.addAttribute("studentId", student.getStudentId());
                                 modelMap.addAttribute("staffId", graduationDesignTeacher.getStaffId());
-                                canUse = true;
-                            } else {
-                                modelMap.addAttribute("studentId", 0);
-                                modelMap.addAttribute("staffId", 0);
-                                canUse = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES);
+                                hasValue = true;
                             }
                         }
                     }
@@ -486,33 +482,27 @@ public class GraduationDesignSubjectController {
                         if (staffRecord.isPresent()) {
                             modelMap.addAttribute("studentId", 0);
                             modelMap.addAttribute("staffId", staff.getStaffId());
-                            canUse = true;
-                        } else {
-                            modelMap.addAttribute("studentId", 0);
-                            modelMap.addAttribute("staffId", 0);
-                            canUse = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES);
+                            hasValue = true;
                         }
                     }
-                } else {
-                    modelMap.addAttribute("studentId", 0);
-                    modelMap.addAttribute("staffId", 0);
-                    canUse = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES);
                 }
 
-                if (canUse) {
-                    UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-                    modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
-                    if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-                        modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-                    } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                        modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
-                    }
-                    modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
-                    modelMap.addAttribute("endTime", DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
-                    page = "web/graduate/design/subject/design_subject_declare::#page-wrapper";
-                } else {
-                    page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+                if (!hasValue) {
+                    modelMap.addAttribute("studentId", 0);
+                    modelMap.addAttribute("staffId", 0);
                 }
+
+                UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+                modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
+                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+                    modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
+                } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                    modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
+                }
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                modelMap.addAttribute("endTime", DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
+                page = "web/graduate/design/subject/design_subject_declare::#page-wrapper";
+
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "请等待确认调整后查看");
             }

@@ -12,7 +12,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             release_data_url: '/anyone/graduate/design/release/data',
             affix_url:'/web/graduate/design/proposal/affix',
             my_url:'/web/graduate/design/proposal/my',
-            my_condition:'/web/graduate/design/proposal/my/condition'
+            my_condition:'/web/graduate/design/proposal/my/condition',
+            team_url:'/web/graduate/design/proposal/team'
         };
 
         /*

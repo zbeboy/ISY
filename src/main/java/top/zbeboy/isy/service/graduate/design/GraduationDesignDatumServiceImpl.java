@@ -18,6 +18,7 @@ import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBea
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -124,6 +125,21 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
             count = selectConditionStep.fetchOne();
         }
         return count.value1();
+    }
+
+    @Override
+    public List<GraduationDesignDatumBean> findTeamAllByPage(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean) {
+        return null;
+    }
+
+    @Override
+    public int countTeamAll(GraduationDesignDatumBean graduationDesignDatumBean) {
+        return 0;
+    }
+
+    @Override
+    public int countTeamByCondition(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean) {
+        return 0;
     }
 
     @Override

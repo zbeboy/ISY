@@ -2,7 +2,7 @@
  * Created by zbeboy on 2017/6/22.
  */
 //# sourceURL=graduate_design_proposal_my.js
-require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address",
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.address",
         "messenger", "bootstrap", "jquery.fileupload-validate"],
     function ($, Handlebars, nav_active) {
 
@@ -47,9 +47,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             },
             drawCallback: function (oSettings) {
                 responsiveHelper.respond();
-                $('#checkall').prop('checked', false);
-                // 调用全选插件
-                $.fn.check({checkall_name: "checkall", checkbox_name: "check"});
             },
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
@@ -66,7 +63,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 }
             },
             "columns": [
-                {"data": null},
                 {"data": "originalFileName"},
                 {"data": "graduationDesignDatumTypeName"},
                 {"data": "version"},
@@ -74,13 +70,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 {"data": null}
             ],
             columnDefs: [
-                {
-                    targets: 0,
-                    orderable: false,
-                    render: function (a, b, c, d) {
-                        return '<input type="checkbox" value="' + c.graduationDesignDatumId + '" name="check"/>';
-                    }
-                },
                 {
                     targets: 1,
                     render: function (a, b, c, d) {

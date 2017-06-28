@@ -6,6 +6,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatum;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,6 +52,28 @@ public interface GraduationDesignDatumService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean);
+
+    /**
+     * 分页查询
+     *
+     * @param dataTablesUtils datatables工具类
+     * @return 分页数据
+     */
+    List<GraduationDesignDatumBean> findTeamAllByPage(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean);
+
+    /**
+     * 总数
+     *
+     * @return 总数
+     */
+    int countTeamAll(GraduationDesignDatumBean graduationDesignDatumBean);
+
+    /**
+     * 根据条件查询总数
+     *
+     * @return 条件查询总数
+     */
+    int countTeamByCondition(DataTablesUtils<GraduationDesignDatumBean> dataTablesUtils, GraduationDesignDatumBean graduationDesignDatumBean);
 
     /**
      * 更新
