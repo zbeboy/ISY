@@ -74,7 +74,7 @@ public class MobileServiceImpl implements MobileService {
     public void sendValidMobileShortMessage(String mobile, String verificationCode) {
         log.debug(" mobile valid : {} : {}", mobile, verificationCode);
         if (isyProperties.getMobile().isOpen()) {
-            String content = "【ISY信息平台】 您的验证码:" + verificationCode;
+            String content = "【" + isyProperties.getMobile().getSign() + "】 您的验证码:" + verificationCode;
             sendShortMessage(mobile, content);
         } else {
             log.debug(" 管理员已关闭短信发送 ");

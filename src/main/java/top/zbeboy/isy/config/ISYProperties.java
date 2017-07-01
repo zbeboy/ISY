@@ -81,6 +81,8 @@ public class ISYProperties {
 
         private boolean open;
 
+        private String sign;
+
         public String getApikey() {
             return apikey;
         }
@@ -95,6 +97,14 @@ public class ISYProperties {
 
         public void setOpen(boolean open) {
             this.open = open;
+        }
+
+        public String getSign() {
+            return sign;
+        }
+
+        public void setSign(String sign) {
+            this.sign = sign;
         }
     }
 
