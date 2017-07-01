@@ -395,11 +395,13 @@ require(["jquery", "handlebars", "emails",
     // 自动完成账号
     $(paramId.email).typeahead({
         source: function (query, process) {
-            var tempArr = [];
-            for (var i = 0; i < emails.mailArr.length; i++) {
-                tempArr.push(query + emails.mailArr[i])
+            if(query.indexOf('@') === -1){
+                var tempArr = [];
+                for (var i = 0; i < emails.mailArr.length; i++) {
+                    tempArr.push(query + emails.mailArr[i])
+                }
+                process(tempArr);
             }
-            process(tempArr);
         },
         afterSelect: function (item) {
             //选择项之后的事件 ，item是当前选中的。
