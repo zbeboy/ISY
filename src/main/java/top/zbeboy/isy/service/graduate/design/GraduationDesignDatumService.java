@@ -23,6 +23,14 @@ public interface GraduationDesignDatumService {
     GraduationDesignDatum findById(String id);
 
     /**
+     * 通过主键关联查询
+     *
+     * @param id 主键
+     * @return 毕业设计资料
+     */
+    Optional<Record> findByIdRelation(String id);
+
+    /**
      * 通过教职工与学生关联表id与文件类型id查询
      *
      * @param graduationDesignTutorId     教职工与学生关联表id

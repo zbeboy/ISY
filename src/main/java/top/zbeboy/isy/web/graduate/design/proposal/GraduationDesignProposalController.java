@@ -7,6 +7,7 @@ import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +32,6 @@ import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.file.FileBean;
-import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -350,53 +350,63 @@ public class GraduationDesignProposalController {
                                 // 是否符合该毕业设计条件
                                 Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignRelease.getGraduationDesignReleaseId());
                                 if (record.isPresent()) {
+                                    boolean canUse = true;
                                     GraduationDesignTutor graduationDesignTutor = record.get().into(GraduationDesignTutor.class);
                                     // 是否更新
                                     Optional<Record> recordDatum =
                                             graduationDesignDatumService.findByGraduationDesignTutorIdAndGraduationDesignDatumTypeId(graduationDesignTutor.getGraduationDesignTutorId(), graduationDesignProposalAddVo.getGraduationDesignDatumTypeId());
-                                    GraduationDesignDatum graduationDesignDatum;
+                                    GraduationDesignDatum graduationDesignDatum = null;
                                     boolean isUpdate = false;
                                     if (recordDatum.isPresent()) {
-                                        graduationDesignDatum = recordDatum.get().into(GraduationDesignDatum.class);
-                                        isUpdate = true;
+                                        GraduationDesignDatumBean graduationDesignDatumBean = recordDatum.get().into(GraduationDesignDatumBean.class);
+                                        if (student.getStudentId() == graduationDesignDatumBean.getStudentId()) {
+                                            graduationDesignDatum = recordDatum.get().into(GraduationDesignDatum.class);
+                                            isUpdate = true;
+                                        } else {
+                                            canUse = false;
+                                        }
                                     } else {
                                         graduationDesignDatum = new GraduationDesignDatum();
                                     }
-                                    String path = Workbook.graduationDesignProposalPath(users);
-                                    List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
-                                            RequestUtils.getRealPath(request) + path, request.getRemoteAddr());
-                                    if (!ObjectUtils.isEmpty(fileBeen) && fileBeen.size() > 0) {
-                                        String fileId = UUIDUtils.getUUID();
-                                        FileBean tempFile = fileBeen.get(0);
-                                        Files files = new Files();
-                                        files.setFileId(fileId);
-                                        files.setExt(tempFile.getExt());
-                                        files.setNewName(tempFile.getNewName());
-                                        files.setOriginalFileName(tempFile.getOriginalFileName());
-                                        files.setSize(String.valueOf(tempFile.getSize()));
-                                        files.setRelativePath(path + tempFile.getNewName());
-                                        filesService.save(files);
-                                        if (isUpdate) {
-                                            // 删除旧文件
-                                            Files oldFile = filesService.findById(graduationDesignDatum.getFileId());
-                                            FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());
-                                            graduationDesignDatum.setFileId(fileId);
-                                            graduationDesignDatum.setUpdateTime(DateTimeUtils.getNow());
-                                            graduationDesignDatum.setVersion(graduationDesignProposalAddVo.getVersion());
-                                            graduationDesignDatumService.update(graduationDesignDatum);
-                                            filesService.deleteById(oldFile.getFileId());
+                                    if (canUse) {
+                                        String path = Workbook.graduationDesignProposalPath(users);
+                                        List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                                                RequestUtils.getRealPath(request) + path, request.getRemoteAddr());
+                                        if (!ObjectUtils.isEmpty(fileBeen) && fileBeen.size() > 0) {
+                                            String fileId = UUIDUtils.getUUID();
+                                            FileBean tempFile = fileBeen.get(0);
+                                            Files files = new Files();
+                                            files.setFileId(fileId);
+                                            files.setExt(tempFile.getExt());
+                                            files.setNewName(tempFile.getNewName());
+                                            files.setOriginalFileName(tempFile.getOriginalFileName());
+                                            files.setSize(String.valueOf(tempFile.getSize()));
+                                            files.setRelativePath(path + tempFile.getNewName());
+                                            filesService.save(files);
+                                            if (isUpdate) {
+                                                // 删除旧文件
+                                                Files oldFile = filesService.findById(graduationDesignDatum.getFileId());
+                                                FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());
+                                                graduationDesignDatum.setFileId(fileId);
+                                                graduationDesignDatum.setUpdateTime(DateTimeUtils.getNow());
+                                                graduationDesignDatum.setVersion(graduationDesignProposalAddVo.getVersion());
+                                                graduationDesignDatumService.update(graduationDesignDatum);
+                                                filesService.deleteById(oldFile.getFileId());
+                                            } else {
+                                                graduationDesignDatum.setGraduationDesignDatumId(UUIDUtils.getUUID());
+                                                graduationDesignDatum.setFileId(fileId);
+                                                graduationDesignDatum.setUpdateTime(DateTimeUtils.getNow());
+                                                graduationDesignDatum.setGraduationDesignTutorId(graduationDesignTutor.getGraduationDesignTutorId());
+                                                graduationDesignDatum.setVersion(graduationDesignProposalAddVo.getVersion());
+                                                graduationDesignDatum.setGraduationDesignDatumTypeId(graduationDesignProposalAddVo.getGraduationDesignDatumTypeId());
+                                                graduationDesignDatumService.save(graduationDesignDatum);
+                                            }
+                                            ajaxUtils.success().msg("保存成功");
                                         } else {
-                                            graduationDesignDatum.setGraduationDesignDatumId(UUIDUtils.getUUID());
-                                            graduationDesignDatum.setFileId(fileId);
-                                            graduationDesignDatum.setUpdateTime(DateTimeUtils.getNow());
-                                            graduationDesignDatum.setGraduationDesignTutorId(graduationDesignTutor.getGraduationDesignTutorId());
-                                            graduationDesignDatum.setVersion(graduationDesignProposalAddVo.getVersion());
-                                            graduationDesignDatum.setGraduationDesignDatumTypeId(graduationDesignProposalAddVo.getGraduationDesignDatumTypeId());
-                                            graduationDesignDatumService.save(graduationDesignDatum);
+                                            ajaxUtils.fail().msg("未查询到文件信息");
                                         }
-                                        ajaxUtils.success().msg("保存成功");
                                     } else {
-                                        ajaxUtils.fail().msg("未查询到文件信息");
+                                        ajaxUtils.fail().msg("无法核实该文件属于您");
                                     }
                                 } else {
                                     ajaxUtils.fail().msg("您的账号不符合该毕业设计条件");
@@ -424,47 +434,184 @@ public class GraduationDesignProposalController {
     }
 
     /**
-     * 我的资料页面删除文件
+     * 删除文件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
      * @param graduationDesignDatumId   毕业资料id
      * @param request                   请求
      * @return true or false
      */
-    @RequestMapping(value = "/web/graduate/design/proposal/my/del", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/graduate/design/proposal/del", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils myDelete(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("graduationDesignDatumId") String graduationDesignDatumId, HttpServletRequest request) {
+    public AjaxUtils proposalDelete(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("graduationDesignDatumId") String graduationDesignDatumId, HttpServletRequest request) {
         AjaxUtils<FileBean> ajaxUtils = AjaxUtils.of();
         try {
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+            if (!errorBean.isHasError()) {
+                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                // 毕业时间范围
+                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                    // 是否已确认调整
+                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                        Users users = usersService.getUserFromSession();
+                        GraduationDesignDatum graduationDesignDatum = canUseCondition(graduationDesignDatumId, users);
+                        if (!ObjectUtils.isEmpty(graduationDesignDatum)) {
+                            Files files = filesService.findById(graduationDesignDatum.getFileId());
+                            if (!ObjectUtils.isEmpty(files)) {
+                                FilesUtils.deleteFile(RequestUtils.getRealPath(request) + files.getRelativePath());
+                                graduationDesignDatumService.deleteById(graduationDesignDatumId);
+                                filesService.deleteById(files.getFileId());
+                                ajaxUtils.success().msg("删除成功");
+                            } else {
+                                ajaxUtils.fail().msg("未查询到该文件信息");
+                            }
+                        } else {
+                            ajaxUtils.fail().msg("不符合条件，删除失败");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未确认指导教师调整");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("不在时间范围，无法操作");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } catch (IOException e) {
+            log.error("Delete graduation design proposal error, error is {}", e);
+            ajaxUtils.fail().msg("保存文件异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param graduationDesignDatumId   毕业资料id
+     * @param request                   请求
+     */
+    @RequestMapping(value = "/web/graduate/design/proposal/download", method = RequestMethod.GET)
+    public void download(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("graduationDesignDatumId") String graduationDesignDatumId, HttpServletResponse response, HttpServletRequest request) {
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                boolean canUse = false;
                 Users users = usersService.getUserFromSession();
-                Student student = studentService.findByUsername(users.getUsername());
-                ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+                GraduationDesignDatum graduationDesignDatum = null;
+                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                        || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                    graduationDesignDatum = graduationDesignDatumService.findById(graduationDesignDatumId);
+                    canUse = true;
+                } else {
+                    // 学生
+                    if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                        Optional<Record> record = graduationDesignDatumService.findByIdRelation(graduationDesignDatumId);
+                        if (record.isPresent()) {
+                            Student student = studentService.findByUsername(users.getUsername());
+                            GraduationDesignDatumBean graduationDesignDatumBean = record.get().into(GraduationDesignDatumBean.class);
+                            if (student.getStudentId() == graduationDesignDatumBean.getStudentId()) {
+                                graduationDesignDatum = record.get().into(GraduationDesignDatum.class);
+                                canUse = true;
+                            }
+                        }
+                    } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                        graduationDesignDatum = graduationDesignDatumService.findById(graduationDesignDatumId);
+                        canUse = true;
+                    }
+                }
+
+                if (canUse) {
+                    Files files = filesService.findById(graduationDesignDatum.getFileId());
+                    if (!ObjectUtils.isEmpty(files)) {
+                        uploadService.download(files.getOriginalFileName() + "V" + graduationDesignDatum.getVersion(), "/" + files.getRelativePath(), response, request);
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
+     * 获取毕业设计资料信息
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param graduationDesignDatumId   毕业设计资料id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/proposal/team/datum", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignDatumBean> teamDatum(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("graduationDesignDatumId") String graduationDesignDatumId) {
+        AjaxUtils<GraduationDesignDatumBean> ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = graduationDesignDatumService.findByIdRelation(graduationDesignDatumId);
+            if (record.isPresent()) {
+                GraduationDesignDatumBean graduationDesignDatum = record.get().into(GraduationDesignDatumBean.class);
+                ajaxUtils.success().msg("获取数据成功").obj(graduationDesignDatum);
+            } else {
+                ajaxUtils.fail().msg("未查询到相关信息");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 更新毕业设计资料
+     *
+     * @param graduationDesignProposalAddVo 数据
+     * @param multipartHttpServletRequest   文件
+     * @param request                       请求
+     * @return true or false
+     */
+    @RequestMapping("/web/graduate/design/proposal/team/update")
+    @ResponseBody
+    public AjaxUtils<FileBean> teamUpdate(@Valid GraduationDesignProposalAddVo graduationDesignProposalAddVo, BindingResult bindingResult,
+                                          MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
+        AjaxUtils<FileBean> ajaxUtils = AjaxUtils.of();
+        try {
+            if (!bindingResult.hasErrors() && StringUtils.hasLength(graduationDesignProposalAddVo.getGraduationDesignDatumId())) {
+                ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignProposalAddVo.getGraduationDesignReleaseId());
                 if (!errorBean.isHasError()) {
                     GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                     // 毕业时间范围
                     if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
                         // 是否已确认调整
                         if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                            // 是否符合该毕业设计条件
-                            Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignRelease.getGraduationDesignReleaseId());
-                            if (record.isPresent()) {
-                                GraduationDesignDatum graduationDesignDatum = graduationDesignDatumService.findById(graduationDesignDatumId);
-                                if (!ObjectUtils.isEmpty(graduationDesignDatum)) {
-                                    Files files = filesService.findById(graduationDesignDatum.getFileId());
-                                    if (!ObjectUtils.isEmpty(files)) {
-                                        FilesUtils.deleteFile(RequestUtils.getRealPath(request) + files.getRelativePath());
-                                        graduationDesignDatumService.deleteById(graduationDesignDatumId);
-                                        filesService.deleteById(files.getFileId());
-                                        ajaxUtils.success().msg("删除成功");
-                                    } else {
-                                        ajaxUtils.fail().msg("未查询到该文件信息");
-                                    }
+                            Users users = usersService.getUserFromSession();
+                            GraduationDesignDatum graduationDesignDatum = canUseCondition(graduationDesignProposalAddVo.getGraduationDesignDatumId(), users);
+                            if (!ObjectUtils.isEmpty(graduationDesignDatum)) {
+                                String path = Workbook.graduationDesignProposalPath(users);
+                                List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                                        RequestUtils.getRealPath(request) + path, request.getRemoteAddr());
+                                if (!ObjectUtils.isEmpty(fileBeen) && fileBeen.size() > 0) {
+                                    String fileId = UUIDUtils.getUUID();
+                                    FileBean tempFile = fileBeen.get(0);
+                                    Files files = new Files();
+                                    files.setFileId(fileId);
+                                    files.setExt(tempFile.getExt());
+                                    files.setNewName(tempFile.getNewName());
+                                    files.setOriginalFileName(tempFile.getOriginalFileName());
+                                    files.setSize(String.valueOf(tempFile.getSize()));
+                                    files.setRelativePath(path + tempFile.getNewName());
+                                    filesService.save(files);
+                                    Files oldFile = filesService.findById(graduationDesignDatum.getFileId());
+                                    FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.getRelativePath());
+                                    graduationDesignDatum.setFileId(fileId);
+                                    graduationDesignDatum.setUpdateTime(DateTimeUtils.getNow());
+                                    graduationDesignDatum.setVersion(graduationDesignProposalAddVo.getVersion());
+                                    graduationDesignDatumService.update(graduationDesignDatum);
+                                    filesService.deleteById(oldFile.getFileId());
+                                    ajaxUtils.success().msg("保存成功");
                                 } else {
-                                    ajaxUtils.fail().msg("未查询到该资料信息");
+                                    ajaxUtils.fail().msg("未查询到文件信息");
                                 }
                             } else {
-                                ajaxUtils.fail().msg("您的账号不符合该毕业设计条件");
+                                ajaxUtils.fail().msg("不符合保存条件，保存失败");
                             }
                         } else {
                             ajaxUtils.fail().msg("未确认指导教师调整");
@@ -476,46 +623,51 @@ public class GraduationDesignProposalController {
                     ajaxUtils.fail().msg(errorBean.getErrorMsg());
                 }
             } else {
-                ajaxUtils.fail().msg("目前仅提供学生使用");
+                ajaxUtils.fail().msg("参数异常");
             }
-        } catch (IOException e) {
-            log.error("Delete graduation design proposal error, error is {}", e);
+        } catch (Exception e) {
+            log.error("Upload graduation design proposal error, error is {}", e);
             ajaxUtils.fail().msg("保存文件异常");
         }
         return ajaxUtils;
     }
 
     /**
-     * 我的资料页面下载文件
+     * 团队进入条件入口
      *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @param graduationDesignDatumId   毕业资料id
-     * @param request                   请求
+     * @param graduationDesignDatumId 毕业资料id
+     * @param users                   用户信息
+     * @return 毕业资料数据
      */
-    @RequestMapping(value = "/web/graduate/design/proposal/my/download", method = RequestMethod.GET)
-    public void myDownload(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("graduationDesignDatumId") String graduationDesignDatumId, HttpServletResponse response, HttpServletRequest request) {
-        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            Users users = usersService.getUserFromSession();
-            Student student = studentService.findByUsername(users.getUsername());
-            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
-            if (!errorBean.isHasError()) {
-                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                // 是否已确认调整
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                    // 是否符合该毕业设计条件
-                    Optional<Record> record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignRelease.getGraduationDesignReleaseId());
-                    if (record.isPresent()) {
-                        GraduationDesignDatum graduationDesignDatum = graduationDesignDatumService.findById(graduationDesignDatumId);
-                        if (!ObjectUtils.isEmpty(graduationDesignDatum)) {
-                            Files files = filesService.findById(graduationDesignDatum.getFileId());
-                            if (!ObjectUtils.isEmpty(files)) {
-                                uploadService.download(files.getOriginalFileName() + "V" + graduationDesignDatum.getVersion(), "/" + files.getRelativePath(), response, request);
-                            }
-                        }
+    private GraduationDesignDatum canUseCondition(String graduationDesignDatumId, Users users) {
+        GraduationDesignDatum graduationDesignDatum = null;
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            graduationDesignDatum = graduationDesignDatumService.findById(graduationDesignDatumId);
+        } else {
+            // 学生
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Optional<Record> record = graduationDesignDatumService.findByIdRelation(graduationDesignDatumId);
+                if (record.isPresent()) {
+                    Student student = studentService.findByUsername(users.getUsername());
+                    GraduationDesignDatumBean graduationDesignDatumBean = record.get().into(GraduationDesignDatumBean.class);
+
+                    if (student.getStudentId() == graduationDesignDatumBean.getStudentId()) {
+                        graduationDesignDatum = record.get().into(GraduationDesignDatum.class);
+                    }
+                }
+            } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                Optional<Record> staffRecord = graduationDesignDatumService.findByIdRelation(graduationDesignDatumId);
+                if (staffRecord.isPresent()) {
+                    Staff staff = staffService.findByUsername(users.getUsername());
+                    GraduationDesignDatumBean graduationDesignDatumBean = staffRecord.get().into(GraduationDesignDatumBean.class);
+                    if (staff.getStaffId() == graduationDesignDatumBean.getStaffId()) {
+                        graduationDesignDatum = staffRecord.get().into(GraduationDesignDatum.class);
                     }
                 }
             }
         }
+        return graduationDesignDatum;
     }
 
     /**

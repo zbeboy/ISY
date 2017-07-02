@@ -18,7 +18,6 @@ import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBea
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -47,9 +46,25 @@ public class GraduationDesignDatumServiceImpl extends DataTablesPlugin<Graduatio
     }
 
     @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(GRADUATION_DESIGN_DATUM)
+                .join(FILES)
+                .on(GRADUATION_DESIGN_DATUM.FILE_ID.eq(FILES.FILE_ID))
+                .join(GRADUATION_DESIGN_TUTOR)
+                .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID))
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .where(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public Optional<Record> findByGraduationDesignTutorIdAndGraduationDesignDatumTypeId(String graduationDesignTutorId, int graduationDesignDatumTypeId) {
         return create.select()
                 .from(GRADUATION_DESIGN_DATUM)
+                .join(GRADUATION_DESIGN_TUTOR)
+                .on(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID))
                 .where(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_TUTOR_ID.eq(graduationDesignTutorId).and(GRADUATION_DESIGN_DATUM.GRADUATION_DESIGN_DATUM_TYPE_ID.eq(graduationDesignDatumTypeId)))
                 .fetchOptional();
     }

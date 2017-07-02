@@ -17,4 +17,5 @@ public class GraduationDesignProposalAddVo {
     @NotNull
     @Size(max = 64)
     private String    graduationDesignReleaseId;
+    private String    graduationDesignDatumId;
 }

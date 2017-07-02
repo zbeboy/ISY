@@ -1,7 +1,8 @@
 /**
  * Created by zbeboy on 2017/6/28.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh-CN", "datatables.responsive", "jquery.address", "messenger"],
+require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh-CN", "datatables.responsive",
+        "jquery.address", "messenger", "bootstrap", "jquery.fileupload-validate"],
     function ($, Handlebars, constants, nav_active) {
 
         /*
@@ -12,6 +13,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 data_url: '/web/graduate/design/proposal/team/data',
                 teachers: '/anyone/graduate/design/subject/teachers',
                 datum_type: '/use/graduate/design/proposal/datums',
+                datum_info: '/web/graduate/design/proposal/team/datum',
+                del: '/web/graduate/design/proposal/del',
+                download: '/web/graduate/design/proposal/download',
+                file_upload_url: '/web/graduate/design/proposal/team/update',
                 back: '/web/menu/graduate/design/proposal'
             };
         }
@@ -196,6 +201,18 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                                 }
                                             ]
                                         };
+                                } else {
+                                    context =
+                                        {
+                                            func: [
+                                                {
+                                                    "name": "下载",
+                                                    "css": "download",
+                                                    "type": "default",
+                                                    "id": c.graduationDesignDatumId
+                                                }
+                                            ]
+                                        };
                                 }
                             }
                         }
@@ -239,13 +256,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                     edit($(this).attr('data-id'));
                 });
 
-                /*  tableElement.delegate('.del', "click", function () {
-                 del($(this).attr('data-id'));
-                 });
+                tableElement.delegate('.del', "click", function () {
+                    del($(this).attr('data-id'));
+                });
 
-                 tableElement.delegate('.download', "click", function () {
-                 download($(this).attr('data-id'));
-                 });*/
+                tableElement.delegate('.download', "click", function () {
+                    download($(this).attr('data-id'));
+                });
             }
         });
 
@@ -414,6 +431,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         function datumTypeData(data) {
             var template = Handlebars.compile($("#datum-type-template").html());
             $(getParamId().graduationDesignDatumTypeName).html(template(data));
+            $(addParamId.graduationDesignDatumTypeId).html(template(data));
         }
 
         /**
@@ -421,9 +439,18 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          * @param graduationDesignDatumId
          */
         function edit(graduationDesignDatumId) {
-            $.post(getAjaxUrl().operator_condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+            $.post(web_path + getAjaxUrl().datum_info, {
+                id: init_page_param.graduationDesignReleaseId,
+                graduationDesignDatumId: graduationDesignDatumId
+            }, function (data) {
                 if (data.state) {
-                    $.address.value(getAjaxUrl().edit + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignDatumId=' + graduationDesignDatumId);
+                    $(addParamId.graduationDesignDatumTypeId).val(data.objectResult.graduationDesignDatumTypeId);
+                    $(addParamId.graduationDesignDatumTypeId).prop('disabled', true);
+                    $(addParamId.version).val(data.objectResult.version);
+                    $(addParamId.fileName).text(data.objectResult.originalFileName);
+                    $(addParamId.fileSize).text(data.objectResult.size);
+                    $(addParamId.graduationDesignDatumId).val(graduationDesignDatumId);
+                    showUploadModal();
                 } else {
                     Messenger().post({
                         message: data.msg,
@@ -433,5 +460,285 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 }
             });
         }
+
+        /**
+         * 删除
+         * @param graduationDesignDatumId
+         */
+        function del(graduationDesignDatumId) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定删除文件吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            sendDelAjax(graduationDesignDatumId, '删除', 1);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * 删除
+         * @param graduationDesignDatumId
+         */
+        function download(graduationDesignDatumId) {
+            window.location.href = getAjaxUrl().download + '?id=' + init_page_param.graduationDesignReleaseId + '&graduationDesignDatumId=' + graduationDesignDatumId;
+        }
+
+        /**
+         * 删除ajax
+         * @param graduationDesignDatumId
+         * @param message
+         */
+        function sendDelAjax(graduationDesignDatumId, message) {
+            Messenger().run({
+                successMessage: message + '文件成功',
+                errorMessage: message + '文件失败',
+                progressMessage: '正在' + message + '文件....'
+            }, {
+                url: web_path + getAjaxUrl().del,
+                type: 'post',
+                data: {
+                    id: init_page_param.graduationDesignReleaseId,
+                    graduationDesignDatumId: graduationDesignDatumId
+                },
+                success: function (data) {
+                    if (data.state) {
+                        myTable.ajax.reload();
+                        console.log('haha')
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
+        }
+
+        // 添加参数
+        var addParam = {
+            graduationDesignDatumTypeId: '',
+            version: '',
+            graduationDesignReleaseId: init_page_param.graduationDesignReleaseId,
+            graduationDesignDatumId: ''
+        };
+
+        // 添加参数id
+        var addParamId = {
+            graduationDesignDatumTypeId: '#select_datum_type',
+            version: '#version',
+            fileName: '#fileName',
+            fileSize: '#fileSize',
+            graduationDesignDatumId: '#graduationDesignDatumId'
+        };
+
+        // 检验id
+        var addParamValidId = {
+            graduationDesignDatumTypeId: '#valid_datum_type',
+            version: '#valid_version'
+        };
+
+        // 错误id
+        var addParamErrorId = {
+            graduationDesignDatumTypeId: '#datum_type_error_msg',
+            version: '#version_error_msg'
+        };
+
+        /**
+         * 检验成功
+         * @param validId
+         * @param errorMsgId
+         */
+        function validSuccessDom(validId, errorMsgId) {
+            $(validId).addClass('has-success').removeClass('has-error');
+            $(errorMsgId).addClass('hidden').text('');
+        }
+
+        /**
+         * 检验失败
+         * @param validId
+         * @param errorMsgId
+         * @param msg
+         */
+        function validErrorDom(validId, errorMsgId, msg) {
+            $(validId).addClass('has-error').removeClass('has-success');
+            $(errorMsgId).removeClass('hidden').text(msg);
+        }
+
+        /*
+         清除验证
+         */
+        function validCleanDom(inputId, errorId) {
+            $(inputId).removeClass('has-error').removeClass('has-success');
+            $(errorId).addClass('hidden').text('');
+        }
+
+        /**
+         * 初始化添加参数
+         */
+        function initAddParam() {
+            addParam.graduationDesignDatumTypeId = $(addParamId.graduationDesignDatumTypeId).val();
+            addParam.version = $(addParamId.version).val();
+            addParam.graduationDesignDatumId = $(addParamId.graduationDesignDatumId).val();
+        }
+
+
+        /*
+         即时检验
+         */
+        $(addParamId.graduationDesignDatumTypeId).change(function () {
+            initAddParam();
+            var graduationDesignDatumTypeId = addParam.graduationDesignDatumTypeId;
+            if (Number(graduationDesignDatumTypeId) <= 0) {
+                validErrorDom(addParamValidId.graduationDesignDatumTypeId, addParamErrorId.graduationDesignDatumTypeId, '请选择题目类型');
+            } else {
+                validSuccessDom(addParamValidId.graduationDesignDatumTypeId, addParamErrorId.graduationDesignDatumTypeId);
+            }
+        });
+
+        $(addParamId.version).change(function () {
+            initAddParam();
+            var version = addParam.version;
+            if (version !== '') {
+                if (version.length <= 0 || version.length > 10) {
+                    validErrorDom(addParamValidId.version, addParamErrorId.version, '版本应为10个字符之间');
+                } else {
+                    validSuccessDom(addParamValidId.version, addParamErrorId.version);
+                }
+            }
+        });
+
+        /**
+         * 展开上传文件modal
+         */
+        function showUploadModal() {
+            $('#uploadModal').modal('show');
+        }
+
+        /**
+         * 关闭文件上传modal
+         */
+        function closeUploadModal() {
+            $(addParamId.graduationDesignDatumTypeId).val(0);
+            $(addParamId.version).val('');
+            $(addParamId.fileName).text('');
+            $(addParamId.fileSize).text('');
+            validCleanDom(addParamValidId.graduationDesignDatumTypeId, addParamErrorId.graduationDesignDatumTypeId);
+            validCleanDom(addParamValidId.version, addParamErrorId.version);
+            $('#uploadModal').modal('hide');
+        }
+
+        var startUpload = null; // 开始上传
+
+        // 上传组件
+        $('#fileupload').fileupload({
+            url: web_path + getAjaxUrl().file_upload_url,
+            dataType: 'json',
+            maxFileSize: 100000000,// 100MB
+            acceptFileTypes: /([.\/])(doc|docx|xls|xlsx|ppt|pptx)$/i,
+            formAcceptCharset: 'utf-8',
+            autoUpload: false,// 关闭自动上传
+            maxNumberOfFiles: 1,
+            messages: {
+                maxNumberOfFiles: '最大支持上传1个文件',
+                acceptFileTypes: '仅支持上传doc,docx,xls,xlsx,ppt,pptx等类型文件',
+                maxFileSize: '单文件上传仅允许100MB大小'
+            },
+            add: function (e, data) {
+                $(addParamId.fileName).text(data.files[0].name);
+                $(addParamId.fileSize).text(data.files[0].size);
+                startUpload = data;
+            },
+            submit: function (e, data) {
+                data.formData = addParam;
+            },
+            done: function (e, data) {
+                closeUploadModal();// 清空信息
+                myTable.ajax.reload();
+            }
+        }).on('fileuploadsubmit', function (evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function (data) {
+                isOk = false;
+                Messenger().post({
+                    message: '上传失败: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
+        });
+
+        function validGraduationDesignDatumTypeId() {
+            var graduationDesignDatumTypeId = addParam.graduationDesignDatumTypeId;
+            if (Number(graduationDesignDatumTypeId) <= 0) {
+                Messenger().post({
+                    message: '请选择题目类型',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                validVersion();
+            }
+        }
+
+        function validVersion() {
+            var version = addParam.version;
+            if (version !== '') {
+                if (version.length > 10) {
+                    Messenger().post({
+                        message: '版本应为10个字符之间',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                } else {
+                    validUpload();
+                }
+            } else {
+                validUpload();
+            }
+        }
+
+        function validUpload() {
+            var fileName = $(addParamId.fileName).text();
+            if (fileName !== '') {
+                $(addParamId.graduationDesignDatumTypeId).prop('disabled', false);
+                startUpload.submit();
+            } else {
+                Messenger().post({
+                    message: '请选择文件',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        }
+
+        // 确认上传
+        $('#confirmUpload').click(function () {
+            initAddParam();
+            validGraduationDesignDatumTypeId();
+        });
+
+        // 取消上传
+        $('#cancelUpload').click(function () {
+            closeUploadModal();// 清空信息
+        });
 
     });
