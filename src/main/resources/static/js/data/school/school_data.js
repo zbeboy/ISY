@@ -47,7 +47,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[1, 'desc']],// 排序
+            "aaSorting": [[1, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().schools,
                 "dataSrc": "data",
