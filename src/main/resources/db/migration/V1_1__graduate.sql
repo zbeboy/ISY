@@ -159,8 +159,8 @@ CREATE TABLE graduation_design_datum(
 
 CREATE TABLE defense_arrangement(
   defense_arrangement_id VARCHAR(64) PRIMARY KEY ,
-  paper_start_time DATETIME NOT NULL ,
-  paper_end_time DATETIME NOT NULL ,
+  paper_start_date DATE NOT NULL ,
+  paper_end_date DATE NOT NULL ,
   defense_start_date DATE NOT NULL ,
   defense_end_date DATE NOT NULL ,
   defense_start_time VARCHAR(20) NOT NULL ,
@@ -173,7 +173,6 @@ CREATE TABLE defense_arrangement(
 CREATE TABLE defense_group(
   defense_group_id VARCHAR(64) PRIMARY KEY ,
   defense_group_name VARCHAR(20) NOT NULL ,
-  defense_group_number INT NOT NULL ,
   schoolroom_id INT NOT NULL ,
   note VARCHAR(100) ,
   group_leader VARCHAR(64) NOT NULL ,
@@ -184,7 +183,6 @@ CREATE TABLE defense_group(
 );
 
 CREATE TABLE defense_group_member(
-  group_member_id VARCHAR(64) PRIMARY KEY ,
   graduation_design_teacher_id VARCHAR(64) NOT NULL ,
   defense_group_id VARCHAR(64) NOT NULL ,
   note VARCHAR(100),
@@ -201,9 +199,7 @@ CREATE TABLE defense_order(
   defense_time VARCHAR(20) NOT NULL ,
   staff_name VARCHAR(30) NOT NULL ,
   graduation_design_tutor_id VARCHAR(64) NOT NULL ,
-  group_member_id VARCHAR(64) NOT NULL ,
-  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id),
-  FOREIGN KEY (group_member_id) REFERENCES defense_group_member(group_member_id)
+  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
 );
 
 CREATE TABLE graduate_bill(

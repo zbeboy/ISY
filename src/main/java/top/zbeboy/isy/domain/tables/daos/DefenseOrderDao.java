@@ -117,11 +117,4 @@ public class DefenseOrderDao extends DAOImpl<DefenseOrderRecord, top.zbeboy.isy.
     public List<top.zbeboy.isy.domain.tables.pojos.DefenseOrder> fetchByGraduationDesignTutorId(String... values) {
         return fetch(DefenseOrder.DEFENSE_ORDER.GRADUATION_DESIGN_TUTOR_ID, values);
     }
-
-    /**
-     * Fetch records that have <code>group_member_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseOrder> fetchByGroupMemberId(String... values) {
-        return fetch(DefenseOrder.DEFENSE_ORDER.GROUP_MEMBER_ID, values);
-    }
 }

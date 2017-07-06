@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder implements Serializable {
 
-    private static final long serialVersionUID = 134545688;
+    private static final long serialVersionUID = -1030151827;
 
     private String defenseOrderId;
     private String studentNumber;
@@ -35,7 +35,6 @@ public class DefenseOrder implements Serializable {
     private String defenseTime;
     private String staffName;
     private String graduationDesignTutorId;
-    private String groupMemberId;
 
     public DefenseOrder() {}
 
@@ -48,7 +47,6 @@ public class DefenseOrder implements Serializable {
         this.defenseTime = value.defenseTime;
         this.staffName = value.staffName;
         this.graduationDesignTutorId = value.graduationDesignTutorId;
-        this.groupMemberId = value.groupMemberId;
     }
 
     public DefenseOrder(
@@ -59,8 +57,7 @@ public class DefenseOrder implements Serializable {
         Date   defenseDate,
         String defenseTime,
         String staffName,
-        String graduationDesignTutorId,
-        String groupMemberId
+        String graduationDesignTutorId
     ) {
         this.defenseOrderId = defenseOrderId;
         this.studentNumber = studentNumber;
@@ -70,7 +67,6 @@ public class DefenseOrder implements Serializable {
         this.defenseTime = defenseTime;
         this.staffName = staffName;
         this.graduationDesignTutorId = graduationDesignTutorId;
-        this.groupMemberId = groupMemberId;
     }
 
     @NotNull
@@ -152,16 +148,6 @@ public class DefenseOrder implements Serializable {
         this.graduationDesignTutorId = graduationDesignTutorId;
     }
 
-    @NotNull
-    @Size(max = 64)
-    public String getGroupMemberId() {
-        return this.groupMemberId;
-    }
-
-    public void setGroupMemberId(String groupMemberId) {
-        this.groupMemberId = groupMemberId;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("DefenseOrder (");
@@ -174,7 +160,6 @@ public class DefenseOrder implements Serializable {
         sb.append(", ").append(defenseTime);
         sb.append(", ").append(staffName);
         sb.append(", ").append(graduationDesignTutorId);
-        sb.append(", ").append(groupMemberId);
 
         sb.append(")");
         return sb.toString();

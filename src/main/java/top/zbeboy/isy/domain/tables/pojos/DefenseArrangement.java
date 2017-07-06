@@ -6,7 +6,6 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -26,24 +25,24 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseArrangement implements Serializable {
 
-    private static final long serialVersionUID = 1477262601;
+    private static final long serialVersionUID = 496202211;
 
-    private String    defenseArrangementId;
-    private Timestamp paperStartTime;
-    private Timestamp paperEndTime;
-    private Date      defenseStartDate;
-    private Date      defenseEndDate;
-    private String    defenseStartTime;
-    private String    defenseEndTime;
-    private String    defenseNote;
-    private String    graduationDesignReleaseId;
+    private String defenseArrangementId;
+    private Date   paperStartDate;
+    private Date   paperEndDate;
+    private Date   defenseStartDate;
+    private Date   defenseEndDate;
+    private String defenseStartTime;
+    private String defenseEndTime;
+    private String defenseNote;
+    private String graduationDesignReleaseId;
 
     public DefenseArrangement() {}
 
     public DefenseArrangement(DefenseArrangement value) {
         this.defenseArrangementId = value.defenseArrangementId;
-        this.paperStartTime = value.paperStartTime;
-        this.paperEndTime = value.paperEndTime;
+        this.paperStartDate = value.paperStartDate;
+        this.paperEndDate = value.paperEndDate;
         this.defenseStartDate = value.defenseStartDate;
         this.defenseEndDate = value.defenseEndDate;
         this.defenseStartTime = value.defenseStartTime;
@@ -53,19 +52,19 @@ public class DefenseArrangement implements Serializable {
     }
 
     public DefenseArrangement(
-        String    defenseArrangementId,
-        Timestamp paperStartTime,
-        Timestamp paperEndTime,
-        Date      defenseStartDate,
-        Date      defenseEndDate,
-        String    defenseStartTime,
-        String    defenseEndTime,
-        String    defenseNote,
-        String    graduationDesignReleaseId
+        String defenseArrangementId,
+        Date   paperStartDate,
+        Date   paperEndDate,
+        Date   defenseStartDate,
+        Date   defenseEndDate,
+        String defenseStartTime,
+        String defenseEndTime,
+        String defenseNote,
+        String graduationDesignReleaseId
     ) {
         this.defenseArrangementId = defenseArrangementId;
-        this.paperStartTime = paperStartTime;
-        this.paperEndTime = paperEndTime;
+        this.paperStartDate = paperStartDate;
+        this.paperEndDate = paperEndDate;
         this.defenseStartDate = defenseStartDate;
         this.defenseEndDate = defenseEndDate;
         this.defenseStartTime = defenseStartTime;
@@ -85,21 +84,21 @@ public class DefenseArrangement implements Serializable {
     }
 
     @NotNull
-    public Timestamp getPaperStartTime() {
-        return this.paperStartTime;
+    public Date getPaperStartDate() {
+        return this.paperStartDate;
     }
 
-    public void setPaperStartTime(Timestamp paperStartTime) {
-        this.paperStartTime = paperStartTime;
+    public void setPaperStartDate(Date paperStartDate) {
+        this.paperStartDate = paperStartDate;
     }
 
     @NotNull
-    public Timestamp getPaperEndTime() {
-        return this.paperEndTime;
+    public Date getPaperEndDate() {
+        return this.paperEndDate;
     }
 
-    public void setPaperEndTime(Timestamp paperEndTime) {
-        this.paperEndTime = paperEndTime;
+    public void setPaperEndDate(Date paperEndDate) {
+        this.paperEndDate = paperEndDate;
     }
 
     @NotNull
@@ -164,8 +163,8 @@ public class DefenseArrangement implements Serializable {
         StringBuilder sb = new StringBuilder("DefenseArrangement (");
 
         sb.append(defenseArrangementId);
-        sb.append(", ").append(paperStartTime);
-        sb.append(", ").append(paperEndTime);
+        sb.append(", ").append(paperStartDate);
+        sb.append(", ").append(paperEndDate);
         sb.append(", ").append(defenseStartDate);
         sb.append(", ").append(defenseEndDate);
         sb.append(", ").append(defenseStartTime);

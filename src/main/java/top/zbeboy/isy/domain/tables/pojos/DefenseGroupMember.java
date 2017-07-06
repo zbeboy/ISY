@@ -24,9 +24,8 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroupMember implements Serializable {
 
-    private static final long serialVersionUID = -1955214783;
+    private static final long serialVersionUID = 73340108;
 
-    private String groupMemberId;
     private String graduationDesignTeacherId;
     private String defenseGroupId;
     private String note;
@@ -34,32 +33,19 @@ public class DefenseGroupMember implements Serializable {
     public DefenseGroupMember() {}
 
     public DefenseGroupMember(DefenseGroupMember value) {
-        this.groupMemberId = value.groupMemberId;
         this.graduationDesignTeacherId = value.graduationDesignTeacherId;
         this.defenseGroupId = value.defenseGroupId;
         this.note = value.note;
     }
 
     public DefenseGroupMember(
-        String groupMemberId,
         String graduationDesignTeacherId,
         String defenseGroupId,
         String note
     ) {
-        this.groupMemberId = groupMemberId;
         this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.defenseGroupId = defenseGroupId;
         this.note = note;
-    }
-
-    @NotNull
-    @Size(max = 64)
-    public String getGroupMemberId() {
-        return this.groupMemberId;
-    }
-
-    public void setGroupMemberId(String groupMemberId) {
-        this.groupMemberId = groupMemberId;
     }
 
     @NotNull
@@ -95,8 +81,7 @@ public class DefenseGroupMember implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("DefenseGroupMember (");
 
-        sb.append(groupMemberId);
-        sb.append(", ").append(graduationDesignTeacherId);
+        sb.append(graduationDesignTeacherId);
         sb.append(", ").append(defenseGroupId);
         sb.append(", ").append(note);
 

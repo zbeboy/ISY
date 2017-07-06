@@ -24,11 +24,10 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroup implements Serializable {
 
-    private static final long serialVersionUID = -1688076504;
+    private static final long serialVersionUID = -886996526;
 
     private String  defenseGroupId;
     private String  defenseGroupName;
-    private Integer defenseGroupNumber;
     private Integer schoolroomId;
     private String  note;
     private String  groupLeader;
@@ -39,7 +38,6 @@ public class DefenseGroup implements Serializable {
     public DefenseGroup(DefenseGroup value) {
         this.defenseGroupId = value.defenseGroupId;
         this.defenseGroupName = value.defenseGroupName;
-        this.defenseGroupNumber = value.defenseGroupNumber;
         this.schoolroomId = value.schoolroomId;
         this.note = value.note;
         this.groupLeader = value.groupLeader;
@@ -49,7 +47,6 @@ public class DefenseGroup implements Serializable {
     public DefenseGroup(
         String  defenseGroupId,
         String  defenseGroupName,
-        Integer defenseGroupNumber,
         Integer schoolroomId,
         String  note,
         String  groupLeader,
@@ -57,7 +54,6 @@ public class DefenseGroup implements Serializable {
     ) {
         this.defenseGroupId = defenseGroupId;
         this.defenseGroupName = defenseGroupName;
-        this.defenseGroupNumber = defenseGroupNumber;
         this.schoolroomId = schoolroomId;
         this.note = note;
         this.groupLeader = groupLeader;
@@ -82,15 +78,6 @@ public class DefenseGroup implements Serializable {
 
     public void setDefenseGroupName(String defenseGroupName) {
         this.defenseGroupName = defenseGroupName;
-    }
-
-    @NotNull
-    public Integer getDefenseGroupNumber() {
-        return this.defenseGroupNumber;
-    }
-
-    public void setDefenseGroupNumber(Integer defenseGroupNumber) {
-        this.defenseGroupNumber = defenseGroupNumber;
     }
 
     @NotNull
@@ -137,7 +124,6 @@ public class DefenseGroup implements Serializable {
 
         sb.append(defenseGroupId);
         sb.append(", ").append(defenseGroupName);
-        sb.append(", ").append(defenseGroupNumber);
         sb.append(", ").append(schoolroomId);
         sb.append(", ").append(note);
         sb.append(", ").append(groupLeader);

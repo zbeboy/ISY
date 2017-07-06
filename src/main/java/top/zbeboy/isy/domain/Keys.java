@@ -204,7 +204,6 @@ public class Keys {
     public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = UniqueKeys0.KEY_COLLEGE_ROLE_PRIMARY;
     public static final UniqueKey<DefenseArrangementRecord> KEY_DEFENSE_ARRANGEMENT_PRIMARY = UniqueKeys0.KEY_DEFENSE_ARRANGEMENT_PRIMARY;
     public static final UniqueKey<DefenseGroupRecord> KEY_DEFENSE_GROUP_PRIMARY = UniqueKeys0.KEY_DEFENSE_GROUP_PRIMARY;
-    public static final UniqueKey<DefenseGroupMemberRecord> KEY_DEFENSE_GROUP_MEMBER_PRIMARY = UniqueKeys0.KEY_DEFENSE_GROUP_MEMBER_PRIMARY;
     public static final UniqueKey<DefenseOrderRecord> KEY_DEFENSE_ORDER_PRIMARY = UniqueKeys0.KEY_DEFENSE_ORDER_PRIMARY;
     public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
@@ -298,7 +297,6 @@ public class Keys {
     public static final ForeignKey<DefenseGroupMemberRecord, GraduationDesignTeacherRecord> DEFENSE_GROUP_MEMBER_IBFK_1 = ForeignKeys0.DEFENSE_GROUP_MEMBER_IBFK_1;
     public static final ForeignKey<DefenseGroupMemberRecord, DefenseGroupRecord> DEFENSE_GROUP_MEMBER_IBFK_2 = ForeignKeys0.DEFENSE_GROUP_MEMBER_IBFK_2;
     public static final ForeignKey<DefenseOrderRecord, GraduationDesignTutorRecord> DEFENSE_ORDER_IBFK_1 = ForeignKeys0.DEFENSE_ORDER_IBFK_1;
-    public static final ForeignKey<DefenseOrderRecord, DefenseGroupMemberRecord> DEFENSE_ORDER_IBFK_2 = ForeignKeys0.DEFENSE_ORDER_IBFK_2;
     public static final ForeignKey<DepartmentRecord, CollegeRecord> DEPARTMENT_IBFK_1 = ForeignKeys0.DEPARTMENT_IBFK_1;
     public static final ForeignKey<GraduateArchivesRecord, GraduateBillRecord> GRADUATE_ARCHIVES_IBFK_1 = ForeignKeys0.GRADUATE_ARCHIVES_IBFK_1;
     public static final ForeignKey<GraduateBillRecord, GraduationDesignReleaseRecord> GRADUATE_BILL_IBFK_1 = ForeignKeys0.GRADUATE_BILL_IBFK_1;
@@ -410,7 +408,6 @@ public class Keys {
         public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = createUniqueKey(CollegeRole.COLLEGE_ROLE, "KEY_college_role_PRIMARY", CollegeRole.COLLEGE_ROLE.ROLE_ID, CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
         public static final UniqueKey<DefenseArrangementRecord> KEY_DEFENSE_ARRANGEMENT_PRIMARY = createUniqueKey(DefenseArrangement.DEFENSE_ARRANGEMENT, "KEY_defense_arrangement_PRIMARY", DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID);
         public static final UniqueKey<DefenseGroupRecord> KEY_DEFENSE_GROUP_PRIMARY = createUniqueKey(DefenseGroup.DEFENSE_GROUP, "KEY_defense_group_PRIMARY", DefenseGroup.DEFENSE_GROUP.DEFENSE_GROUP_ID);
-        public static final UniqueKey<DefenseGroupMemberRecord> KEY_DEFENSE_GROUP_MEMBER_PRIMARY = createUniqueKey(DefenseGroupMember.DEFENSE_GROUP_MEMBER, "KEY_defense_group_member_PRIMARY", DefenseGroupMember.DEFENSE_GROUP_MEMBER.GROUP_MEMBER_ID);
         public static final UniqueKey<DefenseOrderRecord> KEY_DEFENSE_ORDER_PRIMARY = createUniqueKey(DefenseOrder.DEFENSE_ORDER, "KEY_defense_order_PRIMARY", DefenseOrder.DEFENSE_ORDER.DEFENSE_ORDER_ID);
         public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = createUniqueKey(Department.DEPARTMENT, "KEY_department_PRIMARY", Department.DEPARTMENT.DEPARTMENT_ID);
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);
@@ -502,7 +499,6 @@ public class Keys {
         public static final ForeignKey<DefenseGroupMemberRecord, GraduationDesignTeacherRecord> DEFENSE_GROUP_MEMBER_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_TEACHER_PRIMARY, DefenseGroupMember.DEFENSE_GROUP_MEMBER, "defense_group_member_ibfk_1", DefenseGroupMember.DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID);
         public static final ForeignKey<DefenseGroupMemberRecord, DefenseGroupRecord> DEFENSE_GROUP_MEMBER_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_DEFENSE_GROUP_PRIMARY, DefenseGroupMember.DEFENSE_GROUP_MEMBER, "defense_group_member_ibfk_2", DefenseGroupMember.DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID);
         public static final ForeignKey<DefenseOrderRecord, GraduationDesignTutorRecord> DEFENSE_ORDER_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_TUTOR_PRIMARY, DefenseOrder.DEFENSE_ORDER, "defense_order_ibfk_1", DefenseOrder.DEFENSE_ORDER.GRADUATION_DESIGN_TUTOR_ID);
-        public static final ForeignKey<DefenseOrderRecord, DefenseGroupMemberRecord> DEFENSE_ORDER_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_DEFENSE_GROUP_MEMBER_PRIMARY, DefenseOrder.DEFENSE_ORDER, "defense_order_ibfk_2", DefenseOrder.DEFENSE_ORDER.GROUP_MEMBER_ID);
         public static final ForeignKey<DepartmentRecord, CollegeRecord> DEPARTMENT_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_COLLEGE_PRIMARY, Department.DEPARTMENT, "department_ibfk_1", Department.DEPARTMENT.COLLEGE_ID);
         public static final ForeignKey<GraduateArchivesRecord, GraduateBillRecord> GRADUATE_ARCHIVES_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATE_BILL_PRIMARY, GraduateArchives.GRADUATE_ARCHIVES, "graduate_archives_ibfk_1", GraduateArchives.GRADUATE_ARCHIVES.GRADUATE_BILL_ID);
         public static final ForeignKey<GraduateBillRecord, GraduationDesignReleaseRecord> GRADUATE_BILL_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_GRADUATION_DESIGN_RELEASE_PRIMARY, GraduateBill.GRADUATE_BILL, "graduate_bill_ibfk_1", GraduateBill.GRADUATE_BILL.GRADUATION_DESIGN_RELEASE_ID);

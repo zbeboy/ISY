@@ -14,7 +14,6 @@ import org.jooq.ForeignKey;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
-import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -35,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroupMember extends TableImpl<DefenseGroupMemberRecord> {
 
-    private static final long serialVersionUID = 1366497785;
+    private static final long serialVersionUID = -501615897;
 
     /**
      * The reference instance of <code>isy.defense_group_member</code>
@@ -49,11 +48,6 @@ public class DefenseGroupMember extends TableImpl<DefenseGroupMemberRecord> {
     public Class<DefenseGroupMemberRecord> getRecordType() {
         return DefenseGroupMemberRecord.class;
     }
-
-    /**
-     * The column <code>isy.defense_group_member.group_member_id</code>.
-     */
-    public final TableField<DefenseGroupMemberRecord, String> GROUP_MEMBER_ID = createField("group_member_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.defense_group_member.graduation_design_teacher_id</code>.
@@ -98,22 +92,6 @@ public class DefenseGroupMember extends TableImpl<DefenseGroupMemberRecord> {
     @Override
     public Schema getSchema() {
         return Isy.ISY;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public UniqueKey<DefenseGroupMemberRecord> getPrimaryKey() {
-        return Keys.KEY_DEFENSE_GROUP_MEMBER_PRIMARY;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<UniqueKey<DefenseGroupMemberRecord>> getKeys() {
-        return Arrays.<UniqueKey<DefenseGroupMemberRecord>>asList(Keys.KEY_DEFENSE_GROUP_MEMBER_PRIMARY);
     }
 
     /**

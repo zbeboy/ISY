@@ -76,13 +76,6 @@ public class DefenseGroupDao extends DAOImpl<DefenseGroupRecord, top.zbeboy.isy.
     }
 
     /**
-     * Fetch records that have <code>defense_group_number IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchByDefenseGroupNumber(Integer... values) {
-        return fetch(DefenseGroup.DEFENSE_GROUP.DEFENSE_GROUP_NUMBER, values);
-    }
-
-    /**
      * Fetch records that have <code>schoolroom_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchBySchoolroomId(Integer... values) {
