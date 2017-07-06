@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.graduate.design;
 
+import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignHopeTutorRecord;
@@ -24,6 +25,14 @@ public interface GraduationDesignHopeTutorService {
      * @return 数据
      */
     Result<GraduationDesignHopeTutorRecord> findByStudentId(int studentId);
+
+    /**
+     * 根据学生id查询教师信息
+     *
+     * @param studentId 学生id
+     * @return 教师信息
+     */
+    Result<Record> findByStudentIdRelationForStaff(int studentId);
 
     /**
      * 保存

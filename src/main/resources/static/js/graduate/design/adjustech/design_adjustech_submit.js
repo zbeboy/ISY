@@ -14,6 +14,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                 adjust_teacher: '/web/graduate/design/adjustech/teachers',
                 update: '/web/graduate/design/adjustech/update',
                 del: '/web/graduate/design/adjustech/delete',
+                wish: '/web/graduate/design/adjustech/student/wish',
                 back: '/web/menu/graduate/design/adjustech'
             };
         }
@@ -117,6 +118,14 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                         {
                             func: [
                                 {
+                                    "name": "志愿",
+                                    "css": "wish",
+                                    "type": "default",
+                                    "id": c.graduationDesignTutorId,
+                                    "studentName": c.studentName,
+                                    "graduationDesignTeacherId": c.graduationDesignTeacherId
+                                },
+                                {
                                     "name": "调整",
                                     "css": "edit",
                                     "type": "primary",
@@ -167,6 +176,10 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
+                tableElement.delegate('.wish', "click", function () {
+                    wish($(this).attr('data-id'));
+                });
+
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'), $(this).attr('data-teacher'));
                 });
@@ -313,6 +326,24 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         });
 
         /*
+        志愿
+         */
+        function wish(id){
+            $.post(getAjaxUrl().wish, {graduationDesignTutorId: id}, function (data) {
+                if (data.state) {
+                    wishData(data);
+                    $('#wishModal').modal('show');
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /*
          调整
          */
         function edit(id, graduationDesignTeacherId) {
@@ -336,7 +367,11 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                     $('#teacherGraduationDesignTeacherId').val(graduationDesignTeacherId);
                     $('#teacherModal').modal('show');
                 } else {
-                    $('#teacher_error_msg').removeClass('hidden').addClass('text-danger').text(data.msg);
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             });
         }
@@ -348,6 +383,15 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         function teachersData(data) {
             var template = Handlebars.compile($("#adjust-teacher-template").html());
             $('#teachers').html(template(data));
+        }
+
+        /**
+         * 志愿数据
+         * @param data 数据
+         */
+        function wishData(data) {
+            var template = Handlebars.compile($("#wish-template").html());
+            $('#wishData').html(template(data));
         }
 
         /**

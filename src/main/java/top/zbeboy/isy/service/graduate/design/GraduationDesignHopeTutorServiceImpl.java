@@ -2,6 +2,7 @@ package top.zbeboy.isy.service.graduate.design;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignHopeTutorRecord;
 
-import static top.zbeboy.isy.domain.Tables.GRADUATION_DESIGN_HOPE_TUTOR;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by zbeboy on 2017/5/17.
@@ -40,6 +41,20 @@ public class GraduationDesignHopeTutorServiceImpl implements GraduationDesignHop
     @Override
     public Result<GraduationDesignHopeTutorRecord> findByStudentId(int studentId) {
         return create.selectFrom(GRADUATION_DESIGN_HOPE_TUTOR)
+                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findByStudentIdRelationForStaff(int studentId) {
+        return create.select()
+                .from(GRADUATION_DESIGN_HOPE_TUTOR)
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_HOPE_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .join(STAFF)
+                .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId))
                 .fetch();
     }

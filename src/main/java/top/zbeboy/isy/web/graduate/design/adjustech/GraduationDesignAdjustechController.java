@@ -22,6 +22,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignHopeTutorService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService;
@@ -29,6 +30,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignHopeTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
@@ -65,6 +67,9 @@ public class GraduationDesignAdjustechController {
 
     @Resource
     private GraduationDesignTeacherService graduationDesignTeacherService;
+
+    @Resource
+    private GraduationDesignHopeTutorService graduationDesignHopeTutorService;
 
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> stringValueOperations;
@@ -349,6 +354,30 @@ public class GraduationDesignAdjustechController {
             dataTablesUtils.setiTotalDisplayRecords(graduationDesignTutorService.countNotFillByCondition(dataTablesUtils, condition));
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 查询学生志愿信息
+     *
+     * @param graduationDesignTutorId 毕业设计教师与学生关联id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/adjustech/student/wish", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignHopeTutorBean> studentWish(@RequestParam("graduationDesignTutorId") String graduationDesignTutorId) {
+        AjaxUtils<GraduationDesignHopeTutorBean> ajaxUtils = AjaxUtils.of();
+        GraduationDesignTutor graduationDesignTutor = graduationDesignTutorService.findById(graduationDesignTutorId);
+        if (!ObjectUtils.isEmpty(graduationDesignTutor)) {
+            Result<Record> records = graduationDesignHopeTutorService.findByStudentIdRelationForStaff(graduationDesignTutor.getStudentId());
+            List<GraduationDesignHopeTutorBean> graduationDesignHopeTutorBeens = new ArrayList<>();
+            if (records.isNotEmpty()) {
+                graduationDesignHopeTutorBeens = records.into(GraduationDesignHopeTutorBean.class);
+            }
+            ajaxUtils.success().msg("获取数据成功").listData(graduationDesignHopeTutorBeens);
+        } else {
+            ajaxUtils.fail().msg("未查询到相关信息");
+        }
+        return ajaxUtils;
     }
 
     /**

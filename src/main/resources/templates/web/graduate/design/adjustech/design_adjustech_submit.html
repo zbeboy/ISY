@@ -105,6 +105,23 @@
                 </div>
             </div>
         </div>
+        <!-- 学生志愿模态框 -->
+        <div class="modal fade" id="wishModal" tabindex="-1" role="dialog" aria-labelledby="wishModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="wishModalLabel">志愿教师</h4>
+                    </div>
+                    <div class="modal-body" id="wishData">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--定义操作列按钮模板-->
         <script id="operator_button" type="text/x-handlebars-template">
             {{#each func}}
@@ -130,6 +147,11 @@
                     {{realName}}  {{staffMobile}}
                 </label>
             </div>
+            {{/each}}
+        </script>
+        <script id="wish-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <span>{{realName}}</span> <span>{{mobile}}</span><br/>
             {{/each}}
         </script>
         <script th:inline="javascript">

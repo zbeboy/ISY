@@ -86,6 +86,23 @@
                 </div>
             </div>
         </div>
+        <!-- 学生志愿模态框 -->
+        <div class="modal fade" id="wishModal" tabindex="-1" role="dialog" aria-labelledby="wishModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="wishModalLabel">志愿教师</h4>
+                    </div>
+                    <div class="modal-body" id="wishData">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="teacher-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>
@@ -110,6 +127,9 @@
                 <td>{{username}}</td>
                 <td>{{mobile}}</td>
                 <td>
+                    <button type="button" class="btn btn-default btn-sm hope_tutor"
+                            data-id="{{graduationDesignTutorId}}">志愿
+                    </button>
                     <button type="button" class="btn btn-primary btn-sm adjust_teacher"
                             data-id="{{graduationDesignTutorId}}" data-teacher="{{graduationDesignTeacherId}}">调整
                     </button>
@@ -132,6 +152,11 @@
                     {{realName}}  {{staffMobile}}
                 </label>
             </div>
+            {{/each}}
+        </script>
+        <script id="wish-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <span>{{realName}}</span> <span>{{mobile}}</span><br/>
             {{/each}}
         </script>
         <!-- /.footer -->

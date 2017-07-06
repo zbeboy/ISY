@@ -12,6 +12,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         adjust_teacher: '/web/graduate/design/adjustech/teachers',
         update: '/web/graduate/design/adjustech/update',
         del: '/web/graduate/design/adjustech/delete',
+        wish: '/web/graduate/design/adjustech/student/wish',
         back: '/web/menu/graduate/design/adjustech'
     };
 
@@ -111,6 +112,15 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         $('#teachers').html(template(data));
     }
 
+    /**
+     * 志愿数据
+     * @param data 数据
+     */
+    function wishData(data) {
+        var template = Handlebars.compile($("#wish-template").html());
+        $('#wishData').html(template(data));
+    }
+
     /*
      详情
      */
@@ -118,6 +128,25 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         $('#teacherName').text($(this).attr('data-name'));
         $('#teacherMobile').text($(this).attr('data-mobile'));
         initStudentData($(this).attr('data-id'));
+    });
+
+    /*
+     查看学生志愿
+     */
+    $(studentData).delegate('.hope_tutor', "click", function () {
+        var id = $(this).attr('data-id');
+        $.post(ajax_url.wish, {graduationDesignTutorId: id}, function (data) {
+            if (data.state) {
+                wishData(data);
+                $('#wishModal').modal('show');
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
     });
 
     /*
