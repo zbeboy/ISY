@@ -25,17 +25,18 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseArrangement implements Serializable {
 
-    private static final long serialVersionUID = 496202211;
+    private static final long serialVersionUID = -1763649941;
 
-    private String defenseArrangementId;
-    private Date   paperStartDate;
-    private Date   paperEndDate;
-    private Date   defenseStartDate;
-    private Date   defenseEndDate;
-    private String defenseStartTime;
-    private String defenseEndTime;
-    private String defenseNote;
-    private String graduationDesignReleaseId;
+    private String  defenseArrangementId;
+    private Date    paperStartDate;
+    private Date    paperEndDate;
+    private Date    defenseStartDate;
+    private Date    defenseEndDate;
+    private String  defenseStartTime;
+    private String  defenseEndTime;
+    private Integer intervalTime;
+    private String  defenseNote;
+    private String  graduationDesignReleaseId;
 
     public DefenseArrangement() {}
 
@@ -47,20 +48,22 @@ public class DefenseArrangement implements Serializable {
         this.defenseEndDate = value.defenseEndDate;
         this.defenseStartTime = value.defenseStartTime;
         this.defenseEndTime = value.defenseEndTime;
+        this.intervalTime = value.intervalTime;
         this.defenseNote = value.defenseNote;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
     }
 
     public DefenseArrangement(
-        String defenseArrangementId,
-        Date   paperStartDate,
-        Date   paperEndDate,
-        Date   defenseStartDate,
-        Date   defenseEndDate,
-        String defenseStartTime,
-        String defenseEndTime,
-        String defenseNote,
-        String graduationDesignReleaseId
+        String  defenseArrangementId,
+        Date    paperStartDate,
+        Date    paperEndDate,
+        Date    defenseStartDate,
+        Date    defenseEndDate,
+        String  defenseStartTime,
+        String  defenseEndTime,
+        Integer intervalTime,
+        String  defenseNote,
+        String  graduationDesignReleaseId
     ) {
         this.defenseArrangementId = defenseArrangementId;
         this.paperStartDate = paperStartDate;
@@ -69,6 +72,7 @@ public class DefenseArrangement implements Serializable {
         this.defenseEndDate = defenseEndDate;
         this.defenseStartTime = defenseStartTime;
         this.defenseEndTime = defenseEndTime;
+        this.intervalTime = intervalTime;
         this.defenseNote = defenseNote;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
     }
@@ -139,6 +143,15 @@ public class DefenseArrangement implements Serializable {
         this.defenseEndTime = defenseEndTime;
     }
 
+    @NotNull
+    public Integer getIntervalTime() {
+        return this.intervalTime;
+    }
+
+    public void setIntervalTime(Integer intervalTime) {
+        this.intervalTime = intervalTime;
+    }
+
     @Size(max = 100)
     public String getDefenseNote() {
         return this.defenseNote;
@@ -169,6 +182,7 @@ public class DefenseArrangement implements Serializable {
         sb.append(", ").append(defenseEndDate);
         sb.append(", ").append(defenseStartTime);
         sb.append(", ").append(defenseEndTime);
+        sb.append(", ").append(intervalTime);
         sb.append(", ").append(defenseNote);
         sb.append(", ").append(graduationDesignReleaseId);
 

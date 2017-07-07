@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseOrderRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
 
-    private static final long serialVersionUID = -1105166590;
+    private static final long serialVersionUID = 871784435;
 
     /**
      * The reference instance of <code>isy.defense_order</code>
@@ -92,9 +92,19 @@ public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
     public final TableField<DefenseOrderRecord, Integer> SCORE_TYPE_ID = createField("score_type_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>isy.defense_order.graduation_design_tutor_id</code>.
+     * The column <code>isy.defense_order.sort_num</code>.
      */
-    public final TableField<DefenseOrderRecord, String> GRADUATION_DESIGN_TUTOR_ID = createField("graduation_design_tutor_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<DefenseOrderRecord, Integer> SORT_NUM = createField("sort_num", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.defense_order.student_id</code>.
+     */
+    public final TableField<DefenseOrderRecord, Integer> STUDENT_ID = createField("student_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.defense_order.defense_group_id</code>.
+     */
+    public final TableField<DefenseOrderRecord, String> DEFENSE_GROUP_ID = createField("defense_group_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.defense_order</code> table reference
@@ -147,7 +157,7 @@ public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
      */
     @Override
     public List<ForeignKey<DefenseOrderRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<DefenseOrderRecord, ?>>asList(Keys.DEFENSE_ORDER_IBFK_1);
+        return Arrays.<ForeignKey<DefenseOrderRecord, ?>>asList(Keys.DEFENSE_ORDER_IBFK_1, Keys.DEFENSE_ORDER_IBFK_2);
     }
 
     /**

@@ -165,6 +165,7 @@ CREATE TABLE defense_arrangement(
   defense_end_date DATE NOT NULL ,
   defense_start_time VARCHAR(20) NOT NULL ,
   defense_end_time VARCHAR(20) NOT NULL ,
+  interval_time INT NOT NULL ,
   defense_note VARCHAR(100),
   graduation_design_release_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id)
@@ -199,8 +200,11 @@ CREATE TABLE defense_order(
   defense_time VARCHAR(20) NOT NULL ,
   staff_name VARCHAR(30) NOT NULL ,
   score_type_id INT NOT NULL ,
-  graduation_design_tutor_id VARCHAR(64) NOT NULL ,
-  FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
+  sort_num INT NOT NULL ,
+  student_id INT NOT NULL ,
+  defense_group_id VARCHAR(64) NOT NULL ,
+  FOREIGN KEY (student_id) REFERENCES student(student_id) ,
+  FOREIGN KEY (defense_group_id) REFERENCES defense_group(defense_group_id)
 );
 
 CREATE TABLE graduate_bill(
