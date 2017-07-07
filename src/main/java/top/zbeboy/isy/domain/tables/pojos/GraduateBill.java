@@ -24,30 +24,26 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateBill implements Serializable {
 
-    private static final long serialVersionUID = 950295524;
+    private static final long serialVersionUID = 1858390705;
 
-    private String  graduateBillId;
-    private Integer scoreTypeId;
-    private String  graduationDesignReleaseId;
-    private String  graduationDesignPresubjectId;
+    private String graduateBillId;
+    private String graduationDesignReleaseId;
+    private String graduationDesignPresubjectId;
 
     public GraduateBill() {}
 
     public GraduateBill(GraduateBill value) {
         this.graduateBillId = value.graduateBillId;
-        this.scoreTypeId = value.scoreTypeId;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
         this.graduationDesignPresubjectId = value.graduationDesignPresubjectId;
     }
 
     public GraduateBill(
-        String  graduateBillId,
-        Integer scoreTypeId,
-        String  graduationDesignReleaseId,
-        String  graduationDesignPresubjectId
+        String graduateBillId,
+        String graduationDesignReleaseId,
+        String graduationDesignPresubjectId
     ) {
         this.graduateBillId = graduateBillId;
-        this.scoreTypeId = scoreTypeId;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
         this.graduationDesignPresubjectId = graduationDesignPresubjectId;
     }
@@ -60,15 +56,6 @@ public class GraduateBill implements Serializable {
 
     public void setGraduateBillId(String graduateBillId) {
         this.graduateBillId = graduateBillId;
-    }
-
-    @NotNull
-    public Integer getScoreTypeId() {
-        return this.scoreTypeId;
-    }
-
-    public void setScoreTypeId(Integer scoreTypeId) {
-        this.scoreTypeId = scoreTypeId;
     }
 
     @NotNull
@@ -96,7 +83,6 @@ public class GraduateBill implements Serializable {
         StringBuilder sb = new StringBuilder("GraduateBill (");
 
         sb.append(graduateBillId);
-        sb.append(", ").append(scoreTypeId);
         sb.append(", ").append(graduationDesignReleaseId);
         sb.append(", ").append(graduationDesignPresubjectId);
 

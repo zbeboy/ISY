@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduateBillRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateBill extends TableImpl<GraduateBillRecord> {
 
-    private static final long serialVersionUID = -694642097;
+    private static final long serialVersionUID = -1544787839;
 
     /**
      * The reference instance of <code>isy.graduate_bill</code>
@@ -54,11 +54,6 @@ public class GraduateBill extends TableImpl<GraduateBillRecord> {
      * The column <code>isy.graduate_bill.graduate_bill_id</code>.
      */
     public final TableField<GraduateBillRecord, String> GRADUATE_BILL_ID = createField("graduate_bill_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
-
-    /**
-     * The column <code>isy.graduate_bill.score_type_id</code>.
-     */
-    public final TableField<GraduateBillRecord, Integer> SCORE_TYPE_ID = createField("score_type_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>isy.graduate_bill.graduation_design_release_id</code>.

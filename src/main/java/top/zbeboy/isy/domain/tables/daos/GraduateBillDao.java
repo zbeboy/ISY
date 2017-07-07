@@ -69,13 +69,6 @@ public class GraduateBillDao extends DAOImpl<GraduateBillRecord, top.zbeboy.isy.
     }
 
     /**
-     * Fetch records that have <code>score_type_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.GraduateBill> fetchByScoreTypeId(Integer... values) {
-        return fetch(GraduateBill.GRADUATE_BILL.SCORE_TYPE_ID, values);
-    }
-
-    /**
      * Fetch records that have <code>graduation_design_release_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduateBill> fetchByGraduationDesignReleaseId(String... values) {

@@ -198,13 +198,13 @@ CREATE TABLE defense_order(
   defense_date DATE NOT NULL ,
   defense_time VARCHAR(20) NOT NULL ,
   staff_name VARCHAR(30) NOT NULL ,
+  score_type_id INT NOT NULL ,
   graduation_design_tutor_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_tutor_id) REFERENCES graduation_design_tutor(graduation_design_tutor_id)
 );
 
 CREATE TABLE graduate_bill(
   graduate_bill_id VARCHAR(64) PRIMARY KEY ,
-  score_type_id INT NOT NULL ,
   graduation_design_release_id VARCHAR(64) NOT NULL ,
   graduation_design_presubject_id VARCHAR(64) NOT NULL UNIQUE ,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id),

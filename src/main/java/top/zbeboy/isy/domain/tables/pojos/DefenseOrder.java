@@ -25,16 +25,17 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder implements Serializable {
 
-    private static final long serialVersionUID = -1030151827;
+    private static final long serialVersionUID = -1475200584;
 
-    private String defenseOrderId;
-    private String studentNumber;
-    private String studentName;
-    private String subject;
-    private Date   defenseDate;
-    private String defenseTime;
-    private String staffName;
-    private String graduationDesignTutorId;
+    private String  defenseOrderId;
+    private String  studentNumber;
+    private String  studentName;
+    private String  subject;
+    private Date    defenseDate;
+    private String  defenseTime;
+    private String  staffName;
+    private Integer scoreTypeId;
+    private String  graduationDesignTutorId;
 
     public DefenseOrder() {}
 
@@ -46,18 +47,20 @@ public class DefenseOrder implements Serializable {
         this.defenseDate = value.defenseDate;
         this.defenseTime = value.defenseTime;
         this.staffName = value.staffName;
+        this.scoreTypeId = value.scoreTypeId;
         this.graduationDesignTutorId = value.graduationDesignTutorId;
     }
 
     public DefenseOrder(
-        String defenseOrderId,
-        String studentNumber,
-        String studentName,
-        String subject,
-        Date   defenseDate,
-        String defenseTime,
-        String staffName,
-        String graduationDesignTutorId
+        String  defenseOrderId,
+        String  studentNumber,
+        String  studentName,
+        String  subject,
+        Date    defenseDate,
+        String  defenseTime,
+        String  staffName,
+        Integer scoreTypeId,
+        String  graduationDesignTutorId
     ) {
         this.defenseOrderId = defenseOrderId;
         this.studentNumber = studentNumber;
@@ -66,6 +69,7 @@ public class DefenseOrder implements Serializable {
         this.defenseDate = defenseDate;
         this.defenseTime = defenseTime;
         this.staffName = staffName;
+        this.scoreTypeId = scoreTypeId;
         this.graduationDesignTutorId = graduationDesignTutorId;
     }
 
@@ -139,6 +143,15 @@ public class DefenseOrder implements Serializable {
     }
 
     @NotNull
+    public Integer getScoreTypeId() {
+        return this.scoreTypeId;
+    }
+
+    public void setScoreTypeId(Integer scoreTypeId) {
+        this.scoreTypeId = scoreTypeId;
+    }
+
+    @NotNull
     @Size(max = 64)
     public String getGraduationDesignTutorId() {
         return this.graduationDesignTutorId;
@@ -159,6 +172,7 @@ public class DefenseOrder implements Serializable {
         sb.append(", ").append(defenseDate);
         sb.append(", ").append(defenseTime);
         sb.append(", ").append(staffName);
+        sb.append(", ").append(scoreTypeId);
         sb.append(", ").append(graduationDesignTutorId);
 
         sb.append(")");
