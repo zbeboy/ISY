@@ -27,6 +27,7 @@ requirejs.config({
         "bootstrap-datetimepicker-zh-CN": web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.min",
         "bootstrap-datetimepicker": web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
         "bootstrap-daterangepicker": web_path + "/plugin/bootstrap-daterangepicker/daterangepicker.min",
+        "clockface": web_path + "/plugin/clockface/js/clockface.min",
         "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min",
         "bootstrap-duallistbox": web_path + "/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
@@ -77,6 +78,9 @@ requirejs.config({
         },
         "bootstrap-daterangepicker": {
             deps: ["css!" + web_path + "/plugin/bootstrap-daterangepicker/daterangepicker.min"]
+        },
+        "clockface": {
+            deps: ["css!" + web_path + "/plugin/clockface/css/clockface.min"]
         },
         "bootstrap-select-zh-CN": {
             deps: ["bootstrap-select", "css!" + web_path + "/plugin/bootstrap-select/css/bootstrap-select.min"]

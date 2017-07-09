@@ -98,20 +98,6 @@ public class DefenseArrangementDao extends DAOImpl<DefenseArrangementRecord, top
     }
 
     /**
-     * Fetch records that have <code>defense_start_time IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByDefenseStartTime(String... values) {
-        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_START_TIME, values);
-    }
-
-    /**
-     * Fetch records that have <code>defense_end_time IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByDefenseEndTime(String... values) {
-        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_END_TIME, values);
-    }
-
-    /**
      * Fetch records that have <code>interval_time IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByIntervalTime(Integer... values) {

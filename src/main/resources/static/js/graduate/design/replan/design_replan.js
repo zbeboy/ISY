@@ -8,7 +8,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            release_data_url: '/anyone/graduate/design/release/data'
+            release_data_url: '/anyone/graduate/design/release/data',
+            arrange_url:'/web/graduate/design/replan/arrange'
         };
 
         /*
@@ -119,6 +120,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
 
             $(tableData).html(template(data));
         }
+
+        /*
+         设置
+         */
+        $(tableData).delegate('.design_replan_arrange', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.arrange_url + '?id=' + id);
+        });
 
         init();
 

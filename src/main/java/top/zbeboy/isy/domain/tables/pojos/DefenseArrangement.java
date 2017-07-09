@@ -25,15 +25,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseArrangement implements Serializable {
 
-    private static final long serialVersionUID = -1763649941;
+    private static final long serialVersionUID = 89217220;
 
     private String  defenseArrangementId;
     private Date    paperStartDate;
     private Date    paperEndDate;
     private Date    defenseStartDate;
     private Date    defenseEndDate;
-    private String  defenseStartTime;
-    private String  defenseEndTime;
     private Integer intervalTime;
     private String  defenseNote;
     private String  graduationDesignReleaseId;
@@ -46,8 +44,6 @@ public class DefenseArrangement implements Serializable {
         this.paperEndDate = value.paperEndDate;
         this.defenseStartDate = value.defenseStartDate;
         this.defenseEndDate = value.defenseEndDate;
-        this.defenseStartTime = value.defenseStartTime;
-        this.defenseEndTime = value.defenseEndTime;
         this.intervalTime = value.intervalTime;
         this.defenseNote = value.defenseNote;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
@@ -59,8 +55,6 @@ public class DefenseArrangement implements Serializable {
         Date    paperEndDate,
         Date    defenseStartDate,
         Date    defenseEndDate,
-        String  defenseStartTime,
-        String  defenseEndTime,
         Integer intervalTime,
         String  defenseNote,
         String  graduationDesignReleaseId
@@ -70,8 +64,6 @@ public class DefenseArrangement implements Serializable {
         this.paperEndDate = paperEndDate;
         this.defenseStartDate = defenseStartDate;
         this.defenseEndDate = defenseEndDate;
-        this.defenseStartTime = defenseStartTime;
-        this.defenseEndTime = defenseEndTime;
         this.intervalTime = intervalTime;
         this.defenseNote = defenseNote;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
@@ -124,26 +116,6 @@ public class DefenseArrangement implements Serializable {
     }
 
     @NotNull
-    @Size(max = 20)
-    public String getDefenseStartTime() {
-        return this.defenseStartTime;
-    }
-
-    public void setDefenseStartTime(String defenseStartTime) {
-        this.defenseStartTime = defenseStartTime;
-    }
-
-    @NotNull
-    @Size(max = 20)
-    public String getDefenseEndTime() {
-        return this.defenseEndTime;
-    }
-
-    public void setDefenseEndTime(String defenseEndTime) {
-        this.defenseEndTime = defenseEndTime;
-    }
-
-    @NotNull
     public Integer getIntervalTime() {
         return this.intervalTime;
     }
@@ -180,8 +152,6 @@ public class DefenseArrangement implements Serializable {
         sb.append(", ").append(paperEndDate);
         sb.append(", ").append(defenseStartDate);
         sb.append(", ").append(defenseEndDate);
-        sb.append(", ").append(defenseStartTime);
-        sb.append(", ").append(defenseEndTime);
         sb.append(", ").append(intervalTime);
         sb.append(", ").append(defenseNote);
         sb.append(", ").append(graduationDesignReleaseId);

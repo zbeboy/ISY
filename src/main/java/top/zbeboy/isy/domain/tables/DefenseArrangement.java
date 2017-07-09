@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseArrangementRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseArrangement extends TableImpl<DefenseArrangementRecord> {
 
-    private static final long serialVersionUID = -1597789398;
+    private static final long serialVersionUID = -1324253417;
 
     /**
      * The reference instance of <code>isy.defense_arrangement</code>
@@ -75,16 +75,6 @@ public class DefenseArrangement extends TableImpl<DefenseArrangementRecord> {
      * The column <code>isy.defense_arrangement.defense_end_date</code>.
      */
     public final TableField<DefenseArrangementRecord, Date> DEFENSE_END_DATE = createField("defense_end_date", org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
-
-    /**
-     * The column <code>isy.defense_arrangement.defense_start_time</code>.
-     */
-    public final TableField<DefenseArrangementRecord, String> DEFENSE_START_TIME = createField("defense_start_time", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
-
-    /**
-     * The column <code>isy.defense_arrangement.defense_end_time</code>.
-     */
-    public final TableField<DefenseArrangementRecord, String> DEFENSE_END_TIME = createField("defense_end_time", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
      * The column <code>isy.defense_arrangement.interval_time</code>.

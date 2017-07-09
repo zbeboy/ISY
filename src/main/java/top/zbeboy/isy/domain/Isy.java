@@ -25,6 +25,7 @@ import top.zbeboy.isy.domain.tables.DefenseArrangement;
 import top.zbeboy.isy.domain.tables.DefenseGroup;
 import top.zbeboy.isy.domain.tables.DefenseGroupMember;
 import top.zbeboy.isy.domain.tables.DefenseOrder;
+import top.zbeboy.isy.domain.tables.DefenseTime;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
 import top.zbeboy.isy.domain.tables.GraduateArchives;
@@ -99,7 +100,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = 1715166883;
+    private static final long serialVersionUID = -147650521;
 
     /**
      * The reference instance of <code>isy</code>
@@ -160,6 +161,11 @@ public class Isy extends SchemaImpl {
      * The table <code>isy.defense_order</code>.
      */
     public final DefenseOrder DEFENSE_ORDER = top.zbeboy.isy.domain.tables.DefenseOrder.DEFENSE_ORDER;
+
+    /**
+     * The table <code>isy.defense_time</code>.
+     */
+    public final DefenseTime DEFENSE_TIME = top.zbeboy.isy.domain.tables.DefenseTime.DEFENSE_TIME;
 
     /**
      * The table <code>isy.department</code>.
@@ -492,6 +498,7 @@ public class Isy extends SchemaImpl {
             DefenseGroup.DEFENSE_GROUP,
             DefenseGroupMember.DEFENSE_GROUP_MEMBER,
             DefenseOrder.DEFENSE_ORDER,
+            DefenseTime.DEFENSE_TIME,
             Department.DEPARTMENT,
             Files.FILES,
             GraduateArchives.GRADUATE_ARCHIVES,

@@ -163,12 +163,18 @@ CREATE TABLE defense_arrangement(
   paper_end_date DATE NOT NULL ,
   defense_start_date DATE NOT NULL ,
   defense_end_date DATE NOT NULL ,
-  defense_start_time VARCHAR(20) NOT NULL ,
-  defense_end_time VARCHAR(20) NOT NULL ,
   interval_time INT NOT NULL ,
   defense_note VARCHAR(100),
   graduation_design_release_id VARCHAR(64) NOT NULL ,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release(graduation_design_release_id)
+);
+
+CREATE TABLE defense_time(
+  defense_start_time VARCHAR(20) NOT NULL ,
+  defense_end_time VARCHAR(20) NOT NULL ,
+  sort_time INT NOT NULL ,
+  defense_arrangement_id VARCHAR(64) NOT NULL ,
+  FOREIGN KEY (defense_arrangement_id) REFERENCES defense_arrangement(defense_arrangement_id)
 );
 
 CREATE TABLE defense_group(
