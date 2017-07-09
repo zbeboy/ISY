@@ -3,7 +3,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zbeboy/ISY/v11/LICENSE) 
 [![GitHub stars](https://img.shields.io/github/stars/zbeboy/ISY.svg)](https://github.com/zbeboy/ISY/stargazers)
 # 开发环境
-1.JDK 1.8.*;
+1.JDK 1.8.*;  
 2.Intellij IDEA 2015 +;  
 3.MySQL 5.7 +;  
 4.Maven 3.5.0 +;  
@@ -11,7 +11,7 @@
 6.Elasticsearch 2.4.5;  
 7.Redis last version;  
 # 安装
-1.Clone 代码;
+1.Clone 代码;  
 2.配置application.properties(开发环境),仅供开发者使用;  
 3.额外配置(settings目录),仅供开发者使用;  
 4.安装lombok插件.
