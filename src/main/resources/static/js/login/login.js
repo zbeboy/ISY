@@ -156,7 +156,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
         $(paramId.email).typeahead({
             source: function (query, process) {
 
-                if(query.indexOf('@') === -1){
+                if (query.indexOf('@') === -1) {
                     var tempArr = [];
                     for (var i = 0; i < emails.mailArr.length; i++) {
                         tempArr.push(query + emails.mailArr[i])
@@ -292,7 +292,13 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
                             endLoading();
                             break;
                         case error_code.OK_CODE:
-                            window.location.href = web_path + ajax_url.backstage;
+                            var url = window.location.href;
+                            var toBackstage = web_path + ajax_url.backstage;
+                            // 登录后直接去刚刚被弹出的地方
+                            if (url.indexOf('#') !== -1) {
+                                toBackstage += url.substring(url.lastIndexOf('#'));
+                            }
+                            window.location.href = toBackstage;
                             break;
                         case error_code.SCHOOL_IS_DEL_CODE:
                             changeJcaptcha();
