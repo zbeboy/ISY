@@ -25,27 +25,39 @@
                         <label>毕业论文评阅日期</label>
                         <input class="form-control" name="paperDate" id="paperDate" placeholder="毕业论文评阅日期"
                                readonly="readonly"/>
-                        <input type="hidden" name="graduationDesignReleaseId" th:value="${graduationDesignReleaseId}">
+                        <input type="hidden" name="graduationDesignReleaseId" th:value="${defenseArrangement.graduationDesignReleaseId}">
+                        <input type="hidden" name="defenseArrangementId" th:value="${defenseArrangement.defenseArrangementId}">
+                        <input type="hidden" th:value="${defenseArrangement.paperStartDate}"
+                               id="paperStartDate"/>
+                        <input type="hidden" th:value="${defenseArrangement.paperEndDate}"
+                               id="paperEndDate"/>
                         <p class="text-danger hidden" id="paper_date_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_defense_date">
                         <label>答辩日期</label>
                         <input class="form-control" name="defenseDate" id="defenseDate" placeholder="答辩日期"
                                readonly="readonly"/>
+                        <input type="hidden" th:value="${defenseArrangement.defenseStartDate}"
+                               id="defenseStartDate"/>
+                        <input type="hidden" th:value="${defenseArrangement.defenseEndDate}"
+                               id="defenseEndDate"/>
                         <p class="text-danger hidden" id="defense_date_error_msg"></p>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" th:unless="${#lists.isEmpty(defenseTimes)}">
                         <label>每日答辩时间</label>
-                        <div class="row" style="margin-top: 10px;">
+                        <div class="row" th:each="row,rowStat : ${defenseTimes}" style="margin-top: 10px;">
                             <div class="col-md-4">
-                                <input class="form-control day_defense" value="08:00" name="defenseStartTime"
+                                <input class="form-control day_defense" th:value="${row.defenseStartTime}" name="defenseStartTime"
                                        placeholder="开始时间"
                                        readonly="readonly"/>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control day_defense" value="12:00" name="defenseEndTime"
+                                <input class="form-control day_defense" th:value="${row.defenseEndTime}" name="defenseEndTime"
                                        placeholder="结束时间"
                                        readonly="readonly"/>
+                            </div>
+                            <div class="col-md-2" th:if="${rowStat.count &gt; 1}">
+                                <button type="button" class="btn btn-default defenseDel"><i class="fa fa-minus"></i>删除</button>
                             </div>
                         </div>
                         <p class="text-danger hidden" id="day_defense_error_msg"></p>
@@ -56,12 +68,12 @@
                     </div>
                     <div class="form-group" id="valid_interval_time">
                         <label>答辩间隔时间</label>
-                        <input class="form-control" type="number" id="intervalTime" name="intervalTime" placeholder="答辩间隔时间"/>
+                        <input class="form-control" type="number" id="intervalTime" th:value="${defenseArrangement.intervalTime}" name="intervalTime" placeholder="答辩间隔时间"/>
                         <p class="text-danger hidden" id="interval_time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_defense_note">
                         <label>答辩说明</label>
-                        <textarea class="form-control" rows="3" name="defenseNote" placeholder="答辩说明"></textarea>
+                        <textarea class="form-control" rows="3" name="defenseNote" placeholder="答辩说明" th:text="${defenseArrangement.defenseNote}"></textarea>
                         <p class="text-danger hidden" id="defense_note_error_msg"></p>
                     </div>
                     <div class="text-center">
@@ -91,7 +103,7 @@
                 </div>
             </div>
         </script>
-        <input type="hidden" class="dy_script" value="/js/graduate/design/replan/design_replan_arrange_add.js"/>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/replan/design_replan_arrange_edit.js"/>
     </div>
     <!-- /#page-wrapper -->
 </div>
