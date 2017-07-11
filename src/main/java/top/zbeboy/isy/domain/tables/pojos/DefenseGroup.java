@@ -5,6 +5,7 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,14 +25,16 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroup implements Serializable {
 
-    private static final long serialVersionUID = -886996526;
+    private static final long serialVersionUID = -260371551;
 
-    private String  defenseGroupId;
-    private String  defenseGroupName;
-    private Integer schoolroomId;
-    private String  note;
-    private String  groupLeader;
-    private String  defenseArrangementId;
+    private String    defenseGroupId;
+    private String    defenseGroupName;
+    private Integer   schoolroomId;
+    private String    note;
+    private String    leaderId;
+    private String    secretaryId;
+    private String    defenseArrangementId;
+    private Timestamp createTime;
 
     public DefenseGroup() {}
 
@@ -40,24 +43,30 @@ public class DefenseGroup implements Serializable {
         this.defenseGroupName = value.defenseGroupName;
         this.schoolroomId = value.schoolroomId;
         this.note = value.note;
-        this.groupLeader = value.groupLeader;
+        this.leaderId = value.leaderId;
+        this.secretaryId = value.secretaryId;
         this.defenseArrangementId = value.defenseArrangementId;
+        this.createTime = value.createTime;
     }
 
     public DefenseGroup(
-        String  defenseGroupId,
-        String  defenseGroupName,
-        Integer schoolroomId,
-        String  note,
-        String  groupLeader,
-        String  defenseArrangementId
+        String    defenseGroupId,
+        String    defenseGroupName,
+        Integer   schoolroomId,
+        String    note,
+        String    leaderId,
+        String    secretaryId,
+        String    defenseArrangementId,
+        Timestamp createTime
     ) {
         this.defenseGroupId = defenseGroupId;
         this.defenseGroupName = defenseGroupName;
         this.schoolroomId = schoolroomId;
         this.note = note;
-        this.groupLeader = groupLeader;
+        this.leaderId = leaderId;
+        this.secretaryId = secretaryId;
         this.defenseArrangementId = defenseArrangementId;
+        this.createTime = createTime;
     }
 
     @NotNull
@@ -98,14 +107,22 @@ public class DefenseGroup implements Serializable {
         this.note = note;
     }
 
-    @NotNull
     @Size(max = 64)
-    public String getGroupLeader() {
-        return this.groupLeader;
+    public String getLeaderId() {
+        return this.leaderId;
     }
 
-    public void setGroupLeader(String groupLeader) {
-        this.groupLeader = groupLeader;
+    public void setLeaderId(String leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    @Size(max = 64)
+    public String getSecretaryId() {
+        return this.secretaryId;
+    }
+
+    public void setSecretaryId(String secretaryId) {
+        this.secretaryId = secretaryId;
     }
 
     @NotNull
@@ -118,6 +135,15 @@ public class DefenseGroup implements Serializable {
         this.defenseArrangementId = defenseArrangementId;
     }
 
+    @NotNull
+    public Timestamp getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("DefenseGroup (");
@@ -126,8 +152,10 @@ public class DefenseGroup implements Serializable {
         sb.append(", ").append(defenseGroupName);
         sb.append(", ").append(schoolroomId);
         sb.append(", ").append(note);
-        sb.append(", ").append(groupLeader);
+        sb.append(", ").append(leaderId);
+        sb.append(", ").append(secretaryId);
         sb.append(", ").append(defenseArrangementId);
+        sb.append(", ").append(createTime);
 
         sb.append(")");
         return sb.toString();

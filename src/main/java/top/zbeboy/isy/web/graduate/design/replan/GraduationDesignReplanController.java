@@ -17,11 +17,13 @@ import top.zbeboy.isy.domain.tables.pojos.DefenseTime;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.graduate.design.DefenseArrangementService;
+import top.zbeboy.isy.service.graduate.design.DefenseGroupService;
 import top.zbeboy.isy.service.graduate.design.DefenseTimeService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.vo.graduate.design.replan.GraduationDesignReplanAddVo;
 import top.zbeboy.isy.web.vo.graduate.design.replan.GraduationDesignReplanUpdateVo;
@@ -50,6 +52,9 @@ public class GraduationDesignReplanController {
 
     @Resource
     private DefenseTimeService defenseTimeService;
+
+    @Resource
+    private DefenseGroupService defenseGroupService;
 
     /**
      * 毕业设计答辩安排
@@ -82,6 +87,30 @@ public class GraduationDesignReplanController {
             } else {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/replan/design_replan_arrange_add::#page-wrapper";
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 毕业设计答辩组管理
+     *
+     * @return 毕业设计答辩组管理页面
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group", method = RequestMethod.GET)
+    public String group(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            if (record.isPresent()) {
+                DefenseArrangement defenseArrangement = record.get().into(DefenseArrangement.class);
+                modelMap.addAttribute("defenseArrangement", defenseArrangement);
+                page = "web/graduate/design/replan/design_replan_group::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -173,6 +202,27 @@ public class GraduationDesignReplanController {
             }
         } else {
             ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 组管理数据
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param defenseArrangementId      毕业答辩安排 id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<DefenseGroupBean> groupData(@RequestParam("id") String graduationDesignReleaseId,
+                                                 @RequestParam("defenseArrangementId") String defenseArrangementId) {
+        AjaxUtils<DefenseGroupBean> ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("获取数据成功").listData(defenseGroupService.findByDefenseArrangementId(defenseArrangementId));
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
     }

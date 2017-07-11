@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables;
 
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseGroupRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroup extends TableImpl<DefenseGroupRecord> {
 
-    private static final long serialVersionUID = -1732316094;
+    private static final long serialVersionUID = -1833954350;
 
     /**
      * The reference instance of <code>isy.defense_group</code>
@@ -71,14 +72,24 @@ public class DefenseGroup extends TableImpl<DefenseGroupRecord> {
     public final TableField<DefenseGroupRecord, String> NOTE = createField("note", org.jooq.impl.SQLDataType.VARCHAR.length(100), this, "");
 
     /**
-     * The column <code>isy.defense_group.group_leader</code>.
+     * The column <code>isy.defense_group.leader_id</code>.
      */
-    public final TableField<DefenseGroupRecord, String> GROUP_LEADER = createField("group_leader", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<DefenseGroupRecord, String> LEADER_ID = createField("leader_id", org.jooq.impl.SQLDataType.VARCHAR.length(64), this, "");
+
+    /**
+     * The column <code>isy.defense_group.secretary_id</code>.
+     */
+    public final TableField<DefenseGroupRecord, String> SECRETARY_ID = createField("secretary_id", org.jooq.impl.SQLDataType.VARCHAR.length(64), this, "");
 
     /**
      * The column <code>isy.defense_group.defense_arrangement_id</code>.
      */
     public final TableField<DefenseGroupRecord, String> DEFENSE_ARRANGEMENT_ID = createField("defense_arrangement_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.defense_group.create_time</code>.
+     */
+    public final TableField<DefenseGroupRecord, Timestamp> CREATE_TIME = createField("create_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * Create a <code>isy.defense_group</code> table reference
@@ -131,7 +142,7 @@ public class DefenseGroup extends TableImpl<DefenseGroupRecord> {
      */
     @Override
     public List<ForeignKey<DefenseGroupRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<DefenseGroupRecord, ?>>asList(Keys.DEFENSE_GROUP_IBFK_1, Keys.DEFENSE_GROUP_IBFK_2, Keys.DEFENSE_GROUP_IBFK_3);
+        return Arrays.<ForeignKey<DefenseGroupRecord, ?>>asList(Keys.DEFENSE_GROUP_IBFK_1, Keys.DEFENSE_GROUP_IBFK_2);
     }
 
     /**

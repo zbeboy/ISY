@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -90,10 +91,17 @@ public class DefenseGroupDao extends DAOImpl<DefenseGroupRecord, top.zbeboy.isy.
     }
 
     /**
-     * Fetch records that have <code>group_leader IN (values)</code>
+     * Fetch records that have <code>leader_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchByGroupLeader(String... values) {
-        return fetch(DefenseGroup.DEFENSE_GROUP.GROUP_LEADER, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchByLeaderId(String... values) {
+        return fetch(DefenseGroup.DEFENSE_GROUP.LEADER_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>secretary_id IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchBySecretaryId(String... values) {
+        return fetch(DefenseGroup.DEFENSE_GROUP.SECRETARY_ID, values);
     }
 
     /**
@@ -101,5 +109,12 @@ public class DefenseGroupDao extends DAOImpl<DefenseGroupRecord, top.zbeboy.isy.
      */
     public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchByDefenseArrangementId(String... values) {
         return fetch(DefenseGroup.DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>create_time IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseGroup> fetchByCreateTime(Timestamp... values) {
+        return fetch(DefenseGroup.DEFENSE_GROUP.CREATE_TIME, values);
     }
 }
