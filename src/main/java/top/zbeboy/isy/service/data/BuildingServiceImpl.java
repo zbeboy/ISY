@@ -12,6 +12,8 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.BuildingDao;
 import top.zbeboy.isy.domain.tables.pojos.Building;
+import top.zbeboy.isy.domain.tables.pojos.College;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.BuildingRecord;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -22,6 +24,7 @@ import top.zbeboy.isy.web.bean.data.building.BuildingBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +48,9 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private DepartmentService departmentService;
 
     @Autowired
     public BuildingServiceImpl(DSLContext dslContext) {
@@ -240,6 +246,24 @@ public class BuildingServiceImpl extends DataTablesPlugin<BuildingBean> implemen
         for (int id : ids) {
             create.update(BUILDING).set(BUILDING.BUILDING_IS_DEL, isDel).where(BUILDING.BUILDING_ID.eq(id)).execute();
         }
+    }
+
+    @Override
+    public List<Building> generateBuildFromGraduationDesignRelease(GraduationDesignRelease graduationDesignRelease) {
+        List<Building> buildings = new ArrayList<>();
+        Byte isDel = 0;
+        Building building = new Building(0, "请选择楼", isDel, 0);
+        buildings.add(building);
+        Optional<Record> record = departmentService.findByIdRelation(graduationDesignRelease.getDepartmentId());
+        if (record.isPresent()) {
+            College college = record.get().into(College.class);
+            Result<BuildingRecord> buildingRecords = findByCollegeIdAndIsDel(college.getCollegeId(), isDel);
+            for (BuildingRecord r : buildingRecords) {
+                Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getBuildingIsDel(), r.getCollegeId());
+                buildings.add(tempBuilding);
+            }
+        }
+        return buildings;
     }
 
     /**

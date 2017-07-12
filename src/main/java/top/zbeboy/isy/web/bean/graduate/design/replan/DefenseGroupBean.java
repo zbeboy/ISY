@@ -10,6 +10,7 @@ import top.zbeboy.isy.domain.tables.pojos.DefenseGroup;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class DefenseGroupBean extends DefenseGroup {
+    private Integer buildingId;
     private String buildingName;
     private String buildingCode;
     private String staffName;

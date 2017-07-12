@@ -7,24 +7,24 @@ import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.domain.tables.pojos.DefenseArrangement;
-import top.zbeboy.isy.domain.tables.pojos.DefenseTime;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
-import top.zbeboy.isy.service.graduate.design.DefenseArrangementService;
-import top.zbeboy.isy.service.graduate.design.DefenseGroupService;
-import top.zbeboy.isy.service.graduate.design.DefenseTimeService;
-import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
+import top.zbeboy.isy.service.data.BuildingService;
+import top.zbeboy.isy.service.graduate.design.*;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.SmallPropsUtils;
+import top.zbeboy.isy.web.vo.graduate.design.replan.DefenseGroupAddVo;
+import top.zbeboy.isy.web.vo.graduate.design.replan.DefenseGroupUpdateVo;
 import top.zbeboy.isy.web.vo.graduate.design.replan.GraduationDesignReplanAddVo;
 import top.zbeboy.isy.web.vo.graduate.design.replan.GraduationDesignReplanUpdateVo;
 
@@ -55,6 +55,15 @@ public class GraduationDesignReplanController {
 
     @Resource
     private DefenseGroupService defenseGroupService;
+
+    @Resource
+    private BuildingService buildingService;
+
+    @Resource
+    private DefenseOrderService defenseOrderService;
+
+    @Resource
+    private DefenseGroupMemberService defenseGroupMemberService;
 
     /**
      * 毕业设计答辩安排
@@ -111,6 +120,60 @@ public class GraduationDesignReplanController {
                 page = "web/graduate/design/replan/design_replan_group::#page-wrapper";
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 添加组
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group/add", method = RequestMethod.GET)
+    public String groupAdd(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            if (record.isPresent()) {
+                DefenseArrangement defenseArrangement = record.get().into(DefenseArrangement.class);
+                modelMap.addAttribute("defenseArrangement", defenseArrangement);
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                page = "web/graduate/design/replan/design_replan_group_add::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 编辑组
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group/edit", method = RequestMethod.GET)
+    public String groupEdit(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseGroupId") String defenseGroupId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = defenseGroupService.findByIdRelation(defenseGroupId);
+            if (record.isPresent()) {
+                DefenseGroupBean defenseGroup = record.get().into(DefenseGroupBean.class);
+                modelMap.addAttribute("defenseGroup", defenseGroup);
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                page = "web/graduate/design/replan/design_replan_group_edit::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "未查询到相关组信息");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -207,6 +270,72 @@ public class GraduationDesignReplanController {
     }
 
     /**
+     * 毕业设计添加组
+     *
+     * @param defenseGroupAddVo 数据
+     * @param bindingResult     检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group/save", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils groupSave(@Valid DefenseGroupAddVo defenseGroupAddVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseGroupAddVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(defenseGroupAddVo.getGraduationDesignReleaseId());
+                if (record.isPresent()) {
+                    DefenseGroup defenseGroup = new DefenseGroup();
+                    defenseGroup.setDefenseGroupId(UUIDUtils.getUUID());
+                    defenseGroup.setCreateTime(DateTimeUtils.getNow());
+                    defenseGroup.setDefenseArrangementId(defenseGroupAddVo.getDefenseArrangementId());
+                    defenseGroup.setDefenseGroupName(defenseGroupAddVo.getDefenseGroupName());
+                    defenseGroup.setSchoolroomId(defenseGroupAddVo.getSchoolroomId());
+                    defenseGroup.setNote(defenseGroupAddVo.getNote());
+                    defenseGroupService.save(defenseGroup);
+                    ajaxUtils.success().msg("保存成功");
+                } else {
+                    ajaxUtils.fail().msg("请先进行毕业答辩设置");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 毕业设计添加组
+     *
+     * @param defenseGroupUpdateVo 数据
+     * @param bindingResult        检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group/update", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils groupUpdate(@Valid DefenseGroupUpdateVo defenseGroupUpdateVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseGroupUpdateVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupUpdateVo.getDefenseGroupId());
+                defenseGroup.setDefenseGroupName(defenseGroupUpdateVo.getDefenseGroupName());
+                defenseGroup.setSchoolroomId(defenseGroupUpdateVo.getSchoolroomId());
+                defenseGroup.setNote(defenseGroupUpdateVo.getNote());
+                defenseGroupService.update(defenseGroup);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 组管理数据
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -221,6 +350,35 @@ public class GraduationDesignReplanController {
         ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("获取数据成功").listData(defenseGroupService.findByDefenseArrangementId(defenseArrangementId));
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 批量删除组
+     *
+     * @param defenseGroupIds 组ids
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group/del", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils groupDel(@RequestParam("id") String graduationDesignReleaseId, String defenseGroupIds) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            if (StringUtils.hasLength(defenseGroupIds)) {
+                List<String> ids = SmallPropsUtils.StringIdsToStringList(defenseGroupIds);
+                ids.forEach(id -> {
+                    defenseOrderService.deleteByDefenseGroupId(id);
+                    defenseGroupMemberService.deleteByDefenseGroupId(id);
+                    defenseGroupService.deleteById(id);
+                });
+                ajaxUtils.success().msg("删除成功");
+            } else {
+                ajaxUtils.fail().msg("缺失参数");
+            }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -293,6 +451,68 @@ public class GraduationDesignReplanController {
             defenseTime.setSortTime(i);
             defenseTimeService.save(defenseTime);
         }
+    }
+
+    /**
+     * 获取全部楼
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 全部楼
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/buildings", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<Building> buildings(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("获取楼数据成功！").listData(buildingService.generateBuildFromGraduationDesignRelease(errorBean.getData()));
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 进入页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/group/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils groupCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            if (record.isPresent()) {
+                ajaxUtils.success().msg("在条件范围，允许使用");
+            } else {
+                ajaxUtils.fail().msg("请先进行毕业答辩设置");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 进入页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils canUse(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            ajaxUtils.success().msg("在条件范围，允许使用");
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
     }
 
     /**

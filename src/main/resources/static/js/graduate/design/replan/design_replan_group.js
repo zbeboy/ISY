@@ -7,6 +7,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     var ajax_url = {
         data_url: '/web/graduate/design/replan/group/data',
+        add: '/web/graduate/design/replan/group/add',
+        edit: '/web/graduate/design/replan/group/edit',
+        del: '/web/graduate/design/replan/group/del',
+        condition: '/web/graduate/design/replan/condition',
         back: '/web/menu/graduate/design/replan'
     };
 
@@ -73,29 +77,104 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      添加
      */
     $('#group_add').click(function () {
-
+        $.address.value(ajax_url.add + '?id=' + init_page_param.graduationDesignReleaseId);
     });
 
     /*
      批量删除
      */
     $('#group_dels').click(function () {
+        var defenseGroupIds = [];
+        var ids = $('input[name="check"]:checked');
+        for (var i = 0; i < ids.length; i++) {
+            defenseGroupIds.push($(ids[i]).val());
+        }
 
+        if (defenseGroupIds.length > 0) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定删除选中的吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            $.post(ajax_url.condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                                if (data.state) {
+                                    dels(defenseGroupIds);
+                                } else {
+                                    Messenger().post({
+                                        message: data.msg,
+                                        type: 'error',
+                                        showCloseButton: true
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        } else {
+            Messenger().post("未发现有选中的!");
+        }
     });
 
     /*
      编辑
      */
     $(tableData).delegate('.edit', "click", function () {
-
+        var id = $(this).attr('data-id');
+        $.address.value(ajax_url.edit + '?id=' + init_page_param.graduationDesignReleaseId + '&defenseGroupId=' + id);
     });
 
     /*
      删除
      */
     $(tableData).delegate('.del', "click", function () {
-
+        var defenseGroupId = $(this).attr('data-id');
+        var defenseGroupName = $(this).attr('data-name');
+        $.post(ajax_url.condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+            if (data.state) {
+                groupDel(defenseGroupId, defenseGroupName);
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
     });
+
+    function groupDel(defenseGroupId, defenseGroupName) {
+        var msg;
+        msg = Messenger().post({
+            message: "确定删除组 " + defenseGroupName + " 吗?",
+            actions: {
+                retry: {
+                    label: '确定',
+                    phrase: 'Retrying TIME',
+                    action: function () {
+                        msg.cancel();
+                        del(defenseGroupId);
+                    }
+                },
+                cancel: {
+                    label: '取消',
+                    action: function () {
+                        return msg.cancel();
+                    }
+                }
+            }
+        });
+    }
 
     function del(defenseGroupId) {
         sendDelAjax(defenseGroupId, '删除');

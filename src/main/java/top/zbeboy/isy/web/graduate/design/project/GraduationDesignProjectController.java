@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
-import top.zbeboy.isy.domain.tables.records.BuildingRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.BuildingService;
-import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignPlanService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
@@ -74,9 +72,6 @@ public class GraduationDesignProjectController {
 
     @Resource
     private BuildingService buildingService;
-
-    @Resource
-    private DepartmentService departmentService;
 
     @Resource
     private FilesService filesService;
@@ -403,7 +398,6 @@ public class GraduationDesignProjectController {
         return ajaxUtils;
     }
 
-
     /**
      * 获取全部楼
      *
@@ -416,21 +410,7 @@ public class GraduationDesignProjectController {
         AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            List<Building> buildings = new ArrayList<>();
-            Byte isDel = 0;
-            Building building = new Building(0, "请选择楼", isDel, 0);
-            buildings.add(building);
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            Optional<Record> record = departmentService.findByIdRelation(graduationDesignRelease.getDepartmentId());
-            if (record.isPresent()) {
-                College college = record.get().into(College.class);
-                Result<BuildingRecord> buildingRecords = buildingService.findByCollegeIdAndIsDel(college.getCollegeId(), isDel);
-                for (BuildingRecord r : buildingRecords) {
-                    Building tempBuilding = new Building(r.getBuildingId(), r.getBuildingName(), r.getBuildingIsDel(), r.getCollegeId());
-                    buildings.add(tempBuilding);
-                }
-            }
-            ajaxUtils.success().msg("获取楼数据成功！").listData(buildings);
+            ajaxUtils.success().msg("获取楼数据成功！").listData(buildingService.generateBuildFromGraduationDesignRelease(errorBean.getData()));
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }

@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.data;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Building;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.records.BuildingRecord;
 import top.zbeboy.isy.web.bean.data.building.BuildingBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -102,4 +103,12 @@ public interface BuildingService {
      * @param isDel is_del
      */
     void updateIsDel(List<Integer> ids, Byte isDel);
+
+    /**
+     * 通过毕业设计发布 生成楼数据
+     *
+     * @param graduationDesignRelease 毕业设计发布
+     * @return 楼
+     */
+    List<Building> generateBuildFromGraduationDesignRelease(GraduationDesignRelease graduationDesignRelease);
 }

@@ -10,7 +10,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
             arrange_url: '/web/graduate/design/replan/arrange',
-            group_url: '/web/graduate/design/replan/group'
+            group_url: '/web/graduate/design/replan/group',
+            group_condition: '/web/graduate/design/replan/group/condition'
         };
 
         /*
@@ -135,7 +136,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_replan_group', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.group_url + '?id=' + id);
+            $.post(web_path + ajax_url.group_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.group_url + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         init();

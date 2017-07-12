@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.isy.domain.tables.daos.DefenseGroupDao;
+import top.zbeboy.isy.domain.tables.pojos.DefenseGroup;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -33,6 +35,23 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
     @Autowired
     public DefenseGroupServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public DefenseGroup findById(String id) {
+        return defenseGroupDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(DEFENSE_GROUP)
+                .join(SCHOOLROOM)
+                .on(DEFENSE_GROUP.SCHOOLROOM_ID.eq(SCHOOLROOM.SCHOOLROOM_ID))
+                .join(BUILDING)
+                .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
+                .where(DEFENSE_GROUP.DEFENSE_GROUP_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override
@@ -71,5 +90,21 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
             defenseGroupBeens.add(defenseGroupBean);
         }
         return defenseGroupBeens;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(DefenseGroup defenseGroup) {
+        defenseGroupDao.insert(defenseGroup);
+    }
+
+    @Override
+    public void update(DefenseGroup defenseGroup) {
+        defenseGroupDao.update(defenseGroup);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        defenseGroupDao.deleteById(id);
     }
 }
