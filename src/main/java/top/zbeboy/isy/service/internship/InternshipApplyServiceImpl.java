@@ -229,17 +229,8 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
         JSONObject search = JSON.parseObject(paginationUtils.getSearchParams());
         if (!ObjectUtils.isEmpty(search)) {
             String internshipTitle = StringUtils.trimWhitespace(search.getString("internshipTitle"));
-            String internshipReleaseId = StringUtils.trimWhitespace(search.getString("internshipReleaseId"));
             if (StringUtils.hasLength(internshipTitle)) {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
-            }
-
-            if (StringUtils.hasLength(internshipReleaseId)) {
-                if (!ObjectUtils.isEmpty(a)) {
-                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId));
-                } else {
-                    a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
-                }
             }
         }
         return a;
