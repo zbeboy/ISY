@@ -18,4 +18,7 @@ public class GraduationDesignTeacherBean extends GraduationDesignTeacher {
     private int residueCount;
     // 用于选中
     private boolean selected;
+    private String defenseGroupId;
+    private String defenseGroupName;
+    private String leaderId;
 }

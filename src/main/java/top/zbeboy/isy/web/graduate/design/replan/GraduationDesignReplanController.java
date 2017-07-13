@@ -20,6 +20,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
+import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.replan.DefenseGroupAddVo;
@@ -30,6 +31,7 @@ import top.zbeboy.isy.web.vo.graduate.design.replan.GraduationDesignReplanUpdate
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,6 +126,52 @@ public class GraduationDesignReplanController {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
+    }
+
+    /**
+     * 毕业设计答辩教师分组
+     *
+     * @return 毕业设计答辩教师分组页面
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/divide", method = RequestMethod.GET)
+    public String divide(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认毕业设计指导教师
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+                page = "web/graduate/design/replan/design_replan_divide::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "未确认毕业设计指导教师");
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 教师分组数据
+     *
+     * @param condition 请求
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/divide/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignTeacherBean> divideData(GraduationDesignTeacherBean condition) {
+        AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
+        List<GraduationDesignTeacherBean> graduationDesignTeacherBeens = new ArrayList<>();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(condition.getGraduationDesignReleaseId());
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认毕业设计指导教师
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                graduationDesignTeacherBeens = defenseGroupMemberService.findByGraduationDesignReleaseIdRelationForStaff(condition);
+            }
+        }
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
     }
 
     /**
@@ -451,6 +499,31 @@ public class GraduationDesignReplanController {
                 ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
                 ajaxUtils.fail().msg("请先进行毕业答辩设置");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 进入页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/divide/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils divideCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认毕业设计指导教师
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
+                ajaxUtils.success().msg("在条件范围，允许使用");
+            } else {
+                ajaxUtils.fail().msg("未确认毕业设计指导教师");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());

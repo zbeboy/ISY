@@ -11,7 +11,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             release_data_url: '/anyone/graduate/design/release/data',
             arrange_url: '/web/graduate/design/replan/arrange',
             group_url: '/web/graduate/design/replan/group',
-            group_condition: '/web/graduate/design/replan/group/condition'
+            group_condition: '/web/graduate/design/replan/group/condition',
+            divide_url: '/web/graduate/design/replan/divide'
         };
 
         /*
@@ -147,6 +148,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                     });
                 }
             });
+        });
+
+        /*
+         教师分组
+         */
+        $(tableData).delegate('.design_replan_divide', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.divide_url + '?id=' + id);
         });
 
         init();
