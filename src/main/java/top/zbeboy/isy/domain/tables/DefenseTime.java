@@ -34,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseTimeRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseTime extends TableImpl<DefenseTimeRecord> {
 
-    private static final long serialVersionUID = 906875493;
+    private static final long serialVersionUID = -1405282925;
 
     /**
      * The reference instance of <code>isy.defense_time</code>
@@ -50,14 +50,14 @@ public class DefenseTime extends TableImpl<DefenseTimeRecord> {
     }
 
     /**
-     * The column <code>isy.defense_time.defense_start_time</code>.
+     * The column <code>isy.defense_time.day_defense_start_time</code>.
      */
-    public final TableField<DefenseTimeRecord, String> DEFENSE_START_TIME = createField("defense_start_time", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+    public final TableField<DefenseTimeRecord, String> DAY_DEFENSE_START_TIME = createField("day_defense_start_time", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
-     * The column <code>isy.defense_time.defense_end_time</code>.
+     * The column <code>isy.defense_time.day_defense_end_time</code>.
      */
-    public final TableField<DefenseTimeRecord, String> DEFENSE_END_TIME = createField("defense_end_time", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+    public final TableField<DefenseTimeRecord, String> DAY_DEFENSE_END_TIME = createField("day_defense_end_time", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
      * The column <code>isy.defense_time.sort_time</code>.

@@ -5,7 +5,7 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -25,45 +25,45 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseArrangement implements Serializable {
 
-    private static final long serialVersionUID = 89217220;
+    private static final long serialVersionUID = 708559050;
 
-    private String  defenseArrangementId;
-    private Date    paperStartDate;
-    private Date    paperEndDate;
-    private Date    defenseStartDate;
-    private Date    defenseEndDate;
-    private Integer intervalTime;
-    private String  defenseNote;
-    private String  graduationDesignReleaseId;
+    private String    defenseArrangementId;
+    private Timestamp paperStartTime;
+    private Timestamp paperEndTime;
+    private Timestamp defenseStartTime;
+    private Timestamp defenseEndTime;
+    private Integer   intervalTime;
+    private String    defenseNote;
+    private String    graduationDesignReleaseId;
 
     public DefenseArrangement() {}
 
     public DefenseArrangement(DefenseArrangement value) {
         this.defenseArrangementId = value.defenseArrangementId;
-        this.paperStartDate = value.paperStartDate;
-        this.paperEndDate = value.paperEndDate;
-        this.defenseStartDate = value.defenseStartDate;
-        this.defenseEndDate = value.defenseEndDate;
+        this.paperStartTime = value.paperStartTime;
+        this.paperEndTime = value.paperEndTime;
+        this.defenseStartTime = value.defenseStartTime;
+        this.defenseEndTime = value.defenseEndTime;
         this.intervalTime = value.intervalTime;
         this.defenseNote = value.defenseNote;
         this.graduationDesignReleaseId = value.graduationDesignReleaseId;
     }
 
     public DefenseArrangement(
-        String  defenseArrangementId,
-        Date    paperStartDate,
-        Date    paperEndDate,
-        Date    defenseStartDate,
-        Date    defenseEndDate,
-        Integer intervalTime,
-        String  defenseNote,
-        String  graduationDesignReleaseId
+        String    defenseArrangementId,
+        Timestamp paperStartTime,
+        Timestamp paperEndTime,
+        Timestamp defenseStartTime,
+        Timestamp defenseEndTime,
+        Integer   intervalTime,
+        String    defenseNote,
+        String    graduationDesignReleaseId
     ) {
         this.defenseArrangementId = defenseArrangementId;
-        this.paperStartDate = paperStartDate;
-        this.paperEndDate = paperEndDate;
-        this.defenseStartDate = defenseStartDate;
-        this.defenseEndDate = defenseEndDate;
+        this.paperStartTime = paperStartTime;
+        this.paperEndTime = paperEndTime;
+        this.defenseStartTime = defenseStartTime;
+        this.defenseEndTime = defenseEndTime;
         this.intervalTime = intervalTime;
         this.defenseNote = defenseNote;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
@@ -80,39 +80,39 @@ public class DefenseArrangement implements Serializable {
     }
 
     @NotNull
-    public Date getPaperStartDate() {
-        return this.paperStartDate;
+    public Timestamp getPaperStartTime() {
+        return this.paperStartTime;
     }
 
-    public void setPaperStartDate(Date paperStartDate) {
-        this.paperStartDate = paperStartDate;
-    }
-
-    @NotNull
-    public Date getPaperEndDate() {
-        return this.paperEndDate;
-    }
-
-    public void setPaperEndDate(Date paperEndDate) {
-        this.paperEndDate = paperEndDate;
+    public void setPaperStartTime(Timestamp paperStartTime) {
+        this.paperStartTime = paperStartTime;
     }
 
     @NotNull
-    public Date getDefenseStartDate() {
-        return this.defenseStartDate;
+    public Timestamp getPaperEndTime() {
+        return this.paperEndTime;
     }
 
-    public void setDefenseStartDate(Date defenseStartDate) {
-        this.defenseStartDate = defenseStartDate;
+    public void setPaperEndTime(Timestamp paperEndTime) {
+        this.paperEndTime = paperEndTime;
     }
 
     @NotNull
-    public Date getDefenseEndDate() {
-        return this.defenseEndDate;
+    public Timestamp getDefenseStartTime() {
+        return this.defenseStartTime;
     }
 
-    public void setDefenseEndDate(Date defenseEndDate) {
-        this.defenseEndDate = defenseEndDate;
+    public void setDefenseStartTime(Timestamp defenseStartTime) {
+        this.defenseStartTime = defenseStartTime;
+    }
+
+    @NotNull
+    public Timestamp getDefenseEndTime() {
+        return this.defenseEndTime;
+    }
+
+    public void setDefenseEndTime(Timestamp defenseEndTime) {
+        this.defenseEndTime = defenseEndTime;
     }
 
     @NotNull
@@ -148,10 +148,10 @@ public class DefenseArrangement implements Serializable {
         StringBuilder sb = new StringBuilder("DefenseArrangement (");
 
         sb.append(defenseArrangementId);
-        sb.append(", ").append(paperStartDate);
-        sb.append(", ").append(paperEndDate);
-        sb.append(", ").append(defenseStartDate);
-        sb.append(", ").append(defenseEndDate);
+        sb.append(", ").append(paperStartTime);
+        sb.append(", ").append(paperEndTime);
+        sb.append(", ").append(defenseStartTime);
+        sb.append(", ").append(defenseEndTime);
         sb.append(", ").append(intervalTime);
         sb.append(", ").append(defenseNote);
         sb.append(", ").append(graduationDesignReleaseId);

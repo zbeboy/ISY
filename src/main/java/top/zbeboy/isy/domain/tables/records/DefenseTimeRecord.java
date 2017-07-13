@@ -29,37 +29,37 @@ import top.zbeboy.isy.domain.tables.DefenseTime;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implements Record4<String, String, Integer, String> {
 
-    private static final long serialVersionUID = 1711176621;
+    private static final long serialVersionUID = 954987883;
 
     /**
-     * Setter for <code>isy.defense_time.defense_start_time</code>.
+     * Setter for <code>isy.defense_time.day_defense_start_time</code>.
      */
-    public void setDefenseStartTime(String value) {
+    public void setDayDefenseStartTime(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>isy.defense_time.defense_start_time</code>.
+     * Getter for <code>isy.defense_time.day_defense_start_time</code>.
      */
     @NotNull
     @Size(max = 20)
-    public String getDefenseStartTime() {
+    public String getDayDefenseStartTime() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>isy.defense_time.defense_end_time</code>.
+     * Setter for <code>isy.defense_time.day_defense_end_time</code>.
      */
-    public void setDefenseEndTime(String value) {
+    public void setDayDefenseEndTime(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>isy.defense_time.defense_end_time</code>.
+     * Getter for <code>isy.defense_time.day_defense_end_time</code>.
      */
     @NotNull
     @Size(max = 20)
-    public String getDefenseEndTime() {
+    public String getDayDefenseEndTime() {
         return (String) get(1);
     }
 
@@ -119,7 +119,7 @@ public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implem
      */
     @Override
     public Field<String> field1() {
-        return DefenseTime.DEFENSE_TIME.DEFENSE_START_TIME;
+        return DefenseTime.DEFENSE_TIME.DAY_DEFENSE_START_TIME;
     }
 
     /**
@@ -127,7 +127,7 @@ public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implem
      */
     @Override
     public Field<String> field2() {
-        return DefenseTime.DEFENSE_TIME.DEFENSE_END_TIME;
+        return DefenseTime.DEFENSE_TIME.DAY_DEFENSE_END_TIME;
     }
 
     /**
@@ -151,7 +151,7 @@ public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implem
      */
     @Override
     public String value1() {
-        return getDefenseStartTime();
+        return getDayDefenseStartTime();
     }
 
     /**
@@ -159,7 +159,7 @@ public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implem
      */
     @Override
     public String value2() {
-        return getDefenseEndTime();
+        return getDayDefenseEndTime();
     }
 
     /**
@@ -183,7 +183,7 @@ public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implem
      */
     @Override
     public DefenseTimeRecord value1(String value) {
-        setDefenseStartTime(value);
+        setDayDefenseStartTime(value);
         return this;
     }
 
@@ -192,7 +192,7 @@ public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implem
      */
     @Override
     public DefenseTimeRecord value2(String value) {
-        setDefenseEndTime(value);
+        setDayDefenseEndTime(value);
         return this;
     }
 
@@ -240,11 +240,11 @@ public class DefenseTimeRecord extends TableRecordImpl<DefenseTimeRecord> implem
     /**
      * Create a detached, initialised DefenseTimeRecord
      */
-    public DefenseTimeRecord(String defenseStartTime, String defenseEndTime, Integer sortTime, String defenseArrangementId) {
+    public DefenseTimeRecord(String dayDefenseStartTime, String dayDefenseEndTime, Integer sortTime, String defenseArrangementId) {
         super(DefenseTime.DEFENSE_TIME);
 
-        set(0, defenseStartTime);
-        set(1, defenseEndTime);
+        set(0, dayDefenseStartTime);
+        set(1, dayDefenseEndTime);
         set(2, sortTime);
         set(3, defenseArrangementId);
     }

@@ -4,7 +4,7 @@
 package top.zbeboy.isy.domain.tables;
 
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseArrangementRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseArrangement extends TableImpl<DefenseArrangementRecord> {
 
-    private static final long serialVersionUID = -1324253417;
+    private static final long serialVersionUID = -1975660671;
 
     /**
      * The reference instance of <code>isy.defense_arrangement</code>
@@ -57,24 +57,24 @@ public class DefenseArrangement extends TableImpl<DefenseArrangementRecord> {
     public final TableField<DefenseArrangementRecord, String> DEFENSE_ARRANGEMENT_ID = createField("defense_arrangement_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
-     * The column <code>isy.defense_arrangement.paper_start_date</code>.
+     * The column <code>isy.defense_arrangement.paper_start_time</code>.
      */
-    public final TableField<DefenseArrangementRecord, Date> PAPER_START_DATE = createField("paper_start_date", org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
+    public final TableField<DefenseArrangementRecord, Timestamp> PAPER_START_TIME = createField("paper_start_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
-     * The column <code>isy.defense_arrangement.paper_end_date</code>.
+     * The column <code>isy.defense_arrangement.paper_end_time</code>.
      */
-    public final TableField<DefenseArrangementRecord, Date> PAPER_END_DATE = createField("paper_end_date", org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
+    public final TableField<DefenseArrangementRecord, Timestamp> PAPER_END_TIME = createField("paper_end_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
-     * The column <code>isy.defense_arrangement.defense_start_date</code>.
+     * The column <code>isy.defense_arrangement.defense_start_time</code>.
      */
-    public final TableField<DefenseArrangementRecord, Date> DEFENSE_START_DATE = createField("defense_start_date", org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
+    public final TableField<DefenseArrangementRecord, Timestamp> DEFENSE_START_TIME = createField("defense_start_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
-     * The column <code>isy.defense_arrangement.defense_end_date</code>.
+     * The column <code>isy.defense_arrangement.defense_end_time</code>.
      */
-    public final TableField<DefenseArrangementRecord, Date> DEFENSE_END_DATE = createField("defense_end_date", org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
+    public final TableField<DefenseArrangementRecord, Timestamp> DEFENSE_END_TIME = createField("defense_end_time", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>isy.defense_arrangement.interval_time</code>.

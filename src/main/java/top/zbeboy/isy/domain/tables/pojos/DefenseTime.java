@@ -24,52 +24,52 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseTime implements Serializable {
 
-    private static final long serialVersionUID = 791161545;
+    private static final long serialVersionUID = -1222036671;
 
-    private String  defenseStartTime;
-    private String  defenseEndTime;
+    private String  dayDefenseStartTime;
+    private String  dayDefenseEndTime;
     private Integer sortTime;
     private String  defenseArrangementId;
 
     public DefenseTime() {}
 
     public DefenseTime(DefenseTime value) {
-        this.defenseStartTime = value.defenseStartTime;
-        this.defenseEndTime = value.defenseEndTime;
+        this.dayDefenseStartTime = value.dayDefenseStartTime;
+        this.dayDefenseEndTime = value.dayDefenseEndTime;
         this.sortTime = value.sortTime;
         this.defenseArrangementId = value.defenseArrangementId;
     }
 
     public DefenseTime(
-        String  defenseStartTime,
-        String  defenseEndTime,
+        String  dayDefenseStartTime,
+        String  dayDefenseEndTime,
         Integer sortTime,
         String  defenseArrangementId
     ) {
-        this.defenseStartTime = defenseStartTime;
-        this.defenseEndTime = defenseEndTime;
+        this.dayDefenseStartTime = dayDefenseStartTime;
+        this.dayDefenseEndTime = dayDefenseEndTime;
         this.sortTime = sortTime;
         this.defenseArrangementId = defenseArrangementId;
     }
 
     @NotNull
     @Size(max = 20)
-    public String getDefenseStartTime() {
-        return this.defenseStartTime;
+    public String getDayDefenseStartTime() {
+        return this.dayDefenseStartTime;
     }
 
-    public void setDefenseStartTime(String defenseStartTime) {
-        this.defenseStartTime = defenseStartTime;
+    public void setDayDefenseStartTime(String dayDefenseStartTime) {
+        this.dayDefenseStartTime = dayDefenseStartTime;
     }
 
     @NotNull
     @Size(max = 20)
-    public String getDefenseEndTime() {
-        return this.defenseEndTime;
+    public String getDayDefenseEndTime() {
+        return this.dayDefenseEndTime;
     }
 
-    public void setDefenseEndTime(String defenseEndTime) {
-        this.defenseEndTime = defenseEndTime;
+    public void setDayDefenseEndTime(String dayDefenseEndTime) {
+        this.dayDefenseEndTime = dayDefenseEndTime;
     }
 
     @NotNull
@@ -95,8 +95,8 @@ public class DefenseTime implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("DefenseTime (");
 
-        sb.append(defenseStartTime);
-        sb.append(", ").append(defenseEndTime);
+        sb.append(dayDefenseStartTime);
+        sb.append(", ").append(dayDefenseEndTime);
         sb.append(", ").append(sortTime);
         sb.append(", ").append(defenseArrangementId);
 

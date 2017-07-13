@@ -4,7 +4,7 @@
 package top.zbeboy.isy.domain.tables.daos;
 
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -70,31 +70,31 @@ public class DefenseArrangementDao extends DAOImpl<DefenseArrangementRecord, top
     }
 
     /**
-     * Fetch records that have <code>paper_start_date IN (values)</code>
+     * Fetch records that have <code>paper_start_time IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByPaperStartDate(Date... values) {
-        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.PAPER_START_DATE, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByPaperStartTime(Timestamp... values) {
+        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.PAPER_START_TIME, values);
     }
 
     /**
-     * Fetch records that have <code>paper_end_date IN (values)</code>
+     * Fetch records that have <code>paper_end_time IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByPaperEndDate(Date... values) {
-        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.PAPER_END_DATE, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByPaperEndTime(Timestamp... values) {
+        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.PAPER_END_TIME, values);
     }
 
     /**
-     * Fetch records that have <code>defense_start_date IN (values)</code>
+     * Fetch records that have <code>defense_start_time IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByDefenseStartDate(Date... values) {
-        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_START_DATE, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByDefenseStartTime(Timestamp... values) {
+        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_START_TIME, values);
     }
 
     /**
-     * Fetch records that have <code>defense_end_date IN (values)</code>
+     * Fetch records that have <code>defense_end_time IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByDefenseEndDate(Date... values) {
-        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_END_DATE, values);
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseArrangement> fetchByDefenseEndTime(Timestamp... values) {
+        return fetch(DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_END_TIME, values);
     }
 
     /**

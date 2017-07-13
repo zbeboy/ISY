@@ -40,8 +40,8 @@ public class DefenseTimeServiceImpl implements DefenseTimeService {
     public void save(DefenseTime defenseTime) {
         create.insertInto(DEFENSE_TIME)
                 .set(DEFENSE_TIME.DEFENSE_ARRANGEMENT_ID, defenseTime.getDefenseArrangementId())
-                .set(DEFENSE_TIME.DEFENSE_START_TIME, defenseTime.getDefenseStartTime())
-                .set(DEFENSE_TIME.DEFENSE_END_TIME, defenseTime.getDefenseEndTime())
+                .set(DEFENSE_TIME.DAY_DEFENSE_START_TIME, defenseTime.getDayDefenseStartTime())
+                .set(DEFENSE_TIME.DAY_DEFENSE_END_TIME, defenseTime.getDayDefenseEndTime())
                 .set(DEFENSE_TIME.SORT_TIME, defenseTime.getSortTime())
                 .execute();
     }

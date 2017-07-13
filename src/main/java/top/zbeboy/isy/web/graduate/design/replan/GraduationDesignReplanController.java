@@ -1,7 +1,6 @@
 package top.zbeboy.isy.web.graduate.design.replan;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Controller;
@@ -195,23 +194,19 @@ public class GraduationDesignReplanController {
         if (!bindingResult.hasErrors()) {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReplanAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
-                String[] defenseStartTime = graduationDesignReplanAddVo.getDefenseStartTime();
-                String[] defenseEndTime = graduationDesignReplanAddVo.getDefenseEndTime();
-                if (defenseStartTime.length > 0 && defenseEndTime.length > 0 && defenseStartTime.length == defenseEndTime.length) {
-                    if (validDefenseTime(defenseStartTime, defenseEndTime)) {
-                        DefenseArrangement defenseArrangement = new DefenseArrangement();
-                        String defenseArrangementId = UUIDUtils.getUUID();
-                        defenseArrangement.setDefenseArrangementId(defenseArrangementId);
-                        saveOrUpdateTime(defenseArrangement, graduationDesignReplanAddVo.getPaperDate(), graduationDesignReplanAddVo.getDefenseDate());
-                        defenseArrangement.setIntervalTime(graduationDesignReplanAddVo.getIntervalTime());
-                        defenseArrangement.setDefenseNote(graduationDesignReplanAddVo.getDefenseNote());
-                        defenseArrangement.setGraduationDesignReleaseId(graduationDesignReplanAddVo.getGraduationDesignReleaseId());
-                        defenseArrangementService.save(defenseArrangement);
-                        saveDefenseTime(defenseStartTime, defenseEndTime, defenseArrangementId);
-                        ajaxUtils.success().msg("保存成功");
-                    } else {
-                        ajaxUtils.fail().msg("每日答辩时间大小设置有误");
-                    }
+                String[] dayDefenseStartTime = graduationDesignReplanAddVo.getDayDefenseStartTime();
+                String[] dayDefenseEndTime = graduationDesignReplanAddVo.getDayDefenseEndTime();
+                if (dayDefenseStartTime.length > 0 && dayDefenseEndTime.length > 0 && dayDefenseStartTime.length == dayDefenseEndTime.length) {
+                    DefenseArrangement defenseArrangement = new DefenseArrangement();
+                    String defenseArrangementId = UUIDUtils.getUUID();
+                    defenseArrangement.setDefenseArrangementId(defenseArrangementId);
+                    saveOrUpdateTime(defenseArrangement, graduationDesignReplanAddVo.getPaperTime(), graduationDesignReplanAddVo.getDefenseTime());
+                    defenseArrangement.setIntervalTime(graduationDesignReplanAddVo.getIntervalTime());
+                    defenseArrangement.setDefenseNote(graduationDesignReplanAddVo.getDefenseNote());
+                    defenseArrangement.setGraduationDesignReleaseId(graduationDesignReplanAddVo.getGraduationDesignReleaseId());
+                    defenseArrangementService.save(defenseArrangement);
+                    saveDefenseTime(dayDefenseStartTime, dayDefenseEndTime, defenseArrangementId);
+                    ajaxUtils.success().msg("保存成功");
                 } else {
                     ajaxUtils.fail().msg("每日答辩时间设置有误");
                 }
@@ -238,24 +233,20 @@ public class GraduationDesignReplanController {
         if (!bindingResult.hasErrors()) {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReplanUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
-                String[] defenseStartTime = graduationDesignReplanUpdateVo.getDefenseStartTime();
-                String[] defenseEndTime = graduationDesignReplanUpdateVo.getDefenseEndTime();
-                if (defenseStartTime.length > 0 && defenseEndTime.length > 0 && defenseStartTime.length == defenseEndTime.length) {
-                    if (validDefenseTime(defenseStartTime, defenseEndTime)) {
-                        DefenseArrangement defenseArrangement = defenseArrangementService.findById(graduationDesignReplanUpdateVo.getDefenseArrangementId());
-                        if (!ObjectUtils.isEmpty(defenseArrangement)) {
-                            saveOrUpdateTime(defenseArrangement, graduationDesignReplanUpdateVo.getPaperDate(), graduationDesignReplanUpdateVo.getDefenseDate());
-                            defenseArrangement.setIntervalTime(graduationDesignReplanUpdateVo.getIntervalTime());
-                            defenseArrangement.setDefenseNote(graduationDesignReplanUpdateVo.getDefenseNote());
-                            defenseArrangementService.update(defenseArrangement);
-                            defenseTimeService.deleteByDefenseArrangementId(graduationDesignReplanUpdateVo.getDefenseArrangementId());
-                            saveDefenseTime(defenseStartTime, defenseEndTime, graduationDesignReplanUpdateVo.getDefenseArrangementId());
-                            ajaxUtils.success().msg("保存成功");
-                        } else {
-                            ajaxUtils.fail().msg("未查询到相关设置信息");
-                        }
+                String[] dayDefenseStartTime = graduationDesignReplanUpdateVo.getDayDefenseStartTime();
+                String[] dayDefenseEndTime = graduationDesignReplanUpdateVo.getDayDefenseEndTime();
+                if (dayDefenseStartTime.length > 0 && dayDefenseEndTime.length > 0 && dayDefenseStartTime.length == dayDefenseEndTime.length) {
+                    DefenseArrangement defenseArrangement = defenseArrangementService.findById(graduationDesignReplanUpdateVo.getDefenseArrangementId());
+                    if (!ObjectUtils.isEmpty(defenseArrangement)) {
+                        saveOrUpdateTime(defenseArrangement, graduationDesignReplanUpdateVo.getPaperTime(), graduationDesignReplanUpdateVo.getDefenseTime());
+                        defenseArrangement.setIntervalTime(graduationDesignReplanUpdateVo.getIntervalTime());
+                        defenseArrangement.setDefenseNote(graduationDesignReplanUpdateVo.getDefenseNote());
+                        defenseArrangementService.update(defenseArrangement);
+                        defenseTimeService.deleteByDefenseArrangementId(graduationDesignReplanUpdateVo.getDefenseArrangementId());
+                        saveDefenseTime(dayDefenseStartTime, dayDefenseEndTime, graduationDesignReplanUpdateVo.getDefenseArrangementId());
+                        ajaxUtils.success().msg("保存成功");
                     } else {
-                        ajaxUtils.fail().msg("每日答辩时间大小设置有误");
+                        ajaxUtils.fail().msg("未查询到相关设置信息");
                     }
                 } else {
                     ajaxUtils.fail().msg("每日答辩时间设置有误");
@@ -394,60 +385,31 @@ public class GraduationDesignReplanController {
      */
     private void saveOrUpdateTime(DefenseArrangement defenseArrangement, String paperDate, String defenseDate) {
         try {
-            String format = "yyyy-MM-dd";
+            String format = "yyyy-MM-dd HH:mm:ss";
             String[] paperDateArr = DateTimeUtils.splitDateTime("至", paperDate);
-            defenseArrangement.setPaperStartDate(DateTimeUtils.formatDate(paperDateArr[0], format));
-            defenseArrangement.setPaperEndDate(DateTimeUtils.formatDate(paperDateArr[1], format));
+            defenseArrangement.setPaperStartTime(DateTimeUtils.formatDateToTimestamp(paperDateArr[0], format));
+            defenseArrangement.setPaperEndTime(DateTimeUtils.formatDateToTimestamp(paperDateArr[1], format));
             String[] defenseDateArr = DateTimeUtils.splitDateTime("至", defenseDate);
-            defenseArrangement.setDefenseStartDate(DateTimeUtils.formatDate(defenseDateArr[0], format));
-            defenseArrangement.setDefenseEndDate(DateTimeUtils.formatDate(defenseDateArr[1], format));
+            defenseArrangement.setDefenseStartTime(DateTimeUtils.formatDateToTimestamp(defenseDateArr[0], format));
+            defenseArrangement.setDefenseEndTime(DateTimeUtils.formatDateToTimestamp(defenseDateArr[1], format));
         } catch (ParseException e) {
             log.error(" format time is exception.", e);
         }
     }
 
     /**
-     * 检验每日答辩时间
-     *
-     * @param defenseStartTime 开始时间
-     * @param defenseEndTime   结束时间
-     * @return true or false
-     */
-    private boolean validDefenseTime(String[] defenseStartTime, String[] defenseEndTime) {
-        boolean isValid = true;
-        for (int i = 0; i < defenseStartTime.length; i++) {
-            if (i > 0) {
-                String[] cs = defenseEndTime[i].split(":");
-                String[] ds = defenseStartTime[i - 1].split(":");
-                int cn = NumberUtils.toInt(cs[0]);
-                int dn = NumberUtils.toInt(ds[0]);
-                if (cn < dn) {
-                    isValid = false;
-                    break;
-                } else if (cn == dn) {
-                    if (NumberUtils.toInt(cs[1]) <= NumberUtils.toInt(ds[1])) {
-                        isValid = false;
-                        break;
-                    }
-                }
-            }
-        }
-        return isValid;
-    }
-
-    /**
      * 保存每日答辩时间
      *
-     * @param defenseStartTime     开始时间
-     * @param defenseEndTime       结束时间
+     * @param dayDefenseStartTime  开始时间
+     * @param dayDefenseEndTime    结束时间
      * @param defenseArrangementId 毕业设置安排id
      */
-    private void saveDefenseTime(String[] defenseStartTime, String[] defenseEndTime, String defenseArrangementId) {
-        for (int i = 0; i < defenseStartTime.length; i++) {
+    private void saveDefenseTime(String[] dayDefenseStartTime, String[] dayDefenseEndTime, String defenseArrangementId) {
+        for (int i = 0; i < dayDefenseStartTime.length; i++) {
             DefenseTime defenseTime = new DefenseTime();
             defenseTime.setDefenseArrangementId(defenseArrangementId);
-            defenseTime.setDefenseStartTime(defenseStartTime[i]);
-            defenseTime.setDefenseEndTime(defenseEndTime[i]);
+            defenseTime.setDayDefenseStartTime(dayDefenseStartTime[i]);
+            defenseTime.setDayDefenseEndTime(dayDefenseEndTime[i]);
             defenseTime.setSortTime(i);
             defenseTimeService.save(defenseTime);
         }

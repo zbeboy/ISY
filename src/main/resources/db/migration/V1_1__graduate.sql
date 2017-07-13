@@ -159,10 +159,10 @@ CREATE TABLE graduation_design_datum (
 
 CREATE TABLE defense_arrangement (
   defense_arrangement_id       VARCHAR(64) PRIMARY KEY,
-  paper_start_date             DATE        NOT NULL,
-  paper_end_date               DATE        NOT NULL,
-  defense_start_date           DATE        NOT NULL,
-  defense_end_date             DATE        NOT NULL,
+  paper_start_time             DATETIME    NOT NULL,
+  paper_end_time               DATETIME    NOT NULL,
+  defense_start_time           DATETIME    NOT NULL,
+  defense_end_time             DATETIME    NOT NULL,
   interval_time                INT         NOT NULL,
   defense_note                 VARCHAR(100),
   graduation_design_release_id VARCHAR(64) NOT NULL,
@@ -170,8 +170,8 @@ CREATE TABLE defense_arrangement (
 );
 
 CREATE TABLE defense_time (
-  defense_start_time     VARCHAR(20) NOT NULL,
-  defense_end_time       VARCHAR(20) NOT NULL,
+  day_defense_start_time     VARCHAR(20) NOT NULL,
+  day_defense_end_time       VARCHAR(20) NOT NULL,
   sort_time              INT         NOT NULL,
   defense_arrangement_id VARCHAR(64) NOT NULL,
   FOREIGN KEY (defense_arrangement_id) REFERENCES defense_arrangement (defense_arrangement_id)

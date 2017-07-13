@@ -19,12 +19,12 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-daterange
          参数id
          */
         var paramId = {
-            paperDate: '#paperDate',
-            paperStartDate: '#paperStartDate',
-            paperEndDate: '#paperEndDate',
-            defenseDate: '#defenseDate',
-            defenseStartDate: '#defenseStartDate',
-            defenseEndDate: '#defenseEndDate',
+            paperTime: '#paperTime',
+            paperStartTime: '#paperStartTime',
+            paperEndTime: '#paperEndTime',
+            defenseTime: '#defenseTime',
+            defenseStartTime: '#defenseStartTime',
+            defenseEndTime: '#defenseEndTime',
             day_defense: '.day_defense',
             intervalTime: '#intervalTime',
             defenseNote: '#defenseNote'
@@ -34,8 +34,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-daterange
          参数
          */
         var param = {
-            paperDate: $(paramId.paperDate).val(),
-            defenseDate: $(paramId.defenseDate).val(),
+            paperTime: $(paramId.paperTime).val(),
+            defenseTime: $(paramId.defenseTime).val(),
             day_defense: [],
             intervalTime: $(paramId.intervalTime).val(),
             defenseNote: $(paramId.defenseNote).val()
@@ -45,8 +45,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-daterange
          检验id
          */
         var validId = {
-            paperDate: '#valid_paper_date',
-            defenseDate: '#valid_defense_date',
+            paperTime: '#valid_paper_time',
+            defenseTime: '#valid_defense_time',
             intervalTime: '#valid_interval_time',
             defenseNote: '#valid_defense_note'
         };
@@ -55,8 +55,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-daterange
          错误消息id
          */
         var errorMsgId = {
-            paperDate: '#paper_date_error_msg',
-            defenseDate: '#defense_date_error_msg',
+            paperTime: '#paper_time_error_msg',
+            defenseTime: '#defense_time_error_msg',
             dayDefense: '#day_defense_error_msg',
             intervalTime: '#interval_time_error_msg',
             defenseNote: '#defense_note_error_msg'
@@ -94,17 +94,17 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-daterange
          * 初始化参数
          */
         function initParam() {
-            param.paperDate = $(paramId.paperDate).val();
-            param.defenseDate = $(paramId.defenseDate).val();
+            param.paperTime = $(paramId.paperTime).val();
+            param.defenseTime = $(paramId.defenseTime).val();
             param.intervalTime = $(paramId.intervalTime).val();
             param.defenseNote = $(paramId.defenseNote).val();
         }
 
-        $(paramId.paperDate).daterangepicker({
-            "startDate": $(paramId.paperStartDate).val(),
-            "endDate": $(paramId.paperEndDate).val(),
+        $(paramId.paperTime).daterangepicker({
+            "startDate": $(paramId.paperStartTime).val(),
+            "endDate": $(paramId.paperEndTime).val(),
             "locale": {
-                format: 'YYYY-MM-DD',
+                format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: '确定',
                 cancelLabel: '取消',
                 fromLabel: '起始时间',
@@ -119,11 +119,11 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-daterange
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
 
-        $(paramId.defenseDate).daterangepicker({
-            "startDate": $(paramId.defenseStartDate).val(),
-            "endDate": $(paramId.defenseEndDate).val(),
+        $(paramId.defenseTime).daterangepicker({
+            "startDate": $(paramId.defenseStartTime).val(),
+            "endDate": $(paramId.defenseEndTime).val(),
             "locale": {
-                format: 'YYYY-MM-DD',
+                format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: '确定',
                 cancelLabel: '取消',
                 fromLabel: '起始时间',

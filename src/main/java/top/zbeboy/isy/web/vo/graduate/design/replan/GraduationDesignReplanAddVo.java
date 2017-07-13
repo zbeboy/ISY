@@ -14,11 +14,11 @@ public class GraduationDesignReplanAddVo {
     @Size(max = 64)
     private String graduationDesignReleaseId;
     @NotNull
-    private String paperDate;
+    private String paperTime;
     @NotNull
-    private String defenseDate;
-    private String[] defenseStartTime;
-    private String[] defenseEndTime;
+    private String defenseTime;
+    private String[] dayDefenseStartTime;
+    private String[] dayDefenseEndTime;
     @NotNull
     private int intervalTime;
     private String defenseNote;
