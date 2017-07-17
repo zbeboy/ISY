@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.BuildingService;
 import top.zbeboy.isy.service.graduate.design.*;
@@ -23,10 +24,7 @@ import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
-import top.zbeboy.isy.web.vo.graduate.design.replan.DefenseGroupAddVo;
-import top.zbeboy.isy.web.vo.graduate.design.replan.DefenseGroupUpdateVo;
-import top.zbeboy.isy.web.vo.graduate.design.replan.GraduationDesignReplanAddVo;
-import top.zbeboy.isy.web.vo.graduate.design.replan.GraduationDesignReplanUpdateVo;
+import top.zbeboy.isy.web.vo.graduate.design.replan.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -396,6 +394,34 @@ public class GraduationDesignReplanController {
     }
 
     /**
+     * 组数据
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/divide/groups", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<DefenseGroupBean> groups(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId) {
+        AjaxUtils<DefenseGroupBean> ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            List<DefenseGroupBean> defenseGroupBeens = new ArrayList<>();
+            DefenseGroupBean defenseGroupBean = new DefenseGroupBean();
+            defenseGroupBean.setDefenseGroupId("");
+            defenseGroupBean.setDefenseGroupName("请选择组");
+            defenseGroupBeens.add(defenseGroupBean);
+            Result<Record> records = defenseGroupService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            if (records.isNotEmpty()) {
+                defenseGroupBeens.addAll(records.into(DefenseGroupBean.class));
+            }
+            ajaxUtils.success().msg("获取数据成功").listData(defenseGroupBeens);
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 批量删除组
      *
      * @param defenseGroupIds 组ids
@@ -417,6 +443,82 @@ public class GraduationDesignReplanController {
                 ajaxUtils.success().msg("删除成功");
             } else {
                 ajaxUtils.fail().msg("缺失参数");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 获取该教师组信息
+     *
+     * @param graduationDesignTeacherId 毕业设计指导教师id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/divide/group", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils group(@RequestParam("graduationDesignTeacherId") String graduationDesignTeacherId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        DefenseGroupMember defenseGroupMember = new DefenseGroupMember();
+        DefenseGroupMemberRecord defenseGroupMemberRecord = defenseGroupMemberService.findByGraduationDesignTeacherId(graduationDesignTeacherId);
+        if (!ObjectUtils.isEmpty(defenseGroupMemberRecord)) {
+            defenseGroupMember = defenseGroupMemberRecord.into(DefenseGroupMember.class);
+        }
+        return ajaxUtils.success().msg("获取数据成功").obj(defenseGroupMember);
+    }
+
+    /**
+     * 保存设置
+     *
+     * @param defenseGroupMemberAddVo 数据
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/divide/save", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils divideSave(@Valid DefenseGroupMemberAddVo defenseGroupMemberAddVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseGroupMemberAddVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                DefenseGroupMember defenseGroupMember = new DefenseGroupMember();
+                defenseGroupMember.setGraduationDesignTeacherId(defenseGroupMemberAddVo.getGraduationDesignTeacherId());
+                defenseGroupMember.setDefenseGroupId(defenseGroupMemberAddVo.getDefenseGroupId());
+                defenseGroupMember.setNote(defenseGroupMemberAddVo.getNote());
+                defenseGroupMemberService.save(defenseGroupMember);
+                ajaxUtils.success().msg("保存成功");
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 设置组长
+     *
+     * @param graduationDesignTeacherId 毕业设计指导教师id
+     * @param defenseGroupId            组id
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/divide/leader", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils divideLeader(@RequestParam("graduationDesignTeacherId") String graduationDesignTeacherId,
+                                  @RequestParam("defenseGroupId") String defenseGroupId,
+                                  @RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupId);
+            if (!ObjectUtils.isEmpty(defenseGroup)) {
+                defenseGroup.setLeaderId(graduationDesignTeacherId);
+                defenseGroupService.update(defenseGroup);
+                ajaxUtils.success().msg("设置成功");
+            } else {
+                ajaxUtils.fail().msg("未查询到相关组信息");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());

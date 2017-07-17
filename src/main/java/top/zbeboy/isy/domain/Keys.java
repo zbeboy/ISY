@@ -206,6 +206,7 @@ public class Keys {
     public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = UniqueKeys0.KEY_COLLEGE_ROLE_PRIMARY;
     public static final UniqueKey<DefenseArrangementRecord> KEY_DEFENSE_ARRANGEMENT_PRIMARY = UniqueKeys0.KEY_DEFENSE_ARRANGEMENT_PRIMARY;
     public static final UniqueKey<DefenseGroupRecord> KEY_DEFENSE_GROUP_PRIMARY = UniqueKeys0.KEY_DEFENSE_GROUP_PRIMARY;
+    public static final UniqueKey<DefenseGroupMemberRecord> KEY_DEFENSE_GROUP_MEMBER_GRADUATION_DESIGN_TEACHER_ID = UniqueKeys0.KEY_DEFENSE_GROUP_MEMBER_GRADUATION_DESIGN_TEACHER_ID;
     public static final UniqueKey<DefenseOrderRecord> KEY_DEFENSE_ORDER_PRIMARY = UniqueKeys0.KEY_DEFENSE_ORDER_PRIMARY;
     public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
@@ -411,6 +412,7 @@ public class Keys {
         public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = createUniqueKey(CollegeRole.COLLEGE_ROLE, "KEY_college_role_PRIMARY", CollegeRole.COLLEGE_ROLE.ROLE_ID, CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
         public static final UniqueKey<DefenseArrangementRecord> KEY_DEFENSE_ARRANGEMENT_PRIMARY = createUniqueKey(DefenseArrangement.DEFENSE_ARRANGEMENT, "KEY_defense_arrangement_PRIMARY", DefenseArrangement.DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID);
         public static final UniqueKey<DefenseGroupRecord> KEY_DEFENSE_GROUP_PRIMARY = createUniqueKey(DefenseGroup.DEFENSE_GROUP, "KEY_defense_group_PRIMARY", DefenseGroup.DEFENSE_GROUP.DEFENSE_GROUP_ID);
+        public static final UniqueKey<DefenseGroupMemberRecord> KEY_DEFENSE_GROUP_MEMBER_GRADUATION_DESIGN_TEACHER_ID = createUniqueKey(DefenseGroupMember.DEFENSE_GROUP_MEMBER, "KEY_defense_group_member_graduation_design_teacher_id", DefenseGroupMember.DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID, DefenseGroupMember.DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID);
         public static final UniqueKey<DefenseOrderRecord> KEY_DEFENSE_ORDER_PRIMARY = createUniqueKey(DefenseOrder.DEFENSE_ORDER, "KEY_defense_order_PRIMARY", DefenseOrder.DEFENSE_ORDER.DEFENSE_ORDER_ID);
         public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = createUniqueKey(Department.DEPARTMENT, "KEY_department_PRIMARY", Department.DEPARTMENT.DEPARTMENT_ID);
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);

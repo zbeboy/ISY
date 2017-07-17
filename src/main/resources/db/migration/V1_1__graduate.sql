@@ -170,8 +170,8 @@ CREATE TABLE defense_arrangement (
 );
 
 CREATE TABLE defense_time (
-  day_defense_start_time     VARCHAR(20) NOT NULL,
-  day_defense_end_time       VARCHAR(20) NOT NULL,
+  day_defense_start_time VARCHAR(20) NOT NULL,
+  day_defense_end_time   VARCHAR(20) NOT NULL,
   sort_time              INT         NOT NULL,
   defense_arrangement_id VARCHAR(64) NOT NULL,
   FOREIGN KEY (defense_arrangement_id) REFERENCES defense_arrangement (defense_arrangement_id)
@@ -191,7 +191,7 @@ CREATE TABLE defense_group (
 );
 
 CREATE TABLE defense_group_member (
-  graduation_design_teacher_id VARCHAR(64) NOT NULL,
+  graduation_design_teacher_id VARCHAR(64) NOT NULL UNIQUE ,
   defense_group_id             VARCHAR(64) NOT NULL,
   note                         VARCHAR(100),
   FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id),

@@ -21,4 +21,5 @@ public class GraduationDesignTeacherBean extends GraduationDesignTeacher {
     private String defenseGroupId;
     private String defenseGroupName;
     private String leaderId;
+    private String note;
 }

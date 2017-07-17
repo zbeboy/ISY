@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.graduate.design;
 
 import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.DefenseGroup;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 
@@ -35,6 +36,14 @@ public interface DefenseGroupService {
      * @return 数据
      */
     List<DefenseGroupBean> findByDefenseArrangementId(String defenseArrangementId);
+
+    /**
+     * 通过毕业设计发布id查询
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 数据
+     */
+    Result<Record> findByGraduationDesignReleaseId(String graduationDesignReleaseId);
 
     /**
      * 保存

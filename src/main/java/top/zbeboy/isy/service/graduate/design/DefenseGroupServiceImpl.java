@@ -92,6 +92,17 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
         return defenseGroupBeens;
     }
 
+    @Override
+    public Result<Record> findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
+        return create.select()
+                .from(DEFENSE_ARRANGEMENT)
+                .join(DEFENSE_GROUP)
+                .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
+                .where(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
+                .orderBy(DEFENSE_GROUP.CREATE_TIME.asc())
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(DefenseGroup defenseGroup) {

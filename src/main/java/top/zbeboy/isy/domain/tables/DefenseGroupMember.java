@@ -14,6 +14,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -34,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroupMember extends TableImpl<DefenseGroupMemberRecord> {
 
-    private static final long serialVersionUID = -501615897;
+    private static final long serialVersionUID = -1894269765;
 
     /**
      * The reference instance of <code>isy.defense_group_member</code>
@@ -92,6 +93,14 @@ public class DefenseGroupMember extends TableImpl<DefenseGroupMemberRecord> {
     @Override
     public Schema getSchema() {
         return Isy.ISY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<UniqueKey<DefenseGroupMemberRecord>> getKeys() {
+        return Arrays.<UniqueKey<DefenseGroupMemberRecord>>asList(Keys.KEY_DEFENSE_GROUP_MEMBER_GRADUATION_DESIGN_TEACHER_ID);
     }
 
     /**

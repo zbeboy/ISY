@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.domain.tables.pojos.DefenseGroupMember;
+import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 
@@ -51,6 +53,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID))
                     .leftJoin(DEFENSE_GROUP)
                     .on(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
+                    .orderBy(STAFF.STAFF_NUMBER)
                     .fetch();
         } else {
             records = create.select()
@@ -64,6 +67,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
                     .leftJoin(DEFENSE_GROUP)
                     .on(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
                     .where(a)
+                    .orderBy(STAFF.STAFF_NUMBER)
                     .fetch();
         }
 
@@ -77,6 +81,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
             graduationDesignTeacherBean.setDefenseGroupId(r.getValue(DEFENSE_GROUP.DEFENSE_GROUP_ID));
             graduationDesignTeacherBean.setDefenseGroupName(r.getValue(DEFENSE_GROUP.DEFENSE_GROUP_NAME));
             graduationDesignTeacherBean.setLeaderId(r.getValue(DEFENSE_GROUP.LEADER_ID));
+            graduationDesignTeacherBean.setNote(r.getValue(DEFENSE_GROUP_MEMBER.NOTE));
 
             graduationDesignTeacherBeens.add(graduationDesignTeacherBean);
         }
@@ -84,9 +89,32 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
     }
 
     @Override
+    public DefenseGroupMemberRecord findByGraduationDesignTeacherId(String graduationDesignTeacherId) {
+        return create.selectFrom(DEFENSE_GROUP_MEMBER)
+                .where(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId))
+                .fetchOne();
+    }
+
+    @Override
     public void deleteByDefenseGroupId(String defenseGroupId) {
         create.deleteFrom(DEFENSE_GROUP_MEMBER)
                 .where(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(defenseGroupId))
+                .execute();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(DefenseGroupMember defenseGroupMember) {
+        create.insertInto(DEFENSE_GROUP_MEMBER,
+                DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID,
+                DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID,
+                DEFENSE_GROUP_MEMBER.NOTE)
+                .values(defenseGroupMember.getGraduationDesignTeacherId(),
+                        defenseGroupMember.getDefenseGroupId(),
+                        defenseGroupMember.getNote())
+                .onDuplicateKeyUpdate()
+                .set(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID, defenseGroupMember.getDefenseGroupId())
+                .set(DEFENSE_GROUP_MEMBER.NOTE, defenseGroupMember.getNote())
                 .execute();
     }
 

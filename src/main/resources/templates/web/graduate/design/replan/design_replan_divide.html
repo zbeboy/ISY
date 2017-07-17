@@ -58,6 +58,7 @@
                         <th scope="col">联系方式</th>
                         <th scope="col">组别</th>
                         <th scope="col">是否组长</th>
+                        <th scope="col">备注</th>
                         <th scope="col">操作</th>
                     </tr>
                     </thead>
@@ -70,6 +71,35 @@
         <footer class="footer" th:include="footer::footer">
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
+        <!-- 设置组Modal -->
+        <div class="modal fade" id="setGroupModal" tabindex="-1" role="dialog" aria-labelledby="setGroupModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="setGroupModalLabel">设置</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" id="groupForm">
+                            <div id="groupData">
+
+                            </div>
+                            <div class="form-group">
+                                <label>备注</label>
+                                <input class="form-control" name="note" id="groupNote" placeholder="备注"/>
+                            </div>
+                            <input type="hidden" name="graduationDesignTeacherId" id="groupGraduationDesignTeacherId" />
+                            <input type="hidden" name="graduationDesignReleaseId" th:value="${graduationDesignReleaseId}" />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveSetGroup">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="group-member-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>
@@ -79,15 +109,31 @@
                 <td>{{staffMobile}}</td>
                 <td>{{defenseGroupName}}</td>
                 <td>{{is_leader}}</td>
+                <td>{{note}}</td>
                 <td>
-                    <button type="button" class="btn btn-default btn-sm setGroup"
-                            data-id="{{graduationDesignTeacherId}}">设置组
+                    <button type="button" class="btn btn-default btn-sm edit"
+                            data-id="{{graduationDesignTeacherId}}">设置
                     </button>
                     <button type="button" class="btn btn-primary btn-sm setLeader"
-                            data-id="{{graduationDesignTeacherId}}">设为组长
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}" data-group="{{defenseGroupId}}">设为组长
                     </button>
                 </td>
             </tr>
+            {{/each}}
+        </script>
+        <script id="group-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{defenseGroupId}}">{{group_name}}</option>
+            {{/each}}
+        </script>
+        <script id="group-form-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="radio">
+                <label>
+                    <input type="radio" name="defenseGroupId" class="group_id" value="{{defenseGroupId}}">
+                    {{group_name}}
+                </label>
+            </div>
             {{/each}}
         </script>
         <!-- /.footer -->
