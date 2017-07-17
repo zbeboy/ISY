@@ -151,6 +151,30 @@ public class GraduationDesignReplanController {
     }
 
     /**
+     * 毕业设计答辩生成顺序
+     *
+     * @return 毕业设计答辩生成顺序页面
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/order", method = RequestMethod.GET)
+    public String order(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            if (record.isPresent()) {
+                DefenseArrangement defenseArrangement = record.get().into(DefenseArrangement.class);
+                modelMap.addAttribute("defenseArrangement", defenseArrangement);
+                page = "web/graduate/design/replan/design_replan_order::#page-wrapper";
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
      * 教师分组数据
      *
      * @param condition 请求

@@ -12,6 +12,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             arrange_url: '/web/graduate/design/replan/arrange',
             group_url: '/web/graduate/design/replan/group',
             group_condition: '/web/graduate/design/replan/group/condition',
+            order_url: '/web/graduate/design/replan/order',
             divide_url: '/web/graduate/design/replan/divide'
         };
 
@@ -156,6 +157,24 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         $(tableData).delegate('.design_replan_divide', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(ajax_url.divide_url + '?id=' + id);
+        });
+
+        /*
+         生成顺序
+         */
+        $(tableData).delegate('.design_replan_order', "click", function () {
+            var id = $(this).attr('data-id');
+            $.post(web_path + ajax_url.group_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.order_url + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         init();
