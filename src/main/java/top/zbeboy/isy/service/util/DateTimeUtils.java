@@ -115,6 +115,18 @@ public class DateTimeUtils {
     }
 
     /**
+     * 格式化成util date
+     *
+     * @param date   date 日期
+     * @param format 格式
+     * @return util date
+     * @throws ParseException
+     */
+    public static java.util.Date formatUtilDate(String date, String format) throws ParseException {
+        return new java.util.Date(java.util.Date.from(LocalDate.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern(format)).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
+    }
+
+    /**
      * 格式化成sql date
      *
      * @param date   date 日期

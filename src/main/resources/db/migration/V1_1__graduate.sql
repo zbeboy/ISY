@@ -191,7 +191,7 @@ CREATE TABLE defense_group (
 );
 
 CREATE TABLE defense_group_member (
-  graduation_design_teacher_id VARCHAR(64) NOT NULL UNIQUE ,
+  graduation_design_teacher_id VARCHAR(64) NOT NULL UNIQUE,
   defense_group_id             VARCHAR(64) NOT NULL,
   note                         VARCHAR(100),
   FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id),
@@ -200,16 +200,16 @@ CREATE TABLE defense_group_member (
 
 CREATE TABLE defense_order (
   defense_order_id VARCHAR(64) PRIMARY KEY,
-  student_number   VARCHAR(20)  NOT NULL,
-  student_name     VARCHAR(30)  NOT NULL,
-  subject          VARCHAR(100) NOT NULL,
-  defense_date     DATE         NOT NULL,
-  defense_time     VARCHAR(20)  NOT NULL,
-  staff_name       VARCHAR(30)  NOT NULL,
-  score_type_id    INT          NOT NULL,
-  sort_num         INT          NOT NULL,
-  student_id       INT          NOT NULL,
-  defense_group_id VARCHAR(64)  NOT NULL,
+  student_number   VARCHAR(20) NOT NULL,
+  student_name     VARCHAR(30) NOT NULL,
+  subject          VARCHAR(100),
+  defense_date     DATE        NOT NULL,
+  defense_time     VARCHAR(20) NOT NULL,
+  staff_name       VARCHAR(30) NOT NULL,
+  score_type_id    INT,
+  sort_num         INT         NOT NULL,
+  student_id       INT         NOT NULL,
+  defense_group_id VARCHAR(64) NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
   FOREIGN KEY (defense_group_id) REFERENCES defense_group (defense_group_id)
 );

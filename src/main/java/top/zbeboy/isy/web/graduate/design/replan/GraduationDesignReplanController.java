@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.graduate.design.replan;
 
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
+import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -30,6 +32,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -546,6 +549,130 @@ public class GraduationDesignReplanController {
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 生成顺序
+     *
+     * @param defenseGroupId            组id
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param defenseArrangementId      毕业设计答辩安排id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/order/make", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils orderMake(@RequestParam("defenseGroupId") String defenseGroupId,
+                               @RequestParam("id") String graduationDesignReleaseId,
+                               @RequestParam("defenseArrangementId") String defenseArrangementId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        try {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+            if (!errorBean.isHasError()) {
+                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+                // 是否已确认毕业设计学生调整
+                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                    // 安排情况
+                    DefenseArrangement defenseArrangement = defenseArrangementService.findById(defenseArrangementId);
+                    if (!ObjectUtils.isEmpty(defenseArrangement)) {
+                        // 删除之前顺序配置
+                        defenseOrderService.deleteByDefenseGroupId(defenseGroupId);
+
+                        List<DefenseTime> defenseTimes = new ArrayList<>();
+                        // 每日答辩时间
+                        Result<Record> defenseTimeRecord = defenseTimeService.findByDefenseArrangementId(defenseArrangementId);
+                        if (defenseTimeRecord.isNotEmpty()) {
+                            defenseTimes = defenseTimeRecord.into(DefenseTime.class);
+                        }
+
+                        // 查询小组学生
+                        List<DefenseGroupMemberBean> defenseGroupMemberBeens = defenseGroupMemberService.findByDefenseGroupIdForStudent(defenseGroupId, graduationDesignReleaseId);
+
+                        String format1 = "yyyy-MM-dd HH:mm:ss";
+                        String format2 = "yyyy-MM-dd";
+                        String format3 = "HH:mm";
+                        // 切分时间
+                        String startDate = DateTimeUtils.formatDate(defenseArrangement.getDefenseStartTime(), format2);
+                        DateTime defenseStartTime = new DateTime(defenseArrangement.getDefenseStartTime().getTime());
+                        // 学生计数器
+                        int sortNum = 0;
+                        Date startTime;
+                        Date endTime;
+                        DateTime dateTime = null;
+                        List<DefenseOrder> defenseOrders = new ArrayList<>();
+                        // 先循环日期
+                        while (defenseStartTime.isBefore(defenseArrangement.getDefenseEndTime().getTime())) {
+                            // 循环时段
+                            for (DefenseTime defenseTime : defenseTimes) {
+                                startTime = DateTimeUtils.formatUtilDate(startDate + " " + defenseTime.getDayDefenseStartTime() + ":00", format1);
+                                endTime = DateTimeUtils.formatUtilDate(startDate + " " + defenseTime.getDayDefenseEndTime() + ":00", format1);
+                                dateTime = new DateTime(startTime.getTime());
+                                // 循环学生
+                                while (sortNum < defenseGroupMemberBeens.size()) {
+                                    DefenseGroupMemberBean defenseGroupMemberBean = defenseGroupMemberBeens.get(sortNum);
+                                    DefenseOrder defenseOrder = new DefenseOrder();
+                                    defenseOrder.setDefenseOrderId(UUIDUtils.getUUID());
+                                    // 在该时段
+                                    if (dateTime.isBefore(endTime.getTime())) {
+                                        defenseOrder.setStudentNumber(defenseGroupMemberBean.getStudentNumber());
+                                        defenseOrder.setStudentName(defenseGroupMemberBean.getStudentName());
+                                        defenseOrder.setSubject(defenseGroupMemberBean.getSubject());
+                                        defenseOrder.setDefenseDate(new java.sql.Date(dateTime.toDate().getTime()));
+                                        defenseOrder.setDefenseTime(DateTimeUtils.formatDate(dateTime.toDate(), format3));
+                                        defenseOrder.setStaffName(defenseGroupMemberBean.getStaffName());
+                                        defenseOrder.setSortNum(sortNum);
+                                        defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
+                                        defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
+                                    } else {
+                                        break;
+                                    }
+                                    defenseOrders.add(defenseOrder);
+                                    dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
+                                    sortNum++;
+                                }
+                            }
+                            defenseStartTime = defenseStartTime.plusDays(1);
+                        }
+
+                        // 若已超过时间，但学生还有，补齐
+                        if (sortNum < defenseGroupMemberBeens.size()) {
+                            while (sortNum < defenseGroupMemberBeens.size()) {
+                                DefenseGroupMemberBean defenseGroupMemberBean = defenseGroupMemberBeens.get(sortNum);
+                                DefenseOrder defenseOrder = new DefenseOrder();
+                                defenseOrder.setDefenseOrderId(UUIDUtils.getUUID());
+                                // 在该时段
+                                if (!ObjectUtils.isEmpty(dateTime)) {
+                                    defenseOrder.setStudentNumber(defenseGroupMemberBean.getStudentNumber());
+                                    defenseOrder.setStudentName(defenseGroupMemberBean.getStudentName());
+                                    defenseOrder.setSubject(defenseGroupMemberBean.getSubject());
+                                    defenseOrder.setDefenseDate(new java.sql.Date(dateTime.toDate().getTime()));
+                                    defenseOrder.setDefenseTime(DateTimeUtils.formatDate(dateTime.toDate(), format3));
+                                    defenseOrder.setStaffName(defenseGroupMemberBean.getStaffName());
+                                    defenseOrder.setSortNum(sortNum);
+                                    defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
+                                    defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
+                                    dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
+                                }
+                                defenseOrders.add(defenseOrder);
+                                sortNum++;
+                            }
+                        }
+
+                        defenseOrderService.save(defenseOrders);
+                        ajaxUtils.success().msg("生成成功");
+                    } else {
+                        ajaxUtils.fail().msg("未查询到相关毕业答辩安排");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("未确认毕业设计学生调整");
+                }
+
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } catch (ParseException e) {
+            log.error("Parse time error , error is ", e);
         }
         return ajaxUtils;
     }

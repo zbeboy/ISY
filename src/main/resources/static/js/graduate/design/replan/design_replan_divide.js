@@ -233,8 +233,6 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                 }
             }
         });
-
-
     });
 
     /**

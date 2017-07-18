@@ -359,6 +359,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-maxlength
                 } else {
                     sendAjax();
                 }
+            } else {
+                sendAjax();
             }
         }
 

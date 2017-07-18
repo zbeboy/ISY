@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.daos.DefenseOrderDao;
+import top.zbeboy.isy.domain.tables.pojos.DefenseOrder;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.DEFENSE_ORDER;
 
@@ -19,9 +24,17 @@ public class DefenseOrderServiceImpl implements DefenseOrderService {
 
     private final DSLContext create;
 
+    @Resource
+    private DefenseOrderDao defenseOrderDao;
+
     @Autowired
     public DefenseOrderServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public void save(List<DefenseOrder> defenseOrders) {
+        defenseOrderDao.insert(defenseOrders);
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.DefenseGroupMember;
 import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 
 import java.util.ArrayList;
@@ -93,6 +94,39 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
         return create.selectFrom(DEFENSE_GROUP_MEMBER)
                 .where(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<DefenseGroupMemberBean> findByDefenseGroupIdForStudent(String defenseGroupId, String graduationDesignReleaseId) {
+        List<DefenseGroupMemberBean> defenseGroupMemberBeans = new ArrayList<>();
+        Result<Record> records = create.select()
+                .from(DEFENSE_GROUP_MEMBER)
+                .join(GRADUATION_DESIGN_TUTOR)
+                .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
+                .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                .leftJoin(GRADUATION_DESIGN_PRESUBJECT)
+                .on(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID.eq(STUDENT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
+                .where(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(defenseGroupId))
+                .fetch();
+        for (Record r : records) {
+            DefenseGroupMemberBean defenseGroupMemberBean = new DefenseGroupMemberBean();
+            defenseGroupMemberBean.setDefenseGroupId(r.getValue(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID));
+            defenseGroupMemberBean.setGraduationDesignTeacherId(r.getValue(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID));
+            defenseGroupMemberBean.setNote(r.getValue(DEFENSE_GROUP_MEMBER.NOTE));
+            defenseGroupMemberBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
+            defenseGroupMemberBean.setStudentName(r.getValue(USERS.as("S").REAL_NAME));
+            defenseGroupMemberBean.setSubject(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
+            defenseGroupMemberBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
+            defenseGroupMemberBean.setStudentId(r.getValue(STUDENT.STUDENT_ID));
+
+            defenseGroupMemberBeans.add(defenseGroupMemberBean);
+        }
+        return defenseGroupMemberBeans;
     }
 
     @Override

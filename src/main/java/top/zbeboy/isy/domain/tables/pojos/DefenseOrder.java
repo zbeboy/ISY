@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder implements Serializable {
 
-    private static final long serialVersionUID = -118066413;
+    private static final long serialVersionUID = -497568559;
 
     private String  defenseOrderId;
     private String  studentNumber;
@@ -111,7 +111,6 @@ public class DefenseOrder implements Serializable {
         this.studentName = studentName;
     }
 
-    @NotNull
     @Size(max = 100)
     public String getSubject() {
         return this.subject;
@@ -150,7 +149,6 @@ public class DefenseOrder implements Serializable {
         this.staffName = staffName;
     }
 
-    @NotNull
     public Integer getScoreTypeId() {
         return this.scoreTypeId;
     }

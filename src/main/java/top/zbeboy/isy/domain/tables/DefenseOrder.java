@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseOrderRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
 
-    private static final long serialVersionUID = 871784435;
+    private static final long serialVersionUID = 499051923;
 
     /**
      * The reference instance of <code>isy.defense_order</code>
@@ -69,7 +69,7 @@ public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
     /**
      * The column <code>isy.defense_order.subject</code>.
      */
-    public final TableField<DefenseOrderRecord, String> SUBJECT = createField("subject", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+    public final TableField<DefenseOrderRecord, String> SUBJECT = createField("subject", org.jooq.impl.SQLDataType.VARCHAR.length(100), this, "");
 
     /**
      * The column <code>isy.defense_order.defense_date</code>.
@@ -89,7 +89,7 @@ public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
     /**
      * The column <code>isy.defense_order.score_type_id</code>.
      */
-    public final TableField<DefenseOrderRecord, Integer> SCORE_TYPE_ID = createField("score_type_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<DefenseOrderRecord, Integer> SCORE_TYPE_ID = createField("score_type_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>isy.defense_order.sort_num</code>.

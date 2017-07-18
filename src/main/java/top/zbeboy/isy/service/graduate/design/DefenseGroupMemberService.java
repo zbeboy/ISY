@@ -1,7 +1,10 @@
 package top.zbeboy.isy.service.graduate.design;
 
+import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.DefenseGroupMember;
 import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
+import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 
 import java.util.List;
@@ -26,6 +29,15 @@ public interface DefenseGroupMemberService {
      * @return 数据
      */
     DefenseGroupMemberRecord findByGraduationDesignTeacherId(String graduationDesignTeacherId);
+
+    /**
+     * 通过组id查询学生
+     *
+     * @param defenseGroupId            组id
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 数据
+     */
+    List<DefenseGroupMemberBean> findByDefenseGroupIdForStudent(String defenseGroupId, String graduationDesignReleaseId);
 
     /**
      * 通过组id删除

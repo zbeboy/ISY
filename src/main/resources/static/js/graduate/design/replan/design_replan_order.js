@@ -7,6 +7,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     var ajax_url = {
         data_url: '/web/graduate/design/replan/group/data',
+        make_url: '/web/graduate/design/replan/order/make',
         back: '/web/menu/graduate/design/replan'
     };
 
@@ -65,5 +66,67 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         var template = Handlebars.compile($("#group-template").html());
         $(tableData).html(template(data));
         $('#tablesawTable').tablesaw().data("tablesaw").refresh();
+    }
+
+    /*
+     设置
+     */
+    $(tableData).delegate('.make', "click", function () {
+        var id = $(this).attr('data-id');
+        var msg;
+        msg = Messenger().post({
+            message: "生成将会覆盖调整，确定吗?",
+            actions: {
+                retry: {
+                    label: '确定',
+                    phrase: 'Retrying TIME',
+                    action: function () {
+                        msg.cancel();
+                        sendMakeAjax(id);
+                    }
+                },
+                cancel: {
+                    label: '取消',
+                    action: function () {
+                        return msg.cancel();
+                    }
+                }
+            }
+        });
+    });
+
+    /**
+     * 发送生成ajax
+     * @param id 组id
+     */
+    function sendMakeAjax(id) {
+        Messenger().run({
+            successMessage: '生成成功',
+            errorMessage: '生成失败',
+            progressMessage: '正在生成....'
+        }, {
+            url: web_path + ajax_url.make_url,
+            type: 'post',
+            data: {
+                defenseGroupId: id,
+                id: init_page_param.graduationDesignReleaseId,
+                defenseArrangementId: init_page_param.defenseArrangementId
+            },
+            success: function (data) {
+                if (!data.state) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            },
+            error: function (xhr) {
+                if ((xhr != null ? xhr.status : void 0) === 404) {
+                    return "请求失败";
+                }
+                return true;
+            }
+        });
     }
 });

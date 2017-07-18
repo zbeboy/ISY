@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.DefenseOrder;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrderRecord extends UpdatableRecordImpl<DefenseOrderRecord> implements Record11<String, String, String, String, Date, String, String, Integer, Integer, Integer, String> {
 
-    private static final long serialVersionUID = 87333204;
+    private static final long serialVersionUID = 471323128;
 
     /**
      * Setter for <code>isy.defense_order.defense_order_id</code>.
@@ -92,7 +92,6 @@ public class DefenseOrderRecord extends UpdatableRecordImpl<DefenseOrderRecord> 
     /**
      * Getter for <code>isy.defense_order.subject</code>.
      */
-    @NotNull
     @Size(max = 100)
     public String getSubject() {
         return (String) get(3);
@@ -155,7 +154,6 @@ public class DefenseOrderRecord extends UpdatableRecordImpl<DefenseOrderRecord> 
     /**
      * Getter for <code>isy.defense_order.score_type_id</code>.
      */
-    @NotNull
     public Integer getScoreTypeId() {
         return (Integer) get(7);
     }
