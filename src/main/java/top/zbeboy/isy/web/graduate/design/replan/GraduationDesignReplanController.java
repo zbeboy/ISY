@@ -593,7 +593,6 @@ public class GraduationDesignReplanController {
                         String format2 = "yyyy-MM-dd";
                         String format3 = "HH:mm";
                         // 切分时间
-                        String startDate = DateTimeUtils.formatDate(defenseArrangement.getDefenseStartTime(), format2);
                         DateTime defenseStartTime = new DateTime(defenseArrangement.getDefenseStartTime().getTime());
                         // 学生计数器
                         int sortNum = 0;
@@ -603,10 +602,11 @@ public class GraduationDesignReplanController {
                         List<DefenseOrder> defenseOrders = new ArrayList<>();
                         // 先循环日期
                         while (defenseStartTime.isBefore(defenseArrangement.getDefenseEndTime().getTime())) {
+                            String startDate = DateTimeUtils.formatDate(defenseStartTime.toDate(), format2);
                             // 循环时段
                             for (DefenseTime defenseTime : defenseTimes) {
-                                startTime = DateTimeUtils.formatUtilDate(startDate + " " + defenseTime.getDayDefenseStartTime() + ":00", format1);
-                                endTime = DateTimeUtils.formatUtilDate(startDate + " " + defenseTime.getDayDefenseEndTime() + ":00", format1);
+                                startTime = DateTimeUtils.formatDateTime(startDate + " " + defenseTime.getDayDefenseStartTime() + ":00", format1);
+                                endTime = DateTimeUtils.formatDateTime(startDate + " " + defenseTime.getDayDefenseEndTime() + ":00", format1);
                                 dateTime = new DateTime(startTime.getTime());
                                 // 循环学生
                                 while (sortNum < defenseGroupMemberBeens.size()) {

@@ -122,8 +122,8 @@ public class DateTimeUtils {
      * @return util date
      * @throws ParseException
      */
-    public static java.util.Date formatUtilDate(String date, String format) throws ParseException {
-        return new java.util.Date(java.util.Date.from(LocalDate.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern(format)).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
+    public static java.sql.Date formatDateTime(String date, String format) throws ParseException {
+        return new java.sql.Date(java.sql.Date.from(LocalDateTime.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern(format)).atZone(ZoneId.systemDefault()).toInstant()).getTime());
     }
 
     /**
