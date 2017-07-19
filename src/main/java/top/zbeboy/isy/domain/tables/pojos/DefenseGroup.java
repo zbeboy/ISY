@@ -25,14 +25,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroup implements Serializable {
 
-    private static final long serialVersionUID = -260371551;
+    private static final long serialVersionUID = -1092533426;
 
     private String    defenseGroupId;
     private String    defenseGroupName;
     private Integer   schoolroomId;
     private String    note;
     private String    leaderId;
-    private String    secretaryId;
+    private Integer   secretaryId;
     private String    defenseArrangementId;
     private Timestamp createTime;
 
@@ -55,7 +55,7 @@ public class DefenseGroup implements Serializable {
         Integer   schoolroomId,
         String    note,
         String    leaderId,
-        String    secretaryId,
+        Integer   secretaryId,
         String    defenseArrangementId,
         Timestamp createTime
     ) {
@@ -116,12 +116,11 @@ public class DefenseGroup implements Serializable {
         this.leaderId = leaderId;
     }
 
-    @Size(max = 64)
-    public String getSecretaryId() {
+    public Integer getSecretaryId() {
         return this.secretaryId;
     }
 
-    public void setSecretaryId(String secretaryId) {
+    public void setSecretaryId(Integer secretaryId) {
         this.secretaryId = secretaryId;
     }
 

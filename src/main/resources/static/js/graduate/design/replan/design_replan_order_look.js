@@ -9,6 +9,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     var ajax_url = {
         data_url: '/web/graduate/design/replan/order/look/data',
         adjust_url: '/web/graduate/design/replan/order/adjust',
+        secretary_url: '/web/graduate/design/replan/order/secretary',
         nav: '/web/menu/graduate/design/replan',
         back: '/web/graduate/design/replan/order'
     };
@@ -128,6 +129,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      */
     function listData(data) {
         var template = Handlebars.compile($("#order-template").html());
+        Handlebars.registerHelper('is_secretary', function () {
+            var isSecretary = '';
+            if (this.studentId === this.secretaryId) {
+                isSecretary = '是';
+            }
+            return new Handlebars.SafeString(Handlebars.escapeExpression(isSecretary));
+        });
         $(tableData).html(template(data));
         $('#tablesawTable').tablesaw().data("tablesaw").refresh();
     }
@@ -163,5 +171,62 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
             }
         });
     });
+
+    /*
+     设置组长
+     */
+    $(tableData).delegate('.setSecretary', "click", function () {
+        var id = $(this).attr('data-id');
+        var groupId = init_page_param.defenseGroupId;
+        var name = $(this).attr('data-name');
+        var msg;
+        msg = Messenger().post({
+            message: "确定设置 " + name + " 为秘书吗?",
+            actions: {
+                retry: {
+                    label: '确定',
+                    phrase: 'Retrying TIME',
+                    action: function () {
+                        msg.cancel();
+                        sendSecretaryAjax(id, groupId);
+                    }
+                },
+                cancel: {
+                    label: '取消',
+                    action: function () {
+                        return msg.cancel();
+                    }
+                }
+            }
+        });
+    });
+
+    /**
+     * 发送设置秘书ajax
+     * @param id 学生id
+     * @param groupId 组id
+     */
+    function sendSecretaryAjax(id, groupId) {
+        $.post(web_path + ajax_url.secretary_url, {
+            studentId: id,
+            defenseGroupId: groupId,
+            id: init_page_param.graduationDesignReleaseId
+        }, function (data) {
+            if (data.state) {
+                init();
+                Messenger().post({
+                    message: data.msg,
+                    type: 'success',
+                    showCloseButton: true
+                });
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    }
 
 });

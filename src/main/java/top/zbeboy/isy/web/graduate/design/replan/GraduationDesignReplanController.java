@@ -572,6 +572,36 @@ public class GraduationDesignReplanController {
     }
 
     /**
+     * 设置秘书
+     *
+     * @param studentId                 学生id
+     * @param defenseGroupId            组id
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/order/secretary", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils orderSecretary(@RequestParam("studentId") int studentId,
+                                    @RequestParam("defenseGroupId") String defenseGroupId,
+                                    @RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupId);
+            if (!ObjectUtils.isEmpty(defenseGroup)) {
+                defenseGroup.setSecretaryId(studentId);
+                defenseGroupService.update(defenseGroup);
+                ajaxUtils.success().msg("设置成功");
+            } else {
+                ajaxUtils.fail().msg("未查询到相关组信息");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 生成顺序
      *
      * @param defenseGroupId            组id

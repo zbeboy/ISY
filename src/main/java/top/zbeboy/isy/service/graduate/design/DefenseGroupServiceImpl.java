@@ -67,8 +67,8 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
                 .on(DEFENSE_GROUP.LEADER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                 .leftJoin(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                .leftJoin(USERS.as("S"))
-                .on(USERS.as("S").USERNAME.eq(DEFENSE_GROUP.SECRETARY_ID))
+                .leftJoin(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                .on(STUDENT.STUDENT_ID.eq(DEFENSE_GROUP.SECRETARY_ID))
                 .where(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(defenseArrangementId))
                 .orderBy(DEFENSE_GROUP.CREATE_TIME.desc())
                 .fetch();

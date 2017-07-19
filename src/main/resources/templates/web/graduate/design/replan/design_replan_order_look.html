@@ -59,6 +59,7 @@
                         <th scope="col">日期</th>
                         <th scope="col">时间</th>
                         <th scope="col">指导教师</th>
+                        <th scope="col">秘书</th>
                         <th scope="col">操作</th>
                     </tr>
                     </thead>
@@ -109,9 +110,13 @@
                 <td>{{defenseDate}}</td>
                 <td>{{defenseTime}}</td>
                 <td>{{staffName}}</td>
+                <td>{{is_secretary}}</td>
                 <td>
                     <button type="button" class="btn btn-default btn-sm adjust"
                             data-id="{{defenseOrderId}}">调换
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm setSecretary"
+                            data-id="{{studentId}}" data-name="{{studentName}}">设为秘书
                     </button>
                 </td>
             </tr>

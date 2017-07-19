@@ -20,6 +20,7 @@ import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseOrderBean;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static top.zbeboy.isy.domain.Tables.DEFENSE_GROUP;
 import static top.zbeboy.isy.domain.Tables.DEFENSE_ORDER;
 import static top.zbeboy.isy.domain.Tables.SCORE_TYPE;
 
@@ -56,6 +57,8 @@ public class DefenseOrderServiceImpl implements DefenseOrderService {
                     .from(DEFENSE_ORDER)
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
+                    .leftJoin(DEFENSE_GROUP)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
                     .orderBy(DEFENSE_ORDER.SORT_NUM)
                     .fetch();
         } else {
@@ -63,6 +66,8 @@ public class DefenseOrderServiceImpl implements DefenseOrderService {
                     .from(DEFENSE_ORDER)
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
+                    .leftJoin(DEFENSE_GROUP)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
                     .where(a)
                     .orderBy(DEFENSE_ORDER.SORT_NUM)
                     .fetch();
