@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
+import top.zbeboy.isy.domain.tables.records.DefenseOrderRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.BuildingService;
 import top.zbeboy.isy.service.graduate.design.*;
@@ -23,6 +24,7 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
+import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseOrderBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -31,10 +33,7 @@ import top.zbeboy.isy.web.vo.graduate.design.replan.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by zbeboy on 2017/7/7.
@@ -171,6 +170,25 @@ public class GraduationDesignReplanController {
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
             }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 毕业设计答辩顺序
+     *
+     * @return 毕业设计答辩顺序页面
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/order/look", method = RequestMethod.GET)
+    public String orderLook(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseGroupId") String defenseGroupId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("defenseGroupId", defenseGroupId);
+            page = "web/graduate/design/replan/design_replan_order_look::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
@@ -673,6 +691,74 @@ public class GraduationDesignReplanController {
             }
         } catch (ParseException e) {
             log.error("Parse time error , error is ", e);
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 查看及调整顺序
+     *
+     * @param condition 条件
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/order/look/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<DefenseOrderBean> orderLookData(DefenseOrderBean condition) {
+        AjaxUtils<DefenseOrderBean> ajaxUtils = AjaxUtils.of();
+        List<DefenseOrderBean> defenseOrderBeens = new ArrayList<>();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(condition.getGraduationDesignReleaseId());
+        if (!errorBean.isHasError()) {
+            Result<Record> records = defenseOrderService.findAll(condition);
+            if (records.isNotEmpty()) {
+                defenseOrderBeens = records.into(DefenseOrderBean.class);
+            }
+        }
+        return ajaxUtils.success().msg("获取数据成功").listData(defenseOrderBeens);
+    }
+
+    /**
+     * 调换顺序
+     *
+     * @param defenseOrderBean 数据
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/order/adjust", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils orderAdjust(DefenseOrderBean defenseOrderBean) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderBean.getGraduationDesignReleaseId());
+        if (!errorBean.isHasError()) {
+            // 当前学生
+            DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderBean.getDefenseOrderId());
+            if (!ObjectUtils.isEmpty(defenseOrder)) {
+                if (!Objects.equals(defenseOrder.getSortNum(), defenseOrderBean.getSortNum())) {
+                    // 要与之调换的学生
+                    DefenseOrderRecord record = defenseOrderService.findBySortNumAndDefenseGroupId(defenseOrderBean.getSortNum(), defenseOrderBean.getDefenseGroupId());
+                    if (!ObjectUtils.isEmpty(record)) {
+                        DefenseOrder tempDefenseOrder = record.into(DefenseOrder.class);
+                        // 进行调换
+                        tempDefenseOrder.setSortNum(defenseOrder.getSortNum());
+                        java.sql.Date tempDefenseDate = tempDefenseOrder.getDefenseDate();
+                        String tempDefenseTime = tempDefenseOrder.getDefenseTime();
+                        tempDefenseOrder.setDefenseDate(defenseOrder.getDefenseDate());
+                        tempDefenseOrder.setDefenseTime(defenseOrder.getDefenseTime());
+                        defenseOrder.setSortNum(defenseOrderBean.getSortNum());
+                        defenseOrder.setDefenseDate(tempDefenseDate);
+                        defenseOrder.setDefenseTime(tempDefenseTime);
+                        defenseOrderService.update(tempDefenseOrder);
+                        defenseOrderService.update(defenseOrder);
+                        ajaxUtils.success().msg("调换成功");
+                    } else {
+                        ajaxUtils.fail().msg("未查询到与之调换的学生信息");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("序号一致，无法调换");
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到当前学生信息");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
     }

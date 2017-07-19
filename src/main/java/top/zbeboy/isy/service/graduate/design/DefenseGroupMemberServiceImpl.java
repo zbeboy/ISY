@@ -152,6 +152,12 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
                 .execute();
     }
 
+    /**
+     * 搜索条件
+     *
+     * @param condition 条件
+     * @return 条件
+     */
     public Condition searchCondition(GraduationDesignTeacherBean condition) {
         Condition a = null;
         String realName = StringUtils.trimWhitespace(condition.getRealName());

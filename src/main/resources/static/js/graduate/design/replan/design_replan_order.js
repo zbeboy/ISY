@@ -8,6 +8,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
     var ajax_url = {
         data_url: '/web/graduate/design/replan/group/data',
         make_url: '/web/graduate/design/replan/order/make',
+        look_url: '/web/graduate/design/replan/order/look',
         back: '/web/menu/graduate/design/replan'
     };
 
@@ -69,7 +70,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
     }
 
     /*
-     设置
+     生成
      */
     $(tableData).delegate('.make', "click", function () {
         var id = $(this).attr('data-id');
@@ -93,6 +94,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
                 }
             }
         });
+    });
+
+    /*
+     查看及调整
+     */
+    $(tableData).delegate('.look', "click", function () {
+        var id = $(this).attr('data-id');
+        $.address.value(ajax_url.look_url + '?id=' + init_page_param.graduationDesignReleaseId + '&defenseGroupId=' + id);
     });
 
     /**

@@ -207,7 +207,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     });
 
     /*
-     设置
+     设置组长
      */
     $(tableData).delegate('.setLeader', "click", function () {
         var id = $(this).attr('data-id');
