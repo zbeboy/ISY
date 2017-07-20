@@ -635,7 +635,7 @@ public class GraduationDesignReplanController {
                         }
 
                         // 查询小组学生
-                        List<DefenseGroupMemberBean> defenseGroupMemberBeens = defenseGroupMemberService.findByDefenseGroupIdForStudent(defenseGroupId, graduationDesignReleaseId);
+                        List<DefenseGroupMemberBean> defenseGroupMemberBeens = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignReleaseIdForStudent(defenseGroupId, graduationDesignReleaseId);
 
                         String format1 = "yyyy-MM-dd HH:mm:ss";
                         String format2 = "yyyy-MM-dd";

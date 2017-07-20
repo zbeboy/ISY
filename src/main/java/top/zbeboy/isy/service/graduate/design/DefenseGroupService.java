@@ -46,6 +46,14 @@ public interface DefenseGroupService {
     Result<Record> findByGraduationDesignReleaseId(String graduationDesignReleaseId);
 
     /**
+     * 通过毕业设计发布id关联查询
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 数据
+     */
+    List<DefenseGroupBean>  findByGraduationDesignReleaseIdRelation(String graduationDesignReleaseId);
+
+    /**
      * 保存
      *
      * @param defenseGroup 组

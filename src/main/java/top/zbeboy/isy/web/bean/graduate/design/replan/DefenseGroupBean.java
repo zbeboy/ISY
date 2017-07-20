@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import top.zbeboy.isy.domain.tables.pojos.DefenseGroup;
 
+import java.util.List;
+
 /**
  * Created by zbeboy on 2017/7/11.
  */
@@ -15,4 +17,6 @@ public class DefenseGroupBean extends DefenseGroup {
     private String buildingCode;
     private String staffName;
     private String studentName;
+    // 压缩组员信息
+    private List<String> memberName;
 }

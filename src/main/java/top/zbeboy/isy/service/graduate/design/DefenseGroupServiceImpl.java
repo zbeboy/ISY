@@ -56,7 +56,6 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
 
     @Override
     public List<DefenseGroupBean> findByDefenseArrangementId(String defenseArrangementId) {
-        List<DefenseGroupBean> defenseGroupBeens = new ArrayList<>();
         Result<Record> records = create.select()
                 .from(DEFENSE_GROUP)
                 .join(SCHOOLROOM)
@@ -72,6 +71,66 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
                 .where(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(defenseArrangementId))
                 .orderBy(DEFENSE_GROUP.CREATE_TIME.desc())
                 .fetch();
+        return buildDefenseGroupList(records);
+    }
+
+    @Override
+    public Result<Record> findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
+        return create.select()
+                .from(DEFENSE_ARRANGEMENT)
+                .join(DEFENSE_GROUP)
+                .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
+                .where(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
+                .orderBy(DEFENSE_GROUP.CREATE_TIME.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<DefenseGroupBean> findByGraduationDesignReleaseIdRelation(String graduationDesignReleaseId) {
+        Result<Record> records = create.select()
+                .from(DEFENSE_ARRANGEMENT)
+                .join(DEFENSE_GROUP)
+                .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
+                .join(SCHOOLROOM)
+                .on(DEFENSE_GROUP.SCHOOLROOM_ID.eq(SCHOOLROOM.SCHOOLROOM_ID))
+                .join(BUILDING)
+                .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
+                .leftJoin(GRADUATION_DESIGN_TEACHER)
+                .on(DEFENSE_GROUP.LEADER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .leftJoin(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                .leftJoin(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                .on(STUDENT.STUDENT_ID.eq(DEFENSE_GROUP.SECRETARY_ID))
+                .where(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
+                .orderBy(DEFENSE_GROUP.CREATE_TIME.desc())
+                .fetch();
+
+        return buildDefenseGroupList(records);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(DefenseGroup defenseGroup) {
+        defenseGroupDao.insert(defenseGroup);
+    }
+
+    @Override
+    public void update(DefenseGroup defenseGroup) {
+        defenseGroupDao.update(defenseGroup);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        defenseGroupDao.deleteById(id);
+    }
+
+    /**
+     * 构建组
+     *
+     * @param records           数据
+     */
+    private List<DefenseGroupBean> buildDefenseGroupList(Result<Record> records) {
+        List<DefenseGroupBean> defenseGroupBeens = new ArrayList<>();
         for (Record r : records) {
             DefenseGroupBean defenseGroupBean = new DefenseGroupBean();
             defenseGroupBean.setDefenseGroupId(r.getValue(DEFENSE_GROUP.DEFENSE_GROUP_ID));
@@ -90,32 +149,5 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
             defenseGroupBeens.add(defenseGroupBean);
         }
         return defenseGroupBeens;
-    }
-
-    @Override
-    public Result<Record> findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
-        return create.select()
-                .from(DEFENSE_ARRANGEMENT)
-                .join(DEFENSE_GROUP)
-                .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
-                .where(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
-                .orderBy(DEFENSE_GROUP.CREATE_TIME.asc())
-                .fetch();
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Override
-    public void save(DefenseGroup defenseGroup) {
-        defenseGroupDao.insert(defenseGroup);
-    }
-
-    @Override
-    public void update(DefenseGroup defenseGroup) {
-        defenseGroupDao.update(defenseGroup);
-    }
-
-    @Override
-    public void deleteById(String id) {
-        defenseGroupDao.deleteById(id);
     }
 }

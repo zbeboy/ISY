@@ -31,13 +31,21 @@ public interface DefenseGroupMemberService {
     DefenseGroupMemberRecord findByGraduationDesignTeacherId(String graduationDesignTeacherId);
 
     /**
-     * 通过组id查询学生
+     * 通过组id与毕业设计发布id查询
      *
      * @param defenseGroupId            组id
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return 数据
      */
-    List<DefenseGroupMemberBean> findByDefenseGroupIdForStudent(String defenseGroupId, String graduationDesignReleaseId);
+    List<DefenseGroupMemberBean> findByDefenseGroupIdAndGraduationDesignReleaseIdForStudent(String defenseGroupId, String graduationDesignReleaseId);
+
+    /**
+     * 通过组id查询
+     *
+     * @param defenseGroupId            组id
+     * @return 数据
+     */
+    List<DefenseGroupMemberBean> findByDefenseGroupIdForStaff(String defenseGroupId);
 
     /**
      * 通过组id删除

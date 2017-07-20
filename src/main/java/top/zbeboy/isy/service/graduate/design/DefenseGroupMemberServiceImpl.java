@@ -97,7 +97,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
     }
 
     @Override
-    public List<DefenseGroupMemberBean> findByDefenseGroupIdForStudent(String defenseGroupId, String graduationDesignReleaseId) {
+    public List<DefenseGroupMemberBean> findByDefenseGroupIdAndGraduationDesignReleaseIdForStudent(String defenseGroupId, String graduationDesignReleaseId) {
         List<DefenseGroupMemberBean> defenseGroupMemberBeans = new ArrayList<>();
         Result<Record> records = create.select()
                 .from(DEFENSE_GROUP_MEMBER)
@@ -123,6 +123,31 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
             defenseGroupMemberBean.setSubject(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
             defenseGroupMemberBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
             defenseGroupMemberBean.setStudentId(r.getValue(STUDENT.STUDENT_ID));
+
+            defenseGroupMemberBeans.add(defenseGroupMemberBean);
+        }
+        return defenseGroupMemberBeans;
+    }
+
+    @Override
+    public List<DefenseGroupMemberBean> findByDefenseGroupIdForStaff(String defenseGroupId) {
+        List<DefenseGroupMemberBean> defenseGroupMemberBeans = new ArrayList<>();
+        Result<Record> records = create.select()
+                .from(DEFENSE_GROUP_MEMBER)
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .join(STAFF)
+                .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(defenseGroupId))
+                .fetch();
+        for (Record r : records) {
+            DefenseGroupMemberBean defenseGroupMemberBean = new DefenseGroupMemberBean();
+            defenseGroupMemberBean.setDefenseGroupId(r.getValue(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID));
+            defenseGroupMemberBean.setGraduationDesignTeacherId(r.getValue(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID));
+            defenseGroupMemberBean.setNote(r.getValue(DEFENSE_GROUP_MEMBER.NOTE));
+            defenseGroupMemberBean.setStaffName(r.getValue(USERS.REAL_NAME));
 
             defenseGroupMemberBeans.add(defenseGroupMemberBean);
         }

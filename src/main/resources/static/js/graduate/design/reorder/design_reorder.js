@@ -1,7 +1,7 @@
 /**
  * Created by zbeboy on 2017/7/19.
  */
-require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading"],
+require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-pagination", "jquery.showLoading", "bootstrap"],
     function ($, Handlebars) {
 
         /*
@@ -9,6 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
+            group_url: '/web/graduate/design/reorder/groups',
             arrange_url: '/web/graduate/design/reorder/arrange'
         };
 
@@ -121,12 +122,58 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             $(tableData).html(template(data));
         }
 
+        /**
+         * 组数据
+         * @param data 数据
+         */
+        function groupData(data) {
+            var template = Handlebars.compile($("#group-template").html());
+
+            Handlebars.registerHelper('text', function () {
+                var v = '组员: ' + this.memberName.join(',');
+                return new Handlebars.SafeString(Handlebars.escapeExpression(v));
+            });
+
+            $('#groupData').html(template(data));
+        }
+
+        /**
+         * 判断空值
+         * @param value
+         * @returns {*}
+         */
+        function isNull(value) {
+            if (value == null) {
+                return '';
+            }
+            return value;
+        }
+
         /*
          安排
          */
         $(tableData).delegate('.design_reorder_arrange', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(ajax_url.arrange_url + '?id=' + id);
+        });
+
+        /*
+         答辩
+         */
+        $(tableData).delegate('.design_reorder_reply', "click", function () {
+            var id = $(this).attr('data-id');
+            $.post(web_path + ajax_url.group_url, {id: id}, function (data) {
+                if (data.state) {
+                    groupData(data);
+                    $('#groupModal').modal('show');
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         init();

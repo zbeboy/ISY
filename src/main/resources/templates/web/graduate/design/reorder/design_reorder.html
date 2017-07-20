@@ -47,6 +47,24 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <!-- 小组 Modal -->
+        <div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="groupModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="groupModalLabel">选择小组</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="list-group" id="groupData">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="graduation-design-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <div class="panel panel-default">
@@ -90,6 +108,19 @@
                     <button type="button" class="btn btn-default design_reorder_reply" data-id="{{graduationDesignReleaseId}}">答辩</button>
                 </div>
             </div>
+            {{/each}}
+        </script>
+        <script id="group-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <a href="javascript:;" class="list-group-item selectGroup">
+                <h4 class="list-group-item-heading row">
+                    <div class="col-md-2">{{defenseGroupName}}</div>
+                    <div class="col-md-3">组长:{{staffName}}</div>
+                    <div class="col-md-3">秘书:{{studentName}}</div>
+                    <div class="col-md-4">教室:{{buildingName}}{{buildingCode}}</div>
+                </h4>
+                <p class="list-group-item-text">{{text}}</p>
+            </a>
             {{/each}}
         </script>
         <input type="hidden" class="dy_script" value="/js/graduate/design/reorder/design_reorder.js"/>
