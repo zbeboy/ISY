@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder implements Serializable {
 
-    private static final long serialVersionUID = -497568559;
+    private static final long serialVersionUID = 703207412;
 
     private String  defenseOrderId;
     private String  studentNumber;
@@ -36,6 +36,8 @@ public class DefenseOrder implements Serializable {
     private String  staffName;
     private Integer scoreTypeId;
     private Integer sortNum;
+    private Integer defenseStatus;
+    private String  defenseQuestion;
     private Integer studentId;
     private String  defenseGroupId;
 
@@ -51,6 +53,8 @@ public class DefenseOrder implements Serializable {
         this.staffName = value.staffName;
         this.scoreTypeId = value.scoreTypeId;
         this.sortNum = value.sortNum;
+        this.defenseStatus = value.defenseStatus;
+        this.defenseQuestion = value.defenseQuestion;
         this.studentId = value.studentId;
         this.defenseGroupId = value.defenseGroupId;
     }
@@ -65,6 +69,8 @@ public class DefenseOrder implements Serializable {
         String  staffName,
         Integer scoreTypeId,
         Integer sortNum,
+        Integer defenseStatus,
+        String  defenseQuestion,
         Integer studentId,
         String  defenseGroupId
     ) {
@@ -77,6 +83,8 @@ public class DefenseOrder implements Serializable {
         this.staffName = staffName;
         this.scoreTypeId = scoreTypeId;
         this.sortNum = sortNum;
+        this.defenseStatus = defenseStatus;
+        this.defenseQuestion = defenseQuestion;
         this.studentId = studentId;
         this.defenseGroupId = defenseGroupId;
     }
@@ -166,6 +174,23 @@ public class DefenseOrder implements Serializable {
         this.sortNum = sortNum;
     }
 
+    public Integer getDefenseStatus() {
+        return this.defenseStatus;
+    }
+
+    public void setDefenseStatus(Integer defenseStatus) {
+        this.defenseStatus = defenseStatus;
+    }
+
+    @Size(max = 65535)
+    public String getDefenseQuestion() {
+        return this.defenseQuestion;
+    }
+
+    public void setDefenseQuestion(String defenseQuestion) {
+        this.defenseQuestion = defenseQuestion;
+    }
+
     @NotNull
     public Integer getStudentId() {
         return this.studentId;
@@ -198,6 +223,8 @@ public class DefenseOrder implements Serializable {
         sb.append(", ").append(staffName);
         sb.append(", ").append(scoreTypeId);
         sb.append(", ").append(sortNum);
+        sb.append(", ").append(defenseStatus);
+        sb.append(", ").append(defenseQuestion);
         sb.append(", ").append(studentId);
         sb.append(", ").append(defenseGroupId);
 

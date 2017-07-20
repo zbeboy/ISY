@@ -17,6 +17,7 @@ import top.zbeboy.isy.domain.tables.DefenseArrangement;
 import top.zbeboy.isy.domain.tables.DefenseGroup;
 import top.zbeboy.isy.domain.tables.DefenseGroupMember;
 import top.zbeboy.isy.domain.tables.DefenseOrder;
+import top.zbeboy.isy.domain.tables.DefenseRate;
 import top.zbeboy.isy.domain.tables.DefenseTime;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
@@ -146,6 +147,11 @@ public class Tables {
      * The table <code>isy.defense_order</code>.
      */
     public static final DefenseOrder DEFENSE_ORDER = top.zbeboy.isy.domain.tables.DefenseOrder.DEFENSE_ORDER;
+
+    /**
+     * The table <code>isy.defense_rate</code>.
+     */
+    public static final DefenseRate DEFENSE_RATE = top.zbeboy.isy.domain.tables.DefenseRate.DEFENSE_RATE;
 
     /**
      * The table <code>isy.defense_time</code>.

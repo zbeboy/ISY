@@ -208,10 +208,20 @@ CREATE TABLE defense_order (
   staff_name       VARCHAR(30) NOT NULL,
   score_type_id    INT,
   sort_num         INT         NOT NULL,
+  defense_status   INT DEFAULT 0,
+  defense_question TEXT,
   student_id       INT         NOT NULL,
   defense_group_id VARCHAR(64) NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
   FOREIGN KEY (defense_group_id) REFERENCES defense_group (defense_group_id)
+);
+
+CREATE TABLE defense_rate (
+  defense_order_id             VARCHAR(64) NOT NULL,
+  graduation_design_teacher_id VARCHAR(64) NOT NULL,
+  grade                        DOUBLE      NOT NULL,
+  FOREIGN KEY (defense_order_id) REFERENCES defense_order (defense_order_id),
+  FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id)
 );
 
 CREATE TABLE graduate_bill (

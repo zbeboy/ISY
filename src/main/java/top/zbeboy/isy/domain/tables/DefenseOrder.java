@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseOrderRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
 
-    private static final long serialVersionUID = 499051923;
+    private static final long serialVersionUID = -532384592;
 
     /**
      * The reference instance of <code>isy.defense_order</code>
@@ -95,6 +95,16 @@ public class DefenseOrder extends TableImpl<DefenseOrderRecord> {
      * The column <code>isy.defense_order.sort_num</code>.
      */
     public final TableField<DefenseOrderRecord, Integer> SORT_NUM = createField("sort_num", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.defense_order.defense_status</code>.
+     */
+    public final TableField<DefenseOrderRecord, Integer> DEFENSE_STATUS = createField("defense_status", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+
+    /**
+     * The column <code>isy.defense_order.defense_question</code>.
+     */
+    public final TableField<DefenseOrderRecord, String> DEFENSE_QUESTION = createField("defense_question", org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>isy.defense_order.student_id</code>.
