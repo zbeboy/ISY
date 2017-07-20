@@ -673,6 +673,7 @@ public class GraduationDesignReplanController {
                                         defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
                                         defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
                                         defenseOrder.setDefenseStatus(0);
+                                        defenseOrder.setStudentMobile(defenseGroupMemberBean.getStudentMobile());
                                     } else {
                                         break;
                                     }
@@ -702,6 +703,7 @@ public class GraduationDesignReplanController {
                                     defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
                                     defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
                                     defenseOrder.setDefenseStatus(0);
+                                    defenseOrder.setStudentMobile(defenseGroupMemberBean.getStudentMobile());
                                     dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
                                 }
                                 defenseOrders.add(defenseOrder);
@@ -733,7 +735,7 @@ public class GraduationDesignReplanController {
      * @param condition 条件
      * @return 数据
      */
-    @RequestMapping(value = "/web/graduate/design/replan/order/look/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/anyone/graduate/design/defense/order/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<DefenseOrderBean> orderLookData(DefenseOrderBean condition) {
         AjaxUtils<DefenseOrderBean> ajaxUtils = AjaxUtils.of();

@@ -10,7 +10,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
             group_url: '/web/graduate/design/reorder/groups',
-            arrange_url: '/web/graduate/design/reorder/arrange'
+            arrange_url: '/web/graduate/design/reorder/arrange',
+            order_url: '/web/graduate/design/reorder/order'
         };
 
         /*
@@ -31,6 +32,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         };
 
         var tableData = '#tableData';
+        var groupDataNode = '#groupData';
 
         function startLoading() {
             // 显示遮罩
@@ -134,19 +136,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 return new Handlebars.SafeString(Handlebars.escapeExpression(v));
             });
 
-            $('#groupData').html(template(data));
-        }
-
-        /**
-         * 判断空值
-         * @param value
-         * @returns {*}
-         */
-        function isNull(value) {
-            if (value == null) {
-                return '';
-            }
-            return value;
+            $(groupDataNode).html(template(data));
         }
 
         /*
@@ -165,6 +155,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             $.post(web_path + ajax_url.group_url, {id: id}, function (data) {
                 if (data.state) {
                     groupData(data);
+                    $('#graduationDesignReleaseId').val(id);
                     $('#groupModal').modal('show');
                 } else {
                     Messenger().post({
@@ -174,6 +165,27 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                     });
                 }
             });
+        });
+
+        var to_group = false;
+        var to_group_id = '';
+
+        $('#groupModal').on('hidden.bs.modal', function (e) {
+            // do something...
+            if (to_group) {
+                to_group = false;
+                var graduationDesignReleaseId = $('#graduationDesignReleaseId').val();
+                $.address.value(ajax_url.order_url + '?id=' + graduationDesignReleaseId + '&defenseGroupId=' + to_group_id);
+            }
+        });
+
+        /*
+         安排
+         */
+        $(groupDataNode).delegate('.selectGroup', "click", function () {
+            to_group_id = $(this).attr('data-id');
+            to_group = true;
+            $('#groupModal').modal('hide');
         });
 
         init();

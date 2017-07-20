@@ -120,6 +120,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
             defenseGroupMemberBean.setNote(r.getValue(DEFENSE_GROUP_MEMBER.NOTE));
             defenseGroupMemberBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
             defenseGroupMemberBean.setStudentName(r.getValue(USERS.as("S").REAL_NAME));
+            defenseGroupMemberBean.setStudentMobile(r.getValue(USERS.as("S").MOBILE));
             defenseGroupMemberBean.setSubject(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
             defenseGroupMemberBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
             defenseGroupMemberBean.setStudentId(r.getValue(STUDENT.STUDENT_ID));

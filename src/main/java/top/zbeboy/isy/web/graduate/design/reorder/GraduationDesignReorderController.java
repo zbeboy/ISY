@@ -18,6 +18,7 @@ import top.zbeboy.isy.service.graduate.design.*;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
+import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseOrderBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
@@ -81,6 +82,25 @@ public class GraduationDesignReorderController {
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "未进行毕业答辩设置");
             }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+        }
+        return page;
+    }
+
+    /**
+     * 毕业设计答辩顺序
+     *
+     * @return 毕业设计答辩顺序页面
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/order", method = RequestMethod.GET)
+    public String orderLook(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseGroupId") String defenseGroupId, ModelMap modelMap) {
+        String page;
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("defenseGroupId", defenseGroupId);
+            page = "web/graduate/design/reorder/design_reorder_order::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }

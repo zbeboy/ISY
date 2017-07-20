@@ -58,6 +58,7 @@
                     <div class="modal-body">
                         <div class="list-group" id="groupData">
                         </div>
+                        <input type="hidden" id="graduationDesignReleaseId" />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -112,7 +113,7 @@
         </script>
         <script id="group-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <a href="javascript:;" class="list-group-item selectGroup">
+            <a href="javascript:;" class="list-group-item selectGroup" data-id="{{defenseGroupId}}">
                 <h4 class="list-group-item-heading row">
                     <div class="col-md-2">{{defenseGroupName}}</div>
                     <div class="col-md-3">组长:{{staffName}}</div>

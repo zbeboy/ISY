@@ -25,11 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseOrder implements Serializable {
 
-    private static final long serialVersionUID = 703207412;
+    private static final long serialVersionUID = 20805598;
 
     private String  defenseOrderId;
     private String  studentNumber;
     private String  studentName;
+    private String  studentMobile;
     private String  subject;
     private Date    defenseDate;
     private String  defenseTime;
@@ -47,6 +48,7 @@ public class DefenseOrder implements Serializable {
         this.defenseOrderId = value.defenseOrderId;
         this.studentNumber = value.studentNumber;
         this.studentName = value.studentName;
+        this.studentMobile = value.studentMobile;
         this.subject = value.subject;
         this.defenseDate = value.defenseDate;
         this.defenseTime = value.defenseTime;
@@ -63,6 +65,7 @@ public class DefenseOrder implements Serializable {
         String  defenseOrderId,
         String  studentNumber,
         String  studentName,
+        String  studentMobile,
         String  subject,
         Date    defenseDate,
         String  defenseTime,
@@ -77,6 +80,7 @@ public class DefenseOrder implements Serializable {
         this.defenseOrderId = defenseOrderId;
         this.studentNumber = studentNumber;
         this.studentName = studentName;
+        this.studentMobile = studentMobile;
         this.subject = subject;
         this.defenseDate = defenseDate;
         this.defenseTime = defenseTime;
@@ -117,6 +121,16 @@ public class DefenseOrder implements Serializable {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    @NotNull
+    @Size(max = 15)
+    public String getStudentMobile() {
+        return this.studentMobile;
+    }
+
+    public void setStudentMobile(String studentMobile) {
+        this.studentMobile = studentMobile;
     }
 
     @Size(max = 100)
@@ -217,6 +231,7 @@ public class DefenseOrder implements Serializable {
         sb.append(defenseOrderId);
         sb.append(", ").append(studentNumber);
         sb.append(", ").append(studentName);
+        sb.append(", ").append(studentMobile);
         sb.append(", ").append(subject);
         sb.append(", ").append(defenseDate);
         sb.append(", ").append(defenseTime);

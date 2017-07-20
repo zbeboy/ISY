@@ -12,6 +12,7 @@ import top.zbeboy.isy.domain.tables.pojos.DefenseGroupMember;
 public class DefenseGroupMemberBean extends DefenseGroupMember {
     private String studentNumber;
     private String studentName;
+    private String studentMobile;
     private String subject;
     private String staffName;
     private int studentId;

@@ -202,6 +202,7 @@ CREATE TABLE defense_order (
   defense_order_id VARCHAR(64) PRIMARY KEY,
   student_number   VARCHAR(20) NOT NULL,
   student_name     VARCHAR(30) NOT NULL,
+  student_mobile   VARCHAR(15) NOT NULL,
   subject          VARCHAR(100),
   defense_date     DATE        NOT NULL,
   defense_time     VARCHAR(20) NOT NULL,

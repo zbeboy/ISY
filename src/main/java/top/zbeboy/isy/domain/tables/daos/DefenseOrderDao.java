@@ -84,6 +84,13 @@ public class DefenseOrderDao extends DAOImpl<DefenseOrderRecord, top.zbeboy.isy.
     }
 
     /**
+     * Fetch records that have <code>student_mobile IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.DefenseOrder> fetchByStudentMobile(String... values) {
+        return fetch(DefenseOrder.DEFENSE_ORDER.STUDENT_MOBILE, values);
+    }
+
+    /**
      * Fetch records that have <code>subject IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.DefenseOrder> fetchBySubject(String... values) {

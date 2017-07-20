@@ -7,7 +7,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      ajax url.
      */
     var ajax_url = {
-        data_url: '/web/graduate/design/replan/order/look/data',
+        data_url: '/anyone/graduate/design/defense/order/data',
         adjust_url: '/web/graduate/design/replan/order/adjust',
         secretary_url: '/web/graduate/design/replan/order/secretary',
         nav: '/web/menu/graduate/design/replan',

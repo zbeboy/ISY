@@ -102,7 +102,7 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
                 .leftJoin(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
                 .on(STUDENT.STUDENT_ID.eq(DEFENSE_GROUP.SECRETARY_ID))
                 .where(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
-                .orderBy(DEFENSE_GROUP.CREATE_TIME.desc())
+                .orderBy(DEFENSE_GROUP.CREATE_TIME.asc())
                 .fetch();
 
         return buildDefenseGroupList(records);
