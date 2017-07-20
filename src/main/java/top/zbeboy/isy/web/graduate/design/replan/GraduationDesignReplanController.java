@@ -672,6 +672,7 @@ public class GraduationDesignReplanController {
                                         defenseOrder.setSortNum(sortNum);
                                         defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
                                         defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
+                                        defenseOrder.setDefenseStatus(0);
                                     } else {
                                         break;
                                     }
@@ -700,6 +701,7 @@ public class GraduationDesignReplanController {
                                     defenseOrder.setSortNum(sortNum);
                                     defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
                                     defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
+                                    defenseOrder.setDefenseStatus(0);
                                     dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
                                 }
                                 defenseOrders.add(defenseOrder);
