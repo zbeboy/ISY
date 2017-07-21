@@ -8,6 +8,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      */
     var ajax_url = {
         data_url: '/anyone/graduate/design/defense/order/data',
+        timer_url: '/web/graduate/design/reorder/timer',
         back: '/web/menu/graduate/design/reorder'
     };
 
@@ -129,5 +130,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         $(tableData).html(template(data));
         $('#tablesawTable').tablesaw().data("tablesaw").refresh();
     }
+
+    /*
+   设置
+   */
+    $(tableData).delegate('.timer', "click", function () {
+        var id = $(this).attr('data-id');
+        window.location.href = web_path + ajax_url.timer_url + '?defenseOrderId=' + id;
+    });
 
 });

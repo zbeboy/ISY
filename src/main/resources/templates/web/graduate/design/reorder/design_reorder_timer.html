@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="header :: header(~{::meta},~{::title},~{::link})">
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+    <title th:text="${defenseOrder.sortNum + ' _  ' + defenseOrder.studentName + ' ' + defenseOrder.studentNumber}">ISY</title>
+    <!-- sticky-footer CSS -->
+    <link href="css/sticky-footer.css" rel="stylesheet" th:href="@{/css/custom/sticky-footer.css}"/>
+</head>
+<body>
+<div class="container">
+
+    <h3 th:text="${defenseOrder.sortNum + ' _  ' + defenseOrder.studentName + ' ' +defenseOrder.studentNumber}">Example 2 - Countdown Timer</h3>
+    <span id="countdown">05:00:00</span>
+    <form id="example2form">
+        <input type='button' value='Play/Pause' id="play" />
+        <input type='button' value='Stop/Reset' id="stop" />
+        <input name='startTime' value='300' style='width:30px;' />
+    </form>
+
+    <footer class="footer" th:include="footer::footer" style="height: 60px;">
+        <p class="text-muted">&copy; Company 2016</p>
+    </footer>
+    <!-- /.footer -->
+</div>
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/design_reorder_timer"></script>
+<script th:inline="javascript">
+    var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/graduate/design/reorder",
+        waitSeconds: 0
+    });
+</script>
+</body>
+</html>
