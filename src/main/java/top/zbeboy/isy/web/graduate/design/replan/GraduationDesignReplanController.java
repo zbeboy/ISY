@@ -19,6 +19,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseOrderRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.BuildingService;
 import top.zbeboy.isy.service.graduate.design.*;
+import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
@@ -65,6 +66,9 @@ public class GraduationDesignReplanController {
 
     @Resource
     private DefenseGroupMemberService defenseGroupMemberService;
+
+    @Resource
+    private UsersService usersService;
 
     /**
      * 毕业设计答辩安排
@@ -574,14 +578,14 @@ public class GraduationDesignReplanController {
     /**
      * 设置秘书
      *
-     * @param studentId                 学生id
+     * @param secretaryId                  用户账号
      * @param defenseGroupId            组id
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return true or false
      */
     @RequestMapping(value = "/web/graduate/design/replan/order/secretary", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils orderSecretary(@RequestParam("studentId") int studentId,
+    public AjaxUtils orderSecretary(@RequestParam("secretaryId") String secretaryId,
                                     @RequestParam("defenseGroupId") String defenseGroupId,
                                     @RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
@@ -589,9 +593,14 @@ public class GraduationDesignReplanController {
         if (!errorBean.isHasError()) {
             DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupId);
             if (!ObjectUtils.isEmpty(defenseGroup)) {
-                defenseGroup.setSecretaryId(studentId);
-                defenseGroupService.update(defenseGroup);
-                ajaxUtils.success().msg("设置成功");
+                Users users = usersService.findByUsername(StringUtils.trimWhitespace(secretaryId));
+                if (!ObjectUtils.isEmpty(users)) {
+                    defenseGroup.setSecretaryId(users.getUsername());
+                    defenseGroupService.update(defenseGroup);
+                    ajaxUtils.success().msg("设置成功");
+                } else {
+                    ajaxUtils.fail().msg("未查询到该账号信息");
+                }
             } else {
                 ajaxUtils.fail().msg("未查询到相关组信息");
             }

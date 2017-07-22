@@ -183,7 +183,7 @@ CREATE TABLE defense_group (
   schoolroom_id          INT         NOT NULL,
   note                   VARCHAR(100),
   leader_id              VARCHAR(64),
-  secretary_id           INT,
+  secretary_id           VARCHAR(64),
   defense_arrangement_id VARCHAR(64) NOT NULL,
   create_time            DATETIME    NOT NULL,
   FOREIGN KEY (schoolroom_id) REFERENCES schoolroom (schoolroom_id),

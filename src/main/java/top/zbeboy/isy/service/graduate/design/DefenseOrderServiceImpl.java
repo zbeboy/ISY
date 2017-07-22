@@ -55,19 +55,19 @@ public class DefenseOrderServiceImpl implements DefenseOrderService {
         if (ObjectUtils.isEmpty(a)) {
             records = create.select()
                     .from(DEFENSE_ORDER)
+                    .join(DEFENSE_GROUP)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .leftJoin(DEFENSE_GROUP)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
                     .orderBy(DEFENSE_ORDER.SORT_NUM)
                     .fetch();
         } else {
             records = create.select()
                     .from(DEFENSE_ORDER)
+                    .join(DEFENSE_GROUP)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .leftJoin(DEFENSE_GROUP)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID))
                     .where(a)
                     .orderBy(DEFENSE_ORDER.SORT_NUM)
                     .fetch();

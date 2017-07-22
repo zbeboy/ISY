@@ -1,7 +1,7 @@
 /**
  * Created by zbeboy on 2017/7/11.
  */
-require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "jquery.showLoading", "tablesaw", "check.all"], function ($, nav_active, Handlebars) {
+require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "jquery.showLoading", "tablesaw", "check.all", "bootstrap"], function ($, nav_active, Handlebars) {
     /*
      ajax url.
      */
@@ -11,6 +11,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         edit: '/web/graduate/design/replan/group/edit',
         del: '/web/graduate/design/replan/group/del',
         condition: '/web/graduate/design/replan/condition',
+        secretary_url: '/web/graduate/design/replan/order/secretary',
         back: '/web/menu/graduate/design/replan'
     };
 
@@ -153,6 +154,15 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         });
     });
 
+    /*
+     设置秘书账号
+     */
+    $(tableData).delegate('.secretary', "click", function () {
+        var defenseGroupId = $(this).attr('data-id');
+        $('#secretaryDefenseGroupId').val(defenseGroupId);
+        $('#secretaryModal').modal('show');
+    });
+
     function groupDel(defenseGroupId, defenseGroupName) {
         var msg;
         msg = Messenger().post({
@@ -208,6 +218,51 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
                     return "请求失败";
                 }
                 return true;
+            }
+        });
+    }
+
+    // 确定秘书账号
+    $('#setSecretary').click(function () {
+        validSecretary();
+    });
+
+    /**
+     * 检验账号
+     */
+    function validSecretary() {
+        var secretaryId = $('#secretaryId').val();
+        if (secretaryId.length <= 0) {
+            Messenger().post({
+                message: '请填写账号',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            sendSecretaryAjax();
+        }
+    }
+
+    /**
+     * 发送秘书ajax
+     */
+    function sendSecretaryAjax() {
+        $.post(web_path + ajax_url.secretary_url, $('#secretaryForm').serialize(), function (data) {
+            if (data.state) {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'success',
+                    showCloseButton: true
+                });
+                $('#secretaryId').val('');
+                $('#secretaryModal').modal('hide');
+                init();
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
             }
         });
     }

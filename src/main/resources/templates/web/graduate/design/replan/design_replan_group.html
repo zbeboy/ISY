@@ -59,6 +59,27 @@
         <footer class="footer" th:include="footer::footer">
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
+        <!-- 秘书设置 modal -->
+        <div class="modal fade" id="secretaryModal" tabindex="-1" role="dialog" aria-labelledby="secretaryModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form id="secretaryForm">
+                            <div class="form-group">
+                                <label>秘书账号</label>
+                                <input class="form-control" name="secretaryId" id="secretaryId" placeholder="秘书账号">
+                                <input type="hidden" name="defenseGroupId" id="secretaryDefenseGroupId">
+                                <input type="hidden" name="id" th:value="${defenseArrangement.graduationDesignReleaseId}">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="setSecretary">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="group-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>
@@ -74,6 +95,9 @@
                     </button>
                     <button type="button" class="btn btn-danger btn-sm del"
                             data-id="{{defenseGroupId}}" data-name="{{defenseGroupName}}">删除
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm secretary"
+                            data-id="{{defenseGroupId}}">设置秘书
                     </button>
                 </td>
             </tr>

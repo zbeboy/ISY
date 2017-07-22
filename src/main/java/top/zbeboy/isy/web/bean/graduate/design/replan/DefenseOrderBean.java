@@ -12,5 +12,5 @@ import top.zbeboy.isy.domain.tables.pojos.DefenseOrder;
 public class DefenseOrderBean extends DefenseOrder{
     private String scoreTypeName;
     private String graduationDesignReleaseId;
-    private int secretaryId;
+    private String secretaryId;
 }

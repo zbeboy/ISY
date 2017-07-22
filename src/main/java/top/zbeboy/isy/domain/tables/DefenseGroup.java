@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseGroupRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseGroup extends TableImpl<DefenseGroupRecord> {
 
-    private static final long serialVersionUID = -482037387;
+    private static final long serialVersionUID = -1833954350;
 
     /**
      * The reference instance of <code>isy.defense_group</code>
@@ -79,7 +79,7 @@ public class DefenseGroup extends TableImpl<DefenseGroupRecord> {
     /**
      * The column <code>isy.defense_group.secretary_id</code>.
      */
-    public final TableField<DefenseGroupRecord, Integer> SECRETARY_ID = createField("secretary_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
+    public final TableField<DefenseGroupRecord, String> SECRETARY_ID = createField("secretary_id", org.jooq.impl.SQLDataType.VARCHAR.length(64), this, "");
 
     /**
      * The column <code>isy.defense_group.defense_arrangement_id</code>.
