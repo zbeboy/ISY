@@ -136,7 +136,19 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
             }
             return new Handlebars.SafeString(Handlebars.escapeExpression(isSecretary));
         });
+        Handlebars.registerHelper('subject', function () {
+            var v = '';
+            if (this.subject !== null) {
+                if(this.subject.length > 5){
+                    v = this.subject.substring(0, 5) + '...';
+                } else {
+                    v = this.subject;
+                }
+            }
+            return '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="' + this.subject + '">' + v + '</button>';
+        });
         $(tableData).html(template(data));
+        $('[data-toggle="tooltip"]').tooltip();
         $('#tablesawTable').tablesaw().data("tablesaw").refresh();
     }
 
