@@ -132,11 +132,20 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     }
 
     /*
-   设置
-   */
+     设置
+     */
     $(tableData).delegate('.timer', "click", function () {
         var id = $(this).attr('data-id');
-        window.location.href = web_path + ajax_url.timer_url + '?defenseOrderId=' + id;
+        $('#timerDefenseOrderId').val(id);
+        $('#timerModal').modal('show');
+    });
+
+    // 计时
+    $('#toTimer').click(function () {
+        var id = $('#timerDefenseOrderId').val();
+        var timer = Math.round(Number($('#timerInput').val()));
+        $('#timerModal').modal('hide');
+        window.open(web_path + ajax_url.timer_url + '?defenseOrderId=' + id + '&timer=' + timer);
     });
 
 });

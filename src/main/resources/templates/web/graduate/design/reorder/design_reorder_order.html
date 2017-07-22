@@ -74,30 +74,22 @@
         <footer class="footer" th:include="footer::footer">
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
-        <!-- 设置组Modal -->
-        <div class="modal fade" id="adjustModal" tabindex="-1" role="dialog" aria-labelledby="adjustModalLabel">
-            <div class="modal-dialog" role="document">
+        <!-- 计时 modal -->
+        <div class="modal fade" id="timerModal" tabindex="-1" role="dialog" aria-labelledby="timerModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="adjustModalLabel">调换</h4>
-                    </div>
                     <div class="modal-body">
-                        <form role="form" id="adjustForm">
+                        <form>
                             <div class="form-group">
-                                <label>序号</label>
-                                <input class="form-control" type="number" name="sortNum" placeholder="请填写要与之调换的序号"/>
+                                <label for="timerInput">时长(分钟)</label>
+                                <input class="form-control" type="number" id="timerInput" placeholder="时长">
+                                <input type="hidden" id="timerDefenseOrderId">
                             </div>
-                            <input type="hidden" name="defenseOrderId" id="adjustDefenseOrderId"/>
-                            <input type="hidden" name="defenseGroupId" th:value="${defenseGroupId}"/>
-                            <input type="hidden" name="graduationDesignReleaseId"
-                                   th:value="${graduationDesignReleaseId}"/>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" id="saveAdjust">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toTimer">确定</button>
                     </div>
                 </div>
             </div>

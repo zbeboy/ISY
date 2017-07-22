@@ -12,13 +12,13 @@
 <body>
 <div class="container">
 
-    <h3 th:text="${defenseOrder.sortNum + ' _  ' + defenseOrder.studentName + ' ' +defenseOrder.studentNumber}">Example 2 - Countdown Timer</h3>
-    <span id="countdown">05:00:00</span>
-    <form id="example2form">
-        <input type='button' value='Play/Pause' id="play" />
-        <input type='button' value='Stop/Reset' id="stop" />
-        <input name='startTime' value='300' style='width:30px;' />
-    </form>
+    <div class="text-center" style="margin-top: 15%;">
+        <h2 th:text="${defenseOrder.sortNum + ' _  ' + defenseOrder.studentName + ' ' +defenseOrder.studentNumber}">Example 2 - Countdown Timer</h2>
+        <h1 id="countdown">05:00:00</h1>
+        <form id="example2form">
+            <input class="btn btn-default" type='button' value='Play/Pause' id="play" />
+        </form>
+    </div>
 
     <footer class="footer" th:include="footer::footer" style="height: 60px;">
         <p class="text-muted">&copy; Company 2016</p>
@@ -30,6 +30,7 @@
         data-main="/design_reorder_timer"></script>
 <script th:inline="javascript">
     var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
+    var reorder_timer = /*[[${timer}]]*/ 0;
     require.config({
         baseUrl: web_path + "/js/graduate/design/reorder",
         waitSeconds: 0

@@ -118,11 +118,12 @@ public class GraduationDesignReorderController {
      * @return 页面
      */
     @RequestMapping(value = "/web/graduate/design/reorder/timer", method = RequestMethod.GET)
-    public String timer(@RequestParam("defenseOrderId") String defenseOrderId, ModelMap modelMap) {
+    public String timer(@RequestParam("defenseOrderId") String defenseOrderId, int timer, ModelMap modelMap) {
         String page;
         DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderId);
         if (!ObjectUtils.isEmpty(defenseOrder)) {
             modelMap.addAttribute("defenseOrder", defenseOrder);
+            modelMap.addAttribute("timer", timer);
             page = "web/graduate/design/reorder/design_reorder_timer";
         } else {
             modelMap.put("msg", "未查询到组信息");
