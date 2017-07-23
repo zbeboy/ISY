@@ -100,6 +100,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
                 $('#checkall').prop('checked', false);
                 // 调用全选插件
                 $.fn.check({checkall_name: "checkall", checkbox_name: "check"});
+                $('[data-toggle="tooltip"]').tooltip();
             },
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
@@ -145,6 +146,20 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
                     orderable: false,
                     render: function (a, b, c, d) {
                         return '<input type="checkbox" value="' + c.graduationDesignPresubjectId + '" name="check"/>';
+                    }
+                },
+                {
+                    targets: 1,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if (c.presubjectTitle !== null) {
+                            if(c.presubjectTitle.length > 12){
+                                v = c.presubjectTitle.substring(0, 12) + '...';
+                            } else {
+                                v = c.presubjectTitle;
+                            }
+                        }
+                        return '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="' + c.presubjectTitle + '">' + v + '</button>';
                     }
                 },
                 {
