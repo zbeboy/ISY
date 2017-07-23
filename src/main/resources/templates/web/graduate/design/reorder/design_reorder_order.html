@@ -9,8 +9,8 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">毕业答辩安排 -
-                    <small>查看及调整</small>
+                <h1 class="page-header">毕业答辩顺序 -
+                    <small>答辩</small>
                     <small class="pull-right">
                         <button type="button" class="btn btn-primary" id="page_back">返回</button>
                     </small>
@@ -78,6 +78,11 @@
         <div class="modal fade" id="timerModal" tabindex="-1" role="dialog" aria-labelledby="timerModalLabel">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="timerModalLabel"></h4>
+                    </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
@@ -108,23 +113,17 @@
                 <td>{{scoreTypeName}}</td>
                 <td>{{defense_status}}</td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-sm timer"
-                            data-id="{{defenseOrderId}}">计时
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm"
-                            data-id="{{defenseOrderId}}">状态
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm"
-                            data-id="{{defenseOrderId}}">打分
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm"
-                            data-id="{{defenseOrderId}}">成绩
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm"
-                            data-id="{{defenseOrderId}}">问题
-                    </button>
+                    {{{operator}}}
                 </td>
             </tr>
+            {{/each}}
+        </script>
+        <!--定义操作列按钮模板-->
+        <script id="operator_button" type="text/x-handlebars-template">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-student="{{this.sortNum}} _ {{this.studentName}}">{{this.name}}
+            </button>
             {{/each}}
         </script>
         <!-- /.footer -->

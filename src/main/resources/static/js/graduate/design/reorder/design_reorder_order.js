@@ -130,7 +130,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         Handlebars.registerHelper('subject', function () {
             var v = '';
             if (this.subject !== null) {
-                if(this.subject.length > 5){
+                if (this.subject.length > 5) {
                     v = this.subject.substring(0, 5) + '...';
                 } else {
                     v = this.subject;
@@ -138,9 +138,70 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
             }
             return '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="' + this.subject + '">' + v + '</button>';
         });
+
+        Handlebars.registerHelper('operator', function () {
+            return buildOperatorButton(this);
+        });
+
         $(tableData).html(template(data));
         $('[data-toggle="tooltip"]').tooltip();
         $('#tablesawTable').tablesaw().data("tablesaw").refresh();
+    }
+
+    /**
+     * 构建操作按钮
+     * @param c
+     */
+    function buildOperatorButton(c) {
+        // 预编译模板
+        var template = Handlebars.compile($("#operator_button").html());
+        var context =
+            {
+                func: [
+                    {
+                        "name": "计时",
+                        "css": "timer",
+                        "type": "primary",
+                        "defenseOrderId": c.defenseOrderId,
+                        "sortNum": c.sortNum,
+                        "studentName": c.studentName
+                    },
+                    {
+                        "name": "状态",
+                        "css": "",
+                        "type": "default",
+                        "defenseOrderId": c.defenseOrderId,
+                        "sortNum": c.sortNum,
+                        "studentName": c.studentName
+                    },
+                    {
+                        "name": "打分",
+                        "css": "",
+                        "type": "default",
+                        "defenseOrderId": c.defenseOrderId,
+                        "sortNum": c.sortNum,
+                        "studentName": c.studentName
+                    },
+                    {
+                        "name": "成绩",
+                        "css": "",
+                        "type": "default",
+                        "defenseOrderId": c.defenseOrderId,
+                        "sortNum": c.sortNum,
+                        "studentName": c.studentName
+                    },
+                    {
+                        "name": "问题",
+                        "css": "",
+                        "type": "default",
+                        "defenseOrderId": c.defenseOrderId,
+                        "sortNum": c.sortNum,
+                        "studentName": c.studentName
+                    }
+                ]
+            };
+
+        return template(context);
     }
 
     /*
@@ -148,7 +209,9 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      */
     $(tableData).delegate('.timer', "click", function () {
         var id = $(this).attr('data-id');
+        var name = $(this).attr('data-student');
         $('#timerDefenseOrderId').val(id);
+        $('#timerModalLabel').text(name);
         $('#timerModal').modal('show');
     });
 

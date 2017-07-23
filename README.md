@@ -4,7 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/zbeboy/ISY.svg)](https://github.com/zbeboy/ISY/stargazers)
 # 开发环境
 1.JDK 1.8.*;  
-2.Intellij IDEA 2015 +;  
+2.Intellij IDEA 2017 +;  
 3.MySQL 5.7 +;  
 4.Maven 3.5.0 +;  
 5.Node 6 +;  
