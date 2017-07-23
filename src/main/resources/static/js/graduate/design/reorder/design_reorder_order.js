@@ -213,14 +213,6 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                             "studentName": c.studentName
                         },
                         {
-                            "name": "打分",
-                            "css": "",
-                            "type": "default",
-                            "defenseOrderId": c.defenseOrderId,
-                            "sortNum": c.sortNum,
-                            "studentName": c.studentName
-                        },
-                        {
                             "name": "成绩",
                             "css": "",
                             "type": "default",
