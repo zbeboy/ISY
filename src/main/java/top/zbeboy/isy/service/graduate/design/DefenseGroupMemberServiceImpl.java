@@ -19,6 +19,7 @@ import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
@@ -153,6 +154,14 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
             defenseGroupMemberBeans.add(defenseGroupMemberBean);
         }
         return defenseGroupMemberBeans;
+    }
+
+    @Override
+    public Optional<Record> findByDefenseGroupIdAndGraduationDesignTeacherId(String defenseGroupId, String graduationDesignTeacherId) {
+        return create.select()
+                .from(DEFENSE_GROUP_MEMBER)
+                .where(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(defenseGroupId).and(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId)))
+                .fetchOptional();
     }
 
     @Override

@@ -143,6 +143,20 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
             return buildOperatorButton(this);
         });
 
+        Handlebars.registerHelper('defense_status', function () {
+            var v = '';
+            if(this.defenseStatus === 0){
+                v = '未开始';
+            } else if(this.defenseStatus === 1){
+                v = '进行中';
+            } else if(this.defenseStatus === 2){
+                v = '已结束';
+            } else if(this.defenseStatus === 3){
+                v = '缺席';
+            }
+            return new Handlebars.SafeString(Handlebars.escapeExpression(v));
+        });
+
         $(tableData).html(template(data));
         $('[data-toggle="tooltip"]').tooltip();
         $('#tablesawTable').tablesaw().data("tablesaw").refresh();
@@ -167,30 +181,6 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         "studentName": c.studentName
                     },
                     {
-                        "name": "状态",
-                        "css": "",
-                        "type": "default",
-                        "defenseOrderId": c.defenseOrderId,
-                        "sortNum": c.sortNum,
-                        "studentName": c.studentName
-                    },
-                    {
-                        "name": "打分",
-                        "css": "",
-                        "type": "default",
-                        "defenseOrderId": c.defenseOrderId,
-                        "sortNum": c.sortNum,
-                        "studentName": c.studentName
-                    },
-                    {
-                        "name": "成绩",
-                        "css": "",
-                        "type": "default",
-                        "defenseOrderId": c.defenseOrderId,
-                        "sortNum": c.sortNum,
-                        "studentName": c.studentName
-                    },
-                    {
                         "name": "问题",
                         "css": "",
                         "type": "default",
@@ -200,6 +190,169 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                     }
                 ]
             };
+
+        // 是管理员或系统
+        if (init_page_param.reorderIsSuper) {
+            context =
+                {
+                    func: [
+                        {
+                            "name": "计时",
+                            "css": "timer",
+                            "type": "primary",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "状态",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "打分",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "成绩",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "问题",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        }
+                    ]
+                };
+        } else if (init_page_param.reorderIsLeader) {
+            context =
+                {
+                    func: [
+                        {
+                            "name": "计时",
+                            "css": "timer",
+                            "type": "primary",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "状态",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "打分",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "成绩",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "问题",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        }
+                    ]
+                };
+        } else if (init_page_param.reorderIsSecretary) {
+            context =
+                {
+                    func: [
+                        {
+                            "name": "计时",
+                            "css": "timer",
+                            "type": "primary",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "状态",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "成绩",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "问题",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        }
+                    ]
+                };
+        } else if (init_page_param.reorderIsMember) {
+            context =
+                {
+                    func: [
+                        {
+                            "name": "计时",
+                            "css": "timer",
+                            "type": "primary",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "打分",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
+                            "name": "问题",
+                            "css": "",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        }
+                    ]
+                };
+        }
 
         return template(context);
     }

@@ -8,6 +8,7 @@ import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by zbeboy on 2017/7/12.
@@ -42,10 +43,19 @@ public interface DefenseGroupMemberService {
     /**
      * 通过组id查询
      *
-     * @param defenseGroupId            组id
+     * @param defenseGroupId 组id
      * @return 数据
      */
     List<DefenseGroupMemberBean> findByDefenseGroupIdForStaff(String defenseGroupId);
+
+    /**
+     * 通过组id与毕业指导教师id查找
+     *
+     * @param defenseGroupId            组id
+     * @param graduationDesignTeacherId 指导教师id
+     * @return 数据
+     */
+    Optional<Record> findByDefenseGroupIdAndGraduationDesignTeacherId(String defenseGroupId, String graduationDesignTeacherId);
 
     /**
      * 通过组id删除

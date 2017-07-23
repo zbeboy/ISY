@@ -6,16 +6,19 @@ import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.domain.tables.pojos.DefenseArrangement;
-import top.zbeboy.isy.domain.tables.pojos.DefenseOrder;
-import top.zbeboy.isy.domain.tables.pojos.DefenseTime;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
+import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.graduate.design.*;
+import top.zbeboy.isy.service.platform.RoleService;
+import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
@@ -53,6 +56,21 @@ public class GraduationDesignReorderController {
 
     @Resource
     private DefenseOrderService defenseOrderService;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private UsersService usersService;
+
+    @Resource
+    private GraduationDesignTeacherService graduationDesignTeacherService;
+
+    @Resource
+    private StaffService staffService;
 
     /**
      * 毕业答辩顺序
@@ -101,6 +119,71 @@ public class GraduationDesignReorderController {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
+            // 是管理员或系统
+            boolean reorderIsSuper = false;
+            // 是组长
+            boolean reorderIsLeader = false;
+            // 是秘书
+            boolean reorderIsSecretary = false;
+            // 是组员
+            boolean reorderIsMember = false;
+
+            // 是否是管理员或系统
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                reorderIsSuper = true;
+            } else {
+                Users users = usersService.getUserFromSession();
+                DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupId);
+                if (!ObjectUtils.isEmpty(defenseGroup)) {
+                    // 教职工
+                    if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                        // 是否为组长
+                        if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+                            GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+                            if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                                Staff staff = staffService.findByUsername(users.getUsername());
+                                if (!ObjectUtils.isEmpty(staff)) {
+                                    if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                        reorderIsLeader = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        // 是否为组员
+                        if (!reorderIsLeader) {
+                            Staff staff = staffService.findByUsername(users.getUsername());
+                            if (!ObjectUtils.isEmpty(staff)) {
+                                Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
+                                if (record.isPresent()) {
+                                    GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
+                                    Optional<Record> groupMemberRecord = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignTeacherId(defenseGroupId, graduationDesignTeacher.getGraduationDesignTeacherId());
+                                    if (groupMemberRecord.isPresent()) {
+                                        reorderIsMember = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        // 是否秘书
+                        if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                            reorderIsSecretary = true;
+                        }
+
+
+                    } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
+                        // 是否秘书
+                        if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                            reorderIsSecretary = true;
+                        }
+                    }
+                }
+            }
+
+            modelMap.addAttribute("reorderIsSuper",reorderIsSuper);
+            modelMap.addAttribute("reorderIsLeader",reorderIsLeader);
+            modelMap.addAttribute("reorderIsSecretary",reorderIsSecretary);
+            modelMap.addAttribute("reorderIsMember",reorderIsMember);
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("defenseGroupId", defenseGroupId);
             page = "web/graduate/design/reorder/design_reorder_order::#page-wrapper";

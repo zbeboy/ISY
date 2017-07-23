@@ -256,3 +256,10 @@ INSERT INTO graduation_design_datum_type (graduation_design_datum_type_name) VAL
 INSERT INTO graduation_design_datum_type (graduation_design_datum_type_name) VALUES ('开题报告');
 INSERT INTO graduation_design_datum_type (graduation_design_datum_type_name) VALUES ('论文');
 INSERT INTO graduation_design_datum_type (graduation_design_datum_type_name) VALUES ('PPT');
+
+INSERT INTO score_type (score_type_name) VALUES ('良');
+INSERT INTO score_type (score_type_name) VALUES ('中');
+INSERT INTO score_type (score_type_name) VALUES ('及格');
+INSERT INTO score_type (score_type_name) VALUES ('优');
+INSERT INTO score_type (score_type_name) VALUES ('不及格');
+INSERT INTO score_type (score_type_name) VALUES ('缺考');
