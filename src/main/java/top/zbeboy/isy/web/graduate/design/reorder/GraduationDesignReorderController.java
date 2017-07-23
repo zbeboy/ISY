@@ -180,10 +180,10 @@ public class GraduationDesignReorderController {
                 }
             }
 
-            modelMap.addAttribute("reorderIsSuper",reorderIsSuper);
-            modelMap.addAttribute("reorderIsLeader",reorderIsLeader);
-            modelMap.addAttribute("reorderIsSecretary",reorderIsSecretary);
-            modelMap.addAttribute("reorderIsMember",reorderIsMember);
+            modelMap.addAttribute("reorderIsSuper", reorderIsSuper);
+            modelMap.addAttribute("reorderIsLeader", reorderIsLeader);
+            modelMap.addAttribute("reorderIsSecretary", reorderIsSecretary);
+            modelMap.addAttribute("reorderIsMember", reorderIsMember);
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("defenseGroupId", defenseGroupId);
             page = "web/graduate/design/reorder/design_reorder_order::#page-wrapper";

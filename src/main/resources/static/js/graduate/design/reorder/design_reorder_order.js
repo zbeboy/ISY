@@ -8,6 +8,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      */
     var ajax_url = {
         data_url: '/anyone/graduate/design/defense/order/data',
+        scores: '/user/scores',
         timer_url: '/web/graduate/design/reorder/timer',
         back: '/web/menu/graduate/design/reorder'
     };
@@ -17,7 +18,9 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      */
     var paramId = {
         studentName: '#search_student_name',
-        studentNumber: '#search_student_number'
+        studentNumber: '#search_student_number',
+        scoreTypeId:'#select_score',
+        defenseStatus:'#select_status'
     };
 
     /*
@@ -27,7 +30,9 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         graduationDesignReleaseId: init_page_param.graduationDesignReleaseId,
         defenseGroupId: init_page_param.defenseGroupId,
         studentName: $(paramId.studentName).val(),
-        studentNumber: $(paramId.studentNumber).val()
+        studentNumber: $(paramId.studentNumber).val(),
+        scoreTypeId: $(paramId.scoreTypeId).val(),
+        defenseStatus: $(paramId.defenseStatus).val()
     };
 
     // 刷新时选中菜单
@@ -53,6 +58,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     function cleanParam() {
         $(paramId.studentName).val('');
         $(paramId.studentNumber).val('');
+        $(paramId.scoreTypeId).val(0);
+        $(paramId.defenseStatus).val(-1);
     }
 
     /**
@@ -61,6 +68,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     function refreshSearch() {
         param.studentName = $(paramId.studentName).val();
         param.studentNumber = $(paramId.studentNumber).val();
+        param.scoreTypeId = $(paramId.scoreTypeId).val();
+        param.defenseStatus = $(paramId.defenseStatus).val();
     }
 
     /*
@@ -94,6 +103,16 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         }
     });
 
+    $(paramId.scoreTypeId).change(function () {
+        refreshSearch();
+        init();
+    });
+
+    $(paramId.defenseStatus).change(function () {
+        refreshSearch();
+        init();
+    });
+
     var tableData = '#tableData';
 
     /*
@@ -104,6 +123,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     });
 
     init();
+    initScore();
 
     function init() {
         startLoading();
@@ -117,6 +137,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                     type: 'error',
                     showCloseButton: true
                 });
+            }
+        });
+    }
+
+    function initScore() {
+        $.get(web_path + ajax_url.scores, function (data) {
+            if (data.state) {
+                scoreData(data);
             }
         });
     }
@@ -145,13 +173,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
         Handlebars.registerHelper('defense_status', function () {
             var v = '';
-            if(this.defenseStatus === 0){
+            if (this.defenseStatus === 0) {
                 v = '未开始';
-            } else if(this.defenseStatus === 1){
+            } else if (this.defenseStatus === 1) {
                 v = '进行中';
-            } else if(this.defenseStatus === 2){
+            } else if (this.defenseStatus === 2) {
                 v = '已结束';
-            } else if(this.defenseStatus === 3){
+            } else if (this.defenseStatus === 3) {
                 v = '缺席';
             }
             return new Handlebars.SafeString(Handlebars.escapeExpression(v));
@@ -160,6 +188,15 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         $(tableData).html(template(data));
         $('[data-toggle="tooltip"]').tooltip();
         $('#tablesawTable').tablesaw().data("tablesaw").refresh();
+    }
+
+    /**
+     * 成绩数据
+     * @param data 数据
+     */
+    function scoreData(data) {
+        var template = Handlebars.compile($("#score-template").html());
+        $(paramId.scoreTypeId).html(template(data));
     }
 
     /**

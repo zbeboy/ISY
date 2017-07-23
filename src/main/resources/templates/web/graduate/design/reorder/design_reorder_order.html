@@ -32,6 +32,22 @@
                                    placeholder="学生学号"/>
                         </div>
                     </div>
+                    <div class="row" style="margin-top:2px;">
+                        <div class="col-md-6">
+                            <select class="form-control input-sm" name="scoreTypeId" id="select_score">
+                                <option value="">请选择成绩</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control input-sm" name="defenseStatus" id="select_status">
+                                <option value="-1">请选择状态</option>
+                                <option value="0">未开始</option>
+                                <option value="1">进行中</option>
+                                <option value="2">已结束</option>
+                                <option value="3">缺席</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="text-center" style="margin-top:4px;">
                         <button type="button" id="search" class="btn btn-outline btn-default"><i
                                 class="fa fa-search"></i>搜索
@@ -124,6 +140,11 @@
             <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
                     data-student="{{this.sortNum}} _ {{this.studentName}}">{{this.name}}
             </button>
+            {{/each}}
+        </script>
+        <script id="score-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{scoreTypeId}}">{{scoreTypeName}}</option>
             {{/each}}
         </script>
         <!-- /.footer -->

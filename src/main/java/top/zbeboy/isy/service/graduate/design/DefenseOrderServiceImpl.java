@@ -110,15 +110,33 @@ public class DefenseOrderServiceImpl implements DefenseOrderService {
         Condition a = null;
         String studentName = StringUtils.trimWhitespace(condition.getStudentName());
         String studentNumber = StringUtils.trimWhitespace(condition.getStudentNumber());
+        int scoreTypeId = condition.getScoreTypeId() == null ? 0 : condition.getScoreTypeId();
+        int defenseStatus = condition.getDefenseStatus() == null ? -1 : condition.getDefenseStatus();
         if (StringUtils.hasLength(studentName)) {
             a = DEFENSE_ORDER.STUDENT_NAME.like(SQLQueryUtils.likeAllParam(studentName));
         }
 
         if (StringUtils.hasLength(studentNumber)) {
             if (!ObjectUtils.isEmpty(a)) {
-                a = a.and(DEFENSE_ORDER.STUDENT_NUMBER.eq(studentNumber));
+                a = a.and(DEFENSE_ORDER.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
             } else {
-                a = DEFENSE_ORDER.STUDENT_NUMBER.eq(studentNumber);
+                a = DEFENSE_ORDER.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
+            }
+        }
+
+        if (scoreTypeId > 0) {
+            if (!ObjectUtils.isEmpty(a)) {
+                a = a.and(DEFENSE_ORDER.SCORE_TYPE_ID.eq(scoreTypeId));
+            } else {
+                a = DEFENSE_ORDER.SCORE_TYPE_ID.eq(scoreTypeId);
+            }
+        }
+
+        if (defenseStatus > 0) {
+            if (!ObjectUtils.isEmpty(a)) {
+                a = a.and(DEFENSE_ORDER.DEFENSE_STATUS.eq(defenseStatus));
+            } else {
+                a = DEFENSE_ORDER.DEFENSE_STATUS.eq(defenseStatus);
             }
         }
         return a;
