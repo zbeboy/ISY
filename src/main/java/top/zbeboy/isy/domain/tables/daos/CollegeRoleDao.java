@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class CollegeRoleDao extends DAOImpl<CollegeRoleRecord, top.zbeboy.isy.domain.tables.pojos.CollegeRole, Record2<Integer, Integer>> {
+public class CollegeRoleDao extends DAOImpl<CollegeRoleRecord, top.zbeboy.isy.domain.tables.pojos.CollegeRole, Record2<String, Integer>> {
 
     /**
      * Create a new CollegeRoleDao without any configuration
@@ -51,14 +51,14 @@ public class CollegeRoleDao extends DAOImpl<CollegeRoleRecord, top.zbeboy.isy.do
      * {@inheritDoc}
      */
     @Override
-    protected Record2<Integer, Integer> getId(top.zbeboy.isy.domain.tables.pojos.CollegeRole object) {
+    protected Record2<String, Integer> getId(top.zbeboy.isy.domain.tables.pojos.CollegeRole object) {
         return compositeKeyRecord(object.getRoleId(), object.getCollegeId());
     }
 
     /**
      * Fetch records that have <code>role_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.CollegeRole> fetchByRoleId(Integer... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.CollegeRole> fetchByRoleId(String... values) {
         return fetch(CollegeRole.COLLEGE_ROLE.ROLE_ID, values);
     }
 

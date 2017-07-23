@@ -63,7 +63,7 @@ public class WebSecurity {
         }
         boolean hasRole = false;
         List<Role> roleList = cacheManageService.findByUsernameWithRole(users.getUsername());// 已缓存
-        List<Integer> roleIds = new ArrayList<>();
+        List<String> roleIds = new ArrayList<>();
         roleIds.addAll(roleList.stream().map(Role::getRoleId).collect(Collectors.toList()));
 
         List<RoleApplication> roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存

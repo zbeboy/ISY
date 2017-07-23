@@ -60,21 +60,21 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
     }
 
     @Override
-    public void deleteByRoleId(int roleId) {
+    public void deleteByRoleId(String roleId) {
         create.deleteFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.in(roleId))
                 .execute();
     }
 
     @Override
-    public Result<RoleApplicationRecord> findByRoleId(int roleId) {
+    public Result<RoleApplicationRecord> findByRoleId(String roleId) {
         return create.selectFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.ROLE_ID.eq(roleId))
                 .fetch();
     }
 
     @Override
-    public void batchSaveRoleApplication(String applicationIds, int roleId) {
+    public void batchSaveRoleApplication(String applicationIds, String roleId) {
         if (StringUtils.hasLength(applicationIds)) {
             List<String> ids = SmallPropsUtils.StringIdsToStringList(applicationIds);
             List<RoleApplication> roleApplications = new ArrayList<>();

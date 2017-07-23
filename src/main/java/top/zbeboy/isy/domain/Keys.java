@@ -182,7 +182,6 @@ public class Keys {
     public static final Identity<NationRecord, Integer> IDENTITY_NATION = Identities0.IDENTITY_NATION;
     public static final Identity<OrganizeRecord, Integer> IDENTITY_ORGANIZE = Identities0.IDENTITY_ORGANIZE;
     public static final Identity<PoliticalLandscapeRecord, Integer> IDENTITY_POLITICAL_LANDSCAPE = Identities0.IDENTITY_POLITICAL_LANDSCAPE;
-    public static final Identity<RoleRecord, Integer> IDENTITY_ROLE = Identities0.IDENTITY_ROLE;
     public static final Identity<SchoolRecord, Integer> IDENTITY_SCHOOL = Identities0.IDENTITY_SCHOOL;
     public static final Identity<SchoolroomRecord, Integer> IDENTITY_SCHOOLROOM = Identities0.IDENTITY_SCHOOLROOM;
     public static final Identity<ScienceRecord, Integer> IDENTITY_SCIENCE = Identities0.IDENTITY_SCIENCE;
@@ -391,7 +390,6 @@ public class Keys {
         public static Identity<NationRecord, Integer> IDENTITY_NATION = createIdentity(Nation.NATION, Nation.NATION.NATION_ID);
         public static Identity<OrganizeRecord, Integer> IDENTITY_ORGANIZE = createIdentity(Organize.ORGANIZE, Organize.ORGANIZE.ORGANIZE_ID);
         public static Identity<PoliticalLandscapeRecord, Integer> IDENTITY_POLITICAL_LANDSCAPE = createIdentity(PoliticalLandscape.POLITICAL_LANDSCAPE, PoliticalLandscape.POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID);
-        public static Identity<RoleRecord, Integer> IDENTITY_ROLE = createIdentity(Role.ROLE, Role.ROLE.ROLE_ID);
         public static Identity<SchoolRecord, Integer> IDENTITY_SCHOOL = createIdentity(School.SCHOOL, School.SCHOOL.SCHOOL_ID);
         public static Identity<SchoolroomRecord, Integer> IDENTITY_SCHOOLROOM = createIdentity(Schoolroom.SCHOOLROOM, Schoolroom.SCHOOLROOM.SCHOOLROOM_ID);
         public static Identity<ScienceRecord, Integer> IDENTITY_SCIENCE = createIdentity(Science.SCIENCE, Science.SCIENCE.SCIENCE_ID);

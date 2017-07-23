@@ -22,7 +22,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE role (
-  role_id      INT AUTO_INCREMENT PRIMARY KEY,
+  role_id      VARCHAR(64) PRIMARY KEY,
   role_name    VARCHAR(50)        NOT NULL,
   role_en_name VARCHAR(64) UNIQUE NOT NULL,
   role_type    INT                NOT NULL
@@ -48,7 +48,7 @@ CREATE TABLE application (
 );
 
 CREATE TABLE role_application (
-  role_id        INT         NOT NULL,
+  role_id        VARCHAR(64) NOT NULL,
   application_id VARCHAR(64) NOT NULL,
   FOREIGN KEY (role_id) REFERENCES role (role_id),
   FOREIGN KEY (application_id) REFERENCES application (application_id),
@@ -87,8 +87,8 @@ CREATE TABLE college_application (
 );
 
 CREATE TABLE college_role (
-  role_id    INT NOT NULL,
-  college_id INT NOT NULL,
+  role_id    VARCHAR(64) NOT NULL,
+  college_id INT         NOT NULL,
   FOREIGN KEY (role_id) REFERENCES role (role_id),
   FOREIGN KEY (college_id) REFERENCES college (college_id),
   PRIMARY KEY (role_id, college_id)
@@ -590,9 +590,12 @@ INSERT INTO users (username, password, enabled, users_type_id, real_name, mobile
 VALUES ('863052317@qq.com', '$2a$10$HKXHRhnhlC1aZQ4hukD0S.zYep/T5A7FULBo7S2UrJsqQCThUxdo2', 1, 3, '赵银', '13987614709',
                             'images/avatar.jpg', 1, '', '', NULL, NULL, 'zh-CN', '2016-08-18');
 
-INSERT INTO role (role_name, role_en_name, role_type) VALUES ('系统', 'ROLE_SYSTEM', 1);
-INSERT INTO role (role_name, role_en_name, role_type) VALUES ('管理员', 'ROLE_ADMIN', 1);
-INSERT INTO role (role_name, role_en_name, role_type) VALUES ('运维', 'ROLE_ACTUATOR', 1);
+INSERT INTO role (role_id, role_name, role_en_name, role_type)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '系统', 'ROLE_SYSTEM', 1);
+INSERT INTO role (role_id, role_name, role_en_name, role_type)
+VALUES ('e813c71358fc4691afeafb438ea53919', '管理员', 'ROLE_ADMIN', 1);
+INSERT INTO role (role_id, role_name, role_en_name, role_type)
+VALUES ('cd5012abe87246f3ae21c86600c6e12a', '运维', 'ROLE_ACTUATOR', 1);
 
 INSERT INTO authorities (username, authority) VALUES ('863052317@qq.com', 'ROLE_SYSTEM');
 INSERT INTO authorities (username, authority) VALUES ('863052317@qq.com', 'ROLE_ACTUATOR');
@@ -911,85 +914,163 @@ INSERT INTO internship_type (internship_type_name) VALUES ('毕业实习(校内)
 INSERT INTO internship_type (internship_type_name) VALUES ('毕业实习(学校统一组织校外实习)');
 INSERT INTO internship_type (internship_type_name) VALUES ('毕业实习(学生校外自主实习)');
 
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'b5939e89e8794c4e8b2d333a1386fb2a');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'b9fb5f0479f6484a8c2bfd113eb6b3aa');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '69fccdabaa5448c2aeaba56456004ac2');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '0eb2165a08824c1cac232d975af392b3');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'e3d45ba55e48462cb47595ce01bba60c');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '492825a2af45482b92f0aea71973deea');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '9b671f7e11304beabb8a35c49d9e69e4');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'afed0863997149e9aa1e38930afd93c0');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '4ad4ebdabcf743a48f17e953201d50e7');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '3d87f7d05f454f51ac407834aeed6cf3');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'eac4175a8a9b44a380629cbbebc69eb9');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '762c6ba3323e4d739b104422d12f24d7');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '61cf2fa3e5b545a89cff0778937b94eb');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'd0c43d82367648578900829bc380d576');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'd964e48c8d5747739ee78f16a0d5d34e');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '1f694733093949158714580f1bf1d0fa');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '0ed7aa64d18244d882ee9edfbc8bcb88');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'bbbdbeb69a284a2589fc694d962d3636');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '61e8ccfa0ed74ff8b6c7e50ba72725dc');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'd82b367340db4428932ce28a7dd9bb7f');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '88a1e75eecbb4ab782642cfc0b246184');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '53dcc742fa484a7cbcd4841651c39efd');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '17ca4892fe0744f0a1d0fa1db8af0703');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '783f9fe0a92746ea8c8cda01e9f2f848');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'd58873b68598404fad86d808a28b1400');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '0c2ace393cab4a8c909e0ac09e723e7f');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '17506dc86a904051a771bb22cd9c31dd');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '800fd53d557449ee98b59d562c3ed013');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '753e7add7a25452f949abb9b9a5519bb');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '056b34f340544930b19716455a0ea3d2');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '13783647424340a0b5b716fe0c5d659d');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'c76085dd8803486c80545145bfd0b4d2');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '27af0835aaa64ed583b7abf0f26db20d');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '2f05225d873643c58bc93dd881a782aa');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '3b0045bc766e49b9b68165e6604f340f');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '0514540625d94c798fce8da2d293f0cc');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'b1d93d90ec01432ebe0d2247d1515434');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '425a9353055340f5ac7583f7c0cad7cc');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '2210762f4ddd4718b02570b09c073567');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '7132186fc3fb4ce8bf3333a1369dce30');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '488e75a887134895944fc7c02c56d994');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '7ebe58b9e5d64b27af163bd9885b1aae');
-INSERT INTO role_application (role_id, application_id) VALUES (1, '1dd10c63d4584559bb444fa6f3e4a40e');
-INSERT INTO role_application (role_id, application_id) VALUES (1, 'ac1cbf2870004403adb0d20df5a457e3');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'b5939e89e8794c4e8b2d333a1386fb2a');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'b9fb5f0479f6484a8c2bfd113eb6b3aa');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '69fccdabaa5448c2aeaba56456004ac2');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '0eb2165a08824c1cac232d975af392b3');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'e3d45ba55e48462cb47595ce01bba60c');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '492825a2af45482b92f0aea71973deea');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '9b671f7e11304beabb8a35c49d9e69e4');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'afed0863997149e9aa1e38930afd93c0');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '4ad4ebdabcf743a48f17e953201d50e7');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '3d87f7d05f454f51ac407834aeed6cf3');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'eac4175a8a9b44a380629cbbebc69eb9');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '762c6ba3323e4d739b104422d12f24d7');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '61cf2fa3e5b545a89cff0778937b94eb');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'd0c43d82367648578900829bc380d576');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'd964e48c8d5747739ee78f16a0d5d34e');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '1f694733093949158714580f1bf1d0fa');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '0ed7aa64d18244d882ee9edfbc8bcb88');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'bbbdbeb69a284a2589fc694d962d3636');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '61e8ccfa0ed74ff8b6c7e50ba72725dc');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'd82b367340db4428932ce28a7dd9bb7f');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '88a1e75eecbb4ab782642cfc0b246184');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '53dcc742fa484a7cbcd4841651c39efd');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '17ca4892fe0744f0a1d0fa1db8af0703');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '783f9fe0a92746ea8c8cda01e9f2f848');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'd58873b68598404fad86d808a28b1400');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '0c2ace393cab4a8c909e0ac09e723e7f');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '17506dc86a904051a771bb22cd9c31dd');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '800fd53d557449ee98b59d562c3ed013');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '753e7add7a25452f949abb9b9a5519bb');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '056b34f340544930b19716455a0ea3d2');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '13783647424340a0b5b716fe0c5d659d');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'c76085dd8803486c80545145bfd0b4d2');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '27af0835aaa64ed583b7abf0f26db20d');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '2f05225d873643c58bc93dd881a782aa');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '3b0045bc766e49b9b68165e6604f340f');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '0514540625d94c798fce8da2d293f0cc');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'b1d93d90ec01432ebe0d2247d1515434');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '425a9353055340f5ac7583f7c0cad7cc');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '2210762f4ddd4718b02570b09c073567');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '7132186fc3fb4ce8bf3333a1369dce30');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '488e75a887134895944fc7c02c56d994');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '7ebe58b9e5d64b27af163bd9885b1aae');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '1dd10c63d4584559bb444fa6f3e4a40e');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'ac1cbf2870004403adb0d20df5a457e3');
 
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'b5939e89e8794c4e8b2d333a1386fb2a');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'b9fb5f0479f6484a8c2bfd113eb6b3aa');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '69fccdabaa5448c2aeaba56456004ac2');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '0eb2165a08824c1cac232d975af392b3');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '492825a2af45482b92f0aea71973deea');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '9b671f7e11304beabb8a35c49d9e69e4');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'afed0863997149e9aa1e38930afd93c0');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '4ad4ebdabcf743a48f17e953201d50e7');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '3d87f7d05f454f51ac407834aeed6cf3');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'eac4175a8a9b44a380629cbbebc69eb9');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '762c6ba3323e4d739b104422d12f24d7');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '61cf2fa3e5b545a89cff0778937b94eb');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '1f694733093949158714580f1bf1d0fa');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '0ed7aa64d18244d882ee9edfbc8bcb88');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'bbbdbeb69a284a2589fc694d962d3636');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '61e8ccfa0ed74ff8b6c7e50ba72725dc');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'd82b367340db4428932ce28a7dd9bb7f');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '88a1e75eecbb4ab782642cfc0b246184');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '53dcc742fa484a7cbcd4841651c39efd');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '17ca4892fe0744f0a1d0fa1db8af0703');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '783f9fe0a92746ea8c8cda01e9f2f848');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'd58873b68598404fad86d808a28b1400');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '800fd53d557449ee98b59d562c3ed013');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '2f05225d873643c58bc93dd881a782aa');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '3b0045bc766e49b9b68165e6604f340f');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '0514540625d94c798fce8da2d293f0cc');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'b1d93d90ec01432ebe0d2247d1515434');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '425a9353055340f5ac7583f7c0cad7cc');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '2210762f4ddd4718b02570b09c073567');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '7132186fc3fb4ce8bf3333a1369dce30');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '488e75a887134895944fc7c02c56d994');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '7ebe58b9e5d64b27af163bd9885b1aae');
-INSERT INTO role_application (role_id, application_id) VALUES (2, '1dd10c63d4584559bb444fa6f3e4a40e');
-INSERT INTO role_application (role_id, application_id) VALUES (2, 'ac1cbf2870004403adb0d20df5a457e3');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'b5939e89e8794c4e8b2d333a1386fb2a');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'b9fb5f0479f6484a8c2bfd113eb6b3aa');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '69fccdabaa5448c2aeaba56456004ac2');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '0eb2165a08824c1cac232d975af392b3');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '492825a2af45482b92f0aea71973deea');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '9b671f7e11304beabb8a35c49d9e69e4');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'afed0863997149e9aa1e38930afd93c0');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '4ad4ebdabcf743a48f17e953201d50e7');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '3d87f7d05f454f51ac407834aeed6cf3');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'eac4175a8a9b44a380629cbbebc69eb9');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '762c6ba3323e4d739b104422d12f24d7');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '61cf2fa3e5b545a89cff0778937b94eb');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '1f694733093949158714580f1bf1d0fa');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '0ed7aa64d18244d882ee9edfbc8bcb88');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'bbbdbeb69a284a2589fc694d962d3636');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '61e8ccfa0ed74ff8b6c7e50ba72725dc');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'd82b367340db4428932ce28a7dd9bb7f');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '88a1e75eecbb4ab782642cfc0b246184');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '53dcc742fa484a7cbcd4841651c39efd');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '17ca4892fe0744f0a1d0fa1db8af0703');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '783f9fe0a92746ea8c8cda01e9f2f848');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'd58873b68598404fad86d808a28b1400');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '800fd53d557449ee98b59d562c3ed013');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '2f05225d873643c58bc93dd881a782aa');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '3b0045bc766e49b9b68165e6604f340f');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '0514540625d94c798fce8da2d293f0cc');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'b1d93d90ec01432ebe0d2247d1515434');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '425a9353055340f5ac7583f7c0cad7cc');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '2210762f4ddd4718b02570b09c073567');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '7132186fc3fb4ce8bf3333a1369dce30');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '488e75a887134895944fc7c02c56d994');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '7ebe58b9e5d64b27af163bd9885b1aae');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '1dd10c63d4584559bb444fa6f3e4a40e');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', 'ac1cbf2870004403adb0d20df5a457e3');
 
 INSERT INTO political_landscape (political_landscape_name) VALUES ('群众');
 INSERT INTO political_landscape (political_landscape_name) VALUES ('共青团员');

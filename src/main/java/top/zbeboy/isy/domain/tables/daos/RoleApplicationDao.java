@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class RoleApplicationDao extends DAOImpl<RoleApplicationRecord, top.zbeboy.isy.domain.tables.pojos.RoleApplication, Record2<Integer, String>> {
+public class RoleApplicationDao extends DAOImpl<RoleApplicationRecord, top.zbeboy.isy.domain.tables.pojos.RoleApplication, Record2<String, String>> {
 
     /**
      * Create a new RoleApplicationDao without any configuration
@@ -51,14 +51,14 @@ public class RoleApplicationDao extends DAOImpl<RoleApplicationRecord, top.zbebo
      * {@inheritDoc}
      */
     @Override
-    protected Record2<Integer, String> getId(top.zbeboy.isy.domain.tables.pojos.RoleApplication object) {
+    protected Record2<String, String> getId(top.zbeboy.isy.domain.tables.pojos.RoleApplication object) {
         return compositeKeyRecord(object.getRoleId(), object.getApplicationId());
     }
 
     /**
      * Fetch records that have <code>role_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.RoleApplication> fetchByRoleId(Integer... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.RoleApplication> fetchByRoleId(String... values) {
         return fetch(RoleApplication.ROLE_APPLICATION.ROLE_ID, values);
     }
 

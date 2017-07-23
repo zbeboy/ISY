@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.records.RoleRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class RoleDao extends DAOImpl<RoleRecord, top.zbeboy.isy.domain.tables.pojos.Role, Integer> {
+public class RoleDao extends DAOImpl<RoleRecord, top.zbeboy.isy.domain.tables.pojos.Role, String> {
 
     /**
      * Create a new RoleDao without any configuration
@@ -50,21 +50,21 @@ public class RoleDao extends DAOImpl<RoleRecord, top.zbeboy.isy.domain.tables.po
      * {@inheritDoc}
      */
     @Override
-    protected Integer getId(top.zbeboy.isy.domain.tables.pojos.Role object) {
+    protected String getId(top.zbeboy.isy.domain.tables.pojos.Role object) {
         return object.getRoleId();
     }
 
     /**
      * Fetch records that have <code>role_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.Role> fetchByRoleId(Integer... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.Role> fetchByRoleId(String... values) {
         return fetch(Role.ROLE.ROLE_ID, values);
     }
 
     /**
      * Fetch a unique record that has <code>role_id = value</code>
      */
-    public top.zbeboy.isy.domain.tables.pojos.Role fetchOneByRoleId(Integer value) {
+    public top.zbeboy.isy.domain.tables.pojos.Role fetchOneByRoleId(String value) {
         return fetchOne(Role.ROLE.ROLE_ID, value);
     }
 

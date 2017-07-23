@@ -37,7 +37,7 @@ public interface RoleApplicationService {
      *
      * @param roleId 角色id
      */
-    void deleteByRoleId(int roleId);
+    void deleteByRoleId(String roleId);
 
     /**
      * 根据角色id查询
@@ -45,7 +45,7 @@ public interface RoleApplicationService {
      * @param roleId 角色id
      * @return 数据
      */
-    Result<RoleApplicationRecord> findByRoleId(int roleId);
+    Result<RoleApplicationRecord> findByRoleId(String roleId);
 
     /**
      * 批量保存或更新角色
@@ -53,5 +53,5 @@ public interface RoleApplicationService {
      * @param applicationIds 应用ids
      * @param roleId         角色id
      */
-    void batchSaveRoleApplication(String applicationIds, int roleId);
+    void batchSaveRoleApplication(String applicationIds, String roleId);
 }

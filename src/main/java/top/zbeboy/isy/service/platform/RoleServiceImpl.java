@@ -66,7 +66,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, int roleId) {
+    public Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, String roleId) {
         return create.select()
                 .from(ROLE)
                 .where(ROLE.ROLE_NAME.eq(roleName).and(ROLE.ROLE_TYPE.eq(roleType)).and(ROLE.ROLE_ID.ne(roleId)))
@@ -74,12 +74,12 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public Role findById(int id) {
+    public Role findById(String id) {
         return roleDao.findById(id);
     }
 
     @Override
-    public Optional<Record> findByRoleIdRelation(int roleId) {
+    public Optional<Record> findByRoleIdRelation(String roleId) {
         return create.select()
                 .from(ROLE)
                 .leftJoin(COLLEGE_ROLE)
@@ -103,7 +103,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, int roleId) {
+    public Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, String roleId) {
         return create.select()
                 .from(ROLE)
                 .leftJoin(COLLEGE_ROLE)
@@ -118,30 +118,18 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
         roleDao.insert(role);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Override
-    public int saveAndReturnId(Role role) {
-        RoleRecord roleRecord = create.insertInto(ROLE)
-                .set(ROLE.ROLE_NAME, role.getRoleName())
-                .set(ROLE.ROLE_EN_NAME, role.getRoleEnName())
-                .set(ROLE.ROLE_TYPE, role.getRoleType())
-                .returning(ROLE.ROLE_ID)
-                .fetchOne();
-        return roleRecord.getRoleId();
-    }
-
     @Override
     public void update(Role role) {
         roleDao.update(role);
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(String id) {
         roleDao.deleteById(id);
     }
 
     @Override
-    public Result<RoleRecord> findInRoleId(List<Integer> ids) {
+    public Result<RoleRecord> findInRoleId(List<String> ids) {
         return create.selectFrom(ROLE)
                 .where(ROLE.ROLE_ID.in(ids))
                 .fetch();
@@ -312,7 +300,7 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, int roleId) {
+    public Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, String roleId) {
         SelectConditionStep<CollegeRoleRecord> select = create.selectFrom(COLLEGE_ROLE)
                 .where(COLLEGE_ROLE.ROLE_ID.eq(ROLE.ROLE_ID));
         return create.selectFrom(ROLE)

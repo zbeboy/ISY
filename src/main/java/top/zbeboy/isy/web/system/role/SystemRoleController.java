@@ -100,7 +100,7 @@ public class SystemRoleController {
      * @return 编辑页面
      */
     @RequestMapping(value = "/web/system/role/edit", method = RequestMethod.GET)
-    public String roleEdit(@RequestParam("id") int roleId, ModelMap modelMap) {
+    public String roleEdit(@RequestParam("id") String roleId, ModelMap modelMap) {
         Optional<Record> record = roleService.findByRoleIdRelation(roleId);
         RoleBean roleBean = new RoleBean();
         if (record.isPresent()) {
@@ -122,7 +122,7 @@ public class SystemRoleController {
      */
     @RequestMapping(value = "/web/system/role/update/valid", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValid(@RequestParam("roleName") String name, @RequestParam("roleId") int roleId) {
+    public AjaxUtils updateValid(@RequestParam("roleName") String name, @RequestParam("roleId") String roleId) {
         String roleName = StringUtils.trimWhitespace(name);
         if (StringUtils.hasLength(roleName)) {
             Result<Record> records = roleService.findByRoleNameAndRoleTypeNeRoleId(name, 1, roleId);
@@ -145,16 +145,13 @@ public class SystemRoleController {
      */
     @RequestMapping(value = "/web/system/role/update", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils roleUpdate(@RequestParam("roleId") int roleId, @RequestParam("roleName") String roleName, String applicationIds) {
+    public AjaxUtils roleUpdate(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
         role.setRoleName(roleName);
         roleService.update(role);
-        if (roleId > 0) {
-            roleApplicationService.deleteByRoleId(roleId);
-            roleApplicationService.batchSaveRoleApplication(applicationIds,roleId);
-            return AjaxUtils.of().success().msg("更新成功");
-        }
-        return AjaxUtils.of().fail().msg("更新失败");
+        roleApplicationService.deleteByRoleId(roleId);
+        roleApplicationService.batchSaveRoleApplication(applicationIds, roleId);
+        return AjaxUtils.of().success().msg("更新成功");
     }
 
     /**
@@ -165,7 +162,7 @@ public class SystemRoleController {
      */
     @RequestMapping(value = "/web/system/role/application/data", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<RoleApplication> roleApplicationData(@RequestParam("roleId") int roleId) {
+    public AjaxUtils<RoleApplication> roleApplicationData(@RequestParam("roleId") String roleId) {
         AjaxUtils<RoleApplication> ajaxUtils = AjaxUtils.of();
         Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findByRoleId(roleId);
         List<RoleApplication> roleApplications = new ArrayList<>();

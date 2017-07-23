@@ -60,7 +60,7 @@ public interface CacheManageService {
      * @param username 用户账号用于缓存
      * @return 数据
      */
-    List<RoleApplication> findInRoleIdsWithUsername(List<Integer> roleIds, String username);
+    List<RoleApplication> findInRoleIdsWithUsername(List<String> roleIds, String username);
 
     /**
      * 根据用户账号查询角色

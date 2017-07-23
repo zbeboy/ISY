@@ -30,5 +30,5 @@ public interface CollegeRoleService {
      *
      * @param roleId 角色id
      */
-    void deleteByRoleId(int roleId);
+    void deleteByRoleId(String roleId);
 }

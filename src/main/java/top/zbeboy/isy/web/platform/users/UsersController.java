@@ -625,7 +625,7 @@ public class UsersController {
             College college = record.get().into(College.class);
             List<CollegeRoleRecord> collegeRoleRecords = collegeRoleService.findByCollegeId(college.getCollegeId());
             if (!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()) {
-                List<Integer> roleIds = new ArrayList<>();
+                List<String> roleIds = new ArrayList<>();
                 collegeRoleRecords.forEach(role -> roleIds.add(role.getRoleId()));
                 Result<RoleRecord> roleRecords = roleService.findInRoleId(roleIds);
                 roles.addAll(roleRecords.into(Role.class));

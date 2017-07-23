@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -23,9 +24,9 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CollegeRole implements Serializable {
 
-    private static final long serialVersionUID = -1992367790;
+    private static final long serialVersionUID = -745351673;
 
-    private Integer roleId;
+    private String  roleId;
     private Integer collegeId;
 
     public CollegeRole() {}
@@ -36,7 +37,7 @@ public class CollegeRole implements Serializable {
     }
 
     public CollegeRole(
-        Integer roleId,
+        String  roleId,
         Integer collegeId
     ) {
         this.roleId = roleId;
@@ -44,11 +45,12 @@ public class CollegeRole implements Serializable {
     }
 
     @NotNull
-    public Integer getRoleId() {
+    @Size(max = 64)
+    public String getRoleId() {
         return this.roleId;
     }
 
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 

@@ -95,7 +95,7 @@ public class CacheManageServiceImpl implements CacheManageService {
         if (this.stringRedisTemplate.hasKey(cacheKey)) {
             return ops.get(cacheKey);
         }
-        List<Integer> roleIds = new ArrayList<>();
+        List<String> roleIds = new ArrayList<>();
         String html = "";
         roleIds.addAll(roles.stream().map(Role::getRoleId).collect(Collectors.toList()));
         List<RoleApplication> roleApplications = findInRoleIdsWithUsername(roleIds, username);
@@ -146,7 +146,7 @@ public class CacheManageServiceImpl implements CacheManageService {
     }
 
     @Override
-    public List<RoleApplication> findInRoleIdsWithUsername(List<Integer> roleIds, String username) {
+    public List<RoleApplication> findInRoleIdsWithUsername(List<String> roleIds, String username) {
         String cacheKey = CacheBook.USER_ROLE_ID + username;
         if (roleApplicationValueOperations.getOperations().hasKey(cacheKey)) {
             return roleApplicationValueOperations.get(cacheKey);

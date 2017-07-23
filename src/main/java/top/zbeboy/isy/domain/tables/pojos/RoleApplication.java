@@ -24,10 +24,10 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleApplication implements Serializable {
 
-    private static final long serialVersionUID = 646370046;
+    private static final long serialVersionUID = 1060088409;
 
-    private Integer roleId;
-    private String  applicationId;
+    private String roleId;
+    private String applicationId;
 
     public RoleApplication() {}
 
@@ -37,19 +37,20 @@ public class RoleApplication implements Serializable {
     }
 
     public RoleApplication(
-        Integer roleId,
-        String  applicationId
+        String roleId,
+        String applicationId
     ) {
         this.roleId = roleId;
         this.applicationId = applicationId;
     }
 
     @NotNull
-    public Integer getRoleId() {
+    @Size(max = 64)
+    public String getRoleId() {
         return this.roleId;
     }
 
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 

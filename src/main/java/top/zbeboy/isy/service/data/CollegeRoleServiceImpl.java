@@ -45,7 +45,7 @@ public class CollegeRoleServiceImpl implements CollegeRoleService {
     }
 
     @Override
-    public void deleteByRoleId(int roleId) {
+    public void deleteByRoleId(String roleId) {
         create.deleteFrom(COLLEGE_ROLE)
                 .where(COLLEGE_ROLE.ROLE_ID.eq(roleId))
                 .execute();
