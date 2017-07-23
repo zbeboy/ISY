@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleApplication extends TableImpl<RoleApplicationRecord> {
 
-    private static final long serialVersionUID = -391068051;
+    private static final long serialVersionUID = -691562838;
 
     /**
      * The reference instance of <code>isy.role_application</code>
@@ -58,7 +58,7 @@ public class RoleApplication extends TableImpl<RoleApplicationRecord> {
     /**
      * The column <code>isy.role_application.application_id</code>.
      */
-    public final TableField<RoleApplicationRecord, Integer> APPLICATION_ID = createField("application_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RoleApplicationRecord, String> APPLICATION_ID = createField("application_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * Create a <code>isy.role_application</code> table reference

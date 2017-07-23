@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CollegeApplication extends TableImpl<CollegeApplicationRecord> {
 
-    private static final long serialVersionUID = 634732774;
+    private static final long serialVersionUID = 820039113;
 
     /**
      * The reference instance of <code>isy.college_application</code>
@@ -53,7 +53,7 @@ public class CollegeApplication extends TableImpl<CollegeApplicationRecord> {
     /**
      * The column <code>isy.college_application.application_id</code>.
      */
-    public final TableField<CollegeApplicationRecord, Integer> APPLICATION_ID = createField("application_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<CollegeApplicationRecord, String> APPLICATION_ID = createField("application_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.college_application.college_id</code>.

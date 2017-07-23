@@ -53,7 +53,7 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
     }
 
     @Override
-    public void deleteByApplicationId(int applicationId) {
+    public void deleteByApplicationId(String applicationId) {
         create.deleteFrom(ROLE_APPLICATION)
                 .where(ROLE_APPLICATION.APPLICATION_ID.eq(applicationId))
                 .execute();
@@ -75,8 +75,8 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
 
     @Override
     public void batchSaveRoleApplication(String applicationIds, int roleId) {
-        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
+        if (StringUtils.hasLength(applicationIds)) {
+            List<String> ids = SmallPropsUtils.StringIdsToStringList(applicationIds);
             List<RoleApplication> roleApplications = new ArrayList<>();
             ids.forEach(id -> roleApplications.add(new RoleApplication(roleId, id)));
             save(roleApplications);

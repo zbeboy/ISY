@@ -172,7 +172,6 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Identities0.IDENTITY_ACADEMIC_TITLE;
-    public static final Identity<ApplicationRecord, Integer> IDENTITY_APPLICATION = Identities0.IDENTITY_APPLICATION;
     public static final Identity<BuildingRecord, Integer> IDENTITY_BUILDING = Identities0.IDENTITY_BUILDING;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
     public static final Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Identities0.IDENTITY_DEPARTMENT;
@@ -382,7 +381,6 @@ public class Keys {
 
     private static class Identities0 extends AbstractKeys {
         public static Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = createIdentity(AcademicTitle.ACADEMIC_TITLE, AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
-        public static Identity<ApplicationRecord, Integer> IDENTITY_APPLICATION = createIdentity(Application.APPLICATION, Application.APPLICATION.APPLICATION_ID);
         public static Identity<BuildingRecord, Integer> IDENTITY_BUILDING = createIdentity(Building.BUILDING, Building.BUILDING.BUILDING_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
         public static Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = createIdentity(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);

@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.records.CollegeApplicationRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class CollegeApplicationDao extends DAOImpl<CollegeApplicationRecord, top.zbeboy.isy.domain.tables.pojos.CollegeApplication, Record2<Integer, Integer>> {
+public class CollegeApplicationDao extends DAOImpl<CollegeApplicationRecord, top.zbeboy.isy.domain.tables.pojos.CollegeApplication, Record2<String, Integer>> {
 
     /**
      * Create a new CollegeApplicationDao without any configuration
@@ -51,14 +51,14 @@ public class CollegeApplicationDao extends DAOImpl<CollegeApplicationRecord, top
      * {@inheritDoc}
      */
     @Override
-    protected Record2<Integer, Integer> getId(top.zbeboy.isy.domain.tables.pojos.CollegeApplication object) {
+    protected Record2<String, Integer> getId(top.zbeboy.isy.domain.tables.pojos.CollegeApplication object) {
         return compositeKeyRecord(object.getApplicationId(), object.getCollegeId());
     }
 
     /**
      * Fetch records that have <code>application_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.CollegeApplication> fetchByApplicationId(Integer... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.CollegeApplication> fetchByApplicationId(String... values) {
         return fetch(CollegeApplication.COLLEGE_APPLICATION.APPLICATION_ID, values);
     }
 

@@ -21,6 +21,7 @@ import top.zbeboy.isy.service.data.CollegeApplicationService;
 import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.system.ApplicationService;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.system.application.ApplicationBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -92,7 +93,7 @@ public class SystemApplicationController {
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
             applicationBeen = records.into(ApplicationBean.class);
             applicationBeen.forEach(a -> {
-                if (a.getApplicationPid() == 0) {
+                if (a.getApplicationPid().equals("0")) {
                     a.setApplicationPidName("无");
                 } else {
                     Application application = applicationService.findById(a.getApplicationPid());
@@ -122,7 +123,7 @@ public class SystemApplicationController {
      * @return 更新页面
      */
     @RequestMapping(value = "/web/system/application/edit", method = RequestMethod.GET)
-    public String applicationEdit(@RequestParam("id") int id, ModelMap modelMap) {
+    public String applicationEdit(@RequestParam("id") String id, ModelMap modelMap) {
         Application application = applicationService.findById(id);
         modelMap.addAttribute("sys_application", application);
         return "web/system/application/system_application_edit::#page-wrapper";
@@ -139,14 +140,14 @@ public class SystemApplicationController {
         // 一级与二级菜单
         List<Application> applicationPids = new ArrayList<>();
         Application application = new Application();
-        application.setApplicationId(0);
+        application.setApplicationId("0");
         application.setApplicationName("无");
         applicationPids.add(application);
-        applicationPids.addAll(applicationService.findByPid(0));
-        List<Integer> pids = new ArrayList<>();
-        applicationPids.forEach(p -> {
-            pids.add(p.getApplicationId());
-        });
+        applicationPids.addAll(applicationService.findByPid("0"));
+        List<String> pids = new ArrayList<>();
+        for (int i = 1; i < applicationPids.size(); i++) {
+            pids.add(applicationPids.get(i).getApplicationId());
+        }
         Result<ApplicationRecord> applicationRecords = applicationService.findInPids(pids);
         if (applicationRecords.isNotEmpty()) {
             List<Application> secondLevelIds = applicationRecords.into(Application.class);
@@ -187,7 +188,7 @@ public class SystemApplicationController {
      */
     @RequestMapping(value = "/web/system/application/update/valid/name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidName(@RequestParam("applicationName") String applicationName, @RequestParam("applicationId") int applicationId) {
+    public AjaxUtils updateValidName(@RequestParam("applicationName") String applicationName, @RequestParam("applicationId") String applicationId) {
         if (StringUtils.hasLength(applicationName)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationNameNeApplicationId(applicationName, applicationId);
             if (applications.isEmpty()) {
@@ -228,7 +229,7 @@ public class SystemApplicationController {
      */
     @RequestMapping(value = "/web/system/application/update/valid/en_name", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidEnName(@RequestParam("applicationEnName") String applicationEnName, @RequestParam("applicationId") int applicationId) {
+    public AjaxUtils updateValidEnName(@RequestParam("applicationEnName") String applicationEnName, @RequestParam("applicationId") String applicationId) {
         if (StringUtils.hasLength(applicationEnName)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationEnNameNeApplicationId(applicationEnName, applicationId);
             if (applications.isEmpty()) {
@@ -269,7 +270,7 @@ public class SystemApplicationController {
      */
     @RequestMapping(value = "/web/system/application/update/valid/url", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidUrl(@RequestParam("applicationUrl") String applicationUrl, @RequestParam("applicationId") int applicationId) {
+    public AjaxUtils updateValidUrl(@RequestParam("applicationUrl") String applicationUrl, @RequestParam("applicationId") String applicationId) {
         if (StringUtils.hasLength(applicationUrl)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationUrlNeApplicationId(applicationUrl, applicationId);
             if (applications.isEmpty()) {
@@ -310,7 +311,7 @@ public class SystemApplicationController {
      */
     @RequestMapping(value = "/web/system/application/update/valid/code", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils updateValidCode(@RequestParam("applicationCode") String applicationCode, @RequestParam("applicationId") int applicationId) {
+    public AjaxUtils updateValidCode(@RequestParam("applicationCode") String applicationCode, @RequestParam("applicationId") String applicationId) {
         if (StringUtils.hasLength(applicationCode)) {
             Result<ApplicationRecord> applications = applicationService.findByApplicationCodeNeApplicationId(applicationCode, applicationId);
             if (applications.isEmpty()) {
@@ -334,6 +335,8 @@ public class SystemApplicationController {
     public AjaxUtils applicationSave(@Valid ApplicationVo applicationVo, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             Application application = new Application();
+            String applicationId = UUIDUtils.getUUID();
+            application.setApplicationId(applicationId);
             application.setApplicationName(applicationVo.getApplicationName());
             application.setApplicationSort(applicationVo.getApplicationSort());
             application.setApplicationPid(applicationVo.getApplicationPid());
@@ -342,7 +345,7 @@ public class SystemApplicationController {
             application.setApplicationEnName(applicationVo.getApplicationEnName());
             application.setIcon(applicationVo.getIcon());
             application.setApplicationDataUrlStartWith(applicationVo.getApplicationDataUrlStartWith());
-            int applicationId = applicationService.saveAndReturnId(application);
+            applicationService.save(application);
             Role role = roleService.findByRoleEnName(Workbook.SYSTEM_AUTHORITIES);
             RoleApplication roleApplication = new RoleApplication(role.getRoleId(), applicationId);
             roleApplicationService.save(roleApplication);
@@ -386,8 +389,8 @@ public class SystemApplicationController {
     @RequestMapping(value = "/web/system/application/update/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils applicationUpdateDel(String applicationIds) {
-        if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-            List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
+        if (StringUtils.hasLength(applicationIds)) {
+            List<String> ids = SmallPropsUtils.StringIdsToStringList(applicationIds);
             ids.forEach(id -> {
                 roleApplicationService.deleteByApplicationId(id);
                 collegeApplicationService.deleteByApplicationId(id);

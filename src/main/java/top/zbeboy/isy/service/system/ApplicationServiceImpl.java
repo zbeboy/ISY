@@ -53,46 +53,28 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
         applicationDao.insert(application);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Override
-    public int saveAndReturnId(Application application) {
-        ApplicationRecord applicationRecord = create.insertInto(APPLICATION)
-                .set(APPLICATION.APPLICATION_NAME, application.getApplicationName())
-                .set(APPLICATION.APPLICATION_SORT, application.getApplicationSort())
-                .set(APPLICATION.APPLICATION_PID, application.getApplicationPid())
-                .set(APPLICATION.APPLICATION_URL, application.getApplicationUrl())
-                .set(APPLICATION.APPLICATION_CODE, application.getApplicationCode())
-                .set(APPLICATION.APPLICATION_EN_NAME, application.getApplicationEnName())
-                .set(APPLICATION.ICON, application.getIcon())
-                .set(APPLICATION.APPLICATION_DATA_URL_START_WITH, application.getApplicationDataUrlStartWith())
-                .returning(APPLICATION.APPLICATION_ID)
-                .fetchOne();
-
-        return applicationRecord.getApplicationId();
-    }
-
     @Override
     public void update(Application application) {
         applicationDao.update(application);
     }
 
     @Override
-    public void deletes(List<Integer> ids) {
-        ids.forEach(id -> applicationDao.deleteById(id));
+    public void deletes(List<String> ids) {
+        applicationDao.deleteById(ids);
     }
 
     @Override
-    public Application findById(int id) {
+    public Application findById(String id) {
         return applicationDao.findById(id);
     }
 
     @Override
-    public List<Application> findByPid(int pid) {
+    public List<Application> findByPid(String pid) {
         return applicationDao.fetchByApplicationPid(pid);
     }
 
     @Override
-    public List<Application> findByPidAndCollegeId(int pid, int collegeId) {
+    public List<Application> findByPidAndCollegeId(String pid, int collegeId) {
         List<Application> applications = new ArrayList<>();
         Result<Record> records = create.select()
                 .from(APPLICATION)
@@ -107,14 +89,14 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     @Override
-    public Result<ApplicationRecord> findInPids(List<Integer> pids) {
+    public Result<ApplicationRecord> findInPids(List<String> pids) {
         return create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_PID.in(pids))
                 .fetch();
     }
 
     @Override
-    public Result<ApplicationRecord> findInIdsAndPid(List<Integer> ids, int pid) {
+    public Result<ApplicationRecord> findInIdsAndPid(List<String> ids, String pid) {
         return create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_ID.in(ids).and(APPLICATION.APPLICATION_PID.eq(pid)))
                 .orderBy(APPLICATION.APPLICATION_SORT)
@@ -142,7 +124,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     @Override
-    public Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName, int applicationId) {
+    public Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName, String applicationId) {
         return create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_NAME.eq(applicationName).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
                 .fetch();
@@ -154,7 +136,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     @Override
-    public Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName, int applicationId) {
+    public Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName, String applicationId) {
         return create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_EN_NAME.eq(applicationEnName).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
                 .fetch();
@@ -166,7 +148,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     @Override
-    public Result<ApplicationRecord> findByApplicationUrlNeApplicationId(String applicationUrl, int applicationId) {
+    public Result<ApplicationRecord> findByApplicationUrlNeApplicationId(String applicationUrl, String applicationId) {
         return create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_URL.eq(applicationUrl).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
                 .fetch();
@@ -178,19 +160,19 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
     }
 
     @Override
-    public Result<ApplicationRecord> findByApplicationCodeNeApplicationId(String applicationCode, int applicationId) {
+    public Result<ApplicationRecord> findByApplicationCodeNeApplicationId(String applicationCode, String applicationId) {
         return create.selectFrom(APPLICATION)
                 .where(APPLICATION.APPLICATION_CODE.eq(applicationCode).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
                 .fetch();
     }
 
     @Override
-    public List<TreeBean> getApplicationJson(int pid) {
+    public List<TreeBean> getApplicationJson(String pid) {
         return bindingDataToJson(pid);
     }
 
     @Override
-    public List<TreeBean> getApplicationJsonByCollegeId(int pid, int collegeId) {
+    public List<TreeBean> getApplicationJsonByCollegeId(String pid, int collegeId) {
         return bindingDataToJson(pid, collegeId);
     }
 
@@ -200,7 +182,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      * @param id 父id
      * @return list treeBean
      */
-    private List<TreeBean> bindingDataToJson(int id) {
+    private List<TreeBean> bindingDataToJson(String id) {
         List<Application> applications = findByPid(id);
         List<TreeBean> treeBeens = new ArrayList<>();
         if (ObjectUtils.isEmpty(applications)) {
@@ -221,7 +203,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
      * @param collegeId 院id
      * @return list treeBean
      */
-    private List<TreeBean> bindingDataToJson(int id, int collegeId) {
+    private List<TreeBean> bindingDataToJson(String id, int collegeId) {
         List<Application> applications = findByPidAndCollegeId(id, collegeId);
         List<TreeBean> treeBeens = new ArrayList<>();
         if (ObjectUtils.isEmpty(applications)) {

@@ -24,12 +24,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Application implements Serializable {
 
-    private static final long serialVersionUID = -1290682697;
+    private static final long serialVersionUID = -1593876535;
 
-    private Integer applicationId;
+    private String  applicationId;
     private String  applicationName;
     private Integer applicationSort;
-    private Integer applicationPid;
+    private String  applicationPid;
     private String  applicationUrl;
     private String  applicationCode;
     private String  applicationEnName;
@@ -51,10 +51,10 @@ public class Application implements Serializable {
     }
 
     public Application(
-        Integer applicationId,
+        String  applicationId,
         String  applicationName,
         Integer applicationSort,
-        Integer applicationPid,
+        String  applicationPid,
         String  applicationUrl,
         String  applicationCode,
         String  applicationEnName,
@@ -73,11 +73,12 @@ public class Application implements Serializable {
     }
 
     @NotNull
-    public Integer getApplicationId() {
+    @Size(max = 64)
+    public String getApplicationId() {
         return this.applicationId;
     }
 
-    public void setApplicationId(Integer applicationId) {
+    public void setApplicationId(String applicationId) {
         this.applicationId = applicationId;
     }
 
@@ -100,11 +101,12 @@ public class Application implements Serializable {
     }
 
     @NotNull
-    public Integer getApplicationPid() {
+    @Size(max = 64)
+    public String getApplicationPid() {
         return this.applicationPid;
     }
 
-    public void setApplicationPid(Integer applicationPid) {
+    public void setApplicationPid(String applicationPid) {
         this.applicationPid = applicationPid;
     }
 

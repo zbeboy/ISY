@@ -15,5 +15,5 @@ import java.util.List;
 public class TreeBean {
     private String text;
     private List<TreeBean> nodes;
-    private int dataId;
+    private String dataId;
 }

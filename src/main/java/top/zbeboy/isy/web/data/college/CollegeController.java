@@ -335,8 +335,8 @@ public class CollegeController {
     public AjaxUtils updateMount(@RequestParam("collegeId") int collegeId, String applicationIds) {
         if (collegeId > 0) {
             collegeApplicationService.deleteByCollegeId(collegeId);
-            if (StringUtils.hasLength(applicationIds) && SmallPropsUtils.StringIdsIsNumber(applicationIds)) {
-                List<Integer> ids = SmallPropsUtils.StringIdsToList(applicationIds);
+            if (StringUtils.hasLength(applicationIds)) {
+                List<String> ids = SmallPropsUtils.StringIdsToStringList(applicationIds);
                 ids.forEach(id -> {
                     CollegeApplication collegeApplication = new CollegeApplication(id, collegeId);
                     collegeApplicationService.save(collegeApplication);
@@ -355,7 +355,7 @@ public class CollegeController {
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson() {
         AjaxUtils<TreeBean> ajaxUtils = AjaxUtils.of();
-        List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
+        List<TreeBean> treeBeens = applicationService.getApplicationJson("0");
         return ajaxUtils.success().listData(treeBeens);
     }
 }

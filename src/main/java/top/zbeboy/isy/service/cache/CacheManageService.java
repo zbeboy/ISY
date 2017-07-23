@@ -43,7 +43,7 @@ public interface CacheManageService {
      * @param username 用户账号 缓存
      * @return 应用
      */
-    List<Application> findInIdsWithUsername(List<Integer> ids, String username);
+    List<Application> findInIdsWithUsername(List<String> ids, String username);
 
     /**
      * 获取该菜单下的data url

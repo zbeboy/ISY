@@ -10,7 +10,6 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.jooq.Field;
-import org.jooq.Identity;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -35,7 +34,7 @@ import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Application extends TableImpl<ApplicationRecord> {
 
-    private static final long serialVersionUID = 95754923;
+    private static final long serialVersionUID = 1873893428;
 
     /**
      * The reference instance of <code>isy.application</code>
@@ -53,7 +52,7 @@ public class Application extends TableImpl<ApplicationRecord> {
     /**
      * The column <code>isy.application.application_id</code>.
      */
-    public final TableField<ApplicationRecord, Integer> APPLICATION_ID = createField("application_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ApplicationRecord, String> APPLICATION_ID = createField("application_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.application.application_name</code>.
@@ -68,7 +67,7 @@ public class Application extends TableImpl<ApplicationRecord> {
     /**
      * The column <code>isy.application.application_pid</code>.
      */
-    public final TableField<ApplicationRecord, Integer> APPLICATION_PID = createField("application_pid", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ApplicationRecord, String> APPLICATION_PID = createField("application_pid", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.application.application_url</code>.
@@ -123,14 +122,6 @@ public class Application extends TableImpl<ApplicationRecord> {
     @Override
     public Schema getSchema() {
         return Isy.ISY;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Identity<ApplicationRecord, Integer> getIdentity() {
-        return Keys.IDENTITY_APPLICATION;
     }
 
     /**

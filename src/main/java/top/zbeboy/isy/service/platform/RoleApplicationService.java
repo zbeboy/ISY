@@ -30,7 +30,7 @@ public interface RoleApplicationService {
      *
      * @param applicationId 应用id
      */
-    void deleteByApplicationId(int applicationId);
+    void deleteByApplicationId(String applicationId);
 
     /**
      * 通过角色id删除

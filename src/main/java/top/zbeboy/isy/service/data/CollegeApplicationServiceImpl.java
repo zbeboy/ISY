@@ -28,7 +28,7 @@ public class CollegeApplicationServiceImpl implements CollegeApplicationService 
     }
 
     @Override
-    public void deleteByApplicationId(int applicationId) {
+    public void deleteByApplicationId(String applicationId) {
         create.deleteFrom(COLLEGE_APPLICATION)
                 .where(COLLEGE_APPLICATION.APPLICATION_ID.eq(applicationId))
                 .execute();

@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -23,10 +24,10 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleApplication implements Serializable {
 
-    private static final long serialVersionUID = 1895852267;
+    private static final long serialVersionUID = 646370046;
 
     private Integer roleId;
-    private Integer applicationId;
+    private String  applicationId;
 
     public RoleApplication() {}
 
@@ -37,7 +38,7 @@ public class RoleApplication implements Serializable {
 
     public RoleApplication(
         Integer roleId,
-        Integer applicationId
+        String  applicationId
     ) {
         this.roleId = roleId;
         this.applicationId = applicationId;
@@ -53,11 +54,12 @@ public class RoleApplication implements Serializable {
     }
 
     @NotNull
-    public Integer getApplicationId() {
+    @Size(max = 64)
+    public String getApplicationId() {
         return this.applicationId;
     }
 
-    public void setApplicationId(Integer applicationId) {
+    public void setApplicationId(String applicationId) {
         this.applicationId = applicationId;
     }
 

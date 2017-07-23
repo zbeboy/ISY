@@ -23,14 +23,6 @@ public interface ApplicationService {
     void save(Application application);
 
     /**
-     * 保存并返回id
-     *
-     * @param application 应用
-     * @return id
-     */
-    int saveAndReturnId(Application application);
-
-    /**
      * 更新
      *
      * @param application 应用
@@ -42,7 +34,7 @@ public interface ApplicationService {
      *
      * @param ids ids
      */
-    void deletes(List<Integer> ids);
+    void deletes(List<String> ids);
 
     /**
      * 通过id查询
@@ -50,7 +42,7 @@ public interface ApplicationService {
      * @param id id
      * @return 应用
      */
-    Application findById(int id);
+    Application findById(String id);
 
     /**
      * 通过pid查询
@@ -58,7 +50,7 @@ public interface ApplicationService {
      * @param pid 父id
      * @return 应用
      */
-    List<Application> findByPid(int pid);
+    List<Application> findByPid(String pid);
 
     /**
      * 通过pid查询
@@ -67,7 +59,7 @@ public interface ApplicationService {
      * @param collegeId 院id
      * @return 应用
      */
-    List<Application> findByPidAndCollegeId(int pid, int collegeId);
+    List<Application> findByPidAndCollegeId(String pid, int collegeId);
 
     /**
      * 通过pids查询
@@ -75,7 +67,7 @@ public interface ApplicationService {
      * @param pids 父ids
      * @return 应用
      */
-    Result<ApplicationRecord> findInPids(List<Integer> pids);
+    Result<ApplicationRecord> findInPids(List<String> pids);
 
     /**
      * 通过ids和父id查询
@@ -84,7 +76,7 @@ public interface ApplicationService {
      * @param pid 父id
      * @return 应用
      */
-    Result<ApplicationRecord> findInIdsAndPid(List<Integer> ids, int pid);
+    Result<ApplicationRecord> findInIdsAndPid(List<String> ids, String pid);
 
     /**
      * 分页查询
@@ -123,7 +115,7 @@ public interface ApplicationService {
      * @param applicationId   应用id
      * @return 应用
      */
-    Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName, int applicationId);
+    Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName, String applicationId);
 
     /**
      * 通过应用英文名查询
@@ -140,7 +132,7 @@ public interface ApplicationService {
      * @param applicationId     应用id
      * @return 应用
      */
-    Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName, int applicationId);
+    Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName, String applicationId);
 
     /**
      * 通过应用链接查询
@@ -157,7 +149,7 @@ public interface ApplicationService {
      * @param applicationId  应用id
      * @return 应用
      */
-    Result<ApplicationRecord> findByApplicationUrlNeApplicationId(String applicationUrl, int applicationId);
+    Result<ApplicationRecord> findByApplicationUrlNeApplicationId(String applicationUrl, String applicationId);
 
     /**
      * 通过应用识别码查询
@@ -174,7 +166,7 @@ public interface ApplicationService {
      * @param applicationId   应用id
      * @return 应用
      */
-    Result<ApplicationRecord> findByApplicationCodeNeApplicationId(String applicationCode, int applicationId);
+    Result<ApplicationRecord> findByApplicationCodeNeApplicationId(String applicationCode, String applicationId);
 
     /**
      * 通过父id获取所有子类组成的List
@@ -182,7 +174,7 @@ public interface ApplicationService {
      * @param pid 父id
      * @return list json
      */
-    List<TreeBean> getApplicationJson(int pid);
+    List<TreeBean> getApplicationJson(String pid);
 
     /**
      * 通过父id与院id获取所有子类组成的List
@@ -190,5 +182,5 @@ public interface ApplicationService {
      * @param pid 父id
      * @return list json
      */
-    List<TreeBean> getApplicationJsonByCollegeId(int pid, int collegeId);
+    List<TreeBean> getApplicationJsonByCollegeId(String pid, int collegeId);
 }

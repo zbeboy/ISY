@@ -68,7 +68,7 @@ public class WebSecurity {
 
         List<RoleApplication> roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存
         if (!roleApplications.isEmpty()) {
-            List<Integer> applicationIds = new ArrayList<>();
+            List<String> applicationIds = new ArrayList<>();
             // 防止重复菜单加载
             roleApplications.stream().filter(roleApplication -> !applicationIds.contains(roleApplication.getApplicationId())).forEach(roleApplication -> {// 防止重复菜单加载
                 applicationIds.add(roleApplication.getApplicationId());

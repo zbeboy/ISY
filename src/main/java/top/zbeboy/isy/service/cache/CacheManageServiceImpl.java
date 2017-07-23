@@ -100,13 +100,13 @@ public class CacheManageServiceImpl implements CacheManageService {
         roleIds.addAll(roles.stream().map(Role::getRoleId).collect(Collectors.toList()));
         List<RoleApplication> roleApplications = findInRoleIdsWithUsername(roleIds, username);
         if (!roleApplications.isEmpty()) {
-            List<Integer> applicationIds = new ArrayList<>();
+            List<String> applicationIds = new ArrayList<>();
             for (RoleApplication roleApplication : roleApplications) {
                 if (!applicationIds.contains(roleApplication.getApplicationId())) {// 防止重复菜单加载
                     applicationIds.add(roleApplication.getApplicationId());
                 }
             }
-            Result<ApplicationRecord> applicationRecords = applicationService.findInIdsAndPid(applicationIds, 0);
+            Result<ApplicationRecord> applicationRecords = applicationService.findInIdsAndPid(applicationIds, "0");
             html = firstLevelHtml(applicationRecords, applicationIds);
         }
         ops.set(cacheKey, html, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES);
@@ -114,7 +114,7 @@ public class CacheManageServiceImpl implements CacheManageService {
     }
 
     @Override
-    public List<Application> findInIdsWithUsername(List<Integer> ids, String username) {
+    public List<Application> findInIdsWithUsername(List<String> ids, String username) {
         String cacheKey = CacheBook.USER_APPLICATION_ID + username;
         if (applicationValueOperations.getOperations().hasKey(cacheKey)) {
             return applicationValueOperations.get(cacheKey);
@@ -185,7 +185,7 @@ public class CacheManageServiceImpl implements CacheManageService {
     }
 
     // 一级菜单
-    private String firstLevelHtml(Result<ApplicationRecord> applicationRecords, List<Integer> applicationIds) {
+    private String firstLevelHtml(Result<ApplicationRecord> applicationRecords, List<String> applicationIds) {
         String html = "<ul class=\"nav\" id=\"side-menu\">" +
                 "</ul>";
         Document doc = Jsoup.parse(html);
@@ -208,7 +208,7 @@ public class CacheManageServiceImpl implements CacheManageService {
     }
 
     // 二级菜单
-    private String secondLevelHtml(Result<ApplicationRecord> applicationRecords, List<Integer> applicationIds) {
+    private String secondLevelHtml(Result<ApplicationRecord> applicationRecords, List<String> applicationIds) {
         StringBuilder stringBuilder = new StringBuilder("<ul class=\"nav nav-second-level\">");
         for (ApplicationRecord applicationRecord : applicationRecords) { // pid = 1级菜单id
             String li = "<li>";

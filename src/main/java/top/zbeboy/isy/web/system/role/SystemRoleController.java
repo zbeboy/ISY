@@ -184,7 +184,7 @@ public class SystemRoleController {
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson() {
         AjaxUtils<TreeBean> ajaxUtils = AjaxUtils.of();
-        List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
+        List<TreeBean> treeBeens = applicationService.getApplicationJson("0");
         return ajaxUtils.success().listData(treeBeens);
     }
 }

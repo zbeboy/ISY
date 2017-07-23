@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class ApplicationDao extends DAOImpl<ApplicationRecord, top.zbeboy.isy.domain.tables.pojos.Application, Integer> {
+public class ApplicationDao extends DAOImpl<ApplicationRecord, top.zbeboy.isy.domain.tables.pojos.Application, String> {
 
     /**
      * Create a new ApplicationDao without any configuration
@@ -50,21 +50,21 @@ public class ApplicationDao extends DAOImpl<ApplicationRecord, top.zbeboy.isy.do
      * {@inheritDoc}
      */
     @Override
-    protected Integer getId(top.zbeboy.isy.domain.tables.pojos.Application object) {
+    protected String getId(top.zbeboy.isy.domain.tables.pojos.Application object) {
         return object.getApplicationId();
     }
 
     /**
      * Fetch records that have <code>application_id IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.Application> fetchByApplicationId(Integer... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.Application> fetchByApplicationId(String... values) {
         return fetch(Application.APPLICATION.APPLICATION_ID, values);
     }
 
     /**
      * Fetch a unique record that has <code>application_id = value</code>
      */
-    public top.zbeboy.isy.domain.tables.pojos.Application fetchOneByApplicationId(Integer value) {
+    public top.zbeboy.isy.domain.tables.pojos.Application fetchOneByApplicationId(String value) {
         return fetchOne(Application.APPLICATION.APPLICATION_ID, value);
     }
 
@@ -85,7 +85,7 @@ public class ApplicationDao extends DAOImpl<ApplicationRecord, top.zbeboy.isy.do
     /**
      * Fetch records that have <code>application_pid IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.Application> fetchByApplicationPid(Integer... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.Application> fetchByApplicationPid(String... values) {
         return fetch(Application.APPLICATION.APPLICATION_PID, values);
     }
 

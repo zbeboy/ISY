@@ -24,7 +24,7 @@ public class TestService {
 
     @Test
     public void testApplicationToJsonMethod() {
-        List<TreeBean> treeBeens = applicationService.getApplicationJson(0);
+        List<TreeBean> treeBeens = applicationService.getApplicationJson("0");
         System.out.println(treeBeens);
         String json = JSON.toJSONString(treeBeens, true);
         System.out.println(json);

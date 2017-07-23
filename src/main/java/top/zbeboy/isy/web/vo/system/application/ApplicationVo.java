@@ -10,13 +10,13 @@ import javax.validation.constraints.Size;
  */
 @Data
 public class ApplicationVo {
-    private Integer applicationId;
+    private String applicationId;
     @NotNull
     @Size(max = 30)
     private String applicationName;
     private Integer applicationSort;
     @NotNull
-    private Integer applicationPid;
+    private String applicationPid;
     @NotNull
     @Size(max = 300)
     private String applicationUrl;

@@ -343,7 +343,7 @@ public class RoleController {
     @ResponseBody
     public AjaxUtils<TreeBean> applicationJson(@RequestParam("collegeId") int collegeId) {
         AjaxUtils<TreeBean> ajaxUtils = AjaxUtils.of();
-        List<TreeBean> treeBeens = applicationService.getApplicationJsonByCollegeId(0, collegeId);
+        List<TreeBean> treeBeens = applicationService.getApplicationJsonByCollegeId("0", collegeId);
         return ajaxUtils.success().listData(treeBeens);
     }
 }

@@ -36,10 +36,10 @@ CREATE TABLE authorities (
 );
 
 CREATE TABLE application (
-  application_id                  INT AUTO_INCREMENT PRIMARY KEY,
+  application_id                  VARCHAR(64) PRIMARY KEY,
   application_name                VARCHAR(30)  NOT NULL,
   application_sort                INT,
-  application_pid                 INT          NOT NULL,
+  application_pid                 VARCHAR(64)  NOT NULL,
   application_url                 VARCHAR(300) NOT NULL,
   application_code                VARCHAR(100) NOT NULL,
   application_en_name             VARCHAR(100) NOT NULL,
@@ -48,8 +48,8 @@ CREATE TABLE application (
 );
 
 CREATE TABLE role_application (
-  role_id        INT NOT NULL,
-  application_id INT NOT NULL,
+  role_id        INT         NOT NULL,
+  application_id VARCHAR(64) NOT NULL,
   FOREIGN KEY (role_id) REFERENCES role (role_id),
   FOREIGN KEY (application_id) REFERENCES application (application_id),
   PRIMARY KEY (role_id, application_id)
@@ -79,8 +79,8 @@ CREATE TABLE college (
 );
 
 CREATE TABLE college_application (
-  application_id INT NOT NULL,
-  college_id     INT NOT NULL,
+  application_id VARCHAR(64) NOT NULL,
+  college_id     INT         NOT NULL,
   FOREIGN KEY (application_id) REFERENCES application (application_id),
   FOREIGN KEY (college_id) REFERENCES college (college_id),
   PRIMARY KEY (application_id, college_id)
@@ -597,215 +597,312 @@ INSERT INTO role (role_name, role_en_name, role_type) VALUES ('运维', 'ROLE_AC
 INSERT INTO authorities (username, authority) VALUES ('863052317@qq.com', 'ROLE_SYSTEM');
 INSERT INTO authorities (username, authority) VALUES ('863052317@qq.com', 'ROLE_ACTUATOR');
 
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('实习', 200, 0, '#', 'internship', 'internship', 'fa-coffee');
-INSERT INTO application (application_name, application_sort,
+VALUES ('b5939e89e8794c4e8b2d333a1386fb2a', '实习', 200, '0', '#', 'internship', 'internship', 'fa-coffee');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('毕业', 230, 0, '#', 'graduate', 'graduate', 'fa-graduation-cap');
-INSERT INTO application (application_name, application_sort,
+VALUES ('b9fb5f0479f6484a8c2bfd113eb6b3aa', '毕业', 230, '0', '#', 'graduate', 'graduate', 'fa-graduation-cap');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('数据', 800, 0, '#', 'datas', 'datas', 'fa-hdd-o');
-INSERT INTO application (application_name, application_sort,
+VALUES ('69fccdabaa5448c2aeaba56456004ac2', '数据', 800, '0', '#', 'datas', 'datas', 'fa-hdd-o');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('平台', 900, 0, '#', 'platform', 'platform', 'fa-list');
-INSERT INTO application (application_name, application_sort,
+VALUES ('0eb2165a08824c1cac232d975af392b3', '平台', 900, '0', '#', 'platform', 'platform', 'fa-list');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('系统', 1000, 0, '#', 'system', 'system', 'fa-sitemap');
+VALUES ('e3d45ba55e48462cb47595ce01bba60c', '系统', 1000, '0', '#', 'system', 'system', 'fa-sitemap');
 
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('实习发布', 201, 1, '/web/menu/internship/release', 'internship_release', 'internship_release', '',
-        '/web/internship/release');
-INSERT INTO application (application_name, application_sort,
+VALUES
+  ('492825a2af45482b92f0aea71973deea', '实习发布', 201, 'b5939e89e8794c4e8b2d333a1386fb2a', '/web/menu/internship/release',
+   'internship_release',
+   'internship_release', '',
+   '/web/internship/release');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('实习教师分配', 202, 1, '/web/menu/internship/teacher_distribution', 'internship_teacher_distribution',
+VALUES ('9b671f7e11304beabb8a35c49d9e69e4', '实习教师分配', 202, 'b5939e89e8794c4e8b2d333a1386fb2a',
+        '/web/menu/internship/teacher_distribution',
+        'internship_teacher_distribution',
         'internship_teacher_distribution', '', '/web/internship/teacher_distribution');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('实习申请', 203, 1, '/web/menu/internship/apply', 'internship_apply', 'internship_apply', '', '/web/internship/apply');
-INSERT INTO application (application_name, application_sort,
+  ('afed0863997149e9aa1e38930afd93c0', '实习申请', 203, 'b5939e89e8794c4e8b2d333a1386fb2a', '/web/menu/internship/apply',
+   'internship_apply',
+   'internship_apply', '', '/web/internship/apply');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('实习审核', 204, 1, '/web/menu/internship/review', 'internship_review', 'internship_review', '',
-        '/web/internship/review');
-INSERT INTO application (application_name, application_sort,
+VALUES
+  ('4ad4ebdabcf743a48f17e953201d50e7', '实习审核', 204, 'b5939e89e8794c4e8b2d333a1386fb2a', '/web/menu/internship/review',
+   'internship_review',
+   'internship_review', '',
+   '/web/internship/review');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('实习统计', 205, 1, '/web/menu/internship/statistical', 'internship_statistical', 'internship_statistical', '',
-        '/web/internship/statistical');
-INSERT INTO application (application_name, application_sort,
+VALUES
+  ('3d87f7d05f454f51ac407834aeed6cf3', '实习统计', 205, 'b5939e89e8794c4e8b2d333a1386fb2a',
+   '/web/menu/internship/statistical', 'internship_statistical',
+   'internship_statistical', '',
+   '/web/internship/statistical');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('实习日志', 206, 1, '/web/menu/internship/journal', 'internship_journal', 'internship_journal', '',
-        '/web/internship/journal');
-INSERT INTO application (application_name, application_sort,
+VALUES
+  ('eac4175a8a9b44a380629cbbebc69eb9', '实习日志', 206, 'b5939e89e8794c4e8b2d333a1386fb2a', '/web/menu/internship/journal',
+   'internship_journal',
+   'internship_journal', '',
+   '/web/internship/journal');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('实习监管', 207, 1, '/web/menu/internship/regulate', 'internship_regulate', 'internship_regulate', '',
-        '/web/internship/regulate');
+VALUES
+  ('762c6ba3323e4d739b104422d12f24d7', '实习监管', 207, 'b5939e89e8794c4e8b2d333a1386fb2a', '/web/menu/internship/regulate',
+   'internship_regulate',
+   'internship_regulate', '',
+   '/web/internship/regulate');
 
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('毕业设计', 231, 2, '#', 'graduate_design', 'graduate_design', '');
+VALUES ('61cf2fa3e5b545a89cff0778937b94eb', '毕业设计', 231, 'b9fb5f0479f6484a8c2bfd113eb6b3aa', '#', 'graduate_design',
+        'graduate_design', '');
 
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('学校数据', 801, 3, '/web/menu/data/school', 'data_school', 'data_school', '', '/web/data/school');
-INSERT INTO application (application_name, application_sort,
+VALUES ('d0c43d82367648578900829bc380d576', '学校数据', 801, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/school',
+        'data_school', 'data_school', '',
+        '/web/data/school');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('院数据', 802, 3, '/web/menu/data/college', 'data_college', 'data_college', '', '/web/data/college');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('系数据', 803, 3, '/web/menu/data/department', 'data_department', 'data_department', '', '/web/data/department');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('专业数据', 804, 3, '/web/menu/data/science', 'data_science', 'data_science', '', '/web/data/science');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('班级数据', 805, 3, '/web/menu/data/organize', 'data_organize', 'data_organize', '', '/web/data/organize');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('楼数据', 806, 3, '/web/menu/data/building', 'data_building', 'data_building', '', '/web/data/building');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('教室数据', 807, 3, '/web/menu/data/schoolroom', 'data_schoolroom', 'data_schoolroom', '', '/web/data/schoolroom');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('教职工数据', 808, 3, '/web/menu/data/staff', 'data_staff', 'data_staff', '', '/web/data/staff');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('学生数据', 809, 3, '/web/menu/data/student', 'data_student', 'data_student', '', '/web/data/student');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('民族数据', 810, 3, '/web/menu/data/nation', 'data_nation', 'data_nation', '', '/web/data/nation');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('政治面貌数据', 811, 3, '/web/menu/data/politics', 'data_politics', 'data_politics', '', '/web/data/politics');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('职称数据', 812, 3, '/web/menu/data/academic', 'data_academic', 'data_academic', '', '/web/data/academic');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('Elastic同步', 813, 3, '/web/menu/data/elastic', 'data_elastic', 'data_elastic', '', '/web/data/elastic');
-
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('平台用户', 901, 4, '/web/menu/platform/users', 'platform_users', 'platform_users', '', '/web/platform/users');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('平台角色', 902, 4, '/web/menu/platform/role', 'platform_role', 'platform_role', '', '/web/platform/role');
-
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('系统应用', 1001, 5, '/web/menu/system/application', 'system_application', 'system_application', '',
-        '/web/system/application');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('系统角色', 1002, 5, '/web/menu/system/role', 'system_role', 'system_role', '', '/web/system/role');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('系统日志', 1003, 5, '/web/menu/system/log', 'system_log', 'system_log', '', '/web/system/log');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('系统短信', 1004, 5, '/web/menu/system/sms', 'system_sms', 'system_sms', '', '/web/system/sms');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('系统邮件', 1005, 5, '/web/menu/system/mailbox', 'system_mailbox', 'system_mailbox', '', '/web/system/mailbox');
-
-INSERT INTO application (application_name, application_sort,
+VALUES ('d964e48c8d5747739ee78f16a0d5d34e', '院数据', 802, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/college',
+        'data_college', 'data_college', '',
+        '/web/data/college');
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('毕业设计发布', 232, 13, '/web/menu/graduate/design/release', 'graduate_design_release', 'graduate_design_release', '',
+  ('1f694733093949158714580f1bf1d0fa', '系数据', 803, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/department',
+   'data_department', 'data_department',
+   '', '/web/data/department');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('0ed7aa64d18244d882ee9edfbc8bcb88', '专业数据', 804, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/science',
+   'data_science', 'data_science', '',
+   '/web/data/science');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('bbbdbeb69a284a2589fc694d962d3636', '班级数据', 805, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/organize',
+   'data_organize', 'data_organize', '',
+   '/web/data/organize');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('61e8ccfa0ed74ff8b6c7e50ba72725dc', '楼数据', 806, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/building',
+   'data_building', 'data_building', '',
+   '/web/data/building');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('d82b367340db4428932ce28a7dd9bb7f', '教室数据', 807, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/schoolroom',
+   'data_schoolroom',
+   'data_schoolroom', '', '/web/data/schoolroom');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES ('88a1e75eecbb4ab782642cfc0b246184', '教职工数据', 808, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/staff',
+        'data_staff', 'data_staff', '',
+        '/web/data/staff');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('53dcc742fa484a7cbcd4841651c39efd', '学生数据', 809, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/student',
+   'data_student', 'data_student', '',
+   '/web/data/student');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES ('17ca4892fe0744f0a1d0fa1db8af0703', '民族数据', 810, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/nation',
+        'data_nation', 'data_nation', '',
+        '/web/data/nation');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('783f9fe0a92746ea8c8cda01e9f2f848', '政治面貌数据', 811, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/politics',
+   'data_politics', 'data_politics',
+   '', '/web/data/politics');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('d58873b68598404fad86d808a28b1400', '职称数据', 812, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/academic',
+   'data_academic', 'data_academic', '',
+   '/web/data/academic');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('0c2ace393cab4a8c909e0ac09e723e7f', 'Elastic同步', 813, '69fccdabaa5448c2aeaba56456004ac2', '/web/menu/data/elastic',
+   'data_elastic', 'data_elastic',
+   '', '/web/data/elastic');
+
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('17506dc86a904051a771bb22cd9c31dd', '平台用户', 901, '0eb2165a08824c1cac232d975af392b3', '/web/menu/platform/users',
+   'platform_users', 'platform_users',
+   '', '/web/platform/users');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('800fd53d557449ee98b59d562c3ed013', '平台角色', 902, '0eb2165a08824c1cac232d975af392b3', '/web/menu/platform/role',
+   'platform_role', 'platform_role', '',
+   '/web/platform/role');
+
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('753e7add7a25452f949abb9b9a5519bb', '系统应用', 1001, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/application',
+   'system_application',
+   'system_application', '',
+   '/web/system/application');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES ('056b34f340544930b19716455a0ea3d2', '系统角色', 1002, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/role',
+        'system_role', 'system_role', '',
+        '/web/system/role');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES ('13783647424340a0b5b716fe0c5d659d', '系统日志', 1003, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/log',
+        'system_log', 'system_log', '',
+        '/web/system/log');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES ('c76085dd8803486c80545145bfd0b4d2', '系统短信', 1004, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/sms',
+        'system_sms', 'system_sms', '',
+        '/web/system/sms');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('27af0835aaa64ed583b7abf0f26db20d', '系统邮件', 1005, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/mailbox',
+   'system_mailbox', 'system_mailbox',
+   '', '/web/system/mailbox');
+
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('2f05225d873643c58bc93dd881a782aa', '毕业设计发布', 232, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/release',
+   'graduate_design_release', 'graduate_design_release', '',
    '/web/graduate/design/release');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('毕业指导教师', 233, 13, '/web/menu/graduate/design/tutor', 'graduate_design_tutor', 'graduate_design_tutor', '',
-        '/web/graduate/design/tutor');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('填报指导教师', 234, 13, '/web/menu/graduate/design/pharmtech', 'graduate_design_pharmtech', 'graduate_design_pharmtech',
+  ('3b0045bc766e49b9b68165e6604f340f', '毕业指导教师', 233, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/tutor', 'graduate_design_tutor',
+   'graduate_design_tutor', '',
+   '/web/graduate/design/tutor');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('0514540625d94c798fce8da2d293f0cc', '填报指导教师', 234, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/pharmtech',
+   'graduate_design_pharmtech', 'graduate_design_pharmtech',
    '', '/web/graduate/design/pharmtech');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('调整填报教师', 235, 13, '/web/menu/graduate/design/adjustech', 'graduate_design_adjustech', 'graduate_design_adjustech',
+  ('b1d93d90ec01432ebe0d2247d1515434', '调整填报教师', 235, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/adjustech',
+   'graduate_design_adjustech', 'graduate_design_adjustech',
    '', '/web/graduate/design/adjustech');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('毕业设计规划', 236, 13, '/web/menu/graduate/design/project', 'graduate_design_project', 'graduate_design_project', '',
+  ('425a9353055340f5ac7583f7c0cad7cc', '毕业设计规划', 236, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/project',
+   'graduate_design_project', 'graduate_design_project', '',
    '/web/graduate/design/project');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('毕业设计题目', 237, 13, '/web/menu/graduate/design/subject', 'graduate_design_subject', 'graduate_design_subject', '',
+  ('2210762f4ddd4718b02570b09c073567', '毕业设计题目', 237, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/subject',
+   'graduate_design_subject', 'graduate_design_subject', '',
    '/web/graduate/design/subject');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('毕业设计资料', 239, 13, '/web/menu/graduate/design/proposal', 'graduate_design_proposal', 'graduate_design_proposal', '',
+  ('7132186fc3fb4ce8bf3333a1369dce30', '毕业设计资料', 239, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/proposal',
+   'graduate_design_proposal', 'graduate_design_proposal', '',
    '/web/graduate/design/proposal');
-INSERT INTO application (application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('毕业答辩安排', 240, 13, '/web/menu/graduate/design/replan', 'graduate_design_replan', 'graduate_design_replan', '',
-        '/web/graduate/design/replan');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('毕业答辩顺序', 241, 13, '/web/menu/graduate/design/reorder', 'graduate_design_reorder', 'graduate_design_reorder', '',
+  ('488e75a887134895944fc7c02c56d994', '毕业答辩安排', 240, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/replan', 'graduate_design_replan',
+   'graduate_design_replan', '',
+   '/web/graduate/design/replan');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('7ebe58b9e5d64b27af163bd9885b1aae', '毕业答辩顺序', 241, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/reorder',
+   'graduate_design_reorder', 'graduate_design_reorder', '',
    '/web/graduate/design/reorder');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('毕业设计清单', 242, 13, '/web/menu/graduate/design/manifest', 'graduate_design_manifest', 'graduate_design_manifest', '',
+  ('1dd10c63d4584559bb444fa6f3e4a40e', '毕业设计清单', 242, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/manifest',
+   'graduate_design_manifest', 'graduate_design_manifest', '',
    '/web/graduate/design/manifest');
-INSERT INTO application (application_name, application_sort,
+INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
-  ('毕业设计归档', 243, 13, '/web/menu/graduate/design/archive', 'graduate_design_archive', 'graduate_design_archive', '',
+  ('ac1cbf2870004403adb0d20df5a457e3', '毕业设计归档', 243, '61cf2fa3e5b545a89cff0778937b94eb',
+   '/web/menu/graduate/design/archive',
+   'graduate_design_archive', 'graduate_design_archive', '',
    '/web/graduate/design/archive');
 
 INSERT INTO internship_type (internship_type_name) VALUES ('顶岗实习(留学院)');
@@ -814,85 +911,85 @@ INSERT INTO internship_type (internship_type_name) VALUES ('毕业实习(校内)
 INSERT INTO internship_type (internship_type_name) VALUES ('毕业实习(学校统一组织校外实习)');
 INSERT INTO internship_type (internship_type_name) VALUES ('毕业实习(学生校外自主实习)');
 
-INSERT INTO role_application (role_id, application_id) VALUES (1, 1);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 2);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 3);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 4);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 5);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 6);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 7);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 8);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 9);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 10);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 11);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 12);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 13);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 14);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 15);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 16);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 17);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 18);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 19);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 20);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 21);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 22);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 23);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 24);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 25);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 26);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 27);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 28);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 29);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 30);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 31);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 32);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 33);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 34);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 35);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 36);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 37);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 38);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 39);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 40);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 41);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 42);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 43);
-INSERT INTO role_application (role_id, application_id) VALUES (1, 44);
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'b5939e89e8794c4e8b2d333a1386fb2a');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'b9fb5f0479f6484a8c2bfd113eb6b3aa');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '69fccdabaa5448c2aeaba56456004ac2');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '0eb2165a08824c1cac232d975af392b3');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'e3d45ba55e48462cb47595ce01bba60c');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '492825a2af45482b92f0aea71973deea');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '9b671f7e11304beabb8a35c49d9e69e4');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'afed0863997149e9aa1e38930afd93c0');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '4ad4ebdabcf743a48f17e953201d50e7');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '3d87f7d05f454f51ac407834aeed6cf3');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'eac4175a8a9b44a380629cbbebc69eb9');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '762c6ba3323e4d739b104422d12f24d7');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '61cf2fa3e5b545a89cff0778937b94eb');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'd0c43d82367648578900829bc380d576');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'd964e48c8d5747739ee78f16a0d5d34e');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '1f694733093949158714580f1bf1d0fa');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '0ed7aa64d18244d882ee9edfbc8bcb88');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'bbbdbeb69a284a2589fc694d962d3636');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '61e8ccfa0ed74ff8b6c7e50ba72725dc');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'd82b367340db4428932ce28a7dd9bb7f');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '88a1e75eecbb4ab782642cfc0b246184');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '53dcc742fa484a7cbcd4841651c39efd');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '17ca4892fe0744f0a1d0fa1db8af0703');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '783f9fe0a92746ea8c8cda01e9f2f848');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'd58873b68598404fad86d808a28b1400');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '0c2ace393cab4a8c909e0ac09e723e7f');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '17506dc86a904051a771bb22cd9c31dd');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '800fd53d557449ee98b59d562c3ed013');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '753e7add7a25452f949abb9b9a5519bb');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '056b34f340544930b19716455a0ea3d2');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '13783647424340a0b5b716fe0c5d659d');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'c76085dd8803486c80545145bfd0b4d2');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '27af0835aaa64ed583b7abf0f26db20d');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '2f05225d873643c58bc93dd881a782aa');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '3b0045bc766e49b9b68165e6604f340f');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '0514540625d94c798fce8da2d293f0cc');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'b1d93d90ec01432ebe0d2247d1515434');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '425a9353055340f5ac7583f7c0cad7cc');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '2210762f4ddd4718b02570b09c073567');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '7132186fc3fb4ce8bf3333a1369dce30');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '488e75a887134895944fc7c02c56d994');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '7ebe58b9e5d64b27af163bd9885b1aae');
+INSERT INTO role_application (role_id, application_id) VALUES (1, '1dd10c63d4584559bb444fa6f3e4a40e');
+INSERT INTO role_application (role_id, application_id) VALUES (1, 'ac1cbf2870004403adb0d20df5a457e3');
 
-INSERT INTO role_application (role_id, application_id) VALUES (2, 1);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 2);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 3);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 4);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 6);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 7);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 8);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 9);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 10);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 11);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 12);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 13);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 16);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 17);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 18);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 19);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 20);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 21);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 22);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 23);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 24);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 25);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 28);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 34);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 35);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 36);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 37);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 38);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 39);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 40);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 41);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 42);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 43);
-INSERT INTO role_application (role_id, application_id) VALUES (2, 44);
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'b5939e89e8794c4e8b2d333a1386fb2a');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'b9fb5f0479f6484a8c2bfd113eb6b3aa');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '69fccdabaa5448c2aeaba56456004ac2');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '0eb2165a08824c1cac232d975af392b3');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '492825a2af45482b92f0aea71973deea');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '9b671f7e11304beabb8a35c49d9e69e4');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'afed0863997149e9aa1e38930afd93c0');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '4ad4ebdabcf743a48f17e953201d50e7');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '3d87f7d05f454f51ac407834aeed6cf3');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'eac4175a8a9b44a380629cbbebc69eb9');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '762c6ba3323e4d739b104422d12f24d7');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '61cf2fa3e5b545a89cff0778937b94eb');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '1f694733093949158714580f1bf1d0fa');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '0ed7aa64d18244d882ee9edfbc8bcb88');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'bbbdbeb69a284a2589fc694d962d3636');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '61e8ccfa0ed74ff8b6c7e50ba72725dc');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'd82b367340db4428932ce28a7dd9bb7f');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '88a1e75eecbb4ab782642cfc0b246184');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '53dcc742fa484a7cbcd4841651c39efd');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '17ca4892fe0744f0a1d0fa1db8af0703');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '783f9fe0a92746ea8c8cda01e9f2f848');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'd58873b68598404fad86d808a28b1400');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '800fd53d557449ee98b59d562c3ed013');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '2f05225d873643c58bc93dd881a782aa');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '3b0045bc766e49b9b68165e6604f340f');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '0514540625d94c798fce8da2d293f0cc');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'b1d93d90ec01432ebe0d2247d1515434');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '425a9353055340f5ac7583f7c0cad7cc');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '2210762f4ddd4718b02570b09c073567');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '7132186fc3fb4ce8bf3333a1369dce30');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '488e75a887134895944fc7c02c56d994');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '7ebe58b9e5d64b27af163bd9885b1aae');
+INSERT INTO role_application (role_id, application_id) VALUES (2, '1dd10c63d4584559bb444fa6f3e4a40e');
+INSERT INTO role_application (role_id, application_id) VALUES (2, 'ac1cbf2870004403adb0d20df5a457e3');
 
 INSERT INTO political_landscape (political_landscape_name) VALUES ('群众');
 INSERT INTO political_landscape (political_landscape_name) VALUES ('共青团员');
