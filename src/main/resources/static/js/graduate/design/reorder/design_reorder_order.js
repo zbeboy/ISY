@@ -157,14 +157,16 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         var template = Handlebars.compile($("#order-template").html());
         Handlebars.registerHelper('subject', function () {
             var v = '';
+            var html = '';
             if (this.subject !== null) {
                 if (this.subject.length > 5) {
                     v = this.subject.substring(0, 5) + '...';
                 } else {
                     v = this.subject;
                 }
+                html = '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="' + this.subject + '">' + v + '</button>';
             }
-            return '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="' + this.subject + '">' + v + '</button>';
+            return html;
         });
 
         Handlebars.registerHelper('operator', function () {

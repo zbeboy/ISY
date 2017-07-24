@@ -82,14 +82,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                     targets: 0,
                     render: function (a, b, c, d) {
                         var v = '';
+                        var html = '';
                         if (c.presubjectTitle !== null) {
                             if(c.presubjectTitle.length > 12){
                                 v = c.presubjectTitle.substring(0, 12) + '...';
                             } else {
                                 v = c.presubjectTitle;
                             }
+                            html = '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="' + c.presubjectTitle + '">' + v + '</button>';
                         }
-                        return '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="' + c.presubjectTitle + '">' + v + '</button>';
+                        return html;
                     }
                 },
                 {
