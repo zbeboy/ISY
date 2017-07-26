@@ -9,7 +9,9 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     var ajax_url = {
         data_url: '/anyone/graduate/design/defense/order/data',
         scores: '/user/scores',
+        order_url: '/web/graduate/design/reorder/info',
         timer_url: '/web/graduate/design/reorder/timer',
+        status_url: '/web/graduate/design/reorder/status',
         back: '/web/menu/graduate/design/reorder'
     };
 
@@ -19,8 +21,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     var paramId = {
         studentName: '#search_student_name',
         studentNumber: '#search_student_number',
-        scoreTypeId:'#select_score',
-        defenseStatus:'#select_status'
+        scoreTypeId: '#select_score',
+        defenseStatus: '#select_status'
     };
 
     /*
@@ -245,7 +247,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "状态",
-                            "css": "",
+                            "css": "defenseStatus",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -283,7 +285,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "状态",
-                            "css": "",
+                            "css": "defenseStatus",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -329,7 +331,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "状态",
-                            "css": "",
+                            "css": "defenseStatus",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -389,7 +391,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     }
 
     /*
-     设置
+     计时
      */
     $(tableData).delegate('.timer', "click", function () {
         var id = $(this).attr('data-id');
@@ -399,12 +401,68 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         $('#timerModal').modal('show');
     });
 
-    // 计时
+    // 计时确定
     $('#toTimer').click(function () {
         var id = $('#timerDefenseOrderId').val();
         var timer = Math.round(Number($('#timerInput').val()));
         $('#timerModal').modal('hide');
         window.open(web_path + ajax_url.timer_url + '?defenseOrderId=' + id + '&timer=' + timer);
+    });
+
+    /*
+   状态
+   */
+    $(tableData).delegate('.defenseStatus', "click", function () {
+        var id = $(this).attr('data-id');
+        var name = $(this).attr('data-student');
+        $.post(web_path + ajax_url.order_url, {
+            id: init_page_param.graduationDesignReleaseId,
+            defenseOrderId: id
+        }, function (data) {
+            if (data.state) {
+                $('#statusDefenseOrderId').val(id);
+                $('#statusModalLabel').text(name);
+                selectedStatus(data);
+                $('#statusModal').modal('show');
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    /**
+     * 选中状态
+     * @param data
+     */
+    function selectedStatus(data) {
+        var inputs = $("input[name='defenseStatus']");
+        for (var i = 0; i < inputs.length; i++) {
+            if (Number($(inputs[i]).val()) === data.objectResult.defenseStatus) {
+                $(inputs[i]).prop('checked', true);
+                break;
+            }
+        }
+    }
+
+    // 状态确定
+    $('#toStatus').click(function () {
+        var id = $('#statusDefenseOrderId').val();
+        $.post(web_path + ajax_url.status_url, $('#statusForm').serialize(), function (data) {
+            if (data.state) {
+                $('#statusModal').modal('hide');
+                init();
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
     });
 
 });

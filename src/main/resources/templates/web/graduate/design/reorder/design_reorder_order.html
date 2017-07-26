@@ -115,6 +115,53 @@
                 </div>
             </div>
         </div>
+        <!-- 状态 modal -->
+        <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="statusModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="statusForm">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="0" checked>
+                                    未开始
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="1">
+                                    进行中
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="2">
+                                    已结束
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="3">
+                                    缺席
+                                </label>
+                            </div>
+                            <input type="hidden" id="statusDefenseOrderId" name="defenseOrderId">
+                            <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId" />
+                            <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId" />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toStatus">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="order-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>

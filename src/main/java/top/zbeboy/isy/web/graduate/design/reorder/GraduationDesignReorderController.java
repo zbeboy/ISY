@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,12 +20,15 @@ import top.zbeboy.isy.service.graduate.design.*;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.vo.graduate.design.reorder.DefenseOrderVo;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -216,6 +220,114 @@ public class GraduationDesignReorderController {
     }
 
     /**
+     * 查询顺序信息
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param defenseOrderId            顺序id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/info", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils info(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseOrderId") String defenseOrderId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderId);
+            if (!ObjectUtils.isEmpty(defenseOrder)) {
+                ajaxUtils.success().msg("获取数据成功").obj(defenseOrder);
+            } else {
+                ajaxUtils.fail().msg("未查询到相关顺序");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 更新答辩顺序状态
+     *
+     * @param defenseOrderVo 页面参数
+     * @param bindingResult  检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/status", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils status(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                Optional<Record> defenseArrangementRecord = defenseArrangementService.findByGraduationDesignReleaseId(defenseOrderVo.getGraduationDesignReleaseId());
+                if (defenseArrangementRecord.isPresent()) {
+                    DefenseArrangement defenseArrangement = defenseArrangementRecord.get().into(DefenseArrangement.class);
+                    // 答辩开始时间之后可用
+                    if (DateTimeUtils.timestampAfterDecide(defenseArrangement.getDefenseStartTime())) {
+                        // 判断资格
+                        boolean canUse = false;
+                        // 是否是管理员或系统
+                        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                            canUse = true;
+                        } else {
+                            Users users = usersService.getUserFromSession();
+                            DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
+                            if (!ObjectUtils.isEmpty(defenseGroup)) {
+                                // 教职工
+                                if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                                    // 是否为组长
+                                    if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+                                        GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+                                        if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                                            Staff staff = staffService.findByUsername(users.getUsername());
+                                            if (!ObjectUtils.isEmpty(staff)) {
+                                                if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                                    canUse = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // 是否秘书
+                                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                                        canUse = true;
+                                    }
+                                } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
+                                    // 是否秘书
+                                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                                        canUse = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (canUse) {
+                            DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
+                            if (!ObjectUtils.isEmpty(defenseOrder)) {
+                                defenseOrder.setDefenseStatus(defenseOrderVo.getDefenseStatus());
+                                defenseOrderService.update(defenseOrder);
+                                ajaxUtils.success().msg("更新状态成功");
+                            } else {
+                                ajaxUtils.fail().msg("未查询到相关顺序");
+                            }
+                        } else {
+                            ajaxUtils.fail().msg("您不符合更改条件");
+                        }
+
+                    } else {
+                        ajaxUtils.fail().msg("请在答辩开始之后操作");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("未查询到相关答辩设置");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 获取组及组员信息
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -241,5 +353,26 @@ public class GraduationDesignReorderController {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 进入入口条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                errorBean.setHasError(false);
+            } else {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+            }
+        }
+        return errorBean;
     }
 }
