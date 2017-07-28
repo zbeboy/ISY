@@ -20,6 +20,6 @@ public class DefenseOrderVo {
     @NotNull
     @Size(max = 64)
     private String graduationDesignReleaseId;
-    @Min(0)
     private int defenseStatus;
+    private double grade;
 }

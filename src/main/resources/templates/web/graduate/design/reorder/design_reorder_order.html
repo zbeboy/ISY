@@ -162,6 +162,32 @@
                 </div>
             </div>
         </div>
+        <!-- 打分 modal -->
+        <div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gradeModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="gradeForm">
+                            <div class="form-group">
+                                <label for="grade">分数</label>
+                                <input class="form-control" type="number" name="grade" id="grade" placeholder="分数">
+                                <input type="hidden" id="gradeDefenseOrderId">
+                                <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toGrade">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="order-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>

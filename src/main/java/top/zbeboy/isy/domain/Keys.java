@@ -208,6 +208,7 @@ public class Keys {
     public static final UniqueKey<DefenseGroupRecord> KEY_DEFENSE_GROUP_PRIMARY = UniqueKeys0.KEY_DEFENSE_GROUP_PRIMARY;
     public static final UniqueKey<DefenseGroupMemberRecord> KEY_DEFENSE_GROUP_MEMBER_GRADUATION_DESIGN_TEACHER_ID = UniqueKeys0.KEY_DEFENSE_GROUP_MEMBER_GRADUATION_DESIGN_TEACHER_ID;
     public static final UniqueKey<DefenseOrderRecord> KEY_DEFENSE_ORDER_PRIMARY = UniqueKeys0.KEY_DEFENSE_ORDER_PRIMARY;
+    public static final UniqueKey<DefenseRateRecord> KEY_DEFENSE_RATE_DEFENSE_ORDER_ID = UniqueKeys0.KEY_DEFENSE_RATE_DEFENSE_ORDER_ID;
     public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
     public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_GRADUATE_BILL_ID = UniqueKeys0.KEY_GRADUATE_ARCHIVES_GRADUATE_BILL_ID;
@@ -414,6 +415,7 @@ public class Keys {
         public static final UniqueKey<DefenseGroupRecord> KEY_DEFENSE_GROUP_PRIMARY = createUniqueKey(DefenseGroup.DEFENSE_GROUP, "KEY_defense_group_PRIMARY", DefenseGroup.DEFENSE_GROUP.DEFENSE_GROUP_ID);
         public static final UniqueKey<DefenseGroupMemberRecord> KEY_DEFENSE_GROUP_MEMBER_GRADUATION_DESIGN_TEACHER_ID = createUniqueKey(DefenseGroupMember.DEFENSE_GROUP_MEMBER, "KEY_defense_group_member_graduation_design_teacher_id", DefenseGroupMember.DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID);
         public static final UniqueKey<DefenseOrderRecord> KEY_DEFENSE_ORDER_PRIMARY = createUniqueKey(DefenseOrder.DEFENSE_ORDER, "KEY_defense_order_PRIMARY", DefenseOrder.DEFENSE_ORDER.DEFENSE_ORDER_ID);
+        public static final UniqueKey<DefenseRateRecord> KEY_DEFENSE_RATE_DEFENSE_ORDER_ID = createUniqueKey(DefenseRate.DEFENSE_RATE, "KEY_defense_rate_defense_order_id", DefenseRate.DEFENSE_RATE.DEFENSE_ORDER_ID, DefenseRate.DEFENSE_RATE.GRADUATION_DESIGN_TEACHER_ID);
         public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = createUniqueKey(Department.DEPARTMENT, "KEY_department_PRIMARY", Department.DEPARTMENT.DEPARTMENT_ID);
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);
         public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_GRADUATE_BILL_ID = createUniqueKey(GraduateArchives.GRADUATE_ARCHIVES, "KEY_graduate_archives_graduate_bill_id", GraduateArchives.GRADUATE_ARCHIVES.GRADUATE_BILL_ID);

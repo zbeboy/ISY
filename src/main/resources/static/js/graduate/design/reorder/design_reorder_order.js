@@ -10,8 +10,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         data_url: '/anyone/graduate/design/defense/order/data',
         scores: '/user/scores',
         order_url: '/web/graduate/design/reorder/info',
+        grade_info_url: '/web/graduate/design/reorder/grade/info',
         timer_url: '/web/graduate/design/reorder/timer',
         status_url: '/web/graduate/design/reorder/status',
+        grade_url: '/web/graduate/design/reorder/grade',
         back: '/web/menu/graduate/design/reorder'
     };
 
@@ -293,7 +295,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "打分",
-                            "css": "",
+                            "css": "grade",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -369,7 +371,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "打分",
-                            "css": "",
+                            "css": "grade",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -455,6 +457,48 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
             if (data.state) {
                 $('#statusModal').modal('hide');
                 init();
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    /*
+     打分
+    */
+    $(tableData).delegate('.grade', "click", function () {
+        var id = $(this).attr('data-id');
+        var name = $(this).attr('data-student');
+        $.post(web_path + ajax_url.grade_info_url, {
+            id: init_page_param.graduationDesignReleaseId,
+            defenseOrderId: id,
+            defenseGroupId: init_page_param.defenseGroupId
+        }, function (data) {
+            if (data.state) {
+                $('#grade').val(data.objectResult);
+                $('#gradeDefenseOrderId').val(id);
+                $('#gradeModalLabel').text(name);
+                $('#gradeModal').modal('show');
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    // 打分确定
+    $('#toGrade').click(function () {
+        var id = $('#statusDefenseOrderId').val();
+        $.post(web_path + ajax_url.grade_url, $('#gradeForm').serialize(), function (data) {
+            if (data.state) {
+                $('#gradeModal').modal('hide');
             } else {
                 Messenger().post({
                     message: data.msg,

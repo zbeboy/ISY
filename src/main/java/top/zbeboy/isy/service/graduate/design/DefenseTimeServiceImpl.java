@@ -36,6 +36,7 @@ public class DefenseTimeServiceImpl implements DefenseTimeService {
                 .fetch();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(DefenseTime defenseTime) {
         create.insertInto(DEFENSE_TIME)

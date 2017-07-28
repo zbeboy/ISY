@@ -222,7 +222,8 @@ CREATE TABLE defense_rate (
   graduation_design_teacher_id VARCHAR(64) NOT NULL,
   grade                        DOUBLE      NOT NULL,
   FOREIGN KEY (defense_order_id) REFERENCES defense_order (defense_order_id),
-  FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id)
+  FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id),
+  UNIQUE (defense_order_id, graduation_design_teacher_id)
 );
 
 CREATE TABLE graduate_bill (

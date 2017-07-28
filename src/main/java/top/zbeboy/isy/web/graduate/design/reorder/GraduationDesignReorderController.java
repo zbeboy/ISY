@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.records.DefenseRateRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.graduate.design.*;
@@ -75,6 +76,9 @@ public class GraduationDesignReorderController {
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private DefenseRateService defenseRateService;
 
     /**
      * 毕业答辩顺序
@@ -314,6 +318,182 @@ public class GraduationDesignReorderController {
 
                     } else {
                         ajaxUtils.fail().msg("请在答辩开始之后操作");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("未查询到相关答辩设置");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 获取当前教师打分信息
+     *
+     * @param defenseOrderVo 数据
+     * @param bindingResult  校验
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/grade/info", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils gradeInfo(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
+                if (!ObjectUtils.isEmpty(defenseOrder)) {
+                    // 答辩状态为 已进行
+                    if (!ObjectUtils.isEmpty(defenseOrder.getDefenseStatus()) && defenseOrder.getDefenseStatus() == 1) {
+                        // 判断资格
+                        boolean canUse = false;
+                        Users users = usersService.getUserFromSession();
+                        DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
+                        String graduationDesignTeacherId = null;
+                        if (!ObjectUtils.isEmpty(defenseGroup)) {
+                            // 是组长
+                            boolean reorderIsLeader = false;
+                            // 教职工
+                            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                                // 是否为组长
+                                if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+                                    GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+                                    if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                                        Staff staff = staffService.findByUsername(users.getUsername());
+                                        if (!ObjectUtils.isEmpty(staff)) {
+                                            if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                                canUse = true;
+                                                reorderIsLeader = true;
+                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
+                                            }
+                                        }
+                                    }
+                                }
+                                // 是否为组员
+                                if (!reorderIsLeader) {
+                                    Staff staff = staffService.findByUsername(users.getUsername());
+                                    if (!ObjectUtils.isEmpty(staff)) {
+                                        Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(defenseOrderVo.getGraduationDesignReleaseId(), staff.getStaffId());
+                                        if (record.isPresent()) {
+                                            GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
+                                            Optional<Record> groupMemberRecord = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseGroupId(), graduationDesignTeacher.getGraduationDesignTeacherId());
+                                            if (groupMemberRecord.isPresent()) {
+                                                canUse = true;
+                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (canUse) {
+                            double grade = 0d;
+                            DefenseRateRecord defenseRateRecord = defenseRateService.findByDefenseOrderIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseOrderId(), graduationDesignTeacherId);
+                            if (!ObjectUtils.isEmpty(defenseRateRecord)) {
+                                grade = defenseRateRecord.getGrade();
+                            }
+                            ajaxUtils.success().msg("获取分数成功").obj(grade);
+                        } else {
+                            ajaxUtils.fail().msg("您不符合查询条件");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未开始答辩，无法操作");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("未查询到相关答辩设置");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+
+        return ajaxUtils;
+    }
+
+    /**
+     * 更新当前教师打分信息
+     *
+     * @param defenseOrderVo 数据
+     * @param bindingResult  校验
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/grade", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils grade(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
+                if (!ObjectUtils.isEmpty(defenseOrder)) {
+                    // 答辩状态为 已进行
+                    if (!ObjectUtils.isEmpty(defenseOrder.getDefenseStatus()) && defenseOrder.getDefenseStatus() == 1) {
+                        // 判断资格
+                        boolean canUse = false;
+                        Users users = usersService.getUserFromSession();
+                        DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
+                        String graduationDesignTeacherId = null;
+                        if (!ObjectUtils.isEmpty(defenseGroup)) {
+                            // 是组长
+                            boolean reorderIsLeader = false;
+                            // 教职工
+                            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                                // 是否为组长
+                                if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+                                    GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+                                    if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                                        Staff staff = staffService.findByUsername(users.getUsername());
+                                        if (!ObjectUtils.isEmpty(staff)) {
+                                            if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                                canUse = true;
+                                                reorderIsLeader = true;
+                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
+                                            }
+                                        }
+                                    }
+                                }
+                                // 是否为组员
+                                if (!reorderIsLeader) {
+                                    Staff staff = staffService.findByUsername(users.getUsername());
+                                    if (!ObjectUtils.isEmpty(staff)) {
+                                        Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(defenseOrderVo.getGraduationDesignReleaseId(), staff.getStaffId());
+                                        if (record.isPresent()) {
+                                            GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
+                                            Optional<Record> groupMemberRecord = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseGroupId(), graduationDesignTeacher.getGraduationDesignTeacherId());
+                                            if (groupMemberRecord.isPresent()) {
+                                                canUse = true;
+                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (canUse) {
+                            DefenseRate defenseRate;
+                            DefenseRateRecord defenseRateRecord = defenseRateService.findByDefenseOrderIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseOrderId(), graduationDesignTeacherId);
+                            if (!ObjectUtils.isEmpty(defenseRateRecord)) {
+                                defenseRate = defenseRateRecord.into(DefenseRate.class);
+                                defenseRate.setGrade(defenseOrderVo.getGrade());
+                            } else {
+                                defenseRate = new DefenseRate();
+                                defenseRate.setDefenseOrderId(defenseOrderVo.getDefenseOrderId());
+                                defenseRate.setGraduationDesignTeacherId(graduationDesignTeacherId);
+                                defenseRate.setGrade(defenseOrderVo.getGrade());
+                            }
+                            defenseRateService.save(defenseRate);
+                            ajaxUtils.success().msg("保存成功");
+                        } else {
+                            ajaxUtils.fail().msg("您不符合更改条件");
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未开始答辩，无法操作");
                     }
                 } else {
                     ajaxUtils.fail().msg("未查询到相关答辩设置");

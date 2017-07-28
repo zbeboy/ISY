@@ -14,6 +14,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 
 import top.zbeboy.isy.domain.Isy;
@@ -34,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.DefenseRateRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefenseRate extends TableImpl<DefenseRateRecord> {
 
-    private static final long serialVersionUID = 1456682924;
+    private static final long serialVersionUID = 1133054091;
 
     /**
      * The reference instance of <code>isy.defense_rate</code>
@@ -92,6 +93,14 @@ public class DefenseRate extends TableImpl<DefenseRateRecord> {
     @Override
     public Schema getSchema() {
         return Isy.ISY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<UniqueKey<DefenseRateRecord>> getKeys() {
+        return Arrays.<UniqueKey<DefenseRateRecord>>asList(Keys.KEY_DEFENSE_RATE_DEFENSE_ORDER_ID);
     }
 
     /**
