@@ -22,4 +22,5 @@ public class DefenseOrderVo {
     private String graduationDesignReleaseId;
     private int defenseStatus;
     private double grade;
+    private int scoreTypeId;
 }

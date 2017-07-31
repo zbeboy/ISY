@@ -151,8 +151,9 @@
                                 </label>
                             </div>
                             <input type="hidden" id="statusDefenseOrderId" name="defenseOrderId">
-                            <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId" />
-                            <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId" />
+                            <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId"/>
+                            <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                   name="graduationDesignReleaseId"/>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -177,14 +178,48 @@
                                 <label for="grade">分数</label>
                                 <input class="form-control" type="number" name="grade" id="grade" placeholder="分数">
                                 <input type="hidden" id="gradeDefenseOrderId" name="defenseOrderId">
-                                <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId" />
-                                <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId" />
+                                <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId"/>
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                         <button type="button" class="btn btn-primary" id="toGrade">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 成绩 modal -->
+        <div class="modal fade" id="markModal" tabindex="-1" role="dialog" aria-labelledby="markModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="markModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="rate">
+
+                        </div>
+                        <form id="markForm" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label>成绩</label>
+                                <div id="scoreData">
+
+                                </div>
+                                <input type="hidden" id="markDefenseOrderId" name="defenseOrderId">
+                                <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId"/>
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toMark">确定</button>
                     </div>
                 </div>
             </div>
@@ -219,6 +254,26 @@
         <script id="score-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <option value="{{scoreTypeId}}">{{scoreTypeName}}</option>
+            {{/each}}
+        </script>
+        <script id="mark-score-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="radio">
+                <label>
+                    <input type="radio" name="scoreTypeId" class="markScore" value="{{scoreTypeId}}">
+                    {{scoreTypeName}}
+                </label>
+            </div>
+            {{/each}}
+        </script>
+        <script id="rate-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="col-md-6">
+                {{realName}}
+            </div>
+            <div class="col-md-6">
+                {{grade}}
+            </div>
             {{/each}}
         </script>
         <!-- /.footer -->

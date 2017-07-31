@@ -23,6 +23,7 @@ import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.reorder.DefenseRateBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -526,9 +527,66 @@ public class GraduationDesignReorderController {
                 );
                 defenseGroupBean.setMemberName(memberName);
             });
-            ajaxUtils.success().msg("获取楼数据成功！").listData(defenseGroupBeens);
+            ajaxUtils.success().msg("获取数据成功！").listData(defenseGroupBeens);
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 查询各教师打分及成绩信息
+     *
+     * @param defenseOrderVo 数据
+     * @param bindingResult  检验
+     * @return 结果
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/mark/info", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils<DefenseRateBean> markInfo(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
+        AjaxUtils<DefenseRateBean> ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
+                if (!ObjectUtils.isEmpty(defenseOrder)) {
+                    List<DefenseRateBean> defenseRateBeans = defenseRateService.findByDefenseOrderIdAndDefenseGroupId(defenseOrderVo.getDefenseOrderId(), defenseOrderVo.getDefenseGroupId());
+                    ajaxUtils.success().msg("获取数据成功！").listData(defenseRateBeans).obj(defenseOrder);
+                } else {
+                    ajaxUtils.fail().msg("未获取到相关顺序");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 修改成绩
+     *
+     * @param defenseOrderVo 数据
+     * @param bindingResult  检验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/mark", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils mark(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
+                if (!ObjectUtils.isEmpty(defenseOrder)) {
+                    defenseOrder.setScoreTypeId(defenseOrderVo.getScoreTypeId());
+                    defenseOrderService.update(defenseOrder);
+                    ajaxUtils.success().msg("修改成绩成功");
+                } else {
+                    ajaxUtils.fail().msg("未获取到相关顺序");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
         }
         return ajaxUtils;
     }

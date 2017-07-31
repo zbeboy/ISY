@@ -11,9 +11,11 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         scores: '/user/scores',
         order_url: '/web/graduate/design/reorder/info',
         grade_info_url: '/web/graduate/design/reorder/grade/info',
+        mark_info_url: '/web/graduate/design/reorder/mark/info',
         timer_url: '/web/graduate/design/reorder/timer',
         status_url: '/web/graduate/design/reorder/status',
         grade_url: '/web/graduate/design/reorder/grade',
+        mark_url: '/web/graduate/design/reorder/mark',
         back: '/web/menu/graduate/design/reorder'
     };
 
@@ -149,6 +151,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         $.get(web_path + ajax_url.scores, function (data) {
             if (data.state) {
                 scoreData(data);
+                markScoreData(data);
             }
         });
     }
@@ -203,6 +206,25 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     function scoreData(data) {
         var template = Handlebars.compile($("#score-template").html());
         $(paramId.scoreTypeId).html(template(data));
+    }
+
+    /**
+     * 修改成绩数据
+     * @param data
+     */
+    function markScoreData(data) {
+        var template = Handlebars.compile($("#mark-score-template").html());
+        $('#scoreData').html(template(data));
+        $($('#scoreData').children()[0]).remove();
+    }
+
+    /**
+     * 教师打分情况
+     * @param data
+     */
+    function markTeacherData(data) {
+        var template = Handlebars.compile($("#rate-template").html());
+        $('#rate').html(template(data));
     }
 
     /**
@@ -265,7 +287,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "成绩",
-                            "css": "",
+                            "css": "mark",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -311,7 +333,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "成绩",
-                            "css": "",
+                            "css": "mark",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -349,7 +371,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "成绩",
-                            "css": "",
+                            "css": "mark",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -460,7 +482,6 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
     // 状态确定
     $('#toStatus').click(function () {
-        var id = $('#statusDefenseOrderId').val();
         $.post(web_path + ajax_url.status_url, $('#statusForm').serialize(), function (data) {
             if (data.state) {
                 $('#statusModal').modal('hide');
@@ -503,10 +524,62 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
     // 打分确定
     $('#toGrade').click(function () {
-        var id = $('#statusDefenseOrderId').val();
         $.post(web_path + ajax_url.grade_url, $('#gradeForm').serialize(), function (data) {
             if (data.state) {
                 $('#gradeModal').modal('hide');
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    /*
+     成绩
+    */
+    $(tableData).delegate('.mark', "click", function () {
+        var id = $(this).attr('data-id');
+        var name = $(this).attr('data-student');
+        $.post(web_path + ajax_url.mark_info_url, {
+            graduationDesignReleaseId: init_page_param.graduationDesignReleaseId,
+            defenseOrderId: id,
+            defenseGroupId: init_page_param.defenseGroupId
+        }, function (data) {
+            if (data.state) {
+                markTeacherData(data);
+                selectedScore(data.objectResult.scoreTypeId);
+                $('#markDefenseOrderId').val(id);
+                $('#markModalLabel').text(name);
+                $('#markModal').modal('show');
+            } else {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    function selectedScore(scoreTypeId) {
+        var scoreTypes = $('.markScore');
+        for (var i = 0; i < scoreTypes.length; i++) {
+            if (Number($(scoreTypes[i]).val()) === scoreTypeId) {
+                $(scoreTypes[i]).prop('checked', true);
+                break;
+            }
+        }
+    }
+
+    // 成绩确定
+    $('#toMark').click(function () {
+        $.post(web_path + ajax_url.mark_url, $('#markForm').serialize(), function (data) {
+            if (data.state) {
+                $('#markModal').modal('hide');
+                init();
             } else {
                 Messenger().post({
                     message: data.msg,
