@@ -268,43 +268,7 @@ public class GraduationDesignReorderController {
                     DefenseArrangement defenseArrangement = defenseArrangementRecord.get().into(DefenseArrangement.class);
                     // 答辩开始时间之后可用
                     if (DateTimeUtils.timestampAfterDecide(defenseArrangement.getDefenseStartTime())) {
-                        // 判断资格
-                        boolean canUse = false;
-                        // 是否是管理员或系统
-                        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                            canUse = true;
-                        } else {
-                            Users users = usersService.getUserFromSession();
-                            DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
-                            if (!ObjectUtils.isEmpty(defenseGroup)) {
-                                // 教职工
-                                if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                                    Staff staff = staffService.findByUsername(users.getUsername());
-                                    // 是否为组长
-                                    if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
-                                        GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
-                                        if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                            if (!ObjectUtils.isEmpty(staff)) {
-                                                if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
-                                                    canUse = true;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    // 是否秘书
-                                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                                        canUse = true;
-                                    }
-                                } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
-                                    // 是否秘书
-                                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                                        canUse = true;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (canUse) {
+                        if (groupCondition(defenseOrderVo)) {
                             DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                             if (!ObjectUtils.isEmpty(defenseOrder)) {
                                 defenseOrder.setDefenseStatus(defenseOrderVo.getDefenseStatus());
@@ -608,46 +572,11 @@ public class GraduationDesignReorderController {
         if (!bindingResult.hasErrors()) {
             ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
-                // 判断资格
-                boolean canUse = false;
-                // 是否是管理员或系统
-                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                    canUse = true;
-                } else {
-                    Users users = usersService.getUserFromSession();
-                    DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
-                    if (!ObjectUtils.isEmpty(defenseGroup)) {
-                        // 教职工
-                        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                            Staff staff = staffService.findByUsername(users.getUsername());
-                            // 是否为组长
-                            if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
-                                GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
-                                if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                    if (!ObjectUtils.isEmpty(staff)) {
-                                        if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
-                                            canUse = true;
-                                        }
-                                    }
-                                }
-                            }
-                            // 是否秘书
-                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                                canUse = true;
-                            }
-                        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
-                            // 是否秘书
-                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                                canUse = true;
-                            }
-                        }
-                    }
-                }
                 DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                 if (!ObjectUtils.isEmpty(defenseOrder)) {
                     modelMap.addAttribute("defenseOrder", defenseOrder);
                     modelMap.addAttribute("defenseOrderVo", defenseOrderVo);
-                    if (canUse) {
+                    if (groupCondition(defenseOrderVo)) {
                         page = "web/graduate/design/reorder/design_reorder_question_edit::#page-wrapper";
                     } else {
                         page = "web/graduate/design/reorder/design_reorder_question::#page-wrapper";
@@ -679,42 +608,7 @@ public class GraduationDesignReorderController {
             ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 // 判断资格
-                boolean canUse = false;
-                // 是否是管理员或系统
-                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                    canUse = true;
-                } else {
-                    Users users = usersService.getUserFromSession();
-                    DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
-                    if (!ObjectUtils.isEmpty(defenseGroup)) {
-                        // 教职工
-                        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                            Staff staff = staffService.findByUsername(users.getUsername());
-                            // 是否为组长
-                            if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
-                                GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
-                                if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                    if (!ObjectUtils.isEmpty(staff)) {
-                                        if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
-                                            canUse = true;
-                                        }
-                                    }
-                                }
-                            }
-                            // 是否秘书
-                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                                canUse = true;
-                            }
-                        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
-                            // 是否秘书
-                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                                canUse = true;
-                            }
-                        }
-                    }
-                }
-
-                if (canUse) {
+                if (groupCondition(defenseOrderVo)) {
                     DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                     if (!ObjectUtils.isEmpty(defenseOrder)) {
                         defenseOrder.setDefenseQuestion(defenseOrderVo.getDefenseQuestion());
@@ -733,6 +627,51 @@ public class GraduationDesignReorderController {
             ajaxUtils.fail().msg("参数异常");
         }
         return ajaxUtils;
+    }
+
+    /**
+     * 组条件
+     *
+     * @param defenseOrderVo 数据
+     * @return true or false
+     */
+    private boolean groupCondition(DefenseOrderVo defenseOrderVo) {
+        // 判断资格
+        boolean canUse = false;
+        // 是否是管理员或系统
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            canUse = true;
+        } else {
+            Users users = usersService.getUserFromSession();
+            DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
+            if (!ObjectUtils.isEmpty(defenseGroup)) {
+                // 教职工
+                if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                    Staff staff = staffService.findByUsername(users.getUsername());
+                    // 是否为组长
+                    if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+                        GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+                        if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                            if (!ObjectUtils.isEmpty(staff)) {
+                                if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
+                                    canUse = true;
+                                }
+                            }
+                        }
+                    }
+                    // 是否秘书
+                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                        canUse = true;
+                    }
+                } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
+                    // 是否秘书
+                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                        canUse = true;
+                    }
+                }
+            }
+        }
+        return canUse;
     }
 
     /**
