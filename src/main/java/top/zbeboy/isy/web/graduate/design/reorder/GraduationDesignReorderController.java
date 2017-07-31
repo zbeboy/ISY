@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -145,13 +146,13 @@ public class GraduationDesignReorderController {
                 if (!ObjectUtils.isEmpty(defenseGroup)) {
                     // 教职工
                     if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                        Staff staff = staffService.findByUsername(users.getUsername());
                         // 是否为组长
                         if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
                             GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
                             if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                Staff staff = staffService.findByUsername(users.getUsername());
                                 if (!ObjectUtils.isEmpty(staff)) {
-                                    if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                    if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
                                         reorderIsLeader = true;
                                     }
                                 }
@@ -160,7 +161,6 @@ public class GraduationDesignReorderController {
 
                         // 是否为组员
                         if (!reorderIsLeader) {
-                            Staff staff = staffService.findByUsername(users.getUsername());
                             if (!ObjectUtils.isEmpty(staff)) {
                                 Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
                                 if (record.isPresent()) {
@@ -278,13 +278,13 @@ public class GraduationDesignReorderController {
                             if (!ObjectUtils.isEmpty(defenseGroup)) {
                                 // 教职工
                                 if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                                    Staff staff = staffService.findByUsername(users.getUsername());
                                     // 是否为组长
                                     if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
                                         GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
                                         if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                            Staff staff = staffService.findByUsername(users.getUsername());
                                             if (!ObjectUtils.isEmpty(staff)) {
-                                                if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                                if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
                                                     canUse = true;
                                                 }
                                             }
@@ -359,13 +359,13 @@ public class GraduationDesignReorderController {
                             boolean reorderIsLeader = false;
                             // 教职工
                             if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                                Staff staff = staffService.findByUsername(users.getUsername());
                                 // 是否为组长
                                 if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
                                     GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
                                     if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                        Staff staff = staffService.findByUsername(users.getUsername());
                                         if (!ObjectUtils.isEmpty(staff)) {
-                                            if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                            if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
                                                 canUse = true;
                                                 reorderIsLeader = true;
                                                 graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
@@ -375,7 +375,6 @@ public class GraduationDesignReorderController {
                                 }
                                 // 是否为组员
                                 if (!reorderIsLeader) {
-                                    Staff staff = staffService.findByUsername(users.getUsername());
                                     if (!ObjectUtils.isEmpty(staff)) {
                                         Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(defenseOrderVo.getGraduationDesignReleaseId(), staff.getStaffId());
                                         if (record.isPresent()) {
@@ -444,13 +443,13 @@ public class GraduationDesignReorderController {
                             boolean reorderIsLeader = false;
                             // 教职工
                             if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                                Staff staff = staffService.findByUsername(users.getUsername());
                                 // 是否为组长
                                 if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
                                     GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
                                     if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                        Staff staff = staffService.findByUsername(users.getUsername());
                                         if (!ObjectUtils.isEmpty(staff)) {
-                                            if (graduationDesignTeacher.getStaffId().equals(staff.getStaffId())) {
+                                            if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
                                                 canUse = true;
                                                 reorderIsLeader = true;
                                                 graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
@@ -460,7 +459,6 @@ public class GraduationDesignReorderController {
                                 }
                                 // 是否为组员
                                 if (!reorderIsLeader) {
-                                    Staff staff = staffService.findByUsername(users.getUsername());
                                     if (!ObjectUtils.isEmpty(staff)) {
                                         Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(defenseOrderVo.getGraduationDesignReleaseId(), staff.getStaffId());
                                         if (record.isPresent()) {
