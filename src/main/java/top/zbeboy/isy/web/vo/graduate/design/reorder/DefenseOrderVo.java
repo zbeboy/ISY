@@ -23,4 +23,5 @@ public class DefenseOrderVo {
     private int defenseStatus;
     private double grade;
     private int scoreTypeId;
+    private String defenseQuestion;
 }

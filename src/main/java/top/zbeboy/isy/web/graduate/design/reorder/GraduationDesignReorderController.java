@@ -558,6 +558,8 @@ public class GraduationDesignReorderController {
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
             }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
         }
         return ajaxUtils;
     }
@@ -587,6 +589,148 @@ public class GraduationDesignReorderController {
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
             }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 问题条件
+     *
+     * @param defenseOrderVo 数据
+     * @param bindingResult  校验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/question/info", method = RequestMethod.GET)
+    public String questionInfo(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult, ModelMap modelMap) {
+        String page;
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                // 判断资格
+                boolean canUse = false;
+                // 是否是管理员或系统
+                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                    canUse = true;
+                } else {
+                    Users users = usersService.getUserFromSession();
+                    DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
+                    if (!ObjectUtils.isEmpty(defenseGroup)) {
+                        // 教职工
+                        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                            Staff staff = staffService.findByUsername(users.getUsername());
+                            // 是否为组长
+                            if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+                                GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+                                if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                                    if (!ObjectUtils.isEmpty(staff)) {
+                                        if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
+                                            canUse = true;
+                                        }
+                                    }
+                                }
+                            }
+                            // 是否秘书
+                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                                canUse = true;
+                            }
+                        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
+                            // 是否秘书
+                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                                canUse = true;
+                            }
+                        }
+                    }
+                }
+                DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
+                if (!ObjectUtils.isEmpty(defenseOrder)) {
+                    modelMap.addAttribute("defenseOrder", defenseOrder);
+                    modelMap.addAttribute("defenseOrderVo", defenseOrderVo);
+                    if (canUse) {
+                        page = "web/graduate/design/reorder/design_reorder_question_edit::#page-wrapper";
+                    } else {
+                        page = "web/graduate/design/reorder/design_reorder_question::#page-wrapper";
+                    }
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关顺序");
+                }
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            }
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "参数异常");
+        }
+        return page;
+    }
+
+    /**
+     * 更新问题
+     *
+     * @param defenseOrderVo 数据
+     * @param bindingResult  校验
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/question", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils question(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (!bindingResult.hasErrors()) {
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            if (!errorBean.isHasError()) {
+                // 判断资格
+                boolean canUse = false;
+                // 是否是管理员或系统
+                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                    canUse = true;
+                } else {
+                    Users users = usersService.getUserFromSession();
+                    DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
+                    if (!ObjectUtils.isEmpty(defenseGroup)) {
+                        // 教职工
+                        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                            Staff staff = staffService.findByUsername(users.getUsername());
+                            // 是否为组长
+                            if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+                                GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+                                if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                                    if (!ObjectUtils.isEmpty(staff)) {
+                                        if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
+                                            canUse = true;
+                                        }
+                                    }
+                                }
+                            }
+                            // 是否秘书
+                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                                canUse = true;
+                            }
+                        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
+                            // 是否秘书
+                            if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
+                                canUse = true;
+                            }
+                        }
+                    }
+                }
+
+                if (canUse) {
+                    DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
+                    if (!ObjectUtils.isEmpty(defenseOrder)) {
+                        defenseOrder.setDefenseQuestion(defenseOrderVo.getDefenseQuestion());
+                        defenseOrderService.update(defenseOrder);
+                        ajaxUtils.success().msg("更新成功");
+                    } else {
+                        ajaxUtils.fail().msg("未查询到相关顺序");
+                    }
+                } else {
+                    ajaxUtils.fail().msg("不符合编辑条件");
+                }
+            } else {
+                ajaxUtils.fail().msg(errorBean.getErrorMsg());
+            }
+        } else {
+            ajaxUtils.fail().msg("参数异常");
         }
         return ajaxUtils;
     }

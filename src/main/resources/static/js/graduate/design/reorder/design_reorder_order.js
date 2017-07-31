@@ -12,6 +12,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         order_url: '/web/graduate/design/reorder/info',
         grade_info_url: '/web/graduate/design/reorder/grade/info',
         mark_info_url: '/web/graduate/design/reorder/mark/info',
+        question_info_url: '/web/graduate/design/reorder/question/info',
         timer_url: '/web/graduate/design/reorder/timer',
         status_url: '/web/graduate/design/reorder/status',
         grade_url: '/web/graduate/design/reorder/grade',
@@ -247,7 +248,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                     },
                     {
                         "name": "问题",
-                        "css": "",
+                        "css": "question",
                         "type": "default",
                         "defenseOrderId": c.defenseOrderId,
                         "sortNum": c.sortNum,
@@ -295,7 +296,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "问题",
-                            "css": "",
+                            "css": "question",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -341,7 +342,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "问题",
-                            "css": "",
+                            "css": "question",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -379,7 +380,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "问题",
-                            "css": "",
+                            "css": "question",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -409,7 +410,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                         },
                         {
                             "name": "问题",
-                            "css": "",
+                            "css": "question",
                             "type": "default",
                             "defenseOrderId": c.defenseOrderId,
                             "sortNum": c.sortNum,
@@ -588,6 +589,16 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                 });
             }
         });
+    });
+
+    /*
+     问题
+    */
+    $(tableData).delegate('.question', "click", function () {
+        var id = $(this).attr('data-id');
+        $.address.value(ajax_url.question_info_url + '?graduationDesignReleaseId=' + init_page_param.graduationDesignReleaseId +
+        '&defenseOrderId=' + id +
+        '&defenseGroupId=' + init_page_param.defenseGroupId);
     });
 
 });

@@ -79,7 +79,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
             $(errorId).addClass('hidden').text('');
         }
 
-        // 初始化内容与感想富文本框
+        // 初始化富文本框
         var quill = new Quill(paramId.presubjectPlanHtml, {
             placeholder: '计划',
             theme: 'bubble'
