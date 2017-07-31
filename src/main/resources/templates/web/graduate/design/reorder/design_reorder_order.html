@@ -176,7 +176,8 @@
                             <div class="form-group">
                                 <label for="grade">分数</label>
                                 <input class="form-control" type="number" name="grade" id="grade" placeholder="分数">
-                                <input type="hidden" id="gradeDefenseOrderId">
+                                <input type="hidden" id="gradeDefenseOrderId" name="defenseOrderId">
+                                <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId" />
                                 <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId" />
                             </div>
                         </form>

@@ -256,6 +256,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                             "studentName": c.studentName
                         },
                         {
+                            "name": "打分",
+                            "css": "grade",
+                            "type": "default",
+                            "defenseOrderId": c.defenseOrderId,
+                            "sortNum": c.sortNum,
+                            "studentName": c.studentName
+                        },
+                        {
                             "name": "成绩",
                             "css": "",
                             "type": "default",
@@ -474,7 +482,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         var id = $(this).attr('data-id');
         var name = $(this).attr('data-student');
         $.post(web_path + ajax_url.grade_info_url, {
-            id: init_page_param.graduationDesignReleaseId,
+            graduationDesignReleaseId: init_page_param.graduationDesignReleaseId,
             defenseOrderId: id,
             defenseGroupId: init_page_param.defenseGroupId
         }, function (data) {
