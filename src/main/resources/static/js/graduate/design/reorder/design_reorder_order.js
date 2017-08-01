@@ -551,6 +551,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         }, function (data) {
             if (data.state) {
                 markTeacherData(data);
+                avegeScore(data);
                 selectedScore(data.objectResult.scoreTypeId);
                 $('#markDefenseOrderId').val(id);
                 $('#markModalLabel').text(name);
@@ -575,6 +576,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         }
     }
 
+    function avegeScore(data) {
+        var count = 0;
+        for (var i = 0; i < data.listResult.length; i++) {
+            count += data.listResult[i].grade;
+        }
+        $('#aveScore').text((count / data.listResult.length).toFixed(2));
+    }
+
     // 成绩确定
     $('#toMark').click(function () {
         $.post(web_path + ajax_url.mark_url, $('#markForm').serialize(), function (data) {
@@ -597,8 +606,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     $(tableData).delegate('.question', "click", function () {
         var id = $(this).attr('data-id');
         $.address.value(ajax_url.question_info_url + '?graduationDesignReleaseId=' + init_page_param.graduationDesignReleaseId +
-        '&defenseOrderId=' + id +
-        '&defenseGroupId=' + init_page_param.defenseGroupId);
+            '&defenseOrderId=' + id +
+            '&defenseGroupId=' + init_page_param.defenseGroupId);
     });
 
 });
