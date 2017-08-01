@@ -77,4 +77,26 @@ public interface GraduationDesignDeclareService {
      */
     Result<Record1<String>> findByStaffIdRelationNeIsOkApply(int staffId, String graduationDesignReleaseId);
 
+    /**
+     * 毕业设计清单分页查询 数据
+     *
+     * @param dataTablesUtils datatables工具类
+     * @return 分页数据
+     */
+    List<GraduationDesignDeclareBean> findAllManifestByPage(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean);
+
+    /**
+     * 毕业设计清单数据 总数
+     *
+     * @return 总数
+     */
+    int countAllManifest(GraduationDesignDeclareBean graduationDesignDeclareBean);
+
+    /**
+     * 毕业设计清单根据条件查询总数 数据
+     *
+     * @return 条件查询总数
+     */
+    int countManifestByCondition(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean);
+
 }
