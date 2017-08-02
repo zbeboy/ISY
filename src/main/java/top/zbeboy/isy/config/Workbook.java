@@ -224,6 +224,16 @@ public final class Workbook {
     }
 
     /**
+     * 保存毕业设计清单路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String graduationDesignManifestPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "graduate/design/manifest/";
+    }
+
+    /**
      * 毕业时间
      *
      * @return 时间

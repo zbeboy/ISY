@@ -135,6 +135,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             });
         }
 
+        /*
+       安排
+       */
+        $(tableData).delegate('.manifest', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.list_url + '?id=' + id);
+        });
+
         /**
          * 创建分页
          * @param data 数据

@@ -63,14 +63,14 @@
                     <thead>
                     <tr>
                         <th data-class="expand">课题</th>
-                        <th data-hide="phone">题目类型</th>
-                        <th data-hide="phone">课题来源</th>
-                        <th data-hide="always">指导教师</th>
-                        <th data-hide="always">教师职称</th>
+                        <th data-hide="always">题目类型</th>
+                        <th data-hide="always">课题来源</th>
+                        <th data-hide="phone">指导教师</th>
+                        <th data-hide="phone">教师职称</th>
                         <th data-hide="phone">指导学生人数</th>
-                        <th data-hide="always">学号</th>
+                        <th data-hide="phone">学号</th>
                         <th>学生姓名</th>
-                        <th data-hide="always">成绩</th>
+                        <th data-hide="phone">成绩</th>
                         <th data-hide="phone">操作</th>
                     </tr>
                     </thead>
@@ -99,6 +99,11 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <script id="staff-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{staff_value}}">{{staff_name}}</option>
+            {{/each}}
+        </script>
         <!--定义操作列按钮模板-->
         <script id="operator_button" type="text/x-handlebars-template">
             {{#each func}}

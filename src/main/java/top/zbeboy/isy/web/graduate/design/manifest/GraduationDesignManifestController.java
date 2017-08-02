@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.graduate.design.manifest;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
@@ -11,23 +12,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.Staff;
-import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.domain.tables.pojos.UsersType;
+import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.common.UploadService;
+import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
+import top.zbeboy.isy.service.export.GraduationDesignDeclareExport;
+import top.zbeboy.isy.service.export.GraduationDesignManifestExport;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareDataService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
+import top.zbeboy.isy.service.util.RequestUtils;
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
+import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +61,9 @@ public class GraduationDesignManifestController {
     private GraduationDesignDeclareService graduationDesignDeclareService;
 
     @Resource
+    private GraduationDesignDeclareDataService graduationDesignDeclareDataService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
@@ -65,6 +77,12 @@ public class GraduationDesignManifestController {
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private DepartmentService departmentService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 毕业设计清单
@@ -148,5 +166,53 @@ public class GraduationDesignManifestController {
             dataTablesUtils.setiTotalDisplayRecords(graduationDesignDeclareService.countManifestByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 导出 清单 数据
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = "/web/graduate/design/manifest/list/data/export", method = RequestMethod.GET)
+    public void listDataExport(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");
+            int staffId = NumberUtils.toInt(request.getParameter("staffId"));
+            if (!ObjectUtils.isEmpty(graduationDesignReleaseId) && staffId > 0) {
+                Optional<Record> staffRecord = staffService.findByIdRelation(staffId);
+                if (staffRecord.isPresent()) {
+                    Users users = staffRecord.get().into(Users.class);
+                    GraduationDesignDeclareData graduationDesignDeclareData = graduationDesignDeclareDataService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+                    if (!ObjectUtils.isEmpty(graduationDesignDeclareData)) {
+                        String year = graduationDesignDeclareData.getGraduationDate().substring(0, graduationDesignDeclareData.getGraduationDate().indexOf("年"));
+                        String fileName = users.getRealName() + "_ " + year + "届" + graduationDesignDeclareData.getDepartmentName() + "毕业设计归档清单";
+                        String ext = Workbook.XLSX_FILE;
+                        ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
+
+                        String extraSearchParam = request.getParameter("extra_search");
+                        DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils = DataTablesUtils.of();
+                        if (org.apache.commons.lang3.StringUtils.isNotBlank(extraSearchParam)) {
+                            dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
+                        }
+                        GraduationDesignDeclareBean otherCondition = new GraduationDesignDeclareBean();
+                        otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
+                        otherCondition.setStaffId(staffId);
+                        List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignDeclareService.exportManifestData(dataTablesUtils, otherCondition);
+                        if (org.apache.commons.lang3.StringUtils.isNotBlank(exportBean.getFileName())) {
+                            fileName = exportBean.getFileName();
+                        }
+                        if (org.apache.commons.lang3.StringUtils.isNotBlank(exportBean.getExt())) {
+                            ext = exportBean.getExt();
+                        }
+                        GraduationDesignManifestExport export = new GraduationDesignManifestExport(graduationDesignDeclareBeens);
+                        String path = Workbook.graduationDesignManifestPath(users) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.graduationDesignManifestPath(users), fileName, ext);
+                        uploadService.download(fileName, "/" + path, response, request);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("Export file error, error is {}", e);
+        }
     }
 }

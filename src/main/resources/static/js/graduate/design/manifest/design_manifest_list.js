@@ -11,7 +11,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             return {
                 data_url: '/web/graduate/design/manifest/list/data',
                 teachers: '/anyone/graduate/design/subject/teachers',
-                export_data_url: '',
+                export_data_url: '/web/graduate/design/manifest/list/data/export',
                 back: '/web/menu/graduate/design/manifest'
             };
         }
@@ -85,7 +85,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[6, 'desc']],// 排序
+            "aaSorting": [[6, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().data_url,
                 "dataSrc": "data",
@@ -111,7 +111,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             ],
             columnDefs: [
                 {
-                    targets: 1,
+                    targets: 0,
                     render: function (a, b, c, d) {
                         var v = '';
                         var html = '';
@@ -369,5 +369,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             }
 
         });
+
+        function grade(id){
+
+        }
 
     });

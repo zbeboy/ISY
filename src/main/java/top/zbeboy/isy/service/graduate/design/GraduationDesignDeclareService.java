@@ -99,4 +99,13 @@ public interface GraduationDesignDeclareService {
      */
     int countManifestByCondition(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean);
 
+    /**
+     * 导出毕业设计清单
+     *
+     * @param dataTablesUtils             datatables工具类
+     * @param graduationDesignDeclareBean 条件
+     * @return 导出数据
+     */
+    List<GraduationDesignDeclareBean> exportManifestData(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean);
+
 }
