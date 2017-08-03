@@ -22,7 +22,7 @@ import top.zbeboy.isy.domain.tables.DefenseTime;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
 import top.zbeboy.isy.domain.tables.GraduateArchives;
-import top.zbeboy.isy.domain.tables.GraduateBill;
+import top.zbeboy.isy.domain.tables.GraduateArchivesCode;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
@@ -174,9 +174,9 @@ public class Tables {
     public static final GraduateArchives GRADUATE_ARCHIVES = top.zbeboy.isy.domain.tables.GraduateArchives.GRADUATE_ARCHIVES;
 
     /**
-     * The table <code>isy.graduate_bill</code>.
+     * The table <code>isy.graduate_archives_code</code>.
      */
-    public static final GraduateBill GRADUATE_BILL = top.zbeboy.isy.domain.tables.GraduateBill.GRADUATE_BILL;
+    public static final GraduateArchivesCode GRADUATE_ARCHIVES_CODE = top.zbeboy.isy.domain.tables.GraduateArchivesCode.GRADUATE_ARCHIVES_CODE;
 
     /**
      * The table <code>isy.graduation_design_datum</code>.

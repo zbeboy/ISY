@@ -24,9 +24,9 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateArchives implements Serializable {
 
-    private static final long serialVersionUID = 119024170;
+    private static final long serialVersionUID = 2319783;
 
-    private String graduateBillId;
+    private String graduationDesignPresubjectId;
     private Byte   isExcellent;
     private String archiveNumber;
     private String note;
@@ -34,19 +34,19 @@ public class GraduateArchives implements Serializable {
     public GraduateArchives() {}
 
     public GraduateArchives(GraduateArchives value) {
-        this.graduateBillId = value.graduateBillId;
+        this.graduationDesignPresubjectId = value.graduationDesignPresubjectId;
         this.isExcellent = value.isExcellent;
         this.archiveNumber = value.archiveNumber;
         this.note = value.note;
     }
 
     public GraduateArchives(
-        String graduateBillId,
+        String graduationDesignPresubjectId,
         Byte   isExcellent,
         String archiveNumber,
         String note
     ) {
-        this.graduateBillId = graduateBillId;
+        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
         this.isExcellent = isExcellent;
         this.archiveNumber = archiveNumber;
         this.note = note;
@@ -54,12 +54,12 @@ public class GraduateArchives implements Serializable {
 
     @NotNull
     @Size(max = 64)
-    public String getGraduateBillId() {
-        return this.graduateBillId;
+    public String getGraduationDesignPresubjectId() {
+        return this.graduationDesignPresubjectId;
     }
 
-    public void setGraduateBillId(String graduateBillId) {
-        this.graduateBillId = graduateBillId;
+    public void setGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
+        this.graduationDesignPresubjectId = graduationDesignPresubjectId;
     }
 
     public Byte getIsExcellent() {
@@ -93,7 +93,7 @@ public class GraduateArchives implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduateArchives (");
 
-        sb.append(graduateBillId);
+        sb.append(graduationDesignPresubjectId);
         sb.append(", ").append(isExcellent);
         sb.append(", ").append(archiveNumber);
         sb.append(", ").append(note);

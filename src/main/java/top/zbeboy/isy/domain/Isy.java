@@ -30,7 +30,7 @@ import top.zbeboy.isy.domain.tables.DefenseTime;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
 import top.zbeboy.isy.domain.tables.GraduateArchives;
-import top.zbeboy.isy.domain.tables.GraduateBill;
+import top.zbeboy.isy.domain.tables.GraduateArchivesCode;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
@@ -101,7 +101,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = -1520563827;
+    private static final long serialVersionUID = 299670561;
 
     /**
      * The reference instance of <code>isy</code>
@@ -189,9 +189,9 @@ public class Isy extends SchemaImpl {
     public final GraduateArchives GRADUATE_ARCHIVES = top.zbeboy.isy.domain.tables.GraduateArchives.GRADUATE_ARCHIVES;
 
     /**
-     * The table <code>isy.graduate_bill</code>.
+     * The table <code>isy.graduate_archives_code</code>.
      */
-    public final GraduateBill GRADUATE_BILL = top.zbeboy.isy.domain.tables.GraduateBill.GRADUATE_BILL;
+    public final GraduateArchivesCode GRADUATE_ARCHIVES_CODE = top.zbeboy.isy.domain.tables.GraduateArchivesCode.GRADUATE_ARCHIVES_CODE;
 
     /**
      * The table <code>isy.graduation_design_datum</code>.
@@ -509,7 +509,7 @@ public class Isy extends SchemaImpl {
             Department.DEPARTMENT,
             Files.FILES,
             GraduateArchives.GRADUATE_ARCHIVES,
-            GraduateBill.GRADUATE_BILL,
+            GraduateArchivesCode.GRADUATE_ARCHIVES_CODE,
             GraduationDesignDatum.GRADUATION_DESIGN_DATUM,
             GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE,
             GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE,

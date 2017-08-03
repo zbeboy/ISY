@@ -226,20 +226,18 @@ CREATE TABLE defense_rate (
   UNIQUE (defense_order_id, graduation_design_teacher_id)
 );
 
-CREATE TABLE graduate_bill (
-  graduate_bill_id                VARCHAR(64) PRIMARY KEY,
-  graduation_design_release_id    VARCHAR(64) NOT NULL,
-  graduation_design_presubject_id VARCHAR(64) NOT NULL UNIQUE,
-  FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release (graduation_design_release_id),
-  FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject (graduation_design_presubject_id)
-);
-
 CREATE TABLE graduate_archives (
-  graduate_bill_id VARCHAR(64)  NOT NULL UNIQUE,
+  graduation_design_presubject_id VARCHAR(64)  NOT NULL UNIQUE,
   is_excellent     BOOLEAN      NOT NULL DEFAULT 0,
   archive_number   VARCHAR(100) NOT NULL,
   note             VARCHAR(100),
-  FOREIGN KEY (graduate_bill_id) REFERENCES graduate_bill (graduate_bill_id)
+  FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject (graduation_design_presubject_id)
+);
+
+CREATE TABLE graduate_archives_code (
+  code_id INT AUTO_INCREMENT PRIMARY KEY ,
+  code_name VARCHAR(30) NOT NULL UNIQUE ,
+  code_no VARCHAR(20) NOT NULL UNIQUE
 );
 
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('软件型');

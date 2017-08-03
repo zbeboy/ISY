@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduateArchivesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
 
-    private static final long serialVersionUID = 2082692999;
+    private static final long serialVersionUID = 633957103;
 
     /**
      * The reference instance of <code>isy.graduate_archives</code>
@@ -51,9 +51,9 @@ public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
     }
 
     /**
-     * The column <code>isy.graduate_archives.graduate_bill_id</code>.
+     * The column <code>isy.graduate_archives.graduation_design_presubject_id</code>.
      */
-    public final TableField<GraduateArchivesRecord, String> GRADUATE_BILL_ID = createField("graduate_bill_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<GraduateArchivesRecord, String> GRADUATION_DESIGN_PRESUBJECT_ID = createField("graduation_design_presubject_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduate_archives.is_excellent</code>.
@@ -105,7 +105,7 @@ public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
      */
     @Override
     public List<UniqueKey<GraduateArchivesRecord>> getKeys() {
-        return Arrays.<UniqueKey<GraduateArchivesRecord>>asList(Keys.KEY_GRADUATE_ARCHIVES_GRADUATE_BILL_ID);
+        return Arrays.<UniqueKey<GraduateArchivesRecord>>asList(Keys.KEY_GRADUATE_ARCHIVES_GRADUATION_DESIGN_PRESUBJECT_ID);
     }
 
     /**

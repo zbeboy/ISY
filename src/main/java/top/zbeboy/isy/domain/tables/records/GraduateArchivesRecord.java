@@ -29,21 +29,21 @@ import top.zbeboy.isy.domain.tables.GraduateArchives;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateArchivesRecord extends TableRecordImpl<GraduateArchivesRecord> implements Record4<String, Byte, String, String> {
 
-    private static final long serialVersionUID = 1173648155;
+    private static final long serialVersionUID = -241080335;
 
     /**
-     * Setter for <code>isy.graduate_archives.graduate_bill_id</code>.
+     * Setter for <code>isy.graduate_archives.graduation_design_presubject_id</code>.
      */
-    public void setGraduateBillId(String value) {
+    public void setGraduationDesignPresubjectId(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>isy.graduate_archives.graduate_bill_id</code>.
+     * Getter for <code>isy.graduate_archives.graduation_design_presubject_id</code>.
      */
     @NotNull
     @Size(max = 64)
-    public String getGraduateBillId() {
+    public String getGraduationDesignPresubjectId() {
         return (String) get(0);
     }
 
@@ -117,7 +117,7 @@ public class GraduateArchivesRecord extends TableRecordImpl<GraduateArchivesReco
      */
     @Override
     public Field<String> field1() {
-        return GraduateArchives.GRADUATE_ARCHIVES.GRADUATE_BILL_ID;
+        return GraduateArchives.GRADUATE_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID;
     }
 
     /**
@@ -149,7 +149,7 @@ public class GraduateArchivesRecord extends TableRecordImpl<GraduateArchivesReco
      */
     @Override
     public String value1() {
-        return getGraduateBillId();
+        return getGraduationDesignPresubjectId();
     }
 
     /**
@@ -181,7 +181,7 @@ public class GraduateArchivesRecord extends TableRecordImpl<GraduateArchivesReco
      */
     @Override
     public GraduateArchivesRecord value1(String value) {
-        setGraduateBillId(value);
+        setGraduationDesignPresubjectId(value);
         return this;
     }
 
@@ -238,10 +238,10 @@ public class GraduateArchivesRecord extends TableRecordImpl<GraduateArchivesReco
     /**
      * Create a detached, initialised GraduateArchivesRecord
      */
-    public GraduateArchivesRecord(String graduateBillId, Byte isExcellent, String archiveNumber, String note) {
+    public GraduateArchivesRecord(String graduationDesignPresubjectId, Byte isExcellent, String archiveNumber, String note) {
         super(GraduateArchives.GRADUATE_ARCHIVES);
 
-        set(0, graduateBillId);
+        set(0, graduationDesignPresubjectId);
         set(1, isExcellent);
         set(2, archiveNumber);
         set(3, note);
