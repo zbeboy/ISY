@@ -23,4 +23,5 @@ public class GraduationDesignDeclareBean extends GraduationDesignDeclare {
     private String graduationDesignReleaseId;
     private int publicLevel;
     private String scoreTypeName;
+    private String defenseOrderId;
 }

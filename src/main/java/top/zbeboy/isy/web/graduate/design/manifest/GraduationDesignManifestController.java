@@ -16,21 +16,18 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
-import top.zbeboy.isy.service.export.GraduationDesignDeclareExport;
 import top.zbeboy.isy.service.export.GraduationDesignManifestExport;
-import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareDataService;
-import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareService;
-import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
-import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
+import top.zbeboy.isy.service.graduate.design.*;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
+import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
+import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
@@ -79,7 +76,7 @@ public class GraduationDesignManifestController {
     private StaffService staffService;
 
     @Resource
-    private DepartmentService departmentService;
+    private DefenseOrderService defenseOrderService;
 
     @Resource
     private UploadService uploadService;
@@ -214,5 +211,96 @@ public class GraduationDesignManifestController {
         } catch (IOException e) {
             log.error("Export file error, error is {}", e);
         }
+    }
+
+    /**
+     * 成绩信息
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param defenseOrderId            毕业设计答辩顺序id
+     * @return 成绩
+     */
+    @RequestMapping(value = "/web/graduate/design/manifest/mark/info", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils markInfo(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId,
+                              @RequestParam("defenseOrderId") String defenseOrderId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderId);
+            if (!ObjectUtils.isEmpty(defenseOrder)) {
+                ajaxUtils.success().msg("获取数据成功！").obj(defenseOrder);
+            } else {
+                ajaxUtils.fail().msg("未获取到相关顺序");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 修改成绩
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param defenseOrderId            毕业设计答辩顺序id
+     * @param scoreTypeId               成绩类型id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/manifest/mark", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils mark(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId,
+                          @RequestParam("defenseOrderId") String defenseOrderId,
+                          @RequestParam("scoreTypeId") int scoreTypeId, @RequestParam("staffId") int staffId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            boolean canUse = false;
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                canUse = true;
+            } else {
+                if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                    Users users = usersService.getUserFromSession();
+                    Staff staff = staffService.findByUsername(users.getUsername());
+                    canUse = !ObjectUtils.isEmpty(staff) && staff.getStaffId() == staffId;
+                }
+            }
+            if (canUse) {
+                DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderId);
+                if (!ObjectUtils.isEmpty(defenseOrder)) {
+                    defenseOrder.setScoreTypeId(scoreTypeId);
+                    defenseOrderService.update(defenseOrder);
+                    ajaxUtils.success().msg("修改成绩成功");
+                } else {
+                    ajaxUtils.fail().msg("未获取到相关顺序");
+                }
+            } else {
+                ajaxUtils.fail().msg("您不符合编辑条件");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 进入入口条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                errorBean.setHasError(false);
+            } else {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+            }
+        }
+        return errorBean;
     }
 }

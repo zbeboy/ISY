@@ -12,6 +12,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 data_url: '/web/graduate/design/manifest/list/data',
                 teachers: '/anyone/graduate/design/subject/teachers',
                 export_data_url: '/web/graduate/design/manifest/list/data/export',
+                mark_info_url: '/web/graduate/design/manifest/mark/info',
+                mark_url: '/web/graduate/design/manifest/mark',
+                scores: '/user/scores',
                 back: '/web/menu/graduate/design/manifest'
             };
         }
@@ -143,7 +146,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                             "name": "成绩",
                                             "css": "grade",
                                             "type": "info",
-                                            "id": c.graduationDesignPresubjectId
+                                            "id": c.defenseOrderId,
+                                            "staff": c.staffId
                                         }
                                     ]
                                 };
@@ -157,7 +161,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                                     "name": "成绩",
                                                     "css": "grade",
                                                     "type": "info",
-                                                    "id": c.graduationDesignPresubjectId
+                                                    "id": c.defenseOrderId,
+                                                    "staff": c.staffId
                                                 }
                                             ]
                                         };
@@ -201,7 +206,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.grade', "click", function () {
-                    grade($(this).attr('data-id'));
+                    grade($(this).attr('data-id'), $(this).attr('data-staff'));
                 });
             }
         });
@@ -266,6 +271,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
 
         function init() {
             initTeachers();
+            initScore();
         }
 
         /*
@@ -286,6 +292,17 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                         type: 'error',
                         showCloseButton: true
                     });
+                }
+            });
+        }
+
+        /**
+         * 初始化成绩数据
+         */
+        function initScore() {
+            $.get(web_path + getAjaxUrl().scores, function (data) {
+                if (data.state) {
+                    markScoreData(data);
                 }
             });
         }
@@ -330,6 +347,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             });
         }
 
+        /**
+         * 修改成绩数据
+         * @param data
+         */
+        function markScoreData(data) {
+            var template = Handlebars.compile($("#mark-score-template").html());
+            $('#scoreData').html(template(data));
+            $($('#scoreData').children()[0]).remove();
+        }
+
         $('#export_xls').click(function () {
             initParam();
             if (getParam().staffId > 0) {
@@ -370,8 +397,56 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
 
         });
 
-        function grade(id){
-
+        /**
+         * 成绩
+         * @param id
+         * @param staffId
+         */
+        function grade(id, staffId) {
+            $.post(web_path + getAjaxUrl().mark_info_url, {
+                graduationDesignReleaseId: init_page_param.graduationDesignReleaseId,
+                defenseOrderId: id
+            }, function (data) {
+                if (data.state) {
+                    selectedScore(data.objectResult.scoreTypeId);
+                    $('#markDefenseOrderId').val(id);
+                    $('#markStaffId').val(staffId);
+                    $('#markModalLabel').text(data.objectResult.studentName + ' ' + data.objectResult.studentNumber);
+                    $('#markModal').modal('show');
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         }
+
+        function selectedScore(scoreTypeId) {
+            var scoreTypes = $('.markScore');
+            for (var i = 0; i < scoreTypes.length; i++) {
+                if (Number($(scoreTypes[i]).val()) === scoreTypeId) {
+                    $(scoreTypes[i]).prop('checked', true);
+                    break;
+                }
+            }
+        }
+
+        // 成绩确定
+        $('#toMark').click(function () {
+            $.post(web_path + getAjaxUrl().mark_url, $('#markForm').serialize(), function (data) {
+                if (data.state) {
+                    $('#markModal').modal('hide');
+                    myTable.ajax.reload();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
 
     });

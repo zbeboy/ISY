@@ -99,15 +99,55 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <!-- 成绩 modal -->
+        <div class="modal fade" id="markModal" tabindex="-1" role="dialog" aria-labelledby="markModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="markModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="markForm" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label>成绩</label>
+                                <div id="scoreData">
+
+                                </div>
+                                <input type="hidden" id="markDefenseOrderId" name="defenseOrderId">
+                                <input type="hidden" id="markStaffId" name="staffId">
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toMark">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script id="staff-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <option value="{{staff_value}}">{{staff_name}}</option>
             {{/each}}
         </script>
+        <script id="mark-score-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="radio">
+                <label>
+                    <input type="radio" name="scoreTypeId" class="markScore" value="{{scoreTypeId}}">
+                    {{scoreTypeName}}
+                </label>
+            </div>
+            {{/each}}
+        </script>
         <!--定义操作列按钮模板-->
         <script id="operator_button" type="text/x-handlebars-template">
             {{#each func}}
-            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}" data-staff="{{this.staff}}">{{this.name}}
             </button>
             {{/each}}
         </script>
