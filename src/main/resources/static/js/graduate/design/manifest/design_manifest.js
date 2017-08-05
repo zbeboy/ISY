@@ -136,7 +136,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-       安排
+        清单
        */
         $(tableData).delegate('.manifest', "click", function () {
             var id = $(this).attr('data-id');
