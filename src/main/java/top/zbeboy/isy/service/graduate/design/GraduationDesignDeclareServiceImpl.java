@@ -314,6 +314,7 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                 GRADUATION_DESIGN_DECLARE.PLAN_PERIOD,
                 GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER,
                 GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC,
+                GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER,
                 GRADUATION_DESIGN_DECLARE.GUIDE_TIMES,
                 GRADUATION_DESIGN_DECLARE.GUIDE_PEOPLES,
                 GRADUATION_DESIGN_DECLARE.IS_OK_APPLY,
@@ -329,6 +330,7 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                         graduationDesignDeclare.getPlanPeriod(),
                         graduationDesignDeclare.getAssistantTeacher(),
                         graduationDesignDeclare.getAssistantTeacherAcademic(),
+                        graduationDesignDeclare.getAssistantTeacherNumber(),
                         graduationDesignDeclare.getGuideTimes(),
                         graduationDesignDeclare.getGuidePeoples(),
                         graduationDesignDeclare.getIsOkApply(),
@@ -345,6 +347,7 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                 .set(GRADUATION_DESIGN_DECLARE.PLAN_PERIOD, graduationDesignDeclare.getPlanPeriod())
                 .set(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER, graduationDesignDeclare.getAssistantTeacher())
                 .set(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC, graduationDesignDeclare.getAssistantTeacherAcademic())
+                .set(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER, graduationDesignDeclare.getAssistantTeacherNumber())
                 .set(GRADUATION_DESIGN_DECLARE.GUIDE_TIMES, graduationDesignDeclare.getGuideTimes())
                 .set(GRADUATION_DESIGN_DECLARE.GUIDE_PEOPLES, graduationDesignDeclare.getGuidePeoples())
                 .set(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY, graduationDesignDeclare.getIsOkApply())

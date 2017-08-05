@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduateArchivesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
 
-    private static final long serialVersionUID = 633957103;
+    private static final long serialVersionUID = -1026128759;
 
     /**
      * The reference instance of <code>isy.graduate_archives</code>
@@ -105,7 +105,7 @@ public class GraduateArchives extends TableImpl<GraduateArchivesRecord> {
      */
     @Override
     public List<UniqueKey<GraduateArchivesRecord>> getKeys() {
-        return Arrays.<UniqueKey<GraduateArchivesRecord>>asList(Keys.KEY_GRADUATE_ARCHIVES_GRADUATION_DESIGN_PRESUBJECT_ID);
+        return Arrays.<UniqueKey<GraduateArchivesRecord>>asList(Keys.KEY_GRADUATE_ARCHIVES_GRADUATION_DESIGN_PRESUBJECT_ID, Keys.KEY_GRADUATE_ARCHIVES_ARCHIVE_NUMBER);
     }
 
     /**

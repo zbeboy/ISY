@@ -132,6 +132,7 @@ CREATE TABLE graduation_design_declare (
   plan_period                     VARCHAR(10),
   assistant_teacher               VARCHAR(30),
   assistant_teacher_academic      VARCHAR(30),
+  assistant_teacher_number      VARCHAR(20),
   guide_times                     INT,
   guide_peoples                   INT,
   is_ok_apply                     BOOLEAN DEFAULT 0,
@@ -229,7 +230,7 @@ CREATE TABLE defense_rate (
 CREATE TABLE graduate_archives (
   graduation_design_presubject_id VARCHAR(64)  NOT NULL UNIQUE,
   is_excellent     BOOLEAN      NOT NULL DEFAULT 0,
-  archive_number   VARCHAR(100) NOT NULL,
+  archive_number   VARCHAR(100) NOT NULL UNIQUE,
   note             VARCHAR(100),
   FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject (graduation_design_presubject_id)
 );
@@ -244,7 +245,7 @@ INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('软件�
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('论文型');
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('工程技术研究型');
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('工程设计型');
-INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('分理工论文型');
+INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('非理工论文型');
 
 INSERT INTO graduation_design_subject_origin_type (origin_type_name) VALUES ('生产');
 INSERT INTO graduation_design_subject_origin_type (origin_type_name) VALUES ('科研');

@@ -20,11 +20,11 @@ public class GraduationDesignDeclareUpdateVo {
     private String  planPeriod;
     private String  assistantTeacher;
     private String  assistantTeacherAcademic;
+    private String  assistantTeacherNumber;
     private Integer guideTimes;
     private Integer guidePeoples;
     private Byte    isOkApply;
     @NotNull
-    @Size(max = 64)
     private String  graduationDesignPresubjectId;
     @NotNull
     @Size(max = 64)

@@ -886,6 +886,7 @@ public class GraduationDesignSubjectController {
                                 tempGraduationDesignDeclare.setPlanPeriod(graduationDesignDeclareUpdateVo.getPlanPeriod());
                                 tempGraduationDesignDeclare.setAssistantTeacher(graduationDesignDeclareUpdateVo.getAssistantTeacher());
                                 tempGraduationDesignDeclare.setAssistantTeacherAcademic(graduationDesignDeclareUpdateVo.getAssistantTeacherAcademic());
+                                tempGraduationDesignDeclare.setAssistantTeacherNumber(graduationDesignDeclareUpdateVo.getAssistantTeacherNumber());
                                 tempGraduationDesignDeclare.setGuideTimes(graduationDesignDeclareUpdateVo.getGuideTimes());
                                 tempGraduationDesignDeclare.setGuidePeoples(graduationDesignDeclareUpdateVo.getGuidePeoples());
                                 tempGraduationDesignDeclare.setIsOkApply(graduationDesignDeclareUpdateVo.getIsOkApply());
@@ -1053,6 +1054,7 @@ public class GraduationDesignSubjectController {
                                 tempGraduationDesignDeclare.setPlanPeriod(graduationDesignDeclareUpdateVo.getPlanPeriod());
                                 tempGraduationDesignDeclare.setAssistantTeacher(graduationDesignDeclareUpdateVo.getAssistantTeacher());
                                 tempGraduationDesignDeclare.setAssistantTeacherAcademic(graduationDesignDeclareUpdateVo.getAssistantTeacherAcademic());
+                                tempGraduationDesignDeclare.setAssistantTeacherNumber(graduationDesignDeclareUpdateVo.getAssistantTeacherNumber());
                                 tempGraduationDesignDeclare.setGuideTimes(graduationDesignDeclareUpdateVo.getGuideTimes());
                                 tempGraduationDesignDeclare.setGuidePeoples(graduationDesignDeclareUpdateVo.getGuidePeoples());
                                 tempGraduationDesignDeclare.setIsOkApply(graduationDesignDeclareUpdateVo.getIsOkApply());

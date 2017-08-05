@@ -213,6 +213,7 @@ public class Keys {
     public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
     public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_GRADUATION_DESIGN_PRESUBJECT_ID = UniqueKeys0.KEY_GRADUATE_ARCHIVES_GRADUATION_DESIGN_PRESUBJECT_ID;
+    public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_ARCHIVE_NUMBER = UniqueKeys0.KEY_GRADUATE_ARCHIVES_ARCHIVE_NUMBER;
     public static final UniqueKey<GraduateArchivesCodeRecord> KEY_GRADUATE_ARCHIVES_CODE_PRIMARY = UniqueKeys0.KEY_GRADUATE_ARCHIVES_CODE_PRIMARY;
     public static final UniqueKey<GraduateArchivesCodeRecord> KEY_GRADUATE_ARCHIVES_CODE_CODE_NAME = UniqueKeys0.KEY_GRADUATE_ARCHIVES_CODE_CODE_NAME;
     public static final UniqueKey<GraduateArchivesCodeRecord> KEY_GRADUATE_ARCHIVES_CODE_CODE_NO = UniqueKeys0.KEY_GRADUATE_ARCHIVES_CODE_CODE_NO;
@@ -420,6 +421,7 @@ public class Keys {
         public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = createUniqueKey(Department.DEPARTMENT, "KEY_department_PRIMARY", Department.DEPARTMENT.DEPARTMENT_ID);
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);
         public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_GRADUATION_DESIGN_PRESUBJECT_ID = createUniqueKey(GraduateArchives.GRADUATE_ARCHIVES, "KEY_graduate_archives_graduation_design_presubject_id", GraduateArchives.GRADUATE_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID);
+        public static final UniqueKey<GraduateArchivesRecord> KEY_GRADUATE_ARCHIVES_ARCHIVE_NUMBER = createUniqueKey(GraduateArchives.GRADUATE_ARCHIVES, "KEY_graduate_archives_archive_number", GraduateArchives.GRADUATE_ARCHIVES.ARCHIVE_NUMBER);
         public static final UniqueKey<GraduateArchivesCodeRecord> KEY_GRADUATE_ARCHIVES_CODE_PRIMARY = createUniqueKey(GraduateArchivesCode.GRADUATE_ARCHIVES_CODE, "KEY_graduate_archives_code_PRIMARY", GraduateArchivesCode.GRADUATE_ARCHIVES_CODE.CODE_ID);
         public static final UniqueKey<GraduateArchivesCodeRecord> KEY_GRADUATE_ARCHIVES_CODE_CODE_NAME = createUniqueKey(GraduateArchivesCode.GRADUATE_ARCHIVES_CODE, "KEY_graduate_archives_code_code_name", GraduateArchivesCode.GRADUATE_ARCHIVES_CODE.CODE_NAME);
         public static final UniqueKey<GraduateArchivesCodeRecord> KEY_GRADUATE_ARCHIVES_CODE_CODE_NO = createUniqueKey(GraduateArchivesCode.GRADUATE_ARCHIVES_CODE, "KEY_graduate_archives_code_code_no", GraduateArchivesCode.GRADUATE_ARCHIVES_CODE.CODE_NO);

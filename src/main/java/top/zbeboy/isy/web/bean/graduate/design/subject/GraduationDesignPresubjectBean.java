@@ -25,6 +25,7 @@ public class GraduationDesignPresubjectBean extends GraduationDesignPresubject {
     private String planPeriod;
     private String assistantTeacher;
     private String assistantTeacherAcademic;
+    private String  assistantTeacherNumber;
     private int guideTimes;
     private int guidePeoples;
     private Byte isOkApply;

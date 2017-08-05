@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRecord> {
 
-    private static final long serialVersionUID = -128808271;
+    private static final long serialVersionUID = 705312254;
 
     /**
      * The reference instance of <code>isy.graduation_design_declare</code>
@@ -99,6 +99,11 @@ public class GraduationDesignDeclare extends TableImpl<GraduationDesignDeclareRe
      * The column <code>isy.graduation_design_declare.assistant_teacher_academic</code>.
      */
     public final TableField<GraduationDesignDeclareRecord, String> ASSISTANT_TEACHER_ACADEMIC = createField("assistant_teacher_academic", org.jooq.impl.SQLDataType.VARCHAR.length(30), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_declare.assistant_teacher_number</code>.
+     */
+    public final TableField<GraduationDesignDeclareRecord, String> ASSISTANT_TEACHER_NUMBER = createField("assistant_teacher_number", org.jooq.impl.SQLDataType.VARCHAR.length(20), this, "");
 
     /**
      * The column <code>isy.graduation_design_declare.guide_times</code>.

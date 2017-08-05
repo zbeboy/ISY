@@ -25,7 +25,8 @@
                         <label>题目</label>
                         <input class="form-control" readonly="readonly" name="presubjectTitle" id="presubjectTitle"
                                placeholder="题目" th:value="${graduationDesignPresubject.presubjectTitle}"/>
-                        <input type="hidden" th:value="${graduationDesignPresubject.graduationDesignPresubjectId}" name="graduationDesignPresubjectId"/>
+                        <input type="hidden" th:value="${graduationDesignPresubject.graduationDesignPresubjectId}"
+                               name="graduationDesignPresubjectId"/>
                         <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId"/>
                         <input type="hidden" th:value="${staffId}" name="staffId" id="staffId"/>
                     </div>
@@ -112,6 +113,11 @@
                         <input class="form-control" name="assistantTeacherAcademic" id="assistantTeacherAcademic"
                                th:value="${graduationDesignPresubject.assistantTeacherAcademic}" placeholder="助理教师职称"/>
                     </div>
+                    <div class="form-group">
+                        <label>助理教师工号</label>
+                        <input class="form-control" name="assistantTeacherNumber" id="assistantTeacherNumber"
+                               th:value="${graduationDesignPresubject.assistantTeacherNumber}" placeholder="助理教师工号"/>
+                    </div>
                     <div class="form-group" id="valid_guide_times">
                         <label>指导次数</label>
                         <input type="number" class="form-control" name="guideTimes" id="guideTimes"
@@ -121,7 +127,8 @@
                     <div class="form-group" id="valid_guide_peoples">
                         <label>指导学生人数</label>
                         <input type="number" class="form-control" name="guidePeoples" id="guidePeoples"
-                               th:value="${graduationDesignPresubject.guidePeoples}" placeholder="指导学生人数" readonly="readonly"/>
+                               th:value="${graduationDesignPresubject.guidePeoples}" placeholder="指导学生人数"
+                               readonly="readonly"/>
                         <p class="text-danger hidden" id="guide_peoples_error_msg"></p>
                     </div>
                     <div class="form-group">

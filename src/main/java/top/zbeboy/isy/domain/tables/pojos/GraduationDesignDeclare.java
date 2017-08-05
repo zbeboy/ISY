@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDeclare implements Serializable {
 
-    private static final long serialVersionUID = 969443083;
+    private static final long serialVersionUID = -1801902115;
 
     private Integer subjectTypeId;
     private Integer originTypeId;
@@ -36,6 +36,7 @@ public class GraduationDesignDeclare implements Serializable {
     private String  planPeriod;
     private String  assistantTeacher;
     private String  assistantTeacherAcademic;
+    private String  assistantTeacherNumber;
     private Integer guideTimes;
     private Integer guidePeoples;
     private Byte    isOkApply;
@@ -54,6 +55,7 @@ public class GraduationDesignDeclare implements Serializable {
         this.planPeriod = value.planPeriod;
         this.assistantTeacher = value.assistantTeacher;
         this.assistantTeacherAcademic = value.assistantTeacherAcademic;
+        this.assistantTeacherNumber = value.assistantTeacherNumber;
         this.guideTimes = value.guideTimes;
         this.guidePeoples = value.guidePeoples;
         this.isOkApply = value.isOkApply;
@@ -71,6 +73,7 @@ public class GraduationDesignDeclare implements Serializable {
         String  planPeriod,
         String  assistantTeacher,
         String  assistantTeacherAcademic,
+        String  assistantTeacherNumber,
         Integer guideTimes,
         Integer guidePeoples,
         Byte    isOkApply,
@@ -86,6 +89,7 @@ public class GraduationDesignDeclare implements Serializable {
         this.planPeriod = planPeriod;
         this.assistantTeacher = assistantTeacher;
         this.assistantTeacherAcademic = assistantTeacherAcademic;
+        this.assistantTeacherNumber = assistantTeacherNumber;
         this.guideTimes = guideTimes;
         this.guidePeoples = guidePeoples;
         this.isOkApply = isOkApply;
@@ -175,6 +179,15 @@ public class GraduationDesignDeclare implements Serializable {
         this.assistantTeacherAcademic = assistantTeacherAcademic;
     }
 
+    @Size(max = 20)
+    public String getAssistantTeacherNumber() {
+        return this.assistantTeacherNumber;
+    }
+
+    public void setAssistantTeacherNumber(String assistantTeacherNumber) {
+        this.assistantTeacherNumber = assistantTeacherNumber;
+    }
+
     public Integer getGuideTimes() {
         return this.guideTimes;
     }
@@ -223,6 +236,7 @@ public class GraduationDesignDeclare implements Serializable {
         sb.append(", ").append(planPeriod);
         sb.append(", ").append(assistantTeacher);
         sb.append(", ").append(assistantTeacherAcademic);
+        sb.append(", ").append(assistantTeacherNumber);
         sb.append(", ").append(guideTimes);
         sb.append(", ").append(guidePeoples);
         sb.append(", ").append(isOkApply);
