@@ -17,10 +17,7 @@ import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.elastic.pojo.UsersElastic;
-import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
-import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
-import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
+import top.zbeboy.isy.elastic.repository.*;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.system.AuthoritiesService;
 
@@ -52,10 +49,26 @@ public class ElasticSyncData {
     private StaffElasticRepository staffElasticRepository;
 
     @Autowired
+    private SystemLogElasticRepository systemLogElasticRepository;
+
+    @Autowired
+    private SystemMailboxElasticRepository systemMailboxElasticRepository;
+
+    @Autowired
+    private SystemSmsElasticRepository systemSmsElasticRepository;
+
+    @Autowired
     private AuthoritiesService authoritiesService;
 
     @Autowired
     private RoleService roleService;
+
+    @Test
+    public void cleanLog(){
+        systemLogElasticRepository.deleteAll();
+        systemMailboxElasticRepository.deleteAll();
+        systemSmsElasticRepository.deleteAll();
+    }
 
     @Test
     public void syncOrganizeData() {
