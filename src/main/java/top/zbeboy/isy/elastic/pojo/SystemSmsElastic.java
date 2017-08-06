@@ -11,6 +11,7 @@ import java.sql.Timestamp;
  */
 @Document(indexName = "systemsms", type = "systemsms", shards = 1, replicas = 0, refreshInterval = "-1")
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 @Data
 public class SystemSmsElastic {
     @Id

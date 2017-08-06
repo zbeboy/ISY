@@ -1,5 +1,6 @@
 package top.zbeboy.isy.glue.system;
 
+import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
 import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.web.bean.system.log.SystemLogBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -25,4 +26,11 @@ public interface SystemLogGlue {
      * @return 总数
      */
     long countAll();
+
+    /**
+     * 保存
+     *
+     * @param systemLogElastic 系统日志
+     */
+    void save(SystemLogElastic systemLogElastic);
 }

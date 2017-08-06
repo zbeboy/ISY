@@ -72,10 +72,7 @@ import top.zbeboy.isy.domain.tables.Student;
 import top.zbeboy.isy.domain.tables.SyncElastic;
 import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
-import top.zbeboy.isy.domain.tables.SystemLog;
-import top.zbeboy.isy.domain.tables.SystemMailbox;
 import top.zbeboy.isy.domain.tables.SystemMessage;
-import top.zbeboy.isy.domain.tables.SystemSms;
 import top.zbeboy.isy.domain.tables.Users;
 import top.zbeboy.isy.domain.tables.UsersType;
 
@@ -424,24 +421,9 @@ public class Tables {
     public static final SystemAlertType SYSTEM_ALERT_TYPE = top.zbeboy.isy.domain.tables.SystemAlertType.SYSTEM_ALERT_TYPE;
 
     /**
-     * The table <code>isy.system_log</code>.
-     */
-    public static final SystemLog SYSTEM_LOG = top.zbeboy.isy.domain.tables.SystemLog.SYSTEM_LOG;
-
-    /**
-     * The table <code>isy.system_mailbox</code>.
-     */
-    public static final SystemMailbox SYSTEM_MAILBOX = top.zbeboy.isy.domain.tables.SystemMailbox.SYSTEM_MAILBOX;
-
-    /**
      * The table <code>isy.system_message</code>.
      */
     public static final SystemMessage SYSTEM_MESSAGE = top.zbeboy.isy.domain.tables.SystemMessage.SYSTEM_MESSAGE;
-
-    /**
-     * The table <code>isy.system_sms</code>.
-     */
-    public static final SystemSms SYSTEM_SMS = top.zbeboy.isy.domain.tables.SystemSms.SYSTEM_SMS;
 
     /**
      * The table <code>isy.users</code>.

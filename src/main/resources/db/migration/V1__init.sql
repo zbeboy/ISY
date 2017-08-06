@@ -171,28 +171,6 @@ CREATE TABLE staff (
   FOREIGN KEY (username) REFERENCES users (username)
 );
 
-CREATE TABLE system_log (
-  system_log_id  VARCHAR(64) PRIMARY KEY,
-  behavior       VARCHAR(200) NOT NULL,
-  operating_time DATETIME     NOT NULL,
-  username       VARCHAR(64)  NOT NULL,
-  ip_address     VARCHAR(50)  NOT NULL
-);
-
-CREATE TABLE system_mailbox (
-  system_mailbox_id VARCHAR(64) PRIMARY KEY,
-  send_time         DATETIME,
-  accept_mail       VARCHAR(200),
-  send_condition    VARCHAR(500)
-);
-
-CREATE TABLE system_sms (
-  system_sms_id  VARCHAR(64) PRIMARY KEY,
-  send_time      DATETIME,
-  accept_phone   VARCHAR(15),
-  send_condition VARCHAR(500)
-);
-
 CREATE TABLE files (
   file_id            VARCHAR(64) PRIMARY KEY,
   size               LONG,

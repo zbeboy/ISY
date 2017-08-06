@@ -6,8 +6,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import top.zbeboy.isy.domain.tables.pojos.SystemLog;
-import top.zbeboy.isy.service.system.SystemLogService;
+import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
+import top.zbeboy.isy.glue.system.SystemLogGlue;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 
@@ -32,10 +32,10 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         ServletContext context = request.getSession().getServletContext();
         ApplicationContext ctx = WebApplicationContextUtils
                 .getWebApplicationContext(context);
-        SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), "登录系统失败", new Timestamp(Clock.systemDefaultZone().millis()), request.getParameter("username"), RequestUtils.getIpAddress(request));
-        SystemLogService systemLogService = (SystemLogService) ctx
-                .getBean("systemLogService");
-        systemLogService.save(systemLog);
+        SystemLogElastic systemLog = new SystemLogElastic(UUIDUtils.getUUID(), "登录系统失败", new Timestamp(Clock.systemDefaultZone().millis()), request.getParameter("username"), RequestUtils.getIpAddress(request));
+        SystemLogGlue systemLogGlue = (SystemLogGlue) ctx
+                .getBean("systemLogGlue");
+        systemLogGlue.save(systemLog);
         response.getWriter().print(AjaxAuthenticationCode.AU_ERROR_CODE);
     }
 }

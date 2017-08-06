@@ -50,6 +50,11 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
         return systemMailboxElasticRepository.count();
     }
 
+    @Override
+    public void save(SystemMailboxElastic systemMailboxElastic) {
+        systemMailboxElasticRepository.save(systemMailboxElastic);
+    }
+
     /**
      * 构建新数据
      *

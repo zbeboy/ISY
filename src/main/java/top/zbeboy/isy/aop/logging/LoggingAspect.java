@@ -11,10 +11,10 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.env.Environment;
 import top.zbeboy.isy.annotation.logging.RecordSystemLogging;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.SystemLog;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
+import top.zbeboy.isy.glue.system.SystemLogGlue;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.system.SystemLogService;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 
@@ -45,7 +45,7 @@ public class LoggingAspect {
     private UsersService usersService;
 
     @Resource
-    private SystemLogService systemLogService;
+    private SystemLogGlue systemLogGlue;
 
     @Pointcut("within(top.zbeboy.isy.service..*) || within(top.zbeboy.isy.web..*)")
     public void loggingPointcut() {
@@ -102,8 +102,8 @@ public class LoggingAspect {
                         if (o instanceof HttpServletRequest) {
                             HttpServletRequest request = (HttpServletRequest) o;
                             Users users = usersService.getUserFromSession();
-                            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), String.valueOf(method.getAnnotation(RecordSystemLogging.class).description()), new Timestamp(Clock.systemDefaultZone().millis()), users.getUsername(), RequestUtils.getIpAddress(request));
-                            systemLogService.save(systemLog);
+                            SystemLogElastic systemLog = new SystemLogElastic(UUIDUtils.getUUID(), String.valueOf(method.getAnnotation(RecordSystemLogging.class).description()), new Timestamp(Clock.systemDefaultZone().millis()), users.getUsername(), RequestUtils.getIpAddress(request));
+                            systemLogGlue.save(systemLog);
                             log.info(" Record operator logging to database , the module is {} , the method is {} ", method.getAnnotation(RecordSystemLogging.class).module(), method.getAnnotation(RecordSystemLogging.class).methods());
                             break;
                         }

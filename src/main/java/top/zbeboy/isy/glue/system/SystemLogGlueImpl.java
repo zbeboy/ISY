@@ -14,7 +14,6 @@ import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
 import top.zbeboy.isy.elastic.repository.SystemLogElasticRepository;
 import top.zbeboy.isy.glue.plugin.ElasticPlugin;
 import top.zbeboy.isy.glue.util.ResultUtils;
-import top.zbeboy.isy.service.system.SystemLogService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.log.SystemLogBean;
@@ -33,9 +32,6 @@ import java.util.List;
 public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements SystemLogGlue {
 
     @Resource
-    private SystemLogService systemLogService;
-
-    @Resource
     private SystemLogElasticRepository systemLogElasticRepository;
 
     @Override
@@ -49,6 +45,11 @@ public class SystemLogGlueImpl extends ElasticPlugin<SystemLogBean> implements S
     @Override
     public long countAll() {
         return systemLogElasticRepository.count();
+    }
+
+    @Override
+    public void save(SystemLogElastic systemLogElastic) {
+        systemLogElasticRepository.save(systemLogElastic);
     }
 
     /**

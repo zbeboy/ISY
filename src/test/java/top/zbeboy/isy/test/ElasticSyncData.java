@@ -3,11 +3,6 @@ package top.zbeboy.isy.test;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
-import org.jooq.tools.jdbc.MockConnection;
-import org.jooq.tools.jdbc.MockDataProvider;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +13,14 @@ import top.zbeboy.isy.Application;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.elastic.pojo.*;
-import top.zbeboy.isy.elastic.repository.*;
-import top.zbeboy.isy.service.data.StudentService;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.system.AuthoritiesService;
 
@@ -40,31 +40,22 @@ public class ElasticSyncData {
     DSLContext create;
 
     @Autowired
-    OrganizeElasticRepository organizeElasticRepository;
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
-    SystemLogElasticRepository systemLogElasticRepository;
+    private UsersElasticRepository usersElasticRepository;
 
     @Autowired
-    SystemMailboxElasticRepository systemMailboxElasticRepository;
+    private StudentElasticRepository studentElasticRepository;
 
     @Autowired
-    SystemSmsElasticRepository systemSmsElasticRepository;
+    private StaffElasticRepository staffElasticRepository;
 
     @Autowired
-    UsersElasticRepository usersElasticRepository;
+    private AuthoritiesService authoritiesService;
 
     @Autowired
-    StudentElasticRepository studentElasticRepository;
-
-    @Autowired
-    StaffElasticRepository staffElasticRepository;
-
-    @Autowired
-    AuthoritiesService authoritiesService;
-
-    @Autowired
-    RoleService roleService;
+    private RoleService roleService;
 
     @Test
     public void syncOrganizeData() {
@@ -84,45 +75,6 @@ public class ElasticSyncData {
         if (record.isNotEmpty()) {
             List<OrganizeElastic> organizeElastics = record.into(OrganizeElastic.class);
             organizeElasticRepository.save(organizeElastics);
-        }
-    }
-
-    @Test
-    public void syncSystemLogData() {
-        systemLogElasticRepository.deleteAll();
-        Result<Record> record = create.select()
-                .from(SYSTEM_LOG)
-                .fetch();
-
-        if (record.isNotEmpty()) {
-            List<SystemLogElastic> systemLogElastics = record.into(SystemLogElastic.class);
-            systemLogElasticRepository.save(systemLogElastics);
-        }
-    }
-
-    @Test
-    public void syncSystemMailboxData() {
-        systemMailboxElasticRepository.deleteAll();
-        Result<Record> record = create.select()
-                .from(SYSTEM_MAILBOX)
-                .fetch();
-
-        if (record.isNotEmpty()) {
-            List<SystemMailboxElastic> systemMailboxElastics = record.into(SystemMailboxElastic.class);
-            systemMailboxElasticRepository.save(systemMailboxElastics);
-        }
-    }
-
-    @Test
-    public void syncSystemSmsData() {
-        systemSmsElasticRepository.deleteAll();
-        Result<Record> record = create.select()
-                .from(SYSTEM_SMS)
-                .fetch();
-
-        if (record.isNotEmpty()) {
-            List<SystemSmsElastic> systemSmsElastics = record.into(SystemSmsElastic.class);
-            systemSmsElasticRepository.save(systemSmsElastics);
         }
     }
 

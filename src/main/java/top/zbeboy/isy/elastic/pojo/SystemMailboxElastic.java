@@ -11,6 +11,7 @@ import java.sql.Timestamp;
  */
 @Document(indexName = "systemmailbox", type = "systemmailbox", shards = 1, replicas = 0, refreshInterval = "-1")
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 @Data
 public class SystemMailboxElastic {
     @Id

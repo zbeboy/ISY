@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import top.zbeboy.isy.config.ISYProperties;
-import top.zbeboy.isy.domain.tables.pojos.SystemSms;
+import top.zbeboy.isy.elastic.pojo.SystemSmsElastic;
+import top.zbeboy.isy.glue.system.SystemSmsGlue;
 import top.zbeboy.isy.service.util.UUIDUtils;
 
 import javax.annotation.Resource;
@@ -31,7 +32,7 @@ public class MobileServiceImpl implements MobileService {
     private ISYProperties isyProperties;
 
     @Resource
-    private SystemSmsService systemSmsService;
+    private SystemSmsGlue systemSmsGlue;
 
     @Async
     @Override
@@ -65,8 +66,8 @@ public class MobileServiceImpl implements MobileService {
             log.info("Send sms to mobile {} is exception : {}", mobile, e);
             result = e.getMessage();
         }
-        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), mobile, result);
-        systemSmsService.save(systemSms);
+        SystemSmsElastic systemSms = new SystemSmsElastic(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), mobile, result);
+        systemSmsGlue.save(systemSms);
     }
 
     @Async

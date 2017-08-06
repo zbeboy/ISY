@@ -80,10 +80,7 @@ import top.zbeboy.isy.domain.tables.Student;
 import top.zbeboy.isy.domain.tables.SyncElastic;
 import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
-import top.zbeboy.isy.domain.tables.SystemLog;
-import top.zbeboy.isy.domain.tables.SystemMailbox;
 import top.zbeboy.isy.domain.tables.SystemMessage;
-import top.zbeboy.isy.domain.tables.SystemSms;
 import top.zbeboy.isy.domain.tables.Users;
 import top.zbeboy.isy.domain.tables.UsersType;
 
@@ -101,7 +98,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = 299670561;
+    private static final long serialVersionUID = -852909221;
 
     /**
      * The reference instance of <code>isy</code>
@@ -439,24 +436,9 @@ public class Isy extends SchemaImpl {
     public final SystemAlertType SYSTEM_ALERT_TYPE = top.zbeboy.isy.domain.tables.SystemAlertType.SYSTEM_ALERT_TYPE;
 
     /**
-     * The table <code>isy.system_log</code>.
-     */
-    public final SystemLog SYSTEM_LOG = top.zbeboy.isy.domain.tables.SystemLog.SYSTEM_LOG;
-
-    /**
-     * The table <code>isy.system_mailbox</code>.
-     */
-    public final SystemMailbox SYSTEM_MAILBOX = top.zbeboy.isy.domain.tables.SystemMailbox.SYSTEM_MAILBOX;
-
-    /**
      * The table <code>isy.system_message</code>.
      */
     public final SystemMessage SYSTEM_MESSAGE = top.zbeboy.isy.domain.tables.SystemMessage.SYSTEM_MESSAGE;
-
-    /**
-     * The table <code>isy.system_sms</code>.
-     */
-    public final SystemSms SYSTEM_SMS = top.zbeboy.isy.domain.tables.SystemSms.SYSTEM_SMS;
 
     /**
      * The table <code>isy.users</code>.
@@ -559,10 +541,7 @@ public class Isy extends SchemaImpl {
             SyncElastic.SYNC_ELASTIC,
             SystemAlert.SYSTEM_ALERT,
             SystemAlertType.SYSTEM_ALERT_TYPE,
-            SystemLog.SYSTEM_LOG,
-            SystemMailbox.SYSTEM_MAILBOX,
             SystemMessage.SYSTEM_MESSAGE,
-            SystemSms.SYSTEM_SMS,
             Users.USERS,
             UsersType.USERS_TYPE);
     }

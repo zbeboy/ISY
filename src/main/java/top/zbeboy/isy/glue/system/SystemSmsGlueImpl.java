@@ -17,7 +17,6 @@ import top.zbeboy.isy.elastic.pojo.SystemSmsElastic;
 import top.zbeboy.isy.elastic.repository.SystemSmsElasticRepository;
 import top.zbeboy.isy.glue.plugin.ElasticPlugin;
 import top.zbeboy.isy.glue.util.ResultUtils;
-import top.zbeboy.isy.service.system.SystemSmsService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.sms.SystemSmsBean;
@@ -36,9 +35,6 @@ import java.util.List;
 public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements SystemSmsGlue {
 
     @Resource
-    private SystemSmsService systemSmsService;
-
-    @Resource
     private SystemSmsElasticRepository systemSmsElasticRepository;
 
     @Override
@@ -52,6 +48,11 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     @Override
     public long countAll() {
         return systemSmsElasticRepository.count();
+    }
+
+    @Override
+    public void save(SystemSmsElastic systemSmsElastic) {
+        systemSmsElasticRepository.save(systemSmsElastic);
     }
 
     /**

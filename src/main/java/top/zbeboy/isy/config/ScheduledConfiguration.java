@@ -15,7 +15,9 @@ import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.InternshipApplyService;
 import top.zbeboy.isy.service.internship.InternshipReleaseService;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.system.*;
+import top.zbeboy.isy.service.system.AuthoritiesService;
+import top.zbeboy.isy.service.system.SystemAlertService;
+import top.zbeboy.isy.service.system.SystemMessageService;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -52,15 +54,6 @@ import java.time.Clock;
 public class ScheduledConfiguration {
 
     @Resource
-    private SystemLogService systemLogService;
-
-    @Resource
-    private SystemMailboxService systemMailboxService;
-
-    @Resource
-    private SystemSmsService systemSmsService;
-
-    @Resource
     private InternshipReleaseService internshipReleaseService;
 
     @Resource
@@ -88,21 +81,6 @@ public class ScheduledConfiguration {
     private AuthoritiesService authoritiesService;
 
     /**
-     * 清理信息
-     */
-    @Scheduled(cron = "0 15 01 01 * ?")// 每月1号 晚间1点15分
-    public void clean() {
-        // 清理日志,邮件，短信
-        DateTime dateTime = DateTime.now();
-        DateTime oldTime = dateTime.minusDays(120);
-        Timestamp ts = new Timestamp(oldTime.getMillis());
-        systemLogService.deleteByOperatingTime(ts);
-        systemMailboxService.deleteBySendTime(ts);
-        systemSmsService.deleteBySendTime(ts);
-        log.info(">>>>>>>>>>>>> scheduled ... log , mailbox , sms ");
-    }
-
-    /**
      * 清理未验证用户信息
      */
     @Scheduled(cron = "0 15 01 02 * ?")// 每月2号 晚间1点15分
@@ -123,7 +101,7 @@ public class ScheduledConfiguration {
             }
             usersService.deleteById(r.getUsername());
         });
-        log.info(">>>>>>>>>>>>> scheduled ... users ");
+        log.info(">>>>>>>>>>>>> scheduled ... clean users ");
     }
 
     /**
@@ -153,6 +131,6 @@ public class ScheduledConfiguration {
         Timestamp ts = new Timestamp(oldTime.getMillis());
         systemAlertService.deleteByAlertDate(ts);
         systemMessageService.deleteByMessageDate(ts);
-        log.info(">>>>>>>>>>>>> scheduled ... alert , message ");
+        log.info(">>>>>>>>>>>>> scheduled ... clean alert , message ");
     }
 }
