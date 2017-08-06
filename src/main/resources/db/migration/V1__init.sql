@@ -882,9 +882,9 @@ INSERT INTO application (application_id, application_name, application_sort,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES
   ('ac1cbf2870004403adb0d20df5a457e3', '毕业设计归档', 243, '61cf2fa3e5b545a89cff0778937b94eb',
-   '/web/menu/graduate/design/archive',
-   'graduate_design_archive', 'graduate_design_archive', '',
-   '/web/graduate/design/archive');
+   '/web/menu/graduate/design/archives',
+   'graduate_design_archives', 'graduate_design_archives', '',
+   '/web/graduate/design/archives');
 
 INSERT INTO internship_type (internship_type_name) VALUES ('顶岗实习(留学院)');
 INSERT INTO internship_type (internship_type_name) VALUES ('校外自主实习(去单位)');

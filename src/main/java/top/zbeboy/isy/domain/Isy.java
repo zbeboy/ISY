@@ -29,8 +29,8 @@ import top.zbeboy.isy.domain.tables.DefenseRate;
 import top.zbeboy.isy.domain.tables.DefenseTime;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
-import top.zbeboy.isy.domain.tables.GraduateArchives;
-import top.zbeboy.isy.domain.tables.GraduateArchivesCode;
+import top.zbeboy.isy.domain.tables.GraduationDesignArchives;
+import top.zbeboy.isy.domain.tables.GraduationDesignArchivesCode;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
@@ -98,7 +98,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = -852909221;
+    private static final long serialVersionUID = -512906689;
 
     /**
      * The reference instance of <code>isy</code>
@@ -181,14 +181,14 @@ public class Isy extends SchemaImpl {
     public final Files FILES = top.zbeboy.isy.domain.tables.Files.FILES;
 
     /**
-     * The table <code>isy.graduate_archives</code>.
+     * The table <code>isy.graduation_design_archives</code>.
      */
-    public final GraduateArchives GRADUATE_ARCHIVES = top.zbeboy.isy.domain.tables.GraduateArchives.GRADUATE_ARCHIVES;
+    public final GraduationDesignArchives GRADUATION_DESIGN_ARCHIVES = top.zbeboy.isy.domain.tables.GraduationDesignArchives.GRADUATION_DESIGN_ARCHIVES;
 
     /**
-     * The table <code>isy.graduate_archives_code</code>.
+     * The table <code>isy.graduation_design_archives_code</code>.
      */
-    public final GraduateArchivesCode GRADUATE_ARCHIVES_CODE = top.zbeboy.isy.domain.tables.GraduateArchivesCode.GRADUATE_ARCHIVES_CODE;
+    public final GraduationDesignArchivesCode GRADUATION_DESIGN_ARCHIVES_CODE = top.zbeboy.isy.domain.tables.GraduationDesignArchivesCode.GRADUATION_DESIGN_ARCHIVES_CODE;
 
     /**
      * The table <code>isy.graduation_design_datum</code>.
@@ -490,8 +490,8 @@ public class Isy extends SchemaImpl {
             DefenseTime.DEFENSE_TIME,
             Department.DEPARTMENT,
             Files.FILES,
-            GraduateArchives.GRADUATE_ARCHIVES,
-            GraduateArchivesCode.GRADUATE_ARCHIVES_CODE,
+            GraduationDesignArchives.GRADUATION_DESIGN_ARCHIVES,
+            GraduationDesignArchivesCode.GRADUATION_DESIGN_ARCHIVES_CODE,
             GraduationDesignDatum.GRADUATION_DESIGN_DATUM,
             GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE,
             GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE,

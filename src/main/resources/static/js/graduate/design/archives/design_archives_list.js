@@ -9,9 +9,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
          */
         function getAjaxUrl() {
             return {
-                data_url: '/web/graduate/design/archive/list/data',
-                export_data_url: '/web/graduate/design/archive/list/data/export',
-                back: '/web/menu/graduate/design/archive'
+                data_url: '/web/graduate/design/archives/list/data',
+                export_data_url: '/web/graduate/design/archives/list/data/export',
+                back: '/web/menu/graduate/design/archives'
             };
         }
 

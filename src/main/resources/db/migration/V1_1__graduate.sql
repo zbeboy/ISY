@@ -132,7 +132,7 @@ CREATE TABLE graduation_design_declare (
   plan_period                     VARCHAR(10),
   assistant_teacher               VARCHAR(30),
   assistant_teacher_academic      VARCHAR(30),
-  assistant_teacher_number      VARCHAR(20),
+  assistant_teacher_number        VARCHAR(20),
   guide_times                     INT,
   guide_peoples                   INT,
   is_ok_apply                     BOOLEAN DEFAULT 0,
@@ -227,18 +227,18 @@ CREATE TABLE defense_rate (
   UNIQUE (defense_order_id, graduation_design_teacher_id)
 );
 
-CREATE TABLE graduate_archives (
+CREATE TABLE graduation_design_archives (
   graduation_design_presubject_id VARCHAR(64)  NOT NULL UNIQUE,
-  is_excellent     BOOLEAN      NOT NULL DEFAULT 0,
-  archive_number   VARCHAR(100) NOT NULL UNIQUE,
-  note             VARCHAR(100),
+  is_excellent                    BOOLEAN      NOT NULL DEFAULT 0,
+  archive_number                  VARCHAR(100) NOT NULL UNIQUE,
+  note                            VARCHAR(100),
   FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject (graduation_design_presubject_id)
 );
 
-CREATE TABLE graduate_archives_code (
-  code_id INT AUTO_INCREMENT PRIMARY KEY ,
-  code_name VARCHAR(30) NOT NULL UNIQUE ,
-  code_no VARCHAR(20) NOT NULL UNIQUE
+CREATE TABLE graduation_design_archives_code (
+  code_id   INT AUTO_INCREMENT PRIMARY KEY,
+  code_name VARCHAR(30) NOT NULL UNIQUE,
+  code_no   VARCHAR(20) NOT NULL UNIQUE
 );
 
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('软件型');

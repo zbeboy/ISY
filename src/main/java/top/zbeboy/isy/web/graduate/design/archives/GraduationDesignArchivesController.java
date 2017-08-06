@@ -34,9 +34,9 @@ public class GraduationDesignArchivesController {
      *
      * @return 毕业设计归档页面
      */
-    @RequestMapping(value = "/web/menu/graduate/design/archive", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/menu/graduate/design/archives", method = RequestMethod.GET)
     public String manifest() {
-        return "web/graduate/design/archive/design_archive::#page-wrapper";
+        return "web/graduate/design/archives/design_archives::#page-wrapper";
     }
 
     /**
@@ -46,10 +46,10 @@ public class GraduationDesignArchivesController {
      * @param modelMap                  页面对象
      * @return 页面
      */
-    @RequestMapping(value = "/web/graduate/design/archive/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/graduate/design/archives/list", method = RequestMethod.GET)
     public String list(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
-        return "web/graduate/design/archive/design_archive_list::#page-wrapper";
+        return "web/graduate/design/archives/design_archives_list::#page-wrapper";
     }
 
     /**
@@ -58,7 +58,7 @@ public class GraduationDesignArchivesController {
      * @param request 请求
      * @return 数据
      */
-  /*  @RequestMapping(value = "/web/graduate/design/archive/list/data", method = RequestMethod.GET)
+  /*  @RequestMapping(value = "/web/graduate/design/archives/list/data", method = RequestMethod.GET)
     @ResponseBody
     public DataTablesUtils<GraduationDesignDeclareBean> listData(HttpServletRequest request) {
         String graduationDesignReleaseId = request.getParameter("graduationDesignReleaseId");

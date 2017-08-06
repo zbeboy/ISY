@@ -70,7 +70,15 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Override
     public List<Application> findByPid(String pid) {
-        return applicationDao.fetchByApplicationPid(pid);
+        List<Application> applications = new ArrayList<>();
+        Result<ApplicationRecord> applicationRecords = create.selectFrom(APPLICATION)
+                .where(APPLICATION.APPLICATION_PID.eq(pid))
+                .orderBy(APPLICATION.APPLICATION_SORT.asc())
+                .fetch();
+        if (applicationRecords.isNotEmpty()) {
+            applications = applicationRecords.into(Application.class);
+        }
+        return applications;
     }
 
     @Override
@@ -81,6 +89,7 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
                 .join(COLLEGE_APPLICATION)
                 .on(APPLICATION.APPLICATION_ID.eq(COLLEGE_APPLICATION.APPLICATION_ID))
                 .where(APPLICATION.APPLICATION_PID.eq(pid).and(COLLEGE_APPLICATION.COLLEGE_ID.eq(collegeId)))
+                .orderBy(APPLICATION.APPLICATION_SORT.asc())
                 .fetch();
         if (records.isNotEmpty()) {
             applications = records.into(Application.class);
