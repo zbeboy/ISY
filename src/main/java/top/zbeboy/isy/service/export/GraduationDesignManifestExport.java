@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class GraduationDesignManifestExport extends ExportUtils<GraduationDesignDeclareBean> {
 
-
     // 序号
     private int sequence = 0;
 

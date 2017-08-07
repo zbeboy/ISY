@@ -31,4 +31,14 @@ public interface GraduationDesignArchivesService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils, GraduationDesignArchivesBean graduateArchivesBean);
+
+    /**
+     * 导出
+     *
+     * @param dataTablesUtils              datatables工具类
+     * @param graduationDesignArchivesBean 条件
+     * @return 导出数据
+     */
+    List<GraduationDesignArchivesBean> exportData(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils, GraduationDesignArchivesBean graduationDesignArchivesBean);
+
 }

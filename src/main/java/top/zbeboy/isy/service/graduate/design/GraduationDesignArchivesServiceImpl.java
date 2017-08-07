@@ -221,6 +221,90 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
         return count.value1();
     }
 
+    @Override
+    public List<GraduationDesignArchivesBean> exportData(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils, GraduationDesignArchivesBean graduationDesignArchivesBean) {
+        List<GraduationDesignArchivesBean> graduationDesignArchivesBeans = new ArrayList<>();
+        Result<Record> records;
+        Condition a = searchCondition(dataTablesUtils);
+        a = otherCondition(a, graduationDesignArchivesBean);
+        if (ObjectUtils.isEmpty(a)) {
+            SelectJoinStep<Record> selectJoinStep = create.select()
+                    .from(DEFENSE_ORDER)
+                    .leftJoin(SCORE_TYPE)
+                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
+                    .join(DEFENSE_GROUP_MEMBER)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
+                    .join(GRADUATION_DESIGN_TEACHER)
+                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(GRADUATION_DESIGN_PRESUBJECT)
+                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
+                    .join(STAFF)
+                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .join(ACADEMIC_TITLE)
+                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
+                    .join(GRADUATION_DESIGN_DECLARE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
+                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
+                    .leftJoin(GRADUATION_DESIGN_ARCHIVES)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .join(GRADUATION_DESIGN_DECLARE_DATA)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(GRADUATION_DESIGN_RELEASE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(SCIENCE)
+                    .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(DEPARTMENT)
+                    .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                    .join(COLLEGE)
+                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID));
+            records = selectJoinStep.fetch();
+        } else {
+            SelectConditionStep<Record> selectConditionStep = create.select()
+                    .from(DEFENSE_ORDER)
+                    .leftJoin(SCORE_TYPE)
+                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
+                    .join(DEFENSE_GROUP_MEMBER)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
+                    .join(GRADUATION_DESIGN_TEACHER)
+                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(GRADUATION_DESIGN_PRESUBJECT)
+                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
+                    .join(STAFF)
+                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .join(ACADEMIC_TITLE)
+                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
+                    .join(GRADUATION_DESIGN_DECLARE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
+                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
+                    .leftJoin(GRADUATION_DESIGN_ARCHIVES)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .join(GRADUATION_DESIGN_DECLARE_DATA)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(GRADUATION_DESIGN_RELEASE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(SCIENCE)
+                    .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(DEPARTMENT)
+                    .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                    .join(COLLEGE)
+                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .where(a);
+            records = selectConditionStep.fetch();
+        }
+        buildData(records, graduationDesignArchivesBeans);
+        return graduationDesignArchivesBeans;
+    }
+
     /**
      * 其它条件
      *

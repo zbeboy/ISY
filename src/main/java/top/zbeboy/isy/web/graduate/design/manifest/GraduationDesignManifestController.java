@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.export.GraduationDesignManifestExport;
@@ -47,9 +46,6 @@ public class GraduationDesignManifestController {
 
     @Resource
     private GraduationDesignReleaseService graduationDesignReleaseService;
-
-    @Resource
-    private CommonControllerMethodService commonControllerMethodService;
 
     @Resource
     private GraduationDesignTeacherService graduationDesignTeacherService;

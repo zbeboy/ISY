@@ -138,6 +138,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                     }
                 },
                 {
+                    targets: 17,
+                    render: function (a, b, c, d) {
+                        var v = '否';
+                        if (c.isExcellent !== null && c.isExcellent === 1) {
+                           v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
                     targets: 20,
                     orderable: false,
                     render: function (a, b, c, d) {
