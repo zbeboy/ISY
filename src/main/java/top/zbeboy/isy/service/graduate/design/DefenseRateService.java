@@ -25,7 +25,7 @@ public interface DefenseRateService {
      *
      * @param defenseRate 数据
      */
-    void save(DefenseRate defenseRate);
+    void saveOrUpdate(DefenseRate defenseRate);
 
     /**
      * 通过毕业答辩顺序id与毕业答辩组id查询教师打分信息

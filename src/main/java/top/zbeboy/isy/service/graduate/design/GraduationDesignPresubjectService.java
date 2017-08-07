@@ -40,6 +40,14 @@ public interface GraduationDesignPresubjectService {
     GraduationDesignPresubjectRecord findByStudentIdAndGraduationDesignReleaseId(int studentId, String graduationDesignReleaseId);
 
     /**
+     * 通过毕业设计发布id查询
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return 数据
+     */
+    Result<GraduationDesignPresubjectRecord> findByGraduationDesignReleaseId(String graduationDesignReleaseId);
+
+    /**
      * 保存
      *
      * @param graduationDesignPresubject 数据

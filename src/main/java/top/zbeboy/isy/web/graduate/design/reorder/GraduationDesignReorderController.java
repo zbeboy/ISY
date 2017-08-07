@@ -450,7 +450,7 @@ public class GraduationDesignReorderController {
                                 defenseRate.setGraduationDesignTeacherId(graduationDesignTeacherId);
                                 defenseRate.setGrade(defenseOrderVo.getGrade());
                             }
-                            defenseRateService.save(defenseRate);
+                            defenseRateService.saveOrUpdate(defenseRate);
                             ajaxUtils.success().msg("保存成功");
                         } else {
                             ajaxUtils.fail().msg("您不符合更改条件");

@@ -62,6 +62,13 @@ public class GraduationDesignPresubjectServiceImpl extends DataTablesPlugin<Grad
                 .fetchOne();
     }
 
+    @Override
+    public Result<GraduationDesignPresubjectRecord> findByGraduationDesignReleaseId(String graduationDesignReleaseId) {
+        return create.selectFrom(GRADUATION_DESIGN_PRESUBJECT)
+                .where(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(GraduationDesignPresubject graduationDesignPresubject) {

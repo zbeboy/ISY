@@ -12,6 +12,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 data_url: '/web/graduate/design/archives/list/data',
                 export_data_url: '/web/graduate/design/archives/list/data/export',
                 generateArchivesCode_url: '/web/graduate/design/archives/generate',
+                excellent_url: '/web/graduate/design/archives/excellent',
+                archive_info: '/web/graduate/design/archives/info',
+                valid_archive_number: '/web/graduate/design/archives/valid/number',
+                archive_number_update: '/web/graduate/design/archives/number',
                 back: '/web/menu/graduate/design/archives'
             };
         }
@@ -87,7 +91,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[6, 'asc']],// 排序
+            "aaSorting": [[14, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().data_url,
                 "dataSrc": "data",
@@ -158,22 +162,22 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                             context = {
                                 func: [
                                     {
-                                        "name": "设置百优",
-                                        "css": "okExcellent",
-                                        "type": "default",
-                                        "id": c.defenseOrderId
+                                        "name": "取消百优",
+                                        "css": "cancelExcellent",
+                                        "type": "primary",
+                                        "id": c.graduationDesignPresubjectId
                                     },
                                     {
                                         "name": "档案号",
                                         "css": "archiveNumber",
                                         "type": "default",
-                                        "id": c.defenseOrderId
+                                        "id": c.graduationDesignPresubjectId
                                     },
                                     {
                                         "name": "备注",
                                         "css": "note",
                                         "type": "default",
-                                        "id": c.defenseOrderId
+                                        "id": c.graduationDesignPresubjectId
                                     }
                                 ]
                             };
@@ -181,22 +185,22 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                             context = {
                                 func: [
                                     {
-                                        "name": "取消百优",
-                                        "css": "cancelExcellent",
+                                        "name": "设置百优",
+                                        "css": "okExcellent",
                                         "type": "default",
-                                        "id": c.defenseOrderId
+                                        "id": c.graduationDesignPresubjectId
                                     },
                                     {
                                         "name": "档案号",
                                         "css": "archiveNumber",
                                         "type": "default",
-                                        "id": c.defenseOrderId
+                                        "id": c.graduationDesignPresubjectId
                                     },
                                     {
                                         "name": "备注",
                                         "css": "note",
                                         "type": "default",
-                                        "id": c.defenseOrderId
+                                        "id": c.graduationDesignPresubjectId
                                     }
                                 ]
                             };
@@ -236,8 +240,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
-                tableElement.delegate('.grade', "click", function () {
+                tableElement.delegate('.okExcellent', "click", function () {
+                    excellent($(this).attr('data-id'), 1, '设置为百篇优秀论文');
+                });
 
+                tableElement.delegate('.cancelExcellent', "click", function () {
+                    excellent($(this).attr('data-id'), 0, '取消百篇优秀论文');
+                });
+
+                tableElement.delegate('.archiveNumber', "click", function () {
+                    archive($(this).attr('data-id'));
                 });
             }
         });
@@ -389,6 +401,141 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             $.post(web_path + getAjaxUrl().generateArchivesCode_url, $('#generateArchivesForm').serialize(), function (data) {
                 if (data.state) {
                     $('#generateArchivesModal').modal('hide');
+                    myTable.ajax.reload();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 百优
+         * @param graduationDesignPresubjectId
+         * @param isExcellent
+         * @param message
+         */
+        function excellent(graduationDesignPresubjectId, isExcellent, message) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定" + message + "吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            setExcellent(graduationDesignPresubjectId, isExcellent);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * 设置百优ajax
+         * @param graduationDesignPresubjectId
+         * @param isExcellent
+         */
+        function setExcellent(graduationDesignPresubjectId, isExcellent) {
+            $.post(web_path + getAjaxUrl().excellent_url, {
+                id: init_page_param.graduationDesignReleaseId,
+                graduationDesignPresubjectId: graduationDesignPresubjectId,
+                excellent: isExcellent
+            }, function (data) {
+                if (data.state) {
+                    myTable.ajax.reload();
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        // 全局档案号
+        var global_archive_number = '';
+        var global_has_archives = false;
+
+        /**
+         * 设置单个档案号
+         * @param graduationDesignPresubjectId
+         */
+        function archive(graduationDesignPresubjectId) {
+            $.post(web_path + getAjaxUrl().archive_info, {graduationDesignPresubjectId: graduationDesignPresubjectId}, function (data) {
+                if (data.state) {
+                    $('#archiveNumber').val(data.objectResult.archiveNumber);
+                    $('#archivesGraduationDesignPresubjectId').val(graduationDesignPresubjectId);
+                    $('#archivesModal').modal('show');
+                    global_archive_number = data.objectResult.archiveNumber;
+                    global_has_archives = true;
+                } else {
+                    $('#archivesGraduationDesignPresubjectId').val(graduationDesignPresubjectId);
+                    $('#archivesModal').modal('show');
+                    global_has_archives = false;
+                }
+            });
+        }
+
+        // 确定档案号
+        $('#archives').click(function () {
+            validArchives();
+        });
+
+        function validArchives() {
+            var archiveNumber = $('#archiveNumber').val();
+            if (archiveNumber === '' || archiveNumber.length <= 0) {
+                Messenger().post({
+                    message: '请填写档案号',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                if (global_has_archives && archiveNumber === global_archive_number) {
+                    Messenger().post({
+                        message: '档案号未变更',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                } else {
+                    $.post(web_path + getAjaxUrl().valid_archive_number, {archiveNumber: archiveNumber}, function (data) {
+                        if (data.state) {
+                            sendArchivesAjax();
+                        } else {
+                            Messenger().post({
+                                message: data.msg,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+        /**
+         * 发送档案号更改ajax
+         */
+        function sendArchivesAjax() {
+            $.post(web_path + getAjaxUrl().archive_number_update, $('#archivesForm').serialize(), function (data) {
+                if (data.state) {
+                    $('#archivesModal').modal('hide');
                     myTable.ajax.reload();
                 } else {
                     Messenger().post({

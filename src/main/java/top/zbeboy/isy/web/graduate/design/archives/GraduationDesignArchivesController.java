@@ -4,27 +4,36 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignArchives;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignArchivesRecord;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.export.GraduationDesignArchivesExport;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignArchivesService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareDataService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignPresubjectService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
+import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
+import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.archives.GraduationDesignArchivesBean;
+import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
@@ -50,6 +59,9 @@ public class GraduationDesignArchivesController {
 
     @Resource
     private GraduationDesignDeclareDataService graduationDesignDeclareDataService;
+
+    @Resource
+    private GraduationDesignPresubjectService graduationDesignPresubjectService;
 
     @Resource
     private DepartmentService departmentService;
@@ -187,5 +199,191 @@ public class GraduationDesignArchivesController {
         } catch (IOException e) {
             log.error("Export file error, error is {}", e);
         }
+    }
+
+    /**
+     * 生成档案号
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param archivesAffix             前缀
+     * @param archivesStart             开始序号
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/archives/generate", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils archivesGenerate(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId,
+                                      @RequestParam("archivesAffix") String archivesAffix,
+                                      @RequestParam("archivesStart") int archivesStart) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Byte b = 0;
+            Result<GraduationDesignPresubjectRecord> records = graduationDesignPresubjectService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            for (GraduationDesignPresubjectRecord r : records) {
+                GraduationDesignArchives graduationDesignArchives = new GraduationDesignArchives();
+                graduationDesignArchives.setGraduationDesignPresubjectId(r.getGraduationDesignPresubjectId());
+                graduationDesignArchives.setArchiveNumber(archivesAffix + polishArchiveNumber(archivesStart));
+                graduationDesignArchives.setIsExcellent(b);
+                graduationDesignArchivesService.saveAndIgnore(graduationDesignArchives);
+                archivesStart++;
+            }
+            ajaxUtils.success().msg("生成档案号成功");
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 补0操作
+     *
+     * @param sort 序号
+     * @return 档案编号
+     */
+    private String polishArchiveNumber(int sort) {
+        String num = "";
+        if (sort < 10) {
+            num = "00" + sort;
+        } else if (sort >= 10 && sort < 100) {
+            num = "0" + sort;
+        } else if (sort >= 100) {
+            num = sort + "";
+        }
+        return num;
+    }
+
+    /**
+     * 设置百优
+     *
+     * @param graduationDesignReleaseId    毕业设计发布id
+     * @param graduationDesignPresubjectId 毕业设计题目id
+     * @param excellent                    百优
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/archives/excellent", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils archivesExcellent(@RequestParam("id") String graduationDesignReleaseId,
+                                       @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId,
+                                       @RequestParam("excellent") Byte excellent) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByGraduationDesignPresubjectId(graduationDesignPresubjectId);
+            if (!ObjectUtils.isEmpty(record)) {
+                GraduationDesignArchives graduationDesignArchives = record.into(GraduationDesignArchives.class);
+                graduationDesignArchives.setIsExcellent(excellent);
+                graduationDesignArchivesService.update(graduationDesignArchives);
+                ajaxUtils.success().msg("更新成功");
+            } else {
+                ajaxUtils.fail().msg("未查询到相关档案信息");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 获取档案信息
+     *
+     * @param graduationDesignPresubjectId 毕业设计题目id
+     * @return 信息
+     */
+    @RequestMapping(value = "/web/graduate/design/archives/info", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils archivesInfo(@RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByGraduationDesignPresubjectId(graduationDesignPresubjectId);
+        if (!ObjectUtils.isEmpty(record)) {
+            GraduationDesignArchives graduationDesignArchives = record.into(GraduationDesignArchives.class);
+            ajaxUtils.success().msg("更新成功").obj(graduationDesignArchives);
+        } else {
+            ajaxUtils.fail().msg("未查询到相关档案信息");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 检验档案号
+     *
+     * @param archiveNumber 档案号
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/archives/valid/number", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils archivesValidNumber(@RequestParam("archiveNumber") String archiveNumber) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByArchiveNumber(StringUtils.trimWhitespace(archiveNumber));
+        if (!ObjectUtils.isEmpty(record)) {
+            ajaxUtils.fail().msg("该档案号已被使用");
+        } else {
+            ajaxUtils.success().msg("允许使用");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 更改档案号
+     *
+     * @param archiveNumber                档案号
+     * @param graduationDesignReleaseId    毕业设计发布id
+     * @param graduationDesignPresubjectId 毕业设计题目id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/archives/number", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils archivesNumber(@RequestParam("archiveNumber") String archiveNumber,
+                                    @RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId,
+                                    @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            String tempArchiveNumber = StringUtils.trimWhitespace(archiveNumber);
+            GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByArchiveNumber(tempArchiveNumber);
+            if (ObjectUtils.isEmpty(record)) {
+                GraduationDesignArchivesRecord realRecord = graduationDesignArchivesService.findByGraduationDesignPresubjectId(graduationDesignPresubjectId);
+                GraduationDesignArchives graduationDesignArchives;
+                if (!ObjectUtils.isEmpty(realRecord)) {
+                    graduationDesignArchives = realRecord.into(GraduationDesignArchives.class);
+                    graduationDesignArchives.setArchiveNumber(archiveNumber);
+                    graduationDesignArchivesService.update(graduationDesignArchives);
+                } else {
+                    Byte b = 0;
+                    graduationDesignArchives = new GraduationDesignArchives();
+                    graduationDesignArchives.setGraduationDesignPresubjectId(graduationDesignPresubjectId);
+                    graduationDesignArchives.setIsExcellent(b);
+                    graduationDesignArchives.setArchiveNumber(archiveNumber);
+                    graduationDesignArchivesService.save(graduationDesignArchives);
+                }
+
+                ajaxUtils.success().msg("更改档案号成功");
+            } else {
+                ajaxUtils.fail().msg("该档案号已被使用");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 进入入口条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 毕业时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
+                errorBean.setHasError(false);
+            } else {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+            }
+        }
+        return errorBean;
     }
 }

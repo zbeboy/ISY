@@ -42,7 +42,7 @@ public class DefenseRateServiceImpl implements DefenseRateService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(DefenseRate defenseRate) {
+    public void saveOrUpdate(DefenseRate defenseRate) {
         create.insertInto(DEFENSE_RATE, DEFENSE_RATE.DEFENSE_ORDER_ID, DEFENSE_RATE.GRADUATION_DESIGN_TEACHER_ID, DEFENSE_RATE.GRADE)
                 .values(defenseRate.getDefenseOrderId(),
                         defenseRate.getGraduationDesignTeacherId(),

@@ -534,7 +534,7 @@ public class GraduationDesignReplanController {
                 defenseGroupMember.setGraduationDesignTeacherId(defenseGroupMemberAddVo.getGraduationDesignTeacherId());
                 defenseGroupMember.setDefenseGroupId(defenseGroupMemberAddVo.getDefenseGroupId());
                 defenseGroupMember.setNote(defenseGroupMemberAddVo.getNote());
-                defenseGroupMemberService.save(defenseGroupMember);
+                defenseGroupMemberService.saveOrUpdate(defenseGroupMember);
                 ajaxUtils.success().msg("保存成功");
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());

@@ -173,7 +173,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(DefenseGroupMember defenseGroupMember) {
+    public void saveOrUpdate(DefenseGroupMember defenseGroupMember) {
         create.insertInto(DEFENSE_GROUP_MEMBER,
                 DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID,
                 DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID,

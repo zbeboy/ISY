@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignArchives;
+import top.zbeboy.isy.domain.tables.records.GraduationDesignArchivesRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.graduate.design.archives.GraduationDesignArchivesBean;
@@ -32,6 +34,20 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
     @Autowired
     public GraduationDesignArchivesServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
+    }
+
+    @Override
+    public GraduationDesignArchivesRecord findByGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
+        return create.selectFrom(GRADUATION_DESIGN_ARCHIVES)
+                .where(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID.eq(graduationDesignPresubjectId))
+                .fetchOne();
+    }
+
+    @Override
+    public GraduationDesignArchivesRecord findByArchiveNumber(String archiveNumber) {
+        return create.selectFrom(GRADUATION_DESIGN_ARCHIVES)
+                .where(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER.eq(archiveNumber))
+                .fetchOne();
     }
 
     @Override
@@ -304,6 +320,44 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
         buildData(records, graduationDesignArchivesBeans);
         return graduationDesignArchivesBeans;
     }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void saveAndIgnore(GraduationDesignArchives graduationDesignArchives) {
+        create.insertInto(GRADUATION_DESIGN_ARCHIVES,
+                GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID,
+                GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT,
+                GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER,
+                GRADUATION_DESIGN_ARCHIVES.NOTE)
+                .values(graduationDesignArchives.getGraduationDesignPresubjectId(),
+                        graduationDesignArchives.getIsExcellent(),
+                        graduationDesignArchives.getArchiveNumber(),
+                        graduationDesignArchives.getNote())
+                .onDuplicateKeyIgnore()
+                .execute();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Override
+    public void save(GraduationDesignArchives graduationDesignArchives) {
+        create.insertInto(GRADUATION_DESIGN_ARCHIVES)
+                .set(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID, graduationDesignArchives.getGraduationDesignPresubjectId())
+                .set(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER, graduationDesignArchives.getArchiveNumber())
+                .set(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT, graduationDesignArchives.getIsExcellent())
+                .set(GRADUATION_DESIGN_ARCHIVES.NOTE, graduationDesignArchives.getNote())
+                .execute();
+    }
+
+    @Override
+    public void update(GraduationDesignArchives graduationDesignArchives) {
+        create.update(GRADUATION_DESIGN_ARCHIVES)
+                .set(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT, graduationDesignArchives.getIsExcellent())
+                .set(GRADUATION_DESIGN_ARCHIVES.NOTE, graduationDesignArchives.getNote())
+                .set(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER, graduationDesignArchives.getArchiveNumber())
+                .where(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID.eq(graduationDesignArchives.getGraduationDesignPresubjectId()))
+                .execute();
+    }
+
 
     /**
      * 其它条件

@@ -69,5 +69,5 @@ public interface DefenseGroupMemberService {
      *
      * @param defenseGroupMember 组成员
      */
-    void save(DefenseGroupMember defenseGroupMember);
+    void saveOrUpdate(DefenseGroupMember defenseGroupMember);
 }
