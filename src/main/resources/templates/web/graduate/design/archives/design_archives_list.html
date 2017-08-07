@@ -83,7 +83,7 @@
                         <th data-hide="phone">学生学号</th>
                         <th>学生姓名</th>
                         <th data-hide="phone">成绩</th>
-                        <th data-hide="phone">是否学校百篇优秀论文</th>
+                        <th data-hide="phone">百优</th>
                         <th data-hide="phone">存档号</th>
                         <th data-hide="always">备注</th>
                         <th data-hide="phone">操作</th>
@@ -109,7 +109,7 @@
                         <th data-hide="phone">学生学号</th>
                         <th>学生姓名</th>
                         <th data-hide="phone">成绩</th>
-                        <th data-hide="phone">是否学校百篇优秀论文</th>
+                        <th data-hide="phone">百优</th>
                         <th data-hide="phone">存档号</th>
                         <th data-hide="always">备注</th>
                         <th>操作</th>
@@ -125,6 +125,52 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
+        <!-- 统一生成档案号 modal -->
+        <div class="modal fade" id="generateArchivesModal" tabindex="-1" role="dialog" aria-labelledby="generateArchivesModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="generateArchivesModalLabel">生成档案号</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="generateArchivesForm" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <select class="form-control" name="departmentCode" id="generateArchivesCode">
+                                    <option value="">请选择系部代码</option>
+                                    <option value="13">基础课部代码 13</option>
+                                    <option value="14">体育课部代码 14</option>
+                                    <option value="15">机械工程系代码 15</option>
+                                    <option value="16">信息工程系代码 16</option>
+                                    <option value="17">土木工程系代码 17</option>
+                                    <option value="18">经济管理系代码 18</option>
+                                    <option value="19">艺术设计系代码 19</option>
+                                    <option value="20">语言工程系代码 20</option>
+                                    <option value="21">地球科学系代码 21</option>
+                                    <option value="22">建筑学系代码 22</option>
+                                    <option value="23">公共外语部代码 23</option>
+                                </select>
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="generateArchivesAffix">档案号前缀</label>
+                                <input type="text" class="form-control" readonly="readonly" id="generateArchivesAffix" name="archivesAffix" placeholder="档案号前缀">
+                            </div>
+                            <div class="form-group">
+                                <label for="generateArchivesStart">开始序号</label>
+                                <input type="number" class="form-control" id="generateArchivesStart" name="archivesStart" placeholder="开始序号">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="generateArchives">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--定义操作列按钮模板-->
         <script id="operator_button" type="text/x-handlebars-template">
             {{#each func}}
@@ -135,7 +181,10 @@
         <script th:inline="javascript">
             /*页面参数*/
             var init_page_param = {
-                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ '',
+                'grade': /*[[${grade}]]*/ '',
+                'curYear': /*[[${curYear}]]*/ '',
+                'upYear': /*[[${upYear}]]*/ ''
             };
         </script>
         <input type="hidden" class="dy_script" value="/js/graduate/design/archives/design_archives_list.js"/>

@@ -2,6 +2,7 @@ package top.zbeboy.isy.web.graduate.design.archives;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
+import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.export.GraduationDesignArchivesExport;
@@ -55,6 +57,9 @@ public class GraduationDesignArchivesController {
     @Resource
     private UploadService uploadService;
 
+    @Resource
+    private CommonControllerMethodService commonControllerMethodService;
+
     /**
      * 毕业设计归档
      *
@@ -74,8 +79,18 @@ public class GraduationDesignArchivesController {
      */
     @RequestMapping(value = "/web/graduate/design/archives/list", method = RequestMethod.GET)
     public String list(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
-        modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
-        return "web/graduate/design/archives/design_archives_list::#page-wrapper";
+        String page;
+        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
+        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
+            modelMap.addAttribute("grade", graduationDesignRelease.getAllowGrade());
+            modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+            modelMap.addAttribute("curYear", DateTime.now().getYear());
+            modelMap.addAttribute("upYear", DateTime.now().getYear() - 1);
+            page = "web/graduate/design/archives/design_archives_list::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "未查询到毕业设计相关信息");
+        }
+        return page;
     }
 
     /**

@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             return {
                 data_url: '/web/graduate/design/archives/list/data',
                 export_data_url: '/web/graduate/design/archives/list/data/export',
+                generateArchivesCode_url: '/web/graduate/design/archives/generate',
                 back: '/web/menu/graduate/design/archives'
             };
         }
@@ -142,7 +143,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                     render: function (a, b, c, d) {
                         var v = '否';
                         if (c.isExcellent !== null && c.isExcellent === 1) {
-                           v = '是';
+                            v = '是';
                         }
                         return v;
                     }
@@ -151,12 +152,14 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                     targets: 20,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        var context =
-                            {
+                        var context = null;
+
+                        if (c.isExcellent !== null && c.isExcellent === 1) {
+                            context = {
                                 func: [
                                     {
-                                        "name": "百优",
-                                        "css": "excellent",
+                                        "name": "设置百优",
+                                        "css": "okExcellent",
                                         "type": "default",
                                         "id": c.defenseOrderId
                                     },
@@ -174,6 +177,32 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                                     }
                                 ]
                             };
+                        } else {
+                            context = {
+                                func: [
+                                    {
+                                        "name": "取消百优",
+                                        "css": "cancelExcellent",
+                                        "type": "default",
+                                        "id": c.defenseOrderId
+                                    },
+                                    {
+                                        "name": "档案号",
+                                        "css": "archiveNumber",
+                                        "type": "default",
+                                        "id": c.defenseOrderId
+                                    },
+                                    {
+                                        "name": "备注",
+                                        "css": "note",
+                                        "type": "default",
+                                        "id": c.defenseOrderId
+                                    }
+                                ]
+                            };
+                        }
+
+
                         return template(context);
                     }
                 }
@@ -213,7 +242,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             }
         });
 
-        var global_button = '<button type="button" id="school_add" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-archive"></i>生成档案号</button>' +
+        var global_button = '<button type="button" id="generate_code" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-archive"></i>生成档案号</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -281,12 +310,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             myTable.ajax.reload();
         });
 
-        init();
-
-        function init() {
-
-        }
-
         $('#export_xls').click(function () {
             initParam();
             var searchParam = JSON.stringify(getParam());
@@ -308,5 +331,73 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
             window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId;
         });
+
+        // 生成档案号
+        pageAop.delegate('#generate_code', "click", function () {
+            $('#generateArchivesModal').modal('show');
+        });
+
+        // 改变系部代码
+        $('#generateArchivesCode').change(function () {
+            var code = $(this).val();
+            var generateArchivesAffix = $('#generateArchivesAffix');
+            var grade = init_page_param.grade;
+            var curYear = init_page_param.curYear;
+            var upYear = init_page_param.upYear;
+            if (code !== '') {
+                generateArchivesAffix.val('BYSJ' + upYear + '-' + curYear + '-BS' + grade + '-' + code + '-');
+            } else {
+                generateArchivesAffix.val('');
+            }
+        });
+
+        // 确定生成档案号
+        $('#generateArchives').click(function () {
+            validGenerateArchivesAffix();
+        });
+
+        function validGenerateArchivesAffix() {
+            var generateArchivesAffix = $('#generateArchivesAffix').val();
+            if (generateArchivesAffix === '' || generateArchivesAffix.length <= 0) {
+                Messenger().post({
+                    message: '请生成档案号前缀',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                validGenerateArchivesStart();
+            }
+        }
+
+        function validGenerateArchivesStart() {
+            var generateArchivesStart = $('#generateArchivesStart').val();
+            if (generateArchivesStart === '' || generateArchivesStart.length <= 0) {
+                Messenger().post({
+                    message: '请填写开始序号',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                sendGenerateArchivesCodeAjax();
+            }
+        }
+
+        /**
+         * 发送生成档案号ajax
+         */
+        function sendGenerateArchivesCodeAjax() {
+            $.post(web_path + getAjaxUrl().generateArchivesCode_url, $('#generateArchivesForm').serialize(), function (data) {
+                if (data.state) {
+                    $('#generateArchivesModal').modal('hide');
+                    myTable.ajax.reload();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
 
     });
