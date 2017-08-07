@@ -454,7 +454,7 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
         Condition a = otherCondition(null, graduationDesignDeclareBean);
         if (ObjectUtils.isEmpty(a)) {
             count = create.selectCount()
-                    .from(GRADUATION_DESIGN_TEACHER)
+                    .from(DEFENSE_ORDER)
                     .fetchOne();
         } else {
             count = create.selectCount()

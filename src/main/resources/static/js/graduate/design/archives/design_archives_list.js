@@ -22,8 +22,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             return {
                 studentName: '#search_student_name',
                 studentNumber: '#search_student_number',
-                staffName:'#search_staff_name',
-                staffNumber:'#search_staff_number'
+                staffName: '#search_staff_name',
+                staffNumber: '#search_staff_number'
             };
         }
 
@@ -33,8 +33,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         var param = {
             studentName: '',
             studentNumber: '',
-            staffName:'',
-            staffNumber:''
+            staffName: '',
+            staffNumber: ''
         };
 
         /*
@@ -107,7 +107,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 {"data": "staffNumber"},
                 {"data": "academicTitleName"},
                 {"data": "assistantTeacher"},
-                {"data": "assistantNumber"},
+                {"data": "assistantTeacherNumber"},
                 {"data": "assistantTeacherAcademic"},
                 {"data": "presubjectTitle"},
                 {"data": "subjectTypeName"},
@@ -144,6 +144,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                         var context =
                             {
                                 func: [
+                                    {
+                                        "name": "百优",
+                                        "css": "excellent",
+                                        "type": "default",
+                                        "id": c.defenseOrderId
+                                    },
                                     {
                                         "name": "档案号",
                                         "css": "archiveNumber",
@@ -192,23 +198,24 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.grade', "click", function () {
-                    grade($(this).attr('data-id'), $(this).attr('data-staff'));
+
                 });
             }
         });
 
-        var global_button =
+        var global_button = '<button type="button" id="school_add" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-archive"></i>生成档案号</button>' +
             '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
-        $('#global_button').html(global_button);
+        $('#global_button').append(global_button);
 
 
         /*
          初始化参数
          */
         function initParam() {
-            param.staffId = $(getParamId().staffId).val();
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
+            param.staffName = $(getParamId().staffName).val();
+            param.staffNumber = $(getParamId().staffNumber).val();
         }
 
         /*
@@ -217,12 +224,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         function cleanParam() {
             $(getParamId().studentName).val('');
             $(getParamId().studentNumber).val('');
+            $(getParamId().staffName).val('');
+            $(getParamId().staffNumber).val('');
         }
-
-        $(getParamId().staffId).on('changed.bs.select', function (e) {
-            initParam();
-            myTable.ajax.reload();
-        });
 
         $(getParamId().studentName).keyup(function (event) {
             if (event.keyCode == 13) {
@@ -232,6 +236,20 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().staffName).keyup(function (event) {
+            if (event.keyCode == 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().staffNumber).keyup(function (event) {
             if (event.keyCode == 13) {
                 initParam();
                 myTable.ajax.reload();
@@ -256,183 +274,29 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         init();
 
         function init() {
-            initTeachers();
-            initScore();
-        }
 
-        /*
-         初始化选中教师
-         */
-        var selectedTeacherCount = true;
-
-        /**
-         * 初始化教师数据
-         */
-        function initTeachers() {
-            $.get(web_path + getAjaxUrl().teachers, {id: init_page_param.graduationDesignReleaseId}, function (data) {
-                if (data.state) {
-                    teacherData(data);
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
-        }
-
-        /**
-         * 初始化成绩数据
-         */
-        function initScore() {
-            $.get(web_path + getAjaxUrl().scores, function (data) {
-                if (data.state) {
-                    markScoreData(data);
-                }
-            });
-        }
-
-        /**
-         * 教师数据
-         * @param data 数据
-         */
-        function teacherData(data) {
-            var template = Handlebars.compile($("#staff-template").html());
-            Handlebars.registerHelper('staff_value', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffId));
-            });
-            Handlebars.registerHelper('staff_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.staffMobile));
-            });
-            $(getParamId().staffId).html(template(data));
-
-            // 只在页面初始化加载一次
-            if (selectedTeacherCount) {
-                selectedTeacher();
-                selectedTeacherCount = false;
-            }
-        }
-
-        /**
-         * 选中教师
-         */
-        function selectedTeacher() {
-            var realStaffId = init_page_param.staffId;
-            var staffChildrens = $(getParamId().staffId).children();
-            for (var i = 0; i < staffChildrens.length; i++) {
-                if (Number($(staffChildrens[i]).val()) === realStaffId) {
-                    $(staffChildrens[i]).prop('selected', true);
-                    break;
-                }
-            }
-
-            // 选择教师
-            $(getParamId().staffId).selectpicker({
-                liveSearch: true
-            });
-        }
-
-        /**
-         * 修改成绩数据
-         * @param data
-         */
-        function markScoreData(data) {
-            var template = Handlebars.compile($("#mark-score-template").html());
-            $('#scoreData').html(template(data));
-            $($('#scoreData').children()[0]).remove();
         }
 
         $('#export_xls').click(function () {
             initParam();
-            if (getParam().staffId > 0) {
-                var searchParam = JSON.stringify(getParam());
-                var exportFile = {
-                    fileName: $('#export_file_name').val(),
-                    ext: 'xls'
-                };
-                var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-                window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId;
-            } else {
-                Messenger().post({
-                    message: '请选择指导教师',
-                    type: 'error',
-                    showCloseButton: true
-                });
-            }
-
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId;
         });
 
         $('#export_xlsx').click(function () {
             initParam();
-            if (getParam().staffId > 0) {
-                var searchParam = JSON.stringify(getParam());
-                var exportFile = {
-                    fileName: $('#export_file_name').val(),
-                    ext: 'xlsx'
-                };
-                var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-                window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId;
-            } else {
-                Messenger().post({
-                    message: '请选择指导教师',
-                    type: 'error',
-                    showCloseButton: true
-                });
-            }
-
-        });
-
-        /**
-         * 成绩
-         * @param id
-         * @param staffId
-         */
-        function grade(id, staffId) {
-            $.post(web_path + getAjaxUrl().mark_info_url, {
-                graduationDesignReleaseId: init_page_param.graduationDesignReleaseId,
-                defenseOrderId: id
-            }, function (data) {
-                if (data.state) {
-                    selectedScore(data.objectResult.scoreTypeId);
-                    $('#markDefenseOrderId').val(id);
-                    $('#markStaffId').val(staffId);
-                    $('#markModalLabel').text(data.objectResult.studentName + ' ' + data.objectResult.studentNumber);
-                    $('#markModal').modal('show');
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
-        }
-
-        function selectedScore(scoreTypeId) {
-            var scoreTypes = $('.markScore');
-            for (var i = 0; i < scoreTypes.length; i++) {
-                if (Number($(scoreTypes[i]).val()) === scoreTypeId) {
-                    $(scoreTypes[i]).prop('checked', true);
-                    break;
-                }
-            }
-        }
-
-        // 成绩确定
-        $('#toMark').click(function () {
-            $.post(web_path + getAjaxUrl().mark_url, $('#markForm').serialize(), function (data) {
-                if (data.state) {
-                    $('#markModal').modal('hide');
-                    myTable.ajax.reload();
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId;
         });
 
     });
