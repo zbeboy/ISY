@@ -235,12 +235,6 @@ CREATE TABLE graduation_design_archives (
   FOREIGN KEY (graduation_design_presubject_id) REFERENCES graduation_design_presubject (graduation_design_presubject_id)
 );
 
-CREATE TABLE graduation_design_archives_code (
-  code_id   INT AUTO_INCREMENT PRIMARY KEY,
-  code_name VARCHAR(30) NOT NULL UNIQUE,
-  code_no   VARCHAR(20) NOT NULL UNIQUE
-);
-
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('软件型');
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('论文型');
 INSERT INTO graduation_design_subject_type (subject_type_name) VALUES ('工程技术研究型');
