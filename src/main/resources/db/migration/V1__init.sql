@@ -548,15 +548,6 @@ CREATE TABLE oauth_code (
   authentication BLOB
 );
 
-CREATE TABLE sync_elastic (
-  sync_elastic     INT PRIMARY KEY AUTO_INCREMENT,
-  application_name VARCHAR(30)  NOT NULL,
-  sync_time        DATETIME     NOT NULL,
-  sync_url         VARCHAR(200) NOT NULL,
-  username         VARCHAR(64)  NOT NULL,
-  FOREIGN KEY (username) REFERENCES users (username)
-);
-
 INSERT INTO users_type (users_type_name) VALUES ('学生');
 INSERT INTO users_type (users_type_name) VALUES ('教职工');
 INSERT INTO users_type (users_type_name) VALUES ('系统');

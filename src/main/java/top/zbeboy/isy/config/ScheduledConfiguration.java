@@ -3,12 +3,16 @@ package top.zbeboy.isy.config;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
@@ -80,6 +84,15 @@ public class ScheduledConfiguration {
     @Resource
     private AuthoritiesService authoritiesService;
 
+    @Autowired
+    private UsersElasticRepository usersElasticRepository;
+
+    @Autowired
+    private StudentElasticRepository studentElasticRepository;
+
+    @Autowired
+    private StaffElasticRepository staffElasticRepository;
+
     /**
      * 清理未验证用户信息
      */
@@ -96,10 +109,13 @@ public class ScheduledConfiguration {
             authoritiesService.deleteByUsername(r.getUsername());
             if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
                 staffService.deleteByUsername(r.getUsername());
+                staffElasticRepository.deleteByUsername(r.getUsername());
             } else if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
                 studentService.deleteByUsername(r.getUsername());
+                studentElasticRepository.deleteByUsername(r.getUsername());
             }
             usersService.deleteById(r.getUsername());
+            usersElasticRepository.delete(r.getUsername());
         });
         log.info(">>>>>>>>>>>>> scheduled ... clean users ");
     }

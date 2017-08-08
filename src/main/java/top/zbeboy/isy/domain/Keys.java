@@ -71,7 +71,6 @@ import top.zbeboy.isy.domain.tables.Science;
 import top.zbeboy.isy.domain.tables.ScoreType;
 import top.zbeboy.isy.domain.tables.Staff;
 import top.zbeboy.isy.domain.tables.Student;
-import top.zbeboy.isy.domain.tables.SyncElastic;
 import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemMessage;
@@ -137,7 +136,6 @@ import top.zbeboy.isy.domain.tables.records.ScienceRecord;
 import top.zbeboy.isy.domain.tables.records.ScoreTypeRecord;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
-import top.zbeboy.isy.domain.tables.records.SyncElasticRecord;
 import top.zbeboy.isy.domain.tables.records.SystemAlertRecord;
 import top.zbeboy.isy.domain.tables.records.SystemAlertTypeRecord;
 import top.zbeboy.isy.domain.tables.records.SystemMessageRecord;
@@ -180,7 +178,6 @@ public class Keys {
     public static final Identity<ScoreTypeRecord, Integer> IDENTITY_SCORE_TYPE = Identities0.IDENTITY_SCORE_TYPE;
     public static final Identity<StaffRecord, Integer> IDENTITY_STAFF = Identities0.IDENTITY_STAFF;
     public static final Identity<StudentRecord, Integer> IDENTITY_STUDENT = Identities0.IDENTITY_STUDENT;
-    public static final Identity<SyncElasticRecord, Integer> IDENTITY_SYNC_ELASTIC = Identities0.IDENTITY_SYNC_ELASTIC;
     public static final Identity<SystemAlertTypeRecord, Integer> IDENTITY_SYSTEM_ALERT_TYPE = Identities0.IDENTITY_SYSTEM_ALERT_TYPE;
     public static final Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = Identities0.IDENTITY_USERS_TYPE;
 
@@ -263,7 +260,6 @@ public class Keys {
     public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = UniqueKeys0.KEY_STUDENT_PRIMARY;
     public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = UniqueKeys0.KEY_STUDENT_STUDENT_NUMBER;
     public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = UniqueKeys0.KEY_STUDENT_ID_CARD;
-    public static final UniqueKey<SyncElasticRecord> KEY_SYNC_ELASTIC_PRIMARY = UniqueKeys0.KEY_SYNC_ELASTIC_PRIMARY;
     public static final UniqueKey<SystemAlertRecord> KEY_SYSTEM_ALERT_PRIMARY = UniqueKeys0.KEY_SYSTEM_ALERT_PRIMARY;
     public static final UniqueKey<SystemAlertTypeRecord> KEY_SYSTEM_ALERT_TYPE_PRIMARY = UniqueKeys0.KEY_SYSTEM_ALERT_TYPE_PRIMARY;
     public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = UniqueKeys0.KEY_SYSTEM_MESSAGE_PRIMARY;
@@ -357,7 +353,6 @@ public class Keys {
     public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = ForeignKeys0.STAFF_IBFK_2;
     public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = ForeignKeys0.STUDENT_IBFK_1;
     public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = ForeignKeys0.STUDENT_IBFK_2;
-    public static final ForeignKey<SyncElasticRecord, UsersRecord> SYNC_ELASTIC_IBFK_1 = ForeignKeys0.SYNC_ELASTIC_IBFK_1;
     public static final ForeignKey<SystemAlertRecord, SystemAlertTypeRecord> SYSTEM_ALERT_IBFK_1 = ForeignKeys0.SYSTEM_ALERT_IBFK_1;
     public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = ForeignKeys0.USERS_IBFK_1;
 
@@ -383,7 +378,6 @@ public class Keys {
         public static Identity<ScoreTypeRecord, Integer> IDENTITY_SCORE_TYPE = createIdentity(ScoreType.SCORE_TYPE, ScoreType.SCORE_TYPE.SCORE_TYPE_ID);
         public static Identity<StaffRecord, Integer> IDENTITY_STAFF = createIdentity(Staff.STAFF, Staff.STAFF.STAFF_ID);
         public static Identity<StudentRecord, Integer> IDENTITY_STUDENT = createIdentity(Student.STUDENT, Student.STUDENT.STUDENT_ID);
-        public static Identity<SyncElasticRecord, Integer> IDENTITY_SYNC_ELASTIC = createIdentity(SyncElastic.SYNC_ELASTIC, SyncElastic.SYNC_ELASTIC.SYNC_ELASTIC_);
         public static Identity<SystemAlertTypeRecord, Integer> IDENTITY_SYSTEM_ALERT_TYPE = createIdentity(SystemAlertType.SYSTEM_ALERT_TYPE, SystemAlertType.SYSTEM_ALERT_TYPE.SYSTEM_ALERT_TYPE_ID);
         public static Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = createIdentity(UsersType.USERS_TYPE, UsersType.USERS_TYPE.USERS_TYPE_ID);
     }
@@ -464,7 +458,6 @@ public class Keys {
         public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = createUniqueKey(Student.STUDENT, "KEY_student_PRIMARY", Student.STUDENT.STUDENT_ID);
         public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = createUniqueKey(Student.STUDENT, "KEY_student_student_number", Student.STUDENT.STUDENT_NUMBER);
         public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = createUniqueKey(Student.STUDENT, "KEY_student_id_card", Student.STUDENT.ID_CARD);
-        public static final UniqueKey<SyncElasticRecord> KEY_SYNC_ELASTIC_PRIMARY = createUniqueKey(SyncElastic.SYNC_ELASTIC, "KEY_sync_elastic_PRIMARY", SyncElastic.SYNC_ELASTIC.SYNC_ELASTIC_);
         public static final UniqueKey<SystemAlertRecord> KEY_SYSTEM_ALERT_PRIMARY = createUniqueKey(SystemAlert.SYSTEM_ALERT, "KEY_system_alert_PRIMARY", SystemAlert.SYSTEM_ALERT.SYSTEM_ALERT_ID);
         public static final UniqueKey<SystemAlertTypeRecord> KEY_SYSTEM_ALERT_TYPE_PRIMARY = createUniqueKey(SystemAlertType.SYSTEM_ALERT_TYPE, "KEY_system_alert_type_PRIMARY", SystemAlertType.SYSTEM_ALERT_TYPE.SYSTEM_ALERT_TYPE_ID);
         public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = createUniqueKey(SystemMessage.SYSTEM_MESSAGE, "KEY_system_message_PRIMARY", SystemMessage.SYSTEM_MESSAGE.SYSTEM_MESSAGE_ID);
@@ -556,7 +549,6 @@ public class Keys {
         public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, Staff.STAFF, "staff_ibfk_2", Staff.STAFF.USERNAME);
         public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_ORGANIZE_PRIMARY, Student.STUDENT, "student_ibfk_1", Student.STUDENT.ORGANIZE_ID);
         public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, Student.STUDENT, "student_ibfk_2", Student.STUDENT.USERNAME);
-        public static final ForeignKey<SyncElasticRecord, UsersRecord> SYNC_ELASTIC_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_PRIMARY, SyncElastic.SYNC_ELASTIC, "sync_elastic_ibfk_1", SyncElastic.SYNC_ELASTIC.USERNAME);
         public static final ForeignKey<SystemAlertRecord, SystemAlertTypeRecord> SYSTEM_ALERT_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_SYSTEM_ALERT_TYPE_PRIMARY, SystemAlert.SYSTEM_ALERT, "system_alert_ibfk_1", SystemAlert.SYSTEM_ALERT.SYSTEM_ALERT_TYPE_ID);
         public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = createForeignKey(top.zbeboy.isy.domain.Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, "users_ibfk_1", Users.USERS.USERS_TYPE_ID);
     }
