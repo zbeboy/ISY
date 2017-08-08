@@ -13,6 +13,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 export_data_url: '/web/graduate/design/archives/list/data/export',
                 generateArchivesCode_url: '/web/graduate/design/archives/generate',
                 excellent_url: '/web/graduate/design/archives/excellent',
+                note_url: '/web/graduate/design/archives/note',
                 archive_info: '/web/graduate/design/archives/info',
                 valid_archive_number: '/web/graduate/design/archives/valid/number',
                 archive_number_update: '/web/graduate/design/archives/number',
@@ -250,6 +251,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
 
                 tableElement.delegate('.archiveNumber', "click", function () {
                     archive($(this).attr('data-id'));
+                });
+
+                tableElement.delegate('.note', "click", function () {
+                    note($(this).attr('data-id'));
                 });
             }
         });
@@ -536,6 +541,62 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             $.post(web_path + getAjaxUrl().archive_number_update, $('#archivesForm').serialize(), function (data) {
                 if (data.state) {
                     $('#archivesModal').modal('hide');
+                    myTable.ajax.reload();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 备注
+         * @param graduationDesignPresubjectId 毕业设计题目id
+         */
+        function note(graduationDesignPresubjectId) {
+            $.post(web_path + getAjaxUrl().archive_info, {graduationDesignPresubjectId: graduationDesignPresubjectId}, function (data) {
+                if (data.state) {
+                    $('#note').val(data.objectResult.note);
+                    $('#noteGraduationDesignPresubjectId').val(graduationDesignPresubjectId);
+                    $('#noteModal').modal('show');
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        // 确定备注
+        $('#toNote').click(function () {
+            validNote();
+        });
+
+        function validNote() {
+            var note = $('#note').val();
+            if (note === '' || note.length <= 0) {
+                Messenger().post({
+                    message: '请填写备注',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                sendNoteAjax();
+            }
+        }
+
+        /**
+         * 发送备注ajax
+         */
+        function sendNoteAjax() {
+            $.post(web_path + getAjaxUrl().note_url, $('#noteForm').serialize(), function (data) {
+                if (data.state) {
+                    $('#noteModal').modal('hide');
                     myTable.ajax.reload();
                 } else {
                     Messenger().post({

@@ -204,10 +204,41 @@
                 </div>
             </div>
         </div>
+
+        <!-- 备注 modal -->
+        <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="noteModalLabel">设置备注</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="noteForm" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label for="note">备注</label>
+                                <input type="text" class="form-control" id="note" name="note"
+                                       placeholder="备注">
+                            </div>
+                            <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                   name="graduationDesignReleaseId"/>
+                            <input type="hidden" id="noteGraduationDesignPresubjectId"
+                                   name="graduationDesignPresubjectId"/>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toNote">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--定义操作列按钮模板-->
         <script id="operator_button" type="text/x-handlebars-template">
             {{#each func}}
-            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-teacher="{{this.teacher}}">{{this.name}}
             </button>
             {{/each}}
         </script>

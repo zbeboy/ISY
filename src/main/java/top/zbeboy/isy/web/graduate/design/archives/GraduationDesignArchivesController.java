@@ -296,7 +296,7 @@ public class GraduationDesignArchivesController {
         GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByGraduationDesignPresubjectId(graduationDesignPresubjectId);
         if (!ObjectUtils.isEmpty(record)) {
             GraduationDesignArchives graduationDesignArchives = record.into(GraduationDesignArchives.class);
-            ajaxUtils.success().msg("更新成功").obj(graduationDesignArchives);
+            ajaxUtils.success().msg("获取档案信息成功").obj(graduationDesignArchives);
         } else {
             ajaxUtils.fail().msg("未查询到相关档案信息");
         }
@@ -359,6 +359,37 @@ public class GraduationDesignArchivesController {
                 ajaxUtils.success().msg("更改档案号成功");
             } else {
                 ajaxUtils.fail().msg("该档案号已被使用");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 更新备注
+     *
+     * @param graduationDesignReleaseId    毕业设计发布id
+     * @param graduationDesignPresubjectId 毕业题目id
+     * @param note                         备注
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/archives/note", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils archivesNote(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId,
+                                  @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId,
+                                  @RequestParam("note") String note) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByGraduationDesignPresubjectId(graduationDesignPresubjectId);
+            if (!ObjectUtils.isEmpty(record)) {
+                GraduationDesignArchives graduationDesignArchives = record.into(GraduationDesignArchives.class);
+                graduationDesignArchives.setNote(note);
+                graduationDesignArchivesService.update(graduationDesignArchives);
+                ajaxUtils.success().msg("更新成功");
+            } else {
+                ajaxUtils.fail().msg("未查询到相关档案信息");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
