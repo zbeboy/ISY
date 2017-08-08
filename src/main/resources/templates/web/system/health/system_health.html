@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">系统状况</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <!-- 整体情况 -->
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        总体状况：<span id="allStatus"></span>
+                    </div>
+                </div>
+                <!-- 邮箱情况 -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">邮箱</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                状况：<span id="mailStatus"></span>
+                            </div>
+                            <div class="col-md-6">
+                                请求路径：<span id="mailLocation"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 硬盘情况 -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">硬盘</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                状况：<span id="diskStatus"></span>
+                            </div>
+                            <div class="col-md-3">
+                                总容量：<span id="diskTotal"></span>
+                            </div>
+                            <div class="col-md-3">
+                                空闲容量：<span id="diskFree"></span>
+                            </div>
+                            <div class="col-md-3">
+                                阈值：<span id="diskThreshold"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- redis情况 -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Redis</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                状况：<span id="redisStatus"></span>
+                            </div>
+                            <div class="col-md-6">
+                                版本：<span id="redisVersion"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- db情况 -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">数据库</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                状况：<span id="dbStatus"></span>
+                            </div>
+                            <div class="col-md-6">
+                                数据源：<span id="dbDatabase"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- elasticsearch情况 -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Elasticsearch</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                状况：<span id="elasticsearchStatus"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <input type="hidden" class="dy_script" value="/js/system/health/system_health.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

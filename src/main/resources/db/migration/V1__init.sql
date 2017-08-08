@@ -787,6 +787,13 @@ VALUES
   ('27af0835aaa64ed583b7abf0f26db20d', '系统邮件', 1005, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/mailbox',
    'system_mailbox', 'system_mailbox',
    '', '/web/system/mailbox');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('82b1a7e5bd6c46a3a6a9957f63717d01', '系统状况', 1006, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/health',
+   'system_health', 'system_health',
+   '', '/web/system/health');
 
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
@@ -949,6 +956,8 @@ INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'c76085dd8803486c80545145bfd0b4d2');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '27af0835aaa64ed583b7abf0f26db20d');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '82b1a7e5bd6c46a3a6a9957f63717d01');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '2f05225d873643c58bc93dd881a782aa');
 INSERT INTO role_application (role_id, application_id)
