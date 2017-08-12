@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
-            list_url:'/web/graduate/design/manifest/list'
+            list_url: '/web/graduate/design/manifest/list'
         };
 
         /*
@@ -136,8 +136,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-        清单
-       */
+         清单
+         */
         $(tableData).delegate('.manifest', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(ajax_url.list_url + '?id=' + id);

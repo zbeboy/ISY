@@ -13,7 +13,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
             subject_origin_type: '/user/graduate/design/subject/origin_types',
             declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
             nav: '/web/menu/graduate/design/subject',
-            back:'/web/graduate/design/subject/declare'
+            back: '/web/graduate/design/subject/declare'
         };
 
         // 刷新时选中菜单
@@ -23,7 +23,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
          参数id
          */
         var paramId = {
-            staffId:'#staffId',
+            staffId: '#staffId',
             oldSubjectUsesTimes: '#oldSubjectUsesTimes',
             guideTimes: '#guideTimes',
             guidePeoples: '#guidePeoples',
@@ -46,7 +46,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         var validId = {
             oldSubjectUsesTimes: '#valid_old_subject_uses_times',
             guideTimes: '#valid_guide_times',
-            guidePeoples:'#valid_guide_peoples'
+            guidePeoples: '#valid_guide_peoples'
         };
 
         /*
@@ -55,14 +55,14 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         var errorMsgId = {
             oldSubjectUsesTimes: '#old_subject_uses_times_error_msg',
             guideTimes: '#guide_times_error_msg',
-            guidePeoples:'#guide_peoples_error_msg'
+            guidePeoples: '#guide_peoples_error_msg'
         };
 
         /*
-        正则
-        */
+         正则
+         */
         var regex = {
-            number_regex:/\d*/
+            number_regex: /\d*/
         };
 
         /**

@@ -112,17 +112,17 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "调整",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.studentId,
-                                    "studentName": c.studentName
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "调整",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.studentId,
+                                        "studentName": c.studentName
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }

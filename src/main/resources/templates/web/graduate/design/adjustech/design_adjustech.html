@@ -98,15 +98,19 @@
                             data-id="{{graduationDesignReleaseId}}">调整
                     </button>
                     <button type="button" class="btn btn-default design_fill"
-                            data-id="{{graduationDesignReleaseId}}">已填报学生  <span class="badge">{{studentFillCount}}</span>
+                            data-id="{{graduationDesignReleaseId}}">已填报学生 <span
+                            class="badge">{{studentFillCount}}</span>
                     </button>
                     <button type="button" class="btn btn-default design_not_fill"
-                            data-id="{{graduationDesignReleaseId}}">未填报学生  <span class="badge">{{studentNotFillCount}}</span>
+                            data-id="{{graduationDesignReleaseId}}">未填报学生 <span
+                            class="badge">{{studentNotFillCount}}</span>
                     </button>
                     {{#if isOkTeacherAdjust}}
                     <button type="button" class="btn btn-primary" disabled="disabled">已确认</button>
                     {{else}}
-                    <button type="button" class="btn btn-primary design_teacher_ok_adjust" data-id="{{graduationDesignReleaseId}}">确认</button>
+                    <button type="button" class="btn btn-primary design_teacher_ok_adjust"
+                            data-id="{{graduationDesignReleaseId}}">确认
+                    </button>
                     {{/if}}
                 </div>
             </div>

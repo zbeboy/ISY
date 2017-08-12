@@ -12,20 +12,20 @@ import javax.validation.constraints.Size;
 public class GraduationDesignDeclareUpdateVo {
     private Integer subjectTypeId;
     private Integer originTypeId;
-    private Byte    isNewSubject;
-    private Byte    isNewTeacherMake;
-    private Byte    isNewSubjectMake;
-    private Byte    isOldSubjectChange;
+    private Byte isNewSubject;
+    private Byte isNewTeacherMake;
+    private Byte isNewSubjectMake;
+    private Byte isOldSubjectChange;
     private Integer oldSubjectUsesTimes;
-    private String  planPeriod;
-    private String  assistantTeacher;
-    private String  assistantTeacherAcademic;
-    private String  assistantTeacherNumber;
+    private String planPeriod;
+    private String assistantTeacher;
+    private String assistantTeacherAcademic;
+    private String assistantTeacherNumber;
     private Integer guideTimes;
     private Integer guidePeoples;
-    private Byte    isOkApply;
+    private Byte isOkApply;
     @NotNull
-    private String  graduationDesignPresubjectId;
+    private String graduationDesignPresubjectId;
     @NotNull
     @Size(max = 64)
     private String graduationDesignReleaseId;

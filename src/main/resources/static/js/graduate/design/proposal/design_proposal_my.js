@@ -15,7 +15,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 datum_type: '/use/graduate/design/proposal/datums',
                 file_upload_url: '/web/graduate/design/proposal/my/save',
                 del: '/web/graduate/design/proposal/del',
-                download:'/web/graduate/design/proposal/download',
+                download: '/web/graduate/design/proposal/download',
                 back: '/web/menu/graduate/design/proposal'
             };
         }

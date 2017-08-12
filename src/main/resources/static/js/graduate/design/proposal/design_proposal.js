@@ -10,10 +10,10 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
-            affix_url:'/web/graduate/design/proposal/affix',
-            my_url:'/web/graduate/design/proposal/my',
-            my_condition:'/web/graduate/design/proposal/my/condition',
-            team_url:'/web/graduate/design/proposal/team'
+            affix_url: '/web/graduate/design/proposal/affix',
+            my_url: '/web/graduate/design/proposal/my',
+            my_condition: '/web/graduate/design/proposal/my/condition',
+            team_url: '/web/graduate/design/proposal/team'
         };
 
         /*
@@ -137,8 +137,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_proposal_my', "click", function () {
             var id = $(this).attr('data-id');
-            $.post(web_path + ajax_url.my_condition,{id:id},function (data) {
-                if(data.state){
+            $.post(web_path + ajax_url.my_condition, {id: id}, function (data) {
+                if (data.state) {
                     $.address.value(ajax_url.my_url + '?id=' + id);
                 } else {
                     Messenger().post({

@@ -3,8 +3,6 @@ package top.zbeboy.isy.web.data.academic;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -14,14 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.AcademicTitle;
-import top.zbeboy.isy.domain.tables.pojos.Nation;
 import top.zbeboy.isy.domain.tables.records.AcademicTitleRecord;
-import top.zbeboy.isy.domain.tables.records.NationRecord;
 import top.zbeboy.isy.service.data.AcademicTitleService;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.data.academic.AcademicTitleVo;
-import top.zbeboy.isy.web.vo.data.nation.NationVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -114,8 +109,8 @@ public class AcademicTitleController {
     /**
      * 保存职称信息
      *
-     * @param academicTitleVo      职称
-     * @param bindingResult 检验
+     * @param academicTitleVo 职称
+     * @param bindingResult   检验
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/data/academic/save", method = RequestMethod.POST)
@@ -133,7 +128,7 @@ public class AcademicTitleController {
     /**
      * 检验编辑时职称重复
      *
-     * @param id         职称id
+     * @param id                职称id
      * @param academicTitleName 职称
      * @return true 合格 false 不合格
      */
@@ -152,8 +147,8 @@ public class AcademicTitleController {
     /**
      * 保存更改
      *
-     * @param academicTitleVo      职称
-     * @param bindingResult 检验
+     * @param academicTitleVo 职称
+     * @param bindingResult   检验
      * @return true 更改成功 false 更改失败
      */
     @RequestMapping(value = "/web/data/academic/update", method = RequestMethod.POST)

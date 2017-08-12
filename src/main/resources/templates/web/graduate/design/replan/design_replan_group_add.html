@@ -23,9 +23,11 @@
                 <form role="form" id="add_form">
                     <div class="form-group" id="valid_defense_group_name">
                         <label>组别</label>
-                        <input class="form-control" name="defenseGroupName" id="defenseGroupName" placeholder="组别" maxlength="20"/>
+                        <input class="form-control" name="defenseGroupName" id="defenseGroupName" placeholder="组别"
+                               maxlength="20"/>
                         <input type="hidden" name="graduationDesignReleaseId" th:value="${graduationDesignReleaseId}">
-                        <input type="hidden" name="defenseArrangementId" th:value="${defenseArrangement.defenseArrangementId}">
+                        <input type="hidden" name="defenseArrangementId"
+                               th:value="${defenseArrangement.defenseArrangementId}">
                         <p class="text-danger hidden" id="defense_group_name_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_location">

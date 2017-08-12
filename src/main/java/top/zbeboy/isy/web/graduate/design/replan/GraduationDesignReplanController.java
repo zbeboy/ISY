@@ -578,7 +578,7 @@ public class GraduationDesignReplanController {
     /**
      * 设置秘书
      *
-     * @param secretaryId                  用户账号
+     * @param secretaryId               用户账号
      * @param defenseGroupId            组id
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return true or false

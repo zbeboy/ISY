@@ -45,7 +45,7 @@ public class GraduationDesignArchivesExport extends ExportUtils<GraduationDesign
 
     @Override
     public void createCell(Row row, GraduationDesignArchivesBean graduationDesignArchivesBean) {
-        sequence ++ ;
+        sequence++;
         row.createCell(0).setCellValue(sequence);
         row.createCell(1).setCellValue(graduationDesignArchivesBean.getCollegeName());
         row.createCell(2).setCellValue(graduationDesignArchivesBean.getCollegeCode());

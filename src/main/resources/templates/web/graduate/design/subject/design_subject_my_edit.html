@@ -24,15 +24,18 @@
                     <div class="form-group" id="valid_presubject_title">
                         <label>题目</label>
                         <input class="form-control" name="presubjectTitle" id="presubjectTitle"
-                               placeholder="题目" maxlength="100" th:value="${graduationDesignPresubject.presubjectTitle}"/>
+                               placeholder="题目" maxlength="100"
+                               th:value="${graduationDesignPresubject.presubjectTitle}"/>
                         <p class="text-danger hidden" id="presubject_title_error_msg"></p>
-                        <input type="hidden" th:value="${graduationDesignPresubject.graduationDesignPresubjectId}" name="graduationDesignPresubjectId"/>
+                        <input type="hidden" th:value="${graduationDesignPresubject.graduationDesignPresubjectId}"
+                               name="graduationDesignPresubjectId"/>
                         <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId"/>
                     </div>
                     <div class="form-group" id="valid_presubject_plan">
                         <label>计划</label>
                         <div id="presubjectPlanHtml" style="height:500px;"></div>
-                        <input type="hidden" id="presubjectPlan" name="presubjectPlan" th:value="${graduationDesignPresubject.presubjectPlan}" />
+                        <input type="hidden" id="presubjectPlan" name="presubjectPlan"
+                               th:value="${graduationDesignPresubject.presubjectPlan}"/>
                         <p class="text-danger hidden" id="presubject_plan_error_msg"></p>
                     </div>
                     <div class="form-group">
@@ -55,7 +58,7 @@
                                        value="3"/>任何人任何时候都允许查看(完全公开)
                             </label>
                         </div>
-                        <input type="hidden" id="publicLevel" th:value="${graduationDesignPresubject.publicLevel}" />
+                        <input type="hidden" id="publicLevel" th:value="${graduationDesignPresubject.publicLevel}"/>
                     </div>
                     <div class="text-center">
                         <button type="button" id="save" class="btn btn-default">保存</button>

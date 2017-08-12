@@ -11,10 +11,10 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
             subject: '/web/graduate/design/subject/list',
-            declare:'/web/graduate/design/subject/declare',
-            declare_condition:'/web/graduate/design/subject/declare/condition',
+            declare: '/web/graduate/design/subject/declare',
+            declare_condition: '/web/graduate/design/subject/declare/condition',
             my_subject: '/web/graduate/design/subject/my',
-            my_condition:'/web/graduate/design/subject/my/condition'
+            my_condition: '/web/graduate/design/subject/my/condition'
         };
 
         /*
@@ -139,8 +139,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_subject', "click", function () {
             var id = $(this).attr('data-id');
-            $.post(ajax_url.my_condition,{id:id},function (data) {
-                if(data.state){
+            $.post(ajax_url.my_condition, {id: id}, function (data) {
+                if (data.state) {
                     $.address.value(ajax_url.my_subject + '?id=' + id);
                 } else {
                     Messenger().post({
@@ -157,8 +157,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_subject_declare', "click", function () {
             var id = $(this).attr('data-id');
-            $.post(ajax_url.declare_condition,{id:id},function (data) {
-                if(data.state){
+            $.post(ajax_url.declare_condition, {id: id}, function (data) {
+                if (data.state) {
                     $.address.value(ajax_url.declare + '?id=' + id);
                 } else {
                     Messenger().post({

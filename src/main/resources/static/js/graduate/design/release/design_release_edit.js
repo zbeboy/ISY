@@ -289,13 +289,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                     progress + '%'
                 );
             }
-        }).on('fileuploadadd', function(evt, data) {
+        }).on('fileuploadadd', function (evt, data) {
             var isOk = true;
             var $this = $(this);
             var validation = data.process(function () {
                 return $this.fileupload('process', data);
             });
-            validation.fail(function(data) {
+            validation.fail(function (data) {
                 isOk = false;
                 Messenger().post({
                     message: '上传失败: ' + data.files[0].error,

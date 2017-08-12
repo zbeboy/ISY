@@ -10,9 +10,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/web/graduate/design/adjustech/data',
-            sync_data:'/web/graduate/design/adjustech/sync/data',
-            adjust_url:'/web/graduate/design/adjustech/adjust',
-            yes_fill:'/web/graduate/design/adjustech/student/submit',
+            sync_data: '/web/graduate/design/adjustech/sync/data',
+            adjust_url: '/web/graduate/design/adjustech/adjust',
+            yes_fill: '/web/graduate/design/adjustech/student/submit',
             not_fill: '/web/graduate/design/adjustech/student/unsubmit',
             is_ok: '/web/graduate/design/adjustech/ok'
         };
@@ -131,22 +131,22 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_sync_adjust', "click", function () {
             startLoading();
-            $.post(ajax_url.sync_data,{id:$(this).attr('data-id')},function(data){
+            $.post(ajax_url.sync_data, {id: $(this).attr('data-id')}, function (data) {
                 endLoading();
-               if(data.state){
-                   Messenger().post({
-                       message: data.msg,
-                       type: 'success',
-                       showCloseButton: true
-                   });
-                   init();
-               } else {
-                   Messenger().post({
-                       message: data.msg,
-                       type: 'error',
-                       showCloseButton: true
-                   });
-               }
+                if (data.state) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                    init();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
             });
         });
 

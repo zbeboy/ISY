@@ -175,7 +175,7 @@ public class UsersServiceImpl implements UsersService {
         usersElasticRepository.delete(usersElastic);
         usersElasticRepository.save(usersElastic);
         UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-        if(usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)){
+        if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
             StudentElastic studentElastic = studentElasticRepository.findByUsername(users.getUsername());
             studentElastic.setEnabled(users.getEnabled());
             studentElastic.setRealName(users.getRealName());
@@ -185,7 +185,7 @@ public class UsersServiceImpl implements UsersService {
             studentElastic.setJoinDate(users.getJoinDate());
             studentElasticRepository.delete(studentElastic);
             studentElasticRepository.save(studentElastic);
-        } else if(usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)){
+        } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
             StaffElastic staffElastic = staffElasticRepository.findByUsername(users.getUsername());
             staffElastic.setEnabled(users.getEnabled());
             staffElastic.setRealName(users.getRealName());
@@ -207,12 +207,12 @@ public class UsersServiceImpl implements UsersService {
             usersElasticRepository.delete(usersElastic);
             usersElasticRepository.save(usersElastic);
             UsersType usersType = cacheManageService.findByUsersTypeId(usersElastic.getUsersTypeId());
-            if(usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)){
+            if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
                 StudentElastic studentElastic = studentElasticRepository.findByUsername(usersElastic.getUsername());
                 studentElastic.setEnabled(usersElastic.getEnabled());
                 studentElasticRepository.delete(studentElastic);
                 studentElasticRepository.save(studentElastic);
-            } else if(usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)){
+            } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
                 StaffElastic staffElastic = staffElasticRepository.findByUsername(usersElastic.getUsername());
                 staffElastic.setEnabled(usersElastic.getEnabled());
                 staffElasticRepository.delete(staffElastic);

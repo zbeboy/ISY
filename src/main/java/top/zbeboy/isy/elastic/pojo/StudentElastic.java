@@ -9,7 +9,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 /**
  * Created by lenovo on 2017-04-12.
@@ -40,13 +39,13 @@ public class StudentElastic {
     private Integer politicalLandscapeId;
     @Getter
     @Setter
-    private String  politicalLandscapeName;
+    private String politicalLandscapeName;
     @Getter
     @Setter
     private Integer nationId;
     @Getter
     @Setter
-    private String  nationName;
+    private String nationName;
     @Getter
     @Setter
     private String dormitoryNumber;

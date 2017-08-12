@@ -209,8 +209,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          添加页面
          */
         $('#teacher_add').click(function () {
-            $.post(getAjaxUrl().condition,{id:init_page_param.graduationDesignReleaseId},function(data){
-                if(data.state){
+            $.post(getAjaxUrl().condition, {id: init_page_param.graduationDesignReleaseId}, function (data) {
+                if (data.state) {
                     $.address.value(getAjaxUrl().add + '?rId=' + init_page_param.graduationDesignReleaseId);
                 } else {
                     Messenger().post({

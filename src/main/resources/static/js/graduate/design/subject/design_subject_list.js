@@ -84,7 +84,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                         var v = '';
                         var html = '';
                         if (c.presubjectTitle !== null) {
-                            if(c.presubjectTitle.length > 12){
+                            if (c.presubjectTitle.length > 12) {
                                 v = c.presubjectTitle.substring(0, 12) + '...';
                             } else {
                                 v = c.presubjectTitle;
@@ -103,27 +103,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                         // 当前用户查看自己的实习日志
                         if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "查看",
-                                        "css": "look",
-                                        "type": "info",
-                                        "id": c.graduationDesignPresubjectId
-                                    },
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.graduationDesignPresubjectId
-                                    }
-                                ]
-                            };
-                        } else { // 该实习日志不属于当前用户
-                            // 当前用户角色为系统或管理员
-                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
-                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-                                context =
                                 {
                                     func: [
                                         {
@@ -140,10 +119,11 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                         }
                                     ]
                                 };
-                            } else {// 非作者也非管理员
-                                // 教职工可查看也可编辑
-                                if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
-                                    context =
+                        } else { // 该实习日志不属于当前用户
+                            // 当前用户角色为系统或管理员
+                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                                context =
                                     {
                                         func: [
                                             {
@@ -160,11 +140,45 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                             }
                                         ]
                                     };
+                            } else {// 非作者也非管理员
+                                // 教职工可查看也可编辑
+                                if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
+                                    context =
+                                        {
+                                            func: [
+                                                {
+                                                    "name": "查看",
+                                                    "css": "look",
+                                                    "type": "info",
+                                                    "id": c.graduationDesignPresubjectId
+                                                },
+                                                {
+                                                    "name": "编辑",
+                                                    "css": "edit",
+                                                    "type": "primary",
+                                                    "id": c.graduationDesignPresubjectId
+                                                }
+                                            ]
+                                        };
                                 } else {
                                     if (c.publicLevel == 2) {
                                         // 毕业时间结束后可查看
                                         if (moment().isAfter(init_page_param.endTime)) {
                                             context =
+                                                {
+                                                    func: [
+                                                        {
+                                                            "name": "查看",
+                                                            "css": "look",
+                                                            "type": "info",
+                                                            "id": c.graduationDesignPresubjectId
+                                                        }
+                                                    ]
+                                                };
+                                        }
+                                    } else if (c.publicLevel == 3) {
+                                        // 随时可查看
+                                        context =
                                             {
                                                 func: [
                                                     {
@@ -175,20 +189,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                                     }
                                                 ]
                                             };
-                                        }
-                                    } else if (c.publicLevel == 3) {
-                                        // 随时可查看
-                                        context =
-                                        {
-                                            func: [
-                                                {
-                                                    "name": "查看",
-                                                    "css": "look",
-                                                    "type": "info",
-                                                    "id": c.graduationDesignPresubjectId
-                                                }
-                                            ]
-                                        };
                                     }
                                 }
                             }

@@ -20,9 +20,7 @@ import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseOrderBean;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static top.zbeboy.isy.domain.Tables.DEFENSE_GROUP;
-import static top.zbeboy.isy.domain.Tables.DEFENSE_ORDER;
-import static top.zbeboy.isy.domain.Tables.SCORE_TYPE;
+import static top.zbeboy.isy.domain.Tables.*;
 
 /**
  * Created by zbeboy on 2017/7/12.

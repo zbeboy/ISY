@@ -15,7 +15,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
                 subject_origin_type: '/user/graduate/design/subject/origin_types',
                 declare_basic: '/web/graduate/design/subject/declare/basic',
                 declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
-                look_url:'/web/graduate/design/subject/list/look',
+                look_url: '/web/graduate/design/subject/list/look',
                 update_title: '/web/graduate/design/subject/declare/edit/title',
                 edit: '/web/graduate/design/subject/declare/edit/apply',
                 ok_apply: '/web/graduate/design/subject/declare/apply/ok',
@@ -154,7 +154,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
                         var v = '';
                         var html = '';
                         if (c.presubjectTitle !== null) {
-                            if(c.presubjectTitle.length > 12){
+                            if (c.presubjectTitle.length > 12) {
                                 v = c.presubjectTitle.substring(0, 12) + '...';
                             } else {
                                 v = c.presubjectTitle;

@@ -2,7 +2,6 @@ package top.zbeboy.isy.web.vo.graduate.design.reorder;
 
 import lombok.Data;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 

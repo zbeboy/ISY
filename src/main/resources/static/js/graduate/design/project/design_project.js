@@ -10,11 +10,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
-            project_list:'/web/graduate/design/project/list',
+            project_list: '/web/graduate/design/project/list',
             my_project: '/web/graduate/design/project/my/list',
-            my_condition:'/web/graduate/design/project/my/list/condition',
+            my_condition: '/web/graduate/design/project/my/list/condition',
             students: '/web/graduate/design/project/my/students',
-            student_condition:'/web/graduate/design/project/my/students/condition'
+            student_condition: '/web/graduate/design/project/my/students/condition'
         };
 
         /*
@@ -139,8 +139,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_project_my', "click", function () {
             var id = $(this).attr('data-id');
-            $.post(ajax_url.my_condition,{id:id},function (data) {
-                if(data.state){
+            $.post(ajax_url.my_condition, {id: id}, function (data) {
+                if (data.state) {
                     $.address.value(ajax_url.my_project + '?id=' + id);
                 } else {
                     Messenger().post({
@@ -157,8 +157,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_students', "click", function () {
             var id = $(this).attr('data-id');
-            $.post(ajax_url.student_condition,{id:id},function (data) {
-                if(data.state){
+            $.post(ajax_url.student_condition, {id: id}, function (data) {
+                if (data.state) {
                     $.address.value(ajax_url.students + '?id=' + id);
                 } else {
                     Messenger().post({

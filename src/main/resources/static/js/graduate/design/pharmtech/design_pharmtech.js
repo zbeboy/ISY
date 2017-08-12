@@ -12,7 +12,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             release_data_url: '/anyone/graduate/design/release/data',
             wish_condition: '/web/graduate/design/pharmtech/wish/condition',
             apply_condition: '/web/graduate/design/pharmtech/apply/condition',
-            my_teacher:'/web/graduate/design/pharmtech/my/teacher',
+            my_teacher: '/web/graduate/design/pharmtech/my/teacher',
             wish: '/web/graduate/design/pharmtech/wish',
             apply: '/web/graduate/design/pharmtech/apply'
         };
@@ -131,8 +131,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_pharmtech_wish', "click", function () {
             var id = $(this).attr('data-id');
-            $.post(ajax_url.wish_condition,function (data) {
-                if(data.state){
+            $.post(ajax_url.wish_condition, function (data) {
+                if (data.state) {
                     $.address.value(ajax_url.wish + '?id=' + id);
                 } else {
                     Messenger().post({

@@ -1,7 +1,5 @@
 package top.zbeboy.isy.glue.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;

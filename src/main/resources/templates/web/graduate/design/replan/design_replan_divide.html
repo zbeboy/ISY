@@ -89,8 +89,9 @@
                                 <label>备注</label>
                                 <input class="form-control" name="note" id="groupNote" placeholder="备注"/>
                             </div>
-                            <input type="hidden" name="graduationDesignTeacherId" id="groupGraduationDesignTeacherId" />
-                            <input type="hidden" name="graduationDesignReleaseId" th:value="${graduationDesignReleaseId}" />
+                            <input type="hidden" name="graduationDesignTeacherId" id="groupGraduationDesignTeacherId"/>
+                            <input type="hidden" name="graduationDesignReleaseId"
+                                   th:value="${graduationDesignReleaseId}"/>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -115,7 +116,8 @@
                             data-id="{{graduationDesignTeacherId}}">设置
                     </button>
                     <button type="button" class="btn btn-primary btn-sm setLeader"
-                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}" data-group="{{defenseGroupId}}">设为组长
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}"
+                            data-group="{{defenseGroupId}}">设为组长
                     </button>
                 </td>
             </tr>

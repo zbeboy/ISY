@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "jquery.address"],
          */
         var ajax_url = {
             edit: '/web/graduate/design/subject/my/edit',
-            operator_condition:'/web/graduate/design/subject/my/operator/condition',
+            operator_condition: '/web/graduate/design/subject/my/operator/condition',
             nav: '/web/menu/graduate/design/subject'
         };
 
@@ -47,7 +47,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "jquery.address"],
         }
 
         /*
-        编辑
+         编辑
          */
         $(paramId.edit).click(function () {
             var id = init_page_param.graduationDesignReleaseId;

@@ -127,7 +127,7 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
     /**
      * 构建组
      *
-     * @param records           数据
+     * @param records 数据
      */
     private List<DefenseGroupBean> buildDefenseGroupList(Result<Record> records) {
         List<DefenseGroupBean> defenseGroupBeens = new ArrayList<>();

@@ -9,7 +9,7 @@ import top.zbeboy.isy.domain.tables.pojos.DefenseOrder;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class DefenseOrderBean extends DefenseOrder{
+public class DefenseOrderBean extends DefenseOrder {
     private String scoreTypeName;
     private String graduationDesignReleaseId;
     private String secretaryId;

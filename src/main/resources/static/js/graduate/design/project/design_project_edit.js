@@ -40,8 +40,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         supervisionTime: '#supervisionTime',
         select_building: '#select_building',
         select_schoolroom: '#select_schoolroom',
-        buildingId:'#buildingId',
-        schoolroomId:'#schoolroomId',
+        buildingId: '#buildingId',
+        schoolroomId: '#schoolroomId',
         guideContent: '#guideContent',
         note: '#note'
     };
@@ -62,8 +62,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         supervisionTime: $(paramId.supervisionTime).val(),
         select_building: $(paramId.select_building).val(),
         select_schoolroom: $(paramId.select_schoolroom).val(),
-        buildingId:$(paramId.buildingId).val(),
-        schoolroomId:$(paramId.schoolroomId).val(),
+        buildingId: $(paramId.buildingId).val(),
+        schoolroomId: $(paramId.schoolroomId).val(),
         guideContent: $(paramId.guideContent).val(),
         note: $(paramId.note).val()
     };
@@ -526,7 +526,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validSupervisionTime(){
+    function validSupervisionTime() {
         var supervisionTime = param.supervisionTime;
         if (supervisionTime.length <= 0 || supervisionTime.length > 100) {
             Messenger().post({
@@ -539,7 +539,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validGuideLocation(){
+    function validGuideLocation() {
         var building = param.select_building;
         var schoolroom = param.select_schoolroom;
         if (Number(building) <= 0) {
@@ -549,7 +549,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
                 showCloseButton: true
             });
         } else {
-            if(Number(schoolroom) <= 0){
+            if (Number(schoolroom) <= 0) {
                 Messenger().post({
                     message: '请选择教室',
                     type: 'error',
@@ -561,7 +561,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validGuideContent(){
+    function validGuideContent() {
         var guideContent = param.guideContent;
         if (guideContent.length <= 0 || guideContent.length > 100) {
             Messenger().post({
@@ -574,7 +574,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validNote(){
+    function validNote() {
         var note = param.note;
         if (note.length <= 0 || note.length > 100) {
             Messenger().post({

@@ -144,7 +144,7 @@ public class StaffServiceImpl implements StaffService {
                 .set(STAFF.POLITICAL_LANDSCAPE_ID, staffElastic.getPoliticalLandscapeId())
                 .set(STAFF.NATION_ID, staffElastic.getNationId())
                 .set(STAFF.POST, staffElastic.getPost())
-                .set(STAFF.ACADEMIC_TITLE_ID,staffElastic.getAcademicTitleId())
+                .set(STAFF.ACADEMIC_TITLE_ID, staffElastic.getAcademicTitleId())
                 .set(STAFF.DEPARTMENT_ID, staffElastic.getDepartmentId())
                 .set(STAFF.USERNAME, staffElastic.getUsername())
                 .returning(STAFF.STAFF_ID)

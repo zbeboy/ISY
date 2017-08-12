@@ -72,7 +72,7 @@
                                                 <input class="form-control" name="schoolroom"
                                                        id="recently_select_schoolroom"
                                                        th:value="${graduationDesignPlanRecently.buildingCode}"
-                                                       disabled="disabled" placeholder="教室" />
+                                                       disabled="disabled" placeholder="教室"/>
                                                 <input type="hidden"
                                                        th:value="${graduationDesignPlanRecently.schoolroomId}"
                                                        id="recently_schoolroom_id"/>
@@ -120,15 +120,19 @@
                             <div class="form-group" id="valid_scheduling">
                                 <label>进度安排</label>
                                 <input class="form-control" name="scheduling" id="scheduling"
-                                       placeholder="进度安排" th:value="${graduationDesignPlan.scheduling}" maxlength="100"/>
-                                <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId" />
-                                <input type="hidden" th:value="${graduationDesignPlan.graduationDesignPlanId}" name="graduationDesignPlanId" />
+                                       placeholder="进度安排" th:value="${graduationDesignPlan.scheduling}"
+                                       maxlength="100"/>
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
+                                <input type="hidden" th:value="${graduationDesignPlan.graduationDesignPlanId}"
+                                       name="graduationDesignPlanId"/>
                                 <p class="text-danger hidden" id="scheduling_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_supervision_time">
                                 <label>指导时间</label>
                                 <input class="form-control" name="supervisionTime" id="supervisionTime"
-                                       placeholder="指导时间" maxlength="100" th:value="${graduationDesignPlan.supervisionTime}" />
+                                       placeholder="指导时间" maxlength="100"
+                                       th:value="${graduationDesignPlan.supervisionTime}"/>
                                 <p class="text-danger hidden" id="supervision_time_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_guide_location">
@@ -138,13 +142,15 @@
                                         <select class="form-control" name="buildingId" id="select_building">
                                             <option>请选择楼</option>
                                         </select>
-                                        <input type="hidden" id="buildingId" th:value="${graduationDesignPlan.buildingId}" />
+                                        <input type="hidden" id="buildingId"
+                                               th:value="${graduationDesignPlan.buildingId}"/>
                                     </div>
                                     <div class="col-md-6">
                                         <select class="form-control" name="schoolroomId" id="select_schoolroom">
                                             <option>请选择教室</option>
                                         </select>
-                                        <input type="hidden" id="schoolroomId" th:value="${graduationDesignPlan.schoolroomId}" />
+                                        <input type="hidden" id="schoolroomId"
+                                               th:value="${graduationDesignPlan.schoolroomId}"/>
                                     </div>
                                 </div>
                                 <p class="text-danger hidden" id="guide_location_error_msg"></p>
@@ -152,7 +158,8 @@
                             <div class="form-group" id="valid_guide_content">
                                 <label>指导内容</label>
                                 <input class="form-control" name="guideContent" id="guideContent"
-                                       placeholder="指导内容" maxlength="150" th:value="${graduationDesignPlan.guideContent}"/>
+                                       placeholder="指导内容" maxlength="150"
+                                       th:value="${graduationDesignPlan.guideContent}"/>
                                 <p class="text-danger hidden" id="guide_content_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_note">

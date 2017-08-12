@@ -72,7 +72,7 @@
                                                 <input class="form-control" name="schoolroom"
                                                        id="recently_select_schoolroom"
                                                        th:value="${graduationDesignPlanRecently.buildingCode}"
-                                                       disabled="disabled" placeholder="教室" />
+                                                       disabled="disabled" placeholder="教室"/>
                                                 <input type="hidden"
                                                        th:value="${graduationDesignPlanRecently.schoolroomId}"
                                                        id="recently_schoolroom_id"/>
@@ -121,7 +121,8 @@
                                 <label>进度安排</label>
                                 <input class="form-control" name="scheduling" id="scheduling"
                                        placeholder="进度安排" maxlength="100"/>
-                                <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId" />
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
                                 <p class="text-danger hidden" id="scheduling_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_supervision_time">

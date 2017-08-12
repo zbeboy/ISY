@@ -11,11 +11,11 @@ import javax.validation.constraints.Size;
 @Data
 public class GraduationDesignProposalAddVo {
     @Size(max = 10)
-    private String    version;
+    private String version;
     @NotNull
-    private Integer   graduationDesignDatumTypeId;
+    private Integer graduationDesignDatumTypeId;
     @NotNull
     @Size(max = 64)
-    private String    graduationDesignReleaseId;
-    private String    graduationDesignDatumId;
+    private String graduationDesignReleaseId;
+    private String graduationDesignDatumId;
 }

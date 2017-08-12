@@ -52,13 +52,14 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="groupModalLabel">选择小组</h4>
                     </div>
                     <div class="modal-body">
                         <div class="list-group" id="groupData">
                         </div>
-                        <input type="hidden" id="graduationDesignReleaseId" />
+                        <input type="hidden" id="graduationDesignReleaseId"/>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -105,8 +106,12 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <button type="button" class="btn btn-default design_reorder_arrange" data-id="{{graduationDesignReleaseId}}">安排</button>
-                    <button type="button" class="btn btn-default design_reorder_reply" data-id="{{graduationDesignReleaseId}}">答辩</button>
+                    <button type="button" class="btn btn-default design_reorder_arrange"
+                            data-id="{{graduationDesignReleaseId}}">安排
+                    </button>
+                    <button type="button" class="btn btn-default design_reorder_reply"
+                            data-id="{{graduationDesignReleaseId}}">答辩
+                    </button>
                 </div>
             </div>
             {{/each}}

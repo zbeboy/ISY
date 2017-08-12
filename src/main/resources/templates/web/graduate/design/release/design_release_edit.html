@@ -24,7 +24,8 @@
                     <div class="form-group" id="valid_release_title">
                         <label>标题</label>
                         <input class="form-control" name="graduationDesignTitle" id="graduationDesignTitle"
-                               placeholder="标题" maxlength="100" th:value="${graduationDesignRelease.graduationDesignTitle}"/>
+                               placeholder="标题" maxlength="100"
+                               th:value="${graduationDesignRelease.graduationDesignTitle}"/>
                         <p class="text-danger hidden" id="release_title_error_msg"></p>
                         <input type="hidden" name="graduationDesignReleaseId" id="graduationDesignReleaseId"
                                th:value="${graduationDesignRelease.graduationDesignReleaseId}"/>
@@ -36,7 +37,7 @@
                     <div class="form-group" id="valid_start_time">
                         <label>毕业设计开始时间</label>
                         <input class="form-control" name="startTime" id="startTime" readonly="readonly"
-                               placeholder="毕业设计开始时间" th:value="${graduationDesignRelease.startTimeStr}" />
+                               placeholder="毕业设计开始时间" th:value="${graduationDesignRelease.startTimeStr}"/>
                         <p class="text-danger hidden" id="start_time_error_msg"></p>
                     </div>
                     <div class="form-group" id="valid_end_time">
@@ -72,12 +73,14 @@
                     </div>
                     <div class="form-group">
                         <label>系</label>
-                        <input class="form-control" name="departmentName" th:value="${graduationDesignRelease.departmentName}"
+                        <input class="form-control" name="departmentName"
+                               th:value="${graduationDesignRelease.departmentName}"
                                readonly="readonly"/>
                     </div>
                     <div class="form-group">
                         <label>年级</label>
-                        <input class="form-control" name="grade" id="grade" th:value="${graduationDesignRelease.allowGrade}"
+                        <input class="form-control" name="grade" id="grade"
+                               th:value="${graduationDesignRelease.allowGrade}"
                                readonly="readonly"/>
                     </div>
                     <div class="form-group">

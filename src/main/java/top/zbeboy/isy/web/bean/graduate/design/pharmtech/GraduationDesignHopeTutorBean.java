@@ -9,7 +9,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class GraduationDesignHopeTutorBean extends GraduationDesignHopeTutor{
+public class GraduationDesignHopeTutorBean extends GraduationDesignHopeTutor {
     private String realName;
     private String mobile;
 }

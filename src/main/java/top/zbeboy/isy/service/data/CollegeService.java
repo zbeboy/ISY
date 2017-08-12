@@ -56,7 +56,7 @@ public interface CollegeService {
     Result<CollegeRecord> findByCollegeNameAndSchoolId(String collegeName, int schoolId);
 
     /**
-     *  院代码查询 注：等于院代码
+     * 院代码查询 注：等于院代码
      *
      * @param collegeCode 院代码
      * @return 数据

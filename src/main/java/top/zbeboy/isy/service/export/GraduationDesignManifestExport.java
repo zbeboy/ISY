@@ -34,7 +34,7 @@ public class GraduationDesignManifestExport extends ExportUtils<GraduationDesign
 
     @Override
     public void createCell(Row row, GraduationDesignDeclareBean graduationDesignDeclareBean) {
-        sequence ++ ;
+        sequence++;
         row.createCell(0).setCellValue(sequence);
         row.createCell(1).setCellValue(graduationDesignDeclareBean.getPresubjectTitle());
         row.createCell(2).setCellValue(graduationDesignDeclareBean.getSubjectTypeName());

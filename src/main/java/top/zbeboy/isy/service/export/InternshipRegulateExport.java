@@ -40,7 +40,7 @@ public class InternshipRegulateExport extends ExportUtils<InternshipRegulateBean
 
     @Override
     public void createCell(Row row, InternshipRegulateBean internshipRegulateBean) {
-        sequence ++ ;
+        sequence++;
         row.createCell(0).setCellValue(sequence);
         row.createCell(1).setCellValue(internshipRegulateBean.getStudentName());
         row.createCell(2).setCellValue(internshipRegulateBean.getStudentNumber());

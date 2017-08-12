@@ -39,7 +39,7 @@
                     </tbody>
                 </table>
                 <h3>学生</h3>
-                <p>当前选择 : <span id="teacherName"></span>  <span id="teacherMobile"></span></p>
+                <p>当前选择 : <span id="teacherName"></span> <span id="teacherMobile"></span></p>
                 <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="studentTable">
                     <thead>
                     <tr>
@@ -74,7 +74,8 @@
                         <form role="form" id="teacher_form" style="height: 300px;overflow: auto">
                             <div class="form-group" id="teachers"></div>
                             <input name="graduationDesignTutorId" type="hidden" id="teacherGraduationDesignTutorId"/>
-                            <input name="graduationDesignReleaseId" type="hidden" th:value="${graduationDesignReleaseId}"/>
+                            <input name="graduationDesignReleaseId" type="hidden"
+                                   th:value="${graduationDesignReleaseId}"/>
                             <input type="hidden" id="teacherGraduationDesignTeacherId"/>
                         </form>
                         <p id="teacher_error_msg" class="hidden"></p>
@@ -91,7 +92,8 @@
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="wishModalLabel">志愿教师</h4>
                     </div>
                     <div class="modal-body" id="wishData">
@@ -112,7 +114,8 @@
                 <td>{{residue}}</td>
                 <td>
                     <button type="button" class="btn btn-primary btn-sm teacher_detail"
-                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}" data-mobile="{{staffMobile}}">详情
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}"
+                            data-mobile="{{staffMobile}}">详情
                     </button>
                 </td>
             </tr>
@@ -134,7 +137,8 @@
                             data-id="{{graduationDesignTutorId}}" data-teacher="{{graduationDesignTeacherId}}">调整
                     </button>
                     <button type="button" class="btn btn-danger btn-sm delete_teacher"
-                            data-id="{{graduationDesignTutorId}}" data-teacher="{{graduationDesignTeacherId}}" data-student="{{realName}}">删除
+                            data-id="{{graduationDesignTutorId}}" data-teacher="{{graduationDesignTeacherId}}"
+                            data-student="{{realName}}">删除
                     </button>
                 </td>
             </tr>
@@ -145,11 +149,12 @@
             <div class="radio">
                 <label>
                     {{#if selected}}
-                    <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" checked="checked"/>
+                    <input type="radio" name="graduationDesignTeacherId" value="{{graduationDesignTeacherId}}"
+                           checked="checked"/>
                     {{else}}
-                    <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" />
+                    <input type="radio" name="graduationDesignTeacherId" value="{{graduationDesignTeacherId}}"/>
                     {{/if}}
-                    {{realName}}  {{staffMobile}}
+                    {{realName}} {{staffMobile}}
                 </label>
             </div>
             {{/each}}

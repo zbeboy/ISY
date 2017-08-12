@@ -23,10 +23,12 @@
                 <div class="well">
                     <div class="row">
                         <div class="col-md-4">
-                            <input type="text" id="search_student_name" class="form-control input-sm" placeholder="学生姓名"/>
+                            <input type="text" id="search_student_name" class="form-control input-sm"
+                                   placeholder="学生姓名"/>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="search_student_number" class="form-control input-sm" placeholder="学号"/>
+                            <input type="text" id="search_student_number" class="form-control input-sm"
+                                   placeholder="学号"/>
                         </div>
                         <div class="col-md-4">
                             <select class="form-control" id="select_organize">
@@ -93,7 +95,8 @@
                         <form role="form" id="teacher_form" style="height: 300px;overflow: auto">
                             <div class="form-group" id="teachers"></div>
                             <input name="graduationDesignTutorId" type="hidden" id="teacherGraduationDesignTutorId"/>
-                            <input name="graduationDesignReleaseId" type="hidden" th:value="${graduationDesignReleaseId}"/>
+                            <input name="graduationDesignReleaseId" type="hidden"
+                                   th:value="${graduationDesignReleaseId}"/>
                             <input type="hidden" id="teacherGraduationDesignTeacherId"/>
                         </form>
                         <p id="teacher_error_msg" class="hidden"></p>
@@ -110,7 +113,8 @@
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="wishModalLabel">志愿教师</h4>
                     </div>
                     <div class="modal-body" id="wishData">
@@ -140,11 +144,12 @@
             <div class="radio">
                 <label>
                     {{#if selected}}
-                    <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" checked="checked"/>
+                    <input type="radio" name="graduationDesignTeacherId" value="{{graduationDesignTeacherId}}"
+                           checked="checked"/>
                     {{else}}
-                    <input type="radio" name="graduationDesignTeacherId"  value="{{graduationDesignTeacherId}}" />
+                    <input type="radio" name="graduationDesignTeacherId" value="{{graduationDesignTeacherId}}"/>
                     {{/if}}
-                    {{realName}}  {{staffMobile}}
+                    {{realName}} {{staffMobile}}
                 </label>
             </div>
             {{/each}}

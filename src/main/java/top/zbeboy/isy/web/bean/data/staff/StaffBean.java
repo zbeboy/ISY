@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class StaffBean extends Staff{
+public class StaffBean extends Staff {
     private Integer schoolId;
     private String schoolName;
     private Byte schoolIsDel;
@@ -38,9 +38,9 @@ public class StaffBean extends Staff{
     private String langKey;
     private Date joinDate;
 
-    private String  nationName;
+    private String nationName;
 
-    private String  politicalLandscapeName;
+    private String politicalLandscapeName;
 
     private String roleName;
 

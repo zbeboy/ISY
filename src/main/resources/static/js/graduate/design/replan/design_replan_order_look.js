@@ -132,7 +132,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
             var v = '';
             var html = '';
             if (this.subject !== null) {
-                if(this.subject.length > 5){
+                if (this.subject.length > 5) {
                     v = this.subject.substring(0, 5) + '...';
                 } else {
                     v = this.subject;

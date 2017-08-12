@@ -9,7 +9,7 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignPlan;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class GraduationDesignPlanBean extends GraduationDesignPlan{
+public class GraduationDesignPlanBean extends GraduationDesignPlan {
     private String buildingName;
     private String buildingCode;
     private int buildingId;

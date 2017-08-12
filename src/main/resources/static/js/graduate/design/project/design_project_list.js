@@ -9,9 +9,9 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         data_url: '/web/graduate/design/project/list/teachers',
         detail: '/web/graduate/design/project/list/detail',
         list_condition: '/web/graduate/design/project/list/condition',
-        students:'/web/graduate/design/project/list/students',
-        student_condition:'/web/graduate/design/project/students/condition',
-        download:'/web/graduate/design/project/list/download',
+        students: '/web/graduate/design/project/list/students',
+        student_condition: '/web/graduate/design/project/students/condition',
+        download: '/web/graduate/design/project/list/download',
         back: '/web/menu/graduate/design/project'
     };
 
@@ -67,7 +67,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         var template = Handlebars.compile($("#teacher-template").html());
         Handlebars.registerHelper('placeholder', function () {
             var v = 'Ta';
-            if(this.staffId === init_page_param.staffId){
+            if (this.staffId === init_page_param.staffId) {
                 v = '我';
             }
             return new Handlebars.SafeString(Handlebars.escapeExpression(v));

@@ -22,5 +22,5 @@ public class DefenseGroupUpdateVo {
     private String note;
     @NotNull
     @Size(max = 64)
-    private String  graduationDesignReleaseId;
+    private String graduationDesignReleaseId;
 }

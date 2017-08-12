@@ -115,34 +115,34 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "志愿",
-                                    "css": "wish",
-                                    "type": "default",
-                                    "id": c.graduationDesignTutorId,
-                                    "studentName": c.studentName,
-                                    "graduationDesignTeacherId": c.graduationDesignTeacherId
-                                },
-                                {
-                                    "name": "调整",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.graduationDesignTutorId,
-                                    "studentName": c.studentName,
-                                    "graduationDesignTeacherId": c.graduationDesignTeacherId
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.graduationDesignTutorId,
-                                    "studentName": c.studentName,
-                                    "graduationDesignTeacherId": c.graduationDesignTeacherId
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "志愿",
+                                        "css": "wish",
+                                        "type": "default",
+                                        "id": c.graduationDesignTutorId,
+                                        "studentName": c.studentName,
+                                        "graduationDesignTeacherId": c.graduationDesignTeacherId
+                                    },
+                                    {
+                                        "name": "调整",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.graduationDesignTutorId,
+                                        "studentName": c.studentName,
+                                        "graduationDesignTeacherId": c.graduationDesignTeacherId
+                                    },
+                                    {
+                                        "name": "删除",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.graduationDesignTutorId,
+                                        "studentName": c.studentName,
+                                        "graduationDesignTeacherId": c.graduationDesignTeacherId
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }
@@ -326,9 +326,9 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         });
 
         /*
-        志愿
+         志愿
          */
-        function wish(id){
+        function wish(id) {
             $.post(getAjaxUrl().wish, {graduationDesignTutorId: id}, function (data) {
                 if (data.state) {
                     wishData(data);
@@ -452,9 +452,11 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
          * @param graduationDesignTutorId
          */
         function sendDelAjax(graduationDesignTutorId) {
-            $.post(web_path + getAjaxUrl().del,{id: init_page_param.graduationDesignReleaseId,
-                graduationDesignTutorIds: graduationDesignTutorId},function (data) {
-                if(data.state){
+            $.post(web_path + getAjaxUrl().del, {
+                id: init_page_param.graduationDesignReleaseId,
+                graduationDesignTutorIds: graduationDesignTutorId
+            }, function (data) {
+                if (data.state) {
                     myTable.ajax.reload();
                 } else {
                     Messenger().post({

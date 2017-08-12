@@ -50,7 +50,7 @@ public class InternshipCompanyExport extends ExportUtils<InternshipCompany> {
 
     @Override
     public void createCell(Row row, InternshipCompany internshipCompany) {
-        sequence ++ ;
+        sequence++;
         row.createCell(0).setCellValue(sequence);
         row.createCell(1).setCellValue(internshipCompany.getStudentName());
         row.createCell(2).setCellValue(internshipCompany.getCollegeClass());

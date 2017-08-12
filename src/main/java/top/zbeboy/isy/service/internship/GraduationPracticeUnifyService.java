@@ -3,7 +3,6 @@ package top.zbeboy.isy.service.internship;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify;
-import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeUnifyBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeUnifyVo;
 
@@ -85,7 +84,7 @@ public interface GraduationPracticeUnifyService {
     /**
      * 查询
      *
-     * @param dataTablesUtils           datatables工具类
+     * @param dataTablesUtils         datatables工具类
      * @param graduationPracticeUnify 毕业实习(学校统一组织校外实习)
      * @return 导出数据
      */

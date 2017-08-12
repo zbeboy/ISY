@@ -13,7 +13,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         edit: '/web/graduate/design/project/list/edit',
         del: '/web/graduate/design/project/list/delete',
         download: '/web/graduate/design/project/list/download',
-        download_condition:'/web/graduate/design/project/list/condition',
+        download_condition: '/web/graduate/design/project/list/condition',
         back: '/web/menu/graduate/design/project'
     };
 

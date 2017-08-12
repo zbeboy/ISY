@@ -443,8 +443,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     });
 
     /*
-   状态
-   */
+     状态
+     */
     $(tableData).delegate('.defenseStatus', "click", function () {
         var id = $(this).attr('data-id');
         var name = $(this).attr('data-student');
@@ -499,7 +499,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
     /*
      打分
-    */
+     */
     $(tableData).delegate('.grade', "click", function () {
         var id = $(this).attr('data-id');
         var name = $(this).attr('data-student');
@@ -540,7 +540,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
     /*
      成绩
-    */
+     */
     $(tableData).delegate('.mark', "click", function () {
         var id = $(this).attr('data-id');
         var name = $(this).attr('data-student');
@@ -602,7 +602,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
     /*
      问题
-    */
+     */
     $(tableData).delegate('.question', "click", function () {
         var id = $(this).attr('data-id');
         $.address.value(ajax_url.question_info_url + '?graduationDesignReleaseId=' + init_page_param.graduationDesignReleaseId +

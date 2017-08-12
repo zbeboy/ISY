@@ -490,7 +490,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validSupervisionTime(){
+    function validSupervisionTime() {
         var supervisionTime = param.supervisionTime;
         if (supervisionTime.length <= 0 || supervisionTime.length > 100) {
             Messenger().post({
@@ -503,7 +503,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validGuideLocation(){
+    function validGuideLocation() {
         var building = param.select_building;
         var schoolroom = param.select_schoolroom;
         if (Number(building) <= 0) {
@@ -513,7 +513,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
                 showCloseButton: true
             });
         } else {
-            if(Number(schoolroom) <= 0){
+            if (Number(schoolroom) <= 0) {
                 Messenger().post({
                     message: '请选择教室',
                     type: 'error',
@@ -525,7 +525,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validGuideContent(){
+    function validGuideContent() {
         var guideContent = param.guideContent;
         if (guideContent.length <= 0 || guideContent.length > 100) {
             Messenger().post({
@@ -538,7 +538,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
         }
     }
 
-    function validNote(){
+    function validNote() {
         var note = param.note;
         if (note.length <= 0 || note.length > 100) {
             Messenger().post({

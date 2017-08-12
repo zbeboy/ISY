@@ -51,7 +51,7 @@ public interface DefenseGroupService {
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return 数据
      */
-    List<DefenseGroupBean>  findByGraduationDesignReleaseIdRelation(String graduationDesignReleaseId);
+    List<DefenseGroupBean> findByGraduationDesignReleaseIdRelation(String graduationDesignReleaseId);
 
     /**
      * 保存

@@ -6,7 +6,6 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatum;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import java.util.List;
 import java.util.Optional;
 
 /**

@@ -55,7 +55,7 @@ public class GraduationPracticeUnifyExport extends ExportUtils<GraduationPractic
 
     @Override
     public void createCell(Row row, GraduationPracticeUnify graduationPracticeUnify) {
-        sequence ++ ;
+        sequence++;
         row.createCell(0).setCellValue(sequence);
         row.createCell(1).setCellValue(graduationPracticeUnify.getStudentName());
         row.createCell(2).setCellValue(graduationPracticeUnify.getCollegeClass());

@@ -9,6 +9,6 @@ import top.zbeboy.isy.domain.tables.pojos.DefenseRate;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class DefenseRateBean extends DefenseRate{
+public class DefenseRateBean extends DefenseRate {
     private String realName;
 }

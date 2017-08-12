@@ -9,7 +9,7 @@ import top.zbeboy.isy.domain.tables.pojos.Building;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class BuildingBean extends Building{
+public class BuildingBean extends Building {
     private String schoolName;
     private String collegeName;
     private int schoolId;

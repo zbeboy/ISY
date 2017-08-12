@@ -8,7 +8,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
     var ajax_url = {
         data_url: '/web/graduate/design/project/list/data',
         download: '/web/graduate/design/project/list/download',
-        download_condition:'/web/graduate/design/project/list/condition',
+        download_condition: '/web/graduate/design/project/list/condition',
         nav: '/web/menu/graduate/design/project',
         back: '/web/graduate/design/project/list'
     };

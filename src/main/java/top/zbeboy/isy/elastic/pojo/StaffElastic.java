@@ -9,7 +9,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 /**
  * Created by lenovo on 2017-04-12.

@@ -9,7 +9,7 @@ import top.zbeboy.isy.domain.tables.pojos.Science;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class ScienceBean extends Science{
+public class ScienceBean extends Science {
     private String schoolName;
     private String collegeName;
     private String departmentName;

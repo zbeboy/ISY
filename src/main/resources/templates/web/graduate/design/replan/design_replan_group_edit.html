@@ -23,7 +23,8 @@
                 <form role="form" id="add_form">
                     <div class="form-group" id="valid_defense_group_name">
                         <label>组别</label>
-                        <input class="form-control" name="defenseGroupName" th:value="${defenseGroup.defenseGroupName}" id="defenseGroupName" placeholder="组别" maxlength="20"/>
+                        <input class="form-control" name="defenseGroupName" th:value="${defenseGroup.defenseGroupName}"
+                               id="defenseGroupName" placeholder="组别" maxlength="20"/>
                         <input type="hidden" name="graduationDesignReleaseId" th:value="${graduationDesignReleaseId}">
                         <input type="hidden" name="defenseGroupId" th:value="${defenseGroup.defenseGroupId}">
                         <p class="text-danger hidden" id="defense_group_name_error_msg"></p>
@@ -48,7 +49,8 @@
                     </div>
                     <div class="form-group" id="valid_note">
                         <label>备注</label>
-                        <input class="form-control" name="note" id="note" placeholder="备注" th:value="${defenseGroup.note}" maxlength="100"/>
+                        <input class="form-control" name="note" id="note" placeholder="备注"
+                               th:value="${defenseGroup.note}" maxlength="100"/>
                         <p class="text-danger hidden" id="note_error_msg"></p>
                     </div>
                     <div class="text-center">

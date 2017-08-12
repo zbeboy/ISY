@@ -1,7 +1,6 @@
 package top.zbeboy.isy.service.graduate.design;
 
 import org.jooq.Record;
-import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.DefenseGroupMember;
 import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
