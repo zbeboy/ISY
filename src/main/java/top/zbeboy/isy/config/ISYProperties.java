@@ -42,6 +42,9 @@ public class ISYProperties {
         return weixin;
     }
 
+    /**
+     * 异常初始化参数
+     */
     public static class Async {
 
         private int corePoolSize = 2;
@@ -75,6 +78,9 @@ public class ISYProperties {
         }
     }
 
+    /**
+     * 短信初始化参数
+     */
     public static class Mobile {
 
         private String apikey;
@@ -108,6 +114,9 @@ public class ISYProperties {
         }
     }
 
+    /**
+     * 邮件初始化参数
+     */
     public static class Mail {
 
         private String user;
@@ -201,6 +210,9 @@ public class ISYProperties {
         }
     }
 
+    /**
+     * 通用初始化参数
+     */
     public static class Constants {
 
         private String serverName;
@@ -274,6 +286,9 @@ public class ISYProperties {
         }
     }
 
+    /**
+     * 微信初始化参数
+     */
     public static class Weixin {
         private String token;
         private String appId;

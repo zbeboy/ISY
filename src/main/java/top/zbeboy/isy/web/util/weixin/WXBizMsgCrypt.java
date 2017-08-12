@@ -6,6 +6,14 @@
  * 针对org.apache.commons.codec.binary.Base64，
  * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
  * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
+ * <p>
+ * 针对org.apache.commons.codec.binary.Base64，
+ * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
+ * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
+ * <p>
+ * 针对org.apache.commons.codec.binary.Base64，
+ * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
+ * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
  */
 
 // ------------------------------------------------------------------------
@@ -17,6 +25,7 @@
  */
 package top.zbeboy.isy.web.util.weixin;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
@@ -43,6 +52,7 @@ import java.util.Random;
  * 	<li>如果安装了JDK，将两个jar文件放到%JDK_HOME%\jre\lib\security目录下覆盖原来文件</li>
  * </ol>
  */
+@Slf4j
 public class WXBizMsgCrypt {
     private static Charset CHARSET = Charset.forName("utf-8");
     private Base64 base64 = new Base64();
@@ -92,7 +102,7 @@ public class WXBizMsgCrypt {
     private String getRandomStr() {
         String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 16; i++) {
             int number = random.nextInt(base.length());
             sb.append(base.charAt(number));
@@ -141,7 +151,7 @@ public class WXBizMsgCrypt {
 
             return base64.encodeToString(encrypted);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("微信对明文加密 error : {}", e);
             throw new AesException(AesException.EncryptAESError);
         }
     }
@@ -168,7 +178,7 @@ public class WXBizMsgCrypt {
             // 解密
             original = cipher.doFinal(encrypted);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("微信对明文解密 error : {}", e);
             throw new AesException(AesException.DecryptAESError);
         }
 
@@ -186,7 +196,7 @@ public class WXBizMsgCrypt {
             from_appid = new String(Arrays.copyOfRange(bytes, 20 + xmlLength, bytes.length),
                     CHARSET);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("微信去除补位字符 error : {}", e);
             throw new AesException(AesException.IllegalBuffer);
         }
 

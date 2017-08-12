@@ -21,6 +21,11 @@ public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor,
 
     private final AsyncTaskExecutor executor;
 
+    /**
+     * 异步异常捕获
+     *
+     * @param executor 执行器
+     */
     public ExceptionHandlingAsyncTaskExecutor(AsyncTaskExecutor executor) {
         this.executor = executor;
     }

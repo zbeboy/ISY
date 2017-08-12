@@ -23,11 +23,23 @@ public class JooqSpringBootConfiguration {
     @Autowired
     private ISYProperties isyProperties;
 
+    /**
+     * datasource transaction
+     *
+     * @param dataSource
+     * @return
+     */
     @Bean
     public DataSourceTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    /**
+     * use jooq config
+     *
+     * @param config
+     * @return
+     */
     @Bean
     public DSLContext dsl(org.jooq.Configuration config) {
         return new DefaultDSLContext(config);
@@ -38,21 +50,45 @@ public class JooqSpringBootConfiguration {
         return new DataSourceConnectionProvider(new TransactionAwareDataSourceProxy(dataSource));
     }
 
+    /**
+     * own transaction
+     *
+     * @return
+     */
     @Bean
     public TransactionProvider transactionProvider() {
         return new SpringTransactionProvider();
     }
 
+    /**
+     * exception transaction.
+     *
+     * @return
+     */
     @Bean
     public ExceptionTranslator exceptionTranslator() {
         return new ExceptionTranslator();
     }
 
+    /**
+     * listener
+     *
+     * @param exceptionTranslator
+     * @return
+     */
     @Bean
     public ExecuteListenerProvider executeListenerProvider(ExceptionTranslator exceptionTranslator) {
         return new DefaultExecuteListenerProvider(exceptionTranslator);
     }
 
+    /**
+     * joop config
+     *
+     * @param connectionProvider
+     * @param transactionProvider
+     * @param executeListenerProvider
+     * @return
+     */
     @Bean
     public org.jooq.Configuration jooqConfig(ConnectionProvider connectionProvider,
                                              TransactionProvider transactionProvider, ExecuteListenerProvider executeListenerProvider) {

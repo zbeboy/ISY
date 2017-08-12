@@ -8,29 +8,33 @@
 
 package top.zbeboy.isy.web.util.weixin;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.security.MessageDigest;
 import java.util.Arrays;
 
 /**
  * SHA1 class
- *
+ * <p>
  * 计算公众平台的消息签名接口.
  */
+@Slf4j
 class SHA1 {
 
     /**
      * 用SHA1算法生成安全签名
-     * @param token 票据
+     *
+     * @param token     票据
      * @param timestamp 时间戳
-     * @param nonce 随机字符串
-     * @param encrypt 密文
+     * @param nonce     随机字符串
+     * @param encrypt   密文
      * @return 安全签名
      * @throws AesException
      */
     public static String getSHA1(String token, String timestamp, String nonce, String encrypt) throws AesException {
         try {
             String[] array = new String[]{token, timestamp, nonce, encrypt};
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             // 字符串排序
             Arrays.sort(array);
             for (int i = 0; i < 4; i++) {
@@ -42,7 +46,7 @@ class SHA1 {
             md.update(str.getBytes());
             byte[] digest = md.digest();
 
-            StringBuffer hexstr = new StringBuffer();
+            StringBuilder hexstr = new StringBuilder();
             String shaHex = "";
             for (int i = 0; i < digest.length; i++) {
                 shaHex = Integer.toHexString(digest[i] & 0xFF);
@@ -53,7 +57,7 @@ class SHA1 {
             }
             return hexstr.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("SHA error : {}", e);
             throw new AesException(AesException.ComputeSignatureError);
         }
     }

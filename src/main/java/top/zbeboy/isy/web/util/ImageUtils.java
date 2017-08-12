@@ -4,32 +4,24 @@ package top.zbeboy.isy.web.util;
  * Created by zbeboy on 2017/1/20.
  */
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.util.Iterator;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
+import java.util.Iterator;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
+@Slf4j
 public class ImageUtils {
 
     /**
@@ -55,7 +47,7 @@ public class ImageUtils {
             input = url.openStream();
             return getSizeInfo(input);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Get file size error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(input);
@@ -77,7 +69,7 @@ public class ImageUtils {
             input = new BufferedInputStream(new FileInputStream(file));
             return getSizeInfo(input);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Get file size error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(input);
@@ -97,7 +89,7 @@ public class ImageUtils {
             int h = img.getHeight(null);
             return new int[]{w, h};
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Get file size error : {}", e);
             throw new Exception(e);
         }
     }
@@ -185,7 +177,7 @@ public class ImageUtils {
             tag.getGraphics().drawImage(img.getScaledInstance(toWidth, toHeight, Image.SCALE_SMOOTH), 0, 0, null);
             ImageIO.write(tag, hasNotAlpha ? "jpg" : "png", output);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Resize error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(input);
@@ -245,7 +237,7 @@ public class ImageUtils {
             output = new FileOutputStream(destFile);
             resize(input, output, width, height, maxWidth, maxHeight);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Resize error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(input);
@@ -290,6 +282,7 @@ public class ImageUtils {
             }
             output = new BufferedOutputStream(new FileOutputStream(target));
         } catch (IOException e) {
+            log.error("Crop error : {}", e);
             throw new Exception(e);
         }
         crop(input, output, x, y, w, h, StringUtils.equalsIgnoreCase("png", ext));
@@ -331,7 +324,7 @@ public class ImageUtils {
             tag.getGraphics().drawImage(dest, 0, 0, null);
             ImageIO.write(tag, isPNG ? "png" : "jpg", output);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Crop error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(input);
@@ -377,18 +370,18 @@ public class ImageUtils {
             // associated stream and image metadata and thumbnails to the output
             writer.write(null, new IIOImage(image, null, null), param);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new Exception(e);
+            log.error("Optimize error : {}", e);
         } finally {
             if (ios != null) {
                 try {
                     ios.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new Exception(e);
+                    log.error("ImageOutputStream closed error : {}", e);
                 }
             }
-            writer.dispose();
+            if (writer != null) {
+                writer.dispose();
+            }
         }
     }
 
@@ -425,6 +418,7 @@ public class ImageUtils {
             os = new BufferedOutputStream(new FileOutputStream(target));
             optimize(is, os, quality);
         } catch (FileNotFoundException e) {
+            log.error("Optimize error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(is);
@@ -449,7 +443,7 @@ public class ImageUtils {
             out = new BufferedOutputStream(new FileOutputStream(destFile));
             makeRoundedCorner(in, out, cornerRadius);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("MakeRoundedCorner error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(out);
@@ -511,7 +505,7 @@ public class ImageUtils {
             g2.dispose();
             ImageIO.write(targetImage, "png", outputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("MakeRoundedCorner error : {}", e);
             throw new Exception(e);
         }
     }
@@ -534,7 +528,7 @@ public class ImageUtils {
             out = new BufferedOutputStream(new FileOutputStream(destFile));
             makeRotate(in, out, angle);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("makeRotate error : {}", e);
             throw new Exception(e);
         } finally {
             IOUtils.closeQuietly(out);
@@ -581,13 +575,13 @@ public class ImageUtils {
             // transform
             g2.translate((rect_des.width - width) / 2,
                     (rect_des.height - height) / 2);
-            g2.rotate(Math.toRadians(angle), width / 2, height / 2);
+            g2.rotate(Math.toRadians(angle), width / 2d, height / 2d);
 
             g2.drawImage(dealedImage, null, null);
             g2.dispose();
             ImageIO.write(res, "png", outputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("makeRotate error : {}", e);
             throw new Exception(e);
         }
     }
@@ -597,7 +591,7 @@ public class ImageUtils {
      */
     public static Rectangle CalcRotatedSize(Rectangle src, int angel) {
         // if angel is greater than 90 degree, we need to do some conversion
-        angel = Math.abs(angel) ;
+        angel = Math.abs(angel);
         if (angel >= 90) {
             if (angel / 90 % 2 == 1) {
                 int temp = src.height;
@@ -607,7 +601,7 @@ public class ImageUtils {
             angel = angel % 90;
         }
 
-        double r = Math.sqrt(src.height * src.height + src.width * src.width) / 2;
+        double r = Math.sqrt((double) src.height * src.height + (double) src.width * src.width) / 2;
         double len = 2 * Math.sin(Math.toRadians(angel) / 2) * r;
         double angel_alpha = (Math.PI - Math.toRadians(angel)) / 2;
         double angel_dalta_width = Math.atan((double) src.height / src.width);

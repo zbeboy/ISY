@@ -99,7 +99,7 @@ public class MD5Utils {
             return hexString.toString();
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error("MD5 sha1 error : {}", e);
         }
         return "";
     }

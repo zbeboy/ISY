@@ -19,6 +19,11 @@ public class InitConfiguration implements CommandLineRunner {
 
     private final CacheManager cacheManager;
 
+    /**
+     * 注入cache
+     *
+     * @param cacheManager
+     */
     @Autowired
     public InitConfiguration(CacheManager cacheManager) {
         this.cacheManager = cacheManager;

@@ -9,12 +9,24 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface RecordSystemLogging {
-    // 功能模块
+    /**
+     * 功能模块
+     *
+     * @return 功能模块
+     */
     String module() default "";
 
-    // 方法名
+    /**
+     * 方法名
+     *
+     * @return 方法名
+     */
     String methods() default "";
 
-    // 日志描述
+    /**
+     * 日志描述
+     *
+     * @return 日志描述
+     */
     String description() default "";
 }

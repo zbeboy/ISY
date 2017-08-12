@@ -8,9 +8,13 @@ package top.zbeboy.isy.config;
  * @since 1.0
  */
 public final class CacheBook {
+
+    private CacheBook() {
+    }
+
     /*
-    配置通用到期时间
-     */
+        配置通用到期时间
+         */
     public static final long EXPIRES_SECONDS = 1800;
     public static final long EXPIRES_MINUTES = 30;
     public static final long EXPIRES_HOURS = 4;

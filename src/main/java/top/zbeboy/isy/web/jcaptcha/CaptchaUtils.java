@@ -27,7 +27,7 @@ public class CaptchaUtils {
             isResponseCorrect = CaptchaServiceSingleton.getInstance().validateResponseForID(captchaId, captcha);
             return isResponseCorrect;
         } catch (CaptchaServiceException e) {
-            e.printStackTrace();
+            log.error("Captcha error : {}", e);
             return Boolean.FALSE;
         }
     }

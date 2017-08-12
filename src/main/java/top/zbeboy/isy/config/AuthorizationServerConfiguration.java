@@ -32,6 +32,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Inject
     private AuthenticationManager authenticationManager;
 
+    /**
+     * oauth jdbc token
+     *
+     * @return token
+     */
     @Bean
     public JdbcTokenStore tokenStore() {
         return new JdbcTokenStore(dataSource);
