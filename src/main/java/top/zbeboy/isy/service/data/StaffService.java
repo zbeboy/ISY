@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Staff;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -85,9 +86,9 @@ public interface StaffService {
     /**
      * 保存教职工信息
      *
-     * @param staff 教职工
+     * @param staffElastic 教职工
      */
-    void save(Staff staff);
+    void save(StaffElastic staffElastic);
 
     /**
      * 更新教职式信息

@@ -1,8 +1,7 @@
 package top.zbeboy.isy.service.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,7 +12,6 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.data.StudentService;
-import top.zbeboy.isy.service.internship.*;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
@@ -23,22 +21,22 @@ import top.zbeboy.isy.service.system.SystemAlertTypeService;
 import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.time.Clock;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-10-15.
  */
+@Slf4j
 @Service("commonControllerMethodService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CommonControllerMethodServiceImpl implements CommonControllerMethodService {
-
-    private final Logger log = LoggerFactory.getLogger(CommonControllerMethodServiceImpl.class);
 
     @Autowired
     private ISYProperties isyProperties;
@@ -62,21 +60,6 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     private MailService mailService;
 
     @Resource
-    private InternshipTypeService internshipTypeService;
-
-    @Resource
-    private InternshipCollegeService internshipCollegeService;
-
-    @Resource
-    private InternshipCompanyService internshipCompanyService;
-
-    @Resource
-    private GraduationPracticeCollegeService graduationPracticeCollegeService;
-
-    @Resource
-    private GraduationPracticeCompanyService graduationPracticeCompanyService;
-
-    @Resource
     private SystemAlertService systemAlertService;
 
     @Resource
@@ -84,9 +67,6 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
 
     @Resource
     private SystemAlertTypeService systemAlertTypeService;
-
-    @Resource
-    private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
     @Override
     public void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap) {
@@ -102,42 +82,22 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     }
 
     @Override
-    public void accessRoleCondition(InternshipReleaseBean internshipReleaseBean) {
+    public Map<String, Integer> accessRoleCondition() {
+        Map<String, Integer> map = new HashMap<>();
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
                 && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int departmentId = roleService.getRoleDepartmentId(record);
-            internshipReleaseBean.setDepartmentId(departmentId);
+            map.put("departmentId", departmentId);
         }
         if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
             int collegeId = roleService.getRoleCollegeId(record);
-            internshipReleaseBean.setCollegeId(collegeId);
+            map.put("collegeId", collegeId);
         }
-    }
-
-    @Override
-    public void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId) {
-        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipTypeId);
-        switch (internshipType.getInternshipTypeName()) {
-            case Workbook.INTERNSHIP_COLLEGE_TYPE:
-                internshipCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                break;
-            case Workbook.INTERNSHIP_COMPANY_TYPE:
-                internshipCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                break;
-            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
-                graduationPracticeCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                break;
-            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
-                graduationPracticeUnifyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                break;
-            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
-                graduationPracticeCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                break;
-        }
+        return map;
     }
 
     @Override

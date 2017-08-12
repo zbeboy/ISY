@@ -4,9 +4,8 @@ package top.zbeboy.isy.service.system;
 import io.jstack.sendcloud4j.SendCloud;
 import io.jstack.sendcloud4j.mail.Email;
 import io.jstack.sendcloud4j.mail.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.CharEncoding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -16,8 +15,9 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import top.zbeboy.isy.config.ISYProperties;
-import top.zbeboy.isy.domain.tables.pojos.SystemMailbox;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.elastic.pojo.SystemMailboxElastic;
+import top.zbeboy.isy.glue.system.SystemMailboxGlue;
 import top.zbeboy.isy.service.util.UUIDUtils;
 
 import javax.annotation.Resource;
@@ -32,10 +32,9 @@ import java.util.Properties;
 /**
  * Created by Administrator on 2016/3/29.
  */
+@Slf4j
 @Service("mailService")
 public class MailServiceImpl implements MailService {
-
-    private final Logger log = LoggerFactory.getLogger(MailService.class);
 
     @Resource
     private JavaMailSenderImpl javaMailSender;
@@ -50,7 +49,7 @@ public class MailServiceImpl implements MailService {
     private ISYProperties isyProperties;
 
     @Resource
-    private SystemMailboxService systemMailboxService;
+    private SystemMailboxGlue systemMailboxGlue;
 
     @Async
     @Override
@@ -166,8 +165,8 @@ public class MailServiceImpl implements MailService {
             log.info("E-mail could not be sent to user '{}', exception is: {}", to, e);
             sendCondition = "方式:默认邮箱, 发送失败 " + e.getMessage();
         }
-        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to, sendCondition);
-        systemMailboxService.save(systemMailbox);
+        SystemMailboxElastic systemMailbox = new SystemMailboxElastic(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), to, sendCondition);
+        systemMailboxGlue.save(systemMailbox);
     }
 
     @Async
@@ -227,8 +226,8 @@ public class MailServiceImpl implements MailService {
             log.info("E-mail could not be sent to user '{}', exception is: {}", userMail, e);
             sendCondition = "方式:阿里云邮箱, 发送失败 " + e.getMessage();
         }
-        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), userMail, sendCondition);
-        systemMailboxService.save(systemMailbox);
+        SystemMailboxElastic systemMailbox = new SystemMailboxElastic(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), userMail, sendCondition);
+        systemMailboxGlue.save(systemMailbox);
     }
 
     @Override
@@ -247,8 +246,8 @@ public class MailServiceImpl implements MailService {
         } else {
             sendCondition = "方式:sendCloud邮箱, 发送失败 " + result.getStatusCode() + " : " + result.getMessage();
         }
-        SystemMailbox systemMailbox = new SystemMailbox(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), userMail, sendCondition);
-        systemMailboxService.save(systemMailbox);
+        SystemMailboxElastic systemMailbox = new SystemMailboxElastic(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), userMail, sendCondition);
+        systemMailboxGlue.save(systemMailbox);
     }
 
 }

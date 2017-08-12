@@ -1,10 +1,10 @@
 package top.zbeboy.isy.web.internship.journal;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
+import org.jooq.Record3;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -17,12 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
-import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.*;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -32,6 +30,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
+import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -54,10 +53,9 @@ import java.util.*;
 /**
  * Created by zbeboy on 2016/12/14.
  */
+@Slf4j
 @Controller
 public class InternshipJournalController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipJournalController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -88,9 +86,6 @@ public class InternshipJournalController {
 
     @Resource
     private StudentService studentService;
-
-    @Resource
-    private StaffService staffService;
 
     @Resource
     private InternshipCollegeService internshipCollegeService;
@@ -171,11 +166,24 @@ public class InternshipJournalController {
             }
         }
         if (canUse) {
-            page = "web/internship/journal/internship_my_journal::#page-wrapper";
+            page = "web/internship/journal/internship_journal_my::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
         return page;
+    }
+
+    /**
+     * 小组日志页面
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param modelMap            页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/internship/journal/team", method = RequestMethod.GET)
+    public String teamJournal(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        return "web/internship/journal/internship_journal_team::#page-wrapper";
     }
 
     /**
@@ -186,46 +194,26 @@ public class InternshipJournalController {
      * @return 页面
      */
     @RequestMapping(value = "/web/internship/journal/team/list", method = RequestMethod.GET)
-    public String teamJournalList(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
-        String page;
-        boolean canUse = false;
+    public String teamJournalList(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
             Student student = studentService.findByUsername(users.getUsername());
             if (!ObjectUtils.isEmpty(student)) {
-                Optional<Record> record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.getStudentId());
-                if (record.isPresent()) {
-                    InternshipTeacherDistribution internshipTeacherDistribution = record.get().into(InternshipTeacherDistribution.class);
-                    canUse = true;
-                    modelMap.addAttribute("studentId", student.getStudentId());
-                    modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
-                    modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                    modelMap.addAttribute("usersTypeName", Workbook.STUDENT_USERS_TYPE);
-                } else {
-                    canUse = false;
-                }
+                modelMap.addAttribute("studentId", student.getStudentId());
+                modelMap.addAttribute("usersTypeName", Workbook.STUDENT_USERS_TYPE);
             }
         } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            Staff staff = staffService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(staff)) {
-                Result<InternshipTeacherDistributionRecord> records = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staff.getStaffId());
-                canUse = records.isNotEmpty();
-                modelMap.addAttribute("staffId", staff.getStaffId());
-                modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-                modelMap.addAttribute("usersTypeName", Workbook.STAFF_USERS_TYPE);
-            }
+            modelMap.addAttribute("usersTypeName", Workbook.STAFF_USERS_TYPE);
         }
 
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
         }
-
-        if (canUse) {
-            page = "web/internship/journal/internship_team_journal::#page-wrapper";
-        } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
-        }
-        return page;
+        modelMap.addAttribute("staffId", staffId);
+        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+        return "web/internship/journal/internship_journal_team_list::#page-wrapper";
     }
 
     /**
@@ -250,7 +238,7 @@ public class InternshipJournalController {
         InternshipJournalBean otherCondition = new InternshipJournalBean();
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
-            otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            otherCondition.setInternshipReleaseId(internshipReleaseId);
             String studentId = request.getParameter("studentId");
             String staffId = request.getParameter("staffId");
             if (StringUtils.hasLength(studentId)) {
@@ -272,12 +260,26 @@ public class InternshipJournalController {
             dataTablesUtils.setData(internshipJournalBeans);
             dataTablesUtils.setiTotalRecords(internshipJournalService.countAll(otherCondition));
             dataTablesUtils.setiTotalDisplayRecords(internshipJournalService.countByCondition(dataTablesUtils, otherCondition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 小组教师数据
+     *
+     * @param internshipReleaseId 发布id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/journal/team/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<StaffBean> teamData(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils<StaffBean> ajaxUtils = AjaxUtils.of();
+        Result<Record3<Integer, String, String>> record3s = internshipTeacherDistributionService.findByInternshipReleaseIdDistinctStaffId(internshipReleaseId);
+        List<StaffBean> staffBeen = new ArrayList<>();
+        if (record3s.isNotEmpty()) {
+            staffBeen = record3s.into(StaffBean.class);
+        }
+        return ajaxUtils.success().msg("获取数据成功").listData(staffBeen);
     }
 
     /**
@@ -452,7 +454,7 @@ public class InternshipJournalController {
                     Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
                     if (studentRecord.isPresent()) {
                         Users users = studentRecord.get().into(Users.class);
-                        String downloadFileName = StringUtils.hasLength(users.getRealName()) ? users.getRealName() : "实习日志";
+                        String downloadFileName = "小组实习日志";
                         String zipName = downloadFileName + ".zip";
                         String downloadFilePath = Workbook.internshipJournalPath(users) + zipName;
                         String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
@@ -512,7 +514,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/list/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils journalListDel(String journalIds, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             boolean canDel = roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES);
             Users users = usersService.getUserFromSession();
@@ -560,7 +562,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/my/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils journalSave(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournalVo.getInternshipReleaseId(), internshipJournalVo.getStudentId());
             if (!errorBean.isHasError()) {
@@ -615,7 +617,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/my/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils journalUpdate(@Valid InternshipJournalVo internshipJournalVo, BindingResult bindingResult, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!bindingResult.hasErrors() && StringUtils.hasLength(internshipJournalVo.getInternshipJournalId())) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(internshipJournalVo.getInternshipReleaseId(), internshipJournalVo.getStudentId());
@@ -666,7 +668,7 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/internship/journal/valid/student", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStudent(@RequestParam("student") String info, @RequestParam("internshipReleaseId") String internshipReleaseId, int type) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Student student = null;
         if (type == 0) {
             student = studentService.findByUsername(info);
@@ -706,50 +708,69 @@ public class InternshipJournalController {
     }
 
     /**
+     * 我的日志列表条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/journal/my/list/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myJournalListCondition(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        Users users = usersService.getUserFromSession();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Student student = studentService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(student)) {
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, student.getStudentId());
+                if (!errorBean.isHasError()) {
+                    ajaxUtils.success().msg("在条件范围，允许使用");
+                } else {
+                    ajaxUtils.fail().msg(errorBean.getErrorMsg());
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到您的账号信息");
+            }
+        } else {
+            ajaxUtils.fail().msg("您的注册类型不符合进入条件");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入实习日志入口条件
      *
      * @param internshipReleaseId 实习发布id
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
-        if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("您的个人信息有误");
-            return errorBean;
-        }
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
+                errorBean.setHasError(true);
+                errorBean.setErrorMsg("您的个人信息有误");
+                return errorBean;
+            }
 
-        Map<String, Object> mapData = new HashMap<>();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if (ObjectUtils.isEmpty(internshipRelease)) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关实习信息");
-            return errorBean;
-        }
-        errorBean.setData(internshipRelease);
-        if (internshipRelease.getInternshipReleaseIsDel() == 1) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("该实习已被注销");
-            return errorBean;
-        }
-        Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-        if (internshipApplyRecord.isPresent()) {
-            InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-            mapData.put("internshipApply", internshipApply);
-            // 状态为 2：已通过；4：基本信息变更申请中；5：基本信息变更填写中；6：单位信息变更申请中；7：单位信息变更填写中 允许进行填写
-            if (internshipApply.getInternshipApplyState() == 2 || internshipApply.getInternshipApplyState() == 4 ||
-                    internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 6 || internshipApply.getInternshipApplyState() == 7) {
-                errorBean.setHasError(false);
-                errorBean.setErrorMsg("允许填写");
+            Map<String, Object> mapData = new HashMap<>();
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                mapData.put("internshipApply", internshipApply);
+                // 状态为 2：已通过；4：基本信息变更申请中；5：基本信息变更填写中；6：单位信息变更申请中；7：单位信息变更填写中 允许进行填写
+                if (internshipApply.getInternshipApplyState() == 2 || internshipApply.getInternshipApplyState() == 4 ||
+                        internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 6 || internshipApply.getInternshipApplyState() == 7) {
+                    errorBean.setHasError(false);
+                    errorBean.setErrorMsg("允许填写");
+                } else {
+                    errorBean.setHasError(true);
+                    errorBean.setErrorMsg("检测到您未通过申请，不允许填写");
+                }
             } else {
                 errorBean.setHasError(true);
-                errorBean.setErrorMsg("检测到您未通过申请，不允许填写");
+                errorBean.setErrorMsg("检测到您未申请该实习");
             }
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("检测到您未申请该实习");
+            errorBean.setMapData(mapData);
         }
-        errorBean.setMapData(mapData);
         return errorBean;
     }
 }

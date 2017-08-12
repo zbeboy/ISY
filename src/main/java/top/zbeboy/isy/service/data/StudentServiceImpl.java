@@ -1,9 +1,8 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,18 +11,24 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.StudentDao;
+import top.zbeboy.isy.domain.tables.pojos.Nation;
+import top.zbeboy.isy.domain.tables.pojos.PoliticalLandscape;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
+import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -31,11 +36,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-08-22.
  */
+@Slf4j
 @Service("studentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class StudentServiceImpl implements StudentService {
-
-    private final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     private final DSLContext create;
 
@@ -47,6 +51,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private StudentElasticRepository studentElasticRepository;
+
+    @Resource
+    private OrganizeService organizeService;
+
+    @Resource
+    private PoliticalLandscapeService politicalLandscapeService;
+
+    @Resource
+    private NationService nationService;
 
     @Autowired
     public StudentServiceImpl(DSLContext dslContext) {
@@ -153,13 +169,85 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(Student student) {
-        studentDao.insert(student);
+    public void save(StudentElastic studentElastic) {
+        StudentRecord studentRecord = create.insertInto(STUDENT)
+                .set(STUDENT.STUDENT_NUMBER, studentElastic.getStudentNumber())
+                .set(STUDENT.BIRTHDAY, studentElastic.getBirthday())
+                .set(STUDENT.SEX, studentElastic.getSex())
+                .set(STUDENT.ID_CARD, studentElastic.getIdCard())
+                .set(STUDENT.FAMILY_RESIDENCE, studentElastic.getFamilyResidence())
+                .set(STUDENT.POLITICAL_LANDSCAPE_ID, studentElastic.getPoliticalLandscapeId())
+                .set(STUDENT.NATION_ID, studentElastic.getNationId())
+                .set(STUDENT.DORMITORY_NUMBER, studentElastic.getDormitoryNumber())
+                .set(STUDENT.PARENT_NAME, studentElastic.getParentName())
+                .set(STUDENT.PARENT_CONTACT_PHONE, studentElastic.getParentContactPhone())
+                .set(STUDENT.PLACE_ORIGIN, studentElastic.getPlaceOrigin())
+                .set(STUDENT.ORGANIZE_ID, studentElastic.getOrganizeId())
+                .set(STUDENT.USERNAME, studentElastic.getUsername())
+                .returning(STUDENT.STUDENT_ID)
+                .fetchOne();
+        studentElastic.setAuthorities(-1);
+        studentElastic.setStudentId(studentRecord.getStudentId());
+        studentElasticRepository.save(studentElastic);
     }
 
     @Override
     public void update(Student student) {
         studentDao.update(student);
+        StudentElastic studentElastic = studentElasticRepository.findOne(student.getStudentId() + "");
+        studentElastic.setStudentNumber(student.getStudentNumber());
+        studentElastic.setBirthday(student.getBirthday());
+        studentElastic.setSex(student.getSex());
+        studentElastic.setIdCard(student.getIdCard());
+        studentElastic.setFamilyResidence(student.getFamilyResidence());
+        studentElastic.setDormitoryNumber(student.getDormitoryNumber());
+        studentElastic.setParentName(student.getParentName());
+        studentElastic.setParentContactPhone(student.getParentContactPhone());
+        studentElastic.setPlaceOrigin(student.getPlaceOrigin());
+        if (!Objects.equals(student.getPoliticalLandscapeId(), studentElastic.getPoliticalLandscapeId())) {
+            if (!Objects.isNull(student.getPoliticalLandscapeId()) && student.getPoliticalLandscapeId() > 0) {
+                PoliticalLandscape politicalLandscape = politicalLandscapeService.findById(student.getPoliticalLandscapeId());
+                if (!Objects.isNull(politicalLandscape)) {
+                    studentElastic.setPoliticalLandscapeId(politicalLandscape.getPoliticalLandscapeId());
+                    studentElastic.setPoliticalLandscapeName(politicalLandscape.getPoliticalLandscapeName());
+                }
+            } else {
+                studentElastic.setPoliticalLandscapeId(student.getPoliticalLandscapeId());
+                studentElastic.setPoliticalLandscapeName("");
+            }
+        }
+        if (!Objects.equals(student.getNationId(), studentElastic.getNationId())) {
+            if (!Objects.isNull(student.getNationId()) && student.getNationId() > 0) {
+                Nation nation = nationService.findById(student.getNationId());
+                if (!Objects.isNull(nation)) {
+                    studentElastic.setNationId(nation.getNationId());
+                    studentElastic.setNationName(nation.getNationName());
+                }
+            } else {
+                studentElastic.setNationId(student.getNationId());
+                studentElastic.setNationName("");
+            }
+
+        }
+        if (!Objects.isNull(student.getOrganizeId()) && student.getOrganizeId() > 0 && !Objects.equals(student.getOrganizeId(), studentElastic.getOrganizeId())) {
+            Optional<Record> record = organizeService.findByIdRelation(student.getOrganizeId());
+            if (record.isPresent()) {
+                OrganizeBean organizeBean = record.get().into(OrganizeBean.class);
+                studentElastic.setSchoolId(organizeBean.getSchoolId());
+                studentElastic.setSchoolName(organizeBean.getSchoolName());
+                studentElastic.setCollegeId(organizeBean.getCollegeId());
+                studentElastic.setCollegeName(organizeBean.getCollegeName());
+                studentElastic.setDepartmentId(organizeBean.getDepartmentId());
+                studentElastic.setDepartmentName(organizeBean.getDepartmentName());
+                studentElastic.setScienceId(organizeBean.getScienceId());
+                studentElastic.setScienceName(organizeBean.getScienceName());
+                studentElastic.setOrganizeId(organizeBean.getOrganizeId());
+                studentElastic.setOrganizeName(organizeBean.getOrganizeName());
+                studentElastic.setGrade(organizeBean.getGrade());
+            }
+        }
+        studentElasticRepository.delete(studentElastic);
+        studentElasticRepository.save(studentElastic);
     }
 
     @Override
@@ -187,6 +275,18 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Optional<Record> findByUsernameAndScienceIdAndGradeRelation(String username, int scienceId, String grade) {
+        return create.select()
+                .from(STUDENT)
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(SCIENCE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .where(STUDENT.USERNAME.eq(username).and(SCIENCE.SCIENCE_ID.eq(scienceId)).and(ORGANIZE.GRADE.eq(grade)))
+                .fetchOptional();
+    }
+
+    @Override
     public Student findByUsername(String username) {
         return studentDao.fetchOne(STUDENT.USERNAME, username);
     }
@@ -194,6 +294,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteByUsername(String username) {
         create.deleteFrom(STUDENT).where(STUDENT.USERNAME.eq(username)).execute();
+        studentElasticRepository.deleteByUsername(username);
     }
 
     @Override
@@ -671,6 +772,20 @@ public class StudentServiceImpl implements StudentService {
             return count.value1();
         }
         return 0;
+    }
+
+    @Override
+    public int countByOrganizeIdAndEnabledExistsAuthorities(int organizeId, Byte b) {
+        Select<AuthoritiesRecord> authoritiesRecordSelect =
+                create.selectFrom(AUTHORITIES)
+                        .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
+        Record1<Integer> count = create.selectCount()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(USERS.ENABLED.eq(b).and(STUDENT.ORGANIZE_ID.eq(organizeId)).andExists(authoritiesRecordSelect))
+                .fetchOne();
+        return count.value1();
     }
 
     /**

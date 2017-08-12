@@ -1,11 +1,10 @@
 package top.zbeboy.isy.web.internship.statistics;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -38,15 +37,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-12-10.
  */
+@Slf4j
 @Controller
 public class InternshipStatisticsController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipStatisticsController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -188,10 +187,13 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        internshipReleaseBean.setDepartmentId(org.springframework.util.StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        internshipReleaseBean.setCollegeId(org.springframework.util.StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         internshipReleaseBeens.forEach(r -> {
@@ -200,7 +202,7 @@ public class InternshipStatisticsController {
             r.setSubmittedTotalData(internshipStatisticsService.submittedCountAll(internshipStatisticsBean));
             r.setUnsubmittedTotalData(internshipStatisticsService.unsubmittedCountAll(internshipStatisticsBean));
         });
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -233,10 +235,6 @@ public class InternshipStatisticsController {
             dataTablesUtils.setData(internshipStatisticsBeens);
             dataTablesUtils.setiTotalRecords(internshipStatisticsService.submittedCountAll(internshipStatisticsBean));
             dataTablesUtils.setiTotalDisplayRecords(internshipStatisticsService.submittedCountByCondition(dataTablesUtils, internshipStatisticsBean));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -251,13 +249,14 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/record/apply/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipChangeHistoryBean> changeHistoryDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+        AjaxUtils<InternshipChangeHistoryBean> ajaxUtils = AjaxUtils.of();
         List<InternshipChangeHistoryBean> internshipChangeHistoryBeans = new ArrayList<>();
         Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeHistoryBeans = records.into(InternshipChangeHistoryBean.class);
             internshipChangeHistoryBeans.forEach(i -> i.setApplyTimeStr(DateTimeUtils.formatDate(i.getApplyTime())));
         }
-        return new AjaxUtils<InternshipChangeHistoryBean>().success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
     }
 
     /**
@@ -270,13 +269,14 @@ public class InternshipStatisticsController {
     @RequestMapping(value = "/web/internship/statistical/record/company/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipChangeCompanyHistoryBean> changeCompanyDatas(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId) {
+        AjaxUtils<InternshipChangeCompanyHistoryBean> ajaxUtils = AjaxUtils.of();
         List<InternshipChangeCompanyHistoryBean> internshipChangeCompanyHistoryBeans = new ArrayList<>();
         Result<Record> records = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeCompanyHistoryBeans = records.into(InternshipChangeCompanyHistoryBean.class);
             internshipChangeCompanyHistoryBeans.forEach(i -> i.setChangeTimeStr(DateTimeUtils.formatDate(i.getChangeTime())));
         }
-        return new AjaxUtils<InternshipChangeCompanyHistoryBean>().success().msg("获取数据成功").listData(internshipChangeCompanyHistoryBeans);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipChangeCompanyHistoryBeans);
     }
 
     /**
@@ -308,10 +308,6 @@ public class InternshipStatisticsController {
             dataTablesUtils.setData(internshipStatisticsBeens);
             dataTablesUtils.setiTotalRecords(internshipStatisticsService.unsubmittedCountAll(internshipStatisticsBean));
             dataTablesUtils.setiTotalDisplayRecords(internshipStatisticsService.unsubmittedCountByCondition(dataTablesUtils, internshipStatisticsBean));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -364,10 +360,6 @@ public class InternshipStatisticsController {
             dataTablesUtils.setData(internshipColleges);
             dataTablesUtils.setiTotalRecords(internshipCollegeService.countAll(internshipCollege));
             dataTablesUtils.setiTotalDisplayRecords(internshipCollegeService.countByCondition(dataTablesUtils, internshipCollege));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -385,7 +377,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<InternshipCollege> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<InternshipCollege> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -410,8 +402,9 @@ public class InternshipStatisticsController {
                     if (record.isPresent()) {
                         DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
                         InternshipCollegeExport export = new InternshipCollegeExport(internshipColleges);
-                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
+                        String path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName, ext);
                         uploadService.download(fileName, "/" + path, response, request);
                     }
                 }
@@ -469,10 +462,6 @@ public class InternshipStatisticsController {
             dataTablesUtils.setData(internshipCompanies);
             dataTablesUtils.setiTotalRecords(internshipCompanyService.countAll(internshipCompany));
             dataTablesUtils.setiTotalDisplayRecords(internshipCompanyService.countByCondition(dataTablesUtils, internshipCompany));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -490,7 +479,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<InternshipCompany> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<InternshipCompany> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -515,8 +504,9 @@ public class InternshipStatisticsController {
                     if (record.isPresent()) {
                         DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
                         InternshipCompanyExport export = new InternshipCompanyExport(internshipCompanies);
-                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
+                        String path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName, ext);
                         uploadService.download(fileName, "/" + path, response, request);
                     }
                 }
@@ -574,10 +564,6 @@ public class InternshipStatisticsController {
             dataTablesUtils.setData(graduationPracticeCompanies);
             dataTablesUtils.setiTotalRecords(graduationPracticeCompanyService.countAll(graduationPracticeCompany));
             dataTablesUtils.setiTotalDisplayRecords(graduationPracticeCompanyService.countByCondition(dataTablesUtils, graduationPracticeCompany));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -595,7 +581,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<GraduationPracticeCompany> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<GraduationPracticeCompany> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -620,8 +606,9 @@ public class InternshipStatisticsController {
                     if (record.isPresent()) {
                         DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
                         GraduationPracticeCompanyExport export = new GraduationPracticeCompanyExport(graduationPracticeCompanies);
-                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
+                        String path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName, ext);
                         uploadService.download(fileName, "/" + path, response, request);
                     }
                 }
@@ -679,10 +666,6 @@ public class InternshipStatisticsController {
             dataTablesUtils.setData(graduationPracticeColleges);
             dataTablesUtils.setiTotalRecords(graduationPracticeCollegeService.countAll(graduationPracticeCollege));
             dataTablesUtils.setiTotalDisplayRecords(graduationPracticeCollegeService.countByCondition(dataTablesUtils, graduationPracticeCollege));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -700,7 +683,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<GraduationPracticeCollege> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<GraduationPracticeCollege> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -725,8 +708,9 @@ public class InternshipStatisticsController {
                     if (record.isPresent()) {
                         DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
                         GraduationPracticeCollegeExport export = new GraduationPracticeCollegeExport(graduationPracticeColleges);
-                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
+                        String path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName, ext);
                         uploadService.download(fileName, "/" + path, response, request);
                     }
                 }
@@ -784,10 +768,6 @@ public class InternshipStatisticsController {
             dataTablesUtils.setData(graduationPracticeUnifies);
             dataTablesUtils.setiTotalRecords(graduationPracticeUnifyService.countAll(graduationPracticeUnify));
             dataTablesUtils.setiTotalDisplayRecords(graduationPracticeUnifyService.countByCondition(dataTablesUtils, graduationPracticeUnify));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -805,7 +785,7 @@ public class InternshipStatisticsController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<GraduationPracticeUnify> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<GraduationPracticeUnify> dataTablesUtils = DataTablesUtils.of();
             if (StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -830,8 +810,9 @@ public class InternshipStatisticsController {
                     if (record.isPresent()) {
                         DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
                         GraduationPracticeUnifyExport export = new GraduationPracticeUnifyExport(graduationPracticeUnifies);
-                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
+                        String path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName, ext);
                         uploadService.download(fileName, "/" + path, response, request);
                     }
                 }

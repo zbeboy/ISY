@@ -1,7 +1,6 @@
 package top.zbeboy.isy.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.ObjectUtils;
@@ -11,9 +10,9 @@ import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.system.ApplicationService;
 import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.system.ApplicationService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +28,8 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 public class WebSecurity {
-
-    private final Logger log = LoggerFactory.getLogger(WebSecurity.class);
 
     @Autowired
     private UsersService usersService;
@@ -65,12 +63,12 @@ public class WebSecurity {
         }
         boolean hasRole = false;
         List<Role> roleList = cacheManageService.findByUsernameWithRole(users.getUsername());// 已缓存
-        List<Integer> roleIds = new ArrayList<>();
+        List<String> roleIds = new ArrayList<>();
         roleIds.addAll(roleList.stream().map(Role::getRoleId).collect(Collectors.toList()));
 
         List<RoleApplication> roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.getUsername());// 已缓存
         if (!roleApplications.isEmpty()) {
-            List<Integer> applicationIds = new ArrayList<>();
+            List<String> applicationIds = new ArrayList<>();
             // 防止重复菜单加载
             roleApplications.stream().filter(roleApplication -> !applicationIds.contains(roleApplication.getApplicationId())).forEach(roleApplication -> {// 防止重复菜单加载
                 applicationIds.add(roleApplication.getApplicationId());

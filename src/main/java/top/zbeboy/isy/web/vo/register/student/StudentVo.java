@@ -1,5 +1,7 @@
 package top.zbeboy.isy.web.vo.register.student;
 
+import lombok.Data;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -8,30 +10,36 @@ import javax.validation.constraints.Size;
 /**
  * Created by lenovo on 2016-08-23.
  */
+@Data
 public class StudentVo {
 
     @NotNull
     @Min(1)
-    private int school;
+    private Integer school;
+    private String schoolName;
 
     @NotNull
     @Min(1)
-    private int college;
+    private Integer college;
+    private String collegeName;
 
     @NotNull
     @Min(1)
-    private int department;
+    private Integer department;
+    private String departmentName;
 
     @NotNull
     @Min(1)
-    private int science;
+    private Integer science;
+    private String scienceName;
 
     @NotNull
     private String grade;
 
     @NotNull
     @Min(1)
-    private int organize;
+    private Integer organize;
+    private String organizeName;
 
     @NotNull
     @Pattern(regexp = "^[\\d]{13,}$")
@@ -58,108 +66,4 @@ public class StudentVo {
 
     @NotNull
     private String confirmPassword;
-
-    public int getSchool() {
-        return school;
-    }
-
-    public void setSchool(int school) {
-        this.school = school;
-    }
-
-    public int getCollege() {
-        return college;
-    }
-
-    public void setCollege(int college) {
-        this.college = college;
-    }
-
-    public int getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(int department) {
-        this.department = department;
-    }
-
-    public int getScience() {
-        return science;
-    }
-
-    public void setScience(int science) {
-        this.science = science;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    public int getOrganize() {
-        return organize;
-    }
-
-    public void setOrganize(int organize) {
-        this.organize = organize;
-    }
-
-    public String getStudentNumber() {
-        return studentNumber;
-    }
-
-    public void setStudentNumber(String studentNumber) {
-        this.studentNumber = studentNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getPhoneVerifyCode() {
-        return phoneVerifyCode;
-    }
-
-    public void setPhoneVerifyCode(String phoneVerifyCode) {
-        this.phoneVerifyCode = phoneVerifyCode;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
 }

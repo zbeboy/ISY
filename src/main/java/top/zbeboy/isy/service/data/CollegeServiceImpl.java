@@ -1,9 +1,8 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,6 +12,8 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.CollegeDao;
 import top.zbeboy.isy.domain.tables.pojos.College;
 import top.zbeboy.isy.domain.tables.records.CollegeRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.data.college.CollegeBean;
@@ -28,16 +29,18 @@ import static top.zbeboy.isy.domain.Tables.SCHOOL;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Service("collegeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements CollegeService {
-
-    private final Logger log = LoggerFactory.getLogger(CollegeServiceImpl.class);
 
     private final DSLContext create;
 
     @Resource
     private CollegeDao collegeDao;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public CollegeServiceImpl(DSLContext dslContext) {
@@ -107,6 +110,13 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                 .fetch();
     }
 
+    @Override
+    public Result<CollegeRecord> findByCollegeCode(String collegeCode) {
+        return create.selectFrom(COLLEGE)
+                .where(COLLEGE.COLLEGE_CODE.eq(collegeCode))
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(College college) {
@@ -116,6 +126,13 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     @Override
     public void update(College college) {
         collegeDao.update(college);
+        List<OrganizeElastic> records = organizeElasticRepository.findByCollegeId(college.getSchoolId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setCollegeId(college.getCollegeId());
+            organizeElastic.setCollegeName(college.getCollegeName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override
@@ -144,6 +161,13 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
     public Result<CollegeRecord> findByCollegeNameAndSchoolIdNeCollegeId(String collegeName, int collegeId, int schoolId) {
         return create.selectFrom(COLLEGE)
                 .where(COLLEGE.COLLEGE_NAME.eq(collegeName).and(COLLEGE.COLLEGE_ID.ne(collegeId)).and(COLLEGE.SCHOOL_ID.eq(schoolId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<CollegeRecord> findByCollegeCodeNeCollegeId(String collegeCode, int collegeId) {
+        return create.selectFrom(COLLEGE)
+                .where(COLLEGE.COLLEGE_CODE.eq(collegeCode).and(COLLEGE.COLLEGE_ID.ne(collegeId)))
                 .fetch();
     }
 
@@ -216,6 +240,24 @@ public class CollegeServiceImpl extends DataTablesPlugin<CollegeBean> implements
                     sortField[0] = COLLEGE.COLLEGE_NAME.asc();
                 } else {
                     sortField[0] = COLLEGE.COLLEGE_NAME.desc();
+                }
+            }
+
+            if ("college_code".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = COLLEGE.COLLEGE_CODE.asc();
+                } else {
+                    sortField[0] = COLLEGE.COLLEGE_CODE.desc();
+                }
+            }
+
+            if ("college_address".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = COLLEGE.COLLEGE_ADDRESS.asc();
+                } else {
+                    sortField[0] = COLLEGE.COLLEGE_ADDRESS.desc();
                 }
             }
 

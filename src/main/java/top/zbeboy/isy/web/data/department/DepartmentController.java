@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.data.department;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -36,10 +37,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Controller
 public class DepartmentController {
-
-    private final Logger log = LoggerFactory.getLogger(DepartmentController.class);
 
     @Resource
     private DepartmentService departmentService;
@@ -59,6 +59,7 @@ public class DepartmentController {
     @RequestMapping(value = "/user/departments", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Department> departments(@RequestParam("collegeId") int collegeId) {
+        AjaxUtils<Department> ajaxUtils = AjaxUtils.of();
         List<Department> departments = new ArrayList<>();
         Byte isDel = 0;
         Department department = new Department(0, "请选择系", isDel, 0);
@@ -68,7 +69,7 @@ public class DepartmentController {
             Department tempDepartment = new Department(r.getDepartmentId(), r.getDepartmentName(), r.getDepartmentIsDel(), r.getCollegeId());
             departments.add(tempDepartment);
         }
-        return new AjaxUtils<Department>().success().msg("获取系数据成功！").listData(departments);
+        return ajaxUtils.success().msg("获取系数据成功！").listData(departments);
     }
 
     /**
@@ -172,12 +173,12 @@ public class DepartmentController {
         if (StringUtils.hasLength(departmentName) && collegeId > 0) {
             Result<DepartmentRecord> departmentRecords = departmentService.findByDepartmentNameAndCollegeId(departmentName, collegeId);
             if (ObjectUtils.isEmpty(departmentRecords)) {
-                return new AjaxUtils().success().msg("系名不存在");
+                return AjaxUtils.of().success().msg("系名不存在");
             } else {
-                return new AjaxUtils().fail().msg("系名已存在");
+                return AjaxUtils.of().fail().msg("系名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("缺失必要参数");
+        return AjaxUtils.of().fail().msg("缺失必要参数");
     }
 
     /**
@@ -200,12 +201,12 @@ public class DepartmentController {
         if (StringUtils.hasLength(departmentName) && collegeId > 0) {
             Result<DepartmentRecord> departmentRecords = departmentService.findByDepartmentNameAndCollegeIdNeDepartmentId(departmentName, id, collegeId);
             if (departmentRecords.isEmpty()) {
-                return new AjaxUtils().success().msg("系名不重复");
+                return AjaxUtils.of().success().msg("系名不重复");
             } else {
-                return new AjaxUtils().fail().msg("系名重复");
+                return AjaxUtils.of().fail().msg("系名重复");
             }
         }
-        return new AjaxUtils().fail().msg("缺失必要参数");
+        return AjaxUtils.of().fail().msg("缺失必要参数");
     }
 
     /**
@@ -230,12 +231,12 @@ public class DepartmentController {
             if (collegeId > 0) {
                 department.setCollegeId(collegeId);
                 departmentService.save(department);
-                return new AjaxUtils().success().msg("保存成功");
+                return AjaxUtils.of().success().msg("保存成功");
             } else {
-                return new AjaxUtils().fail().msg("保存失败，缺失必要参数");
+                return AjaxUtils.of().fail().msg("保存失败，缺失必要参数");
             }
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return AjaxUtils.of().fail().msg("填写信息错误，请检查");
     }
 
     /**
@@ -261,13 +262,13 @@ public class DepartmentController {
                 if (collegeId > 0) {
                     department.setCollegeId(collegeId);
                     departmentService.update(department);
-                    return new AjaxUtils().success().msg("更改成功");
+                    return AjaxUtils.of().success().msg("更改成功");
                 } else {
-                    return new AjaxUtils().fail().msg("更新失败，缺失必要参数");
+                    return AjaxUtils.of().fail().msg("更新失败，缺失必要参数");
                 }
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 
     /**
@@ -300,8 +301,8 @@ public class DepartmentController {
     public AjaxUtils departmentUpdateDel(String departmentIds, Byte isDel) {
         if (StringUtils.hasLength(departmentIds) && SmallPropsUtils.StringIdsIsNumber(departmentIds)) {
             departmentService.updateIsDel(SmallPropsUtils.StringIdsToList(departmentIds), isDel);
-            return new AjaxUtils().success().msg("更改系状态成功");
+            return AjaxUtils.of().success().msg("更改系状态成功");
         }
-        return new AjaxUtils().fail().msg("更改系状态失败");
+        return AjaxUtils.of().fail().msg("更改系状态失败");
     }
 }

@@ -1,11 +1,10 @@
 package top.zbeboy.isy.service.util;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.service.util.compress.ZipInputStream;
 
@@ -21,9 +20,8 @@ import java.util.Objects;
  * @version zbeboy
  * @since 1.0
  */
+@Slf4j
 public class FilesUtils {
-
-    private final Logger log = LoggerFactory.getLogger(FilesUtils.class);
 
     /**
      * 删除硬盘上的文件

@@ -4,11 +4,6 @@ import org.jooq.*;
 import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.List;
-
 /**
  * Created by zbeboy on 2016/9/20.
  * datatables 分页插件
@@ -201,7 +196,8 @@ public class DataTablesPlugin<T> {
      * @param selectJoinStep      条件2
      * @param type                类型
      */
-    public void sortCondition(DataTablesUtils<T> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {}
+    public void sortCondition(DataTablesUtils<T> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
+    }
 
     /**
      * 排序辅助,调用此方法前请先调用cleanSortParam以避免对象污染所造成的排序混乱
@@ -210,7 +206,7 @@ public class DataTablesPlugin<T> {
      * @param selectJoinStep      条件2
      * @param type                类型
      */
-    public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type,SortField ... sortField) {
+    public void sortToFinish(SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type, SortField... sortField) {
         if (!ObjectUtils.isEmpty(sortField)) {
             if (type == CONDITION_TYPE) {
                 selectConditionStep.orderBy(sortField);

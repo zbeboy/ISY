@@ -6,9 +6,6 @@
     <!-- default header name is X-CSRF-TOKEN -->
     <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
     <title th:text="#{web.title}">ISY</title>
-    <!-- Custom CSS -->
-    <link href="css/sb-admin-2.css" rel="stylesheet"
-          th:href="@{/webjars/startbootstrap-sb-admin-2/css/sb-admin-2.css}"/>
     <!-- sticky-footer CSS -->
     <link href="css/sticky-footer.css" rel="stylesheet" th:href="@{/css/custom/sticky-footer.css}"/>
 </head>
@@ -28,12 +25,12 @@
                         <fieldset>
                             <div class="form-group" id="valid_email">
                                 <input class="form-control" placeholder="邮箱" id="email" name="username"
-                                       th:value="${username}" type="email" autofocus="autofocus"/>
+                                        type="email" autofocus="autofocus"/>
                                 <p class="text-danger hidden" id="email_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_password">
                                 <input class="form-control" placeholder="密码" id="password" name="password"
-                                       th:value="${password}" type="password"/>
+                                        type="password"/>
                                 <p class="text-danger hidden" id="password_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_captcha">
@@ -48,7 +45,7 @@
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="remember-me" th:value="true"/>记住我
+                                    <input type="checkbox" name="remember-me" value="true"/>记住我
                                 </label>
                             </div>
                             <!-- Change this to a button or input when using this as a form -->
@@ -63,7 +60,7 @@
             </div>
         </div>
     </div>
-    <footer class="footer" th:include="footer::footer" style="height: 60px;">
+    <footer class="footer" th:include="footer::footer">
         <p class="text-muted">&copy; Company 2016</p>
     </footer>
     <!-- /.footer -->

@@ -9,7 +9,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
     var ajax_url = {
         school_data_url: '/user/schools',
         update: '/web/data/college/update',
-        valid: '/web/data/college/update/valid',
+        valid: '/web/data/college/update/valid/name',
+        valid_code: '/web/data/college/update/valid/code',
         back: '/web/menu/data/college'
     };
 
@@ -22,7 +23,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
     var paramId = {
         schoolId: '#select_school',
         collegeId: '#collegeId',
-        collegeName: '#collegeName'
+        collegeName: '#collegeName',
+        collegeCode: '#collegeCode',
+        collegeAddress: '#collegeAddress'
     };
 
     /*
@@ -31,7 +34,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
     var param = {
         schoolId: $(paramId.schoolId).val().trim(),
         collegeId: $(paramId.collegeId).val().trim(),
-        collegeName: $(paramId.collegeName).val().trim()
+        collegeName: $(paramId.collegeName).val().trim(),
+        collegeCode: $(paramId.collegeCode).val().trim(),
+        collegeAddress: $(paramId.collegeAddress).val().trim()
     };
 
     /*
@@ -39,7 +44,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
      */
     var validId = {
         schoolId: '#valid_school',
-        collegeName: '#valid_college_name'
+        collegeName: '#valid_college_name',
+        collegeCode: '#valid_college_code',
+        collegeAddress: '#valid_college_address'
     };
 
     /*
@@ -47,7 +54,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
      */
     var errorMsgId = {
         schoolId: '#school_error_msg',
-        collegeName: '#college_name_error_msg'
+        collegeName: '#college_name_error_msg',
+        collegeCode: '#college_code_error_msg',
+        collegeAddress: '#college_address_error_msg'
     };
 
     /*
@@ -93,6 +102,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
         param.schoolId = $(paramId.schoolId).val().trim();
         param.collegeId = $(paramId.collegeId).val().trim();
         param.collegeName = $(paramId.collegeName).val().trim();
+        param.collegeCode = $(paramId.collegeCode).val().trim();
+        param.collegeAddress = $(paramId.collegeAddress).val().trim();
     }
 
     /**
@@ -159,6 +170,20 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
             warningClass: "label label-success",
             limitReachedClass: "label label-danger"
         });
+
+        $(paramId.collegeCode).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+
+        $(paramId.collegeAddress).maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
     }
 
     // 当改变学校时，变换学院数据.
@@ -195,6 +220,39 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
                         validSuccessDom(validId.collegeName, errorMsgId.collegeName);
                     } else {
                         validErrorDom(validId.collegeName, errorMsgId.collegeName, data.msg);
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
+        }
+    });
+
+    /*
+     即时检验院代码
+     */
+    $(paramId.collegeCode).blur(function () {
+        initParam();
+        var collegeCode = param.collegeCode;
+        if (collegeCode.length <= 0 || collegeCode.length > 20) {
+            validErrorDom(validId.collegeCode, errorMsgId.collegeCode, '院代码20个字符以内');
+        } else {
+            // 院代码是否重复
+            Messenger().run({
+                errorMessage: '请求失败'
+            }, {
+                url: web_path + ajax_url.valid_code,
+                type: 'post',
+                data: param,
+                success: function (data) {
+                    if (data.state) {
+                        validSuccessDom(validId.collegeCode, errorMsgId.collegeCode);
+                    } else {
+                        validErrorDom(validId.collegeCode, errorMsgId.collegeCode, data.msg);
                     }
                 },
                 error: function (xhr) {
@@ -284,6 +342,47 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "b
                 errorMessage: '请求失败'
             }, {
                 url: web_path + ajax_url.valid,
+                type: 'post',
+                data: param,
+                success: function (data) {
+                    if (data.state) {
+                        validCollegeCode();
+                    } else {
+                        Messenger().post({
+                            message: data.msg,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
+    /**
+     * 添加时检验并提交数据
+     */
+    function validCollegeCode() {
+        initParam();
+        var collegeCode = param.collegeCode;
+        if (collegeCode.length <= 0 || collegeCode.length > 20) {
+            Messenger().post({
+                message: '院代码为1~20个字符',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            // 院代码是否重复
+            Messenger().run({
+                errorMessage: '请求失败'
+            }, {
+                url: web_path + ajax_url.valid_code,
                 type: 'post',
                 data: param,
                 success: function (data) {

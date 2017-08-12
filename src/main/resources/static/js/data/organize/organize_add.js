@@ -25,9 +25,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         var paramId = {
             schoolId: '#select_school',
+            schoolName: '#schoolName',
             collegeId: '#select_college',
+            collegeName: '#collegeName',
             departmentId: '#select_department',
+            departmentName: '#departmentName',
             scienceId: '#select_science',
+            scienceName: '#scienceName',
             grade: '#select_grade',
             organizeName: '#organizeName'
         };
@@ -37,9 +41,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         var param = {
             schoolId: $(paramId.schoolId).val(),
+            schoolName: '',
             collegeId: $(paramId.collegeId).val(),
+            collegeName: '',
             departmentId: $(paramId.departmentId).val(),
+            departmentName: '',
             scienceId: $(paramId.scienceId).val(),
+            scienceName: '',
             grade: $(paramId.grade).val(),
             organizeName: $(paramId.organizeName).val()
         };
@@ -112,9 +120,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function initParam() {
             param.schoolId = $(paramId.schoolId).val();
+            param.schoolName = $(paramId.schoolId).find('option:selected').text();
             param.collegeId = $(paramId.collegeId).val();
+            param.collegeName = $(paramId.collegeId).find('option:selected').text();
             param.departmentId = $(paramId.departmentId).val();
+            param.departmentName = $(paramId.departmentId).find('option:selected').text();
             param.scienceId = $(paramId.scienceId).val();
+            param.scienceName = $(paramId.scienceId).find('option:selected').text();
             param.grade = $(paramId.grade).val();
             param.organizeName = $(paramId.organizeName).val();
         }
@@ -493,6 +505,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
+                            // 填充数据
+                            $(paramId.schoolName).val($(paramId.schoolId).find('option:selected').text());
+                            $(paramId.collegeName).val($(paramId.collegeId).find('option:selected').text());
+                            $(paramId.departmentName).val($(paramId.departmentId).find('option:selected').text());
+                            $(paramId.scienceName).val($(paramId.scienceId).find('option:selected').text());
+
                             if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
                                 validSchoolId();
                             } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {

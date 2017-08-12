@@ -50,7 +50,7 @@ public class GraduationPracticeCompanyExport extends ExportUtils<GraduationPract
 
     @Override
     public void createCell(Row row, GraduationPracticeCompany graduationPracticeCompany) {
-        sequence ++ ;
+        sequence++;
         row.createCell(0).setCellValue(sequence);
         row.createCell(1).setCellValue(graduationPracticeCompany.getStudentName());
         row.createCell(2).setCellValue(graduationPracticeCompany.getCollegeClass());

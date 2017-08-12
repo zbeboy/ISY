@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Elastic同步</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack" id="elasticTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" data-tablesaw-priority="persist">描述</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableData">
+                    <tr>
+                        <td>同步班级数据</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" id="syncOrganize">执行
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>同步用户数据</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" id="syncUsers">执行
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>同步学生数据</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" id="syncStudent">执行
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>同步教职工数据</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" id="syncStaff">执行
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>清空系统日志</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm" id="cleanSystemLog">执行
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>清空邮件日志</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm" id="cleanMailbox">执行
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>清空短信日志</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm" id="cleanSms">执行
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <input type="hidden" class="dy_script" value="/js/data/elastic/elastic_data.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

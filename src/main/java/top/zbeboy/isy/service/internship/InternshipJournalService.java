@@ -7,8 +7,6 @@ import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
-import java.util.List;
-
 /**
  * Created by zbeboy on 2016/12/14.
  */

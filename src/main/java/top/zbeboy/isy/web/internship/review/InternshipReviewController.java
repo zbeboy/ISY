@@ -1,9 +1,8 @@
 package top.zbeboy.isy.web.internship.review;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -35,15 +34,15 @@ import java.text.ParseException;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Created by zbeboy on 2016/12/6.
  */
+@Slf4j
 @Controller
 public class InternshipReviewController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipReviewController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -114,10 +113,13 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
         internshipReleaseBeens.forEach(r -> {
@@ -129,7 +131,7 @@ public class InternshipReviewController {
             r.setBasicFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 5));
             r.setCompanyFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.getInternshipReleaseId(), 7));
         });
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -141,8 +143,8 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/condition", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
@@ -160,7 +162,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit", method = RequestMethod.GET)
     public String reviewAudit(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_audit::#page-wrapper";
@@ -180,7 +182,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/pass", method = RequestMethod.GET)
     public String reviewPass(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_pass::#page-wrapper";
@@ -200,7 +202,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/fail", method = RequestMethod.GET)
     public String reviewFail(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_fail::#page-wrapper";
@@ -220,7 +222,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/base_info_apply", method = RequestMethod.GET)
     public String reviewBaseInfoApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_base_info_apply::#page-wrapper";
@@ -240,7 +242,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/base_info_fill", method = RequestMethod.GET)
     public String reviewBaseInfoFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_base_info_fill::#page-wrapper";
@@ -260,7 +262,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/company_apply", method = RequestMethod.GET)
     public String reviewCompanyApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_company_apply::#page-wrapper";
@@ -280,7 +282,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/company_fill", method = RequestMethod.GET)
     public String reviewCompanyFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_company_fill::#page-wrapper";
@@ -301,7 +303,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/detail", method = RequestMethod.GET)
     public String auditDetail(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
             InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
@@ -471,6 +473,7 @@ public class InternshipReviewController {
      * @return 数据
      */
     private AjaxUtils<InternshipReviewBean> internshipReviewData(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean) {
+        AjaxUtils<InternshipReviewBean> ajaxUtils = AjaxUtils.of();
         List<InternshipReviewBean> internshipReviewBeens = internshipReviewService.findAllByPage(paginationUtils, internshipApplyBean);
         if (!ObjectUtils.isEmpty(internshipReviewBeens)) {
             for (int i = 0; i < internshipReviewBeens.size(); i++) {
@@ -478,7 +481,7 @@ public class InternshipReviewController {
                 internshipReviewBeens.set(i, fillInternshipReviewBean(internshipReviewBean));
             }
         }
-        return new AjaxUtils<InternshipReviewBean>().success().msg("获取数据成功").listData(internshipReviewBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReviewBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -490,9 +493,9 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditSave(InternshipReviewBean internshipReviewBean) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
-            ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReviewBean.getInternshipReleaseId());
+            ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReviewBean.getInternshipReleaseId());
             if (!errorBean.isHasError()) {
                 InternshipRelease internshipRelease = errorBean.getData();
                 InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
@@ -516,7 +519,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/pass", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditPass(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
@@ -726,7 +729,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/agree", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditAgree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
@@ -736,11 +739,9 @@ public class InternshipReviewController {
                     internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
                     String format = "yyyy-MM-dd HH:mm:ss";
                     if (StringUtils.hasLength(internshipReviewBean.getFillTime())) {
-                        String[] timeArr = internshipReviewBean.getFillTime().split("至");
-                        if (!ObjectUtils.isEmpty(timeArr) && timeArr.length >= 2) {
-                            internshipApply.setChangeFillStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
-                            internshipApply.setChangeFillEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
-                        }
+                        String[] timeArr = DateTimeUtils.splitDateTime("至", internshipReviewBean.getFillTime());
+                        internshipApply.setChangeFillStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
+                        internshipApply.setChangeFillEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
                     }
                     internshipApplyService.update(internshipApply);
 
@@ -790,7 +791,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/disagree", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditDisagree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
@@ -836,7 +837,7 @@ public class InternshipReviewController {
     @ResponseBody
     public AjaxUtils auditFail(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
                                @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (internshipApplyRecord.isPresent()) {
             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
@@ -875,10 +876,10 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/delete", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils auditDelete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         if (!ObjectUtils.isEmpty(internshipRelease)) {
-            commonControllerMethodService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(), internshipReleaseId, studentId);
+            internshipApplyService.deleteInternshipApplyRecord(internshipRelease.getInternshipTypeId(), internshipReleaseId, studentId);
             internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
             internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
             internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
@@ -993,7 +994,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/anyone/internship/sciences", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Science> auditSciences(@RequestParam("internshipReleaseId") String internshipReleaseId) {
-        AjaxUtils<Science> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<Science> ajaxUtils = AjaxUtils.of();
         List<Science> sciences = new ArrayList<>();
         Science science = new Science();
         science.setScienceId(0);
@@ -1015,30 +1016,13 @@ public class InternshipReviewController {
     @RequestMapping(value = "/anyone/internship/organizes", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Organize> auditOrganizes(@RequestParam("scienceId") int scienceId) {
+        AjaxUtils<Organize> ajaxUtils = AjaxUtils.of();
         List<Organize> organizes = new ArrayList<>();
         Organize organize = new Organize();
         organize.setOrganizeId(0);
         organize.setOrganizeName("请选择班级");
         organizes.add(organize);
         organizes.addAll(organizeService.findByScienceId(scienceId));
-        return new AjaxUtils<Organize>().success().msg("获取班级数据成功").listData(organizes);
-    }
-
-    /**
-     * 进入实习审核入口条件
-     *
-     * @param internshipReleaseId 实习发布id
-     * @return true or false
-     */
-    private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId) {
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if (!ObjectUtils.isEmpty(internshipRelease)) {
-            errorBean.setData(internshipRelease);
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询相关实习信息");
-        }
-        return errorBean;
+        return ajaxUtils.success().msg("获取班级数据成功").listData(organizes);
     }
 }

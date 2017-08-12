@@ -1,30 +1,17 @@
 package top.zbeboy.isy.aop.logging;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
-import top.zbeboy.isy.annotation.logging.RecordSystemLogging;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.SystemLog;
-import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.system.SystemLogService;
-import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.util.RequestUtils;
-import top.zbeboy.isy.service.util.UUIDUtils;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
-import java.sql.Timestamp;
-import java.time.Clock;
 import java.util.Arrays;
 
 /**
@@ -35,28 +22,26 @@ import java.util.Arrays;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 @Aspect
 public class LoggingAspect {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Inject
     private Environment env;
 
-    @Resource
-    private UsersService usersService;
-
-    @Resource
-    private SystemLogService systemLogService;
-
+    /**
+     * 日志切面
+     */
     @Pointcut("within(top.zbeboy.isy.service..*) || within(top.zbeboy.isy.web..*)")
     public void loggingPointcut() {
     }
 
-    @Pointcut("@annotation(top.zbeboy.isy.annotation.logging.RecordSystemLogging)")
-    public void recordLoggingAspect() {
-    }
-
+    /**
+     * 日志打印报错信息
+     *
+     * @param joinPoint
+     * @param e
+     */
     @AfterThrowing(pointcut = "loggingPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
         if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
@@ -68,6 +53,13 @@ public class LoggingAspect {
         }
     }
 
+    /**
+     * 日志切面环绕
+     *
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
     @Around("loggingPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         if (log.isDebugEnabled()) {
@@ -87,33 +79,5 @@ public class LoggingAspect {
 
             throw e;
         }
-    }
-
-    @Around("recordLoggingAspect()")
-    public Object doRecord(ProceedingJoinPoint point) throws Throwable {
-        String targetName = point.getTarget().getClass().getName();
-        String methodName = point.getSignature().getName();
-        Object[] arguments = point.getArgs();
-        Class targetClass = Class.forName(targetName);
-        Method[] methods = targetClass.getMethods();
-        for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
-                Class[] clazzs = method.getParameterTypes();
-                if (clazzs.length == arguments.length) {
-                    for (Object o : arguments) {
-                        if (o instanceof HttpServletRequest) {
-                            HttpServletRequest request = (HttpServletRequest) o;
-                            Users users = usersService.getUserFromSession();
-                            SystemLog systemLog = new SystemLog(UUIDUtils.getUUID(), String.valueOf(method.getAnnotation(RecordSystemLogging.class).description()), new Timestamp(Clock.systemDefaultZone().millis()), users.getUsername(), RequestUtils.getIpAddress(request));
-                            systemLogService.save(systemLog);
-                            log.info(" Record operator logging to database , the module is {} , the method is {} ", method.getAnnotation(RecordSystemLogging.class).module(), method.getAnnotation(RecordSystemLogging.class).methods());
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        return point.proceed();
     }
 }

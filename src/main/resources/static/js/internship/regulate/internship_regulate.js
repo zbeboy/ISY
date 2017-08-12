@@ -12,6 +12,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             internship_regulate_data_url: '/anyone/internship/data',
             regulate_url: '/web/internship/regulate/list',
             my_regulate: '/web/internship/regulate/my/list',
+            my_regulate_condition: '/web/internship/regulate/my/list/condition',
             add: '/web/internship/regulate/list/add',
             valid_is_staff: '/anyone/valid/cur/is/staff',
             valid_staff: '/web/internship/regulate/valid/staff',
@@ -161,7 +162,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.my_regulate', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.my_regulate + "?id=" + id);
+            $.post(web_path + ajax_url.my_regulate_condition,{id:id},function (data) {
+                if(data.state){
+                    $.address.value(ajax_url.my_regulate + "?id=" + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         /*

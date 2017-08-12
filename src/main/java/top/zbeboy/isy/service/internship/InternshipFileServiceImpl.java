@@ -1,10 +1,9 @@
 package top.zbeboy.isy.service.internship;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,11 +16,10 @@ import static top.zbeboy.isy.domain.Tables.INTERNSHIP_FILE;
 /**
  * Created by lenovo on 2016-11-13.
  */
+@Slf4j
 @Service("internshipFileService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipFileServiceImpl implements InternshipFileService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipFileServiceImpl.class);
 
     private final DSLContext create;
 

@@ -1,10 +1,8 @@
 package top.zbeboy.isy.service.internship;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.math.NumberUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,18 +20,16 @@ import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.INTERNSHIP_JOURNAL;
 
 /**
  * Created by zbeboy on 2016/12/14.
  */
+@Slf4j
 @Service("internshipJournalService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJournalBean> implements InternshipJournalService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipJournalServiceImpl.class);
 
     private final DSLContext create;
 
@@ -158,18 +154,16 @@ public class InternshipJournalServiceImpl extends DataTablesPlugin<InternshipJou
             }
 
             if (StringUtils.hasLength(createDate)) {
-                String format = "yyyy-MM-dd HH:mm:ss";
-                String[] createDateArr = createDate.split("至");
-                if (!ObjectUtils.isEmpty(createDateArr) && createDateArr.length >= 2) {
-                    try {
-                        if (ObjectUtils.isEmpty(a)) {
-                            a = INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format)).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
-                        } else {
-                            a = a.and(INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format))).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
-                        }
-                    } catch (ParseException e) {
-                        log.error("Format time error, error is {}", e);
+                try {
+                    String format = "yyyy-MM-dd HH:mm:ss";
+                    String[] createDateArr = DateTimeUtils.splitDateTime("至", createDate);
+                    if (ObjectUtils.isEmpty(a)) {
+                        a = INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format)).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
+                    } else {
+                        a = a.and(INTERNSHIP_JOURNAL.CREATE_DATE.ge(DateTimeUtils.formatDateToTimestamp(createDateArr[0], format))).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(DateTimeUtils.formatDateToTimestamp(createDateArr[1], format)));
                     }
+                } catch (ParseException e) {
+                    log.error("Format time error, error is {}", e);
                 }
 
             }

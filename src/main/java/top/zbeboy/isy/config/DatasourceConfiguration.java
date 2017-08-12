@@ -16,6 +16,11 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class DatasourceConfiguration {
+    /**
+     * HarkiCp datasource
+     *
+     * @return datasource
+     */
     @Bean
     @ConfigurationProperties(prefix = "datasource.mine")
     public DataSource dataSource() {

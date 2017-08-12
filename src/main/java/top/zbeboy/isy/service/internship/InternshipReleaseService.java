@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
+import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -98,4 +99,12 @@ public interface InternshipReleaseService {
      * @return 统计
      */
     int countByCondition(PaginationUtils paginationUtils, InternshipReleaseBean internshipReleaseBean);
+
+    /**
+     * 基础判断条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return 条件
+     */
+    ErrorBean<InternshipRelease> basicCondition(String internshipReleaseId);
 }

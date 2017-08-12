@@ -6,6 +6,7 @@ requirejs.config({
     paths: {
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
+        "emails": web_path + "/js/util/emails",
         "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
             web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"]
     },
@@ -17,7 +18,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-typeahead"], function ($, domready) {
+require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "bootstrap-typeahead"], function ($, domready, emails) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -33,7 +34,6 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
             password_forget: '/user/login/password/forget',
             anew_send_verify_mailbox: '/user/register/mailbox/anew',
             login: '/login',
-            autocomplete_email: '/user/login/autocomplete/email',
             backstage: '/web/menu/backstage'
         };
 
@@ -44,7 +44,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
             email: '#email',
             password: '#password',
             captcha: '#j_captcha_response',
-            btnLogin:'#login'
+            btnLogin: '#login'
         };
 
         /*
@@ -96,9 +96,9 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
          消息
          */
         var msg = {
-            email: '邮箱格式不正确',
-            password: '密码不能为空',
-            captcha: '验证码不能为空'
+            email: '邮箱不正确',
+            password: '密码不正确',
+            captcha: '验证码不正确'
         };
 
         /**
@@ -126,14 +126,14 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
          * 开始加载
          */
         function startLoading() {
-            $(paramId.btnLogin).attr('disabled',true).text('登录中...');
+            $(paramId.btnLogin).attr('disabled', true).text('登录中...');
         }
 
         /**
          * 结束加载
          */
         function endLoading() {
-            $(paramId.btnLogin).attr('disabled',false).text('登 录');
+            $(paramId.btnLogin).attr('disabled', false).text('登 录');
         }
 
         $('#student_register').click(function () {
@@ -155,9 +155,21 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
         // 自动完成账号
         $(paramId.email).typeahead({
             source: function (query, process) {
-                $.get(web_path + ajax_url.autocomplete_email, {query: query}, function (data) {
-                    process(data);
-                });
+
+                if (query.indexOf('@') === -1) {
+                    var tempArr = [];
+                    for (var i = 0; i < emails.mailArr.length; i++) {
+                        tempArr.push(query + emails.mailArr[i])
+                    }
+                    process(tempArr);
+                }
+
+            },
+            afterSelect: function (item) {
+                //选择项之后的事件 ，item是当前选中的。
+                if (valid_regex.email_regex.test(item)) {
+                    validSuccessDom(validId.email, errorMsgId.email);
+                }
             },
             autoSelect: true
         });
@@ -165,9 +177,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
         $(paramId.email).blur(function () {
             initParam();
             var email = param.email;
-            if (!valid_regex.email_regex.test(email)) {
-                validErrorDom(validId.email, errorMsgId.email, msg.email);
-            } else {
+            if (valid_regex.email_regex.test(email)) {
                 validSuccessDom(validId.email, errorMsgId.email);
             }
         });
@@ -175,9 +185,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
         $(paramId.password).blur(function () {
             initParam();
             var password = param.password;
-            if (!valid_regex.password_regex.test(password)) {
-                validErrorDom(validId.password, errorMsgId.password, msg.password);
-            } else {
+            if (valid_regex.password_regex.test(password)) {
                 validSuccessDom(validId.password, errorMsgId.password);
             }
         });
@@ -185,9 +193,7 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
         $(paramId.captcha).blur(function () {
             initParam();
             var j_captcha_response = param.captcha;
-            if (!valid_regex.captcha_regex.test(j_captcha_response)) {
-                validErrorDom(validId.captcha, errorMsgId.captcha, msg.captcha);
-            } else {
+            if (valid_regex.captcha_regex.test(j_captcha_response)) {
                 validSuccessDom(validId.captcha, errorMsgId.captcha);
             }
         });
@@ -202,19 +208,19 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
         });
 
         $(paramId.email).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 validEmail();
             }
         });
 
         $(paramId.password).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 validEmail();
             }
         });
 
         $(paramId.captcha).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 validEmail();
             }
         });
@@ -286,7 +292,13 @@ require(["jquery", "requirejs-domready", "sb-admin", "csrf", "com", "bootstrap-t
                             endLoading();
                             break;
                         case error_code.OK_CODE:
-                            window.location.href = web_path + ajax_url.backstage;
+                            var url = window.location.href;
+                            var toBackstage = web_path + ajax_url.backstage;
+                            // 登录后直接去刚刚被弹出的地方
+                            if (url.indexOf('#') !== -1) {
+                                toBackstage += url.substring(url.lastIndexOf('#'));
+                            }
+                            window.location.href = toBackstage;
                             break;
                         case error_code.SCHOOL_IS_DEL_CODE:
                             changeJcaptcha();

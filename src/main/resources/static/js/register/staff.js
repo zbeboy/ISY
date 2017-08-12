@@ -7,8 +7,11 @@ requirejs.config({
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
         "com": web_path + "/js/util/com",
+        "emails": web_path + "/js/util/emails",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min"
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
+        "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
+            web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"]
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -20,7 +23,8 @@ requirejs.config({
 });
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csrf", "com", "sb-admin"], function ($, Handlebars) {
+require(["jquery", "handlebars", "emails",
+    "jquery.entropizer", "jquery.showLoading", "csrf", "com", "bootstrap", "bootstrap-typeahead"], function ($, Handlebars, emails) {
 
     /*
      ajax url
@@ -100,8 +104,11 @@ require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csr
      */
     var paramId = {
         select_school: '#select_school',
+        schoolName: '#schoolName',
         select_college: '#select_college',
+        collegeName: '#collegeName',
         select_department: '#select_department',
+        departmentName: '#departmentName',
         realName: '#realName',
         staffNumber: '#staffNumber',
         email: '#email',
@@ -123,8 +130,11 @@ require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csr
         password: $(paramId.password).val().trim(),
         confirmPassword: $(paramId.confirmPassword).val().trim(),
         school: $(paramId.select_school).val().trim(),
+        schoolName: '',
         college: $(paramId.select_college).val().trim(),
+        collegeName: '',
         department: $(paramId.select_department).val().trim(),
+        departmentName: ''
     };
 
     /*
@@ -139,8 +149,11 @@ require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csr
         param.password = $(paramId.password).val().trim();
         param.confirmPassword = $(paramId.confirmPassword).val().trim();
         param.school = $(paramId.select_school).val().trim();
+        param.schoolName = $(paramId.select_school).find('option:selected').text();
         param.college = $(paramId.select_college).val().trim();
+        param.collegeName = $(paramId.select_college).find('option:selected').text();
         param.department = $(paramId.select_department).val().trim();
+        param.departmentName = $(paramId.select_department).find('option:selected').text();
     }
 
     /*
@@ -379,6 +392,26 @@ require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csr
         }
     });
 
+    // 自动完成账号
+    $(paramId.email).typeahead({
+        source: function (query, process) {
+            if(query.indexOf('@') === -1){
+                var tempArr = [];
+                for (var i = 0; i < emails.mailArr.length; i++) {
+                    tempArr.push(query + emails.mailArr[i])
+                }
+                process(tempArr);
+            }
+        },
+        afterSelect: function (item) {
+            //选择项之后的事件 ，item是当前选中的。
+            if (valid_regex.email_valid_regex.test(item)) {
+                validSuccessDom(validId.valid_email, errorMsgId.email_error_msg);
+            }
+        },
+        autoSelect: true
+    });
+
     $(paramId.email).blur(function () {
         initParam();
         var email = param.email;
@@ -559,6 +592,11 @@ require(["jquery", "handlebars", "jquery.entropizer", "jquery.showLoading", "csr
         } else {
             validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
         }
+
+        // 填充数据
+        $(paramId.schoolName).val($(paramId.select_school).find('option:selected').text());
+        $(paramId.collegeName).val($(paramId.select_college).find('option:selected').text());
+        $(paramId.departmentName).val($(paramId.select_department).find('option:selected').text());
 
         validRealName();//开始顺序检验
     });

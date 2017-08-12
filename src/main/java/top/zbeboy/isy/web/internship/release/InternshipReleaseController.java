@@ -1,11 +1,10 @@
 package top.zbeboy.isy.web.internship.release;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -22,14 +21,10 @@ import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.CollegeService;
-import top.zbeboy.isy.service.data.DepartmentService;
-import top.zbeboy.isy.service.data.SchoolService;
 import top.zbeboy.isy.service.internship.InternshipFileService;
 import top.zbeboy.isy.service.internship.InternshipReleaseScienceService;
 import top.zbeboy.isy.service.internship.InternshipReleaseService;
 import top.zbeboy.isy.service.internship.InternshipTypeService;
-import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.FilesUtils;
@@ -50,15 +45,15 @@ import java.text.ParseException;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-11-08.
  */
+@Slf4j
 @Controller
 public class InternshipReleaseController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipReleaseController.class);
 
     @Resource
     private InternshipTypeService internshipTypeService;
@@ -79,22 +74,10 @@ public class InternshipReleaseController {
     private UploadService uploadService;
 
     @Resource
-    private SchoolService schoolService;
-
-    @Resource
-    private CollegeService collegeService;
-
-    @Resource
-    private DepartmentService departmentService;
-
-    @Resource
     private FilesService filesService;
 
     @Resource
     private InternshipFileService internshipFileService;
-
-    @Resource
-    private RoleService roleService;
 
     /**
      * 实习发布数据
@@ -115,11 +98,14 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/web/internship/release/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
-        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -131,13 +117,16 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/anyone/internship/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<InternshipReleaseBean> ajaxUtils = AjaxUtils.of();
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        commonControllerMethodService.accessRoleCondition(internshipReleaseBean);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);
         List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean);
-        return new AjaxUtils<InternshipReleaseBean>().success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
     }
 
     /**
@@ -148,21 +137,9 @@ public class InternshipReleaseController {
      */
     @RequestMapping(value = "/web/internship/release/add", method = RequestMethod.GET)
     public String releaseAdd(ModelMap modelMap) {
-        int departmentId = -1;
-        int collegeId = -1;
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            departmentId = roleService.getRoleDepartmentId(record);
-        }
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = roleService.getRoleCollegeId(record);
-        }
-        modelMap.addAttribute("departmentId", departmentId);
-        modelMap.addAttribute("collegeId", collegeId);
+        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        modelMap.addAttribute("departmentId", StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
+        modelMap.addAttribute("collegeId", StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         return "web/internship/release/internship_release_add::#page-wrapper";
     }
 
@@ -170,7 +147,7 @@ public class InternshipReleaseController {
      * 实习发布编辑页面
      *
      * @param internshipReleaseId 实习发布id
-     * @param modelMap            对面对象
+     * @param modelMap            页面对象
      * @return 实习发布编辑页面
      */
     @RequestMapping(value = "/web/internship/release/edit", method = RequestMethod.GET)
@@ -198,11 +175,12 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/user/internship/types", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<InternshipType> internshipTypes() {
+        AjaxUtils<InternshipType> ajaxUtils = AjaxUtils.of();
         List<InternshipType> internshipTypes = new ArrayList<>();
         InternshipType internshipType = new InternshipType(0, "请选择实习类型");
         internshipTypes.add(internshipType);
         internshipTypes.addAll(internshipTypeService.findAll());
-        return new AjaxUtils<InternshipType>().success().msg("获取实习类型数据成功").listData(internshipTypes);
+        return ajaxUtils.success().msg("获取实习类型数据成功").listData(internshipTypes);
     }
 
     /**
@@ -214,12 +192,13 @@ public class InternshipReleaseController {
     @RequestMapping(value = "/user/internship/files", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<Files> internshipFiles(@RequestParam("internshipReleaseId") String internshipReleaseId) {
+        AjaxUtils<Files> ajaxUtils = AjaxUtils.of();
         List<Files> files = new ArrayList<>();
         Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
         if (records.isNotEmpty()) {
             files = records.into(Files.class);
         }
-        return new AjaxUtils<Files>().success().msg("获取实习附件数据成功").listData(files);
+        return ajaxUtils.success().msg("获取实习附件数据成功").listData(files);
     }
 
     /**
@@ -235,10 +214,10 @@ public class InternshipReleaseController {
         if (StringUtils.hasLength(releaseTitle)) {
             List<InternshipRelease> internshipReleases = internshipReleaseService.findByReleaseTitle(releaseTitle);
             if (ObjectUtils.isEmpty(internshipReleases) && internshipReleases.isEmpty()) {
-                return new AjaxUtils().success().msg("标题不重复");
+                return AjaxUtils.of().success().msg("标题不重复");
             }
         }
-        return new AjaxUtils().fail().msg("标题重复");
+        return AjaxUtils.of().fail().msg("标题重复");
     }
 
     /**
@@ -255,10 +234,10 @@ public class InternshipReleaseController {
         if (StringUtils.hasLength(releaseTitle)) {
             Result<InternshipReleaseRecord> internshipReleases = internshipReleaseService.findByReleaseTitleNeInternshipReleaseId(releaseTitle, internshipReleaseId);
             if (ObjectUtils.isEmpty(internshipReleases) && internshipReleases.isEmpty()) {
-                return new AjaxUtils().success().msg("标题不重复");
+                return AjaxUtils.of().success().msg("标题不重复");
             }
         }
-        return new AjaxUtils().fail().msg("标题重复");
+        return AjaxUtils.of().fail().msg("标题重复");
     }
 
     /**
@@ -296,9 +275,9 @@ public class InternshipReleaseController {
                 }
             }
             saveOrUpdateFiles(files, internshipReleaseId);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("保存失败");
+        return AjaxUtils.of().fail().msg("保存失败");
     }
 
     /**
@@ -328,9 +307,9 @@ public class InternshipReleaseController {
                 internshipFiles.forEach(f -> filesService.deleteById(f.getFileId()));
             }
             saveOrUpdateFiles(files, internshipReleaseId);
-            return new AjaxUtils().success().msg("保存成功");
+            return AjaxUtils.of().success().msg("保存成功");
         }
-        return new AjaxUtils().fail().msg("保存失败");
+        return AjaxUtils.of().fail().msg("保存失败");
     }
 
     /**
@@ -346,7 +325,7 @@ public class InternshipReleaseController {
         InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
         internshipRelease.setInternshipReleaseIsDel(isDel);
         internshipReleaseService.update(internshipRelease);
-        return new AjaxUtils().success().msg("更新状态成功");
+        return AjaxUtils.of().success().msg("更新状态成功");
     }
 
     /**
@@ -359,20 +338,12 @@ public class InternshipReleaseController {
     private void saveOrUpdateTime(InternshipRelease internshipRelease, String teacherDistributionTime, String time) {
         try {
             String format = "yyyy-MM-dd HH:mm:ss";
-            if (StringUtils.hasLength(teacherDistributionTime)) {
-                String[] teacherDistributionArr = teacherDistributionTime.split("至");
-                if (!ObjectUtils.isEmpty(teacherDistributionArr) && teacherDistributionArr.length >= 2) {
-                    internshipRelease.setTeacherDistributionStartTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[0], format));
-                    internshipRelease.setTeacherDistributionEndTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[1], format));
-                }
-            }
-            if (StringUtils.hasLength(time)) {
-                String[] timeArr = time.split("至");
-                if (!ObjectUtils.isEmpty(timeArr) && timeArr.length >= 2) {
-                    internshipRelease.setStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
-                    internshipRelease.setEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
-                }
-            }
+            String[] teacherDistributionArr = DateTimeUtils.splitDateTime("至", teacherDistributionTime);
+            internshipRelease.setTeacherDistributionStartTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[0], format));
+            internshipRelease.setTeacherDistributionEndTime(DateTimeUtils.formatDateToTimestamp(teacherDistributionArr[1], format));
+            String[] timeArr = DateTimeUtils.splitDateTime("至", time);
+            internshipRelease.setStartTime(DateTimeUtils.formatDateToTimestamp(timeArr[0], format));
+            internshipRelease.setEndTime(DateTimeUtils.formatDateToTimestamp(timeArr[1], format));
         } catch (ParseException e) {
             log.error(" format time is exception.", e);
         }
@@ -410,48 +381,12 @@ public class InternshipReleaseController {
     @ResponseBody
     public AjaxUtils<FileBean> usersUploadInternship(int schoolId, int collegeId, @RequestParam("departmentId") int departmentId,
                                                      MultipartHttpServletRequest multipartHttpServletRequest) {
-        AjaxUtils<FileBean> data = new AjaxUtils<>();
+        AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
-            School school = null;
-            College college = null;
-            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                    && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                Users users = usersService.getUserFromSession();
-                Optional<Record> record = usersService.findUserSchoolInfo(users);
-                if (record.isPresent()) {
-                    school = record.get().into(School.class);
-                    college = record.get().into(College.class);
-                }
-            }
-            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                Users users = usersService.getUserFromSession();
-                Optional<Record> record = usersService.findUserSchoolInfo(users);
-                if (record.isPresent()) {
-                    school = record.get().into(School.class);
-                    college = record.get().into(College.class);
-                }
-            }
-            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-                school = schoolService.findById(schoolId);
-                college = collegeService.findById(collegeId);
-            }
-            Department department = departmentService.findById(departmentId);
-            if (!ObjectUtils.isEmpty(school)) {
-                if (!ObjectUtils.isEmpty(college)) {
-                    if (!ObjectUtils.isEmpty(department)) {
-                        String path = Workbook.internshipPath(school.getSchoolName(), college.getCollegeName(), department.getDepartmentName());
-                        List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
-                                RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.getRemoteAddr());
-                        data.success().listData(fileBeen).obj(path);
-                    } else {
-                        data.fail().msg("上传失败，未查询到系信息");
-                    }
-                } else {
-                    data.fail().msg("上传失败，未查询到院信息");
-                }
-            } else {
-                data.fail().msg("上传失败，未查询到学校信息");
-            }
+            String path = Workbook.internshipPath(uploadService.schoolInfoPath(schoolId, collegeId, departmentId));
+            List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
+                    RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.getRemoteAddr());
+            data.success().listData(fileBeen).obj(path);
         } catch (Exception e) {
             log.error("Upload file exception,is {}", e);
         }
@@ -469,9 +404,9 @@ public class InternshipReleaseController {
      */
     @RequestMapping("/anyone/users/delete/file/internship")
     @ResponseBody
-    public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId, @RequestParam("internshipReleaseId") String internshipReleaseId,
-                                          HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+    public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId,
+                                          @RequestParam("internshipReleaseId") String internshipReleaseId, HttpServletRequest request) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
                 internshipFileService.deleteByFileIdAndInternshipReleaseId(fileId, internshipReleaseId);

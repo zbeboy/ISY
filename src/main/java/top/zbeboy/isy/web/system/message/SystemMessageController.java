@@ -1,9 +1,8 @@
 package top.zbeboy.isy.web.system.message;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -25,10 +24,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-12-29.
  */
+@Slf4j
 @Controller
 public class SystemMessageController {
-
-    private final Logger log = LoggerFactory.getLogger(SystemMessageController.class);
 
     @Resource
     private SystemMessageService systemMessageService;
@@ -78,11 +76,12 @@ public class SystemMessageController {
     @RequestMapping(value = "/anyone/message/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<SystemMessageBean> messageDatas(PaginationUtils paginationUtils) {
+        AjaxUtils<SystemMessageBean> ajaxUtils = AjaxUtils.of();
         SystemMessageBean systemMessageBean = new SystemMessageBean();
         Users users = usersService.getUserFromSession();
         systemMessageBean.setAcceptUsers(users.getUsername());
         Result<Record> records = systemMessageService.findAllByPage(paginationUtils, systemMessageBean);
         List<SystemMessageBean> systemMessageBeens = systemMessageService.dealData(paginationUtils, records, systemMessageBean);
-        return new AjaxUtils<SystemMessageBean>().success().msg("获取数据成功").listData(systemMessageBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.success().msg("获取数据成功").listData(systemMessageBeens).paginationUtils(paginationUtils);
     }
 }

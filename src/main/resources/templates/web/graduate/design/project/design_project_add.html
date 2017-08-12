@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业设计规划 -
+                    <small>添加</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <p>最近一次
+                    <input type="button" id="copy_all" class="btn btn-default" value="复制全部>>"/>
+                    <input type="button" id="clean_all" class="btn btn-default" value="清除"/>
+                </p>
+                <div class="row">
+                    <div class="col-md-7">
+                        <form role="form">
+                            <div class="form-group">
+                                <label>进度安排</label>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input class="form-control" name="scheduling" id="recently_scheduling"
+                                               placeholder="进度安排" maxlength="100" disabled="disabled"
+                                               th:value="${graduationDesignPlanRecently.scheduling}"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="button" value="复制 >" class="btn btn-default" id="copy_scheduling"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>指导时间</label>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input class="form-control" name="supervisionTime" id="recently_supervisionTime"
+                                               placeholder="指导时间" maxlength="100" disabled="disabled"
+                                               th:value="${graduationDesignPlanRecently.supervisionTime}"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="button" value="复制 >" class="btn btn-default"
+                                               id="copy_supervision_time"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>指导地点</label>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input class="form-control" name="building"
+                                                       id="recently_select_building"
+                                                       th:value="${graduationDesignPlanRecently.buildingName}"
+                                                       disabled="disabled" placeholder="楼"/>
+                                                <input type="hidden"
+                                                       th:value="${graduationDesignPlanRecently.buildingId}"
+                                                       id="recently_building_id"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" name="schoolroom"
+                                                       id="recently_select_schoolroom"
+                                                       th:value="${graduationDesignPlanRecently.buildingCode}"
+                                                       disabled="disabled" placeholder="教室"/>
+                                                <input type="hidden"
+                                                       th:value="${graduationDesignPlanRecently.schoolroomId}"
+                                                       id="recently_schoolroom_id"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="button" value="复制 >" class="btn btn-default"
+                                               id="copy_guide_location"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>指导内容</label>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input class="form-control" name="guideContent" id="recently_guideContent"
+                                               placeholder="指导内容" maxlength="150"
+                                               th:value="${graduationDesignPlanRecently.guideContent}"
+                                               disabled="disabled"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="button" value="复制 >" class="btn btn-default"
+                                               id="copy_guide_content"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>备注</label>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input class="form-control" name="note" id="recently_note"
+                                               placeholder="备注" maxlength="100"
+                                               th:value="${graduationDesignPlanRecently.note}" disabled="disabled"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="button" value="复制 >" class="btn btn-default" id="copy_note"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-5">
+                        <form role="form" id="add_form">
+                            <div class="form-group" id="valid_scheduling">
+                                <label>进度安排</label>
+                                <input class="form-control" name="scheduling" id="scheduling"
+                                       placeholder="进度安排" maxlength="100"/>
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
+                                <p class="text-danger hidden" id="scheduling_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_supervision_time">
+                                <label>指导时间</label>
+                                <input class="form-control" name="supervisionTime" id="supervisionTime"
+                                       placeholder="指导时间" maxlength="100"/>
+                                <p class="text-danger hidden" id="supervision_time_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_guide_location">
+                                <label>指导地点</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="buildingId" id="select_building">
+                                            <option>请选择楼</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="schoolroomId" id="select_schoolroom">
+                                            <option>请选择教室</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <p class="text-danger hidden" id="guide_location_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_guide_content">
+                                <label>指导内容</label>
+                                <input class="form-control" name="guideContent" id="guideContent"
+                                       placeholder="指导内容" maxlength="150"/>
+                                <p class="text-danger hidden" id="guide_content_error_msg"></p>
+                            </div>
+                            <div class="form-group" id="valid_note">
+                                <label>备注</label>
+                                <input class="form-control" name="note" id="note"
+                                       placeholder="备注" maxlength="100"/>
+                                <p class="text-danger hidden" id="note_error_msg"></p>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" id="save" class="btn btn-default">保存</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="building-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{building_value}}">{{building_name}}</option>
+            {{/each}}
+        </script>
+        <script id="schoolroom-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{schoolroom_value}}">{{schoolroom_name}}</option>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/project/design_project_add.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

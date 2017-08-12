@@ -240,7 +240,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 searching: false,
                 "processing": true, // 打开数据加载时的等待效果
                 "serverSide": true,// 打开后台分页
-                "aaSorting": [[2, 'asc']],// 排序
+                "aaSorting": [[2, 'desc']],// 排序
                 "ajax": {
                     "url": web_path + getAjaxUrl().passData,
                     "dataSrc": "data",
@@ -261,6 +261,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     {"data": "schoolName"},
                     {"data": "collegeName"},
                     {"data": "departmentName"},
+                    {"data": "academicTitleName"},
                     {"data": "post"},
                     {"data": "sex"},
                     {"data": "birthday"},
@@ -285,7 +286,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                         orderable: false
                     },
                     {
-                        targets: 16,
+                        targets: 17,
                         render: function (a, b, c, d) {
                             if (c.enabled == 0 || c.enabled == null) {
                                 return "<span class='text-danger'>已注销</span>";
@@ -294,7 +295,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                         }
                     },
                     {
-                        targets: 19,
+                        targets: 20,
                         orderable: false,
                         render: function (a, b, c, d) {
 

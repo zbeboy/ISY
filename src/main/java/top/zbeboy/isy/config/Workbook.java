@@ -1,5 +1,6 @@
 package top.zbeboy.isy.config;
 
+import org.joda.time.DateTime;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 
 /**
@@ -90,6 +91,16 @@ public final class Workbook {
     public static final String SYSTEM_AUTHORITIES = "ROLE_SYSTEM";
 
     /*
+   运维角色
+    */
+    public static final String OPS_ROLE_NAME = "运维";
+
+    /*
+    运维权限
+     */
+    public static final String OPS_AUTHORITIES = "ROLE_ACTUATOR";
+
+    /*
     管理员角色
      */
     public static final String ADMIN_ROLE_NAME = "管理员";
@@ -175,12 +186,59 @@ public final class Workbook {
     /**
      * 实习文件路径
      *
-     * @param schoolName     学校名
-     * @param collegeName    院名
-     * @param departmentName 系名
+     * @param schoolInfoPath 学校路径
      * @return 路径
      */
-    public static String internshipPath(String schoolName, String collegeName, String departmentName) {
-        return Workbook.FILES_PORTFOLIOS + schoolName + "/" + collegeName + "/" + departmentName + "/" + "internship/";
+    public static String internshipPath(String schoolInfoPath) {
+        return Workbook.FILES_PORTFOLIOS + schoolInfoPath + "internship/";
+    }
+
+    /**
+     * 毕业设计文件路径
+     *
+     * @param schoolInfoPath 学校路径
+     * @return 路径
+     */
+    public static String graduateDesignPath(String schoolInfoPath) {
+        return Workbook.FILES_PORTFOLIOS + schoolInfoPath + "graduate/design/";
+    }
+
+    /**
+     * 保存毕业设计规划文件路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String graduationDesignPlanPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "graduate/design/project/";
+    }
+
+    /**
+     * 保存毕业设计资料路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String graduationDesignProposalPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "graduate/design/proposal/";
+    }
+
+    /**
+     * 保存毕业设计清单路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String graduationDesignManifestPath(Users users) {
+        return Workbook.USERS_PORTFOLIOS + users.getUsername() + "/" + "graduate/design/manifest/";
+    }
+
+    /**
+     * 毕业时间
+     *
+     * @return 时间
+     */
+    public static String graduationDate() {
+        return DateTime.now().getYear() + "年07月";
     }
 }

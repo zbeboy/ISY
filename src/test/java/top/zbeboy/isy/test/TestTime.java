@@ -16,5 +16,6 @@ public class TestTime extends TestCase {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String d = sdf.format(s.toDate());
         System.out.println(d);
+        System.out.println(dateTime.getYear());
     }
 }

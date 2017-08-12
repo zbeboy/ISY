@@ -14,7 +14,7 @@ public interface CollegeApplicationService {
      *
      * @param applicationId 应用id
      */
-    void deleteByApplicationId(int applicationId);
+    void deleteByApplicationId(String applicationId);
 
     /**
      * 通过院id查询

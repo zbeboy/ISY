@@ -3,7 +3,7 @@
  */
 //# sourceURL=users_profile_student_edit.js
 require(["jquery", "handlebars", "jquery.cropper.upload", "jquery.showLoading", "messenger", "bootstrap", "jquery.address",
-        "bootstrap-datetimepicker-zh-CN", "jquery.fileupload-validate"],
+        "bootstrap-datetimepicker-zh-CN"],
     function ($, Handlebars, cropper) {
 
         /*

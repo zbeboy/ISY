@@ -1,22 +1,27 @@
 package top.zbeboy.isy.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.InternshipApplyService;
 import top.zbeboy.isy.service.internship.InternshipReleaseService;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.system.*;
+import top.zbeboy.isy.service.system.AuthoritiesService;
+import top.zbeboy.isy.service.system.SystemAlertService;
+import top.zbeboy.isy.service.system.SystemMessageService;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -47,20 +52,10 @@ import java.time.Clock;
  *          <p>
  *          注：不支持字符L等等字符
  */
+@Slf4j
 @Configuration
 @EnableScheduling
 public class ScheduledConfiguration {
-
-    private final Logger log = LoggerFactory.getLogger(ScheduledConfiguration.class);
-
-    @Resource
-    private SystemLogService systemLogService;
-
-    @Resource
-    private SystemMailboxService systemMailboxService;
-
-    @Resource
-    private SystemSmsService systemSmsService;
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -89,20 +84,14 @@ public class ScheduledConfiguration {
     @Resource
     private AuthoritiesService authoritiesService;
 
-    /**
-     * 清理信息
-     */
-    @Scheduled(cron = "0 15 01 01 * ?")// 每月1号 晚间1点15分
-    public void clean() {
-        // 清理日志,邮件，短信
-        DateTime dateTime = DateTime.now();
-        DateTime oldTime = dateTime.minusDays(120);
-        Timestamp ts = new Timestamp(oldTime.getMillis());
-        systemLogService.deleteByOperatingTime(ts);
-        systemMailboxService.deleteBySendTime(ts);
-        systemSmsService.deleteBySendTime(ts);
-        log.info(">>>>>>>>>>>>> scheduled ... log , mailbox , sms ");
-    }
+    @Autowired
+    private UsersElasticRepository usersElasticRepository;
+
+    @Autowired
+    private StudentElasticRepository studentElasticRepository;
+
+    @Autowired
+    private StaffElasticRepository staffElasticRepository;
 
     /**
      * 清理未验证用户信息
@@ -120,12 +109,15 @@ public class ScheduledConfiguration {
             authoritiesService.deleteByUsername(r.getUsername());
             if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
                 staffService.deleteByUsername(r.getUsername());
+                staffElasticRepository.deleteByUsername(r.getUsername());
             } else if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
                 studentService.deleteByUsername(r.getUsername());
+                studentElasticRepository.deleteByUsername(r.getUsername());
             }
             usersService.deleteById(r.getUsername());
+            usersElasticRepository.delete(r.getUsername());
         });
-        log.info(">>>>>>>>>>>>> scheduled ... users ");
+        log.info(">>>>>>>>>>>>> scheduled ... clean users ");
     }
 
     /**
@@ -155,6 +147,6 @@ public class ScheduledConfiguration {
         Timestamp ts = new Timestamp(oldTime.getMillis());
         systemAlertService.deleteByAlertDate(ts);
         systemMessageService.deleteByMessageDate(ts);
-        log.info(">>>>>>>>>>>>> scheduled ... alert , message ");
+        log.info(">>>>>>>>>>>>> scheduled ... clean alert , message ");
     }
 }

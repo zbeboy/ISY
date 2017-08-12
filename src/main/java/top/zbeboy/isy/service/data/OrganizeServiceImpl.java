@@ -1,9 +1,8 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +14,8 @@ import top.zbeboy.isy.domain.tables.daos.OrganizeDao;
 import top.zbeboy.isy.domain.tables.pojos.Organize;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -31,11 +32,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Service("organizeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implements OrganizeService {
-
-    private final Logger log = LoggerFactory.getLogger(OrganizeServiceImpl.class);
 
     private final DSLContext create;
 
@@ -47,6 +47,9 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public OrganizeServiceImpl(DSLContext dslContext) {
@@ -67,6 +70,13 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
     public Result<OrganizeRecord> findInScienceIdsAndGradeAndIsDel(List<Integer> scienceIds, String grade, Byte b) {
         return create.selectFrom(ORGANIZE)
                 .where(ORGANIZE.SCIENCE_ID.in(scienceIds).and(ORGANIZE.GRADE.eq(grade)).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
+                .fetch();
+    }
+
+    @Override
+    public Result<OrganizeRecord> findByScienceIdAndGradeAndIsDel(int scienceId, String grade, Byte b) {
+        return create.selectFrom(ORGANIZE)
+                .where(ORGANIZE.SCIENCE_ID.eq(scienceId).and(ORGANIZE.GRADE.eq(grade)).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
                 .fetch();
     }
 
@@ -105,22 +115,48 @@ public class OrganizeServiceImpl extends DataTablesPlugin<OrganizeBean> implemen
                 .fetch();
     }
 
+    @Override
+    public Result<OrganizeRecord> findByGradeAndScienceIdNotIsDel(String grade, int scienceId) {
+        return create.selectFrom(ORGANIZE)
+                .where(ORGANIZE.GRADE.eq(grade).and(ORGANIZE.SCIENCE_ID.eq(scienceId)))
+                .fetch();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
-    public void save(Organize organize) {
-        organizeDao.insert(organize);
+    public void save(OrganizeElastic organizeElastic) {
+        OrganizeRecord record = create.insertInto(ORGANIZE)
+                .set(ORGANIZE.ORGANIZE_NAME, organizeElastic.getOrganizeName())
+                .set(ORGANIZE.ORGANIZE_IS_DEL, organizeElastic.getOrganizeIsDel())
+                .set(ORGANIZE.SCIENCE_ID, organizeElastic.getScienceId())
+                .set(ORGANIZE.GRADE, organizeElastic.getGrade())
+                .returning(ORGANIZE.ORGANIZE_ID)
+                .fetchOne();
+        organizeElastic.setOrganizeId(record.getOrganizeId());
+        organizeElasticRepository.save(organizeElastic);
     }
 
     @Override
     public void update(Organize organize) {
         organizeDao.update(organize);
+        OrganizeElastic organizeElastic = organizeElasticRepository.findOne(organize.getOrganizeId() + "");
+        organizeElastic.setOrganizeIsDel(organize.getOrganizeIsDel());
+        organizeElastic.setOrganizeName(organize.getOrganizeName());
+        organizeElastic.setScienceId(organize.getScienceId());
+        organizeElastic.setGrade(organize.getGrade());
+        organizeElasticRepository.delete(organizeElastic);
+        organizeElasticRepository.save(organizeElastic);
     }
 
     @Override
     public void updateIsDel(List<Integer> ids, Byte isDel) {
-        for (int id : ids) {
+        ids.forEach(id -> {
             create.update(ORGANIZE).set(ORGANIZE.ORGANIZE_IS_DEL, isDel).where(ORGANIZE.ORGANIZE_ID.eq(id)).execute();
-        }
+            OrganizeElastic organizeElastic = organizeElasticRepository.findOne(id + "");
+            organizeElastic.setOrganizeIsDel(isDel);
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

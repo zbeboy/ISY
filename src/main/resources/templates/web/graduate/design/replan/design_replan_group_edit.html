@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业答辩安排 -
+                    <small>编辑组</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="add_form">
+                    <div class="form-group" id="valid_defense_group_name">
+                        <label>组别</label>
+                        <input class="form-control" name="defenseGroupName" th:value="${defenseGroup.defenseGroupName}"
+                               id="defenseGroupName" placeholder="组别" maxlength="20"/>
+                        <input type="hidden" name="graduationDesignReleaseId" th:value="${graduationDesignReleaseId}">
+                        <input type="hidden" name="defenseGroupId" th:value="${defenseGroup.defenseGroupId}">
+                        <p class="text-danger hidden" id="defense_group_name_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_location">
+                        <label>答辩地点</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select class="form-control" name="buildingId" id="select_building">
+                                    <option>请选择楼</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" name="schoolroomId" id="select_schoolroom">
+                                    <option>请选择教室</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" id="buildingId" th:value="${defenseGroup.buildingId}">
+                        <input type="hidden" id="schoolroomId" th:value="${defenseGroup.schoolroomId}">
+                        <p class="text-danger hidden" id="location_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_note">
+                        <label>备注</label>
+                        <input class="form-control" name="note" id="note" placeholder="备注"
+                               th:value="${defenseGroup.note}" maxlength="100"/>
+                        <p class="text-danger hidden" id="note_error_msg"></p>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="building-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{building_value}}">{{building_name}}</option>
+            {{/each}}
+        </script>
+        <script id="schoolroom-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{schoolroom_value}}">{{schoolroom_name}}</option>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/replan/design_replan_group_edit.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

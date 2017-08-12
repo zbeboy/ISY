@@ -2,7 +2,7 @@
  * Created by lenovo on 2016/12/16.
  */
 //# sourceURL=internship_journal_add.js
-require(["jquery", "handlebars", "nav_active", "quill.bubble", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker", "bootstrap-maxlength"],
+require(["jquery", "handlebars", "nav_active", "quill", "moment", "messenger", "jquery.address", "bootstrap-daterangepicker", "bootstrap-maxlength"],
     function ($, Handlebars, nav_active, Quill) {
 
         /*

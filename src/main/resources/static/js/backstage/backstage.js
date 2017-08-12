@@ -19,6 +19,7 @@ requirejs.config({
         "com": web_path + "/js/util/com",
         "nav": web_path + "/js/util/nav",
         "nav_active": web_path + "/js/util/nav_active",
+        "files": web_path + "/js/util/files",
         "constants": web_path + "/js/util/constants",
         "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
         "jquery.address": ["https://cdn.bootcss.com/jquery.address/1.6/jquery.address.min",
@@ -26,6 +27,7 @@ requirejs.config({
         "bootstrap-datetimepicker-zh-CN": web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.min",
         "bootstrap-datetimepicker": web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
         "bootstrap-daterangepicker": web_path + "/plugin/bootstrap-daterangepicker/daterangepicker.min",
+        "clockface": web_path + "/plugin/clockface/js/clockface.min",
         "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min",
         "bootstrap-duallistbox": web_path + "/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
@@ -40,12 +42,15 @@ requirejs.config({
         "jquery.fileupload": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload.min",
         "jquery.fileupload-validate": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-validate.min",
         "jquery.simple-pagination": web_path + "/plugin/jquery_simple_pagination/jquery.simplePagination.min",
-        "quill.bubble": web_path + "/plugin/quill/quill.min",
+        "quill": web_path + "/plugin/quill/quill.min",
         "jquery.print": web_path + "/plugin/jquery_print/jquery.print.min",
         "jquery.cropper": web_path + "/plugin/jquery_cropper/cropper.min",
         "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload.min",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min"
+        "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
+        "icheck": web_path + "/plugin/icheck/icheck.min",
+        "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min",
+        "sb-admin": web_path + "/plugin/sb-admin-2/js/sb-admin-2.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -74,6 +79,9 @@ requirejs.config({
         "bootstrap-daterangepicker": {
             deps: ["css!" + web_path + "/plugin/bootstrap-daterangepicker/daterangepicker.min"]
         },
+        "clockface": {
+            deps: ["css!" + web_path + "/plugin/clockface/css/clockface.min"]
+        },
         "bootstrap-select-zh-CN": {
             deps: ["bootstrap-select", "css!" + web_path + "/plugin/bootstrap-select/css/bootstrap-select.min"]
         },
@@ -89,14 +97,17 @@ requirejs.config({
         "jquery.fileupload": {
             deps: ["jquery-ui/widget", "jquery.iframe-transport"]
         },
+        "jquery.fileupload-process": {
+            deps: ["jquery.fileupload"]
+        },
         "jquery.fileupload-validate": {
-            deps: ["jquery.fileupload", "jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload.min"]
+            deps: ["jquery.fileupload-process", "css!" + web_path + "/plugin/jquery_file_upload/css/jquery.fileupload.min"]
         },
         "jquery.simple-pagination": {
             deps: ["jquery"]
         },
-        "quill.bubble": {
-            deps: ["css!" + web_path + "/plugin/quill/quill.bubble.min"]
+        "quill": {
+            deps: ["css!" + web_path + "/plugin/quill/quill.bubble.min", "css!" + web_path + "/plugin/quill/quill.snow.min"]
         },
         "jquery.print": {
             deps: ["jquery"]
@@ -106,6 +117,15 @@ requirejs.config({
         },
         "jquery.entropizer": {
             deps: ["css!" + web_path + "/plugin/jquery_entropizer/css/jquery-entropizer.min"]
+        },
+        "icheck": {
+            deps: ["jquery", "css!" + web_path + "/plugin/icheck/icheck.min"]
+        },
+        "tablesaw": {
+            deps: ["jquery", "css!" + web_path + "/plugin/tablesaw/tablesaw.min"]
+        },
+        "sb-admin": {
+            deps: ["jquery", "metisMenu"]
         }
     }
 });
@@ -170,8 +190,8 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
                 $(id[i]).removeClass('active').parent().parent().removeClass('in').parent();
             }
 
-            for (var i = 0; i < li.length; i++) {
-                $(li[i]).removeClass('active');
+            for (var j = 0; j < li.length; j++) {
+                $(li[j]).removeClass('active');
             }
 
             var width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
@@ -184,6 +204,11 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
                 parent.addClass('active');
             }
 
+            var thirdParent = parent.parent();
+            if (thirdParent.is('ul')) {
+                thirdParent.addClass('in');
+                thirdParent.parent().addClass('active');
+            }
         }
 
         function getAjaxUrl() {

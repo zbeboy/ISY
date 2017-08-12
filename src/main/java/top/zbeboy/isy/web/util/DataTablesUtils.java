@@ -2,6 +2,9 @@ package top.zbeboy.isy.web.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.util.ObjectUtils;
@@ -12,6 +15,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-09-14.
  */
+@Slf4j
+@RequiredArgsConstructor(staticName = "of")
+@ToString
 public class DataTablesUtils<T> {
     /*
     返回的数据
@@ -23,12 +29,12 @@ public class DataTablesUtils<T> {
     /*
     数据总数
      */
-    private int iTotalRecords;
+    private long iTotalRecords;
 
     /*
     过滤条件下的总数
      */
-    private int iTotalDisplayRecords;
+    private long iTotalDisplayRecords;
 
     /*
     从哪页开始
@@ -71,13 +77,14 @@ public class DataTablesUtils<T> {
     private String extraSearch;
 
     /*
+    当前页号
+     */
+    private int extraPage;
+
+    /*
     object extraSearch
      */
     private JSONObject search;
-
-    public DataTablesUtils() {
-
-    }
 
     public DataTablesUtils(HttpServletRequest request, List<String> headers) {
         String startParam = request.getParameter("start");
@@ -86,6 +93,7 @@ public class DataTablesUtils<T> {
         String orderDirParam = request.getParameter("order[0][dir]");
         String searchValueParam = request.getParameter("search[value]");
         String extraSearchParam = request.getParameter("extra_search");
+        String extraPage = request.getParameter("extra_page");
         String dramParam = request.getParameter("draw");
 
         if (NumberUtils.isNumber(startParam)) {
@@ -118,6 +126,10 @@ public class DataTablesUtils<T> {
             this.search = JSON.parseObject(extraSearchParam);
         }
 
+        if(NumberUtils.isNumber(extraPage)){
+            this.extraPage = NumberUtils.toInt(extraPage);
+        }
+
         if (NumberUtils.isNumber(dramParam)) {
             this.draw = NumberUtils.toInt(dramParam);
         }
@@ -140,19 +152,19 @@ public class DataTablesUtils<T> {
         this.draw = draw;
     }
 
-    public int getiTotalRecords() {
+    public long getiTotalRecords() {
         return iTotalRecords;
     }
 
-    public void setiTotalRecords(int iTotalRecords) {
+    public void setiTotalRecords(long iTotalRecords) {
         this.iTotalRecords = iTotalRecords;
     }
 
-    public int getiTotalDisplayRecords() {
+    public long getiTotalDisplayRecords() {
         return iTotalDisplayRecords;
     }
 
-    public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
+    public void setiTotalDisplayRecords(long iTotalDisplayRecords) {
         this.iTotalDisplayRecords = iTotalDisplayRecords;
     }
 
@@ -220,30 +232,19 @@ public class DataTablesUtils<T> {
         this.extraSearch = extraSearch;
     }
 
+    public int getExtraPage() {
+        return extraPage;
+    }
+
+    public void setExtraPage(int extraPage) {
+        this.extraPage = extraPage;
+    }
+
     public JSONObject getSearch() {
         return search;
     }
 
     public void setSearch(JSONObject search) {
         this.search = search;
-    }
-
-    @Override
-    public String toString() {
-        return "DataTablesUtils{" +
-                "data=" + data +
-                ", draw=" + draw +
-                ", iTotalRecords=" + iTotalRecords +
-                ", iTotalDisplayRecords=" + iTotalDisplayRecords +
-                ", start=" + start +
-                ", length=" + length +
-                ", orderColumn=" + orderColumn +
-                ", headers=" + headers +
-                ", orderColumnName='" + orderColumnName + '\'' +
-                ", orderDir='" + orderDir + '\'' +
-                ", searchValue='" + searchValue + '\'' +
-                ", extraSearch='" + extraSearch + '\'' +
-                ", search=" + search +
-                '}';
     }
 }

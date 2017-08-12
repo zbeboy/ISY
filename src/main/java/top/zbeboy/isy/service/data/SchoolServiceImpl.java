@@ -1,9 +1,8 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,6 +12,8 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.SchoolDao;
 import top.zbeboy.isy.domain.tables.pojos.School;
 import top.zbeboy.isy.domain.tables.records.SchoolRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -25,16 +26,19 @@ import static top.zbeboy.isy.domain.Tables.SCHOOL;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Service("schoolService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class SchoolServiceImpl extends DataTablesPlugin<School> implements SchoolService {
-
-    private final Logger log = LoggerFactory.getLogger(SchoolServiceImpl.class);
 
     private final DSLContext create;
 
     @Resource
     private SchoolDao schoolDao;
+
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public SchoolServiceImpl(DSLContext dslContext) {
@@ -57,6 +61,13 @@ public class SchoolServiceImpl extends DataTablesPlugin<School> implements Schoo
     @Override
     public void update(School school) {
         schoolDao.update(school);
+        List<OrganizeElastic> records = organizeElasticRepository.findBySchoolId(school.getSchoolId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setSchoolId(school.getSchoolId());
+            organizeElastic.setSchoolName(school.getSchoolName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

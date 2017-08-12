@@ -1,9 +1,8 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +14,8 @@ import top.zbeboy.isy.domain.tables.daos.DepartmentDao;
 import top.zbeboy.isy.domain.tables.pojos.Department;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.DepartmentRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -31,11 +32,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Service("departmentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> implements DepartmentService {
-
-    private final Logger log = LoggerFactory.getLogger(DepartmentServiceImpl.class);
 
     private final DSLContext create;
 
@@ -47,6 +47,9 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public DepartmentServiceImpl(DSLContext dslContext) {
@@ -69,6 +72,13 @@ public class DepartmentServiceImpl extends DataTablesPlugin<DepartmentBean> impl
     @Override
     public void update(Department department) {
         departmentDao.update(department);
+        List<OrganizeElastic> records = organizeElasticRepository.findByDepartmentId(department.getDepartmentId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setDepartmentId(department.getDepartmentId());
+            organizeElastic.setDepartmentName(department.getDepartmentName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override

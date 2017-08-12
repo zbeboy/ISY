@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业设计题目 -
+                    <small>编辑</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="edit_form">
+                    <div class="form-group">
+                        <label>题目</label>
+                        <input class="form-control" readonly="readonly" name="presubjectTitle" id="presubjectTitle"
+                               placeholder="题目" th:value="${graduationDesignPresubject.presubjectTitle}"/>
+                        <input type="hidden" th:value="${graduationDesignPresubject.graduationDesignPresubjectId}"
+                               name="graduationDesignPresubjectId"/>
+                        <input type="hidden" th:value="${graduationDesignReleaseId}" name="graduationDesignReleaseId"/>
+                        <input type="hidden" th:value="${staffId}" name="staffId" id="staffId"/>
+                    </div>
+                    <div class="form-group" id="valid_subject_type">
+                        <select class="form-control" name="subjectTypeId" id="select_subject_type">
+                            <option>题目类型</option>
+                        </select>
+                        <p class="text-danger hidden" id="subject_type_error_msg"></p>
+                        <input type="hidden" th:value="${graduationDesignPresubject.subjectTypeId}" id="subjectTypeId"/>
+                    </div>
+                    <div class="form-group" id="valid_origin_type">
+                        <select class="form-control" name="originTypeId" id="select_origin_type">
+                            <option>课题来源</option>
+                        </select>
+                        <p class="text-danger hidden" id="origin_type_error_msg"></p>
+                        <input type="hidden" th:value="${graduationDesignPresubject.originTypeId}" id="originTypeId"/>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label th:if="${graduationDesignPresubject.isNewSubject == 0 || graduationDesignPresubject.isNewSubject == null}">
+                                <input type="checkbox" name="isNewSubject" id="isNewSubject"
+                                       value="1"/>是否新题
+                            </label>
+                            <label th:if="${graduationDesignPresubject.isNewSubject == 1}">
+                                <input type="checkbox" name="isNewSubject" id="isNewSubject"
+                                       checked="checked" value="1"/>是否新题
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label th:if="${graduationDesignPresubject.isNewTeacherMake == 0 || graduationDesignPresubject.isNewTeacherMake == null}">
+                                <input type="checkbox" name="isNewTeacherMake" id="isNewTeacherMake"
+                                       value="1"/>新老师试做
+                            </label>
+                            <label th:if="${graduationDesignPresubject.isNewTeacherMake == 1}">
+                                <input type="checkbox" name="isNewTeacherMake" id="isNewTeacherMake"
+                                       checked="checked" value="1"/>新老师试做
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label th:if="${graduationDesignPresubject.isNewSubjectMake == 0 || graduationDesignPresubject.isNewSubjectMake == null}">
+                                <input type="checkbox" name="isNewSubjectMake" id="isNewSubjectMake"
+                                       value="1"/>新题目试做
+                            </label>
+                            <label th:if="${graduationDesignPresubject.isNewSubjectMake == 1}">
+                                <input type="checkbox" name="isNewSubjectMake" id="isNewSubjectMake"
+                                       checked="checked" value="1"/>新题目试做
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label th:if="${graduationDesignPresubject.isOldSubjectChange == 0 || graduationDesignPresubject.isOldSubjectChange == null}">
+                                <input type="checkbox" name="isOldSubjectChange" id="isOldSubjectChange"
+                                       value="1"/>旧题有无改进
+                            </label>
+                            <label th:if="${graduationDesignPresubject.isOldSubjectChange == 1}">
+                                <input type="checkbox" name="isOldSubjectChange" id="isOldSubjectChange"
+                                       checked="checked" value="1"/>旧题有无改进
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="valid_old_subject_uses_times">
+                        <label>旧题使用次数</label>
+                        <input type="number" class="form-control" name="oldSubjectUsesTimes" id="oldSubjectUsesTimes"
+                               th:value="${graduationDesignPresubject.oldSubjectUsesTimes}" placeholder="旧题使用次数"/>
+                        <p class="text-danger hidden" id="old_subject_uses_times_error_msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>计划上机学时</label>
+                        <input class="form-control" name="planPeriod" id="planPeriod"
+                               th:value="${graduationDesignPresubject.planPeriod}" placeholder="计划上机学时"/>
+                    </div>
+                    <div class="form-group">
+                        <label>助理教师</label>
+                        <input class="form-control" name="assistantTeacher" id="assistantTeacher"
+                               th:value="${graduationDesignPresubject.assistantTeacher}" placeholder="助理教师"/>
+                    </div>
+                    <div class="form-group">
+                        <label>助理教师职称</label>
+                        <input class="form-control" name="assistantTeacherAcademic" id="assistantTeacherAcademic"
+                               th:value="${graduationDesignPresubject.assistantTeacherAcademic}" placeholder="助理教师职称"/>
+                    </div>
+                    <div class="form-group">
+                        <label>助理教师工号</label>
+                        <input class="form-control" name="assistantTeacherNumber" id="assistantTeacherNumber"
+                               th:value="${graduationDesignPresubject.assistantTeacherNumber}" placeholder="助理教师工号"/>
+                    </div>
+                    <div class="form-group" id="valid_guide_times">
+                        <label>指导次数</label>
+                        <input type="number" class="form-control" name="guideTimes" id="guideTimes"
+                               th:value="${graduationDesignPresubject.guideTimes}" placeholder="指导次数"/>
+                        <p class="text-danger hidden" id="guide_times_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_guide_peoples">
+                        <label>指导学生人数</label>
+                        <input type="number" class="form-control" name="guidePeoples" id="guidePeoples"
+                               th:value="${graduationDesignPresubject.guidePeoples}" placeholder="指导学生人数"
+                               readonly="readonly"/>
+                        <p class="text-danger hidden" id="guide_peoples_error_msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label th:if="${graduationDesignPresubject.isOkApply == 0 || graduationDesignPresubject.isOkApply == null}">
+                                <input type="checkbox" name="isOkApply" id="isOkApply"
+                                       value="1"/>确认申报
+                            </label>
+                            <label th:if="${graduationDesignPresubject.isOkApply == 1}">
+                                <input type="checkbox" name="isOkApply" id="isOkApply"
+                                       checked="checked" value="1"/>确认申报
+                            </label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="subject-type-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{subjectTypeId}}">{{subjectTypeName}}</option>
+            {{/each}}
+        </script>
+        <script id="origin-type-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{originTypeId}}">{{originTypeName}}</option>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ ''
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/subject/design_subject_declare_apply.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

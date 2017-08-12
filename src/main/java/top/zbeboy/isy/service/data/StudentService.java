@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -103,9 +104,9 @@ public interface StudentService {
     /**
      * 保存学生信息
      *
-     * @param student 学生
+     * @param studentElastic 学生
      */
-    void save(Student student);
+    void save(StudentElastic studentElastic);
 
     /**
      * 更新学生信息
@@ -121,6 +122,16 @@ public interface StudentService {
      * @return 关联信息
      */
     Optional<Record> findByUsernameRelation(String username);
+
+    /**
+     * 通过用户账号,专业id,年级关联查询
+     *
+     * @param username  用户账号
+     * @param scienceId 专业id
+     * @param grade     年级
+     * @return 关联信息
+     */
+    Optional<Record> findByUsernameAndScienceIdAndGradeRelation(String username, int scienceId, String grade);
 
     /**
      * 通过用户账号查询
@@ -182,4 +193,13 @@ public interface StudentService {
      * @return 数量
      */
     int countByConditionNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
+
+    /**
+     * 根据班级id，状态 统计有权限用户
+     *
+     * @param organizeId 班级id
+     * @param b          状态
+     * @return 数量
+     */
+    int countByOrganizeIdAndEnabledExistsAuthorities(int organizeId, Byte b);
 }

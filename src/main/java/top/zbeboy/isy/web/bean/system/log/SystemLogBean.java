@@ -1,18 +1,14 @@
 package top.zbeboy.isy.web.bean.system.log;
 
-import top.zbeboy.isy.domain.tables.pojos.SystemLog;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
 
 /**
  * Created by lenovo on 2016-09-15.
  */
-public class SystemLogBean extends SystemLog {
+@EqualsAndHashCode(callSuper = false)
+@Data
+public class SystemLogBean extends SystemLogElastic {
     private String operatingTimeNew;
-
-    public String getOperatingTimeNew() {
-        return operatingTimeNew;
-    }
-
-    public void setOperatingTimeNew(String operatingTimeNew) {
-        this.operatingTimeNew = operatingTimeNew;
-    }
 }

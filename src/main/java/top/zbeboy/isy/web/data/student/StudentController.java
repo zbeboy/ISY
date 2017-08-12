@@ -1,7 +1,7 @@
 package top.zbeboy.isy.web.data.student;
 
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +19,9 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.glue.data.StudentGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -47,10 +50,9 @@ import java.util.List;
 /**
  * Created by lenovo on 2016-08-22.
  */
+@Slf4j
 @Controller
 public class StudentController {
-
-    private final Logger log = LoggerFactory.getLogger(StudentController.class);
 
     @Resource
     private StudentService studentService;
@@ -73,6 +75,9 @@ public class StudentController {
     @Autowired
     private RequestUtils requestUtils;
 
+    @Resource
+    private StudentGlue studentGlue;
+
     /**
      * 判断学号是否已被注册
      *
@@ -84,9 +89,9 @@ public class StudentController {
     public AjaxUtils validStudent(@RequestParam("studentNumber") String studentNumber) {
         Student student = studentService.findByStudentNumber(StringUtils.trimWhitespace(studentNumber));
         if (!ObjectUtils.isEmpty(student)) {
-            return new AjaxUtils().fail();
+            return AjaxUtils.of().fail();
         }
-        return new AjaxUtils().success();
+        return AjaxUtils.of().success();
     }
 
     /**
@@ -101,9 +106,9 @@ public class StudentController {
     public AjaxUtils validAnyoneStudent(@RequestParam("username") String username, @RequestParam("studentNumber") String studentNumber) {
         Result<StudentRecord> studentRecords = studentService.findByStudentNumberNeUsername(username, studentNumber);
         if (studentRecords.isEmpty()) {
-            return new AjaxUtils().success();
+            return AjaxUtils.of().success();
         }
-        return new AjaxUtils().fail();
+        return AjaxUtils.of().fail();
     }
 
     /**
@@ -124,34 +129,38 @@ public class StudentController {
             if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
                 String tempMobile = (String) session.getAttribute("mobile");
                 if (!studentVo.getMobile().equals(tempMobile)) {
-                    return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
+                    return AjaxUtils.of().fail().msg("发现手机号不一致，请重新获取验证码");
                 } else {
                     if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
                         Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
                         Date now = new Date();
                         if (!now.before(mobileExpiry)) {
-                            return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
+                            return AjaxUtils.of().fail().msg("验证码已过有效期(30分钟)");
                         } else {
                             if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
                                 String mobileCode = (String) session.getAttribute("mobileCode");
                                 if (!studentVo.getPhoneVerifyCode().equals(mobileCode)) {
-                                    return new AjaxUtils().fail().msg("验证码错误");
+                                    return AjaxUtils.of().fail().msg("验证码错误");
                                 } else {
                                     String password = StringUtils.trimWhitespace(studentVo.getPassword());
                                     String confirmPassword = StringUtils.trimWhitespace(studentVo.getConfirmPassword());
                                     if (!password.equals(confirmPassword)) {
-                                        return new AjaxUtils().fail().msg("密码不一致");
+                                        return AjaxUtils.of().fail().msg("密码不一致");
                                     } else {
                                         // 注册成功
                                         Users saveUsers = new Users();
+                                        StudentElastic saveStudent = new StudentElastic();
                                         Byte enabled = 1;
                                         Byte verifyMailbox = 0;
                                         saveUsers.setUsername(email);
                                         saveUsers.setEnabled(enabled);
+                                        saveStudent.setEnabled(enabled);
                                         saveUsers.setMobile(mobile);
+                                        saveStudent.setMobile(mobile);
                                         saveUsers.setPassword(BCryptUtils.bCryptPassword(password));
                                         saveUsers.setUsersTypeId(cacheManageService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
                                         saveUsers.setJoinDate(new java.sql.Date(Clock.systemDefaultZone().millis()));
+                                        saveStudent.setJoinDate(saveUsers.getJoinDate());
 
                                         DateTime dateTime = DateTime.now();
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID);
@@ -159,12 +168,24 @@ public class StudentController {
                                         saveUsers.setMailboxVerifyCode(mailboxVerifyCode);
                                         saveUsers.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
                                         saveUsers.setLangKey(request.getLocale().toLanguageTag());
+                                        saveStudent.setLangKey(saveUsers.getLangKey());
                                         saveUsers.setAvatar(Workbook.USERS_AVATAR);
+                                        saveStudent.setAvatar(saveUsers.getAvatar());
                                         saveUsers.setVerifyMailbox(verifyMailbox);
                                         saveUsers.setRealName(studentVo.getRealName());
+                                        saveStudent.setRealName(saveUsers.getRealName());
                                         usersService.save(saveUsers);
 
-                                        Student saveStudent = new Student();
+                                        saveStudent.setSchoolId(studentVo.getSchool());
+                                        saveStudent.setSchoolName(studentVo.getSchoolName());
+                                        saveStudent.setCollegeId(studentVo.getCollege());
+                                        saveStudent.setCollegeName(studentVo.getCollegeName());
+                                        saveStudent.setDepartmentId(studentVo.getDepartment());
+                                        saveStudent.setDepartmentName(studentVo.getDepartmentName());
+                                        saveStudent.setScienceId(studentVo.getScience());
+                                        saveStudent.setScienceName(studentVo.getScienceName());
+                                        saveStudent.setGrade(studentVo.getGrade());
+                                        saveStudent.setOrganizeName(studentVo.getOrganizeName());
                                         saveStudent.setOrganizeId(studentVo.getOrganize());
                                         saveStudent.setStudentNumber(studentVo.getStudentNumber());
                                         saveStudent.setUsername(email);
@@ -178,26 +199,26 @@ public class StudentController {
                                         //发送验证邮件
                                         if (isyProperties.getMail().isOpen()) {
                                             mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
-                                            return new AjaxUtils().success().msg("恭喜注册成功，请验证邮箱");
+                                            return AjaxUtils.of().success().msg("恭喜注册成功，请验证邮箱");
                                         } else {
-                                            return new AjaxUtils().fail().msg("邮件推送已被管理员关闭");
+                                            return AjaxUtils.of().fail().msg("邮件推送已被管理员关闭");
                                         }
 
                                     }
                                 }
                             } else {
-                                return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
+                                return AjaxUtils.of().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
                             }
                         }
                     } else {
-                        return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
+                        return AjaxUtils.of().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
                     }
                 }
             } else {
-                return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
+                return AjaxUtils.of().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
             }
         } else {
-            return new AjaxUtils().fail().msg("参数异常，请检查输入内容是否正确");
+            return AjaxUtils.of().fail().msg("参数异常，请检查输入内容是否正确");
         }
     }
 
@@ -249,17 +270,10 @@ public class StudentController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = studentService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<StudentBean> studentBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            studentBeen = records.into(StudentBean.class);
-            studentBeen.forEach(user -> {
-                user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername()));
-            });
-        }
-        dataTablesUtils.setData(studentBeen);
-        dataTablesUtils.setiTotalRecords(studentService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -289,14 +303,10 @@ public class StudentController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = studentService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<StudentBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(StudentBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(studentService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -313,7 +323,7 @@ public class StudentController {
         Student student = studentService.findByUsername(users.getUsername());
         student.setOrganizeId(organize);
         studentService.update(student);
-        return new AjaxUtils().success().msg("更新学校信息成功");
+        return AjaxUtils.of().success().msg("更新学校信息成功");
     }
 
     /**
@@ -364,12 +374,12 @@ public class StudentController {
                 student.setParentContactPhone(studentVo.getParentContactPhone());
                 student.setPlaceOrigin(studentVo.getPlaceOrigin());
                 studentService.update(student);
-                return new AjaxUtils().success();
+                return AjaxUtils.of().success();
             } catch (ParseException e) {
                 log.error("Birthday to sql date is exception : {}", e.getMessage());
-                return new AjaxUtils().fail().msg("时间转换异常");
+                return AjaxUtils.of().fail().msg("时间转换异常");
             }
         }
-        return new AjaxUtils().fail().msg("参数检验错误");
+        return AjaxUtils.of().fail().msg("参数检验错误");
     }
 }

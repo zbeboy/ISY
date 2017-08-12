@@ -40,7 +40,7 @@ public interface RoleService {
      * @param roleId   角色id
      * @return 数据
      */
-    Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, int roleId);
+    Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, String roleId);
 
     /**
      * 通过主键查询
@@ -48,7 +48,7 @@ public interface RoleService {
      * @param id 主键
      * @return 角色
      */
-    Role findById(int id);
+    Role findById(String id);
 
     /**
      * 根据角色id关联查询
@@ -56,7 +56,7 @@ public interface RoleService {
      * @param roleId 角色id
      * @return 关联查询结果
      */
-    Optional<Record> findByRoleIdRelation(int roleId);
+    Optional<Record> findByRoleIdRelation(String roleId);
 
     /**
      * 通过角色名和院id查询
@@ -75,7 +75,7 @@ public interface RoleService {
      * @param roleId    角色id
      * @return 结果集
      */
-    Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, int roleId);
+    Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, String roleId);
 
     /**
      * 保存
@@ -83,14 +83,6 @@ public interface RoleService {
      * @param role 角色
      */
     void save(Role role);
-
-    /**
-     * 保存并返回id
-     *
-     * @param role 角色
-     * @return id
-     */
-    int saveAndReturnId(Role role);
 
     /**
      * 更新
@@ -104,7 +96,7 @@ public interface RoleService {
      *
      * @param id 主键
      */
-    void deleteById(int id);
+    void deleteById(String id);
 
     /**
      * 批量查询
@@ -112,7 +104,7 @@ public interface RoleService {
      * @param ids ids
      * @return roles
      */
-    Result<RoleRecord> findInRoleId(List<Integer> ids);
+    Result<RoleRecord> findInRoleId(List<String> ids);
 
     /**
      * 分页查询
@@ -151,7 +143,7 @@ public interface RoleService {
      * @param roleId   角色id
      * @return 结果集
      */
-    Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, int roleId);
+    Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, String roleId);
 
     /**
      * 显示角色

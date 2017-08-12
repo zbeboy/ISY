@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业设计发布 -
+                    <small>编辑</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="add_form">
+                    <div class="form-group" id="valid_release_title">
+                        <label>标题</label>
+                        <input class="form-control" name="graduationDesignTitle" id="graduationDesignTitle"
+                               placeholder="标题" maxlength="100"
+                               th:value="${graduationDesignRelease.graduationDesignTitle}"/>
+                        <p class="text-danger hidden" id="release_title_error_msg"></p>
+                        <input type="hidden" name="graduationDesignReleaseId" id="graduationDesignReleaseId"
+                               th:value="${graduationDesignRelease.graduationDesignReleaseId}"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.schoolId}" id="schoolId"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.collegeId}" id="collegeId"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.departmentId}" id="departmentId"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.scienceId}" id="scienceId"/>
+                    </div>
+                    <div class="form-group" id="valid_start_time">
+                        <label>毕业设计开始时间</label>
+                        <input class="form-control" name="startTime" id="startTime" readonly="readonly"
+                               placeholder="毕业设计开始时间" th:value="${graduationDesignRelease.startTimeStr}"/>
+                        <p class="text-danger hidden" id="start_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_end_time">
+                        <label>毕业设计结束时间</label>
+                        <input class="form-control" name="endTime" id="endTime" readonly="readonly"
+                               placeholder="毕业设计结束时间" th:value="${graduationDesignRelease.endTimeStr}"/>
+                        <p class="text-danger hidden" id="end_time_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_fill_teacher_time">
+                        <label>学生申报教师时间</label>
+                        <input class="form-control" name="fillTeacherTime" id="fillTeacherTime" placeholder="学生申报教师时间"/>
+                        <p class="text-danger hidden" id="fill_teacher_time_error_msg"></p>
+                        <input type="hidden" th:value="${graduationDesignRelease.fillTeacherStartTime}"
+                               id="fillTeacherStartTime"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.fillTeacherEndTime}"
+                               id="fillTeacherEndTime"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.fillTeacherStartTimeStr}"
+                               id="fillTeacherStartTimeStr"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.fillTeacherEndTimeStr}"
+                               id="fillTeacherEndTimeStr"/>
+                        <input type="hidden" th:value="${graduationDesignRelease.isOkTeacher}"
+                               id="isOkTeacher"/>
+                    </div>
+                    <div class="form-group">
+                        <label>学校</label>
+                        <input class="form-control" name="schoolName" th:value="${graduationDesignRelease.schoolName}"
+                               readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>院</label>
+                        <input class="form-control" name="collegeName" th:value="${graduationDesignRelease.collegeName}"
+                               readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>系</label>
+                        <input class="form-control" name="departmentName"
+                               th:value="${graduationDesignRelease.departmentName}"
+                               readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>年级</label>
+                        <input class="form-control" name="grade" id="grade"
+                               th:value="${graduationDesignRelease.allowGrade}"
+                               readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>专业</label>
+                        <input class="form-control" name="scienceName" th:value="${graduationDesignRelease.scienceName}"
+                               readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label>状态</label>
+                        <div class="checkbox">
+                            <label th:if="${graduationDesignRelease.graduationDesignIsDel == 0 || graduationDesignRelease.graduationDesignIsDel == null}">
+                                <input type="checkbox" name="graduationDesignIsDel" id="graduationDesignIsDel"
+                                       value="1"/>注销
+                            </label>
+                            <label th:if="${graduationDesignRelease.graduationDesignIsDel == 1}">
+                                <input type="checkbox" name="graduationDesignIsDel" id="graduationDesignIsDel"
+                                       checked="checked" value="1"/>注销
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>附件</label>
+                        <div class="row" id="fileShow">
+
+                        </div>
+                        <div class="text-center">
+                            <!-- The global progress bar -->
+                            <div id="progress" class="progress">
+                                <div class="progress-bar progress-bar-success"></div>
+                            </div>
+                            <p>
+                            <span class="btn btn-primary fileinput-button">
+                                <span>添加附件</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files[]" multiple="multiple"/>
+                            </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="file-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="fileobj" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                 data-new-name="{{new_name}}" data-ext="{{ext}}" data-size="{{l_size}}">
+                <div class="col-lg-6">
+                    {{original_file_name}}.{{ext}}
+                </div>
+                <div class="col-lg-4">
+                    {{size}}
+                </div>
+                <div class="col-lg-2 text-center">
+                    <a class="clearfile" data-file-path="{{lastPath}}" data-original-file-name="{{original_file_name}}"
+                       data-file-id="{{fileId}}" href="javascript:;">删除</a>
+                </div>
+            </div>
+            {{/each}}
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/release/design_release_edit.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

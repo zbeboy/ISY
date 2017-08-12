@@ -46,6 +46,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         searching: false,
         "processing": true, // 打开数据加载时的等待效果
         "serverSide": true,// 打开后台分页
+        "aaSorting": [[1, 'asc']],// 排序
         "ajax": {
             "url": web_path + getAjaxUrl().sciences,
             "dataSrc": "data",
@@ -62,6 +63,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             {"data": "collegeName"},
             {"data": "departmentName"},
             {"data": "scienceName"},
+            {"data": "scienceCode"},
             {"data": "scienceIsDel"},
             {"data": null}
         ],
@@ -74,7 +76,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 }
             },
             {
-                targets: 7,
+                targets: 8,
                 orderable: false,
                 render: function (a, b, c, d) {
 
@@ -126,7 +128,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 }
             },
             {
-                targets: 6,
+                targets: 7,
                 render: function (a, b, c, d) {
                     if (c.scienceIsDel == 0 || c.scienceIsDel == null) {
                         return "<span class='text-info'>正常</span>";

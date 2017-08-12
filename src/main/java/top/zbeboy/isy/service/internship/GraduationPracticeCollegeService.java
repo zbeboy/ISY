@@ -3,7 +3,6 @@ package top.zbeboy.isy.service.internship;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCollege;
-import top.zbeboy.isy.web.bean.internship.review.GraduationPracticeCollegeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.internship.apply.GraduationPracticeCollegeVo;
 

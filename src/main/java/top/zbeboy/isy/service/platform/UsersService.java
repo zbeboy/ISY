@@ -29,14 +29,6 @@ public interface UsersService {
     Users findByUsername(String username);
 
     /**
-     * 自动完成账号查询
-     *
-     * @param username 账号
-     * @return 数据列表
-     */
-    Result<Record1<String>> autoCompleteQueryUsername(String username);
-
-    /**
      * 注意 用于定时 查询未验证用户
      *
      * @param joinDate      加入时间

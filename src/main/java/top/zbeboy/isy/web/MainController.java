@@ -1,7 +1,6 @@
 package top.zbeboy.isy.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -28,10 +27,9 @@ import java.util.Locale;
 /**
  * Created by lenovo on 2016-08-17.
  */
+@Slf4j
 @Controller
 public class MainController {
-
-    private final Logger log = LoggerFactory.getLogger(MainController.class);
 
     @Resource
     private LocaleResolver localeResolver;
@@ -62,15 +60,6 @@ public class MainController {
         return "index";
     }
 
-    /**
-     * api by spring fox.
-     *
-     * @return api
-     */
-    @RequestMapping("/api")
-    public String api() {
-        return "redirect:swagger-ui.html";
-    }
 
     /**
      * 登录页
@@ -110,7 +99,7 @@ public class MainController {
      */
     @RequestMapping(value = "/register/finish", method = RequestMethod.GET)
     public String registerFinish(ModelMap modelMap) {
-        modelMap.put("msg", "验证邮件已发送至您邮箱，请登录邮箱进行验证。");
+        modelMap.put("msg", "验证邮件已发送至您邮箱，请登录邮箱进行验证！");
         return "msg";
     }
 
@@ -168,7 +157,7 @@ public class MainController {
     @RequestMapping("/anyone/users/delete/file")
     @ResponseBody
     public AjaxUtils deleteFile(@RequestParam("filePath") String filePath, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
                 ajaxUtils.success().msg("删除文件成功");

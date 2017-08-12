@@ -1,7 +1,6 @@
 package top.zbeboy.isy.interceptor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -10,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.system.ApplicationService;
 import top.zbeboy.isy.service.platform.UsersService;
 
 import javax.servlet.ServletContext;
@@ -22,9 +20,8 @@ import java.util.List;
  * Created by lenovo on 2016-09-28.
  * 菜单权限配置
  */
+@Slf4j
 public class MenuInterceptor implements HandlerInterceptor {
-
-    private final Logger log = LoggerFactory.getLogger(MenuInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

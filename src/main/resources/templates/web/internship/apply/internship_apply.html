@@ -140,7 +140,6 @@
                                 <p id="reason_error_msg" class="hidden"></p>
                                 <input type="hidden" id="applyState" name="internshipApplyState"/>
                                 <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId"/>
-                                <input type="hidden" id="applyStudentId" name="studentId"/>
                             </div>
                         </form>
                     </div>
@@ -174,10 +173,9 @@
                                 <input id="fileupload" type="file" name="files[]"/>
                             </span>
                             </p>
-                            <small>注:只能上传一个文件，建议上传zip,rar等压缩文件。</small>
+                            <small>注:建议上传zip,rar等压缩文件。</small>
                         </div>
                         <input type="hidden" id="uploadInternshipReleaseId"/>
-                        <input type="hidden" id="uploadStudentId"/>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="confirmUpload">确定上传</button>
@@ -300,24 +298,19 @@
                                 data-student="{{studentId}}">
                             编辑
                         </button>
-                        <button type="button" class="btn btn-default myApplyLook" data-id="{{internshipReleaseId}}"
-                                data-student="{{studentId}}">
+                        <button type="button" class="btn btn-default myApplyLook" data-id="{{internshipReleaseId}}">
                             查看
                         </button>
-                        <button type="button" class="btn btn-default recallApply" data-id="{{internshipReleaseId}}"
-                                data-student="{{studentId}}">
+                        <button type="button" class="btn btn-default recallApply" data-id="{{internshipReleaseId}}">
                             撤消申请
                         </button>
-                        <button type="button" class="btn btn-default basisApply" data-id="{{internshipReleaseId}}"
-                                data-student="{{studentId}}">
+                        <button type="button" class="btn btn-default basisApply" data-id="{{internshipReleaseId}}">
                             基础信息变更申请
                         </button>
-                        <button type="button" class="btn btn-default firmApply" data-id="{{internshipReleaseId}}"
-                                data-student="{{studentId}}">
+                        <button type="button" class="btn btn-default firmApply" data-id="{{internshipReleaseId}}">
                             单位信息变更申请
                         </button>
-                        <button type="button" class="btn btn-default uploadFile" data-id="{{internshipReleaseId}}"
-                                data-student="{{studentId}}">
+                        <button type="button" class="btn btn-default uploadFile" data-id="{{internshipReleaseId}}">
                             上传电子资料
                         </button>
                     </div>

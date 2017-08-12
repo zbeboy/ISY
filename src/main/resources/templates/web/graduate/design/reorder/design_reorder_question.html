@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业答辩顺序 -
+                    <small>问题</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-lg-12 col-md-12">
+                <h3 th:text="${defenseOrder.sortNum + ' _  ' + defenseOrder.studentName + ' ' +defenseOrder.studentNumber}"></h3>
+                <h3>问题</h3>
+                <div id="content"></div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <input type="hidden" id="htmlData" th:value="${defenseOrder.defenseQuestion}"/>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/reorder/design_reorder_question.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

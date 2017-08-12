@@ -1,8 +1,7 @@
 package top.zbeboy.isy.service.weixin;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -13,8 +12,8 @@ import org.xml.sax.SAXException;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.service.util.MD5Utils;
 import top.zbeboy.isy.web.vo.weixin.WeixinVo;
-import top.zbeboy.isy.weixin.AesException;
-import top.zbeboy.isy.weixin.WXBizMsgCrypt;
+import top.zbeboy.isy.web.util.weixin.AesException;
+import top.zbeboy.isy.web.util.weixin.WXBizMsgCrypt;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,10 +25,9 @@ import java.util.Arrays;
 /**
  * Created by zbeboy on 2016/11/15.
  */
+@Slf4j
 @Service("weixinService")
 public class WeixinServiceImpl implements WeixinService {
-
-    private final Logger log = LoggerFactory.getLogger(WeixinServiceImpl.class);
 
     @Autowired
     private ISYProperties isyProperties;

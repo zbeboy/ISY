@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-12-18.
  */
-require(["jquery", "handlebars", "nav_active", "quill.bubble", "jquery.address", "jquery.print"],
+require(["jquery", "handlebars", "nav_active", "quill", "jquery.address", "jquery.print"],
     function ($, Handlebars, nav_active, Quill) {
 
         /*

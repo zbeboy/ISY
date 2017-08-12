@@ -2,9 +2,9 @@ package top.zbeboy.isy.service.common;
 
 import org.springframework.ui.ModelMap;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * Created by lenovo on 2016-10-15.
@@ -21,18 +21,9 @@ public interface CommonControllerMethodService {
     /**
      * 获取实习数据 判断角色
      *
-     * @param internshipReleaseBean 实习发布
+     * @return 根据角色返回相应数据
      */
-    void accessRoleCondition(InternshipReleaseBean internshipReleaseBean);
-
-    /**
-     * 删除实习相关记录
-     *
-     * @param internshipTypeId    实习类型id
-     * @param internshipReleaseId 实习发布id
-     * @param studentId           学生id
-     */
-    void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId);
+    Map<String, Integer> accessRoleCondition();
 
     /**
      * 组装提示信息

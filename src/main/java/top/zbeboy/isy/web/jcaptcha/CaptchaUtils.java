@@ -1,17 +1,15 @@
 package top.zbeboy.isy.web.jcaptcha;
 
 import com.octo.captcha.service.CaptchaServiceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by lenovo on 2016-09-04.
  */
+@Slf4j
 public class CaptchaUtils {
-
-    private final Logger log = LoggerFactory.getLogger(CaptchaUtils.class);
 
     /**
      * 验证验证码
@@ -29,7 +27,7 @@ public class CaptchaUtils {
             isResponseCorrect = CaptchaServiceSingleton.getInstance().validateResponseForID(captchaId, captcha);
             return isResponseCorrect;
         } catch (CaptchaServiceException e) {
-            e.printStackTrace();
+            log.error("Captcha error : {}", e);
             return Boolean.FALSE;
         }
     }

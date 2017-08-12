@@ -11,7 +11,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             college_data_url: '/user/colleges',
             department_data_url: '/user/departments',
             update: '/web/data/science/update',
-            valid: '/web/data/science/update/valid',
+            valid: '/web/data/science/update/valid/name',
+            valid_code: '/web/data/science/update/valid/code',
             back: '/web/menu/data/science'
         };
 
@@ -26,7 +27,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             collegeId: '#select_college',
             departmentId: '#select_department',
             scienceId: '#scienceId',
-            scienceName: '#scienceName'
+            scienceName: '#scienceName',
+            scienceCode: '#scienceCode'
         };
 
         /*
@@ -37,7 +39,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             collegeId: $(paramId.collegeId).val(),
             departmentId: $(paramId.departmentId).val(),
             scienceId: $(paramId.scienceId).val(),
-            scienceName: $(paramId.scienceName).val()
+            scienceName: $(paramId.scienceName).val(),
+            scienceCode: $(paramId.scienceCode).val()
         };
 
         /*
@@ -47,7 +50,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             schoolId: '#valid_school',
             collegeId: '#valid_college',
             departmentId: '#valid_department',
-            scienceName: '#valid_science_name'
+            scienceName: '#valid_science_name',
+            scienceCode: '#valid_science_code'
         };
 
         /*
@@ -57,7 +61,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             schoolId: '#school_error_msg',
             collegeId: '#college_error_msg',
             departmentId: '#department_error_msg',
-            scienceName: '#science_name_error_msg'
+            scienceName: '#science_name_error_msg',
+            scienceCode: '#science_code_error_msg'
         };
 
         /**
@@ -115,6 +120,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             param.departmentId = $(paramId.departmentId).val();
             param.scienceId = $(paramId.scienceId).val();
             param.scienceName = $(paramId.scienceName).val();
+            param.scienceCode = $(paramId.scienceCode).val();
         }
 
         /*
@@ -167,6 +173,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function initMaxLength() {
             $(paramId.scienceName).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+
+            $(paramId.scienceCode).maxlength({
                 alwaysShow: true,
                 threshold: 10,
                 warningClass: "label label-success",
@@ -395,6 +408,39 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
         });
 
         /*
+         即时检验系代码
+         */
+        $(paramId.scienceCode).blur(function () {
+            initParam();
+            var scienceCode = param.scienceCode;
+            if (scienceCode.length <= 0 || scienceCode.length > 20) {
+                validErrorDom(validId.scienceCode, errorMsgId.scienceCode, '专业代码20个字符以内');
+            } else {
+                // 专业代码是否重复
+                Messenger().run({
+                    errorMessage: '请求失败'
+                }, {
+                    url: web_path + ajax_url.valid_code,
+                    type: 'post',
+                    data: param,
+                    success: function (data) {
+                        if (data.state) {
+                            validSuccessDom(validId.scienceCode, errorMsgId.scienceCode);
+                        } else {
+                            validErrorDom(validId.scienceCode, errorMsgId.scienceCode, data.msg);
+                        }
+                    },
+                    error: function (xhr) {
+                        if ((xhr != null ? xhr.status : void 0) === 404) {
+                            return "请求失败";
+                        }
+                        return true;
+                    }
+                });
+            }
+        });
+
+        /*
          返回
          */
         $('#page_back').click(function () {
@@ -508,6 +554,47 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                     errorMessage: '请求失败'
                 }, {
                     url: web_path + ajax_url.valid,
+                    type: 'post',
+                    data: param,
+                    success: function (data) {
+                        if (data.state) {
+                            validScienceCode();
+                        } else {
+                            Messenger().post({
+                                message: data.msg,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        if ((xhr != null ? xhr.status : void 0) === 404) {
+                            return "请求失败";
+                        }
+                        return true;
+                    }
+                });
+            }
+        }
+
+        /**
+         * 添加时检验并提交数据
+         */
+        function validScienceCode() {
+            initParam();
+            var scienceCode = param.scienceCode;
+            if (scienceCode.length <= 0 || scienceCode.length > 20) {
+                Messenger().post({
+                    message: '专业名1~20个字符',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                // 专业代码是否重复
+                Messenger().run({
+                    errorMessage: '请求失败'
+                }, {
+                    url: web_path + ajax_url.valid_code,
                     type: 'post',
                     data: param,
                     success: function (data) {

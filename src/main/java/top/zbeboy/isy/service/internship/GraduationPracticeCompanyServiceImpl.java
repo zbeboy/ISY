@@ -1,10 +1,9 @@
 package top.zbeboy.isy.service.internship;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
 import org.jooq.impl.DSL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,11 +29,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-11-27.
  */
+@Slf4j
 @Service("graduationPracticeCompanyService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class GraduationPracticeCompanyServiceImpl extends DataTablesPlugin<GraduationPracticeCompany> implements GraduationPracticeCompanyService {
-
-    private final Logger log = LoggerFactory.getLogger(GraduationPracticeCompanyServiceImpl.class);
 
     private final DSLContext create;
 

@@ -2,9 +2,9 @@
  * Created by lenovo on 2016-11-10.
  */
 //# sourceURL=internship_release_add.js
-require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepicker", "messenger", "jquery.address",
+require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-daterangepicker", "messenger", "jquery.address",
         "bootstrap-select-zh-CN", "jquery.fileupload-validate", "bootstrap-maxlength", "jquery.showLoading"],
-    function ($, Handlebars, nav_active, moment) {
+    function ($, Handlebars, nav_active, moment, files) {
 
         /*
          ajax url.
@@ -581,6 +581,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             dataType: 'json',
             maxFileSize: 100000000,// 100MB
             formAcceptCharset: 'utf-8',
+            messages: {
+                maxFileSize: '单文件上传仅允许100MB大小'
+            },
             submit: function (e, data) {
                 initParam();
                 if (init_page_param.departmentId == -1 && init_page_param.collegeId == -1 && Number(param.schoolId) <= 0) {
@@ -601,7 +604,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     return false;
                 }
 
-                if (Number(param.departmentId) <= 0) {
+                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
+                    (init_page_param.departmentId == -1 && init_page_param.collegeId != -1))
+                    && Number(param.departmentId) <= 0) {
                     Messenger().post({
                         message: '请选择系',
                         type: 'error',
@@ -609,6 +614,19 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     });
                     return false;
                 }
+
+                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
+                    (init_page_param.departmentId == -1 && init_page_param.collegeId != -1) ||
+                    (init_page_param.departmentId != -1 && init_page_param.collegeId == -1))
+                    && param.grade === '0') {
+                    Messenger().post({
+                        message: '请选择年级',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    return false;
+                }
+
                 data.formData = param;
             },
             done: function (e, data) {
@@ -630,6 +648,21 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                     progress + '%'
                 );
             }
+        }).on('fileuploadadd', function(evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function(data) {
+                isOk = false;
+                Messenger().post({
+                    message: '上传失败: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
         });
 
         /**
@@ -660,7 +693,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(transformationFileUnit(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
@@ -704,27 +737,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 }
             });
         });
-
-        /**
-         * 转换文件单位
-         *
-         * @param size 文件大小
-         * @return 文件尺寸
-         */
-        function transformationFileUnit(size) {
-            var str = "";
-            if (size < 1024) {
-                str = size + "B";
-            } else if (size >= 1024 && size < 1024 * 1024) {
-                str = (size / 1024) + "KB";
-            } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
-                str = (size / (1024 * 1024)) + "MB";
-            } else {
-                str = (size / (1024 * 1024 * 1024)) + "GB";
-            }
-
-            return str;
-        }
 
         $('#save').click(function () {
             add();
@@ -805,10 +817,11 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             var internshipTypeId = param.internshipTypeId;
             // 改变选项时，检验
             if (Number(internshipTypeId) > 0) {
-                if (init_page_param.departmentId != -1 || init_page_param.collegeId != -1) {
+                if (init_page_param.departmentId != -1) {
                     validGrade();
+                } else if (init_page_param.collegeId != -1) {
+                    validDepartmentId();
                 } else {
-                    console.log('hahah');
                     validSchoolId();
                 }
             } else {

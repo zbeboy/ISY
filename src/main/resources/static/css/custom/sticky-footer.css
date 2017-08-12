@@ -12,7 +12,7 @@ body {
   position: absolute;
   bottom: 0;
   /* Set the fixed height of the footer here */
-  height: 40px;
+  height: 60px;
 }
 
 
@@ -20,5 +20,5 @@ body {
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
 .text-muted {
-  margin: 20px 0;
+  margin: 7px 0;
 }

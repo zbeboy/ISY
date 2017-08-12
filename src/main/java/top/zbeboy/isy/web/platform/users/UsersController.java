@@ -2,12 +2,10 @@ package top.zbeboy.isy.web.platform.users;
 
 import com.alibaba.fastjson.JSON;
 import com.octo.captcha.service.CaptchaServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Record;
-import org.jooq.Record1;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,6 +21,14 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
+import top.zbeboy.isy.elastic.pojo.StaffElastic;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.elastic.pojo.UsersElastic;
+import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
+import top.zbeboy.isy.elastic.repository.UsersElasticRepository;
+import top.zbeboy.isy.glue.platform.UsersGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
@@ -74,10 +80,9 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-08-22.
  */
+@Slf4j
 @Controller
 public class UsersController {
-
-    private final Logger log = LoggerFactory.getLogger(UsersController.class);
 
     /*
     检验邮箱使用
@@ -141,6 +146,18 @@ public class UsersController {
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
 
+    @Resource
+    private UsersElasticRepository usersElasticRepository;
+
+    @Resource
+    private StudentElasticRepository studentElasticRepository;
+
+    @Resource
+    private StaffElasticRepository staffElasticRepository;
+
+    @Resource
+    private UsersGlue usersGlue;
+
     /**
      * 检验注册表单
      *
@@ -155,22 +172,22 @@ public class UsersController {
         if (validType == VALID_EMAIL) {
             Users tempUsers = usersService.findByUsername(StringUtils.trimWhitespace(username));
             if (!ObjectUtils.isEmpty(tempUsers)) {
-                return new AjaxUtils().fail().msg("该邮箱已被注册");
+                return AjaxUtils.of().fail().msg("该邮箱已被注册");
             } else {
-                return new AjaxUtils().success();
+                return AjaxUtils.of().success();
             }
         }
 
         if (validType == VALID_MOBILE) {
             List<Users> tempUsers = usersService.findByMobile(StringUtils.trimWhitespace(mobile));
             if (!ObjectUtils.isEmpty(tempUsers)) {
-                return new AjaxUtils().fail().msg("该手机号已被注册");
+                return AjaxUtils.of().fail().msg("该手机号已被注册");
             } else {
-                return new AjaxUtils().success();
+                return AjaxUtils.of().success();
             }
         }
 
-        return new AjaxUtils().fail().msg("检验类型异常");
+        return AjaxUtils.of().fail().msg("检验类型异常");
     }
 
     /**
@@ -187,13 +204,13 @@ public class UsersController {
         if (validType == VALID_MOBILE) {
             Result<UsersRecord> tempUsers = usersService.findByMobileNeUsername(StringUtils.trimWhitespace(mobile), StringUtils.trimWhitespace(username));
             if (!ObjectUtils.isEmpty(tempUsers)) {
-                return new AjaxUtils().fail().msg("该手机号已被注册");
+                return AjaxUtils.of().fail().msg("该手机号已被注册");
             } else {
-                return new AjaxUtils().success();
+                return AjaxUtils.of().success();
             }
         }
 
-        return new AjaxUtils().fail().msg("检验类型异常");
+        return AjaxUtils.of().fail().msg("检验类型异常");
     }
 
     /**
@@ -207,9 +224,9 @@ public class UsersController {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
             Users users = usersService.getUserFromSession();
             Student student = studentService.findByUsername(users.getUsername());
-            return new AjaxUtils().success().msg("学生用户").obj(student.getStudentId());
+            return AjaxUtils.of().success().msg("学生用户").obj(student.getStudentId());
         }
-        return new AjaxUtils().fail().msg("非学生用户");
+        return AjaxUtils.of().fail().msg("非学生用户");
     }
 
     /**
@@ -223,9 +240,9 @@ public class UsersController {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
             Users users = usersService.getUserFromSession();
             Staff staff = staffService.findByUsername(users.getUsername());
-            return new AjaxUtils().success().msg("教职工用户").obj(staff.getStaffId());
+            return AjaxUtils.of().success().msg("教职工用户").obj(staff.getStaffId());
         }
-        return new AjaxUtils().fail().msg("非教职工用户");
+        return AjaxUtils.of().fail().msg("非教职工用户");
     }
 
     /**
@@ -242,27 +259,27 @@ public class UsersController {
         if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
             String tempMobile = (String) session.getAttribute("mobile");
             if (!mobile.equals(tempMobile)) {
-                return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
+                return AjaxUtils.of().fail().msg("发现手机号不一致，请重新获取验证码");
             } else {
                 if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
                     Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
                     Date now = new Date();
                     if (!now.before(mobileExpiry)) {
-                        return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
+                        return AjaxUtils.of().fail().msg("验证码已过有效期(30分钟)");
                     } else {
                         if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
                             String mobileCode = (String) session.getAttribute("mobileCode");
                             if (!phoneVerifyCode.equals(mobileCode)) {
-                                return new AjaxUtils().fail().msg("验证码错误");
+                                return AjaxUtils.of().fail().msg("验证码错误");
                             } else {
-                                return new AjaxUtils().success().msg("");
+                                return AjaxUtils.of().success().msg("");
                             }
                         }
                     }
                 }
             }
         }
-        return new AjaxUtils().fail().msg("请输入手机号，并点击获取验证码按钮");
+        return AjaxUtils.of().fail().msg("请输入手机号，并点击获取验证码按钮");
     }
 
     /**
@@ -319,7 +336,7 @@ public class UsersController {
                 //发送验证邮件
                 if (isyProperties.getMail().isOpen()) {
                     mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
-                    modelMap.put("msg", "验证邮件已发送至您的邮件，请登录邮箱尽快验证！");
+                    modelMap.put("msg", "验证邮件已发送至您邮箱，请登录邮箱进行验证！");
                 } else {
                     modelMap.put("msg", "邮件推送已被管理员关闭，暂时无法验证");
                 }
@@ -352,28 +369,13 @@ public class UsersController {
             session.setAttribute("mobileCode", mobileKey);
             mobileService.sendValidMobileShortMessage(mobile, mobileKey);
             if (isyProperties.getMobile().isOpen()) {
-                return new AjaxUtils().success().msg("短信已发送，请您耐心等待(验证码30分钟内有效，无需重复发送)");
+                return AjaxUtils.of().success().msg("短信已发送，请您耐心等待(验证码30分钟内有效，无需重复发送)");
             } else {
-                return new AjaxUtils().fail().msg("短信发送已被管理员关闭");
+                return AjaxUtils.of().fail().msg("短信发送已被管理员关闭");
             }
         } else {
-            return new AjaxUtils().fail().msg("手机号格式不正确");
+            return AjaxUtils.of().fail().msg("手机号格式不正确");
         }
-    }
-
-    /**
-     * 登录时账号自动完成
-     *
-     * @param query 查询参数
-     * @return 账号
-     */
-    @RequestMapping(value = "/user/login/autocomplete/email", method = RequestMethod.GET)
-    @ResponseBody
-    public List<String> loginAutoCompleteEmail(@RequestParam("query") String query) {
-        List<String> emails = new ArrayList<>();
-        Result<Record1<String>> emailRecord = usersService.autoCompleteQueryUsername(query);
-        emailRecord.forEach(e -> emails.add(e.value1()));
-        return emails;
     }
 
     /**
@@ -431,7 +433,7 @@ public class UsersController {
     @RequestMapping("/user/login/valid/jcaptcha")
     @ResponseBody
     public AjaxUtils validateCaptchaForId(@RequestParam("j_captcha_response") String captcha, HttpServletRequest request) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Boolean isResponseCorrect = Boolean.FALSE;
         // remember that we need an id to validate!
         String captchaId = request.getSession().getId();
@@ -462,7 +464,7 @@ public class UsersController {
     @RequestMapping(value = "/user/login/valid/email", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validEmail(@RequestParam("email") String email) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Users users = usersService.findByUsername(email);
         if (!ObjectUtils.isEmpty(users)) {
             if (users.getVerifyMailbox() == 1) {
@@ -499,7 +501,7 @@ public class UsersController {
                 usersService.update(users);
                 if (isyProperties.getMail().isOpen()) {
                     mailService.sendPasswordResetMail(users, requestUtils.getBaseUrl(request));
-                    return new AjaxUtils().success().msg("密码重置邮件已发送至您的邮箱");
+                    return AjaxUtils.of().success().msg("密码重置邮件已发送至您的邮箱");
                 } else {
                     msg = "邮件推送已被管理员关闭";
                 }
@@ -509,7 +511,7 @@ public class UsersController {
         } else {
             msg = "获取参数有误";
         }
-        return new AjaxUtils().fail().msg(msg);
+        return AjaxUtils.of().fail().msg(msg);
     }
 
     /**
@@ -560,7 +562,7 @@ public class UsersController {
     @RequestMapping("/user/login/password/reset")
     @ResponseBody
     public AjaxUtils loginPasswordReset(StudentVo studentVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             String username = StringUtils.trimWhitespace(studentVo.getEmail());
             String password = StringUtils.trimWhitespace(studentVo.getPassword());
@@ -591,13 +593,14 @@ public class UsersController {
     @RequestMapping(value = "/web/platform/users/type/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<UsersType> usersTypeData() {
+        AjaxUtils<UsersType> ajaxUtils = AjaxUtils.of();
         List<UsersType> usersTypes = new ArrayList<>();
         usersTypes.add(new UsersType(0, "注册类型"));
         Result<UsersTypeRecord> usersTypeRecords = usersTypeService.findAll();
         if (usersTypeRecords.isNotEmpty()) {
             usersTypes.addAll(usersTypeRecords.into(UsersType.class));
         }
-        return new AjaxUtils<UsersType>().success().listData(usersTypes);
+        return ajaxUtils.success().listData(usersTypes);
     }
 
     /**
@@ -609,10 +612,11 @@ public class UsersController {
     @RequestMapping(value = "/special/channel/users/role/data", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Role> roleData(@RequestParam("username") String username) {
+        AjaxUtils<Role> ajaxUtils = AjaxUtils.of();
         List<Role> roles = new ArrayList<>();
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            Role role = roleService.findByRoleEnName(Workbook.ADMIN_AUTHORITIES);
-            roles.add(role);
+            roles.add(roleService.findByRoleEnName(Workbook.ADMIN_AUTHORITIES));
+            roles.add(roleService.findByRoleEnName(Workbook.OPS_AUTHORITIES));
         }
         // 根据此用户账号查询院下所有角色
         Users users = usersService.findByUsername(username);
@@ -621,13 +625,13 @@ public class UsersController {
             College college = record.get().into(College.class);
             List<CollegeRoleRecord> collegeRoleRecords = collegeRoleService.findByCollegeId(college.getCollegeId());
             if (!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()) {
-                List<Integer> roleIds = new ArrayList<>();
+                List<String> roleIds = new ArrayList<>();
                 collegeRoleRecords.forEach(role -> roleIds.add(role.getRoleId()));
                 Result<RoleRecord> roleRecords = roleService.findInRoleId(roleIds);
                 roles.addAll(roleRecords.into(Role.class));
             }
         }
-        return new AjaxUtils<Role>().success().listData(roles);
+        return ajaxUtils.success().listData(roles);
     }
 
     /**
@@ -641,20 +645,58 @@ public class UsersController {
     @RequestMapping(value = "/special/channel/users/role/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles, HttpServletRequest request) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (StringUtils.hasLength(roles)) {
             List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
+            // 禁止非系统用户 提升用户权限到系统或管理员级别权限
+            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                    && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
+                return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限");
+            }
             authoritiesService.deleteByUsername(username);
+            UsersElastic usersElastic = usersElasticRepository.findOne(username);
+            List<String> roleEnNames = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
             roleList.forEach(role -> {
                 Authorities authorities = new Authorities(username, role);
                 authoritiesService.save(authorities);
-                Users users = usersService.findByUsername(username);
-                Users curUsers = usersService.getUserFromSession();
-                String notify = "您的权限已变更。";
-                commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
+                Role tempRole = roleService.findByRoleEnName(role);
+                roleEnNames.add(tempRole.getRoleEnName());
+                stringBuilder.append(tempRole.getRoleName()).append(" ");
             });
-            return new AjaxUtils().success().msg("更改用户角色成功");
+            if (roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES)) {
+                usersElastic.setAuthorities(1);
+            } else if (roleEnNames.contains(Workbook.ADMIN_AUTHORITIES)) {
+                usersElastic.setAuthorities(2);
+            } else {
+                usersElastic.setAuthorities(0);
+            }
+            usersElastic.setRoleName(stringBuilder.toString().trim());
+            usersElasticRepository.delete(username);
+            usersElasticRepository.save(usersElastic);
+            Users users = usersService.findByUsername(username);
+            UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+            if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
+                StudentElastic studentElastic = studentElasticRepository.findByUsername(username);
+                studentElastic.setAuthorities(usersElastic.getAuthorities());
+                studentElastic.setRoleName(usersElastic.getRoleName());
+                studentElasticRepository.deleteByUsername(username);
+                studentElasticRepository.save(studentElastic);
+            } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
+                StaffElastic staffElastic = staffElasticRepository.findByUsername(username);
+                staffElastic.setAuthorities(usersElastic.getAuthorities());
+                staffElastic.setRoleName(usersElastic.getRoleName());
+                staffElasticRepository.deleteByUsername(username);
+                staffElasticRepository.save(staffElastic);
+            }
+            Users curUsers = usersService.getUserFromSession();
+            String notify = "您的权限已变更为" + usersElastic.getRoleName() + " ，请登录查看。";
+            commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
+            ajaxUtils.success().msg("更改用户角色成功");
+        } else {
+            ajaxUtils.fail().msg("用户角色参数异常");
         }
-        return new AjaxUtils().fail().msg("用户角色参数异常");
+        return ajaxUtils;
     }
 
     /**
@@ -689,15 +731,10 @@ public class UsersController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<UsersBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = usersService.findAllByPageExistsAuthorities(dataTablesUtils);
-        List<UsersBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(UsersBean.class);
-            usersBeen.forEach(user -> user.setRoleName(roleService.findByUsernameToStringNoCache(user.getUsername())));
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(usersService.countAllExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<UsersBean>> resultUtils = usersGlue.findAllByPageExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -721,14 +758,10 @@ public class UsersController {
         headers.add("join_date");
         headers.add("operator");
         DataTablesUtils<UsersBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = usersService.findAllByPageNotExistsAuthorities(dataTablesUtils);
-        List<UsersBean> usersBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            usersBeen = records.into(UsersBean.class);
-        }
-        dataTablesUtils.setData(usersBeen);
-        dataTablesUtils.setiTotalRecords(usersService.countAllNotExistsAuthorities());
-        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionNotExistsAuthorities(dataTablesUtils));
+        ResultUtils<List<UsersBean>> resultUtils = usersGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -744,9 +777,9 @@ public class UsersController {
     public AjaxUtils usersUpdateEnabled(String userIds, Byte enabled) {
         if (StringUtils.hasLength(userIds)) {
             usersService.updateEnabled(SmallPropsUtils.StringIdsToStringList(userIds), enabled);
-            return new AjaxUtils().success().msg("注销用户成功");
+            return AjaxUtils.of().success().msg("注销用户成功");
         }
-        return new AjaxUtils().fail().msg("注销用户失败");
+        return AjaxUtils.of().fail().msg("注销用户失败");
     }
 
     /**
@@ -758,7 +791,7 @@ public class UsersController {
     @RequestMapping("/special/channel/users/deletes")
     @ResponseBody
     public AjaxUtils deleteUsers(@RequestParam("username") String userIds) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (StringUtils.hasLength(userIds)) {
             List<String> ids = SmallPropsUtils.StringIdsToStringList(userIds);
             ids.forEach(id -> {
@@ -767,23 +800,26 @@ public class UsersController {
                     ajaxUtils.fail().msg("用户存在角色关联，无法删除");
                 } else {
                     Users users = usersService.findByUsername(id);
-                    UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-                    switch (usersType.getUsersTypeName()) {
-                        case Workbook.STUDENT_USERS_TYPE:  // 学生
-                            studentService.deleteByUsername(id);
-                            usersService.deleteById(id);
-                            ajaxUtils.success().msg("删除用户成功");
-                            break;
-                        case Workbook.STAFF_USERS_TYPE:  // 教职工
-                            staffService.deleteByUsername(id);
-                            usersService.deleteById(id);
-                            ajaxUtils.success().msg("删除用户成功");
-                            break;
-                        default:
-                            ajaxUtils.fail().msg("未获取到用户类型");
-                            break;
+                    if (!ObjectUtils.isEmpty(users)) {
+                        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+                        switch (usersType.getUsersTypeName()) {
+                            case Workbook.STUDENT_USERS_TYPE:  // 学生
+                                studentService.deleteByUsername(id);
+                                usersService.deleteById(id);
+                                ajaxUtils.success().msg("删除用户成功");
+                                break;
+                            case Workbook.STAFF_USERS_TYPE:  // 教职工
+                                staffService.deleteByUsername(id);
+                                usersService.deleteById(id);
+                                ajaxUtils.success().msg("删除用户成功");
+                                break;
+                            default:
+                                ajaxUtils.fail().msg("未获取到用户类型");
+                                break;
+                        }
+                    } else {
+                        ajaxUtils.fail().msg("未查询到用户");
                     }
-
                 }
             });
         } else {
@@ -952,7 +988,7 @@ public class UsersController {
     @RequestMapping(value = "/anyone/users/valid/id_card", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validIdCard(@RequestParam("username") String username, @RequestParam("idCard") String idCard) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Users users = usersService.getUserFromSession();
         UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
         switch (usersType.getUsersTypeName()) {
@@ -991,7 +1027,7 @@ public class UsersController {
     @RequestMapping(value = "/anyone/users/upload/avatar")
     @ResponseBody
     public AjaxUtils<FileBean> usersUploadAvatar(MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) {
-        AjaxUtils<FileBean> data = new AjaxUtils<>();
+        AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
             Users users = usersService.getUserFromSession();
             List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
@@ -1064,18 +1100,18 @@ public class UsersController {
         if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
             String tempMobile = (String) session.getAttribute("mobile");
             if (!newMobile.equals(tempMobile)) {
-                return new AjaxUtils().fail().msg("发现手机号不一致，请重新获取验证码");
+                return AjaxUtils.of().fail().msg("发现手机号不一致，请重新获取验证码");
             } else {
                 if (!ObjectUtils.isEmpty(session.getAttribute("mobileExpiry"))) {
                     Date mobileExpiry = (Date) session.getAttribute("mobileExpiry");
                     Date now = new Date();
                     if (!now.before(mobileExpiry)) {
-                        return new AjaxUtils().fail().msg("验证码已过有效期(30分钟)");
+                        return AjaxUtils.of().fail().msg("验证码已过有效期(30分钟)");
                     } else {
                         if (!ObjectUtils.isEmpty(session.getAttribute("mobileCode"))) {
                             String mobileCode = (String) session.getAttribute("mobileCode");
                             if (!phoneVerifyCode.equals(mobileCode)) {
-                                return new AjaxUtils().fail().msg("验证码错误");
+                                return AjaxUtils.of().fail().msg("验证码错误");
                             } else {
                                 Users users = usersService.findByUsername(username);
                                 if (!ObjectUtils.isEmpty(users)) {
@@ -1085,21 +1121,21 @@ public class UsersController {
                                     session.removeAttribute("mobileExpiry");
                                     session.removeAttribute("mobile");
                                     session.removeAttribute("mobileCode");
-                                    return new AjaxUtils().success().msg("更新手机号成功");
+                                    return AjaxUtils.of().success().msg("更新手机号成功");
                                 } else {
-                                    return new AjaxUtils().fail().msg("未查询到用户信息");
+                                    return AjaxUtils.of().fail().msg("未查询到用户信息");
                                 }
                             }
                         } else {
-                            return new AjaxUtils().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
+                            return AjaxUtils.of().fail().msg("无法获取当前用户电话验证码，请重新获取手机验证码");
                         }
                     }
                 } else {
-                    return new AjaxUtils().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
+                    return AjaxUtils.of().fail().msg("无法获取当前用户验证码有效期，请重新获取手机验证码");
                 }
             }
         } else {
-            return new AjaxUtils().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
+            return AjaxUtils.of().fail().msg("无法获取当前用户电话，请重新获取手机验证码");
         }
     }
 
@@ -1115,7 +1151,7 @@ public class UsersController {
     @ResponseBody
     public AjaxUtils passwordUpdate(@RequestParam("username") String username, @RequestParam("newPassword") String newPassword,
                                     @RequestParam("okPassword") String okPassword) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         String regex = "^[a-zA-Z0-9]\\w{5,17}$";
         if (newPassword.matches(regex)) {
             if (okPassword.equals(newPassword)) {
@@ -1152,11 +1188,11 @@ public class UsersController {
                 updateUsers.setRealName(usersVo.getRealName());
                 updateUsers.setAvatar(usersVo.getAvatar());
                 usersService.update(updateUsers);
-                return new AjaxUtils().success().msg("更新成功");
+                return AjaxUtils.of().success().msg("更新成功");
             } else {
-                return new AjaxUtils().fail().msg("未查询到用户");
+                return AjaxUtils.of().fail().msg("未查询到用户");
             }
         }
-        return new AjaxUtils().fail().msg("参数异常");
+        return AjaxUtils.of().fail().msg("参数异常");
     }
 }

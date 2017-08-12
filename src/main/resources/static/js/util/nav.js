@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016-09-14.
  */
-define(["jquery", "sb-admin"], function ($) {
+define(["jquery", "nav_active", "sb-admin"], function ($, nav_active) {
         // start 小屏幕修复收缩菜单
         topOffset = 50;
         width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
@@ -19,6 +19,10 @@ define(["jquery", "sb-admin"], function ($) {
             $("#page-wrapper").css("min-height", (height) + "px");
         }
         // end
+
+        // 刷新选中
+        var url = window.location.href;
+        nav_active(url.substring(url.lastIndexOf('#') + 1));
 
         // 菜单搜索
         /**

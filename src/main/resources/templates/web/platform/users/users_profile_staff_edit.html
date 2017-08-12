@@ -34,6 +34,13 @@
                                placeholder="工号"/>
                         <p class="text-danger hidden" id="staff_number_error_msg"></p>
                     </div>
+                    <div class="form-group" id="valid_academic">
+                        <select class="form-control" name="academicTitleId" id="select_academic">
+                            <option>请选择职称</option>
+                        </select>
+                        <p class="text-danger hidden" id="academic_error_msg"></p>
+                        <input type="hidden" id="academicTitleId" th:value="${user.academicTitleId}"/>
+                    </div>
                     <div class="form-group" id="valid_post_number">
                         <label>职务</label>
                         <input class="form-control" name="post" id="post"
@@ -223,6 +230,12 @@
         <script id="political-landscape-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <option value="{{political_landscape_value}}">{{political_landscape_name}}</option>
+            {{/each}}
+        </script>
+        <!--职称模板-->
+        <script id="academic-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{academic_value}}">{{academic_name}}</option>
             {{/each}}
         </script>
         <input type="hidden" class="dy_script" value="/js/platform/users/users_profile_staff_edit.js"/>

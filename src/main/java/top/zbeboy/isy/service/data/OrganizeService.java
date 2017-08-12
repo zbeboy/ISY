@@ -5,6 +5,7 @@ import org.jooq.Record1;
 import org.jooq.Result;
 import top.zbeboy.isy.domain.tables.pojos.Organize;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -17,7 +18,7 @@ import java.util.Optional;
 public interface OrganizeService {
 
     /**
-     * 根据专业id查询全部年级
+     * 根据专业id，状态查询全部年级
      *
      * @param scienceId 专业id
      * @param b         状态
@@ -26,7 +27,7 @@ public interface OrganizeService {
     Result<Record1<String>> findByScienceIdAndDistinctGradeAndIsDel(int scienceId, Byte b);
 
     /**
-     * 根据专业ids查询
+     * 根据专业ids，年级，状态查询
      *
      * @param scienceIds 专业ids
      * @param grade      年级
@@ -34,6 +35,16 @@ public interface OrganizeService {
      * @return 班级
      */
     Result<OrganizeRecord> findInScienceIdsAndGradeAndIsDel(List<Integer> scienceIds, String grade, Byte b);
+
+    /**
+     * 根据专业id，年级，状态关联查询
+     *
+     * @param scienceId 专业id
+     * @param grade     年级
+     * @param b         班级状态
+     * @return 班级
+     */
+    Result<OrganizeRecord> findByScienceIdAndGradeAndIsDel(int scienceId, String grade, Byte b);
 
     /**
      * 通过专业查询
@@ -62,7 +73,7 @@ public interface OrganizeService {
     Result<OrganizeRecord> findByOrganizeNameAndScienceIdNeOrganizeId(String organizeName, int organizeId, int scienceId);
 
     /**
-     * 根据年级查询全部班级
+     * 根据年级查询全部班级 注：默认状态为 未注销
      *
      * @param grade     年级
      * @param scienceId 专业id
@@ -71,11 +82,20 @@ public interface OrganizeService {
     Result<OrganizeRecord> findByGradeAndScienceId(String grade, int scienceId);
 
     /**
+     * 根据年级查询全部班级 注：不带状态，用于搜索选择用
+     *
+     * @param grade     年级
+     * @param scienceId 专业id
+     * @return 年级下全部班级
+     */
+    Result<OrganizeRecord> findByGradeAndScienceIdNotIsDel(String grade, int scienceId);
+
+    /**
      * 保存
      *
-     * @param organize 班级
+     * @param organizeElastic 班级
      */
-    void save(Organize organize);
+    void save(OrganizeElastic organizeElastic);
 
     /**
      * 更新

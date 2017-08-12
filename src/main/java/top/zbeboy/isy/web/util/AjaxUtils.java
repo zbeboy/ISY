@@ -1,8 +1,9 @@
 package top.zbeboy.isy.web.util;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,10 @@ import java.util.Map;
  * Created by lenovo on 2016-01-09.
  * ajax消息以及数据封装
  */
+@Slf4j
+@RequiredArgsConstructor(staticName = "of")
+@ToString
 public class AjaxUtils<T> {
-
-    private final Logger log = LoggerFactory.getLogger(AjaxUtils.class);
 
     private boolean state;//消息状态
     private String msg;//消息
@@ -103,17 +105,5 @@ public class AjaxUtils<T> {
 
     public void setListResult(List<T> listResult) {
         this.listResult = listResult;
-    }
-
-    @Override
-    public String toString() {
-        return "AjaxUtils{" +
-                "state=" + state +
-                ", msg='" + msg + '\'' +
-                ", mapResult=" + mapResult +
-                ", listResult=" + listResult +
-                ", objectResult=" + objectResult +
-                ", paginationUtils=" + paginationUtils +
-                '}';
     }
 }

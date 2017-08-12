@@ -1,14 +1,14 @@
 package top.zbeboy.isy.service.system;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.CharEncoding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import top.zbeboy.isy.config.ISYProperties;
-import top.zbeboy.isy.domain.tables.pojos.SystemSms;
+import top.zbeboy.isy.elastic.pojo.SystemSmsElastic;
+import top.zbeboy.isy.glue.system.SystemSmsGlue;
 import top.zbeboy.isy.service.util.UUIDUtils;
 
 import javax.annotation.Resource;
@@ -24,16 +24,15 @@ import java.time.Clock;
 /**
  * Created by lenovo on 2016-05-17.
  */
+@Slf4j
 @Service("mobileService")
 public class MobileServiceImpl implements MobileService {
-
-    private final Logger log = LoggerFactory.getLogger(MobileServiceImpl.class);
 
     @Autowired
     private ISYProperties isyProperties;
 
     @Resource
-    private SystemSmsService systemSmsService;
+    private SystemSmsGlue systemSmsGlue;
 
     @Async
     @Override
@@ -67,8 +66,8 @@ public class MobileServiceImpl implements MobileService {
             log.info("Send sms to mobile {} is exception : {}", mobile, e);
             result = e.getMessage();
         }
-        SystemSms systemSms = new SystemSms(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), mobile, result);
-        systemSmsService.save(systemSms);
+        SystemSmsElastic systemSms = new SystemSmsElastic(UUIDUtils.getUUID(), new Timestamp(Clock.systemDefaultZone().millis()), mobile, result);
+        systemSmsGlue.save(systemSms);
     }
 
     @Async
@@ -76,7 +75,7 @@ public class MobileServiceImpl implements MobileService {
     public void sendValidMobileShortMessage(String mobile, String verificationCode) {
         log.debug(" mobile valid : {} : {}", mobile, verificationCode);
         if (isyProperties.getMobile().isOpen()) {
-            String content = "【ISY信息平台】 您的验证码:" + verificationCode;
+            String content = "【" + isyProperties.getMobile().getSign() + "】 您的验证码:" + verificationCode;
             sendShortMessage(mobile, content);
         } else {
             log.debug(" 管理员已关闭短信发送 ");

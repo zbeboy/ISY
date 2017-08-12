@@ -1,5 +1,6 @@
 package top.zbeboy.isy.web.data.organize;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
@@ -14,10 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Organize;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.glue.data.OrganizeGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.OrganizeService;
+import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -35,16 +42,24 @@ import java.util.Optional;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Controller
 public class OrganizeController {
-
-    private final Logger log = LoggerFactory.getLogger(OrganizeController.class);
 
     @Resource
     private OrganizeService organizeService;
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private OrganizeGlue organizeGlue;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private DepartmentService departmentService;
 
     /**
      * 通过专业id获取全部年级
@@ -55,6 +70,7 @@ public class OrganizeController {
     @RequestMapping(value = "/user/grades", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<SelectUtils> grades(@RequestParam("scienceId") int scienceId) {
+        AjaxUtils<SelectUtils> ajaxUtils = AjaxUtils.of();
         List<SelectUtils> grades = new ArrayList<>();
         SelectUtils selectUtils = new SelectUtils(0, "0", "请选择年级", true);
         grades.add(selectUtils);
@@ -64,7 +80,7 @@ public class OrganizeController {
             SelectUtils tempGrade = new SelectUtils(0, r.getValue("grade").toString(), r.getValue("grade").toString(), false);
             grades.add(tempGrade);
         }
-        return new AjaxUtils<SelectUtils>().success().msg("获取年级数据成功！").listData(grades);
+        return ajaxUtils.success().msg("获取年级数据成功！").listData(grades);
     }
 
     /**
@@ -76,6 +92,7 @@ public class OrganizeController {
     @RequestMapping(value = "/user/department/grades", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<SelectUtils> departmentGrades(@RequestParam("departmentId") int departmentId) {
+        AjaxUtils<SelectUtils> ajaxUtils = AjaxUtils.of();
         List<SelectUtils> grades = new ArrayList<>();
         SelectUtils selectUtils = new SelectUtils(0, "0", "请选择年级", true);
         grades.add(selectUtils);
@@ -84,7 +101,7 @@ public class OrganizeController {
             SelectUtils tempGrade = new SelectUtils(0, r.getValue("grade").toString(), r.getValue("grade").toString(), false);
             grades.add(tempGrade);
         }
-        return new AjaxUtils<SelectUtils>().success().msg("获取年级数据成功！").listData(grades);
+        return ajaxUtils.success().msg("获取年级数据成功！").listData(grades);
     }
 
     /**
@@ -97,6 +114,7 @@ public class OrganizeController {
     @RequestMapping(value = "/user/organizes", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<Organize> organizes(@RequestParam("grade") String grade, @RequestParam("scienceId") int scienceId) {
+        AjaxUtils<Organize> ajaxUtils = AjaxUtils.of();
         List<Organize> organizes = new ArrayList<>();
         Byte isDel = 0;
         Organize organize = new Organize(0, "请选择班级", isDel, 0, "");
@@ -106,7 +124,7 @@ public class OrganizeController {
             Organize tempOrganize = new Organize(r.getOrganizeId(), r.getOrganizeName(), r.getOrganizeIsDel(), r.getScienceId(), r.getGrade());
             organizes.add(tempOrganize);
         }
-        return new AjaxUtils<Organize>().success().msg("获取班级数据成功！").listData(organizes);
+        return ajaxUtils.success().msg("获取班级数据成功！").listData(organizes);
     }
 
     /**
@@ -141,15 +159,10 @@ public class OrganizeController {
         headers.add("organize_is_del");
         headers.add("operator");
         DataTablesUtils<OrganizeBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = organizeService.findAllByPage(dataTablesUtils);
-        List<OrganizeBean> organizeBeen = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            organizeBeen = records.into(OrganizeBean.class);
-        }
-        dataTablesUtils.setData(organizeBeen);
-        dataTablesUtils.setiTotalRecords(organizeService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(organizeService.countByCondition(dataTablesUtils));
-
+        ResultUtils<List<OrganizeBean>> resultUtils = organizeGlue.findAllByPage(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(organizeGlue.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -198,12 +211,12 @@ public class OrganizeController {
         if (StringUtils.hasLength(organizeName)) {
             Result<OrganizeRecord> scienceRecords = organizeService.findByOrganizeNameAndScienceId(organizeName, scienceId);
             if (ObjectUtils.isEmpty(scienceRecords)) {
-                return new AjaxUtils().success().msg("班级名不存在");
+                return AjaxUtils.of().success().msg("班级名不存在");
             } else {
-                return new AjaxUtils().fail().msg("班级名已存在");
+                return AjaxUtils.of().fail().msg("班级名已存在");
             }
         }
-        return new AjaxUtils().fail().msg("班级名不能为空");
+        return AjaxUtils.of().fail().msg("班级名不能为空");
     }
 
     /**
@@ -219,10 +232,10 @@ public class OrganizeController {
     public AjaxUtils updateValid(@RequestParam("organizeId") int id, @RequestParam("organizeName") String organizeName, @RequestParam("scienceId") int scienceId) {
         Result<OrganizeRecord> organizeRecords = organizeService.findByOrganizeNameAndScienceIdNeOrganizeId(organizeName, id, scienceId);
         if (organizeRecords.isEmpty()) {
-            return new AjaxUtils().success().msg("班级名不重复");
+            return AjaxUtils.of().success().msg("班级名不重复");
         }
 
-        return new AjaxUtils().fail().msg("班级名重复");
+        return AjaxUtils.of().fail().msg("班级名重复");
     }
 
     /**
@@ -235,20 +248,47 @@ public class OrganizeController {
     @RequestMapping(value = "/web/data/organize/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils organizeSave(@Valid OrganizeVo organizeVo, BindingResult bindingResult) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            Organize organize = new Organize();
+            OrganizeElastic organizeElastic = new OrganizeElastic();
             Byte isDel = 0;
-            if (null != organizeVo.getOrganizeIsDel() && organizeVo.getOrganizeIsDel() == 1) {
+            if (!ObjectUtils.isEmpty(organizeVo.getOrganizeIsDel()) && organizeVo.getOrganizeIsDel() == 1) {
                 isDel = 1;
             }
-            organize.setOrganizeIsDel(isDel);
-            organize.setOrganizeName(organizeVo.getOrganizeName());
-            organize.setScienceId(organizeVo.getScienceId());
-            organize.setGrade(organizeVo.getGrade());
-            organizeService.save(organize);
-            return new AjaxUtils().success().msg("保存成功");
+            organizeElastic.setOrganizeName(organizeVo.getOrganizeName());
+            organizeElastic.setOrganizeIsDel(isDel);
+            organizeElastic.setScienceId(organizeVo.getScienceId());
+            organizeElastic.setGrade(organizeVo.getGrade());
+            organizeElastic.setDepartmentId(organizeVo.getDepartmentId());
+            organizeElastic.setDepartmentName(organizeVo.getDepartmentName());
+            organizeElastic.setScienceName(organizeVo.getScienceName());
+
+            // 管理员
+            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                Optional<Record> departmentRecord = departmentService.findByIdRelation(organizeVo.getDepartmentId());
+                if (departmentRecord.isPresent()) {
+                    OrganizeBean organizeBean = departmentRecord.get().into(OrganizeBean.class);
+                    organizeElastic.setSchoolId(organizeBean.getSchoolId());
+                    organizeElastic.setSchoolName(organizeBean.getSchoolName());
+                    organizeElastic.setCollegeId(organizeBean.getCollegeId());
+                    organizeElastic.setCollegeName(organizeBean.getCollegeName());
+                    organizeService.save(organizeElastic);
+                    ajaxUtils.success().msg("保存成功");
+                } else {
+                    ajaxUtils.fail().msg("未查询到相关系信息");
+                }
+            } else {
+                organizeElastic.setSchoolId(organizeVo.getSchoolId());
+                organizeElastic.setSchoolName(organizeVo.getSchoolName());
+                organizeElastic.setCollegeId(organizeVo.getCollegeId());
+                organizeElastic.setCollegeName(organizeVo.getCollegeName());
+                organizeService.save(organizeElastic);
+                ajaxUtils.success().msg("保存成功");
+            }
+        } else {
+            ajaxUtils.fail().msg("填写信息错误，请检查");
         }
-        return new AjaxUtils().fail().msg("填写信息错误，请检查");
+        return ajaxUtils;
     }
 
     /**
@@ -273,10 +313,10 @@ public class OrganizeController {
                 organize.setScienceId(organizeVo.getScienceId());
                 organize.setGrade(organizeVo.getGrade());
                 organizeService.update(organize);
-                return new AjaxUtils().success().msg("更改成功");
+                return AjaxUtils.of().success().msg("更改成功");
             }
         }
-        return new AjaxUtils().fail().msg("更改失败");
+        return AjaxUtils.of().fail().msg("更改失败");
     }
 
     /**
@@ -292,8 +332,8 @@ public class OrganizeController {
         if (StringUtils.hasLength(organizeIds) && SmallPropsUtils.StringIdsIsNumber(organizeIds)) {
             log.debug(" ids : {}", organizeIds);
             organizeService.updateIsDel(SmallPropsUtils.StringIdsToList(organizeIds), isDel);
-            return new AjaxUtils().success().msg("更改班级状态成功");
+            return AjaxUtils.of().success().msg("更改班级状态成功");
         }
-        return new AjaxUtils().fail().msg("更改班级状态失败");
+        return AjaxUtils.of().fail().msg("更改班级状态失败");
     }
 }

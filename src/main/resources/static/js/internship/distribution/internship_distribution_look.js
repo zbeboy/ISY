@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
          */
         function getAjaxUrl() {
             return {
-                datas: '/web/internship/teacher_distribution/distribution/condition/data',
+                datas: '/web/internship/teacher_distribution/distribution/look/data',
                 delete_not_apply: '/web/internship/teacher_distribution/distribution/delete_not_apply',
                 back: '/web/menu/internship/teacher_distribution'
             };

@@ -1,9 +1,8 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +14,8 @@ import top.zbeboy.isy.domain.tables.daos.ScienceDao;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.ScienceRecord;
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
+import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -31,10 +32,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-08-21.
  */
+@Slf4j
 @Service("scienceService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements ScienceService {
-    private final Logger log = LoggerFactory.getLogger(ScienceServiceImpl.class);
 
     private final DSLContext create;
 
@@ -46,6 +47,12 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private OrganizeService organizeService;
+
+    @Resource
+    private OrganizeElasticRepository organizeElasticRepository;
 
     @Autowired
     public ScienceServiceImpl(DSLContext dslContext) {
@@ -79,6 +86,13 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     @Override
     public void update(Science science) {
         scienceDao.update(science);
+        List<OrganizeElastic> records = organizeElasticRepository.findByScienceId(science.getScienceId());
+        records.forEach(organizeElastic -> {
+            organizeElastic.setScienceId(science.getScienceId());
+            organizeElastic.setScienceName(science.getScienceName());
+            organizeElasticRepository.delete(organizeElastic);
+            organizeElasticRepository.save(organizeElastic);
+        });
     }
 
     @Override
@@ -269,9 +283,23 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
     }
 
     @Override
+    public Result<ScienceRecord> findByScienceCode(String scienceCode) {
+        return create.selectFrom(SCIENCE)
+                .where(SCIENCE.SCIENCE_CODE.eq(scienceCode))
+                .fetch();
+    }
+
+    @Override
     public Result<ScienceRecord> findByScienceNameAndDepartmentIdNeScienceId(String scienceName, int scienceId, int departmentId) {
         return create.selectFrom(SCIENCE)
                 .where(SCIENCE.SCIENCE_NAME.eq(scienceName).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<ScienceRecord> findByScienceCodeNeScienceId(String scienceCode, int scienceId) {
+        return create.selectFrom(SCIENCE)
+                .where(SCIENCE.SCIENCE_CODE.eq(scienceCode).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
                 .fetch();
     }
 
@@ -384,6 +412,15 @@ public class ScienceServiceImpl extends DataTablesPlugin<ScienceBean> implements
                     sortField[0] = SCIENCE.SCIENCE_NAME.asc();
                 } else {
                     sortField[0] = SCIENCE.SCIENCE_NAME.desc();
+                }
+            }
+
+            if ("science_code".equalsIgnoreCase(orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = SCIENCE.SCIENCE_CODE.asc();
+                } else {
+                    sortField[0] = SCIENCE.SCIENCE_CODE.desc();
                 }
             }
 

@@ -1,9 +1,8 @@
 package top.zbeboy.isy.service.data;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,11 +24,10 @@ import static top.zbeboy.isy.domain.Tables.POLITICAL_LANDSCAPE;
 /**
  * Created by lenovo on 2016-10-30.
  */
-@Service("PoliticalLandscapeService")
+@Slf4j
+@Service("politicalLandscapeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class PoliticalLandscapeServiceImpl extends DataTablesPlugin<PoliticalLandscape> implements PoliticalLandscapeService {
-
-    private final Logger log = LoggerFactory.getLogger(PoliticalLandscapeServiceImpl.class);
 
     private final DSLContext create;
 

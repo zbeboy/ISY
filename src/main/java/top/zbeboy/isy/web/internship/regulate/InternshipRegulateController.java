@@ -1,11 +1,10 @@
 package top.zbeboy.isy.web.internship.regulate;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -24,7 +23,9 @@ import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.export.InternshipRegulateExport;
-import top.zbeboy.isy.service.internship.*;
+import top.zbeboy.isy.service.internship.InternshipRegulateService;
+import top.zbeboy.isy.service.internship.InternshipReleaseService;
+import top.zbeboy.isy.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
@@ -37,7 +38,6 @@ import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
-import top.zbeboy.isy.web.internship.journal.InternshipJournalController;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -55,22 +55,15 @@ import java.util.*;
 /**
  * Created by zbeboy on 2016/12/21.
  */
+@Slf4j
 @Controller
 public class InternshipRegulateController {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipJournalController.class);
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
 
     @Resource
-    private InternshipApplyService internshipApplyService;
-
-    @Resource
     private InternshipTeacherDistributionService internshipTeacherDistributionService;
-
-    @Resource
-    private InternshipTypeService internshipTypeService;
 
     @Resource
     private UsersService usersService;
@@ -121,7 +114,7 @@ public class InternshipRegulateController {
         Users users = usersService.getUserFromSession();
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
             Staff staff = staffService.findByUsername(users.getUsername());
-            if(!ObjectUtils.isEmpty(staff)){
+            if (!ObjectUtils.isEmpty(staff)) {
                 modelMap.addAttribute("staffId", staff.getStaffId());
             } else {
                 modelMap.addAttribute("staffId", null);
@@ -150,7 +143,7 @@ public class InternshipRegulateController {
         Users users = usersService.getUserFromSession();
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
             Staff staff = staffService.findByUsername(users.getUsername());
-            if(!ObjectUtils.isEmpty(staff)){
+            if (!ObjectUtils.isEmpty(staff)) {
                 ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staff.getStaffId());
                 canUse = !errorBean.isHasError();
                 modelMap.addAttribute("staffId", staff.getStaffId());
@@ -158,7 +151,7 @@ public class InternshipRegulateController {
             }
         }
         if (canUse) {
-            page = "web/internship/regulate/internship_my_regulate::#page-wrapper";
+            page = "web/internship/regulate/internship_regulate_my::#page-wrapper";
         } else {
             page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
         }
@@ -187,7 +180,7 @@ public class InternshipRegulateController {
         InternshipRegulateBean otherCondition = new InternshipRegulateBean();
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         if (!ObjectUtils.isEmpty(internshipReleaseId)) {
-            otherCondition.setInternshipReleaseId(request.getParameter("internshipReleaseId"));
+            otherCondition.setInternshipReleaseId(internshipReleaseId);
             String staffId = request.getParameter("staffId");
             if (StringUtils.hasLength(staffId)) {
                 if (NumberUtils.isDigits(staffId)) {
@@ -203,10 +196,6 @@ public class InternshipRegulateController {
             dataTablesUtils.setData(internshipRegulateBeans);
             dataTablesUtils.setiTotalRecords(internshipRegulateService.countAll(otherCondition));
             dataTablesUtils.setiTotalDisplayRecords(internshipRegulateService.countByCondition(dataTablesUtils, otherCondition));
-        } else {
-            dataTablesUtils.setData(null);
-            dataTablesUtils.setiTotalRecords(0);
-            dataTablesUtils.setiTotalDisplayRecords(0);
         }
         return dataTablesUtils;
     }
@@ -224,7 +213,7 @@ public class InternshipRegulateController {
             ExportBean exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean.class);
 
             String extraSearchParam = request.getParameter("extra_search");
-            DataTablesUtils<InternshipRegulateBean> dataTablesUtils = new DataTablesUtils<>();
+            DataTablesUtils<InternshipRegulateBean> dataTablesUtils = DataTablesUtils.of();
             if (org.apache.commons.lang3.StringUtils.isNotBlank(extraSearchParam)) {
                 dataTablesUtils.setSearch(JSON.parseObject(extraSearchParam));
             }
@@ -249,8 +238,9 @@ public class InternshipRegulateController {
                     if (record.isPresent()) {
                         DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
                         InternshipRegulateExport export = new InternshipRegulateExport(internshipRegulateBeens);
-                        String path = Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()) + fileName + "." + ext;
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(departmentBean.getSchoolName(), departmentBean.getCollegeName(), departmentBean.getDepartmentName()), fileName, ext);
+                        String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
+                        String path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName, ext);
                         uploadService.download(fileName, "/" + path, response, request);
                     }
                 }
@@ -340,7 +330,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/list/del", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils regulateListDel(String regulateIds, @RequestParam("staffId") int staffId) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         // 强制身份判断
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
@@ -375,7 +365,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/students", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<StudentBean> regulateStudents(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("staffId") int staffId) {
-        AjaxUtils<StudentBean> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<StudentBean> ajaxUtils = AjaxUtils.of();
         ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staffId);
         if (!errorBean.isHasError()) {
             List<StudentBean> studentBeens = new ArrayList<>();
@@ -400,7 +390,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/student/info", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils<StudentBean> studentInfo(@RequestParam("studentId") int studentId) {
-        AjaxUtils<StudentBean> ajaxUtils = new AjaxUtils<>();
+        AjaxUtils<StudentBean> ajaxUtils = AjaxUtils.of();
         Optional<Record> record = studentService.findByIdRelationForUsers(studentId);
         if (record.isPresent()) {
             StudentBean studentBean = record.get().into(StudentBean.class);
@@ -424,7 +414,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/my/save", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils regulateSave(@Valid InternshipRegulateVo internshipRegulateVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulateVo.getInternshipReleaseId(), internshipRegulateVo.getStaffId());
             if (!errorBean.isHasError()) {
@@ -473,7 +463,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/my/update", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils regulateUpdate(@Valid InternshipRegulateVo internshipRegulateVo, BindingResult bindingResult) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipRegulateVo.getInternshipRegulateId())) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipRegulateVo.getInternshipReleaseId(), internshipRegulateVo.getStaffId());
             if (!errorBean.isHasError()) {
@@ -505,7 +495,7 @@ public class InternshipRegulateController {
     @RequestMapping(value = "/web/internship/regulate/valid/staff", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils validStaff(@RequestParam("staff") String info, @RequestParam("internshipReleaseId") String internshipReleaseId, int type) {
-        AjaxUtils ajaxUtils = new AjaxUtils();
+        AjaxUtils ajaxUtils = AjaxUtils.of();
         Staff staff = null;
         if (type == 0) {
             staff = staffService.findByUsername(info);
@@ -527,53 +517,72 @@ public class InternshipRegulateController {
     }
 
     /**
+     * 我的监管 进入条件
+     *
+     * @param internshipReleaseId 发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/internship/regulate/my/list/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils myRegulateListCondition(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        Users users = usersService.getUserFromSession();
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            Staff staff = staffService.findByUsername(users.getUsername());
+            if (!ObjectUtils.isEmpty(staff)) {
+                ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId, staff.getStaffId());
+                if (!errorBean.isHasError()) {
+                    ajaxUtils.success().msg("在条件范围，允许进入");
+                } else {
+                    ajaxUtils.fail().msg(errorBean.getErrorMsg());
+                }
+            } else {
+                ajaxUtils.fail().msg("未查询到相关教职工信息");
+            }
+        } else {
+            ajaxUtils.fail().msg("您的注册类型不符合进入条件");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入实习监管入口条件
      *
      * @param internshipReleaseId 实习发布id
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int staffId) {
-        ErrorBean<InternshipRelease> errorBean = new ErrorBean<>();
-        // 强制身份判断
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                Users users = usersService.getUserFromSession();
-                Staff staff = staffService.findByUsername(users.getUsername());
-                if (!ObjectUtils.isEmpty(staff) && staff.getStaffId() != staffId) {
+        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        if (!errorBean.isHasError()) {
+            // 强制身份判断
+            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                    Users users = usersService.getUserFromSession();
+                    Staff staff = staffService.findByUsername(users.getUsername());
+                    if (!ObjectUtils.isEmpty(staff) && staff.getStaffId() != staffId) {
+                        errorBean.setHasError(true);
+                        errorBean.setErrorMsg("您的个人信息有误");
+                        return errorBean;
+                    }
+                }
+
+                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("您的个人信息有误");
+                    errorBean.setErrorMsg("您的注册类型不适用于监管");
                     return errorBean;
                 }
             }
-
-            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            Map<String, Object> mapData = new HashMap<>();
+            Result<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
+            if (internshipTeacherDistributionRecord.isNotEmpty()) {
+                errorBean.setHasError(false);
+                mapData.put("internshipTeacherDistribution", internshipTeacherDistributionRecord.into(InternshipTeacherDistribution.class));
+            } else {
                 errorBean.setHasError(true);
-                errorBean.setErrorMsg("您的注册类型不适用于监管");
-                return errorBean;
+                errorBean.setErrorMsg("您不是该实习指导教师");
             }
+            errorBean.setMapData(mapData);
         }
-        Map<String, Object> mapData = new HashMap<>();
-        InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
-        if (ObjectUtils.isEmpty(internshipRelease)) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("未查询到相关实习信息");
-            return errorBean;
-        }
-        errorBean.setData(internshipRelease);
-        if (internshipRelease.getInternshipReleaseIsDel() == 1) {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("该实习已被注销");
-            return errorBean;
-        }
-        Result<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
-        if (internshipTeacherDistributionRecord.isNotEmpty()) {
-            errorBean.setHasError(false);
-            mapData.put("internshipTeacherDistribution", internshipTeacherDistributionRecord.into(InternshipTeacherDistribution.class));
-        } else {
-            errorBean.setHasError(true);
-            errorBean.setErrorMsg("您不是该实习指导教师");
-        }
-        errorBean.setMapData(mapData);
         return errorBean;
     }
 }

@@ -1,37 +1,31 @@
 package top.zbeboy.isy.web.system.sms;
 
-import org.jooq.Record;
-import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.service.system.SystemSmsService;
-import top.zbeboy.isy.service.util.DateTimeUtils;
+import top.zbeboy.isy.glue.system.SystemSmsGlue;
+import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.web.bean.system.sms.SystemSmsBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by lenovo on 2016-09-17.
  * 系统短信模块
  */
+@Slf4j
 @Controller
 @RequestMapping("/web")
 public class SystemSmsController {
 
-    private final Logger log = LoggerFactory.getLogger(SystemSmsController.class);
-
     @Resource
-    private SystemSmsService systemSmsService;
+    private SystemSmsGlue systemSmsGlue;
 
     /**
      * 系统短信
@@ -58,18 +52,10 @@ public class SystemSmsController {
         headers.add("send_time");
         headers.add("send_condition");
         DataTablesUtils<SystemSmsBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
-        Result<Record> records = systemSmsService.findAllByPage(dataTablesUtils);
-        List<SystemSmsBean> systemSmses = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
-            systemSmses = records.into(SystemSmsBean.class);
-            systemSmses.forEach(s -> {
-                Date date = DateTimeUtils.timestampToDate(s.getSendTime());
-                s.setSendTimeNew(DateTimeUtils.formatDate(date));
-            });
-        }
-        dataTablesUtils.setData(systemSmses);
-        dataTablesUtils.setiTotalRecords(systemSmsService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(systemSmsService.countByCondition(dataTablesUtils));
+        ResultUtils<List<SystemSmsBean>> resultUtils = systemSmsGlue.findAllByPage(dataTablesUtils);
+        dataTablesUtils.setData(resultUtils.getData());
+        dataTablesUtils.setiTotalRecords(systemSmsGlue.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 }

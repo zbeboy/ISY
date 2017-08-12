@@ -21,6 +21,10 @@
     color: #C60;
 }
 
+.white {
+    color: white;
+}
+
 .space40 {
     margin-bottom: 40px;
 }
@@ -414,7 +418,6 @@ span.underline {
  3. Header
 -------------------------------------------------------- */
 .site-top {
-    /*background-image: url(/images/alpines-mountain.jpg);  -- 临时放弃*/
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -432,7 +435,6 @@ span.underline {
     top: 0;
     left: 0;
     z-index: 7;
-   /* background: rgba(0, 0, 0, 0.64); -- 临时放弃*/
 }
 
 .site-header {

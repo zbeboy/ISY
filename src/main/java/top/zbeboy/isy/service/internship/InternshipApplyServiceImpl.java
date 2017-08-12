@@ -2,17 +2,18 @@ package top.zbeboy.isy.service.internship;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.InternshipApplyDao;
 import top.zbeboy.isy.domain.tables.pojos.InternshipApply;
+import top.zbeboy.isy.domain.tables.pojos.InternshipType;
 import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
@@ -30,11 +31,10 @@ import static top.zbeboy.isy.domain.Tables.*;
 /**
  * Created by lenovo on 2016-11-29.
  */
+@Slf4j
 @Service("internshipApplyService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipApplyServiceImpl implements InternshipApplyService {
-
-    private final Logger log = LoggerFactory.getLogger(InternshipApplyServiceImpl.class);
 
     private final DSLContext create;
 
@@ -43,6 +43,24 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
 
     @Resource
     private InternshipReleaseScienceService internshipReleaseScienceService;
+
+    @Resource
+    private InternshipTypeService internshipTypeService;
+
+    @Resource
+    private InternshipCollegeService internshipCollegeService;
+
+    @Resource
+    private InternshipCompanyService internshipCompanyService;
+
+    @Resource
+    private GraduationPracticeCollegeService graduationPracticeCollegeService;
+
+    @Resource
+    private GraduationPracticeCompanyService graduationPracticeCompanyService;
+
+    @Resource
+    private GraduationPracticeUnifyService graduationPracticeUnifyService;
 
     @Autowired
     public InternshipApplyServiceImpl(DSLContext dslContext) {
@@ -94,6 +112,28 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
         create.deleteFrom(INTERNSHIP_APPLY)
                 .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_APPLY.STUDENT_ID.eq(studentId)))
                 .execute();
+    }
+
+    @Override
+    public void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId) {
+        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipTypeId);
+        switch (internshipType.getInternshipTypeName()) {
+            case Workbook.INTERNSHIP_COLLEGE_TYPE:
+                internshipCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.INTERNSHIP_COMPANY_TYPE:
+                internshipCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
+                graduationPracticeCollegeService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
+                graduationPracticeUnifyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+            case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
+                graduationPracticeCompanyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                break;
+        }
     }
 
     @Override
@@ -189,17 +229,8 @@ public class InternshipApplyServiceImpl implements InternshipApplyService {
         JSONObject search = JSON.parseObject(paginationUtils.getSearchParams());
         if (!ObjectUtils.isEmpty(search)) {
             String internshipTitle = StringUtils.trimWhitespace(search.getString("internshipTitle"));
-            String internshipReleaseId = StringUtils.trimWhitespace(search.getString("internshipReleaseId"));
             if (StringUtils.hasLength(internshipTitle)) {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
-            }
-
-            if (StringUtils.hasLength(internshipReleaseId)) {
-                if (!ObjectUtils.isEmpty(a)) {
-                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId));
-                } else {
-                    a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtils.likeAllParam(internshipTitle));
-                }
             }
         }
         return a;

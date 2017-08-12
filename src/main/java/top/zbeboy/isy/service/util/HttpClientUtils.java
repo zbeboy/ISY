@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * Created by zbeboy on 2017/3/7.
  */
+@Slf4j
 public class HttpClientUtils {
 
     /**
@@ -81,7 +83,7 @@ public class HttpClientUtils {
             EntityUtils.consume(entity2);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("HttpClient output error : {}", e);
         } finally {
             response.close();
         }

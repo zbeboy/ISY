@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">毕业答辩顺序 -
+                    <small>答辩</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="well">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" id="search_student_name" class="form-control input-sm"
+                                   placeholder="学生姓名"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="search_student_number" class="form-control input-sm"
+                                   placeholder="学生学号"/>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2px;">
+                        <div class="col-md-6">
+                            <select class="form-control input-sm" name="scoreTypeId" id="select_score">
+                                <option value="">请选择成绩</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control input-sm" name="defenseStatus" id="select_status">
+                                <option value="-1">请选择状态</option>
+                                <option value="0">未开始</option>
+                                <option value="1">进行中</option>
+                                <option value="2">已结束</option>
+                                <option value="3">缺席</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top:4px;">
+                        <button type="button" id="search" class="btn btn-outline btn-default"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline btn-default"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-outline btn-default btn-sm" id="refresh"><i
+                                class="fa fa-refresh"></i>刷新
+                        </button>
+                    </div>
+                </div>
+                <table class="tablesaw tablesaw-stack table table-striped" data-tablesaw-mode="stack"
+                       id="tablesawTable">
+                    <thead>
+                    <tr>
+                        <th scope="col">序号</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">学号</th>
+                        <th scope="col">电话</th>
+                        <th scope="col">题目</th>
+                        <th scope="col">日期</th>
+                        <th scope="col">时间</th>
+                        <th scope="col">指导教师</th>
+                        <th scope="col">成绩</th>
+                        <th scope="col">状态</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableData">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- 计时 modal -->
+        <div class="modal fade" id="timerModal" tabindex="-1" role="dialog" aria-labelledby="timerModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="timerModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="timerInput">时长(分钟)</label>
+                                <input class="form-control" type="number" id="timerInput" placeholder="时长">
+                                <input type="hidden" id="timerDefenseOrderId">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toTimer">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 状态 modal -->
+        <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="statusModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="statusForm">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="0" checked>
+                                    未开始
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="1">
+                                    进行中
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="2">
+                                    已结束
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="defenseStatus" value="3">
+                                    缺席
+                                </label>
+                            </div>
+                            <input type="hidden" id="statusDefenseOrderId" name="defenseOrderId">
+                            <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId"/>
+                            <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                   name="graduationDesignReleaseId"/>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toStatus">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 打分 modal -->
+        <div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gradeModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="gradeForm">
+                            <div class="form-group">
+                                <label for="grade">分数</label>
+                                <input class="form-control" type="number" name="grade" id="grade" placeholder="分数">
+                                <input type="hidden" id="gradeDefenseOrderId" name="defenseOrderId">
+                                <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId"/>
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toGrade">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 成绩 modal -->
+        <div class="modal fade" id="markModal" tabindex="-1" role="dialog" aria-labelledby="markModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="markModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="rate">
+                        </div>
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-md-6">
+                                平均分 :
+                            </div>
+                            <div class="col-md-6" id="aveScore">
+
+                            </div>
+                        </div>
+                        <form id="markForm" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label>成绩</label>
+                                <div id="scoreData">
+
+                                </div>
+                                <input type="hidden" id="markDefenseOrderId" name="defenseOrderId">
+                                <input type="hidden" th:value="${defenseGroupId}" name="defenseGroupId"/>
+                                <input type="hidden" th:value="${graduationDesignReleaseId}"
+                                       name="graduationDesignReleaseId"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="toMark">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script id="order-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <tr>
+                <td>{{sortNum}}</td>
+                <td>{{studentName}}</td>
+                <td>{{studentNumber}}</td>
+                <td>{{studentMobile}}</td>
+                <td>{{{subject}}}</td>
+                <td>{{defenseDate}}</td>
+                <td>{{defenseTime}}</td>
+                <td>{{staffName}}</td>
+                <td>{{scoreTypeName}}</td>
+                <td>{{defense_status}}</td>
+                <td>
+                    {{{operator}}}
+                </td>
+            </tr>
+            {{/each}}
+        </script>
+        <!--定义操作列按钮模板-->
+        <script id="operator_button" type="text/x-handlebars-template">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.defenseOrderId}}"
+                    data-student="{{this.sortNum}} _ {{this.studentName}}">{{this.name}}
+            </button>
+            {{/each}}
+        </script>
+        <script id="score-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{scoreTypeId}}">{{scoreTypeName}}</option>
+            {{/each}}
+        </script>
+        <script id="mark-score-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="radio">
+                <label>
+                    <input type="radio" name="scoreTypeId" class="markScore" value="{{scoreTypeId}}">
+                    {{scoreTypeName}}
+                </label>
+            </div>
+            {{/each}}
+        </script>
+        <script id="rate-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <div class="col-md-6">
+                {{realName}}
+            </div>
+            <div class="col-md-6">
+                {{grade}}
+            </div>
+            {{/each}}
+        </script>
+        <!-- /.footer -->
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'defenseGroupId': /*[[${defenseGroupId}]]*/ '',
+                'graduationDesignReleaseId': /*[[${graduationDesignReleaseId}]]*/ '',
+                'reorderIsSuper': /*[[${reorderIsSuper}]]*/ false,
+                'reorderIsLeader': /*[[${reorderIsLeader}]]*/ false,
+                'reorderIsSecretary': /*[[${reorderIsSecretary}]]*/ false,
+                'reorderIsMember': /*[[${reorderIsMember}]]*/ false
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/graduate/design/reorder/design_reorder_order.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

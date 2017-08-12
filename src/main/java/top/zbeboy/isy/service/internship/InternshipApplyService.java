@@ -73,6 +73,15 @@ public interface InternshipApplyService {
     void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
+     * 删除实习相关记录
+     *
+     * @param internshipTypeId    实习类型id
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId);
+
+    /**
      * 分页查询全部
      *
      * @param paginationUtils     分页工具

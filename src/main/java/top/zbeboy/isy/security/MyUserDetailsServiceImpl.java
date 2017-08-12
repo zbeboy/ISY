@@ -1,7 +1,6 @@
 package top.zbeboy.isy.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,8 +12,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.service.system.AuthoritiesService;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.system.AuthoritiesService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,10 +27,9 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
+@Slf4j
 @Service("myUserDetailsService")
 public class MyUserDetailsServiceImpl implements UserDetailsService {
-
-    private final Logger log = LoggerFactory.getLogger(MyUserDetailsServiceImpl.class);
 
     @Autowired
     private UsersService usersService;

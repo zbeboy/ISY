@@ -36,7 +36,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          我的实习参数id
          */
         var myParamId = {
-            internshipTitle: '#my_search_internship_title',
+            internshipTitle: '#my_search_internship_title'
         };
 
         /*
@@ -352,8 +352,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.myApplyLook', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            $.address.value(ajax_url.my_internship_look_data_url + "?id=" + id + "&studentId=" + studentId);
+            $.address.value(ajax_url.my_internship_look_data_url + "?id=" + id);
         });
 
         /*
@@ -361,8 +360,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.recallApply', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            recall(id, studentId);
+            recall(id);
         });
 
         /*
@@ -370,8 +368,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.basisApply', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            showStateModal(4, id, studentId, '基础信息变更申请');
+            showStateModal(4, id, '基础信息变更申请');
         });
 
         /*
@@ -379,8 +376,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.firmApply', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            showStateModal(6, id, studentId, '单位信息变更申请');
+            showStateModal(6, id, '单位信息变更申请');
         });
 
         /*
@@ -388,8 +384,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(myTableData).delegate('.uploadFile', "click", function () {
             var id = $(this).attr('data-id');
-            var studentId = $(this).attr('data-student');
-            showUploadModal(id, studentId);
+            showUploadModal(id);
         });
 
         /*
@@ -401,18 +396,44 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         /*
-         下载电子资料
+         删除电子资料
          */
         $(myTableData).delegate('.deleteFile', "click", function () {
             var id = $(this).attr('data-id');
-            var student = $(this).attr('data-student');
-            $.post(web_path + ajax_url.delete_file, {id: id, studentId: student}, function (data) {
+            var msg = Messenger().post({
+                message: "确定删除吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            deleteFile(id);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        });
+
+        /**
+         * 发送删除ajax
+         * @param id
+         */
+        function deleteFile(id) {
+            $.post(web_path + ajax_url.delete_file, {id: id}, function (data) {
                 if (data.state) {
                     Messenger().post({
                         message: data.msg,
                         type: 'success',
                         showCloseButton: true
                     });
+                    initMyData();
                 } else {
                     Messenger().post({
                         message: data.msg,
@@ -421,16 +442,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                     });
                 }
             });
-        });
+        }
 
         /**
          * 展开上传文件modal
          * @param id
-         * @param studentId
          */
-        function showUploadModal(id, studentId) {
+        function showUploadModal(id) {
             $('#uploadInternshipReleaseId').val(id);
-            $('#uploadStudentId').val(studentId);
             $('#uploadModal').modal('show');
         }
 
@@ -439,7 +458,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         function closeUploadModal() {
             $('#uploadInternshipReleaseId').val('');
-            $('#uploadStudentId').val('');
             $('#fileName').text('');
             $('#fileSize').text('');
             $('#uploadModal').modal('hide');
@@ -448,9 +466,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 撤消询问
          * @param id
-         * @param studentId
          */
-        function recall(id, studentId) {
+        function recall(id) {
             var msg;
             msg = Messenger().post({
                 message: "确定撤消申请吗?",
@@ -460,7 +477,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            sendRecallAjax(id, studentId);
+                            sendRecallAjax(id);
                         }
                     },
                     cancel: {
@@ -476,10 +493,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         /**
          * 撤消ajax
          * @param id
-         * @param studentId
          */
-        function sendRecallAjax(id, studentId) {
-            $.post(web_path + ajax_url.recall_apply_url, {id: id, studentId: studentId}, function (data) {
+        function sendRecallAjax(id) {
+            $.post(web_path + ajax_url.recall_apply_url, {id: id}, function (data) {
                 if (data.state) {
                     initMyData();
                 } else {
@@ -496,13 +512,11 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 展示变更模态框
          * @param state
          * @param internshipReleaseId
-         * @param studentId
          * @param title
          */
-        function showStateModal(state, internshipReleaseId, studentId, title) {
+        function showStateModal(state, internshipReleaseId, title) {
             $('#applyState').val(state);
             $('#applyInternshipReleaseId').val(internshipReleaseId);
-            $('#applyStudentId').val(studentId);
             $('#stateModalLabel').text(title);
             $('#stateModal').modal('show');
         }
@@ -525,7 +539,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         function hideStateModal() {
             $('#applyState').val('');
             $('#applyInternshipReleaseId').val('');
-            $('#applyStudentId').val('');
             $('#reason').val('');
             $('#stateModalLabel').text('');
             validCleanDom('#valid_reason', '#reason_error_msg');
@@ -788,6 +801,10 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             formAcceptCharset: 'utf-8',
             autoUpload: false,// 关闭自动上传
             maxNumberOfFiles: 1,
+            messages: {
+                maxNumberOfFiles: '最大支持上传1个文件',
+                maxFileSize: '单文件上传仅允许100MB大小'
+            },
             add: function (e, data) {
                 $('#fileName').text(data.files[0].name);
                 $('#fileSize').text(data.files[0].size);
@@ -796,10 +813,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             submit: function (e, data) {
                 if (validUpload()) {
                     var internshipReleaseId = $('#uploadInternshipReleaseId').val();
-                    var studentId = $('#uploadStudentId').val();
                     data.formData = {
-                        'internshipReleaseId': internshipReleaseId,
-                        'studentId': studentId
+                        'internshipReleaseId': internshipReleaseId
                     };
                 }
             },
@@ -807,13 +822,27 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 initMyData();// 刷新我的申请
                 closeUploadModal();// 清空信息
             }
+        }).on('fileuploadsubmit', function(evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function(data) {
+                isOk = false;
+                Messenger().post({
+                    message: '上传失败: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
         });
 
         function validUpload() {
             var internshipReleaseId = $('#uploadInternshipReleaseId').val();
-            var studentId = $('#uploadStudentId').val();
             var fileName = $('#fileName').text();
-            if (internshipReleaseId !== '' && Number(studentId) > 0) {
+            if (internshipReleaseId !== '') {
                 if (fileName !== '') {
                     return true;
                 } else {

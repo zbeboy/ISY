@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">教室数据 -
+                    <small>添加</small>
+                    <small class="pull-right">
+                        <button type="button" class="btn btn-primary" id="page_back">返回</button>
+                    </small>
+                </h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form role="form" id="add_form">
+                    <div class="form-group" id="valid_school" sec:authorize="hasRole('ROLE_SYSTEM')">
+                        <select class="form-control" name="schoolId" id="select_school">
+                            <option>请选择学校</option>
+                        </select>
+                        <p class="text-danger hidden" id="school_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_college" sec:authorize="hasRole('ROLE_SYSTEM')">
+                        <select class="form-control" name="collegeId" id="select_college">
+                            <option>请选择院</option>
+                        </select>
+                        <p class="text-danger hidden" id="college_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_building">
+                        <select class="form-control" name="buildingId" id="select_building">
+                            <option>请选择楼</option>
+                        </select>
+                        <p class="text-danger hidden" id="building_error_msg"></p>
+                    </div>
+                    <div class="form-group" id="valid_building_code">
+                        <label>教室</label>
+                        <input class="form-control" name="buildingCode" id="buildingCode" maxlength="10" placeholder="教室"/>
+                        <p class="text-danger hidden" id="building_code_error_msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>状态</label>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="schoolroomIsDel" value="1"/>注销
+                            </label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="save" class="btn btn-default">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <footer class="footer" th:include="footer::footer">
+            <p class="text-muted">&copy; Company 2016</p>
+        </footer>
+        <!-- /.footer -->
+        <script id="school-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{school_value}}">{{school_name}}</option>
+            {{/each}}
+        </script>
+
+        <script id="college-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{college_value}}">{{college_name}}</option>
+            {{/each}}
+        </script>
+
+        <script id="building-template" type="text/x-handlebars-template">
+            {{#each listResult}}
+            <option value="{{building_value}}">{{building_name}}</option>
+            {{/each}}
+        </script>
+        <script th:inline="javascript">
+            /*页面参数*/
+            var init_page_param = {
+                'currentUserRoleName': /*[[${currentUserRoleName}]]*/ '',
+                'collegeId': /*[[${collegeId}]]*/ 0
+            };
+        </script>
+        <input type="hidden" class="dy_script" value="/js/data/schoolroom/schoolroom_add.js"/>
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+</body>
+
+</html>

@@ -28,6 +28,6 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
         registry.addEndpoint("/remind").withSockJS()
                 .setStreamBytesLimit(512 * 1024)
                 .setHttpMessageCacheSize(1000)
-                .setDisconnectDelay(30 * 1_000);
+                .setDisconnectDelay(30 * 1_000L);
     }
 }

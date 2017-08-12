@@ -1,9 +1,8 @@
 package top.zbeboy.isy.web;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
@@ -24,10 +23,9 @@ import java.util.Map;
 /**
  * Created by lenovo on 2016-12-24.
  */
+@Slf4j
 @Controller
 public class MessageController {
-
-    private final Logger log = LoggerFactory.getLogger(MessageController.class);
 
     @Resource
     private SystemAlertService systemAlertService;
@@ -74,6 +72,6 @@ public class MessageController {
         }
         data.put("messages", systemMessageBeens);
         data.put("messagesCount", systemMessageService.countAllForShow(username, false));
-        return new AjaxUtils().success().msg("获取数据成功").mapData(data);
+        return AjaxUtils.of().success().msg("获取数据成功").mapData(data);
     }
 }
