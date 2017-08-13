@@ -77,6 +77,13 @@ public class GraduationDesignPresubjectDao extends DAOImpl<GraduationDesignPresu
     }
 
     /**
+     * Fetch a unique record that has <code>presubject_title = value</code>
+     */
+    public top.zbeboy.isy.domain.tables.pojos.GraduationDesignPresubject fetchOneByPresubjectTitle(String value) {
+        return fetchOne(GraduationDesignPresubject.GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE, value);
+    }
+
+    /**
      * Fetch records that have <code>presubject_plan IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignPresubject> fetchByPresubjectPlan(String... values) {

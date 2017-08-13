@@ -51,7 +51,7 @@ public class GraduationDesignManifestController {
     private GraduationDesignTeacherService graduationDesignTeacherService;
 
     @Resource
-    private GraduationDesignDeclareService graduationDesignDeclareService;
+    private GraduationDesignManifestService graduationDesignManifestService;
 
     @Resource
     private GraduationDesignDeclareDataService graduationDesignDeclareDataService;
@@ -153,10 +153,10 @@ public class GraduationDesignManifestController {
             int staffId = NumberUtils.toInt(request.getParameter("staffId"));
             otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
             otherCondition.setStaffId(staffId);
-            List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignDeclareService.findAllManifestByPage(dataTablesUtils, otherCondition);
+            List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignManifestService.findAllManifestByPage(dataTablesUtils, otherCondition);
             dataTablesUtils.setData(graduationDesignDeclareBeens);
-            dataTablesUtils.setiTotalRecords(graduationDesignDeclareService.countAllManifest(otherCondition));
-            dataTablesUtils.setiTotalDisplayRecords(graduationDesignDeclareService.countManifestByCondition(dataTablesUtils, otherCondition));
+            dataTablesUtils.setiTotalRecords(graduationDesignManifestService.countAllManifest(otherCondition));
+            dataTablesUtils.setiTotalDisplayRecords(graduationDesignManifestService.countManifestByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
     }
@@ -190,7 +190,7 @@ public class GraduationDesignManifestController {
                         GraduationDesignDeclareBean otherCondition = new GraduationDesignDeclareBean();
                         otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
                         otherCondition.setStaffId(staffId);
-                        List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignDeclareService.exportManifestData(dataTablesUtils, otherCondition);
+                        List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignManifestService.exportManifestData(dataTablesUtils, otherCondition);
                         if (org.apache.commons.lang3.StringUtils.isNotBlank(exportBean.getFileName())) {
                             fileName = exportBean.getFileName();
                         }

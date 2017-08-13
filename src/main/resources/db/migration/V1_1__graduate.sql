@@ -79,7 +79,7 @@ CREATE TABLE graduation_design_plan (
   scheduling                   VARCHAR(100) NOT NULL,
   supervision_time             VARCHAR(100) NOT NULL,
   guide_content                VARCHAR(150) NOT NULL,
-  note                         VARCHAR(100) NOT NULL,
+  note                         VARCHAR(100),
   add_time                     DATETIME     NOT NULL,
   graduation_design_teacher_id VARCHAR(64)  NOT NULL,
   schoolroom_id                INT          NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE graduation_design_plan (
 
 CREATE TABLE graduation_design_presubject (
   graduation_design_presubject_id VARCHAR(64) PRIMARY KEY,
-  presubject_title                VARCHAR(100) NOT NULL,
+  presubject_title                VARCHAR(100) NOT NULL UNIQUE,
   presubject_plan                 TEXT         NOT NULL,
   update_time                     DATETIME     NOT NULL,
   public_level                    INT          NOT NULL,

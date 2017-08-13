@@ -333,10 +333,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
     $(paramId.note).blur(function () {
         initParam();
         var note = param.note;
-        if (note.length <= 0 || note.length > 100) {
-            validErrorDom(validId.note, errorMsgId.note, '备注100个字符以内');
+        if (note.length > 0) {
+            if (note.length > 100) {
+                validErrorDom(validId.note, errorMsgId.note, '备注100个字符以内');
+            } else {
+                validSuccessDom(validId.note, errorMsgId.note);
+            }
         } else {
-            validSuccessDom(validId.note, errorMsgId.note);
+            validCleanDom(validId.note, errorMsgId.note);
         }
     });
 
@@ -540,12 +544,16 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
 
     function validNote() {
         var note = param.note;
-        if (note.length <= 0 || note.length > 100) {
-            Messenger().post({
-                message: '备注100个字符以内',
-                type: 'error',
-                showCloseButton: true
-            });
+        if (note.length > 0) {
+            if (note.length > 100) {
+                Messenger().post({
+                    message: '备注100个字符以内',
+                    type: 'error',
+                    showCloseButton: true
+                });
+            } else {
+                sendAjax();
+            }
         } else {
             sendAjax();
         }

@@ -9,6 +9,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          */
         var ajax_url = {
             save: '/web/graduate/design/subject/my/save',
+            valid_title: '/web/graduate/design/subject/valid/title',
             nav: '/web/menu/graduate/design/subject'
         };
 
@@ -119,7 +120,13 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
             if (presubjectTitle.length <= 0 || presubjectTitle.length > 100) {
                 validErrorDom(validId.presubjectTitle, errorMsgId.presubjectTitle, '题目100个字符以内');
             } else {
-                validSuccessDom(validId.presubjectTitle, errorMsgId.presubjectTitle);
+                $.post(web_path + ajax_url.valid_title, {presubjectTitle: presubjectTitle}, function (data) {
+                    if (data.state) {
+                        validSuccessDom(validId.presubjectTitle, errorMsgId.presubjectTitle);
+                    } else {
+                        validErrorDom(validId.presubjectTitle, errorMsgId.presubjectTitle, data.msg);
+                    }
+                });
             }
         });
 
@@ -176,7 +183,17 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
                     showCloseButton: true
                 });
             } else {
-                validPresubjectPlan();
+                $.post(web_path + ajax_url.valid_title, {presubjectTitle: presubjectTitle}, function (data) {
+                    if (data.state) {
+                        validPresubjectPlan();
+                    } else {
+                        Messenger().post({
+                            message: data.msg,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
+                });
             }
         }
 

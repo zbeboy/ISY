@@ -25,7 +25,6 @@ public class GraduationDesignProjectUpdateVo {
     @NotNull
     @Size(max = 150)
     private String guideContent;
-    @NotNull
     @Size(max = 100)
     private String note;
     @NotNull

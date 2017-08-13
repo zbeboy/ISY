@@ -32,7 +32,7 @@ import top.zbeboy.isy.domain.tables.GraduationDesignPlan;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlanRecord extends UpdatableRecordImpl<GraduationDesignPlanRecord> implements Record8<String, String, String, String, String, Timestamp, String, Integer> {
 
-    private static final long serialVersionUID = 363491184;
+    private static final long serialVersionUID = -1910179774;
 
     /**
      * Setter for <code>isy.graduation_design_plan.graduation_design_plan_id</code>.
@@ -108,7 +108,6 @@ public class GraduationDesignPlanRecord extends UpdatableRecordImpl<GraduationDe
     /**
      * Getter for <code>isy.graduation_design_plan.note</code>.
      */
-    @NotNull
     @Size(max = 100)
     public String getNote() {
         return (String) get(4);

@@ -18,6 +18,7 @@ import top.zbeboy.isy.web.bean.graduate.design.subject.GraduationDesignPresubjec
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.*;
@@ -43,6 +44,11 @@ public class GraduationDesignPresubjectServiceImpl extends DataTablesPlugin<Grad
     @Override
     public GraduationDesignPresubject findById(String id) {
         return graduationDesignPresubjectDao.findById(id);
+    }
+
+    @Override
+    public List<GraduationDesignPresubject> findByPresubjectTitle(String presubjectTitle) {
+        return graduationDesignPresubjectDao.fetchByPresubjectTitle(presubjectTitle);
     }
 
     @Override

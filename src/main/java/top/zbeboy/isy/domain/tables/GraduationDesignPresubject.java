@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPresubject extends TableImpl<GraduationDesignPresubjectRecord> {
 
-    private static final long serialVersionUID = 898811086;
+    private static final long serialVersionUID = -1546740212;
 
     /**
      * The reference instance of <code>isy.graduation_design_presubject</code>
@@ -129,7 +129,7 @@ public class GraduationDesignPresubject extends TableImpl<GraduationDesignPresub
      */
     @Override
     public List<UniqueKey<GraduationDesignPresubjectRecord>> getKeys() {
-        return Arrays.<UniqueKey<GraduationDesignPresubjectRecord>>asList(Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_PRIMARY, Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_GRADUATION_DESIGN_RELEASE_ID);
+        return Arrays.<UniqueKey<GraduationDesignPresubjectRecord>>asList(Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_PRIMARY, Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_PRESUBJECT_TITLE, Keys.KEY_GRADUATION_DESIGN_PRESUBJECT_GRADUATION_DESIGN_RELEASE_ID);
     }
 
     /**

@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan implements Serializable {
 
-    private static final long serialVersionUID = -740033674;
+    private static final long serialVersionUID = 1102948506;
 
     private String    graduationDesignPlanId;
     private String    scheduling;
@@ -109,7 +109,6 @@ public class GraduationDesignPlan implements Serializable {
         this.guideContent = guideContent;
     }
 
-    @NotNull
     @Size(max = 100)
     public String getNote() {
         return this.note;

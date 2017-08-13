@@ -11,10 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
@@ -740,6 +737,25 @@ public class GraduationDesignSubjectController {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
+    }
+
+    /**
+     * 检验毕业设计题目
+     *
+     * @param presubjectTitle 题目
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/valid/title", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils validTitle(@RequestParam("presubjectTitle") String presubjectTitle) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        List<GraduationDesignPresubject> graduationDesignPresubjects = graduationDesignPresubjectService.findByPresubjectTitle(StringUtils.trimAllWhitespace(presubjectTitle));
+        if (!ObjectUtils.isEmpty(graduationDesignPresubjects) && graduationDesignPresubjects.size() > 0) {
+            ajaxUtils.fail().msg("该题目已被使用");
+        } else {
+            ajaxUtils.success().msg("该题目未被使用");
+        }
+        return ajaxUtils;
     }
 
     /**

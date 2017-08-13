@@ -178,12 +178,11 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
     @Override
     public List<GraduationDesignDeclareBean> exportData(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean) {
         List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = new ArrayList<>();
-        Byte b = 1;
         Result<Record> records;
         Condition a = searchCondition(dataTablesUtils);
         a = otherCondition(a, graduationDesignDeclareBean);
         if (ObjectUtils.isEmpty(a)) {
-            SelectConditionStep<Record> selectConditionStep = create.select()
+            SelectJoinStep<Record> selectJoinStep = create.select()
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(GRADUATION_DESIGN_TUTOR)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
@@ -202,9 +201,8 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .leftJoin(GRADUATION_DESIGN_SUBJECT_TYPE)
                     .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
                     .leftJoin(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .where(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY.eq(b));
-            records = selectConditionStep.fetch();
+                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID));
+            records = selectJoinStep.fetch();
         } else {
             SelectConditionStep<Record> selectConditionStep = create.select()
                     .from(GRADUATION_DESIGN_TEACHER)
@@ -226,7 +224,7 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
                     .leftJoin(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
                     .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .where(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY.eq(b).and(a));
+                    .where(a);
             records = selectConditionStep.fetch();
         }
         buildData(records, graduationDesignDeclareBeens);
@@ -262,40 +260,6 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
             tempGraduationDesignDeclareBean.setPresubjectTitle(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
             tempGraduationDesignDeclareBean.setPublicLevel(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PUBLIC_LEVEL));
             tempGraduationDesignDeclareBean.setGraduationDesignReleaseId(r.getValue(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID));
-            graduationDesignDeclareBeens.add(tempGraduationDesignDeclareBean);
-        }
-    }
-
-    private void buildManifestData(Result<Record> records, List<GraduationDesignDeclareBean> graduationDesignDeclareBeens) {
-        for (Record r : records) {
-            GraduationDesignDeclareBean tempGraduationDesignDeclareBean = new GraduationDesignDeclareBean();
-            tempGraduationDesignDeclareBean.setSubjectTypeId(r.getValue(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID));
-            tempGraduationDesignDeclareBean.setSubjectTypeName(r.getValue(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME));
-            tempGraduationDesignDeclareBean.setOriginTypeId(r.getValue(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID));
-            tempGraduationDesignDeclareBean.setOriginTypeName(r.getValue(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_NAME));
-            tempGraduationDesignDeclareBean.setIsNewSubject(r.getValue(GRADUATION_DESIGN_DECLARE.IS_NEW_SUBJECT));
-            tempGraduationDesignDeclareBean.setIsNewTeacherMake(r.getValue(GRADUATION_DESIGN_DECLARE.IS_NEW_TEACHER_MAKE));
-            tempGraduationDesignDeclareBean.setIsNewSubjectMake(r.getValue(GRADUATION_DESIGN_DECLARE.IS_NEW_SUBJECT_MAKE));
-            tempGraduationDesignDeclareBean.setIsOldSubjectChange(r.getValue(GRADUATION_DESIGN_DECLARE.IS_OLD_SUBJECT_CHANGE));
-            tempGraduationDesignDeclareBean.setOldSubjectUsesTimes(r.getValue(GRADUATION_DESIGN_DECLARE.OLD_SUBJECT_USES_TIMES));
-            tempGraduationDesignDeclareBean.setPlanPeriod(r.getValue(GRADUATION_DESIGN_DECLARE.PLAN_PERIOD));
-            tempGraduationDesignDeclareBean.setAssistantTeacher(r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER));
-            tempGraduationDesignDeclareBean.setAssistantTeacherAcademic(r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC));
-            tempGraduationDesignDeclareBean.setGuideTimes(r.getValue(GRADUATION_DESIGN_DECLARE.GUIDE_TIMES));
-            tempGraduationDesignDeclareBean.setGuidePeoples(r.getValue(GRADUATION_DESIGN_DECLARE.GUIDE_PEOPLES));
-            tempGraduationDesignDeclareBean.setIsOkApply(r.getValue(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY));
-            tempGraduationDesignDeclareBean.setGraduationDesignPresubjectId(r.getValue(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID));
-            tempGraduationDesignDeclareBean.setStaffId(r.getValue(STAFF.STAFF_ID));
-            tempGraduationDesignDeclareBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
-            tempGraduationDesignDeclareBean.setAcademicTitleName(r.getValue(ACADEMIC_TITLE.ACADEMIC_TITLE_NAME));
-            tempGraduationDesignDeclareBean.setStudentId(r.getValue(STUDENT.STUDENT_ID));
-            tempGraduationDesignDeclareBean.setStudentName(r.getValue(USERS.as("S").REAL_NAME));
-            tempGraduationDesignDeclareBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
-            tempGraduationDesignDeclareBean.setPresubjectTitle(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
-            tempGraduationDesignDeclareBean.setPublicLevel(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PUBLIC_LEVEL));
-            tempGraduationDesignDeclareBean.setGraduationDesignReleaseId(r.getValue(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID));
-            tempGraduationDesignDeclareBean.setScoreTypeName(r.getValue(SCORE_TYPE.SCORE_TYPE_NAME));
-            tempGraduationDesignDeclareBean.setDefenseOrderId(r.getValue(DEFENSE_ORDER.DEFENSE_ORDER_ID));
             graduationDesignDeclareBeens.add(tempGraduationDesignDeclareBean);
         }
     }
@@ -382,205 +346,6 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                 .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
                 .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId).and(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY.ne(isOkApply).or(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY.isNull())).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
                 .fetch();
-    }
-
-    @Override
-    public List<GraduationDesignDeclareBean> findAllManifestByPage(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean) {
-        List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = new ArrayList<>();
-        Result<Record> records;
-        Condition a = searchCondition(dataTablesUtils);
-        a = otherCondition(a, graduationDesignDeclareBean);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record> selectJoinStep = create.select()
-                    .from(DEFENSE_ORDER)
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(DEFENSE_GROUP_MEMBER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(ACADEMIC_TITLE)
-                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID));
-            sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
-            pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
-            records = selectJoinStep.fetch();
-        } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(DEFENSE_ORDER)
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(DEFENSE_GROUP_MEMBER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(ACADEMIC_TITLE)
-                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .where(a);
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
-        }
-        buildManifestData(records, graduationDesignDeclareBeens);
-        return graduationDesignDeclareBeens;
-    }
-
-    @Override
-    public int countAllManifest(GraduationDesignDeclareBean graduationDesignDeclareBean) {
-        Record1<Integer> count;
-        Condition a = otherCondition(null, graduationDesignDeclareBean);
-        if (ObjectUtils.isEmpty(a)) {
-            count = create.selectCount()
-                    .from(DEFENSE_ORDER)
-                    .fetchOne();
-        } else {
-            count = create.selectCount()
-                    .from(DEFENSE_ORDER)
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(DEFENSE_GROUP_MEMBER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(ACADEMIC_TITLE)
-                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .where(a)
-                    .fetchOne();
-        }
-        return count.value1();
-    }
-
-    @Override
-    public int countManifestByCondition(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean) {
-        Record1<Integer> count;
-        Condition a = searchCondition(dataTablesUtils);
-        a = otherCondition(a, graduationDesignDeclareBean);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
-                    .from(GRADUATION_DESIGN_TEACHER);
-            count = selectJoinStep.fetchOne();
-        } else {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
-                    .from(DEFENSE_ORDER)
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(DEFENSE_GROUP_MEMBER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(ACADEMIC_TITLE)
-                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .where(a);
-            count = selectConditionStep.fetchOne();
-        }
-        return count.value1();
-    }
-
-    @Override
-    public List<GraduationDesignDeclareBean> exportManifestData(DataTablesUtils<GraduationDesignDeclareBean> dataTablesUtils, GraduationDesignDeclareBean graduationDesignDeclareBean) {
-        List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = new ArrayList<>();
-        Result<Record> records;
-        Condition a = searchCondition(dataTablesUtils);
-        a = otherCondition(a, graduationDesignDeclareBean);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record> selectJoinStep = create.select()
-                    .from(DEFENSE_ORDER)
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(DEFENSE_GROUP_MEMBER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(ACADEMIC_TITLE)
-                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID));
-            records = selectJoinStep.fetch();
-        } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(DEFENSE_ORDER)
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(DEFENSE_GROUP_MEMBER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(GRADUATION_DESIGN_TEACHER)
-                    .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(DEFENSE_ORDER.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(ACADEMIC_TITLE)
-                    .on(STAFF.STAFF_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .join(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .where(a);
-            records = selectConditionStep.fetch();
-        }
-        buildManifestData(records, graduationDesignDeclareBeens);
-        return graduationDesignDeclareBeens;
     }
 
     /**
@@ -897,17 +662,6 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc();
                 } else {
                     sortField[0] = GRADUATION_DESIGN_DECLARE.IS_OK_APPLY.desc();
-                    sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc();
-                }
-            }
-
-            if ("score_type_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
-                if (isAsc) {
-                    sortField[0] = SCORE_TYPE.SCORE_TYPE_ID.asc();
-                    sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc();
-                } else {
-                    sortField[0] = SCORE_TYPE.SCORE_TYPE_ID.desc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc();
                 }
             }

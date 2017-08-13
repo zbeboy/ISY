@@ -7,6 +7,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 import top.zbeboy.isy.web.bean.graduate.design.subject.GraduationDesignPresubjectBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,6 +22,14 @@ public interface GraduationDesignPresubjectService {
      * @return 数据
      */
     GraduationDesignPresubject findById(String id);
+
+    /**
+     * 通过题目查询
+     *
+     * @param presubjectTitle 题目
+     * @return 数据
+     */
+    List<GraduationDesignPresubject> findByPresubjectTitle(String presubjectTitle);
 
     /**
      * 根据主键关联查询

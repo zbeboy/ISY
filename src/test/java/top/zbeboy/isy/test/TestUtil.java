@@ -29,9 +29,9 @@ public class TestUtil extends TestCase {
 
     public void testUUIDUtils() {
         System.out.println("::" + getUUID());
-        String[] ss = getUUID(10);
+        String[] ss = getUUID(20);
         for (String s : ss) {
-            System.out.println(s.length());
+            System.out.println(s);
         }
     }
 }

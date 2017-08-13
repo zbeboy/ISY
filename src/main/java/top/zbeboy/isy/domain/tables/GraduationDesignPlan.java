@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignPlanRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> {
 
-    private static final long serialVersionUID = -1202864372;
+    private static final long serialVersionUID = -692214261;
 
     /**
      * The reference instance of <code>isy.graduation_design_plan</code>
@@ -74,7 +74,7 @@ public class GraduationDesignPlan extends TableImpl<GraduationDesignPlanRecord> 
     /**
      * The column <code>isy.graduation_design_plan.note</code>.
      */
-    public final TableField<GraduationDesignPlanRecord, String> NOTE = createField("note", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+    public final TableField<GraduationDesignPlanRecord, String> NOTE = createField("note", org.jooq.impl.SQLDataType.VARCHAR.length(100), this, "");
 
     /**
      * The column <code>isy.graduation_design_plan.add_time</code>.
