@@ -1049,6 +1049,8 @@ INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', 'ac1cbf2870004403adb0d20df5a457e3');
 
 INSERT INTO role_application (role_id, application_id)
+VALUES ('cd5012abe87246f3ae21c86600c6e12a', 'e3d45ba55e48462cb47595ce01bba60c');
+INSERT INTO role_application (role_id, application_id)
 VALUES ('cd5012abe87246f3ae21c86600c6e12a', '82b1a7e5bd6c46a3a6a9957f63717d01');
 
 INSERT INTO political_landscape (political_landscape_name) VALUES ('群众');
