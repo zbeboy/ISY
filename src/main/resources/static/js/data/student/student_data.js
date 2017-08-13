@@ -227,6 +227,18 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
     });
 
     /**
+     * 获取分页信息
+     * @returns {number}
+     */
+    function getPassPage() {
+        var page = 0;
+        if (passTable) {
+            page = passTable.page();
+        }
+        return page;
+    }
+
+    /**
      * init pass tab table.
      */
     function pass() {
@@ -269,6 +281,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     // 添加额外的参数传给服务器
                     var searchParam = getPassParam();
                     d.extra_search = JSON.stringify(searchParam);
+                    d.extra_page = getPassPage();
                 }
             },
             "columns": [
@@ -809,6 +822,18 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         waitTable.ajax.reload();
     });
 
+    /**
+     * 获取分页信息
+     * @returns {number}
+     */
+    function getWaitPage() {
+        var page = 0;
+        if (waitTable) {
+            page = waitTable.page();
+        }
+        return page;
+    }
+
     function wait() {
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -849,6 +874,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     // 添加额外的参数传给服务器
                     var searchParam = getWaitParam();
                     d.extra_search = JSON.stringify(searchParam);
+                    d.extra_page = getWaitPage();
                 }
             },
             "columns": [
