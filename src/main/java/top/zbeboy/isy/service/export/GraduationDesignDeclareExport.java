@@ -379,7 +379,7 @@ public class GraduationDesignDeclareExport extends ExportUtils<GraduationDesignD
         cell.setCellStyle(style);
 
         cell = row.createCell(8);
-        cell.setCellValue(graduationDesignDeclareBean.getOldSubjectUsesTimes());
+        cell.setCellValue(isNull(graduationDesignDeclareBean.getOldSubjectUsesTimes()));
         cell.setCellStyle(style);
 
         cell = row.createCell(9);
@@ -403,7 +403,7 @@ public class GraduationDesignDeclareExport extends ExportUtils<GraduationDesignD
         cell.setCellStyle(style);
 
         cell = row.createCell(14);
-        cell.setCellValue(graduationDesignDeclareBean.getGuideTimes());
+        cell.setCellValue(isNull(graduationDesignDeclareBean.getGuideTimes()));
         cell.setCellStyle(style);
 
         cell = row.createCell(15);
@@ -419,10 +419,14 @@ public class GraduationDesignDeclareExport extends ExportUtils<GraduationDesignD
         cell.setCellStyle(style);
     }
 
-    public String dealByte(Byte b) {
+    private String dealByte(Byte b) {
         if (b != null && b == 1) {
             return "是";
         }
         return "否";
+    }
+
+    private Integer isNull(Integer param) {
+        return param != null ? param : 0;
     }
 }
