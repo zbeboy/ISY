@@ -54,7 +54,7 @@ require(["jquery", "messenger", "tablesaw"], function ($) {
     $('#syncUsers').click(function () {
         var msg;
         msg = Messenger().post({
-            message: "确定同步班级数据吗?",
+            message: "确定同步用户数据吗?",
             actions: {
                 retry: {
                     label: '确定',
@@ -80,7 +80,7 @@ require(["jquery", "messenger", "tablesaw"], function ($) {
     $('#syncStudent').click(function () {
         var msg;
         msg = Messenger().post({
-            message: "确定同步班级数据吗?",
+            message: "确定同步学生数据吗?",
             actions: {
                 retry: {
                     label: '确定',
@@ -106,7 +106,7 @@ require(["jquery", "messenger", "tablesaw"], function ($) {
     $('#syncStaff').click(function () {
         var msg;
         msg = Messenger().post({
-            message: "确定同步班级数据吗?",
+            message: "确定同步教职工数据吗?",
             actions: {
                 retry: {
                     label: '确定',
@@ -132,7 +132,7 @@ require(["jquery", "messenger", "tablesaw"], function ($) {
     $('#cleanSystemLog').click(function () {
         var msg;
         msg = Messenger().post({
-            message: "确定同步班级数据吗?",
+            message: "确定清空系统日志吗?",
             actions: {
                 retry: {
                     label: '确定',
@@ -158,7 +158,7 @@ require(["jquery", "messenger", "tablesaw"], function ($) {
     $('#cleanMailbox').click(function () {
         var msg;
         msg = Messenger().post({
-            message: "确定同步班级数据吗?",
+            message: "确定清空邮件日志吗?",
             actions: {
                 retry: {
                     label: '确定',
@@ -184,7 +184,7 @@ require(["jquery", "messenger", "tablesaw"], function ($) {
     $('#cleanSms').click(function () {
         var msg;
         msg = Messenger().post({
-            message: "确定同步班级数据吗?",
+            message: "确定清空短信日志吗?",
             actions: {
                 retry: {
                     label: '确定',
