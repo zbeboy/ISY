@@ -957,8 +957,6 @@ VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'c76085dd8803486c80545145bfd0b4d2');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '27af0835aaa64ed583b7abf0f26db20d');
 INSERT INTO role_application (role_id, application_id)
-VALUES ('220f8f10263c4a38bc1f6b7c42759594', '82b1a7e5bd6c46a3a6a9957f63717d01');
-INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '2f05225d873643c58bc93dd881a782aa');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '3b0045bc766e49b9b68165e6604f340f');
@@ -1049,6 +1047,9 @@ INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', '1dd10c63d4584559bb444fa6f3e4a40e');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', 'ac1cbf2870004403adb0d20df5a457e3');
+
+INSERT INTO role_application (role_id, application_id)
+VALUES ('cd5012abe87246f3ae21c86600c6e12a', '82b1a7e5bd6c46a3a6a9957f63717d01');
 
 INSERT INTO political_landscape (political_landscape_name) VALUES ('群众');
 INSERT INTO political_landscape (political_landscape_name) VALUES ('共青团员');
