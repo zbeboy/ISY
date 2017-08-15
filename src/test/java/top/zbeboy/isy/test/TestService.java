@@ -6,6 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.zbeboy.isy.Application;
+import top.zbeboy.isy.elastic.pojo.StudentElastic;
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
 import top.zbeboy.isy.service.system.ApplicationService;
 import top.zbeboy.isy.web.bean.tree.TreeBean;
 
@@ -20,7 +22,10 @@ import java.util.List;
 public class TestService {
 
     @Resource
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
+
+    @Resource
+    private StudentElasticRepository studentElasticRepository;
 
     @Test
     public void testApplicationToJsonMethod() {
@@ -28,5 +33,14 @@ public class TestService {
         System.out.println(treeBeens);
         String json = JSON.toJSONString(treeBeens, true);
         System.out.println(json);
+    }
+
+    @Test
+    public void deleteStudentByUsername(){
+        StudentElastic studentElastic = studentElasticRepository.findByUsername("863052300@qq.com");
+//        Iterable<StudentElastic> studentElastics = studentElasticRepository.findAll();
+//        studentElastics.forEach(System.out::println);
+//        studentElasticRepository.deleteByUsername("");
+        System.out.println(studentElastic);
     }
 }
