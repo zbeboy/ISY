@@ -30,10 +30,7 @@ public class UsersElastic {
     private String langKey;
     private Date joinDate;
     /**
-     * -1 : 无权限
-     * 0 :  有权限
-     * 1 : 系统
-     * 2 : 管理员
+     * 详见：ElasticBook
      */
     private Integer authorities;
     /**

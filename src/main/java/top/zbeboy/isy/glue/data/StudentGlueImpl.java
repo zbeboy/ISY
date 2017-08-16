@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.elastic.config.ElasticBook;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
 import top.zbeboy.isy.glue.util.ResultUtils;
@@ -45,10 +46,10 @@ public class StudentGlueImpl implements StudentGlue {
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            boolqueryBuilder.mustNot(QueryBuilders.termQuery("authorities", 1));
-            boolqueryBuilder.mustNot(QueryBuilders.termQuery("authorities", -1));
+            boolqueryBuilder.mustNot(QueryBuilders.termQuery("authorities", ElasticBook.SYSTEM_AUTHORITIES));
+            boolqueryBuilder.mustNot(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES));
         } else {
-            boolqueryBuilder.must(QueryBuilders.matchQuery("authorities", 0));
+            boolqueryBuilder.must(QueryBuilders.matchQuery("authorities", ElasticBook.HAS_AUTHORITIES));
         }
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(boolqueryBuilder);
         Page<StudentElastic> studentElasticPage = studentElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build());
@@ -59,7 +60,7 @@ public class StudentGlueImpl implements StudentGlue {
     public ResultUtils<List<StudentBean>> findAllByPageNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
         ResultUtils<List<StudentBean>> resultUtils = ResultUtils.of();
-        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search, -1));
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search, ElasticBook.NO_AUTHORITIES));
         Page<StudentElastic> studentElasticPage = studentElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build());
         return resultUtils.data(dataBuilder(studentElasticPage)).totalElements(studentElasticPage.getTotalElements());
     }
@@ -69,25 +70,25 @@ public class StudentGlueImpl implements StudentGlue {
         long count;
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             List<Integer> list = new ArrayList<>();
-            list.add(1);
-            list.add(-1);
+            list.add(ElasticBook.SYSTEM_AUTHORITIES);
+            list.add(ElasticBook.NO_AUTHORITIES);
             count = studentElasticRepository.countByAuthoritiesNotIn(list);
         } else {
-            count = studentElasticRepository.countByAuthorities(0);
+            count = studentElasticRepository.countByAuthorities(ElasticBook.HAS_AUTHORITIES);
         }
         return count;
     }
 
     @Override
     public long countAllNotExistsAuthorities() {
-        return studentElasticRepository.countByAuthorities(-1);
+        return studentElasticRepository.countByAuthorities(ElasticBook.NO_AUTHORITIES);
     }
 
     /**
      * 若有其它条件
      *
      * @param search      条件内容
-     * @param authorities -1 : 无权限 0 :  有权限 1 : 系统 2 : 管理员
+     * @param authorities 详见：ElasticBook
      * @return 其它条件
      */
     public QueryBuilder prepositionCondition(JSONObject search, int authorities) {

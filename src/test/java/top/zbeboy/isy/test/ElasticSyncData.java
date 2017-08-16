@@ -64,7 +64,7 @@ public class ElasticSyncData {
     private RoleService roleService;
 
     @Test
-    public void cleanLog(){
+    public void cleanLog() {
         systemLogElasticRepository.deleteAll();
         systemMailboxElasticRepository.deleteAll();
         systemSmsElasticRepository.deleteAll();
@@ -108,28 +108,45 @@ public class ElasticSyncData {
              * 0 :  有权限
              * 1 : 系统
              * 2 : 管理员
+             * 3 : 运维
              */
             if (!ObjectUtils.isEmpty(authoritiesRecords) && authoritiesRecords.size() > 0) {
                 boolean hasUse = false;
                 StringBuilder stringBuilder = new StringBuilder();
                 for (AuthoritiesRecord a : authoritiesRecords) {
-                    if (!hasUse && a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
+                    if (a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
                         usersElastic.setAuthorities(1);
-                        hasUse = true;
-                    }
-                    if (!hasUse && a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
-                        usersElastic.setAuthorities(2);
                         hasUse = true;
                     }
                     Role tempRole = roleService.findByRoleEnName(a.getAuthority());
                     stringBuilder.append(tempRole.getRoleName()).append(" ");
+                }
+
+                if (!hasUse) {
+                    for (AuthoritiesRecord a : authoritiesRecords) {
+                        if (a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
+                            usersElastic.setAuthorities(2);
+                            hasUse = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!hasUse) {
+                    for (AuthoritiesRecord a : authoritiesRecords) {
+                        if (a.getAuthority().equals(Workbook.OPS_AUTHORITIES)) {
+                            usersElastic.setAuthorities(3);
+                            hasUse = true;
+                            break;
+                        }
+                    }
                 }
                 if (!hasUse) {
                     usersElastic.setAuthorities(0);
                 }
                 usersElastic.setRoleName(stringBuilder.toString().trim());
             } else {
-                usersElastic.setAuthorities(-1);
+                usersElastic.setAuthorities(99999);
             }
             usersElastics.add(usersElastic);
         }
@@ -172,23 +189,39 @@ public class ElasticSyncData {
                 boolean hasUse = false;
                 StringBuilder stringBuilder = new StringBuilder();
                 for (AuthoritiesRecord a : authoritiesRecords) {
-                    if (!hasUse && a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
+                    if (a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
                         studentElastic.setAuthorities(1);
-                        hasUse = true;
-                    }
-                    if (!hasUse && a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
-                        studentElastic.setAuthorities(2);
                         hasUse = true;
                     }
                     Role tempRole = roleService.findByRoleEnName(a.getAuthority());
                     stringBuilder.append(tempRole.getRoleName()).append(" ");
+                }
+
+                if (!hasUse) {
+                    for (AuthoritiesRecord a : authoritiesRecords) {
+                        if (a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
+                            studentElastic.setAuthorities(2);
+                            hasUse = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!hasUse) {
+                    for (AuthoritiesRecord a : authoritiesRecords) {
+                        if (a.getAuthority().equals(Workbook.OPS_AUTHORITIES)) {
+                            studentElastic.setAuthorities(3);
+                            hasUse = true;
+                            break;
+                        }
+                    }
                 }
                 if (!hasUse) {
                     studentElastic.setAuthorities(0);
                 }
                 studentElastic.setRoleName(stringBuilder.toString().trim());
             } else {
-                studentElastic.setAuthorities(-1);
+                studentElastic.setAuthorities(99999);
             }
             studentElastics.add(studentElastic);
         }
@@ -229,23 +262,39 @@ public class ElasticSyncData {
                 boolean hasUse = false;
                 StringBuilder stringBuilder = new StringBuilder();
                 for (AuthoritiesRecord a : authoritiesRecords) {
-                    if (!hasUse && a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
+                    if (a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
                         staffElastic.setAuthorities(1);
-                        hasUse = true;
-                    }
-                    if (!hasUse && a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
-                        staffElastic.setAuthorities(2);
                         hasUse = true;
                     }
                     Role tempRole = roleService.findByRoleEnName(a.getAuthority());
                     stringBuilder.append(tempRole.getRoleName()).append(" ");
+                }
+
+                if (!hasUse) {
+                    for (AuthoritiesRecord a : authoritiesRecords) {
+                        if (a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
+                            staffElastic.setAuthorities(2);
+                            hasUse = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!hasUse) {
+                    for (AuthoritiesRecord a : authoritiesRecords) {
+                        if (a.getAuthority().equals(Workbook.OPS_AUTHORITIES)) {
+                            staffElastic.setAuthorities(3);
+                            hasUse = true;
+                            break;
+                        }
+                    }
                 }
                 if (!hasUse) {
                     staffElastic.setAuthorities(0);
                 }
                 staffElastic.setRoleName(stringBuilder.toString().trim());
             } else {
-                staffElastic.setAuthorities(-1);
+                staffElastic.setAuthorities(99999);
             }
             staffElastics.add(staffElastic);
         }

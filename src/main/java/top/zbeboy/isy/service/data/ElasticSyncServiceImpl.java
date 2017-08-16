@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
+import top.zbeboy.isy.elastic.config.ElasticBook;
 import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
@@ -213,25 +214,40 @@ public class ElasticSyncServiceImpl implements ElasticSyncService {
      */
     private Map<String, Object> buildAuthoritiesAndRoleNameData(List<AuthoritiesRecord> authoritiesRecords) {
         Map<String, Object> map = new HashMap<>();
-        int authorities = 0;
+        int authorities = ElasticBook.HAS_AUTHORITIES;
         if (!ObjectUtils.isEmpty(authoritiesRecords) && authoritiesRecords.size() > 0) {
             boolean hasUse = false;
             StringBuilder stringBuilder = new StringBuilder();
             for (AuthoritiesRecord a : authoritiesRecords) {
-                if (!hasUse && a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
-                    authorities = 1;
-                    hasUse = true;
-                }
-                if (!hasUse && a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
-                    authorities = 2;
+                if (a.getAuthority().equals(Workbook.SYSTEM_AUTHORITIES)) {
+                    authorities = ElasticBook.SYSTEM_AUTHORITIES;
                     hasUse = true;
                 }
                 Role tempRole = roleService.findByRoleEnName(a.getAuthority());
                 stringBuilder.append(tempRole.getRoleName()).append(" ");
             }
+
+            if (!hasUse) {
+                for (AuthoritiesRecord a : authoritiesRecords) {
+                    if (a.getAuthority().equals(Workbook.ADMIN_AUTHORITIES)) {
+                        authorities = ElasticBook.ADMIN_AUTHORITIES;
+                        hasUse = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasUse) {
+                for (AuthoritiesRecord a : authoritiesRecords) {
+                    if (a.getAuthority().equals(Workbook.OPS_AUTHORITIES)) {
+                        authorities = ElasticBook.OPS_AUTHORITIES;
+                        break;
+                    }
+                }
+            }
             map.put("roleName", stringBuilder.toString().trim());
         } else {
-            authorities = -1;
+            authorities = ElasticBook.NO_AUTHORITIES;
             map.put("roleName", "");
         }
         map.put("authorities", authorities);
