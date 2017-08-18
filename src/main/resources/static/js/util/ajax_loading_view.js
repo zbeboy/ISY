@@ -23,12 +23,23 @@ define(["jquery", "jquery.showLoading", "messenger"], function ($) {
                 console.log(textStatus);
             })
             .fail(function (jqxhr, settings, exception) {
-                Messenger().post("loading js fail !");
+                Messenger().post({
+                    message: 'Loading js fail !',
+                    type: 'error',
+                    showCloseButton: true
+                });
             });
     }
 
     return function (url, targetId, web_path) {
         endLoading(targetId);
+        var loadingMessage;
+        loadingMessage = Messenger().post({
+            message: 'Loading ...',
+            type: 'info',
+            id: 'loadingMessage',
+            showCloseButton: true
+        });
         startLoading(targetId);
         $(targetId).empty();
         $.get(web_path + url, function (data) {
@@ -38,7 +49,11 @@ define(["jquery", "jquery.showLoading", "messenger"], function ($) {
                 loadJs(web_path + $(scripts[i]).val());
             }
             endLoading(targetId);
-            Messenger().post("loading finish !");
+            loadingMessage.update({
+                message: 'Loading finish , enjoy you life !',
+                type: 'success',
+                showCloseButton: true
+            });
         });
     };
 });
