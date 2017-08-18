@@ -206,6 +206,86 @@ public class ElasticSyncServiceImpl implements ElasticSyncService {
         }
     }
 
+    @Async
+    @Override
+    public void collegeRoleNameUpdate(int collegeId, String roleName) {
+        // step1 : 更新该院下学生
+        List<StudentElastic> studentElastics = studentElasticRepository.findByCollegeIdAndRoleNameLike(collegeId, roleName);
+        refreshStudent(studentElastics);
+
+        // step2 : 更新用户表
+        List<UsersElastic> usersElastics = new ArrayList<>();
+        studentElastics.forEach(studentElastic -> {
+            usersElastics.add(usersElasticRepository.findOne(studentElastic.getUsername()));
+        });
+
+        // step3 : 更新改院下教职工
+        List<StaffElastic> staffElastics = staffElasticRepository.findByCollegeIdAndRoleNameLike(collegeId, roleName);
+        refreshStaff(staffElastics);
+
+        // step4 : 更新用户表
+        staffElastics.forEach(staffElastic -> {
+            usersElastics.add(usersElasticRepository.findOne(staffElastic.getUsername()));
+        });
+
+        refreshUsers(usersElastics);
+    }
+
+    @Async
+    @Override
+    public void systemRoleNameUpdate(String roleName) {
+        List<StaffElastic> staffElastics = new ArrayList<>();
+        List<StudentElastic> studentElastics = new ArrayList<>();
+        List<UsersElastic> usersElastics = usersElasticRepository.findByRoleNameLike(roleName);
+        for (UsersElastic usersElastic : usersElastics) {
+            // 根据用户类型刷新角色名
+            if (usersElastic.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
+                staffElastics.add(staffElasticRepository.findByUsername(usersElastic.getUsername()));
+            } else if (usersElastic.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
+                studentElastics.add(studentElasticRepository.findByUsername(usersElastic.getUsername()));
+            }
+        }
+        refreshUsers(usersElastics);
+        refreshStaff(staffElastics);
+        refreshStudent(studentElastics);
+    }
+
+    private void refreshStudent(List<StudentElastic> studentElastics) {
+        if (!ObjectUtils.isEmpty(studentElastics) && studentElastics.size() > 0) {
+            studentElasticRepository.delete(studentElastics);
+            for (StudentElastic r : studentElastics) {
+                List<AuthoritiesRecord> authoritiesRecords = authoritiesService.findByUsername(r.getUsername());
+                String roleName = buildRoleNameData(authoritiesRecords);
+                r.setRoleName(roleName);
+            }
+            studentElasticRepository.save(studentElastics);
+        }
+    }
+
+    private void refreshStaff(List<StaffElastic> staffElastics) {
+        if (!ObjectUtils.isEmpty(staffElastics) && staffElastics.size() > 0) {
+            staffElasticRepository.delete(staffElastics);
+            for (StaffElastic r : staffElastics) {
+                List<AuthoritiesRecord> authoritiesRecords = authoritiesService.findByUsername(r.getUsername());
+                String roleName = buildRoleNameData(authoritiesRecords);
+                r.setRoleName(roleName);
+            }
+            staffElasticRepository.save(staffElastics);
+        }
+    }
+
+    private void refreshUsers(List<UsersElastic> usersElastics) {
+        if (!ObjectUtils.isEmpty(usersElastics) && usersElastics.size() > 0) {
+            usersElasticRepository.delete(usersElastics);
+            for (UsersElastic r : usersElastics) {
+                List<AuthoritiesRecord> authoritiesRecords = authoritiesService.findByUsername(r.getUsername());
+                String roleName = buildRoleNameData(authoritiesRecords);
+                r.setRoleName(roleName);
+            }
+            usersElasticRepository.save(usersElastics);
+        }
+    }
+
     /**
      * 构造权限与角色数据
      *
@@ -252,5 +332,22 @@ public class ElasticSyncServiceImpl implements ElasticSyncService {
         }
         map.put("authorities", authorities);
         return map;
+    }
+
+    /**
+     * 构造角色名
+     *
+     * @param authoritiesRecords 权限数据
+     * @return 角色名
+     */
+    private String buildRoleNameData(List<AuthoritiesRecord> authoritiesRecords) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (!ObjectUtils.isEmpty(authoritiesRecords) && authoritiesRecords.size() > 0) {
+            for (AuthoritiesRecord a : authoritiesRecords) {
+                Role tempRole = roleService.findByRoleEnName(a.getAuthority());
+                stringBuilder.append(tempRole.getRoleName()).append(" ");
+            }
+        }
+        return stringBuilder.toString().trim();
     }
 }

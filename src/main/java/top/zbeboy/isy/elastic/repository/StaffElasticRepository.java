@@ -4,6 +4,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by lenovo on 2017-04-12.
@@ -40,4 +41,13 @@ public interface StaffElasticRepository extends ElasticsearchRepository<StaffEla
      * @return 数量
      */
     long countByAuthoritiesNotIn(Collection<Integer> authorities);
+
+    /**
+     * 通过院id与角色名模糊查询
+     *
+     * @param collegeId 院id
+     * @param roleName  角色名
+     * @return 教职工
+     */
+    List<StaffElastic> findByCollegeIdAndRoleNameLike(int collegeId, String roleName);
 }

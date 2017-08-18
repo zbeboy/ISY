@@ -20,6 +20,7 @@ import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.RoleRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.CollegeRoleService;
+import top.zbeboy.isy.service.data.ElasticSyncService;
 import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
@@ -67,6 +68,9 @@ public class RoleController {
 
     @Resource
     private ApplicationService applicationService;
+
+    @Resource
+    private ElasticSyncService elasticSyncService;
 
     /**
      * 平台角色页面
@@ -248,6 +252,11 @@ public class RoleController {
         role.setRoleEnName("ROLE_" + RandomUtils.generateRoleEnName().toUpperCase());
         role.setRoleType(2);
         roleService.save(role);
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            collegeId = roleService.getRoleCollegeId(record);
+        }
         saveOrUpdate(collegeId, applicationIds, roleId);
         return AjaxUtils.of().success().msg("保存成功");
     }
@@ -265,11 +274,20 @@ public class RoleController {
     @ResponseBody
     public AjaxUtils roleUpdate(@RequestParam("roleId") String roleId, @RequestParam(value = "collegeId", defaultValue = "0") int collegeId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
+        String oldRoleName = role.getRoleName();
         role.setRoleName(StringUtils.trimAllWhitespace(roleName));
         roleService.update(role);
+        // 用户可能同时更改菜单
         roleApplicationService.deleteByRoleId(roleId);
+        // 当是系统角色时，可能改变这个角色到其它院下
         collegeRoleService.deleteByRoleId(roleId);
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            Users users = usersService.getUserFromSession();
+            Optional<Record> record = usersService.findUserSchoolInfo(users);
+            collegeId = roleService.getRoleCollegeId(record);
+        }
         saveOrUpdate(collegeId, applicationIds, roleId);
+        elasticSyncService.collegeRoleNameUpdate(collegeId, oldRoleName);
         return AjaxUtils.of().success().msg("更新成功");
     }
 
@@ -281,11 +299,6 @@ public class RoleController {
      * @param roleId         角色id
      */
     private void saveOrUpdate(int collegeId, String applicationIds, String roleId) {
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            collegeId = roleService.getRoleCollegeId(record);
-        }
         roleApplicationService.batchSaveRoleApplication(applicationIds, roleId);
         if (collegeId > 0) {
             CollegeRole collegeRole = new CollegeRole(roleId, collegeId);
@@ -302,12 +315,14 @@ public class RoleController {
     @RequestMapping(value = "/web/platform/role/delete", method = RequestMethod.POST)
     @ResponseBody
     public AjaxUtils roleDelete(@RequestParam("roleId") String roleId) {
-        Role role = roleService.findById(roleId);
-        if (!ObjectUtils.isEmpty(role)) {
+        Optional<Record> record = roleService.findByRoleIdRelation(roleId);
+        if (record.isPresent()) {
+            Record temp = record.get();
             collegeRoleService.deleteByRoleId(roleId);
             roleApplicationService.deleteByRoleId(roleId);
-            authoritiesService.deleteByAuthorities(role.getRoleEnName());
+            authoritiesService.deleteByAuthorities(temp.getValue(ROLE.ROLE_EN_NAME));
             roleService.deleteById(roleId);
+            elasticSyncService.collegeRoleNameUpdate(temp.getValue(COLLEGE.COLLEGE_ID), temp.getValue(ROLE.ROLE_NAME));
         }
         return AjaxUtils.of().success().msg("删除成功");
     }

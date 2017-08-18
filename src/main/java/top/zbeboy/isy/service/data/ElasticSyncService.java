@@ -39,4 +39,19 @@ public interface ElasticSyncService {
      * 同步教职工数据
      */
     void syncStaffData();
+
+    /**
+     * 更新院级自定义角色名
+     *
+     * @param collegeId 院id
+     * @param roleName  角色名
+     */
+    void collegeRoleNameUpdate(int collegeId, String roleName);
+
+    /**
+     * 更新系统级角色名
+     *
+     * @param roleName 角色名
+     */
+    void systemRoleNameUpdate(String roleName);
 }

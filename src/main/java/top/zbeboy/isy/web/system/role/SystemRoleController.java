@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
+import top.zbeboy.isy.service.data.ElasticSyncService;
 import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.system.ApplicationService;
@@ -45,7 +45,7 @@ public class SystemRoleController {
     private RoleApplicationService roleApplicationService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private ElasticSyncService elasticSyncService;
 
     @Resource
     private ApplicationService applicationService;
@@ -147,10 +147,12 @@ public class SystemRoleController {
     @ResponseBody
     public AjaxUtils roleUpdate(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName, String applicationIds) {
         Role role = roleService.findById(roleId);
+        String oldRoleName = role.getRoleName();
         role.setRoleName(roleName);
         roleService.update(role);
         roleApplicationService.deleteByRoleId(roleId);
         roleApplicationService.batchSaveRoleApplication(applicationIds, roleId);
+        elasticSyncService.systemRoleNameUpdate(oldRoleName);
         return AjaxUtils.of().success().msg("更新成功");
     }
 
