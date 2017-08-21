@@ -1,10 +1,12 @@
 package top.zbeboy.isy.web.weixin;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.service.weixin.WeixinService;
 import top.zbeboy.isy.web.vo.weixin.WeixinVo;
 
@@ -20,6 +22,9 @@ public class WeixinController {
     @Resource
     private WeixinService weixinService;
 
+    @Autowired
+    private ISYProperties isyProperties;
+
     /**
      * 微信接入检验
      *
@@ -29,6 +34,7 @@ public class WeixinController {
     @RequestMapping(value = "/weixin", method = RequestMethod.GET)
     @ResponseBody
     public String weixinValid(WeixinVo weixinVo) {
+        weixinVo.setToken(isyProperties.getWeixin().getToken());
         if (weixinService.checkSignature(weixinVo)) {
             return weixinVo.getEchostr();
         }

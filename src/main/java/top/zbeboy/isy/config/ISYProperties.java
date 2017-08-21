@@ -294,6 +294,8 @@ public class ISYProperties {
         private String appId;
         private String appSecret;
         private String encodingAESKey;
+        private String smallToken;
+        private String smallEncodingAESKey;
 
         public String getToken() {
             return token;
@@ -325,6 +327,22 @@ public class ISYProperties {
 
         public void setEncodingAESKey(String encodingAESKey) {
             this.encodingAESKey = encodingAESKey;
+        }
+
+        public String getSmallToken() {
+            return smallToken;
+        }
+
+        public void setSmallToken(String smallToken) {
+            this.smallToken = smallToken;
+        }
+
+        public String getSmallEncodingAESKey() {
+            return smallEncodingAESKey;
+        }
+
+        public void setSmallEncodingAESKey(String smallEncodingAESKey) {
+            this.smallEncodingAESKey = smallEncodingAESKey;
         }
     }
 }

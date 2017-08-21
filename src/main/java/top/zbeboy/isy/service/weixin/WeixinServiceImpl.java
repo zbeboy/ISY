@@ -2,18 +2,16 @@ package top.zbeboy.isy.service.weixin;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.service.util.MD5Utils;
-import top.zbeboy.isy.web.vo.weixin.WeixinVo;
 import top.zbeboy.isy.web.util.weixin.AesException;
 import top.zbeboy.isy.web.util.weixin.WXBizMsgCrypt;
+import top.zbeboy.isy.web.vo.weixin.WeixinVo;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,12 +27,9 @@ import java.util.Arrays;
 @Service("weixinService")
 public class WeixinServiceImpl implements WeixinService {
 
-    @Autowired
-    private ISYProperties isyProperties;
-
     @Override
     public boolean checkSignature(WeixinVo weixinVo) {
-        String[] arr = new String[]{isyProperties.getWeixin().getToken(), weixinVo.getTimestamp(), weixinVo.getNonce()};
+        String[] arr = new String[]{weixinVo.getToken(), weixinVo.getTimestamp(), weixinVo.getNonce()};
         Arrays.sort(arr);
         String newArr = MD5Utils.sha_1(arr[0] + arr[1] + arr[2]);
         return StringUtils.equals(weixinVo.getSignature(), newArr);
@@ -44,11 +39,11 @@ public class WeixinServiceImpl implements WeixinService {
     public String encryptMsg(String msg, WeixinVo weixinVo) {
         String afterMsg = "";
         try {
-            String encodingAesKey = isyProperties.getWeixin().getEncodingAESKey();
-            String token = isyProperties.getWeixin().getToken();
+            String encodingAesKey = weixinVo.getEncodingAESKey();
+            String token = weixinVo.getToken();
             String timestamp = weixinVo.getTimestamp();
             String nonce = weixinVo.getNonce();
-            String appId = isyProperties.getWeixin().getAppId();
+            String appId = weixinVo.getAppId();
             WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
             afterMsg = pc.encryptMsg(msg, timestamp, nonce);
         } catch (AesException e) {
@@ -61,11 +56,11 @@ public class WeixinServiceImpl implements WeixinService {
     public String decryptMsg(String msg, WeixinVo weixinVo) {
         String afterMsg = "";
         try {
-            String encodingAesKey = isyProperties.getWeixin().getEncodingAESKey();
-            String token = isyProperties.getWeixin().getToken();
+            String encodingAesKey = weixinVo.getEncodingAESKey();
+            String token = weixinVo.getToken();
             String timestamp = weixinVo.getTimestamp();
             String nonce = weixinVo.getNonce();
-            String appId = isyProperties.getWeixin().getAppId();
+            String appId = weixinVo.getAppId();
             WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

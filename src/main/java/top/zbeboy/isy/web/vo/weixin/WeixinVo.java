@@ -2,8 +2,6 @@ package top.zbeboy.isy.web.vo.weixin;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * Created by lenovo on 2016-11-15.
  */
@@ -33,4 +31,17 @@ public class WeixinVo {
     消息体签名，用于验证消息体的正确性
      */
     private String msg_signature;
+    /*
+    token
+     */
+    private String token;
+    /*
+    EncodingAESKey
+     */
+    private String encodingAESKey;
+    /*
+    app
+     */
+    private String appId;
+    private String appSecret;
 }
