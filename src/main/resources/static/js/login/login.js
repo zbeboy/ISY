@@ -152,18 +152,43 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
             changeJcaptcha();
         });
 
+        /**
+         * 拼接自动完成 email
+         * @param query
+         * @returns {Array}
+         */
+        function autoCompleteEmail(query) {
+            var tempArr = [];
+            if (query.indexOf('@') === -1) {
+                for (var j = 0; j < emails.mailArr.length; j++) {
+                    tempArr.push(query + emails.mailArr[j])
+                }
+            }
+            return tempArr;
+        }
+
         // 自动完成账号
         $(paramId.email).typeahead({
             source: function (query, process) {
-
-                if (query.indexOf('@') === -1) {
-                    var tempArr = [];
-                    for (var i = 0; i < emails.mailArr.length; i++) {
-                        tempArr.push(query + emails.mailArr[i])
+                // 过滤数组
+                var tempArr = [];
+                // 采用 html5 Storage存储
+                // Check browser support
+                if (typeof(Storage) !== "undefined") {
+                    var storageEmail = localStorage.getItem("email");
+                    if (storageEmail !== null && storageEmail.indexOf(query) === 0) {
+                        tempArr.push(storageEmail);
+                    } else {
+                        tempArr = autoCompleteEmail(query);
                     }
-                    process(tempArr);
+                } else {
+                    // not support web storage
+                    tempArr = autoCompleteEmail(query);
                 }
 
+                if (tempArr.length > 0) {
+                    process(tempArr);
+                }
             },
             afterSelect: function (item) {
                 //选择项之后的事件 ，item是当前选中的。
@@ -292,6 +317,11 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
                             endLoading();
                             break;
                         case error_code.OK_CODE:
+                            // 存储到 web storage if support.
+                            if (typeof(Storage) !== "undefined") {
+                                // Store
+                                localStorage.setItem("email", email);
+                            }
                             var url = window.location.href;
                             var toBackstage = web_path + ajax_url.backstage;
                             // 登录后直接去刚刚被弹出的地方
