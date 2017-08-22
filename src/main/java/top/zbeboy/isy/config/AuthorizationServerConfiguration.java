@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
@@ -55,7 +56,24 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .scopes("read", "write")
                 .resourceIds("marri")
                 .secret("123456");*/
-        clients.jdbc(dataSource).withClient("my-trusted-client").authorizedGrantTypes("password");
+        /*
+        clients.jdbc(dataSource())
+               .withClient("sampleClientId")
+               .authorizedGrantTypes("implicit")
+               .scopes("read")
+               .autoApprove(true)
+               .and()
+               .withClient("clientIdPassword")
+               .secret("secret")
+               .authorizedGrantTypes(
+                 "password","authorization_code", "refresh_token")
+               .scopes("read");
+         */
+        clients.jdbc(dataSource).withClient("isy-base-client")
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+                .authorities("SYSTEM")
+                .scopes("read", "write", "trust")
+                .secret("bar");
     }
 
     @Override
