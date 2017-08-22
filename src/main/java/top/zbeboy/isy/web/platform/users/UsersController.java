@@ -21,6 +21,7 @@ import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.*;
+import top.zbeboy.isy.elastic.config.ElasticBook;
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.elastic.pojo.UsersElastic;
@@ -667,11 +668,11 @@ public class UsersController {
                     stringBuilder.append(tempRole.getRoleName()).append(" ");
                 });
                 if (roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES)) {
-                    usersElastic.setAuthorities(1);
+                    usersElastic.setAuthorities(ElasticBook.SYSTEM_AUTHORITIES);
                 } else if (roleEnNames.contains(Workbook.ADMIN_AUTHORITIES)) {
-                    usersElastic.setAuthorities(2);
+                    usersElastic.setAuthorities(ElasticBook.ADMIN_AUTHORITIES);
                 } else {
-                    usersElastic.setAuthorities(0);
+                    usersElastic.setAuthorities(ElasticBook.HAS_AUTHORITIES);
                 }
                 usersElastic.setRoleName(stringBuilder.toString().trim());
                 usersElasticRepository.delete(username);
