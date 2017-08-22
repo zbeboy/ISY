@@ -1160,7 +1160,8 @@ public class InternshipApplyController {
             InternshipRelease internshipRelease = errorBean.getData();
             List<StaffBean> staffs = new ArrayList<>();
             Byte enabled = 1;
-            Result<Record> staffRecord = staffService.findByDepartmentIdAndEnabledRelationExistsAuthorities(internshipRelease.getDepartmentId(), enabled);
+            Byte verifyMailbox = 1;
+            Result<Record> staffRecord = staffService.findByDepartmentIdAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(internshipRelease.getDepartmentId(), enabled, verifyMailbox);
             if (staffRecord.isNotEmpty()) {
                 staffs = staffRecord.into(StaffBean.class);
             }

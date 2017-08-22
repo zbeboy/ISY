@@ -43,11 +43,12 @@ public interface StaffService {
     /**
      * 根据系id查询 有权限并且未被注销的教师
      *
-     * @param departmentId 系id
-     * @param b            用户状态
+     * @param departmentId  系id
+     * @param b             用户状态
+     * @param verifyMailbox 是否已验证邮箱
      * @return 教职工们
      */
-    Result<Record> findByDepartmentIdAndEnabledRelationExistsAuthorities(int departmentId, Byte b);
+    Result<Record> findByDepartmentIdAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(int departmentId, Byte b, Byte verifyMailbox);
 
     /**
      * 根据用户账号查询

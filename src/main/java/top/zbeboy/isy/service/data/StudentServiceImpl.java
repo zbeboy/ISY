@@ -111,7 +111,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Result<Record> findInOrganizeIdsAndEnabledExistsAuthorities(List<Integer> organizeIds, Byte b) {
+    public Result<Record> findInOrganizeIdsAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(List<Integer> organizeIds, Byte b, Byte verifyMailbox) {
         Select<AuthoritiesRecord> authoritiesRecordSelect =
                 create.selectFrom(AUTHORITIES)
                         .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
@@ -119,7 +119,7 @@ public class StudentServiceImpl implements StudentService {
                 .from(STUDENT)
                 .join(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                .where(STUDENT.ORGANIZE_ID.in(organizeIds).and(USERS.ENABLED.eq(b)).andExists(authoritiesRecordSelect))
+                .where(STUDENT.ORGANIZE_ID.in(organizeIds).and(USERS.ENABLED.eq(b)).and(USERS.VERIFY_MAILBOX.eq(verifyMailbox)).andExists(authoritiesRecordSelect))
                 .fetch();
     }
 

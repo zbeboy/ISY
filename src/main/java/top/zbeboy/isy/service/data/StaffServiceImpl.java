@@ -98,7 +98,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Result<Record> findByDepartmentIdAndEnabledRelationExistsAuthorities(int departmentId, Byte b) {
+    public Result<Record> findByDepartmentIdAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(int departmentId, Byte b, Byte verifyMailbox) {
         Select<AuthoritiesRecord> authoritiesRecordSelect =
                 create.selectFrom(AUTHORITIES)
                         .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
@@ -106,7 +106,7 @@ public class StaffServiceImpl implements StaffService {
                 .from(STAFF)
                 .join(USERS)
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                .where(STAFF.DEPARTMENT_ID.eq(departmentId).and(USERS.ENABLED.eq(b))).andExists(authoritiesRecordSelect)
+                .where(STAFF.DEPARTMENT_ID.eq(departmentId).and(USERS.ENABLED.eq(b)).and(USERS.VERIFY_MAILBOX.eq(verifyMailbox))).andExists(authoritiesRecordSelect)
                 .fetch();
     }
 

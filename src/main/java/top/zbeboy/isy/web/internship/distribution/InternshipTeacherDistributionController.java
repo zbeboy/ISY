@@ -389,7 +389,8 @@ public class InternshipTeacherDistributionController {
             InternshipRelease internshipRelease = errorBean.getData();
             List<StaffBean> staffs = new ArrayList<>();
             Byte enabled = 1;
-            Result<Record> staffRecords = staffService.findByDepartmentIdAndEnabledRelationExistsAuthorities(internshipRelease.getDepartmentId(), enabled);
+            Byte verifyMailbox = 1;
+            Result<Record> staffRecords = staffService.findByDepartmentIdAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(internshipRelease.getDepartmentId(), enabled, verifyMailbox);
             if (staffRecords.isNotEmpty()) {
                 staffs = staffRecords.into(StaffBean.class);
             }
@@ -457,6 +458,7 @@ public class InternshipTeacherDistributionController {
                 List<Student> students = new ArrayList<>();
                 // 筛选学生数据
                 Byte enabled = 1;
+                Byte verifyMailbox = 1;
                 if (StringUtils.hasLength(excludeInternshipReleaseId)) {
                     List<String> excludeInternshipReleaseIds = SmallPropsUtils.StringIdsToStringList(excludeInternshipReleaseId);
                     // 查询并排除掉其它实习的学生
@@ -465,7 +467,7 @@ public class InternshipTeacherDistributionController {
                         students = studentRecords.into(Student.class);
                     }
                 } else {
-                    Result<Record> studentRecords = studentService.findInOrganizeIdsAndEnabledExistsAuthorities(organizeIds, enabled);
+                    Result<Record> studentRecords = studentService.findInOrganizeIdsAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(organizeIds, enabled, verifyMailbox);
                     if (studentRecords.isNotEmpty()) {
                         students = studentRecords.into(Student.class);
                     }

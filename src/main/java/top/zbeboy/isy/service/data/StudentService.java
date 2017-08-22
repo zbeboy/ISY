@@ -51,11 +51,12 @@ public interface StudentService {
     /**
      * 根据班级id集合查询有权限未注销的学生
      *
-     * @param organizeIds 班级ids
-     * @param b           用户状态
+     * @param organizeIds   班级ids
+     * @param b             用户状态
+     * @param verifyMailbox 是否已验证邮箱
      * @return 学生们
      */
-    Result<Record> findInOrganizeIdsAndEnabledExistsAuthorities(List<Integer> organizeIds, Byte b);
+    Result<Record> findInOrganizeIdsAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(List<Integer> organizeIds, Byte b, Byte verifyMailbox);
 
     /**
      * 通过账号与系id查询

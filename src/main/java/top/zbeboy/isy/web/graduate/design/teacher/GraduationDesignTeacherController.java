@@ -172,7 +172,8 @@ public class GraduationDesignTeacherController {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             List<StaffBean> staffs = new ArrayList<>();
             Byte enabled = 1;
-            Result<Record> staffRecords = staffService.findByDepartmentIdAndEnabledRelationExistsAuthorities(graduationDesignRelease.getDepartmentId(), enabled);
+            Byte verifyMailbox = 1;
+            Result<Record> staffRecords = staffService.findByDepartmentIdAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(graduationDesignRelease.getDepartmentId(), enabled, verifyMailbox);
             if (staffRecords.isNotEmpty()) {
                 staffs = staffRecords.into(StaffBean.class);
                 List<GraduationDesignTeacher> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseId(graduationDesignReleaseId);

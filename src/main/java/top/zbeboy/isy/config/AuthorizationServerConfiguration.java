@@ -69,9 +69,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                .scopes("read");
          */
         clients.jdbc(dataSource).withClient("isy-base-client")
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+                .authorizedGrantTypes("password")
                 .authorities("SYSTEM")
-                .scopes("read", "write", "trust")
+                .scopes("read", "write")
                 .secret("bar");
     }
 
