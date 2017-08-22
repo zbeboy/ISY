@@ -17,6 +17,7 @@ import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.StudentRecord;
+import top.zbeboy.isy.elastic.config.ElasticBook;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.elastic.repository.StudentElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -186,7 +187,7 @@ public class StudentServiceImpl implements StudentService {
                 .set(STUDENT.USERNAME, studentElastic.getUsername())
                 .returning(STUDENT.STUDENT_ID)
                 .fetchOne();
-        studentElastic.setAuthorities(-1);
+        studentElastic.setAuthorities(ElasticBook.NO_AUTHORITIES);
         studentElastic.setStudentId(studentRecord.getStudentId());
         studentElasticRepository.save(studentElastic);
     }

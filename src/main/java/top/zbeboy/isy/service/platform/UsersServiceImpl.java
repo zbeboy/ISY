@@ -18,6 +18,7 @@ import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.pojos.UsersType;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
+import top.zbeboy.isy.elastic.config.ElasticBook;
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
 import top.zbeboy.isy.elastic.pojo.UsersElastic;
@@ -151,7 +152,7 @@ public class UsersServiceImpl implements UsersService {
         usersElastic.setPasswordResetKeyValid(users.getPasswordResetKeyValid());
         usersElastic.setLangKey(users.getLangKey());
         usersElastic.setJoinDate(users.getJoinDate());
-        usersElastic.setAuthorities(-1);
+        usersElastic.setAuthorities(ElasticBook.NO_AUTHORITIES);
         usersElasticRepository.save(usersElastic);
     }
 

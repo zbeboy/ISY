@@ -14,6 +14,7 @@ import top.zbeboy.isy.domain.tables.daos.StaffDao;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.isy.domain.tables.records.StaffRecord;
+import top.zbeboy.isy.elastic.config.ElasticBook;
 import top.zbeboy.isy.elastic.pojo.StaffElastic;
 import top.zbeboy.isy.elastic.repository.StaffElasticRepository;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -149,7 +150,7 @@ public class StaffServiceImpl implements StaffService {
                 .set(STAFF.USERNAME, staffElastic.getUsername())
                 .returning(STAFF.STAFF_ID)
                 .fetchOne();
-        staffElastic.setAuthorities(-1);
+        staffElastic.setAuthorities(ElasticBook.NO_AUTHORITIES);
         staffElastic.setStaffId(staffRecord.getStaffId());
         staffElasticRepository.save(staffElastic);
     }
