@@ -650,51 +650,55 @@ public class UsersController {
         if (StringUtils.hasLength(roles)) {
             Users users = usersService.findByUsername(username);
             if (!ObjectUtils.isEmpty(users)) {
-                List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
-                // 禁止非系统用户 提升用户权限到系统或管理员级别权限
-                if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                        && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
-                    return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限");
-                }
-                authoritiesService.deleteByUsername(username);
-                UsersElastic usersElastic = usersElasticRepository.findOne(username);
-                List<String> roleEnNames = new ArrayList<>();
-                StringBuilder stringBuilder = new StringBuilder();
-                roleList.forEach(role -> {
-                    Authorities authorities = new Authorities(username, role);
-                    authoritiesService.save(authorities);
-                    Role tempRole = roleService.findByRoleEnName(role);
-                    roleEnNames.add(tempRole.getRoleEnName());
-                    stringBuilder.append(tempRole.getRoleName()).append(" ");
-                });
-                if (roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES)) {
-                    usersElastic.setAuthorities(ElasticBook.SYSTEM_AUTHORITIES);
-                } else if (roleEnNames.contains(Workbook.ADMIN_AUTHORITIES)) {
-                    usersElastic.setAuthorities(ElasticBook.ADMIN_AUTHORITIES);
+                if (!ObjectUtils.isEmpty(users.getVerifyMailbox()) && users.getVerifyMailbox() == 1) {
+                    List<String> roleList = SmallPropsUtils.StringIdsToStringList(roles);
+                    // 禁止非系统用户 提升用户权限到系统或管理员级别权限
+                    if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
+                            && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
+                        return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限");
+                    }
+                    authoritiesService.deleteByUsername(username);
+                    UsersElastic usersElastic = usersElasticRepository.findOne(username);
+                    List<String> roleEnNames = new ArrayList<>();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    roleList.forEach(role -> {
+                        Authorities authorities = new Authorities(username, role);
+                        authoritiesService.save(authorities);
+                        Role tempRole = roleService.findByRoleEnName(role);
+                        roleEnNames.add(tempRole.getRoleEnName());
+                        stringBuilder.append(tempRole.getRoleName()).append(" ");
+                    });
+                    if (roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES)) {
+                        usersElastic.setAuthorities(ElasticBook.SYSTEM_AUTHORITIES);
+                    } else if (roleEnNames.contains(Workbook.ADMIN_AUTHORITIES)) {
+                        usersElastic.setAuthorities(ElasticBook.ADMIN_AUTHORITIES);
+                    } else {
+                        usersElastic.setAuthorities(ElasticBook.HAS_AUTHORITIES);
+                    }
+                    usersElastic.setRoleName(stringBuilder.toString().trim());
+                    usersElasticRepository.delete(username);
+                    usersElasticRepository.save(usersElastic);
+                    UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+                    if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
+                        StudentElastic studentElastic = studentElasticRepository.findByUsername(username);
+                        studentElastic.setAuthorities(usersElastic.getAuthorities());
+                        studentElastic.setRoleName(usersElastic.getRoleName());
+                        studentElasticRepository.deleteByUsername(username);
+                        studentElasticRepository.save(studentElastic);
+                    } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
+                        StaffElastic staffElastic = staffElasticRepository.findByUsername(username);
+                        staffElastic.setAuthorities(usersElastic.getAuthorities());
+                        staffElastic.setRoleName(usersElastic.getRoleName());
+                        staffElasticRepository.deleteByUsername(username);
+                        staffElasticRepository.save(staffElastic);
+                    }
+                    Users curUsers = usersService.getUserFromSession();
+                    String notify = "您的权限已变更为" + usersElastic.getRoleName() + " ，请登录查看。";
+                    commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
+                    ajaxUtils.success().msg("更改用户角色成功");
                 } else {
-                    usersElastic.setAuthorities(ElasticBook.HAS_AUTHORITIES);
+                    ajaxUtils.fail().msg("该用户未激活账号");
                 }
-                usersElastic.setRoleName(stringBuilder.toString().trim());
-                usersElasticRepository.delete(username);
-                usersElasticRepository.save(usersElastic);
-                UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-                if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
-                    StudentElastic studentElastic = studentElasticRepository.findByUsername(username);
-                    studentElastic.setAuthorities(usersElastic.getAuthorities());
-                    studentElastic.setRoleName(usersElastic.getRoleName());
-                    studentElasticRepository.deleteByUsername(username);
-                    studentElasticRepository.save(studentElastic);
-                } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
-                    StaffElastic staffElastic = staffElasticRepository.findByUsername(username);
-                    staffElastic.setAuthorities(usersElastic.getAuthorities());
-                    staffElastic.setRoleName(usersElastic.getRoleName());
-                    staffElasticRepository.deleteByUsername(username);
-                    staffElasticRepository.save(staffElastic);
-                }
-                Users curUsers = usersService.getUserFromSession();
-                String notify = "您的权限已变更为" + usersElastic.getRoleName() + " ，请登录查看。";
-                commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request);
-                ajaxUtils.success().msg("更改用户角色成功");
             } else {
                 ajaxUtils.fail().msg("未查询到该用户信息");
             }
