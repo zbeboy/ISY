@@ -185,8 +185,8 @@ public class StaffGlueImpl implements StaffGlue {
             }
 
             if (StringUtils.hasLength(username)) {
-                WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("username", SQLQueryUtils.elasticLikeAllParam(username));
-                boolqueryBuilder.must(wildcardQueryBuilder);
+                MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchPhraseQuery("username", SQLQueryUtils.elasticLikeAllParam(username));
+                boolqueryBuilder.must(matchQueryBuilder);
             }
 
             if (StringUtils.hasLength(mobile)) {

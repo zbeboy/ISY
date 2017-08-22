@@ -37,7 +37,7 @@ public class TestService {
 
     @Test
     public void deleteStudentByUsername(){
-        StudentElastic studentElastic = studentElasticRepository.findByUsername("863052300@qq.com");
+        StudentElastic studentElastic = studentElasticRepository.findByUsername("1006367538@qq.com");
 //        Iterable<StudentElastic> studentElastics = studentElasticRepository.findAll();
 //        studentElastics.forEach(System.out::println);
 //        studentElasticRepository.deleteByUsername("");

@@ -69,6 +69,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
      */
     function getPassParamId() {
         return {
+            realName: '#pass_search_real_name',
             username: '#pass_search_username',
             mobile: '#pass_search_mobile',
             usersType: '#pass_users_type'
@@ -79,6 +80,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
      参数
      */
     var passParam = {
+        realName: '',
         username: '',
         mobile: '',
         usersType: ''
@@ -96,6 +98,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
      * @returns {{username: (*|jQuery), mobile: (*|jQuery), usersType: (*|jQuery)}}
      */
     function initPassParam() {
+        passParam.realName = $(getPassParamId().realName).val();
         passParam.username = $(getPassParamId().username).val();
         passParam.mobile = $(getPassParamId().mobile).val();
         passParam.usersType = $(getPassParamId().usersType).val();
@@ -105,6 +108,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
      * clean pass tab param.
      */
     function cleanPassParam() {
+        $(getPassParamId().realName).val('');
         $(getPassParamId().username).val('');
         $(getPassParamId().mobile).val('');
         var childrens = $(getPassParamId().usersType).children();
@@ -121,6 +125,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     // pass tab table.
     var passTable = null;
+
+    $(getPassParamId().realName).keyup(function (event) {
+        if (event.keyCode == 13) {
+            initPassParam();
+            passTable.ajax.reload();
+        }
+    });
 
     $(getPassParamId().username).keyup(function (event) {
         if (event.keyCode == 13) {
@@ -256,44 +267,44 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
                         if (c.enabled == 1) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    },
-                                    {
-                                        "name": "设置角色",
-                                        "css": "role",
-                                        "type": "info",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "注销",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.username,
+                                            "role": c.roleName
+                                        },
+                                        {
+                                            "name": "设置角色",
+                                            "css": "role",
+                                            "type": "info",
+                                            "id": c.username,
+                                            "role": c.roleName
+                                        }
+                                    ]
+                                };
                         } else {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    },
-                                    {
-                                        "name": "设置角色",
-                                        "css": "role",
-                                        "type": "info",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "恢复",
+                                            "css": "recovery",
+                                            "type": "warning",
+                                            "id": c.username,
+                                            "role": c.roleName
+                                        },
+                                        {
+                                            "name": "设置角色",
+                                            "css": "role",
+                                            "type": "info",
+                                            "id": c.username,
+                                            "role": c.roleName
+                                        }
+                                    ]
+                                };
                         }
 
                         return template(context);
@@ -612,6 +623,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
     function getWaitParamId() {
         return {
+            realName: '#wait_search_real_name',
             username: '#wait_search_username',
             mobile: '#wait_search_mobile',
             usersType: '#wait_users_type'
@@ -622,6 +634,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
      参数
      */
     var waitParam = {
+        realName: '',
         username: '',
         mobile: '',
         usersType: ''
@@ -635,12 +648,14 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
     }
 
     function initWaitParam() {
+        waitParam.realName = $(getWaitParamId().realName).val();
         waitParam.username = $(getWaitParamId().username).val();
         waitParam.mobile = $(getWaitParamId().mobile).val();
         waitParam.usersType = $(getWaitParamId().usersType).val();
     }
 
     function cleanWaitParam() {
+        $(getWaitParamId().realName).val('');
         $(getWaitParamId().username).val('');
         $(getWaitParamId().mobile).val('');
         var childrens = $(getWaitParamId().usersType).children();
@@ -653,6 +668,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
     }
 
     var waitTable = null;
+
+    $(getWaitParamId().realName).keyup(function (event) {
+        if (event.keyCode == 13) {
+            initWaitParam();
+            waitTable.ajax.reload();
+        }
+    });
 
     $(getWaitParamId().username).keyup(function (event) {
         if (event.keyCode == 13) {
@@ -766,24 +788,24 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     orderable: false,
                     render: function (a, b, c, d) {
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "删除",
-                                    "css": "delete",
-                                    "type": "danger",
-                                    "id": c.username,
-                                    "role": ''
-                                },
-                                {
-                                    "name": "设置角色",
-                                    "css": "role",
-                                    "type": "info",
-                                    "id": c.username,
-                                    "role": ''
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "删除",
+                                        "css": "delete",
+                                        "type": "danger",
+                                        "id": c.username,
+                                        "role": ''
+                                    },
+                                    {
+                                        "name": "设置角色",
+                                        "css": "role",
+                                        "type": "info",
+                                        "id": c.username,
+                                        "role": ''
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }

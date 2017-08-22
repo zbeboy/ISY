@@ -130,12 +130,18 @@ public class UsersGlueImpl implements UsersGlue {
     public QueryBuilder searchCondition(JSONObject search) {
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         if (!ObjectUtils.isEmpty(search)) {
+            String realName = StringUtils.trimWhitespace(search.getString("realName"));
             String username = StringUtils.trimWhitespace(search.getString("username"));
             String mobile = StringUtils.trimWhitespace(search.getString("mobile"));
             String usersType = StringUtils.trimWhitespace(search.getString("usersType"));
+            if (StringUtils.hasLength(realName)) {
+                MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchPhraseQuery("realName", SQLQueryUtils.elasticLikeAllParam(realName));
+                boolqueryBuilder.must(matchQueryBuilder);
+            }
+
             if (StringUtils.hasLength(username)) {
-                WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery("username", SQLQueryUtils.elasticLikeAllParam(username));
-                boolqueryBuilder.must(wildcardQueryBuilder);
+                MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchPhraseQuery("username", SQLQueryUtils.elasticLikeAllParam(username));
+                boolqueryBuilder.must(matchQueryBuilder);
             }
 
             if (StringUtils.hasLength(mobile)) {
