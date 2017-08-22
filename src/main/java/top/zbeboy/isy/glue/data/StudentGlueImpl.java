@@ -138,6 +138,7 @@ public class StudentGlueImpl implements StudentGlue {
             studentBean.setRealName(studentElastic.getRealName());
             studentBean.setMobile(studentElastic.getMobile());
             studentBean.setAvatar(studentElastic.getAvatar());
+            studentBean.setVerifyMailbox(studentElastic.getVerifyMailbox());
             studentBean.setLangKey(studentElastic.getLangKey());
             studentBean.setJoinDate(studentElastic.getJoinDate());
             studentBean.setRoleName(studentElastic.getRoleName());

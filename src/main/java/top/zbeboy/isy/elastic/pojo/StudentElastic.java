@@ -108,6 +108,9 @@ public class StudentElastic {
     private String avatar;
     @Getter
     @Setter
+    private Byte verifyMailbox;
+    @Getter
+    @Setter
     private String langKey;
     @Getter
     @Setter

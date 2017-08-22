@@ -184,6 +184,7 @@ public class UsersServiceImpl implements UsersService {
             studentElastic.setAvatar(users.getAvatar());
             studentElastic.setLangKey(users.getLangKey());
             studentElastic.setJoinDate(users.getJoinDate());
+            studentElastic.setVerifyMailbox(users.getVerifyMailbox());
             studentElasticRepository.delete(studentElastic);
             studentElasticRepository.save(studentElastic);
         } else if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
@@ -194,6 +195,7 @@ public class UsersServiceImpl implements UsersService {
             staffElastic.setAvatar(users.getAvatar());
             staffElastic.setLangKey(users.getLangKey());
             staffElastic.setJoinDate(users.getJoinDate());
+            staffElastic.setVerifyMailbox(users.getVerifyMailbox());
             staffElasticRepository.delete(staffElastic);
             staffElasticRepository.save(staffElastic);
         }

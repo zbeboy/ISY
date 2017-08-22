@@ -114,6 +114,7 @@ public class UsersGlueImpl implements UsersGlue {
             usersBean.setRoleName(usersElastic.getRoleName());
             usersBean.setUsersTypeName(usersElastic.getUsersTypeName());
             usersBean.setEnabled(usersElastic.getEnabled());
+            usersBean.setVerifyMailbox(usersElastic.getVerifyMailbox());
             usersBean.setLangKey(usersElastic.getLangKey());
             usersBean.setJoinDate(usersElastic.getJoinDate());
             userses.add(usersBean);

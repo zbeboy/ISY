@@ -787,25 +787,41 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     targets: 7,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "删除",
-                                        "css": "delete",
-                                        "type": "danger",
-                                        "id": c.username,
-                                        "role": ''
-                                    },
-                                    {
-                                        "name": "设置角色",
-                                        "css": "role",
-                                        "type": "info",
-                                        "id": c.username,
-                                        "role": ''
-                                    }
-                                ]
-                            };
+                        var context = null;
+                        if (c.verifyMailbox !== null && c.verifyMailbox === 1) {
+                            context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "删除",
+                                            "css": "delete",
+                                            "type": "danger",
+                                            "id": c.username,
+                                            "role": ''
+                                        },
+                                        {
+                                            "name": "设置角色",
+                                            "css": "role",
+                                            "type": "info",
+                                            "id": c.username,
+                                            "role": ''
+                                        }
+                                    ]
+                                };
+                        } else {
+                            context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "删除",
+                                            "css": "delete",
+                                            "type": "danger",
+                                            "id": c.username,
+                                            "role": ''
+                                        }
+                                    ]
+                                };
+                        }
 
                         return template(context);
                     }

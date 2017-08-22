@@ -131,6 +131,7 @@ public class StaffGlueImpl implements StaffGlue {
             staffBean.setRealName(staffElastic.getRealName());
             staffBean.setMobile(staffElastic.getMobile());
             staffBean.setAvatar(staffElastic.getAvatar());
+            staffBean.setVerifyMailbox(staffElastic.getVerifyMailbox());
             staffBean.setLangKey(staffElastic.getLangKey());
             staffBean.setJoinDate(staffElastic.getJoinDate());
             staffBean.setRoleName(staffElastic.getRoleName());
