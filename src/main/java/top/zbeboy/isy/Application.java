@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import top.zbeboy.isy.config.ISYProperties;
 
 /*
- * Copyright 2016 the original isy team.
+ * Copyright 2017 the original isy team.
  */
 @Slf4j
 @SpringBootApplication
