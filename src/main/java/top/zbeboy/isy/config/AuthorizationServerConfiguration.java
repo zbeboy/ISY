@@ -7,9 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import top.zbeboy.isy.security.MyUserDetailsServiceImpl;
 
@@ -32,6 +35,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Inject
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private ClientDetailsService clientDetailsService;
+
     /**
      * oauth jdbc token
      *
@@ -40,6 +46,15 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Bean
     public JdbcTokenStore tokenStore() {
         return new JdbcTokenStore(dataSource);
+    }
+
+    @Bean
+    public DefaultTokenServices tokenServices() {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(tokenStore());
+        tokenServices.setClientDetailsService(clientDetailsService);
+        tokenServices.setSupportRefreshToken(true);
+        return tokenServices;
     }
 
     @Bean
@@ -70,13 +85,17 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
          */
         clients.jdbc(dataSource).withClient("isy-base-client")
                 .authorizedGrantTypes("password")
-                .authorities("SYSTEM")
                 .scopes("read", "write")
                 .secret("bar");
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.userDetailsService(myUserDetailsService).authorizationCodeServices(authorizationCodeServices()).authenticationManager(this.authenticationManager).tokenStore(tokenStore()).approvalStoreDisabled();
+        endpoints.userDetailsService(myUserDetailsService)
+                .authorizationCodeServices(authorizationCodeServices())
+                .authenticationManager(this.authenticationManager)
+                .tokenStore(tokenStore())
+                .tokenServices(tokenServices())
+                .approvalStoreDisabled();
     }
 }
