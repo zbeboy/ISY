@@ -7,11 +7,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import top.zbeboy.isy.security.MyUserDetailsServiceImpl;
@@ -62,6 +64,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         return new JdbcAuthorizationCodeServices(dataSource);
     }
 
+    @Bean
+    public OAuth2RequestFactory oAuth2RequestFactory() {
+        DefaultOAuth2RequestFactory defaultOAuth2RequestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+        defaultOAuth2RequestFactory.setCheckUserScopes(true);
+        return defaultOAuth2RequestFactory;
+    }
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         /*clients.jdbc(dataSource).withClient("clientapp")
@@ -85,7 +94,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
          */
         clients.jdbc(dataSource).withClient("isy-base-client")
                 .authorizedGrantTypes("password")
-                .scopes("read", "write")
+                .scopes("SYSTEM")
                 .secret("bar");
     }
 
@@ -96,6 +105,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authenticationManager(this.authenticationManager)
                 .tokenStore(tokenStore())
                 .tokenServices(tokenServices())
+                .requestFactory(oAuth2RequestFactory())
                 .approvalStoreDisabled();
+    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        oauthServer.checkTokenAccess("isAuthenticated()");
     }
 }

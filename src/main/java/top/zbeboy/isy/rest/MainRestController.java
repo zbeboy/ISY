@@ -1,10 +1,13 @@
 package top.zbeboy.isy.rest;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zbeboy on 2017/1/19.
@@ -16,5 +19,14 @@ public class MainRestController {
     @GetMapping("/user")
     public Principal user(Principal user) {
         return user;
+    }
+
+    @GetMapping("/rest/test")
+    @PreAuthorize("#oauth2.hasScope('read')")
+    public List<String> test(){
+        List<String> list = new ArrayList<>();
+        list.add("test1");
+        list.add("test2");
+        return list;
     }
 }

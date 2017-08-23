@@ -102,6 +102,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder()).and().eraseCredentials(false);
-        //    auth.jdbcAuthentication().dataSource(this.dataSource).passwordEncoder(passwordEncoder()).and().eraseCredentials(false);
     }
 }
