@@ -70,7 +70,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public EmbeddedServletContainerFactory undertow() {
         UndertowEmbeddedServletContainerFactory undertow = new UndertowEmbeddedServletContainerFactory();
-        undertow.addBuilderCustomizers(builder -> builder.addHttpListener(isyProperties.getConstants().getServerHttpPort(), isyProperties.getConstants().getUndertowListenerIp()));
+        undertow.addBuilderCustomizers(builder -> builder.addHttpListener(this.isyProperties.getConstants().getServerHttpPort(), this.isyProperties.getConstants().getUndertowListenerIp()));
         undertow.addDeploymentInfoCustomizers(deploymentInfo ->
                 deploymentInfo.addSecurityConstraint(new SecurityConstraint()
                         .addWebResourceCollection(new WebResourceCollection()
@@ -79,10 +79,10 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
                         .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
                         .setDefaultEncoding(CharEncoding.UTF_8)
                         .setUrlEncoding(CharEncoding.UTF_8)
-                        .setConfidentialPortManager(exchange -> isyProperties.getConstants().getServerHttpsPort())
+                        .setConfidentialPortManager(exchange -> this.isyProperties.getConstants().getServerHttpsPort())
         );
-        if (env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION)) {
-            File documentRoot = new File(System.getProperty("user.dir") + "/" + isyProperties.getConstants().getTempDir());
+        if (this.env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION)) {
+            File documentRoot = new File(System.getProperty("user.dir") + "/" + this.isyProperties.getConstants().getTempDir());
             if (!documentRoot.exists()) {
                 documentRoot.mkdirs();
             }

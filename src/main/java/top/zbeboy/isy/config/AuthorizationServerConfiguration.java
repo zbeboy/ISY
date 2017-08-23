@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
@@ -37,9 +38,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Inject
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private ClientDetailsService clientDetailsService;
-
     /**
      * oauth jdbc token
      *
@@ -47,28 +45,33 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      */
     @Bean
     public JdbcTokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource);
+        return new JdbcTokenStore(this.dataSource);
     }
 
     @Bean
     public DefaultTokenServices tokenServices() {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(tokenStore());
-        tokenServices.setClientDetailsService(clientDetailsService);
+        tokenServices.setClientDetailsService(clientDetailsService());
         tokenServices.setSupportRefreshToken(true);
         return tokenServices;
     }
 
     @Bean
     protected AuthorizationCodeServices authorizationCodeServices() {
-        return new JdbcAuthorizationCodeServices(dataSource);
+        return new JdbcAuthorizationCodeServices(this.dataSource);
     }
 
     @Bean
     public OAuth2RequestFactory oAuth2RequestFactory() {
-        DefaultOAuth2RequestFactory defaultOAuth2RequestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+        DefaultOAuth2RequestFactory defaultOAuth2RequestFactory = new DefaultOAuth2RequestFactory(clientDetailsService());
         defaultOAuth2RequestFactory.setCheckUserScopes(true);
         return defaultOAuth2RequestFactory;
+    }
+
+    @Bean
+    public ClientDetailsService clientDetailsService() {
+        return new JdbcClientDetailsService(this.dataSource);
     }
 
     @Override
@@ -92,15 +95,15 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                  "password","authorization_code", "refresh_token")
                .scopes("read");
          */
-        clients.jdbc(dataSource).withClient("isy-base-client")
+        clients.jdbc(this.dataSource).withClient("isy-base-client")
                 .authorizedGrantTypes("password")
-                .scopes("SYSTEM")
+                .scopes("read")
                 .secret("bar");
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.userDetailsService(myUserDetailsService)
+        endpoints.userDetailsService(this.myUserDetailsService)
                 .authorizationCodeServices(authorizationCodeServices())
                 .authenticationManager(this.authenticationManager)
                 .tokenStore(tokenStore())
@@ -111,6 +114,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer.checkTokenAccess("isAuthenticated()");
+        oauthServer.allowFormAuthenticationForClients();
     }
 }

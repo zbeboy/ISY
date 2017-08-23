@@ -97,6 +97,6 @@ public class JooqSpringBootConfiguration {
                 .derive(connectionProvider)
                 .derive(transactionProvider)
                 .derive(executeListenerProvider)
-                .derive(SQLDialect.valueOf(isyProperties.getConstants().getJooqSqlDialect().toUpperCase()));
+                .derive(SQLDialect.valueOf(this.isyProperties.getConstants().getJooqSqlDialect().toUpperCase()));
     }
 }

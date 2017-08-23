@@ -103,19 +103,19 @@ public class ScheduledConfiguration {
         DateTime oldTime = dateTime.minusDays(30);
         Byte b = 0;
         // 查询未验证用户
-        Result<UsersRecord> records = usersService.findByJoinDateAndVerifyMailbox(oldTime.toDate(), b);
+        Result<UsersRecord> records = this.usersService.findByJoinDateAndVerifyMailbox(oldTime.toDate(), b);
         records.forEach(r -> {
-            UsersType usersType = cacheManageService.findByUsersTypeId(r.getUsersTypeId());
-            authoritiesService.deleteByUsername(r.getUsername());
+            UsersType usersType = this.cacheManageService.findByUsersTypeId(r.getUsersTypeId());
+            this.authoritiesService.deleteByUsername(r.getUsername());
             if (usersType.getUsersTypeName().equals(Workbook.STAFF_USERS_TYPE)) {
-                staffService.deleteByUsername(r.getUsername());
-                staffElasticRepository.deleteByUsername(r.getUsername());
+                this.staffService.deleteByUsername(r.getUsername());
+                this.staffElasticRepository.deleteByUsername(r.getUsername());
             } else if (usersType.getUsersTypeName().equals(Workbook.STUDENT_USERS_TYPE)) {
-                studentService.deleteByUsername(r.getUsername());
-                studentElasticRepository.deleteByUsername(r.getUsername());
+                this.studentService.deleteByUsername(r.getUsername());
+                this.studentElasticRepository.deleteByUsername(r.getUsername());
             }
-            usersService.deleteById(r.getUsername());
-            usersElasticRepository.delete(r.getUsername());
+            this.usersService.deleteById(r.getUsername());
+            this.usersElasticRepository.delete(r.getUsername());
         });
         log.info(">>>>>>>>>>>>> scheduled ... clean users ");
     }
@@ -127,12 +127,12 @@ public class ScheduledConfiguration {
     public void internshipApply() {
         // 更改实习提交状态
         Timestamp now = new Timestamp(Clock.systemDefaultZone().millis());
-        Result<InternshipReleaseRecord> internshipReleaseRecords = internshipReleaseService.findByEndTime(now);
+        Result<InternshipReleaseRecord> internshipReleaseRecords = this.internshipReleaseService.findByEndTime(now);
         for (InternshipReleaseRecord r : internshipReleaseRecords) {
-            internshipApplyService.updateStateWithInternshipReleaseIdAndState(r.getInternshipReleaseId(), 0, 1);
+            this.internshipApplyService.updateStateWithInternshipReleaseIdAndState(r.getInternshipReleaseId(), 0, 1);
         }
-        internshipApplyService.updateStateByChangeFillEndTime(now, 5, 1);
-        internshipApplyService.updateStateByChangeFillEndTime(now, 7, 1);
+        this.internshipApplyService.updateStateByChangeFillEndTime(now, 5, 1);
+        this.internshipApplyService.updateStateByChangeFillEndTime(now, 7, 1);
         log.info(">>>>>>>>>>>>> scheduled ... internshipApply state update. ");
     }
 
@@ -145,8 +145,8 @@ public class ScheduledConfiguration {
         DateTime dateTime = DateTime.now();
         DateTime oldTime = dateTime.minusYears(1);
         Timestamp ts = new Timestamp(oldTime.getMillis());
-        systemAlertService.deleteByAlertDate(ts);
-        systemMessageService.deleteByMessageDate(ts);
+        this.systemAlertService.deleteByAlertDate(ts);
+        this.systemMessageService.deleteByMessageDate(ts);
         log.info(">>>>>>>>>>>>> scheduled ... clean alert , message ");
     }
 }

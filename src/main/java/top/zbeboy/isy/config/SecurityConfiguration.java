@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JdbcTokenRepositoryImpl jdbcTokenRepository() {
         JdbcTokenRepositoryImpl j = new JdbcTokenRepositoryImpl();
-        j.setDataSource(dataSource);
+        j.setDataSource(this.dataSource);
         return j;
     }
 
@@ -75,8 +75,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**", "/plugin/**", "/files/**", "/webjars/**", "/webjarsjs/**").permitAll()
                 .and().formLogin().loginPage("/login")
-                .successHandler(ajaxAuthenticationSuccessHandler)
-                .failureHandler(ajaxAuthenticationFailureHandler)
+                .successHandler(this.ajaxAuthenticationSuccessHandler)
+                .failureHandler(this.ajaxAuthenticationFailureHandler)
                 .and().sessionManagement().invalidSessionUrl("/login")
                 .and().logout().logoutSuccessUrl("/")
                 .permitAll().invalidateHttpSession(true)
@@ -101,6 +101,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder()).and().eraseCredentials(false);
+        auth.userDetailsService(this.myUserDetailsService).passwordEncoder(passwordEncoder()).and().eraseCredentials(false);
     }
 }
