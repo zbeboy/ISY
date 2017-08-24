@@ -7,25 +7,24 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import top.zbeboy.isy.security.MyUserDetailsServiceImpl;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 /**
  * Created by zbeboy on 2017/3/9.
  */
 @Configuration
+@EnableResourceServer
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
@@ -35,8 +34,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private MyUserDetailsServiceImpl myUserDetailsService;
 
-    @Inject
+    @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private ClientDetailsService clientDetailsService;
 
     /**
      * oauth jdbc token
@@ -49,29 +51,15 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     }
 
     @Bean
-    public DefaultTokenServices tokenServices() {
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(tokenStore());
-        tokenServices.setClientDetailsService(clientDetailsService());
-        tokenServices.setSupportRefreshToken(true);
-        return tokenServices;
-    }
-
-    @Bean
     protected AuthorizationCodeServices authorizationCodeServices() {
         return new JdbcAuthorizationCodeServices(this.dataSource);
     }
 
     @Bean
     public OAuth2RequestFactory oAuth2RequestFactory() {
-        DefaultOAuth2RequestFactory defaultOAuth2RequestFactory = new DefaultOAuth2RequestFactory(clientDetailsService());
+        DefaultOAuth2RequestFactory defaultOAuth2RequestFactory = new DefaultOAuth2RequestFactory(this.clientDetailsService);
         defaultOAuth2RequestFactory.setCheckUserScopes(true);
         return defaultOAuth2RequestFactory;
-    }
-
-    @Bean
-    public ClientDetailsService clientDetailsService() {
-        return new JdbcClientDetailsService(this.dataSource);
     }
 
     @Override
@@ -97,7 +85,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
          */
         clients.jdbc(this.dataSource).withClient("isy-base-client")
                 .authorizedGrantTypes("password")
-                .scopes("read")
+                .authorities("ROLE_SYSTEM")
+                .resourceIds("isy_base_resource")
+                .scopes("system")
                 .secret("bar");
     }
 
@@ -107,13 +97,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authorizationCodeServices(authorizationCodeServices())
                 .authenticationManager(this.authenticationManager)
                 .tokenStore(tokenStore())
-                .tokenServices(tokenServices())
-                .requestFactory(oAuth2RequestFactory())
-                .approvalStoreDisabled();
+                .requestFactory(oAuth2RequestFactory());
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer.allowFormAuthenticationForClients();
+        oauthServer.checkTokenAccess("isAuthenticated()");
     }
 }
