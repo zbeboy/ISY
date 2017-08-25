@@ -2,9 +2,9 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:include="header :: header(~{::meta},~{::title},~{::link})">
     <!-- csrf -->
-    <meta name="_csrf" content="" />
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
     <!-- default header name is X-CSRF-TOKEN -->
-    <meta name="_csrf_header" content="" />
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
     <title>Error</title>
     <!-- Custom CSS-->
     <link rel="stylesheet" href="css/error.css" th:href="@{/css/custom/error.css}"/>
