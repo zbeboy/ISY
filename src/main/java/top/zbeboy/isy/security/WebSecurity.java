@@ -10,9 +10,7 @@ import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.platform.UsersService;
-import top.zbeboy.isy.service.system.ApplicationService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +31,6 @@ public class WebSecurity {
 
     @Autowired
     private UsersService usersService;
-
-    @Resource
-    private RoleApplicationService roleApplicationService;
-
-    @Resource
-    private ApplicationService applicationService;
 
     @Resource
     private CacheManageService cacheManageService;
