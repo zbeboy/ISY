@@ -69,8 +69,8 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .authorizedGrantTypes("password", "refresh_token")
                 .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                 .scopes("read", "write", "trust")
-                .resourceIds("isy-base-resource")
-                .accessTokenValiditySeconds(60)
+                .resourceIds(Oauth2ResourceIdsBook.ISY_BASE_RESOURCE)
+                .accessTokenValiditySeconds(86400)
                 .secret("secret");
         // @formatter:on
     }
