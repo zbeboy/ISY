@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @Configuration
 @EnableResourceServer
-public class Oauth2ResourceServer extends ResourceServerConfigurerAdapter {
+public class OauResourceServer extends ResourceServerConfigurerAdapter {
 
     @Autowired
     private TokenStore tokenStore;
@@ -19,7 +19,7 @@ public class Oauth2ResourceServer extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(ResourceServerSecurityConfigurer resources)
             throws Exception {
-        resources.tokenStore(tokenStore).resourceId(Oauth2ResourceIdsBook.ISY_BASE_RESOURCE);
+        resources.tokenStore(tokenStore).resourceId(OauResourceIdsBook.ISY_BASE_RESOURCE);
     }
 
     @Override
