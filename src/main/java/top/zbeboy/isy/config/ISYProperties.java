@@ -22,6 +22,8 @@ public class ISYProperties {
 
     private final Weixin weixin = new Weixin();
 
+    private final OAuth2 oAuth2 = new OAuth2();
+
     public Async getAsync() {
         return async;
     }
@@ -40,6 +42,10 @@ public class ISYProperties {
 
     public Weixin getWeixin() {
         return weixin;
+    }
+
+    public OAuth2 getoAuth2() {
+        return oAuth2;
     }
 
     /**
@@ -343,6 +349,21 @@ public class ISYProperties {
 
         public void setSmallEncodingAESKey(String smallEncodingAESKey) {
             this.smallEncodingAESKey = smallEncodingAESKey;
+        }
+    }
+
+    /**
+     * 微信初始化参数
+     */
+    public static class OAuth2 {
+        private String redirectUrisPrefix;
+
+        public String getRedirectUrisPrefix() {
+            return redirectUrisPrefix;
+        }
+
+        public void setRedirectUrisPrefix(String redirectUrisPrefix) {
+            this.redirectUrisPrefix = redirectUrisPrefix;
         }
     }
 }
