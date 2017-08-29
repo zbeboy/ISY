@@ -111,6 +111,7 @@ public class MailServiceImpl implements MailService {
         data.setLocale(locale);
         data.setVariable("user", users);
         data.setVariable("resetLink", baseUrl + "/user/login/password/forget/reset?key=" + users.getPasswordResetKey() + "&username=" + users.getUsername());
+        data.setVariable("baseUrl", baseUrl);
         String subject = messageSource.getMessage("email.reset.title", null, locale);
         String content = springTemplateEngine.process("mails/passwordresetemail", data);
         sendEmail(users.getUsername(), subject, content, false, true);
@@ -125,6 +126,7 @@ public class MailServiceImpl implements MailService {
         data.setLocale(locale);
         data.setVariable("user", users);
         data.setVariable("validLink", baseUrl + "/user/register/mailbox/valid?key=" + users.getMailboxVerifyCode() + "&username=" + users.getUsername());
+        data.setVariable("baseUrl", baseUrl);
         String subject = messageSource.getMessage("email.valid.title", null, locale);
         String content = springTemplateEngine.process("mails/validemail", data);
         sendEmail(users.getUsername(), subject, content, false, true);
@@ -140,6 +142,7 @@ public class MailServiceImpl implements MailService {
         data.setVariable("user", users);
         data.setVariable("notifyLink", baseUrl + "/login");
         data.setVariable("notify", notify);
+        data.setVariable("baseUrl", baseUrl);
         String subject = messageSource.getMessage("email.notify.title", null, locale);
         String content = springTemplateEngine.process("mails/notifyemail", data);
         sendEmail(users.getUsername(), subject, content, false, true);

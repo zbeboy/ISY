@@ -38,7 +38,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-                                                            或复制链接在浏览器中打开 : <code th:utext="${validLink}"></code>
+                                                            或复制以下链接在浏览器中打开 : <code th:utext="${validLink}"></code>
                                                         </td>
                                                     </tr>
                                                     <tr style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
@@ -72,7 +72,7 @@
                                 <td style="color: #444444; font-family: Arial, sans-serif; font-size: 14px;"
                                     width="75%">
                                     <span th:utext="#{web.foot.signature}"></span>
-                                    <a href="https://www.zbeboy.top" style="color: #ffffff;"><font color="#666666">网站首页</font></a>
+                                    <a href="https://www.zbeboy.top" th:href="${baseUrl}" style="color: #ffffff;"><font color="#666666">网站首页</font></a>
                                 </td>
                             </tr>
                         </table>
