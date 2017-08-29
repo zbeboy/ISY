@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Role;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
@@ -304,7 +305,11 @@ public class ElasticSyncServiceImpl implements ElasticSyncService {
                     hasUse = true;
                 }
                 Role tempRole = roleService.findByRoleEnName(a.getAuthority());
-                stringBuilder.append(tempRole.getRoleName()).append(" ");
+                if(!ObjectUtils.isEmpty(tempRole) && StringUtils.hasLength(tempRole.getRoleName())){
+                    stringBuilder.append(tempRole.getRoleName()).append(" ");
+                } else {
+                    stringBuilder.append("Not exist role ...").append(" ");
+                }
             }
 
             if (!hasUse) {
