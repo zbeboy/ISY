@@ -194,12 +194,7 @@ public class StaffController {
 
                                         //发送验证邮件
                                         if (isyProperties.getMail().isOpen()) {
-                                            Users users = new Users();
-                                            users.setUsername(saveUsers.getUsername());
-                                            users.setLangKey(saveUsers.getLangKey());
-                                            users.setMailboxVerifyCode(saveUsers.getMailboxVerifyCode());
-                                            users.setMailboxVerifyValid(saveUsers.getMailboxVerifyValid());
-                                            mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request));
+                                            mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request));
                                             return AjaxUtils.of().success().msg("恭喜注册成功，请验证邮箱");
                                         } else {
                                             return AjaxUtils.of().fail().msg("邮件推送已被管理员关闭");
