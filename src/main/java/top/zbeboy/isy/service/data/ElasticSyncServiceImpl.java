@@ -305,10 +305,10 @@ public class ElasticSyncServiceImpl implements ElasticSyncService {
                     hasUse = true;
                 }
                 Role tempRole = roleService.findByRoleEnName(a.getAuthority());
-                if(!ObjectUtils.isEmpty(tempRole) && StringUtils.hasLength(tempRole.getRoleName())){
+                if (!ObjectUtils.isEmpty(tempRole) && StringUtils.hasLength(tempRole.getRoleName())) {
                     stringBuilder.append(tempRole.getRoleName()).append(" ");
                 } else {
-                    stringBuilder.append("Not exist role ...").append(" ");
+                    throw new NullPointerException("Not exist role for authority : " + a.getAuthority());
                 }
             }
 
