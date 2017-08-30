@@ -34,7 +34,7 @@ public class OAuth2ResourceServer extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/me").access("#oauth2.hasScope('read')")
-                .antMatchers("/rest/**").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))");
+                .antMatchers("/rest/**").access("#oauth2.hasScope('read')");
         // @formatter:on
     }
 }
