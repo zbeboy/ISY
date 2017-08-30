@@ -22,10 +22,11 @@ public class MainRestController {
     }
 
     @GetMapping("/rest/test")
-    public List<String> test(){
+    public List<String> test(Principal user){
         List<String> list = new ArrayList<>();
         list.add("test1");
         list.add("test2");
+        System.out.println(user.toString());
         return list;
     }
 }
