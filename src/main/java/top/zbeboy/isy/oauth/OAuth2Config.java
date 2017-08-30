@@ -70,7 +70,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                 .scopes("read", "write", "trust")
                 .resourceIds(OAuth2ResourceIdsBook.ISY_BASE_RESOURCE)
-                .accessTokenValiditySeconds(86400)
+                .accessTokenValiditySeconds(180 * 24 * 60 * 60)
                 .refreshTokenValiditySeconds(365 * 24 * 60 * 60)
                 .secret("9afcd2264ace49a09053eae4790fc812");
         // @formatter:on
