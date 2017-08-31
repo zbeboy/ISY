@@ -14,6 +14,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.domain.tables.pojos.UsersType;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
@@ -27,6 +29,9 @@ public class UsersRestController {
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private CacheManageService cacheManageService;
+
     /**
      * 获取用户类型
      *
@@ -38,9 +43,18 @@ public class UsersRestController {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(user) && StringUtils.isNotBlank(user.getName())) {
             Users users = usersService.findByUsername(user.getName());
-            ajaxUtils.success().msg("获取用户类型成功").obj(users.getUsersTypeId());
+            if (!ObjectUtils.isEmpty(user)) {
+                UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
+                if (!ObjectUtils.isEmpty(usersType)) {
+                    ajaxUtils.success().msg("获取用户类型成功").obj(usersType);
+                } else {
+                    ajaxUtils.fail().msg("未获取到用户类型");
+                }
+            } else {
+                ajaxUtils.fail().msg("未获取到用户相关信息");
+            }
         } else {
-            ajaxUtils.fail().msg("未获取到用户相关信息");
+            ajaxUtils.fail().msg("用户可能未授权");
         }
         return ajaxUtils;
     }
