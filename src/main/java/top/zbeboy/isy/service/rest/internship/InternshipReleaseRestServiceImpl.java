@@ -127,12 +127,11 @@ public class InternshipReleaseRestServiceImpl implements InternshipReleaseRestSe
     }
 
     @Override
-    public InternshipReleaseBean dealDateTime(InternshipReleaseBean i, String format) {
+    public void dealDateTime(InternshipReleaseBean i, String format) {
         i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(), format));
         i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(), format));
         i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(), format));
         i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(), format));
         i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(), format));
-        return i;
     }
 }

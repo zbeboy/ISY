@@ -40,7 +40,7 @@ public interface InternshipReleaseRestService {
      * @param format 时间格式
      * @return 格式化后的数据
      */
-    InternshipReleaseBean dealDateTime(InternshipReleaseBean i, String format);
+    void dealDateTime(InternshipReleaseBean i, String format);
 
     /**
      * 分页查询全部
