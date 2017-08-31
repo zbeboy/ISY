@@ -26,6 +26,7 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,11 +72,11 @@ public class InternshipReleaseRestController {
             if (student.isPresent()) {
                 StudentBean studentBean = student.get().into(StudentBean.class);
                 Result<Record> records = internshipReleaseRestService.findAllByPageForStudent(paginationUtils, studentBean.getScienceId(), studentBean.getGrade());
+                List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
                 if (records.isNotEmpty()) {
-                    ajaxUtils.success().listData(records.into(InternshipReleaseBean.class)).paginationUtils(paginationUtils).obj(studentBean.getScienceName());
-                } else {
-                    ajaxUtils.fail().msg("没有任何数据");
+                    internshipReleaseBeens = records.into(InternshipReleaseBean.class);
                 }
+                ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils).obj(studentBean.getScienceName());
             } else {
                 ajaxUtils.fail().msg("查询学生信息失败");
             }
@@ -101,11 +102,7 @@ public class InternshipReleaseRestController {
                 Department department = staff.get().into(Department.class);
                 Result<Record> records = internshipReleaseRestService.findAllByPageForStaff(paginationUtils, department.getDepartmentId());
                 List<InternshipReleaseBean> internshipReleaseBeens = internshipReleaseRestService.dealData(records);
-                if (records.isNotEmpty()) {
-                    ajaxUtils.success().listData(internshipReleaseBeens).paginationUtils(paginationUtils);
-                } else {
-                    ajaxUtils.fail().msg("没有任何数据");
-                }
+                ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
             } else {
                 ajaxUtils.fail().msg("查询教职工信息失败");
             }
