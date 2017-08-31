@@ -34,6 +34,15 @@ public interface InternshipReleaseRestService {
     List<InternshipReleaseBean> dealData(Result<Record> records);
 
     /**
+     * 处理实习中时间
+     *
+     * @param i      数据
+     * @param format 时间格式
+     * @return 格式化后的数据
+     */
+    InternshipReleaseBean dealDateTime(InternshipReleaseBean i, String format);
+
+    /**
      * 分页查询全部
      *
      * @param paginationUtils 分页工具

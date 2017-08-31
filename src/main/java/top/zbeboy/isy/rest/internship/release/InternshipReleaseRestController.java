@@ -16,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.isy.domain.tables.pojos.Department;
+import top.zbeboy.isy.domain.tables.pojos.Science;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.rest.internship.InternshipReleaseRestService;
@@ -74,9 +75,17 @@ public class InternshipReleaseRestController {
                 Result<Record> records = internshipReleaseRestService.findAllByPageForStudent(paginationUtils, studentBean.getScienceId(), studentBean.getGrade());
                 List<InternshipReleaseBean> internshipReleaseBeens = new ArrayList<>();
                 if (records.isNotEmpty()) {
+                    Science sciences = student.get().into(Science.class);
+                    List<Science> scienceList = new ArrayList<>();
+                    scienceList.add(sciences);
+                    String format = "yyyy-MM-dd HH:mm:ss";
                     internshipReleaseBeens = records.into(InternshipReleaseBean.class);
+                    internshipReleaseBeens.forEach(i -> {
+                        i.setSciences(scienceList);
+                        internshipReleaseRestService.dealDateTime(i, format);
+                    });
                 }
-                ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils).obj(studentBean.getScienceName());
+                ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils);
             } else {
                 ajaxUtils.fail().msg("查询学生信息失败");
             }

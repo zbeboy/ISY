@@ -71,11 +71,7 @@ public class InternshipReleaseRestServiceImpl implements InternshipReleaseRestSe
             internshipReleaseBeens = records.into(InternshipReleaseBean.class);
             String format = "yyyy-MM-dd HH:mm:ss";
             internshipReleaseBeens.forEach(i -> {
-                i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(), format));
-                i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(), format));
-                i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(), format));
-                i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(), format));
-                i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(), format));
+                dealDateTime(i,format);
                 Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseIdRelation(i.getInternshipReleaseId());
                 i.setSciences(records1.into(Science.class));
             });
@@ -128,5 +124,15 @@ public class InternshipReleaseRestServiceImpl implements InternshipReleaseRestSe
                 .orderBy(INTERNSHIP_RELEASE.RELEASE_TIME.desc())
                 .limit((pageNum - 1) * pageSize, pageSize)
                 .fetch();
+    }
+
+    @Override
+    public InternshipReleaseBean dealDateTime(InternshipReleaseBean i, String format) {
+        i.setTeacherDistributionStartTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionStartTime(), format));
+        i.setTeacherDistributionEndTimeStr(DateTimeUtils.timestampToString(i.getTeacherDistributionEndTime(), format));
+        i.setStartTimeStr(DateTimeUtils.timestampToString(i.getStartTime(), format));
+        i.setEndTimeStr(DateTimeUtils.timestampToString(i.getEndTime(), format));
+        i.setReleaseTimeStr(DateTimeUtils.timestampToString(i.getReleaseTime(), format));
+        return i;
     }
 }
