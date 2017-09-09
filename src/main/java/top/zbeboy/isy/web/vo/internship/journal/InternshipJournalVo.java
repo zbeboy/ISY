@@ -20,7 +20,7 @@ public class InternshipJournalVo {
     @Size(max = 20)
     private String studentNumber;
     @NotNull
-    @Size(max = 10)
+    @Size(max = 200)
     private String organize;
     @NotNull
     @Size(max = 10)

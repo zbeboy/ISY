@@ -441,7 +441,7 @@ CREATE TABLE internship_journal (
   internship_journal_id            VARCHAR(64) PRIMARY KEY,
   student_name                     VARCHAR(10)  NOT NULL,
   student_number                   VARCHAR(20)  NOT NULL,
-  organize                         VARCHAR(10)  NOT NULL,
+  organize                         VARCHAR(200)  NOT NULL,
   school_guidance_teacher          VARCHAR(10)  NOT NULL,
   graduation_practice_company_name VARCHAR(200) NOT NULL,
   internship_journal_content       TEXT         NOT NULL,
