@@ -36,7 +36,7 @@ public class LoggingAspectConfiguration {
      * @return
      */
     @Bean
-    @Profile({Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION})
+    @Profile({Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION, Workbook.SPRING_PROFILE_TEST})
     public LoggingRecordAspect loggingRecordAspect() {
         return new LoggingRecordAspect();
     }

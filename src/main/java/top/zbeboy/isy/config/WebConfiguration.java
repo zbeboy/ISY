@@ -81,7 +81,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
                         .setUrlEncoding(CharEncoding.UTF_8)
                         .setConfidentialPortManager(exchange -> this.isyProperties.getConstants().getServerHttpsPort())
         );
-        if (this.env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION)) {
+        if (this.env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION, Workbook.SPRING_PROFILE_TEST)) {
             File documentRoot = new File(System.getProperty("user.dir") + "/" + this.isyProperties.getConstants().getTempDir());
             if (!documentRoot.exists()) {
                 documentRoot.mkdirs();

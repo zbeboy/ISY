@@ -24,6 +24,11 @@ public final class Workbook {
     public static final String SPRING_PROFILE_PRODUCTION = "prod";
 
     /*
+    测试环境
+   */
+    public static final String SPRING_PROFILE_TEST = "test";
+
+    /*
    注册类型为学生
     */
     public static final String STUDENT_REGIST = "student";
