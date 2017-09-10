@@ -8,9 +8,9 @@
 <footer class="footer" th:fragment="footer">
     <div class="text-center">
         <div style="margin:0 auto;">
-            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=53011102000364"
+            <a target="_blank" th:href="#{web.foot.gov.href}"
                style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img
-                    src="/images/beian_logo.png" style="float:left;"/>
+                    th:src="@{/images/beian_logo.png}" style="float:left;"/>
                 <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;"
                    th:text="#{web.foot.gov.information}"></p></a>
         </div>
