@@ -501,7 +501,7 @@ public class GraduationDesignSubjectController {
                 page = "web/graduate/design/subject/design_subject_declare::#page-wrapper";
 
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请等待确认调整后查看");
+                page = commonControllerMethodService.showTip(modelMap, "请等待确认指导教师调整后查看");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
