@@ -141,7 +141,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                         ]
                                     };
                             } else {// 非作者也非管理员
-                                // 教职工可查看也可编辑
+                                // 教职工可查看，因题目可在分配教师前写，不存在指导教师，本人指导教师则无法编辑，因此仅允许查看
                                 if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
                                     context =
                                         {
@@ -150,12 +150,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                                     "name": "查看",
                                                     "css": "look",
                                                     "type": "info",
-                                                    "id": c.graduationDesignPresubjectId
-                                                },
-                                                {
-                                                    "name": "编辑",
-                                                    "css": "edit",
-                                                    "type": "primary",
                                                     "id": c.graduationDesignPresubjectId
                                                 }
                                             ]
