@@ -260,6 +260,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
                                             {
                                                 func: [
                                                     {
+                                                        "name": "查看",
+                                                        "css": "look",
+                                                        "type": "info",
+                                                        "id": c.graduationDesignPresubjectId
+                                                    },
+                                                    {
                                                         "name": "修改题目",
                                                         "css": "update_title",
                                                         "type": "info",
