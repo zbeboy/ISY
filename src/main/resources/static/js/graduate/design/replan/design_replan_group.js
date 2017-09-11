@@ -94,7 +94,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
         if (defenseGroupIds.length > 0) {
             var msg;
             msg = Messenger().post({
-                message: "确定删除选中的吗?",
+                message: "确定删除选中的组吗?",
                 actions: {
                     retry: {
                         label: '确定',
