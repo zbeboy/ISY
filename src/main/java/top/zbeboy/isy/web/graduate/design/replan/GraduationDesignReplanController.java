@@ -65,6 +65,9 @@ public class GraduationDesignReplanController {
     private DefenseOrderService defenseOrderService;
 
     @Resource
+    private DefenseRateService defenseRateService;
+
+    @Resource
     private DefenseGroupMemberService defenseGroupMemberService;
 
     @Resource
@@ -485,6 +488,8 @@ public class GraduationDesignReplanController {
             if (StringUtils.hasLength(defenseGroupIds)) {
                 List<String> ids = SmallPropsUtils.StringIdsToStringList(defenseGroupIds);
                 ids.forEach(id -> {
+                    List<DefenseOrder> defenseOrders = defenseOrderService.findByDefenseGroupId(id);
+                    defenseOrders.forEach(order-> defenseRateService.deleteByDefenseOrderId(order.getDefenseOrderId()));
                     defenseOrderService.deleteByDefenseGroupId(id);
                     defenseGroupMemberService.deleteByDefenseGroupId(id);
                     defenseGroupService.deleteById(id);

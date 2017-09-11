@@ -22,6 +22,14 @@ public interface DefenseOrderService {
     DefenseOrder findById(String id);
 
     /**
+     * 通过组id查询
+     *
+     * @param defenseGroupId 组id
+     * @return 组数据
+     */
+    List<DefenseOrder> findByDefenseGroupId(String defenseGroupId);
+
+    /**
      * 查询数据
      *
      * @param condition 查询条件

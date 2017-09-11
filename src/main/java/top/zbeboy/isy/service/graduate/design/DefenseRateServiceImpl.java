@@ -75,4 +75,9 @@ public class DefenseRateServiceImpl implements DefenseRateService {
         }
         return defenseRateBeans;
     }
+
+    @Override
+    public void deleteByDefenseOrderId(String defenseOrderId) {
+        create.deleteFrom(DEFENSE_RATE).where(DEFENSE_RATE.DEFENSE_ORDER_ID.eq(defenseOrderId)).execute();
+    }
 }

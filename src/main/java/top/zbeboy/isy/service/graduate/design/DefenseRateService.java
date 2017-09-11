@@ -35,4 +35,11 @@ public interface DefenseRateService {
      * @return 数据
      */
     List<DefenseRateBean> findByDefenseOrderIdAndDefenseGroupId(String defenseOrderId, String defenseGroupId);
+
+    /**
+     * 通过答辩顺序id删除
+     *
+     * @param defenseOrderId 答辩顺序id
+     */
+    void deleteByDefenseOrderId(String defenseOrderId);
 }

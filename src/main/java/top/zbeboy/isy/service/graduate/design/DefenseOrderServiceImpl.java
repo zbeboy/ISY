@@ -46,6 +46,11 @@ public class DefenseOrderServiceImpl implements DefenseOrderService {
     }
 
     @Override
+    public List<DefenseOrder> findByDefenseGroupId(String defenseGroupId) {
+        return defenseOrderDao.fetchByDefenseGroupId(defenseGroupId);
+    }
+
+    @Override
     public Result<Record> findAll(DefenseOrderBean condition) {
         Result<Record> records;
         Condition a = searchCondition(condition);
