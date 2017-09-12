@@ -1,8 +1,11 @@
 /logs
 /target/*
 /root/*
-application*.properties
 *.pfx
 /node_modules/
 /.idea/dataSources.xml
 /.idea/workspace.xml
+/src/main/resources/application-dev.properties
+/src/main/resources/application-secrecy.properties
+/src/main/resources/application-test.properties
+/src/main/resources/application-prod.properties
