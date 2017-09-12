@@ -249,7 +249,7 @@ public class GraduationDesignPharmtechController {
                 graduationDesignHopeTutorService.save(graduationDesignHopeTutor);
                 ajaxUtils.success().msg("保存成功");
             } else {
-                ajaxUtils.fail().msg("仅支持志愿三位指导教师");
+                ajaxUtils.fail().msg("最大支持志愿三位指导教师");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -331,7 +331,7 @@ public class GraduationDesignPharmtechController {
                     ajaxUtils.fail().msg("未发现确认数据");
                 }
             } else {
-                ajaxUtils.fail().msg("仅能选择一位指导教师");
+                ajaxUtils.fail().msg("仅可选择一位指导教师");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());

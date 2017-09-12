@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 
 /**
  * Created by zbeboy on 2017/3/9.
+ * Oauth2 config.
  */
 @Configuration
 @EnableAuthorizationServer

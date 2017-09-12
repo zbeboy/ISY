@@ -526,7 +526,7 @@ public class GraduationDesignAdjustechController {
                 ajaxUtils.fail().msg("该毕业设计已被注销");
             }
         } else {
-            ajaxUtils.fail().msg("未查询到相关信息");
+            ajaxUtils.fail().msg("未查询到相关毕业设计信息");
         }
         return ajaxUtils;
     }
