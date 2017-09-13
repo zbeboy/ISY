@@ -368,7 +368,7 @@ public class GraduationDesignSubjectController {
                     page = commonControllerMethodService.showTip(modelMap, "您不符合查看条件");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到相关信息");
+                page = commonControllerMethodService.showTip(modelMap, "未查询到相关毕业设计题目信息");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -436,7 +436,7 @@ public class GraduationDesignSubjectController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/subject/design_subject_my::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到您的学生信息");
+                page = commonControllerMethodService.showTip(modelMap, "您可能不是学生用户或不符合进入条件");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -600,7 +600,7 @@ public class GraduationDesignSubjectController {
                 graduationDesignTeacherBeens.addAll(graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId));
                 ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
             } else {
-                ajaxUtils.fail().msg("请等待确认调整后查看");
+                ajaxUtils.fail().msg("请等待确认毕业设计指导教师调整后查看");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -626,7 +626,7 @@ public class GraduationDesignSubjectController {
                 GraduationDesignDeclareData graduationDesignDeclareData = graduationDesignDeclareDataService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
                 ajaxUtils.success().msg("获取数据成功").obj(graduationDesignDeclareData);
             } else {
-                ajaxUtils.fail().msg("请等待确认调整后查看");
+                ajaxUtils.fail().msg("请等待确认毕业设计指导教师调整后查看");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -655,7 +655,7 @@ public class GraduationDesignSubjectController {
                 }
                 ajaxUtils.success().msg("获取数据成功").obj(peoples);
             } else {
-                ajaxUtils.fail().msg("请等待确认调整后查看");
+                ajaxUtils.fail().msg("请等待确认毕业设计指导教师调整后查看");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -731,7 +731,7 @@ public class GraduationDesignSubjectController {
                     modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                     modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到您的学生信息");
+                    page = commonControllerMethodService.showTip(modelMap, "您可能不是学生用户或不符合进入条件");
                 }
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
@@ -793,7 +793,7 @@ public class GraduationDesignSubjectController {
                         graduationDesignPresubjectService.save(graduationDesignPresubject);
                         ajaxUtils.success().msg("保存成功");
                     } else {
-                        ajaxUtils.fail().msg("未查询到您的学生信息");
+                        ajaxUtils.fail().msg("您可能不是学生用户或不符合进入条件");
                     }
                 } else {
                     ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
@@ -919,7 +919,7 @@ public class GraduationDesignSubjectController {
                             ajaxUtils.fail().msg("已确认申报，无法编辑");
                         }
                     } else {
-                        ajaxUtils.fail().msg("未确认指导教师调整");
+                        ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
                     }
                 } else {
                     ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
@@ -975,7 +975,7 @@ public class GraduationDesignSubjectController {
                     }
                     ajaxUtils.success().msg("确认成功");
                 } else {
-                    ajaxUtils.fail().msg("未确认指导教师调整");
+                    ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
                 }
             } else {
                 ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
@@ -1025,7 +1025,7 @@ public class GraduationDesignSubjectController {
                         page = commonControllerMethodService.showTip(modelMap, "未发现未申报的数据");
                     }
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未确认指导教师调整");
+                    page = commonControllerMethodService.showTip(modelMap, "未确认毕业设计指导教师调整");
                 }
             } else {
                 page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
@@ -1085,7 +1085,7 @@ public class GraduationDesignSubjectController {
                             ajaxUtils.fail().msg("不符合条件，无法编辑");
                         }
                     } else {
-                        ajaxUtils.fail().msg("未确认指导教师调整");
+                        ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
                     }
                 } else {
                     ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
@@ -1252,7 +1252,7 @@ public class GraduationDesignSubjectController {
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                 ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
-                ajaxUtils.fail().msg("请等待确认调整后查看");
+                ajaxUtils.fail().msg("请等待确认毕业设计指导教师调整后查看");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -1279,7 +1279,7 @@ public class GraduationDesignSubjectController {
                 if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                     ajaxUtils.success().msg("在条件范围，允许使用");
                 } else {
-                    ajaxUtils.fail().msg("请等待确认调整后查看");
+                    ajaxUtils.fail().msg("请等待确认毕业设计指导教师调整后查看");
                 }
             } else {
                 ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
@@ -1308,7 +1308,7 @@ public class GraduationDesignSubjectController {
             if (studentRecord.isPresent()) {
                 ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
-                ajaxUtils.fail().msg("未查询到您的学生信息");
+                ajaxUtils.fail().msg("您可能不是学生用户或不符合进入条件");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -1336,7 +1336,7 @@ public class GraduationDesignSubjectController {
                 if (studentRecord.isPresent()) {
                     ajaxUtils.success().msg("在条件范围，允许使用");
                 } else {
-                    ajaxUtils.fail().msg("未查询到您的学生信息");
+                    ajaxUtils.fail().msg("您可能不是学生用户或不符合进入条件");
                 }
             } else {
                 ajaxUtils.fail().msg("不在毕业时间范围，无法操作");
