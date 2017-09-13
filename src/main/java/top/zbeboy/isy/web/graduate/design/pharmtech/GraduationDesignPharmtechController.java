@@ -107,7 +107,7 @@ public class GraduationDesignPharmtechController {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             page = "web/graduate/design/pharmtech/design_pharmtech_wish::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您的注册类型不是学生");
+            page = commonControllerMethodService.showTip(modelMap, "仅支持学生用户使用");
         }
         return page;
     }
@@ -165,7 +165,7 @@ public class GraduationDesignPharmtechController {
             }
             ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeachers);
         } else {
-            ajaxUtils.fail().msg("您的注册类型不是学生");
+            ajaxUtils.fail().msg("仅支持学生用户使用");
         }
         return ajaxUtils;
     }
@@ -413,7 +413,7 @@ public class GraduationDesignPharmtechController {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
-            ajaxUtils.fail().msg("您的注册类型不是学生");
+            ajaxUtils.fail().msg("仅支持学生用户使用");
         }
         return ajaxUtils;
     }
@@ -477,7 +477,7 @@ public class GraduationDesignPharmtechController {
                     ajaxUtils.fail().msg("您的账号不符合此次毕业设计条件");
                 }
             } else {
-                ajaxUtils.fail().msg("您的注册类型不是学生");
+                ajaxUtils.fail().msg("仅支持学生用户使用");
             }
         } else {
             ajaxUtils.fail().msg("未查询到相关毕业设计信息");
@@ -545,7 +545,7 @@ public class GraduationDesignPharmtechController {
                         }
                     } else {
                         errorBean.setHasError(true);
-                        errorBean.setErrorMsg("您的注册类型不是学生");
+                        errorBean.setErrorMsg("仅支持学生用户使用");
                     }
                 } else {
                     errorBean.setHasError(true);
