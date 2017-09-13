@@ -531,6 +531,12 @@
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <executable>true</executable>
+                            <arguments>
+                                <argument>--spring.profiles.active=secrecy,dev</argument>
+                            </arguments>
+                        </configuration>
                     </plugin>
 
                     <plugin>
@@ -610,7 +616,7 @@
                         <configuration>
                             <executable>true</executable>
                             <arguments>
-                                <argument>--spring.profiles.active=prod</argument>
+                                <argument>--spring.profiles.active=secrecy,prod</argument>
                             </arguments>
                         </configuration>
                     </plugin>
@@ -659,7 +665,7 @@
                         <configuration>
                             <executable>true</executable>
                             <arguments>
-                                <argument>--spring.profiles.active=test</argument>
+                                <argument>--spring.profiles.active=secrecy,test</argument>
                             </arguments>
                         </configuration>
                     </plugin>
