@@ -111,7 +111,7 @@ public class GraduationDesignReorderController {
                 modelMap.addAttribute("defenseTimes", defenseTimes);
                 page = "web/graduate/design/reorder/design_reorder_arrange::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未进行毕业答辩设置");
+                page = commonControllerMethodService.showTip(modelMap, "未进行毕业设计答辩设置");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -285,7 +285,7 @@ public class GraduationDesignReorderController {
                         ajaxUtils.fail().msg("请在答辩开始之后操作");
                     }
                 } else {
-                    ajaxUtils.fail().msg("未查询到相关答辩设置");
+                    ajaxUtils.fail().msg("未查询到相关毕业设计答辩设置");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -368,7 +368,7 @@ public class GraduationDesignReorderController {
                         ajaxUtils.fail().msg("未开始答辩，无法操作");
                     }
                 } else {
-                    ajaxUtils.fail().msg("未查询到相关答辩设置");
+                    ajaxUtils.fail().msg("未查询到相关毕业设计答辩设置");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -459,7 +459,7 @@ public class GraduationDesignReorderController {
                         ajaxUtils.fail().msg("未开始答辩，无法操作");
                     }
                 } else {
-                    ajaxUtils.fail().msg("未查询到相关答辩设置");
+                    ajaxUtils.fail().msg("未查询到相关毕业设计答辩设置");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -625,6 +625,30 @@ public class GraduationDesignReorderController {
             }
         } else {
             ajaxUtils.fail().msg("参数异常");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 安排页面进入条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or falseo
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/arrange/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils arrangeCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
+            if (record.isPresent()) {
+                ajaxUtils.success().msg("在条件范围，允许使用");
+            } else {
+                ajaxUtils.fail().msg("未进行毕业设计答辩设置");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
     }

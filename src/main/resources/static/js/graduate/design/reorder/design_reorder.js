@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             release_data_url: '/anyone/graduate/design/release/data',
             group_url: '/web/graduate/design/reorder/groups',
             arrange_url: '/web/graduate/design/reorder/arrange',
+            arrange_condition: '/web/graduate/design/reorder/arrange/condition',
             order_url: '/web/graduate/design/reorder/order'
         };
 
@@ -144,7 +145,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_reorder_arrange', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.arrange_url + '?id=' + id);
+            $.post(web_path + ajax_url.arrange_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.arrange_url + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         /*
