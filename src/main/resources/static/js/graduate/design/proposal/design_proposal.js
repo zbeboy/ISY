@@ -13,7 +13,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             affix_url: '/web/graduate/design/proposal/affix',
             my_url: '/web/graduate/design/proposal/my',
             my_condition: '/web/graduate/design/proposal/my/condition',
-            team_url: '/web/graduate/design/proposal/team'
+            team_url: '/web/graduate/design/proposal/team',
+            team_condition:'/web/graduate/design/proposal/team/condition'
         };
 
         /*
@@ -155,7 +156,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_proposal_team', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.team_url + '?id=' + id);
+            $.post(web_path + ajax_url.team_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.team_url + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         init();

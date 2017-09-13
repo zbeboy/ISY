@@ -173,7 +173,7 @@ public class GraduationDesignProposalController {
      * @return 页面
      */
     @RequestMapping(value = "/web/graduate/design/proposal/team", method = RequestMethod.GET)
-    public String declare(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+    public String team(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
         ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
@@ -224,7 +224,7 @@ public class GraduationDesignProposalController {
                 page = "web/graduate/design/proposal/design_proposal_team::#page-wrapper";
 
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请等待确认调整后查看");
+                page = commonControllerMethodService.showTip(modelMap, "请等待确认毕业设计指导教师调整后查看");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -412,7 +412,7 @@ public class GraduationDesignProposalController {
                                     ajaxUtils.fail().msg("您的账号不符合该毕业设计条件");
                                 }
                             } else {
-                                ajaxUtils.fail().msg("未确认指导教师调整");
+                                ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
                             }
                         } else {
                             ajaxUtils.fail().msg("不在时间范围，无法操作");
@@ -469,7 +469,7 @@ public class GraduationDesignProposalController {
                             ajaxUtils.fail().msg("不符合条件，删除失败");
                         }
                     } else {
-                        ajaxUtils.fail().msg("未确认指导教师调整");
+                        ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
                     }
                 } else {
                     ajaxUtils.fail().msg("不在时间范围，无法操作");
@@ -552,7 +552,7 @@ public class GraduationDesignProposalController {
                 GraduationDesignDatumBean graduationDesignDatum = record.get().into(GraduationDesignDatumBean.class);
                 ajaxUtils.success().msg("获取数据成功").obj(graduationDesignDatum);
             } else {
-                ajaxUtils.fail().msg("未查询到相关信息");
+                ajaxUtils.fail().msg("未查询到相关毕业设计资料信息");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -614,7 +614,7 @@ public class GraduationDesignProposalController {
                                 ajaxUtils.fail().msg("不符合保存条件，保存失败");
                             }
                         } else {
-                            ajaxUtils.fail().msg("未确认指导教师调整");
+                            ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
                         }
                     } else {
                         ajaxUtils.fail().msg("不在时间范围，无法操作");
@@ -696,6 +696,31 @@ public class GraduationDesignProposalController {
     }
 
     /**
+     * 小组页面判断条件
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/proposal/team/condition", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils teamCondition(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
+                ajaxUtils.success().msg("在条件范围，允许使用");
+            } else {
+                ajaxUtils.fail().msg("请等待确认毕业设计指导教师调整后查看");
+            }
+        } else {
+            ajaxUtils.fail().msg(errorBean.getErrorMsg());
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 进入页面判断条件
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -739,7 +764,7 @@ public class GraduationDesignProposalController {
                 }
             } else {
                 errorBean.setHasError(true);
-                errorBean.setErrorMsg("请等待确认调整后查看");
+                errorBean.setErrorMsg("请等待确认毕业设计指导教师调整后查看");
             }
             errorBean.setMapData(dataMap);
         }
