@@ -298,7 +298,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
                 // 显示遮罩
                 startLoading();
                 $.post(web_path + ajax_url.login, $('#login_form').serialize(), function (data) {
-                    var captchaInput = $('#j_captcha_response');
+                    var captchaInput = $(paramId.captcha);
                     var p_error_msg = $('#error_msg');
                     switch (data) {
                         case error_code.AU_ERROR_CODE:
@@ -311,6 +311,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
                             break;
                         case error_code.CAPTCHA_ERROR_CODE:
                             changeJcaptcha();
+                            captchaInput.val('');
                             validErrorDom(validId.captcha, errorMsgId.captcha, '验证码错误');
                             p_error_msg.addClass('hidden');
                             // 去除遮罩
