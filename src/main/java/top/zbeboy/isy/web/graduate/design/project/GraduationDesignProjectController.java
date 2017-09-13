@@ -704,9 +704,8 @@ public class GraduationDesignProjectController {
      *
      * @param errorBean 条件
      * @param mapData   data
-     * @return 条件
      */
-    private ErrorBean<GraduationDesignRelease> okCurrentTeacher(ErrorBean<GraduationDesignRelease> errorBean, Map<String, Object> mapData) {
+    private void okCurrentTeacher(ErrorBean<GraduationDesignRelease> errorBean, Map<String, Object> mapData) {
         GraduationDesignRelease graduationDesignRelease = errorBean.getData();
         // 是否已确认毕业设计指导教师
         if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
@@ -722,7 +721,7 @@ public class GraduationDesignProjectController {
                     errorBean.setHasError(false);
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("您不是该毕业设计的指导教师");
+                    errorBean.setErrorMsg("您不是该毕业设计指导教师");
                 }
             } else {
                 errorBean.setHasError(true);
@@ -732,6 +731,5 @@ public class GraduationDesignProjectController {
             errorBean.setHasError(true);
             errorBean.setErrorMsg("未确认毕业设计指导教师，无法操作");
         }
-        return errorBean;
     }
 }

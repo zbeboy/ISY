@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         var ajax_url = {
             release_data_url: '/anyone/graduate/design/release/data',
             project_list: '/web/graduate/design/project/list',
+            list_condition: '/web/graduate/design/project/list/condition',
             my_project: '/web/graduate/design/project/my/list',
             my_condition: '/web/graduate/design/project/my/list/condition',
             students: '/web/graduate/design/project/my/students',
@@ -131,7 +132,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_project_list', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.project_list + '?id=' + id);
+            $.post(web_path + ajax_url.list_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.project_list + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         /*
