@@ -127,7 +127,7 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("defenseArrangement", defenseArrangement);
                 page = "web/graduate/design/replan/design_replan_group::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
+                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业设计答辩设置");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -175,7 +175,7 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("defenseArrangement", defenseArrangement);
                 page = "web/graduate/design/replan/design_replan_order::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
+                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业设计答辩设置");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -243,7 +243,7 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/replan/design_replan_group_add::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业答辩设置");
+                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业设计答辩设置");
             }
         } else {
             page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
@@ -344,7 +344,7 @@ public class GraduationDesignReplanController {
                         saveDefenseTime(dayDefenseStartTime, dayDefenseEndTime, graduationDesignReplanUpdateVo.getDefenseArrangementId());
                         ajaxUtils.success().msg("保存成功");
                     } else {
-                        ajaxUtils.fail().msg("未查询到相关设置信息");
+                        ajaxUtils.fail().msg("未查询到相关毕业设计答辩信息");
                     }
                 } else {
                     ajaxUtils.fail().msg("每日答辩时间设置有误");
@@ -384,7 +384,7 @@ public class GraduationDesignReplanController {
                     defenseGroupService.save(defenseGroup);
                     ajaxUtils.success().msg("保存成功");
                 } else {
-                    ajaxUtils.fail().msg("请先进行毕业答辩设置");
+                    ajaxUtils.fail().msg("请先进行毕业设计答辩设置");
                 }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
@@ -633,7 +633,7 @@ public class GraduationDesignReplanController {
             ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                // 是否已确认毕业设计学生调整
+                // 是否已确认毕业设计指导教师调整
                 if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
                     // 安排情况
                     DefenseArrangement defenseArrangement = defenseArrangementService.findById(defenseArrangementId);
@@ -731,7 +731,7 @@ public class GraduationDesignReplanController {
                         ajaxUtils.fail().msg("未查询到相关毕业答辩安排");
                     }
                 } else {
-                    ajaxUtils.fail().msg("未确认毕业设计学生调整");
+                    ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
                 }
 
             } else {
@@ -885,7 +885,7 @@ public class GraduationDesignReplanController {
             if (record.isPresent()) {
                 ajaxUtils.success().msg("在条件范围，允许使用");
             } else {
-                ajaxUtils.fail().msg("请先进行毕业答辩设置");
+                ajaxUtils.fail().msg("请先进行毕业设计答辩设置");
             }
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());

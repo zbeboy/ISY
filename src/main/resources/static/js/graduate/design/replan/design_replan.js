@@ -13,7 +13,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             group_url: '/web/graduate/design/replan/group',
             group_condition: '/web/graduate/design/replan/group/condition',
             order_url: '/web/graduate/design/replan/order',
-            divide_url: '/web/graduate/design/replan/divide'
+            divide_url: '/web/graduate/design/replan/divide',
+            divide_condition: '/web/graduate/design/replan/divide/condition'
         };
 
         /*
@@ -156,7 +157,17 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          */
         $(tableData).delegate('.design_replan_divide', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.divide_url + '?id=' + id);
+            $.post(web_path + ajax_url.divide_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.divide_url + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
 
         /*
