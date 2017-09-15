@@ -215,4 +215,15 @@ public class MainController {
 
         return new ModelAndView("redirect:/");
     }
+
+    /**
+     * 用于集群时，对服务器心跳检测
+     *
+     * @return 服务器是否正常运行
+     */
+    @RequestMapping(value = "/server/probe", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils serverHealthCheck() {
+        return AjaxUtils.of().success().msg("Server is running ...");
+    }
 }
