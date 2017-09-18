@@ -1430,7 +1430,7 @@ public class InternshipApplyController {
                     }
                 } else {
                     errorBean.setHasError(true);
-                    errorBean.setErrorMsg("未查询学生信息");
+                    errorBean.setErrorMsg("未查询到学生信息");
                     return errorBean;
                 }
             }
