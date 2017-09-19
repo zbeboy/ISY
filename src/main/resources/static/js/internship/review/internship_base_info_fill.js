@@ -13,6 +13,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             audit_pass_url: '/web/internship/review/audit/pass',
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
+            audit_detail_url: '/web/internship/review/audit/detail',
             back: '/web/menu/internship/review'
         };
 
@@ -227,6 +228,15 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
 
         // 数据form
         var dataForm = null;
+
+        /*
+         查看详情
+        */
+        $(tableData).delegate('.detail_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            $.address.value(ajax_url.audit_detail_url + '?internshipReleaseId=' + id + '&studentId=' + studentId);
+        });
 
         /*
          通过
