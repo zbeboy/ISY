@@ -14,6 +14,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
             audit_detail_url: '/web/internship/review/audit/detail',
+            audit_delete_url: '/web/internship/review/audit/delete',
             save: '/web/internship/review/audit/save',
             back: '/web/menu/internship/review'
         };
@@ -263,6 +264,35 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         /*
+        删除
+        */
+        $(tableData).delegate('.delete_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            var studentName = $(this).attr('data-name');
+            var msg;
+            msg = Messenger().post({
+                message: "确定删除学生 '" + studentName + "'的申请吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            sendDeleteAjax(id, studentId);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        });
+
+        /*
         全选
         */
         $(tableData).delegate('.check_all_apply', "click", function () {
@@ -327,6 +357,33 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                         return "请求失败";
                     }
                     return true;
+                }
+            });
+        }
+
+        /**
+         * 发送删除申请ajax
+         * @param internshipReleaseId
+         * @param studentId
+         */
+        function sendDeleteAjax(internshipReleaseId, studentId) {
+            $.post(web_path + ajax_url.audit_delete_url, {
+                internshipReleaseId: internshipReleaseId,
+                studentId: studentId
+            }, function (data) {
+                if (data.state) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                    init();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             });
         }
