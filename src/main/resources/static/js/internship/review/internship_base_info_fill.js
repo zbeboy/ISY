@@ -14,6 +14,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
             audit_detail_url: '/web/internship/review/audit/detail',
+            save: '/web/internship/review/audit/save',
             back: '/web/menu/internship/review'
         };
 
@@ -236,6 +237,20 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             var id = $(this).attr('data-id');
             var studentId = $(this).attr('data-student');
             $.address.value(ajax_url.audit_detail_url + '?internshipReleaseId=' + id + '&studentId=' + studentId);
+        });
+
+        /*
+        保存
+        */
+        $(tableData).delegate('.save_apply', "click", function () {
+            dataForm = $(this).parent().parent().prev().find('form');
+            $.post(web_path + ajax_url.save, dataForm.serialize(), function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: 'info',
+                    showCloseButton: true
+                });
+            });
         });
 
         /*

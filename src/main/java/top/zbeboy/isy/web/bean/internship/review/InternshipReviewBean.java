@@ -33,7 +33,4 @@ public class InternshipReviewBean {
     private String ext;
 
     private String fillTime;
-
-    // 只更新实习状态
-    private Byte onlyUpdateInternshipApplyState;
 }

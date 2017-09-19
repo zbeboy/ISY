@@ -529,10 +529,8 @@ public class InternshipReviewController {
                 internshipApplyService.update(internshipApply);
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReviewBean.getInternshipReleaseId());
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    if (internshipReviewBean.getOnlyUpdateInternshipApplyState() == 0) {
-                        InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
-                        updateInternshipMaterialState(internshipType, internshipReviewBean);
-                    }
+                    InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
+                    updateInternshipMaterialState(internshipType, internshipReviewBean);
                     InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
                     internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtils.getUUID());
                     internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());

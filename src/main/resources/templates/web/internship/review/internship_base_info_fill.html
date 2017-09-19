@@ -221,7 +221,6 @@
                         </div>
                         <input type="hidden" name="internshipReleaseId" value="{{internshipReleaseId}}"/>
                         <input type="hidden" name="studentId" value="{{studentId}}"/>
-                        <input type="hidden" value="1" name="onlyUpdateInternshipApplyState"/>
                         <input type="hidden" value="" name="reason"/>
                         <input type="hidden" value="2" name="internshipApplyState"/>
                     </form>
@@ -233,6 +232,11 @@
                                 data-student="{{studentId}}">
                             查看详情
                         </button>
+                        {{#if hasController}}
+                        <button type="button" class="btn btn-default save_apply">
+                            保存
+                        </button>
+                        {{/if}}
                         <button type="button" class="btn btn-default pass_apply" data-name="{{student_name}}">
                             通过
                         </button>
