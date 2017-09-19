@@ -1272,6 +1272,7 @@ public class InternshipApplyController {
                 internshipChangeHistory.setStudentId(studentId);
                 internshipChangeHistory.setState(internshipApplyState);
                 internshipChangeHistory.setApplyTime(now);
+                internshipChangeHistory.setReason(internshipApply.getReason());
                 internshipChangeHistoryService.save(internshipChangeHistory);
 
             } else {

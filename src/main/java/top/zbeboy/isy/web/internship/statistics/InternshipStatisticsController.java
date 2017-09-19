@@ -254,7 +254,15 @@ public class InternshipStatisticsController {
         Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
         if (records.isNotEmpty()) {
             internshipChangeHistoryBeans = records.into(InternshipChangeHistoryBean.class);
-            internshipChangeHistoryBeans.forEach(i -> i.setApplyTimeStr(DateTimeUtils.formatDate(i.getApplyTime())));
+            internshipChangeHistoryBeans.forEach(i -> {
+                i.setApplyTimeStr(DateTimeUtils.formatDate(i.getApplyTime()));
+                if (!ObjectUtils.isEmpty(i.getChangeFillStartTime())) {
+                    i.setChangeFillStartTimeStr(DateTimeUtils.formatDate(i.getChangeFillStartTime()));
+                }
+                if (!ObjectUtils.isEmpty(i.getChangeFillEndTime())) {
+                    i.setChangeFillEndTimeStr(DateTimeUtils.formatDate(i.getChangeFillEndTime()));
+                }
+            });
         }
         return ajaxUtils.success().msg("获取数据成功").listData(internshipChangeHistoryBeans);
     }

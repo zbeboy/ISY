@@ -15,4 +15,6 @@ public class InternshipChangeHistoryBean extends InternshipChangeHistory {
     private String studentNumber;
     private String organizeName;
     private String applyTimeStr;
+    private String changeFillStartTimeStr;
+    private String changeFillEndTimeStr;
 }

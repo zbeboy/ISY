@@ -758,6 +758,9 @@ public class InternshipReviewController {
                     internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
                     internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
+                    internshipChangeHistory.setReason(internshipApply.getReason());
+                    internshipChangeHistory.setChangeFillStartTime(internshipApply.getChangeFillStartTime());
+                    internshipChangeHistory.setChangeFillEndTime(internshipApply.getChangeFillEndTime());
                     internshipChangeHistoryService.save(internshipChangeHistory);
 
                     Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
@@ -804,6 +807,7 @@ public class InternshipReviewController {
                 internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
                 internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
                 internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
+                internshipChangeHistory.setReason(internshipApply.getReason());
                 internshipChangeHistoryService.save(internshipChangeHistory);
 
                 Optional<Record> userRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
@@ -849,6 +853,7 @@ public class InternshipReviewController {
             internshipChangeHistory.setStudentId(studentId);
             internshipChangeHistory.setState(internshipApplyState);
             internshipChangeHistory.setApplyTime(new Timestamp(Clock.systemDefaultZone().millis()));
+            internshipChangeHistory.setReason(internshipApply.getReason());
             internshipChangeHistoryService.save(internshipChangeHistory);
 
             Optional<Record> userRecord = studentService.findByIdRelation(studentId);
