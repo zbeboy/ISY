@@ -15,6 +15,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             organize_data_url: '/anyone/internship/organizes',
             audit_detail_url: '/web/internship/review/audit/detail',
             audit_delete_url: '/web/internship/review/audit/delete',
+            audit_fail_url: '/web/internship/review/audit/fail',
             save: '/web/internship/review/audit/save',
             back: '/web/menu/internship/review'
         };
@@ -264,6 +265,15 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         /*
+        不通过
+        */
+        $(tableData).delegate('.fail_apply', "click", function () {
+            var id = $(this).attr('data-id');
+            var studentId = $(this).attr('data-student');
+            showStateModal(3, id, studentId, '审核不通过');
+        });
+
+        /*
         删除
         */
         $(tableData).delegate('.delete_apply', "click", function () {
@@ -377,6 +387,101 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                         type: 'success',
                         showCloseButton: true
                     });
+                    init();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 展示变更模态框
+         * @param state
+         * @param internshipReleaseId
+         * @param studentId
+         * @param title
+         */
+        function showStateModal(state, internshipReleaseId, studentId, title) {
+            $('#applyState').val(state);
+            $('#applyInternshipReleaseId').val(internshipReleaseId);
+            $('#applyStudentId').val(studentId);
+            $('#stateModalLabel').text(title);
+            $('#stateModal').modal('show');
+        }
+
+        /**
+         * 隐藏变更模态框
+         */
+        function hideStateModal() {
+            $('#applyState').val('');
+            $('#applyInternshipReleaseId').val('');
+            $('#applyStudentId').val('');
+            $('#reason').val('');
+            $('#stateModalLabel').text('');
+            validCleanDom('#valid_reason', '#reason_error_msg');
+            $('#stateModal').modal('hide');
+        }
+
+        /*
+        提交变更申请
+        */
+        $('#stateOk').click(function () {
+            stateAdd();
+        });
+
+        /*
+         取消变更申请
+         */
+        $('#stateCancel').click(function () {
+            hideStateModal();
+        });
+
+        /*
+       状态申请提交询问
+      */
+        function stateAdd() {
+            var msg;
+            msg = Messenger().post({
+                message: '确定不通过吗?',
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            validReason();
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        function validReason() {
+            var reason = $('#reason').val();
+            if (reason.length <= 0 || reason.length > 500) {
+                validErrorDom('#valid_reason', '#reason_error_msg', '原因500个字符以内');
+            } else {
+                sendStateAjax();
+            }
+        }
+
+        /**
+         * 发送状态申请
+         */
+        function sendStateAjax() {
+            $.post(web_path + ajax_url.audit_fail_url, $('#state_form').serialize(), function (data) {
+                if (data.state) {
+                    hideStateModal();
                     init();
                 } else {
                     Messenger().post({
