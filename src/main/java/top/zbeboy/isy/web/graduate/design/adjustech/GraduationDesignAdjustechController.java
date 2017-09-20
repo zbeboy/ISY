@@ -74,6 +74,9 @@ public class GraduationDesignAdjustechController {
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> stringValueOperations;
 
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, List<GraduationDesignTeacherBean>> stringListValueOperations;
+
     @Resource
     private StringRedisTemplate template;
 
@@ -88,6 +91,19 @@ public class GraduationDesignAdjustechController {
     @RequestMapping(value = "/web/menu/graduate/design/adjustech", method = RequestMethod.GET)
     public String adjustech() {
         return "web/graduate/design/adjustech/design_adjustech::#page-wrapper";
+    }
+
+    /**
+     * 填报情况页面
+     *
+     * @param graduationDesignReleaseId 发布id
+     * @param modelMap                  页面对象
+     * @return 页面
+     */
+    @RequestMapping(value = "/web/graduate/design/adjustech/apply", method = RequestMethod.GET)
+    public String adjustechApply(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
+        modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
+        return "web/graduate/design/adjustech/design_adjustech_apply::#page-wrapper";
     }
 
     /**
@@ -121,6 +137,39 @@ public class GraduationDesignAdjustechController {
     public String notFill(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
         return "web/graduate/design/adjustech/design_adjustech_unsubmit::#page-wrapper";
+    }
+
+    /**
+     * 填报情况教师数据
+     *
+     * @param graduationDesignReleaseId 发布id
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/adjustech/apply/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<GraduationDesignTeacherBean> applyData(@RequestParam("id") String graduationDesignReleaseId) {
+        AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
+        List<GraduationDesignTeacherBean> graduationDesignTeacherBeens;
+        String cacheKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId;
+        // 从缓存中得到列表
+        if (stringListValueOperations.getOperations().hasKey(cacheKey)) {
+            graduationDesignTeacherBeens = stringListValueOperations.get(cacheKey);
+        } else {
+            graduationDesignTeacherBeens = new ArrayList<>();
+        }
+        // 处理列表
+        if (!ObjectUtils.isEmpty(graduationDesignTeacherBeens) && graduationDesignTeacherBeens.size() > 0) {
+            for (GraduationDesignTeacherBean designTeacherBean : graduationDesignTeacherBeens) {
+                // 装填剩余人数
+                String studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + designTeacherBean.getGraduationDesignTeacherId();
+                if (template.hasKey(studentCountKey)) {
+                    ValueOperations<String, String> ops = this.template.opsForValue();
+                    designTeacherBean.setResidueCount(NumberUtils.toInt(ops.get(studentCountKey)));
+                }
+            }
+        }
+        ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
+        return ajaxUtils;
     }
 
     /**
