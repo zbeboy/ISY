@@ -47,6 +47,7 @@ requirejs.config({
         "jquery.cropper": web_path + "/plugin/jquery_cropper/cropper.min",
         "jquery.cropper.upload": web_path + "/plugin/jquery_cropper/cropper.upload.min",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
+        "jquery.mark": web_path + "/plugin/jquery_mark/jquery.mark.min",
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
         "icheck": web_path + "/plugin/icheck/icheck.min",
         "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min",
@@ -117,6 +118,9 @@ requirejs.config({
         },
         "jquery.entropizer": {
             deps: ["css!" + web_path + "/plugin/jquery_entropizer/css/jquery-entropizer.min"]
+        },
+        "jquery.mark": {
+            deps: ["jquery"]
         },
         "icheck": {
             deps: ["jquery", "css!" + web_path + "/plugin/icheck/icheck.min"]
