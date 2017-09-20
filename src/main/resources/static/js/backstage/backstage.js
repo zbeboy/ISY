@@ -145,12 +145,26 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "sockjs-client", "moment-with-locales", "csrf", "stomp-websocket", "com", "jquery.address", "nav"],
+require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "sockjs-client", "moment-with-locales",
+        "csrf", "stomp-websocket", "com", "jquery.address", "nav", "bootstrap-notify"],
     function ($, loadingView, domready, Handlebars, SockJS, moment, csrf) {
         domready(function () {
             //This function is called once the DOM is ready.
             //It will be safe to query the DOM and manipulate
             //DOM nodes in this function.
+
+            /*
+            用于测试环境通知
+             */
+           /* $.notify({
+                title: '<strong>注意!</strong>',
+                message: '您当前处于ISY校园协作平台测试环境，若是重要操作，请到<a href="https://www.zbeboy.top" target="_blank">正式环境</a>'
+            }, {
+                type: 'warning',
+                placement: {
+                    align: 'center'
+                }
+            });*/
 
             /*
              init message.
