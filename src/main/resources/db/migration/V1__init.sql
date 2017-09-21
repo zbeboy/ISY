@@ -267,7 +267,7 @@ CREATE TABLE internship_change_company_history (
   company_address                      VARCHAR(500),
   company_contacts                     VARCHAR(10),
   company_tel                          VARCHAR(20),
-  change_time                          DATETIME    NOT NULL,
+  change_time                          DATETIME(3)    NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id)
 );
@@ -439,10 +439,10 @@ CREATE TABLE graduation_practice_company (
 
 CREATE TABLE internship_journal (
   internship_journal_id            VARCHAR(64) PRIMARY KEY,
-  student_name                     VARCHAR(10)  NOT NULL,
+  student_name                     VARCHAR(30)  NOT NULL,
   student_number                   VARCHAR(20)  NOT NULL,
   organize                         VARCHAR(200)  NOT NULL,
-  school_guidance_teacher          VARCHAR(10)  NOT NULL,
+  school_guidance_teacher          VARCHAR(30)  NOT NULL,
   graduation_practice_company_name VARCHAR(200) NOT NULL,
   internship_journal_content       TEXT         NOT NULL,
   internship_journal_html          TEXT         NOT NULL,
@@ -460,14 +460,14 @@ CREATE TABLE internship_journal (
 
 CREATE TABLE internship_regulate (
   internship_regulate_id  VARCHAR(64) PRIMARY KEY,
-  student_name            VARCHAR(10)  NOT NULL,
+  student_name            VARCHAR(30)  NOT NULL,
   student_number          VARCHAR(20)  NOT NULL,
   student_tel             VARCHAR(15)  NOT NULL,
   internship_content      VARCHAR(200) NOT NULL,
   internship_progress     VARCHAR(200) NOT NULL,
   report_way              VARCHAR(20)  NOT NULL,
   report_date             DATE         NOT NULL,
-  school_guidance_teacher VARCHAR(10)  NOT NULL,
+  school_guidance_teacher VARCHAR(30)  NOT NULL,
   tliy                    VARCHAR(200),
   create_date             DATETIME     NOT NULL,
   student_id              INT          NOT NULL,

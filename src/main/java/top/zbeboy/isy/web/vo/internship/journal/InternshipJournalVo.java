@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class InternshipJournalVo {
     private String internshipJournalId;
     @NotNull
-    @Size(max = 10)
+    @Size(max = 30)
     private String studentName;
     @NotNull
     @Size(max = 20)
@@ -23,7 +23,7 @@ public class InternshipJournalVo {
     @Size(max = 200)
     private String organize;
     @NotNull
-    @Size(max = 10)
+    @Size(max = 30)
     private String schoolGuidanceTeacher;
     @NotNull
     @Size(max = 200)

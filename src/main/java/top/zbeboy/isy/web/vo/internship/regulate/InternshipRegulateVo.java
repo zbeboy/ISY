@@ -13,7 +13,7 @@ import java.sql.Date;
 public class InternshipRegulateVo {
     private String internshipRegulateId;
     @NotNull
-    @Size(max = 10)
+    @Size(max = 30)
     private String studentName;
     @NotNull
     @Size(max = 20)
