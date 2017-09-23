@@ -52,6 +52,13 @@ public class GraduationDesignPresubjectServiceImpl extends DataTablesPlugin<Grad
     }
 
     @Override
+    public Result<GraduationDesignPresubjectRecord> findByPresubjectTitleNeId(String presubjectTitle, String graduationDesignPresubjectId) {
+        return create.selectFrom(GRADUATION_DESIGN_PRESUBJECT)
+                .where(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE.eq(presubjectTitle).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.ne(graduationDesignPresubjectId)))
+                .fetch();
+    }
+
+    @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
                 .from(GRADUATION_DESIGN_PRESUBJECT)

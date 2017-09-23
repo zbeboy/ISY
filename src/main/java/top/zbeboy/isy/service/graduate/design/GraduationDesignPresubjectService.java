@@ -32,6 +32,15 @@ public interface GraduationDesignPresubjectService {
     List<GraduationDesignPresubject> findByPresubjectTitle(String presubjectTitle);
 
     /**
+     * 编辑时题目校验 注意:不等于主键
+     *
+     * @param presubjectTitle              题目
+     * @param graduationDesignPresubjectId 主键
+     * @return 数据
+     */
+    Result<GraduationDesignPresubjectRecord> findByPresubjectTitleNeId(String presubjectTitle, String graduationDesignPresubjectId);
+
+    /**
      * 根据主键关联查询
      *
      * @param id 主键

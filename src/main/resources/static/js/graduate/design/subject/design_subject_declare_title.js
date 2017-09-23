@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
         var ajax_url = {
             update: '/web/graduate/design/subject/declare/edit/title/update',
             nav: '/web/menu/graduate/design/subject',
-            valid_title: '/web/graduate/design/subject/valid/title',
+            valid_title: '/web/graduate/design/subject/update/valid/title',
             back: '/web/graduate/design/subject/declare'
         };
 
@@ -21,6 +21,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          参数id
          */
         var paramId = {
+            graduationDesignPresubjectId: '#graduationDesignPresubjectId',
             presubjectTitle: '#presubjectTitle',
             presubjectPlanHtml: '#presubjectPlanHtml',
             presubjectPlan: '#presubjectPlan',
@@ -31,6 +32,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          参数
          */
         var param = {
+            graduationDesignPresubjectId: $(paramId.graduationDesignPresubjectId).val(),
             presubjectTitle: $(paramId.presubjectTitle).val(),
             presubjectPlan: $(paramId.presubjectPlan).val(),
             publicLevel: $(paramId.publicLevel).val()
@@ -91,6 +93,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          * 初始化参数
          */
         function initParam() {
+            param.graduationDesignPresubjectId = $(paramId.graduationDesignPresubjectId).val();
             param.presubjectTitle = $(paramId.presubjectTitle).val();
             param.presubjectPlan = quill.getText(0, quill.getLength());
             param.publicLevel = $(paramId.publicLevel).val();
@@ -139,10 +142,14 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
         $(paramId.presubjectTitle).blur(function () {
             initParam();
             var presubjectTitle = param.presubjectTitle;
+            var graduationDesignPresubjectId = param.graduationDesignPresubjectId;
             if (presubjectTitle.length <= 0 || presubjectTitle.length > 100) {
                 validErrorDom(validId.presubjectTitle, errorMsgId.presubjectTitle, '题目100个字符以内');
             } else {
-                $.post(web_path + ajax_url.valid_title, {presubjectTitle: presubjectTitle}, function (data) {
+                $.post(web_path + ajax_url.valid_title, {
+                    presubjectTitle: presubjectTitle,
+                    graduationDesignPresubjectId: graduationDesignPresubjectId
+                }, function (data) {
                     if (data.state) {
                         validSuccessDom(validId.presubjectTitle, errorMsgId.presubjectTitle);
                     } else {
@@ -198,6 +205,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          */
         function validPresubjectTitle() {
             var presubjectTitle = param.presubjectTitle;
+            var graduationDesignPresubjectId = param.graduationDesignPresubjectId;
             if (presubjectTitle.length <= 0 || presubjectTitle.length > 100) {
                 Messenger().post({
                     message: '题目100个字符以内',
@@ -205,7 +213,10 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
                     showCloseButton: true
                 });
             } else {
-                $.post(web_path + ajax_url.valid_title, {presubjectTitle: presubjectTitle}, function (data) {
+                $.post(web_path + ajax_url.valid_title, {
+                    presubjectTitle: presubjectTitle,
+                    graduationDesignPresubjectId: graduationDesignPresubjectId
+                }, function (data) {
                     if (data.state) {
                         validPresubjectPlan();
                     } else {

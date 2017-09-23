@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "nav_active", "quill", "messenger", "jquery.add
          */
         var ajax_url = {
             save: '/web/graduate/design/subject/my/save',
-            valid_title: '/web/graduate/design/subject/valid/title',
+            valid_title: '/web/graduate/design/subject/save/valid/title',
             nav: '/web/menu/graduate/design/subject'
         };
 

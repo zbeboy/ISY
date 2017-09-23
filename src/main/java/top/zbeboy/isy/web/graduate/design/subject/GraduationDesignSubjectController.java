@@ -743,16 +743,36 @@ public class GraduationDesignSubjectController {
     }
 
     /**
-     * 检验毕业设计题目
+     * 保存时检验毕业设计题目
      *
      * @param presubjectTitle 题目
      * @return true or false
      */
-    @RequestMapping(value = "/web/graduate/design/subject/valid/title", method = RequestMethod.POST)
+    @RequestMapping(value = "/web/graduate/design/subject/save/valid/title", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils validTitle(@RequestParam("presubjectTitle") String presubjectTitle) {
+    public AjaxUtils saveValidTitle(@RequestParam("presubjectTitle") String presubjectTitle) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         List<GraduationDesignPresubject> graduationDesignPresubjects = graduationDesignPresubjectService.findByPresubjectTitle(StringUtils.trimAllWhitespace(presubjectTitle));
+        if (!ObjectUtils.isEmpty(graduationDesignPresubjects) && graduationDesignPresubjects.size() > 0) {
+            ajaxUtils.fail().msg("该题目已被使用");
+        } else {
+            ajaxUtils.success().msg("该题目未被使用");
+        }
+        return ajaxUtils;
+    }
+
+    /**
+     * 编辑时检验毕业设计题目
+     *
+     * @param presubjectTitle 题目
+     * @return true or false
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/update/valid/title", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxUtils updateValidTitle(@RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId,
+                                      @RequestParam("presubjectTitle") String presubjectTitle) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        Result<GraduationDesignPresubjectRecord> graduationDesignPresubjects = graduationDesignPresubjectService.findByPresubjectTitleNeId(StringUtils.trimAllWhitespace(presubjectTitle), graduationDesignPresubjectId);
         if (!ObjectUtils.isEmpty(graduationDesignPresubjects) && graduationDesignPresubjects.size() > 0) {
             ajaxUtils.fail().msg("该题目已被使用");
         } else {
