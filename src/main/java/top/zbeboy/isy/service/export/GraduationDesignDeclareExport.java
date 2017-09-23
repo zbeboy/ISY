@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.ExportUtils;
@@ -91,8 +92,8 @@ public class GraduationDesignDeclareExport extends ExportUtils<GraduationDesignD
                 cell.setCellValue("毕业时间:" + graduationDesignDeclareData.getGraduationDate() +
                         "　　系:" + graduationDesignDeclareData.getDepartmentName() +
                         "  　专业:" + graduationDesignDeclareData.getScienceName() +
-                        "　　　　 班级:" + graduationDesignDeclareData.getOrganizeNames() +
-                        "　　　  班级人数:" + graduationDesignDeclareData.getOrganizePeoples() +
+                        "　　　　 班级:" + replaceData(graduationDesignDeclareData.getOrganizeNames()) +
+                        "　　　  班级人数:" + replaceData(graduationDesignDeclareData.getOrganizePeoples()) +
                         "　　　　  指导人数:" + guidePeoples);
                 cell.setCellStyle(style);
 
@@ -428,5 +429,12 @@ public class GraduationDesignDeclareExport extends ExportUtils<GraduationDesignD
 
     private Integer isNull(Integer param) {
         return param != null ? param : 0;
+    }
+
+    private String replaceData(String str) {
+        if (StringUtils.hasLength(str)) {
+            str = str.replaceAll("###", ",");
+        }
+        return str;
     }
 }

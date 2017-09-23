@@ -401,7 +401,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             initAddParam();
             var graduationDesignDatumTypeId = addParam.graduationDesignDatumTypeId;
             if (Number(graduationDesignDatumTypeId) <= 0) {
-                validErrorDom(addParamValidId.graduationDesignDatumTypeId, addParamErrorId.graduationDesignDatumTypeId, '请选择题目类型');
+                validErrorDom(addParamValidId.graduationDesignDatumTypeId, addParamErrorId.graduationDesignDatumTypeId, '请选择文件类型');
             } else {
                 validSuccessDom(addParamValidId.graduationDesignDatumTypeId, addParamErrorId.graduationDesignDatumTypeId);
             }
@@ -488,7 +488,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             var graduationDesignDatumTypeId = addParam.graduationDesignDatumTypeId;
             if (Number(graduationDesignDatumTypeId) <= 0) {
                 Messenger().post({
-                    message: '请选择题目类型',
+                    message: '请选择文件类型',
                     type: 'error',
                     showCloseButton: true
                 });
