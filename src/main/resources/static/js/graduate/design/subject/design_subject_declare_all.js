@@ -11,7 +11,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
             update: '/web/graduate/design/subject/declare/all/update',
             subject_type: '/user/graduate/design/subject/types',
             subject_origin_type: '/user/graduate/design/subject/origin_types',
-            declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
             nav: '/web/menu/graduate/design/subject',
             back: '/web/graduate/design/subject/declare'
         };
@@ -109,7 +108,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         function init() {
             initSubjectType();
             initSubjectOriginType();
-            initDeclareBasicPeoples();
         }
 
         /**
@@ -147,26 +145,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         }
 
         /**
-         * 初始化指导人数
-         */
-        function initDeclareBasicPeoples() {
-            $.get(web_path + ajax_url.declare_basic_peoples, {
-                id: init_page_param.graduationDesignReleaseId,
-                staffId: $(paramId.staffId).val()
-            }, function (data) {
-                if (data.state) {
-                    declareBasicPeoplesData(data);
-                } else {
-                    Messenger().post({
-                        message: data.msg,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
-        }
-
-        /**
          * 题目类型数据
          * @param data 数据
          */
@@ -182,14 +160,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
         function subjectOriginTypeData(data) {
             var template = Handlebars.compile($("#origin-type-template").html());
             $(paramId.originType).html(template(data));
-        }
-
-        /**
-         * 指导人数
-         * @param data 数据
-         */
-        function declareBasicPeoplesData(data) {
-            $(paramId.guidePeoples).val(data.objectResult);
         }
 
         /*
