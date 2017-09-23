@@ -1,6 +1,7 @@
 package top.zbeboy.isy.web.internship.journal;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Record3;
@@ -454,7 +455,7 @@ public class InternshipJournalController {
                     Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
                     if (studentRecord.isPresent()) {
                         Users users = studentRecord.get().into(Users.class);
-                        String downloadFileName = "小组实习日志";
+                        String downloadFileName = users.getRealName() + "全部实习日志";
                         String zipName = downloadFileName + ".zip";
                         String downloadFilePath = Workbook.internshipJournalPath(users) + zipName;
                         String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
@@ -486,12 +487,18 @@ public class InternshipJournalController {
                 if (records.isNotEmpty()) {
                     List<String> fileName = new ArrayList<>();
                     List<String> filePath = new ArrayList<>();
-                    records.forEach(r -> {
+                    String staffName = "";
+                    boolean isSetStaffName = false;
+                    for (InternshipJournalRecord r : records) {
                         filePath.add(RequestUtils.getRealPath(request) + r.getInternshipJournalWord());
                         fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf('/') + 1));
-                    });
-                    Users users = usersService.getUserFromSession();
-                    String downloadFileName = users.getRealName() + "小组实习日志";
+                        if (BooleanUtils.isFalse(isSetStaffName)) {
+                            staffName = r.getSchoolGuidanceTeacher();
+                            isSetStaffName = true;
+                        }
+                    }
+
+                    String downloadFileName = staffName + "小组实习日志";
                     String zipName = downloadFileName + ".zip";
                     String downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName;
                     String zipPath = RequestUtils.getRealPath(request) + downloadFilePath;
