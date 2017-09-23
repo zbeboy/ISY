@@ -713,8 +713,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
             $('#graduationDate').text(isNull(data.objectResult.graduationDate));
             $('#departmentName').text(isNull(data.objectResult.departmentName));
             $('#scienceName').text(isNull(data.objectResult.scienceName));
-            $('#organizeNames').text(isNull(data.objectResult.organizeNames));
-            $('#organizePeoples').text(isNull(data.objectResult.organizePeoples));
+            var organizeNames = isNull(data.objectResult.organizeNames);
+            if(organizeNames!==null){
+                organizeNames = replaceData(organizeNames);
+            }
+            var organizePeoples = isNull(data.objectResult.organizePeoples);
+            if(organizePeoples!==null){
+                organizePeoples = replaceData(organizePeoples);
+            }
+            $('#organizeNames').text(organizeNames);
+            $('#organizePeoples').text(organizePeoples);
         }
 
         /**
@@ -732,6 +740,15 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
          */
         function isNull(param) {
             return param == null ? "" : param;
+        }
+
+        /**
+         * 替换数据
+         * @param str
+         */
+        function replaceData(str) {
+            str = str.replace(/###/g, ",");
+            return str;
         }
 
         /*
