@@ -767,8 +767,8 @@ public class InternshipReviewController {
                     if (userRecord.isPresent()) {
                         Users users = userRecord.get().into(Users.class);
                         Users curUsers = usersService.getUserFromSession();
-                        String notify = "您的实习变更申请已通过，请尽快在填写时间内完成。";
-                        commonControllerMethodService.sendNotify(users, curUsers, "实习变更通过", notify, request);
+                        String notify = "已同意您的实习变更申请，请尽快登录系统在填写时间范围变更您的内容。";
+                        commonControllerMethodService.sendNotify(users, curUsers, "同意实习变更申请", notify, request);
                     }
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习申请信息");
@@ -814,8 +814,8 @@ public class InternshipReviewController {
                 if (userRecord.isPresent()) {
                     Users users = userRecord.get().into(Users.class);
                     Users curUsers = usersService.getUserFromSession();
-                    String notify = "您的实习变更申请未通过。";
-                    commonControllerMethodService.sendNotify(users, curUsers, "实习变更未通过", notify, request);
+                    String notify = "已拒绝您的实习变更申请。";
+                    commonControllerMethodService.sendNotify(users, curUsers, "拒绝实习变更申请", notify, request);
                 }
             } else {
                 ajaxUtils.fail().msg("未查询到相关实习申请信息");
@@ -861,7 +861,7 @@ public class InternshipReviewController {
                 Users users = userRecord.get().into(Users.class);
                 Users curUsers = usersService.getUserFromSession();
                 String notify = "您的自主实习申请未通过，具体原因：" + reason;
-                commonControllerMethodService.sendNotify(users, curUsers, "实习未通过", notify, request);
+                commonControllerMethodService.sendNotify(users, curUsers, "实习申请未通过", notify, request);
             }
         } else {
             ajaxUtils.fail().msg("未查询到相关申请信息");
@@ -893,7 +893,7 @@ public class InternshipReviewController {
                 Users users = userRecord.get().into(Users.class);
                 Users curUsers = usersService.getUserFromSession();
                 String notify = "您的自主实习可能存在问题，已被管理员删除此次申请，若您有任何疑问，请联系管理员";
-                commonControllerMethodService.sendNotify(users, curUsers, "清除实习记录", notify, request);
+                commonControllerMethodService.sendNotify(users, curUsers, "实习申请被删除", notify, request);
             }
             ajaxUtils.success().msg("删除申请成功");
         } else {
