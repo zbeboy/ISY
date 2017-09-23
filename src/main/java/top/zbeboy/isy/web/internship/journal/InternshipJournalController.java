@@ -256,7 +256,12 @@ public class InternshipJournalController {
             List<InternshipJournalBean> internshipJournalBeans = new ArrayList<>();
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
                 internshipJournalBeans = records.into(InternshipJournalBean.class);
-                internshipJournalBeans.forEach(i -> i.setCreateDateStr(DateTimeUtils.formatDate(i.getCreateDate())));
+                internshipJournalBeans.forEach(i -> {
+                    i.setCreateDateStr(DateTimeUtils.formatDate(i.getCreateDate()));
+                    i.setInternshipJournalContent("");
+                    i.setInternshipJournalHtml("");
+                    i.setInternshipJournalWord("");
+                });
             }
             dataTablesUtils.setData(internshipJournalBeans);
             dataTablesUtils.setiTotalRecords(internshipJournalService.countAll(otherCondition));

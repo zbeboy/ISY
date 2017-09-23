@@ -188,7 +188,11 @@ public class GraduationDesignSubjectController {
             List<GraduationDesignPresubjectBean> graduationDesignPresubjectBeens = new ArrayList<>();
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
                 graduationDesignPresubjectBeens = records.into(GraduationDesignPresubjectBean.class);
-                graduationDesignPresubjectBeens.forEach(i -> i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime())));
+                graduationDesignPresubjectBeens.forEach(i -> {
+                            i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime()));
+                            i.setPresubjectPlan("");
+                        }
+                );
             }
             dataTablesUtils.setData(graduationDesignPresubjectBeens);
             dataTablesUtils.setiTotalRecords(graduationDesignPresubjectService.countAll(otherCondition));
