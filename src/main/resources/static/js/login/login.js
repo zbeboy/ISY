@@ -27,7 +27,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
         /*
         用于测试环境通知
          */
-      /*  $.notify({
+        $.notify({
             title: '<strong>注意!</strong>',
             message: '您即将登录ISY校园协作平台测试环境，登录<a href="https://www.zbeboy.top/login" target="_blank">正式环境</a>'
         }, {
@@ -35,7 +35,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
             placement: {
                 align: 'center'
             }
-        });*/
+        });
 
         /*
          ajax url

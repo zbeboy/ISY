@@ -30,23 +30,28 @@ public class GraduationDesignHopeTutorServiceImpl implements GraduationDesignHop
     }
 
     @Override
-    public int countByStudentId(int studentId) {
+    public int countByStudentIdAndGraduationDesignReleaseId(int studentId, String graduationDesignReleaseId) {
         Record1<Integer> count = create.selectCount()
                 .from(GRADUATION_DESIGN_HOPE_TUTOR)
-                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId))
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_HOPE_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
                 .fetchOne();
         return count.value1();
     }
 
     @Override
-    public Result<GraduationDesignHopeTutorRecord> findByStudentId(int studentId) {
-        return create.selectFrom(GRADUATION_DESIGN_HOPE_TUTOR)
-                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId))
+    public Result<Record> findByStudentIdAndGraduationDesignReleaseId(int studentId, String graduationDesignReleaseId) {
+        return create.select()
+                .from(GRADUATION_DESIGN_HOPE_TUTOR)
+                .join(GRADUATION_DESIGN_TEACHER)
+                .on(GRADUATION_DESIGN_HOPE_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
+                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
                 .fetch();
     }
 
     @Override
-    public Result<Record> findByStudentIdRelationForStaff(int studentId) {
+    public Result<Record> findByStudentIdAndGraduationDesignTeacherIdRelationForStaff(int studentId, String graduationDesignTeacherId) {
         return create.select()
                 .from(GRADUATION_DESIGN_HOPE_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
@@ -55,7 +60,7 @@ public class GraduationDesignHopeTutorServiceImpl implements GraduationDesignHop
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                 .join(USERS)
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId))
+                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId).and(GRADUATION_DESIGN_HOPE_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId)))
                 .fetch();
     }
 

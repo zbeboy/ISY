@@ -21,7 +21,6 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.domain.tables.records.GraduationDesignHopeTutorRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignHopeTutorService;
@@ -125,7 +124,7 @@ public class GraduationDesignPharmtechController {
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Student student = (Student) errorBean.getMapData().get("student");
-            int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
+            int count = graduationDesignHopeTutorService.countByStudentIdAndGraduationDesignReleaseId(student.getStudentId(), graduationDesignReleaseId);
             if (count > 0) {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/pharmtech/design_pharmtech_apply::#page-wrapper";
@@ -151,14 +150,17 @@ public class GraduationDesignPharmtechController {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
             Users users = usersService.getUserFromSession();
             Student student = studentService.findByUsername(users.getUsername());
-            Result<GraduationDesignHopeTutorRecord> designHopeTutorRecords = graduationDesignHopeTutorService.findByStudentId(student.getStudentId());
+            Result<Record> designHopeTutorRecords = graduationDesignHopeTutorService.findByStudentIdAndGraduationDesignReleaseId(student.getStudentId(), graduationDesignReleaseId);
             List<GraduationDesignTeacherBean> graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId);
             for (GraduationDesignTeacherBean designTeacherBean : graduationDesignTeachers) {
                 boolean selectedTeacher = false;
-                for (GraduationDesignHopeTutorRecord record : designHopeTutorRecords) {
-                    if (designTeacherBean.getGraduationDesignTeacherId().equals(record.getGraduationDesignTeacherId())) {
-                        selectedTeacher = true;
-                        break;
+                if (designHopeTutorRecords.isNotEmpty()) {
+                    List<GraduationDesignHopeTutor> graduationDesignHopeTutors = designHopeTutorRecords.into(GraduationDesignHopeTutor.class);
+                    for (GraduationDesignHopeTutor r : graduationDesignHopeTutors) {
+                        if (designTeacherBean.getGraduationDesignTeacherId().equals(r.getGraduationDesignTeacherId())) {
+                            selectedTeacher = true;
+                            break;
+                        }
                     }
                 }
                 designTeacherBean.setSelected(selectedTeacher);
@@ -241,7 +243,7 @@ public class GraduationDesignPharmtechController {
         if (!errorBean.isHasError()) {
             Student student = (Student) errorBean.getMapData().get("student");
             // 是否已达到志愿数量
-            int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
+            int count = graduationDesignHopeTutorService.countByStudentIdAndGraduationDesignReleaseId(student.getStudentId(), graduationDesignReleaseId);
             if (count < 3) {
                 GraduationDesignHopeTutor graduationDesignHopeTutor = new GraduationDesignHopeTutor();
                 graduationDesignHopeTutor.setGraduationDesignTeacherId(graduationDesignTeacherId);
@@ -431,7 +433,7 @@ public class GraduationDesignPharmtechController {
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Student student = (Student) errorBean.getMapData().get("student");
-            int count = graduationDesignHopeTutorService.countByStudentId(student.getStudentId());
+            int count = graduationDesignHopeTutorService.countByStudentIdAndGraduationDesignReleaseId(student.getStudentId(), graduationDesignReleaseId);
             if (count > 0) {
                 ajaxUtils.success().msg("在条件范围，允许使用");
             } else {

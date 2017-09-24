@@ -417,7 +417,7 @@ public class GraduationDesignAdjustechController {
         AjaxUtils<GraduationDesignHopeTutorBean> ajaxUtils = AjaxUtils.of();
         GraduationDesignTutor graduationDesignTutor = graduationDesignTutorService.findById(graduationDesignTutorId);
         if (!ObjectUtils.isEmpty(graduationDesignTutor)) {
-            Result<Record> records = graduationDesignHopeTutorService.findByStudentIdRelationForStaff(graduationDesignTutor.getStudentId());
+            Result<Record> records = graduationDesignHopeTutorService.findByStudentIdAndGraduationDesignTeacherIdRelationForStaff(graduationDesignTutor.getStudentId(),graduationDesignTutor.getGraduationDesignTeacherId());
             List<GraduationDesignHopeTutorBean> graduationDesignHopeTutorBeens = new ArrayList<>();
             if (records.isNotEmpty()) {
                 graduationDesignHopeTutorBeens = records.into(GraduationDesignHopeTutorBean.class);
