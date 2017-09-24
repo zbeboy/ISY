@@ -71,7 +71,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             ],
             columnDefs: [
                 {
-                    targets: 1,
+                    targets: 0,
                     render: function (a, b, c, d) {
                         return c.originalFileName + '.' + c.ext;
                     }
