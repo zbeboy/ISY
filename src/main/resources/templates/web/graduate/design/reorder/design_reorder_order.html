@@ -201,7 +201,7 @@
                         <h4 class="modal-title" id="markModalLabel"></h4>
                     </div>
                     <div class="modal-body">
-                        <div class="row" id="rate">
+                        <div id="rate">
                         </div>
                         <div class="row" style="margin-top: 15px;">
                             <div class="col-md-6">
@@ -275,11 +275,13 @@
         </script>
         <script id="rate-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <div class="col-md-6">
-                {{realName}}
-            </div>
-            <div class="col-md-6">
-                {{grade}}
+            <div class="row">
+                <div class="col-md-6">
+                    {{realName}}
+                </div>
+                <div class="col-md-6">
+                    {{grade}}
+                </div>
             </div>
             {{/each}}
         </script>
