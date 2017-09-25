@@ -438,8 +438,20 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     $('#toTimer').click(function () {
         var id = $('#timerDefenseOrderId').val();
         var timer = Math.round(Number($('#timerInput').val()));
-        $('#timerModal').modal('hide');
-        window.open(web_path + ajax_url.timer_url + '?defenseOrderId=' + id + '&timer=' + timer);
+        // 采用 html5 Storage存储
+        // Check browser support
+        if (typeof(Storage) !== "undefined") {
+            localStorage.setItem("DEFENSE_ORDER_ID_" + id, timer * 60);
+            $('#timerModal').modal('hide');
+            window.open(web_path + ajax_url.timer_url + '?defenseOrderId=' + id + '&timer=' + timer);
+        } else {
+            // not support web storage
+            Messenger().post({
+                message: '您的浏览器不支持Web storage，无法完成操作',
+                type: 'error',
+                showCloseButton: true
+            });
+        }
     });
 
     /*

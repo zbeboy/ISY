@@ -17,7 +17,9 @@
         <h2 th:text="${defenseOrder.sortNum + ' _  ' + defenseOrder.studentName + ' ' +defenseOrder.studentNumber}"></h2>
         <h1 id="countdown"></h1>
         <form id="example2form">
-            <input class="btn btn-default" type='button' value='Play/Pause' id="play"/>
+            <input class="btn btn-default" type='button' value='继续' id="play" disabled="disabled"/>
+            <input class="btn btn-default" type='button' value='暂停' id="pause"/>
+            <input class="btn btn-default" type='button' value='重新' id="rePlay"/>
         </form>
     </div>
 
@@ -32,6 +34,7 @@
 <script th:inline="javascript">
     var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
     var reorder_timer = /*[[${timer}]]*/ 0;
+    var defenseOrderId = /*[[${defenseOrder.defenseOrderId}]]*/ '';
     require.config({
         baseUrl: web_path + "/js/graduate/design/reorder",
         waitSeconds: 0

@@ -1,76 +1,72 @@
 /**
  * Created by zbeboy on 2017/7/21.
  */
-requirejs.config({
-    // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
-    paths: {
-        "jquery.timer": web_path + "/plugin/jquery_timer/jquery.timer.min"
-    },
-    // shimオプションの設定。モジュール間の依存関係を定義します。
-    shim: {
-        "jquery.timer": {
-            // jQueryに依存するのでpathsで設定した"module/name"を指定します。
-            deps: ["jquery"]
-        }
-    }
-});
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "jquery.timer", "bootstrap"], function ($) {
-    /**
-     * Example 2 is similar to example 1.  The biggest difference
-     * besides counting up is the ability to reset the timer to a
-     * specific time.  To do this, there is an input text field
-     * in a form.
-     */
-    var Example2 = new (function () {
+require(["jquery", "bootstrap"], function ($) {
+    var clock = new clock();
+    var countdown = $('#countdown');
+    var w;
+    var isPlay = true;
 
-        var $countdown,
-            incrementTime = 70,
-            currentTime = reorder_timer * 60 * 100,
-            updateTimer = function () {
-                $countdown.html(formatTime(currentTime));
-                if (currentTime === 0) {
-                    Example2.Timer.stop();
-                    timerComplete();
-                    return;
+    startWorker();
+
+    function startWorker() {
+        if (typeof(Worker) !== "undefined") {
+            if (typeof(w) == "undefined") {
+                w = new Worker(web_path + "/js/graduate/design/reorder/design_reorder_timer_script.js");
+            }
+            w.onmessage = function (event) {
+                if (isPlay) {
+                    clock.move();
                 }
-                currentTime -= incrementTime / 10;
-                if (currentTime < 0) currentTime = 0;
-            },
-            timerComplete = function () {
-                alert('Countdown timer complete!');
-            },
-            init = function () {
-                $countdown = $('#countdown');
-                Example2.Timer = $.timer(updateTimer, incrementTime, true);
             };
-        $(init);
-    });
-
-    // Common functions
-    function pad(number, length) {
-        var str = '' + number;
-        while (str.length < length) {
-            str = '0' + str;
+        } else {
+            countdown.html("Sorry, your browser does not support Web Workers...");
         }
-        return str;
     }
 
-    function formatTime(time) {
-        var min = parseInt(time / 6000),
-            sec = parseInt(time / 100) - (min * 60),
-            hundredths = pad(time - (sec * 100) - (min * 6000), 2);
-        return (min > 0 ? pad(min, 2) : "00") + ":" + pad(sec, 2) + ":" + hundredths;
+    function clock() {
+        /*s是clock()中的变量，非var那种全局变量，代表剩余秒数*/
+        this.s = localStorage.getItem("DEFENSE_ORDER_ID_" + defenseOrderId);
+        this.move = function () {
+            /*输出前先调用exchange函数进行秒到分秒的转换，因为exchange并非在主函数window.onload使用，因此不需要进行声明*/
+            countdown.html(exchange(this.s));
+            localStorage.setItem("DEFENSE_ORDER_ID_" + defenseOrderId, this.s);
+            /*每被调用一次，剩余秒数就自减*/
+            this.s = this.s - 1;
+            /*如果时间耗尽，那么，弹窗，使按钮不可用，停止不停调用clock函数中的move()*/
+            if (this.s < 0) {
+                alert("时间到");
+                w.terminate();
+            }
+        }
     }
 
-    // 开始或暂停
+    function exchange(time) {
+        /*javascript的除法是浮点除法，必须使用Math.floor取其整数部分*/
+        this.m = Math.floor(time / 60);
+        /*存在取余运算*/
+        this.s = (time % 60);
+        this.text = this.m + "分" + this.s + "秒";
+        /*传过来的形式参数time不要使用this，而其余在本函数使用的变量则必须使用this*/
+        return this.text;
+    }
+
     $('#play').click(function () {
-        Example2.Timer.toggle();
+        isPlay = true;
+        $(this).prop('disabled', true);
+        $('#pause').prop('disabled', false);
     });
 
-    // 停止或重置
-    $('#stop').click(function () {
-        Example2.resetCountdown();
+    $('#pause').click(function () {
+        isPlay = false;
+        $(this).prop('disabled', true);
+        $('#play').prop('disabled', false);
+    });
+
+    $('#rePlay').click(function () {
+        localStorage.setItem("DEFENSE_ORDER_ID_" + defenseOrderId, reorder_timer * 60);
+        location.reload();
     });
 
 });
