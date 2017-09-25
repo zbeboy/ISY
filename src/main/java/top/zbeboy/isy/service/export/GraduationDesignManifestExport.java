@@ -41,9 +41,13 @@ public class GraduationDesignManifestExport extends ExportUtils<GraduationDesign
         row.createCell(3).setCellValue(graduationDesignDeclareBean.getOriginTypeName());
         row.createCell(4).setCellValue(graduationDesignDeclareBean.getStaffName());
         row.createCell(5).setCellValue(graduationDesignDeclareBean.getAcademicTitleName());
-        row.createCell(6).setCellValue(graduationDesignDeclareBean.getGuidePeoples());
+        row.createCell(6).setCellValue(numIsNull(graduationDesignDeclareBean.getGuidePeoples()));
         row.createCell(7).setCellValue(graduationDesignDeclareBean.getStudentNumber());
         row.createCell(8).setCellValue(graduationDesignDeclareBean.getStudentName());
         row.createCell(9).setCellValue(graduationDesignDeclareBean.getScoreTypeName());
+    }
+
+    private Integer numIsNull(Integer param) {
+        return param != null ? param : 0;
     }
 }
