@@ -51,7 +51,7 @@ public class GraduationDesignHopeTutorServiceImpl implements GraduationDesignHop
     }
 
     @Override
-    public Result<Record> findByStudentIdAndGraduationDesignTeacherIdRelationForStaff(int studentId, String graduationDesignTeacherId) {
+    public Result<Record> findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(int studentId, String graduationDesignReleaseId) {
         return create.select()
                 .from(GRADUATION_DESIGN_HOPE_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
@@ -60,7 +60,7 @@ public class GraduationDesignHopeTutorServiceImpl implements GraduationDesignHop
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                 .join(USERS)
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId).and(GRADUATION_DESIGN_HOPE_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(graduationDesignTeacherId)))
+                .where(GRADUATION_DESIGN_HOPE_TUTOR.STUDENT_ID.eq(studentId).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
                 .fetch();
     }
 

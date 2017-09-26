@@ -135,7 +135,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
      */
     $(studentData).delegate('.hope_tutor', "click", function () {
         var id = $(this).attr('data-id');
-        $.post(ajax_url.wish, {graduationDesignTutorId: id}, function (data) {
+        $.post(ajax_url.wish, {
+            graduationDesignTutorId: id,
+            id: init_page_param.graduationDesignReleaseId
+        }, function (data) {
             if (data.state) {
                 wishData(data);
                 $('#wishModal').modal('show');

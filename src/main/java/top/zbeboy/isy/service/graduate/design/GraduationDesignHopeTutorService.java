@@ -31,10 +31,10 @@ public interface GraduationDesignHopeTutorService {
      * 根据学生id与毕业设计发布id查询教师信息
      *
      * @param studentId                 学生id
-     * @param graduationDesignTeacherId 毕业设计指导教师id
+     * @param graduationDesignReleaseId 毕业设计指导教师id
      * @return 教师信息
      */
-    Result<Record> findByStudentIdAndGraduationDesignTeacherIdRelationForStaff(int studentId, String graduationDesignTeacherId);
+    Result<Record> findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(int studentId, String graduationDesignReleaseId);
 
     /**
      * 保存

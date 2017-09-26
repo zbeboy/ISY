@@ -413,11 +413,12 @@ public class GraduationDesignAdjustechController {
      */
     @RequestMapping(value = "/web/graduate/design/adjustech/student/wish", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxUtils<GraduationDesignHopeTutorBean> studentWish(@RequestParam("graduationDesignTutorId") String graduationDesignTutorId) {
+    public AjaxUtils<GraduationDesignHopeTutorBean> studentWish(@RequestParam("id") String graduationDesignReleaseId,
+                                                                @RequestParam("graduationDesignTutorId") String graduationDesignTutorId) {
         AjaxUtils<GraduationDesignHopeTutorBean> ajaxUtils = AjaxUtils.of();
         GraduationDesignTutor graduationDesignTutor = graduationDesignTutorService.findById(graduationDesignTutorId);
         if (!ObjectUtils.isEmpty(graduationDesignTutor)) {
-            Result<Record> records = graduationDesignHopeTutorService.findByStudentIdAndGraduationDesignTeacherIdRelationForStaff(graduationDesignTutor.getStudentId(),graduationDesignTutor.getGraduationDesignTeacherId());
+            Result<Record> records = graduationDesignHopeTutorService.findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(graduationDesignTutor.getStudentId(), graduationDesignReleaseId);
             List<GraduationDesignHopeTutorBean> graduationDesignHopeTutorBeens = new ArrayList<>();
             if (records.isNotEmpty()) {
                 graduationDesignHopeTutorBeens = records.into(GraduationDesignHopeTutorBean.class);

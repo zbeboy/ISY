@@ -329,7 +329,10 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
          志愿
          */
         function wish(id) {
-            $.post(getAjaxUrl().wish, {graduationDesignTutorId: id}, function (data) {
+            $.post(getAjaxUrl().wish, {
+                graduationDesignTutorId: id,
+                id: init_page_param.graduationDesignReleaseId
+            }, function (data) {
                 if (data.state) {
                     wishData(data);
                     $('#wishModal').modal('show');
