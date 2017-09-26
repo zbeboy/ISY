@@ -131,7 +131,14 @@ public class GraduationDesignProjectController {
             if (isOwner(staffId)) {
                 page = "web/graduate/design/project/design_project_my::#page-wrapper";
             } else {
-                page = "web/graduate/design/project/design_project_detail::#page-wrapper";
+                Optional<Record> staffRecord = staffService.findByIdRelationForUsers(staffId);
+                if (staffRecord.isPresent()) {
+                    Users staffUser = staffRecord.get().into(Users.class);
+                    modelMap.addAttribute("staffRealName", staffUser.getRealName());
+                    page = "web/graduate/design/project/design_project_detail::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到教师信息");
+                }
             }
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("staffId", staffId);
@@ -155,7 +162,14 @@ public class GraduationDesignProjectController {
             if (isOwner(staffId)) {
                 page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
             } else {
-                page = "web/graduate/design/project/design_project_students::#page-wrapper";
+                Optional<Record> staffRecord = staffService.findByIdRelationForUsers(staffId);
+                if (staffRecord.isPresent()) {
+                    Users staffUser = staffRecord.get().into(Users.class);
+                    modelMap.addAttribute("staffRealName", staffUser.getRealName());
+                    page = "web/graduate/design/project/design_project_students::#page-wrapper";
+                } else {
+                    page = commonControllerMethodService.showTip(modelMap, "未查询到教师信息");
+                }
             }
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("staffId", staffId);
