@@ -158,6 +158,14 @@ CREATE TABLE graduation_design_datum (
   UNIQUE (graduation_design_datum_type_id, graduation_design_tutor_id)
 );
 
+CREATE TABLE graduation_design_datum_group (
+  graduation_design_datum_group_id VARCHAR(64) PRIMARY KEY,
+  file_id                          VARCHAR(64) NOT NULL,
+  graduation_design_teacher_id     VARCHAR(64) NOT NULL,
+  FOREIGN KEY (file_id) REFERENCES files (file_id),
+  FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id)
+);
+
 CREATE TABLE defense_arrangement (
   defense_arrangement_id       VARCHAR(64) PRIMARY KEY,
   paper_start_time             DATETIME    NOT NULL,

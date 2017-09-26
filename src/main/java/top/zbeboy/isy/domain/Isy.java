@@ -31,6 +31,7 @@ import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
 import top.zbeboy.isy.domain.tables.GraduationDesignArchives;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
+import top.zbeboy.isy.domain.tables.GraduationDesignDatumGroup;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatumType;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclare;
 import top.zbeboy.isy.domain.tables.GraduationDesignDeclareData;
@@ -96,7 +97,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = -526937411;
+    private static final long serialVersionUID = 1962637447;
 
     /**
      * The reference instance of <code>isy</code>
@@ -187,6 +188,11 @@ public class Isy extends SchemaImpl {
      * The table <code>isy.graduation_design_datum</code>.
      */
     public final GraduationDesignDatum GRADUATION_DESIGN_DATUM = top.zbeboy.isy.domain.tables.GraduationDesignDatum.GRADUATION_DESIGN_DATUM;
+
+    /**
+     * The table <code>isy.graduation_design_datum_group</code>.
+     */
+    public final GraduationDesignDatumGroup GRADUATION_DESIGN_DATUM_GROUP = top.zbeboy.isy.domain.tables.GraduationDesignDatumGroup.GRADUATION_DESIGN_DATUM_GROUP;
 
     /**
      * The table <code>isy.graduation_design_datum_type</code>.
@@ -480,6 +486,7 @@ public class Isy extends SchemaImpl {
             Files.FILES,
             GraduationDesignArchives.GRADUATION_DESIGN_ARCHIVES,
             GraduationDesignDatum.GRADUATION_DESIGN_DATUM,
+            GraduationDesignDatumGroup.GRADUATION_DESIGN_DATUM_GROUP,
             GraduationDesignDatumType.GRADUATION_DESIGN_DATUM_TYPE,
             GraduationDesignDeclare.GRADUATION_DESIGN_DECLARE,
             GraduationDesignDeclareData.GRADUATION_DESIGN_DECLARE_DATA,
