@@ -22,6 +22,7 @@ import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
+import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.*;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -87,6 +88,9 @@ public class InternshipJournalController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private StaffService staffService;
 
     @Resource
     private InternshipCollegeService internshipCollegeService;
@@ -196,25 +200,34 @@ public class InternshipJournalController {
      */
     @RequestMapping(value = "/web/internship/journal/team/list", method = RequestMethod.GET)
     public String teamJournalList(@RequestParam("id") String internshipReleaseId, @RequestParam("staffId") int staffId, ModelMap modelMap) {
-        Users users = usersService.getUserFromSession();
-        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            Student student = studentService.findByUsername(users.getUsername());
-            if (!ObjectUtils.isEmpty(student)) {
-                modelMap.addAttribute("studentId", student.getStudentId());
-                modelMap.addAttribute("usersTypeName", Workbook.STUDENT_USERS_TYPE);
+        String page;
+        Optional<Record> staffRecord = staffService.findByIdRelationForUsers(staffId);
+        if (staffRecord.isPresent()) {
+            Users users = usersService.getUserFromSession();
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+                Student student = studentService.findByUsername(users.getUsername());
+                if (!ObjectUtils.isEmpty(student)) {
+                    modelMap.addAttribute("studentId", student.getStudentId());
+                    modelMap.addAttribute("usersTypeName", Workbook.STUDENT_USERS_TYPE);
+                }
+            } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                modelMap.addAttribute("usersTypeName", Workbook.STAFF_USERS_TYPE);
             }
-        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            modelMap.addAttribute("usersTypeName", Workbook.STAFF_USERS_TYPE);
-        }
 
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
+            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+                modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
+            } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
+            }
+            Users staffUser = staffRecord.get().into(Users.class);
+            modelMap.addAttribute("staffId", staffId);
+            modelMap.addAttribute("staffRealName", staffUser.getRealName());
+            modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
+            page = "web/internship/journal/internship_journal_team_list::#page-wrapper";
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "未查询到教师信息");
         }
-        modelMap.addAttribute("staffId", staffId);
-        modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
-        return "web/internship/journal/internship_journal_team_list::#page-wrapper";
+        return page;
     }
 
     /**
