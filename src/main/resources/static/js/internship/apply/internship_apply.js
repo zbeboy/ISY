@@ -819,16 +819,30 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 }
             },
             done: function (e, data) {
-                initMyData();// 刷新我的申请
-                closeUploadModal();// 清空信息
+                if (data.result.state) {
+                    Messenger().post({
+                        message: data.result.msg,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                    initMyData();// 刷新我的申请
+                    closeUploadModal();// 清空信息
+                } else {
+                    Messenger().post({
+                        message: data.result.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+
             }
-        }).on('fileuploadsubmit', function(evt, data) {
+        }).on('fileuploadsubmit', function (evt, data) {
             var isOk = true;
             var $this = $(this);
             var validation = data.process(function () {
                 return $this.fileupload('process', data);
             });
-            validation.fail(function(data) {
+            validation.fail(function (data) {
                 isOk = false;
                 Messenger().post({
                     message: '上传失败: ' + data.files[0].error,

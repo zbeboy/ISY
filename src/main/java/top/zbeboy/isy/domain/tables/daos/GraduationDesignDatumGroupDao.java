@@ -4,6 +4,7 @@
 package top.zbeboy.isy.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -80,5 +81,12 @@ public class GraduationDesignDatumGroupDao extends DAOImpl<GraduationDesignDatum
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatumGroup> fetchByGraduationDesignTeacherId(String... values) {
         return fetch(GraduationDesignDatumGroup.GRADUATION_DESIGN_DATUM_GROUP.GRADUATION_DESIGN_TEACHER_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>upload_time IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatumGroup> fetchByUploadTime(Timestamp... values) {
+        return fetch(GraduationDesignDatumGroup.GRADUATION_DESIGN_DATUM_GROUP.UPLOAD_TIME, values);
     }
 }

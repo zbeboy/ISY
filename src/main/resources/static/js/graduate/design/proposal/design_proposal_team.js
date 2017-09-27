@@ -666,8 +666,21 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 data.formData = addParam;
             },
             done: function (e, data) {
-                closeUploadModal();// 清空信息
-                myTable.ajax.reload();
+                if (data.result.state) {
+                    Messenger().post({
+                        message: data.result.msg,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                    closeUploadModal();// 清空信息
+                    myTable.ajax.reload();
+                } else {
+                    Messenger().post({
+                        message: data.result.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
             }
         }).on('fileuploadsubmit', function (evt, data) {
             var isOk = true;

@@ -5,6 +5,7 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,11 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignDatumGroup implements Serializable {
 
-    private static final long serialVersionUID = -1141461749;
+    private static final long serialVersionUID = -60705649;
 
-    private String graduationDesignDatumGroupId;
-    private String fileId;
-    private String graduationDesignTeacherId;
+    private String    graduationDesignDatumGroupId;
+    private String    fileId;
+    private String    graduationDesignTeacherId;
+    private Timestamp uploadTime;
 
     public GraduationDesignDatumGroup() {}
 
@@ -36,16 +38,19 @@ public class GraduationDesignDatumGroup implements Serializable {
         this.graduationDesignDatumGroupId = value.graduationDesignDatumGroupId;
         this.fileId = value.fileId;
         this.graduationDesignTeacherId = value.graduationDesignTeacherId;
+        this.uploadTime = value.uploadTime;
     }
 
     public GraduationDesignDatumGroup(
-        String graduationDesignDatumGroupId,
-        String fileId,
-        String graduationDesignTeacherId
+        String    graduationDesignDatumGroupId,
+        String    fileId,
+        String    graduationDesignTeacherId,
+        Timestamp uploadTime
     ) {
         this.graduationDesignDatumGroupId = graduationDesignDatumGroupId;
         this.fileId = fileId;
         this.graduationDesignTeacherId = graduationDesignTeacherId;
+        this.uploadTime = uploadTime;
     }
 
     @NotNull
@@ -78,6 +83,15 @@ public class GraduationDesignDatumGroup implements Serializable {
         this.graduationDesignTeacherId = graduationDesignTeacherId;
     }
 
+    @NotNull
+    public Timestamp getUploadTime() {
+        return this.uploadTime;
+    }
+
+    public void setUploadTime(Timestamp uploadTime) {
+        this.uploadTime = uploadTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignDatumGroup (");
@@ -85,6 +99,7 @@ public class GraduationDesignDatumGroup implements Serializable {
         sb.append(graduationDesignDatumGroupId);
         sb.append(", ").append(fileId);
         sb.append(", ").append(graduationDesignTeacherId);
+        sb.append(", ").append(uploadTime);
 
         sb.append(")");
         return sb.toString();

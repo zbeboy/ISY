@@ -162,6 +162,7 @@ CREATE TABLE graduation_design_datum_group (
   graduation_design_datum_group_id VARCHAR(64) PRIMARY KEY,
   file_id                          VARCHAR(64) NOT NULL,
   graduation_design_teacher_id     VARCHAR(64) NOT NULL,
+  upload_time                     DATETIME    NOT NULL,
   FOREIGN KEY (file_id) REFERENCES files (file_id),
   FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id)
 );

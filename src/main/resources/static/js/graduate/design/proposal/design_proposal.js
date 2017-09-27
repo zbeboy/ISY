@@ -14,7 +14,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             my_url: '/web/graduate/design/proposal/my',
             my_condition: '/web/graduate/design/proposal/my/condition',
             team_url: '/web/graduate/design/proposal/team',
-            team_condition:'/web/graduate/design/proposal/team/condition'
+            team_condition: '/web/graduate/design/proposal/team/condition',
+            group_url: '/web/graduate/design/proposal/group',
+            group_condition: '/web/graduate/design/proposal/group/condition'
         };
 
         /*
@@ -159,6 +161,24 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             $.post(web_path + ajax_url.team_condition, {id: id}, function (data) {
                 if (data.state) {
                     $.address.value(ajax_url.team_url + '?id=' + id);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
+        /*
+         组内资料
+       */
+        $(tableData).delegate('.design_proposal_group', "click", function () {
+            var id = $(this).attr('data-id');
+            $.post(web_path + ajax_url.group_condition, {id: id}, function (data) {
+                if (data.state) {
+                    $.address.value(ajax_url.group_url + '?id=' + id);
                 } else {
                     Messenger().post({
                         message: data.msg,
