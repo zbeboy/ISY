@@ -475,7 +475,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                         phrase: 'Retrying TIME',
                         action: function () {
                             msg.cancel();
-                            sendDelAjax(graduationDesignDatumId, '删除', 1);
+                            sendDelAjax(graduationDesignDatumId, '删除');
                         }
                     },
                     cancel: {

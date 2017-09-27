@@ -262,7 +262,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         }
 
         function del(graduationDesignDatumId) {
-            sendDelAjax(graduationDesignDatumId, '删除', 1);
+            sendDelAjax(graduationDesignDatumId, '删除');
         }
 
         /**
