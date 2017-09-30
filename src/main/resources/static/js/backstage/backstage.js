@@ -154,19 +154,6 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
             //DOM nodes in this function.
 
             /*
-            用于测试环境通知
-             */
-           /* $.notify({
-                title: '<strong>注意!</strong>',
-                message: '您当前处于ISY校园协作平台测试环境，若是重要操作，请到<a href="https://www.zbeboy.top" target="_blank">正式环境</a>'
-            }, {
-                type: 'warning',
-                placement: {
-                    align: 'center'
-                }
-            });*/
-
-            /*
              init message.
              */
             Messenger.options = {
