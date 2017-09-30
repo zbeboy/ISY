@@ -6,7 +6,7 @@
 
     <groupId>top.zbeboy.project</groupId>
     <artifactId>ISY</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1-RELEASE</version>
     <name>ISY Parent Project</name>
     <url>https://www.zbeboy.top</url>
     <licenses>
