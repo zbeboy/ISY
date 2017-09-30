@@ -4,6 +4,9 @@ package top.zbeboy.isy.service.system;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,5 +58,12 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
         create.deleteFrom(AUTHORITIES)
                 .where(AUTHORITIES.AUTHORITY.eq(authorities))
                 .execute();
+    }
+
+    @Override
+    public boolean isRememberMeAuthenticated() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && RememberMeAuthenticationToken.class.isAssignableFrom(authentication.getClass());
     }
 }

@@ -16,7 +16,10 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.daos.RoleDao;
-import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.domain.tables.pojos.College;
+import top.zbeboy.isy.domain.tables.pojos.Department;
+import top.zbeboy.isy.domain.tables.pojos.Role;
+import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 import top.zbeboy.isy.domain.tables.records.RoleRecord;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
@@ -308,14 +311,6 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
     }
 
     @Override
-    public String findByUsernameToStringNoCache(String username) {
-        Result<Record1<String>> record1s = usersService.findByUsernameWithRole(username);
-        StringBuilder stringBuilder = new StringBuilder();
-        record1s.forEach(r -> stringBuilder.append(r.getValue(0)).append(" "));
-        return stringBuilder.toString();
-    }
-
-    @Override
     public boolean isCurrentUserInRole(String role) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
@@ -350,18 +345,6 @@ public class RoleServiceImpl extends DataTablesPlugin<RoleBean> implements RoleS
             }
         }
         return departmentId;
-    }
-
-    @Override
-    public int getRoleSchoolId(Optional<Record> record) {
-        int schoolId = 0;
-        if (record.isPresent()) {
-            School school = record.get().into(School.class);
-            if (!ObjectUtils.isEmpty(school)) {
-                schoolId = school.getSchoolId();
-            }
-        }
-        return schoolId;
     }
 
     /**

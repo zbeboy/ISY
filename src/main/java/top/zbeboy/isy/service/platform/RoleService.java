@@ -146,14 +146,6 @@ public interface RoleService {
     Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, String roleId);
 
     /**
-     * 显示角色
-     *
-     * @param username 用户名
-     * @return 角色集合
-     */
-    String findByUsernameToStringNoCache(String username);
-
-    /**
      * 检查当前用户是否有此权限
      *
      * @param role 权限
@@ -176,12 +168,4 @@ public interface RoleService {
      * @return id
      */
     int getRoleDepartmentId(Optional<Record> record);
-
-    /**
-     * 获取角色学校id
-     *
-     * @param record 数据库信息
-     * @return id
-     */
-    int getRoleSchoolId(Optional<Record> record);
 }
