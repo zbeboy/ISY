@@ -68,7 +68,6 @@
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-jdbc:8.5.20" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-juli:8.5.20" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.3.11.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.3.11.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-rest:1.5.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.10" level="project" />
@@ -145,9 +144,11 @@
     <orderEntry type="library" name="Maven: org.springframework.webflow:org.springframework.js:2.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.44" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-jooq:1.5.7.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.3.11.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.jooq:jooq:3.9.5" level="project" />
-    <orderEntry type="library" name="Maven: org.jooq:jooq-codegen:3.9.5" level="project" />
-    <orderEntry type="library" name="Maven: org.jooq:jooq-meta:3.9.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jooq:jooq-codegen:3.9.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jooq:jooq-meta:3.9.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-devtools:1.5.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-redis:1.5.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-redis:1.8.7.RELEASE" level="project" />
