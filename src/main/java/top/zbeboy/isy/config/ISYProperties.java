@@ -89,18 +89,18 @@ public class ISYProperties {
      */
     public static class Mobile {
 
-        private String apikey;
+        private String apiKey;
 
         private boolean open;
 
         private String sign;
 
-        public String getApikey() {
-            return apikey;
+        public String getApiKey() {
+            return apiKey;
         }
 
-        public void setApikey(String apikey) {
-            this.apikey = apikey;
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
         }
 
         public boolean isOpen() {

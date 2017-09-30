@@ -1,0 +1,73 @@
+spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  jooq:
+    sql-dialect: mysql
+  data:
+    elasticsearch:
+      cluster-nodes: localhost:9300
+      properties:
+        transport:
+          tcp:
+            connect_timeout: 120s
+  session:
+    store-type: redis
+
+datasource:
+  schema: isy
+  mine:
+    jdbcUrl: jdbc:mysql://localhost/isy?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    connectionTestQuery: select 1;
+    maximumPoolSize: 50
+    driverClassName: com.mysql.jdbc.Driver
+    validationTimeout: 10000
+    cachePrepStmts: true
+    prepStmtCacheSize: 250
+    prepStmtCacheSqlLimit: 2048
+    useServerPrepStmts: true
+    useLocalSessionState: true
+    useLocalTransactionState: true
+    rewriteBatchedStatements: true
+    cacheResultSetMetadata: true
+    cacheServerConfiguration: true
+    elideSetAutoCommits: true
+    maintainTimeStats: false
+
+server:
+  context-path:
+  port: 8443
+  ssl:
+    key-store: classpath:214041306740340.pfx
+    key-store-type: PKCS12
+    key-store-password: 214041306740340
+
+isy:
+  constants:
+    jooq-sql-dialect: ${spring.jooq.sql-dialect}
+    server-http-port: 8080
+    server-https-port: ${server.port}
+    server-name: localhost:${server.port}
+  mail:
+#  1 default 2 aliyun 3 sendCloud
+    send-method: 1
+    open: false
+  mobile:
+    open: false
+  weixin:
+    token: zJNREKzmOM
+    app-id:
+    app-secret:
+    encoding-a-e-s-key: W6t5TgA87waCYWIGnVwiIT5Mj27FjedShIUNVzXcFWL
+    small-token: 0c01473c1f18471cb26c162557423de4
+    small-encoding-a-e-s-key: GFJ957X6WOlhqpkSmsbEsxZIoZMtRmVQRIVFQcDEbwu
+  o-auth2:
+    redirect-uris-prefix: ${isy.constants.serverName}/${server.context-path}
+
+sonar:
+  password: 520315
+

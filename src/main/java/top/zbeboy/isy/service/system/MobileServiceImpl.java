@@ -51,7 +51,7 @@ public class MobileServiceImpl implements MobileService {
                     .openConnection();
             connection.setRequestMethod("GET");
             // 填入apikey到HTTP header
-            connection.setRequestProperty("apikey", isyProperties.getMobile().getApikey());
+            connection.setRequestProperty("apikey", isyProperties.getMobile().getApiKey());
             connection.connect();
             InputStream is = connection.getInputStream();
             reader = new BufferedReader(new InputStreamReader(is, CharEncoding.UTF_8));

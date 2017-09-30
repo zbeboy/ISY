@@ -1,0 +1,46 @@
+# spring setting
+spring:
+      profiles:
+        active: secrecy,dev
+      http:
+        multipart:
+          max-request-size: 100MB
+          max-file-size: 100MB
+      mail:
+        default-encoding: UTF-8
+        host: smtp.qq.com
+      thymeleaf:
+        mode: HTML
+
+# project info
+info:
+  build:
+    artifactId: @project.artifactId@
+    version: @project.version@
+
+# security setting
+security:
+  require-ssl: true
+  oauth2:
+    resource:
+      filter-order: 3
+
+# isy setting
+isy:
+  async:
+    core-pool-size: 2
+    max-pool-size: 50
+    queue-capacity: 10000
+  constants:
+    undertow-listener-ip: 0.0.0.0
+
+# logging setting
+logging:
+  file: isy.log
+  path: logs
+
+# server setting
+server:
+  compression:
+    enabled: true
+    min-response-size: 1

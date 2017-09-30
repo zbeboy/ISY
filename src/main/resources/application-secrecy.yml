@@ -1,0 +1,27 @@
+spring:
+  mail:
+    password: stdadtauqpvhbdcf
+    port: 587
+    protocol: smtp
+    test-connection: false
+    username: zbeboy@qq.com
+    properties:
+     mail:
+      smtp:
+        starttls:
+          enable: true
+
+isy:
+  constants:
+    mail-form: zbeboy@qq.com
+  mail:
+    user: zbeboy@notice.zbeboy.top
+    password: n9c6191zhaoyinbe
+    host: smtpdm.aliyun.com
+    port: 25
+    api-user: zbeboy_notify
+    api-key: 7Bceyh3xDpLzWJR8
+    from-name: ISY Team
+  mobile:
+    sign: ISY信息平台
+    api-key: dff42b3e8cbd6406beea0bf160080115

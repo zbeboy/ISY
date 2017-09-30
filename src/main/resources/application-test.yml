@@ -1,0 +1,86 @@
+spring:
+  devtools:
+    livereload:
+      enabled: false
+    restart:
+      enabled: false
+  jooq:
+    sql-dialect: mysql
+  resources:
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /**
+  data:
+    elasticsearch:
+      cluster-nodes: localhost:9300
+      properties:
+        transport:
+          tcp:
+            connect_timeout: 120s
+  session:
+    store-type: redis
+
+flyway:
+  baseline-on-migrate: true
+
+datasource:
+  schema: isy
+  mine:
+    jdbcUrl: jdbc:mysql://localhost/isy?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: N9c6197zbe
+    connectionTestQuery: select 1;
+    maximumPoolSize: 50
+    driverClassName: com.mysql.jdbc.Driver
+    validationTimeout: 10000
+    cachePrepStmts: true
+    prepStmtCacheSize: 250
+    prepStmtCacheSqlLimit: 2048
+    useServerPrepStmts: true
+    useLocalSessionState: true
+    useLocalTransactionState: true
+    rewriteBatchedStatements: true
+    cacheResultSetMetadata: true
+    cacheServerConfiguration: true
+    elideSetAutoCommits: true
+    maintainTimeStats: false
+
+server:
+  port: 9743
+  context-path:
+  ssl:
+    key-store: classpath:214075876040340.pfx
+    key-store-type: PKCS12
+    key-store-password: 214075876040340
+  undertow:
+    accesslog:
+      dir: logs
+      enabled: true
+#server.address=www.zbeboy.xyz
+#server.tomcat.max-threads=500
+#server.tomcat.basedir=./isy
+
+isy:
+  constants:
+    jooq-sql-dialect: ${spring.jooq.sql-dialect}
+    server-http-port: 9603
+    server-https-port: ${server.port}
+    server-name: www.zbeboy.xyz
+    temp-dir: root
+  mail:
+    send-method: 3
+    open: true
+  mobile:
+    open: true
+  weixin:
+    token: zJNREKzmOM
+    app-id:
+    app-secret:
+    encoding-a-e-s-key: W6t5TgA87waCYWIGnVwiIT5Mj27FjedShIUNVzXcFWL
+    small-token: 0c01473c1f18471cb26c162557423de4
+    small-encoding-a-e-s-key: GFJ957X6WOlhqpkSmsbEsxZIoZMtRmVQRIVFQcDEbwu
+  o-auth2:
+    redirect-uris-prefix: ${isy.constants.serverName}/${server.context-path}
+
