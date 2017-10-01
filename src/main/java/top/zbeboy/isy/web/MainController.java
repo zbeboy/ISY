@@ -71,7 +71,7 @@ public class MainController {
      * @return 登录页.
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(HttpServletRequest request) {
+    public String login() {
         String page;
         if (authoritiesService.isRememberMeAuthenticated()) {
             page = "redirect:/web/menu/backstage";
