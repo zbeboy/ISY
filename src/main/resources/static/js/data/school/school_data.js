@@ -1,8 +1,23 @@
 /**
  * Created by lenovo on 2016-09-12.
  */
+//# sourceURL=school_data.js
 require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
     function ($, Handlebars) {
+
+        /*
+         参数
+        */
+        var param = {
+            schoolName: ''
+        };
+
+        /*
+        web storage key.
+       */
+        var webStorageKey = {
+            SCHOOL_NAME: "DATA_SCHOOL_SCHOOL_NAME_SEARCH"
+        };
 
         /*
          ajax url
@@ -53,7 +68,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
+                    console.log(searchParam);
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },
@@ -81,44 +98,44 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
                         if (c.schoolIsDel == 0 || c.schoolIsDel == null) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    },
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.schoolId,
+                                            "school": c.schoolName
+                                        },
+                                        {
+                                            "name": "注销",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.schoolId,
+                                            "school": c.schoolName
+                                        }
+                                    ]
+                                };
                         } else {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    },
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.schoolId,
-                                        "school": c.schoolName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.schoolId,
+                                            "school": c.schoolName
+                                        },
+                                        {
+                                            "name": "恢复",
+                                            "css": "recovery",
+                                            "type": "warning",
+                                            "id": c.schoolId,
+                                            "school": c.schoolName
+                                        }
+                                    ]
+                                };
                         }
 
                         return template(context);
@@ -175,6 +192,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.recovery', "click", function () {
                     school_recovery($(this).attr('data-id'), $(this).attr('data-school'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -199,13 +218,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            schoolName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -217,6 +229,35 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function initParam() {
             param.schoolName = $(getParamId().schoolName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+         */
+        function initSearchContent() {
+            var schoolName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+            }
+            if (schoolName !== null) {
+                param.schoolName = schoolName;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var schoolName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+            }
+            if (schoolName !== null) {
+                $(getParamId().schoolName).val(schoolName);
+            }
         }
 
         /*
@@ -224,6 +265,10 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function cleanParam() {
             $(getParamId().schoolName).val('');
+
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
+            }
         }
 
         $(getParamId().schoolName).keyup(function (event) {
