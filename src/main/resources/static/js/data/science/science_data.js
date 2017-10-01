@@ -4,6 +4,26 @@
 require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"], function ($, Handlebars) {
 
     /*
+     参数
+     */
+    var param = {
+        schoolName: '',
+        collegeName: '',
+        departmentName: '',
+        scienceName: ''
+    };
+
+    /*
+    web storage key.
+    */
+    var webStorageKey = {
+        SCHOOL_NAME: 'DATA_SCIENCE_SCHOOL_NAME_SEARCH',
+        COLLEGE_NAME: 'DATA_SCIENCE_COLLEGE_NAME_SEARCH',
+        DEPARTMENT_NAME: 'DATA_SCIENCE_DEPARTMENT_NAME_SEARCH',
+        SCIENCE_NAME:'DATA_SCIENCE_SCIENCE_NAME_SEARCH'
+    };
+
+    /*
      ajax url
      */
     function getAjaxUrl() {
@@ -46,12 +66,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         searching: false,
         "processing": true, // 打开数据加载时的等待效果
         "serverSide": true,// 打开后台分页
-        "aaSorting": [[1, 'asc']],// 排序
+        "aaSorting": [[1, 'desc']],// 排序
         "ajax": {
             "url": web_path + getAjaxUrl().sciences,
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
+                initSearchContent();
                 var searchParam = getParam();
                 d.extra_search = JSON.stringify(searchParam);
             }
@@ -84,44 +105,44 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
                     if (c.scienceIsDel == 0 || c.scienceIsDel == null) {
                         context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.scienceId,
-                                    "science": c.scienceName
-                                },
-                                {
-                                    "name": "注销",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.scienceId,
-                                    "science": c.scienceName
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.scienceId,
+                                        "science": c.scienceName
+                                    },
+                                    {
+                                        "name": "注销",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.scienceId,
+                                        "science": c.scienceName
+                                    }
+                                ]
+                            };
                     } else {
                         context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.scienceId,
-                                    "science": c.scienceName
-                                },
-                                {
-                                    "name": "恢复",
-                                    "css": "recovery",
-                                    "type": "warning",
-                                    "id": c.scienceId,
-                                    "science": c.scienceName
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.scienceId,
+                                        "science": c.scienceName
+                                    },
+                                    {
+                                        "name": "恢复",
+                                        "css": "recovery",
+                                        "type": "warning",
+                                        "id": c.scienceId,
+                                        "science": c.scienceName
+                                    }
+                                ]
+                            };
                     }
 
                     return template(context);
@@ -178,6 +199,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             tableElement.delegate('.recovery', "click", function () {
                 science_recovery($(this).attr('data-id'), $(this).attr('data-science'));
             });
+            // 初始化搜索框中内容
+            initSearchInput();
         }
     });
 
@@ -200,16 +223,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     }
 
     /*
-     参数
-     */
-    var param = {
-        schoolName: '',
-        collegeName: '',
-        departmentName: '',
-        scienceName: ''
-    };
-
-    /*
      得到参数
      */
     function getParam() {
@@ -224,6 +237,75 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         param.collegeName = $(getParamId().collegeName).val();
         param.departmentName = $(getParamId().departmentName).val();
         param.scienceName = $(getParamId().scienceName).val();
+
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+            sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+            sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, param.departmentName);
+            sessionStorage.setItem(webStorageKey.SCIENCE_NAME, param.scienceName);
+        }
+    }
+
+    /*
+    初始化搜索内容
+    */
+    function initSearchContent() {
+        var schoolName = null;
+        var collegeName = null;
+        var departmentName = null;
+        var scienceName = null;
+        if (typeof(Storage) !== "undefined") {
+            schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+            collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+            departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);
+            scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+        }
+        if (schoolName !== null) {
+            param.schoolName = schoolName;
+        }
+
+        if (collegeName !== null) {
+            param.collegeName = collegeName;
+        }
+
+        if (departmentName !== null) {
+            param.departmentName = departmentName;
+        }
+
+        if (scienceName !== null) {
+            param.scienceName = scienceName;
+        }
+    }
+
+    /*
+   初始化搜索框
+    */
+    function initSearchInput() {
+        var schoolName = null;
+        var collegeName = null;
+        var departmentName = null;
+        var scienceName = null;
+        if (typeof(Storage) !== "undefined") {
+            schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+            collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+            departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);
+            scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+        }
+        if (schoolName !== null) {
+            $(getParamId().schoolName).val(schoolName);
+        }
+
+        if (collegeName !== null) {
+            $(getParamId().collegeName).val(collegeName);
+        }
+
+        if (departmentName !== null) {
+            $(getParamId().departmentName).val(departmentName);
+        }
+
+        if (scienceName !== null) {
+            $(getParamId().scienceName).val(scienceName);
+        }
     }
 
     /*
@@ -234,6 +316,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         $(getParamId().collegeName).val('');
         $(getParamId().departmentName).val('');
         $(getParamId().scienceName).val('');
+
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
+            sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
+            sessionStorage.removeItem(webStorageKey.DEPARTMENT_NAME);
+            sessionStorage.removeItem(webStorageKey.SCIENCE_NAME);
+        }
     }
 
     $(getParamId().schoolName).keyup(function (event) {
