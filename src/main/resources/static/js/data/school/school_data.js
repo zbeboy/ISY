@@ -70,7 +70,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     // 添加额外的参数传给服务器
                     initSearchContent();
                     var searchParam = getParam();
-                    console.log(searchParam);
                     d.extra_search = JSON.stringify(searchParam);
                 }
             },
