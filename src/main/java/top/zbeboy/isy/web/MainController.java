@@ -1,6 +1,8 @@
 package top.zbeboy.isy.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
@@ -12,17 +14,24 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Files;
+import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.elastic.pojo.SystemLogElastic;
+import top.zbeboy.isy.glue.system.SystemLogGlue;
+import top.zbeboy.isy.security.MyUserImpl;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.system.AuthoritiesService;
 import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
+import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.Locale;
 
 /**
@@ -43,6 +52,9 @@ public class MainController {
 
     @Resource
     private AuthoritiesService authoritiesService;
+
+    @Resource
+    private SystemLogGlue systemLogGlue;
 
     /**
      * main page
@@ -71,9 +83,17 @@ public class MainController {
      * @return 登录页.
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(HttpServletRequest request) {
         String page;
         if (authoritiesService.isRememberMeAuthenticated()) {
+            Authentication authentication =
+                    SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+            if (!ObjectUtils.isEmpty(principal) && principal instanceof MyUserImpl) {
+                Users users = (((MyUserImpl) principal).getUsers());
+                SystemLogElastic systemLog = new SystemLogElastic(UUIDUtils.getUUID(), "R-M登录系统", new Timestamp(Clock.systemDefaultZone().millis()), users.getUsername(), RequestUtils.getIpAddress(request));
+                systemLogGlue.save(systemLog);
+            }
             page = "redirect:/web/menu/backstage";
         } else {
             page = "login";

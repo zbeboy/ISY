@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.domain.tables.pojos.Authorities;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
 
@@ -64,6 +65,6 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
     public boolean isRememberMeAuthenticated() {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && RememberMeAuthenticationToken.class.isAssignableFrom(authentication.getClass());
+        return !ObjectUtils.isEmpty(authentication) && RememberMeAuthenticationToken.class.isAssignableFrom(authentication.getClass());
     }
 }
