@@ -7,6 +7,26 @@
 require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"], function ($, Handlebars) {
 
     /*
+    参数
+    */
+    var param = {
+        schoolName: '',
+        collegeName: '',
+        buildingName: '',
+        buildingCode: ''
+    };
+
+    /*
+   web storage key.
+   */
+    var webStorageKey = {
+        SCHOOL_NAME: 'DATA_SCHOOLROOM_SCHOOL_NAME_SEARCH',
+        COLLEGE_NAME: 'DATA_SCHOOLROOM_COLLEGE_NAME_SEARCH',
+        BUILDING_NAME: 'DATA_SCHOOLROOM_BUILDING_NAME_SEARCH',
+        BUILDING_CODE: 'DATA_SCHOOLROOM_BUILDING_CODE_SEARCH'
+    };
+
+    /*
      ajax url
      */
     function getAjaxUrl() {
@@ -55,6 +75,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
+                initSearchContent();
                 var searchParam = getParam();
                 d.extra_search = JSON.stringify(searchParam);
             }
@@ -86,44 +107,44 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
                     if (c.schoolroomIsDel == 0 || c.schoolroomIsDel == null) {
                         context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.schoolroomId,
-                                    "schoolroom": c.buildingName + c.buildingCode
-                                },
-                                {
-                                    "name": "注销",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.schoolroomId,
-                                    "schoolroom": c.buildingName + c.buildingCode
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.schoolroomId,
+                                        "schoolroom": c.buildingName + c.buildingCode
+                                    },
+                                    {
+                                        "name": "注销",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.schoolroomId,
+                                        "schoolroom": c.buildingName + c.buildingCode
+                                    }
+                                ]
+                            };
                     } else {
                         context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.schoolroomId,
-                                    "schoolroom": c.buildingName + c.buildingCode
-                                },
-                                {
-                                    "name": "恢复",
-                                    "css": "recovery",
-                                    "type": "warning",
-                                    "id": c.schoolroomId,
-                                    "schoolroom": c.buildingName + c.buildingCode
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.schoolroomId,
+                                        "schoolroom": c.buildingName + c.buildingCode
+                                    },
+                                    {
+                                        "name": "恢复",
+                                        "css": "recovery",
+                                        "type": "warning",
+                                        "id": c.schoolroomId,
+                                        "schoolroom": c.buildingName + c.buildingCode
+                                    }
+                                ]
+                            };
                     }
 
                     return template(context);
@@ -180,6 +201,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             tableElement.delegate('.recovery', "click", function () {
                 schoolroom_recovery($(this).attr('data-id'), $(this).attr('data-schoolroom'));
             });
+
+            // 初始化搜索框中内容
+            initSearchInput();
         }
     });
 
@@ -202,16 +226,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     }
 
     /*
-     参数
-     */
-    var param = {
-        schoolName: '',
-        collegeName: '',
-        buildingName: '',
-        buildingCode: ''
-    };
-
-    /*
      得到参数
      */
     function getParam() {
@@ -226,6 +240,74 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         param.collegeName = $(getParamId().collegeName).val();
         param.buildingName = $(getParamId().buildingName).val();
         param.buildingCode = $(getParamId().buildingCode).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+            sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+            sessionStorage.setItem(webStorageKey.BUILDING_NAME, param.buildingName);
+            sessionStorage.setItem(webStorageKey.BUILDING_CODE, param.buildingCode);
+        }
+    }
+
+    /*
+    初始化搜索内容
+    */
+    function initSearchContent() {
+        var schoolName = null;
+        var collegeName = null;
+        var buildingName = null;
+        var buildingCode = null;
+        if (typeof(Storage) !== "undefined") {
+            schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+            collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+            buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
+            buildingCode = sessionStorage.getItem(webStorageKey.BUILDING_CODE);
+        }
+        if (schoolName !== null) {
+            param.schoolName = schoolName;
+        }
+
+        if (collegeName !== null) {
+            param.collegeName = collegeName;
+        }
+
+        if (buildingName !== null) {
+            param.buildingName = buildingName;
+        }
+
+        if (buildingCode !== null) {
+            param.buildingCode = buildingCode;
+        }
+    }
+
+    /*
+   初始化搜索框
+    */
+    function initSearchInput() {
+        var schoolName = null;
+        var collegeName = null;
+        var buildingName = null;
+        var buildingCode = null;
+        if (typeof(Storage) !== "undefined") {
+            schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+            collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+            buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
+            buildingCode = sessionStorage.getItem(webStorageKey.BUILDING_CODE);
+        }
+        if (schoolName !== null) {
+            $(getParamId().schoolName).val(schoolName);
+        }
+
+        if (collegeName !== null) {
+            $(getParamId().collegeName).val(collegeName);
+        }
+
+        if (buildingName !== null) {
+            $(getParamId().buildingName).val(buildingName);
+        }
+
+        if (buildingCode !== null) {
+            $(getParamId().buildingCode).val(buildingCode);
+        }
     }
 
     /*
@@ -236,6 +318,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         $(getParamId().collegeName).val('');
         $(getParamId().buildingName).val('');
         $(getParamId().buildingCode).val('');
+
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
+            sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
+            sessionStorage.removeItem(webStorageKey.BUILDING_NAME);
+            sessionStorage.removeItem(webStorageKey.BUILDING_CODE);
+        }
     }
 
     $(getParamId().schoolName).keyup(function (event) {
