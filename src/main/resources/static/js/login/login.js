@@ -179,17 +179,16 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
             source: function (query, process) {
                 // 过滤数组
                 var tempArr = [];
+                var storageEmail = null;
                 // 采用 html5 Storage存储
                 // Check browser support
                 if (typeof(Storage) !== "undefined") {
-                    var storageEmail = localStorage.getItem(webStorageKey.LOGIN_USERNAME);
-                    if (storageEmail !== null && storageEmail.indexOf(query) === 0) {
-                        tempArr.push(storageEmail);
-                    } else {
-                        tempArr = autoCompleteEmail(query);
-                    }
+                    storageEmail = localStorage.getItem(webStorageKey.LOGIN_USERNAME);
+                }
+
+                if (storageEmail !== null && storageEmail.indexOf(query) === 0) {
+                    tempArr.push(storageEmail);
                 } else {
-                    // not support web storage
                     tempArr = autoCompleteEmail(query);
                 }
 
