@@ -1,7 +1,7 @@
 # spring setting
 spring:
       profiles:
-        active: secrecy,dev
+        active: secrecy,prod
       http:
         multipart:
           max-request-size: 100MB
