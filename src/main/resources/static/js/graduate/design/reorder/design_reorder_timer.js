@@ -8,7 +8,7 @@ require(["jquery", "bootstrap"], function ($) {
      web storage key.
     */
     var webStorageKey = {
-        DEFENSE_ORDER_ID: "DEFENSE_ORDER_ID_"
+        DEFENSE_ORDER_ID: 'DEFENSE_ORDER_ID_'
     };
 
     var clock = new clock();

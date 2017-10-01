@@ -46,7 +46,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      web storage key.
     */
     var webStorageKey = {
-        DEFENSE_ORDER_ID: "DEFENSE_ORDER_ID_"
+        DEFENSE_ORDER_ID: 'DEFENSE_ORDER_ID_'
     };
 
     // 刷新时选中菜单

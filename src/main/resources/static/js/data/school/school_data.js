@@ -16,7 +16,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         web storage key.
        */
         var webStorageKey = {
-            SCHOOL_NAME: "DATA_SCHOOL_SCHOOL_NAME_SEARCH"
+            SCHOOL_NAME: 'DATA_SCHOOL_SCHOOL_NAME_SEARCH'
         };
 
         /*

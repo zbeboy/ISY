@@ -60,7 +60,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
         web storage key.
          */
         var webStorageKey = {
-            LOGIN_USERNAME: "LOGIN_USERNAME_KEY"
+            LOGIN_USERNAME: 'LOGIN_USERNAME_KEY'
         };
 
         /**
