@@ -38,4 +38,11 @@ public interface AuthoritiesService {
      * @param authorities 权限
      */
     void deleteByAuthorities(String authorities);
+
+    /**
+     * Check if user is login by remember me cookie, refer
+     * org.springframework.security.authentication.AuthenticationTrustResolverImpl
+     * @return true or false
+     */
+    boolean isRememberMeAuthenticated();
 }

@@ -71,7 +71,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.6.RELEASE</version>
+        <version>1.5.7.RELEASE</version>
     </parent>
 
     <!-- Add typical dependencies for a web application -->
@@ -213,18 +213,14 @@
 
         <!-- jooq -->
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jooq</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Developer tools -->
@@ -540,25 +536,6 @@
                     </plugin>
 
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>properties-maven-plugin</artifactId>
-                        <version>1.0-alpha-2</version>
-                        <executions>
-                            <execution>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>read-project-properties</goal>
-                                </goals>
-                                <configuration>
-                                    <files>
-                                        <file>src/main/resources/application-dev.properties</file>
-                                    </files>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
                         <groupId>org.jooq</groupId>
                         <artifactId>jooq-codegen-maven</artifactId>
                         <!-- The jOOQ code generation plugin is also executed in the generate-sources phase, prior to compilation -->
@@ -573,10 +550,10 @@
                         <!-- This is a minimal working configuration. See the manual's section about the code generator for more details -->
                         <configuration>
                             <jdbc>
-                                <driver>${datasource.mine.driverClassName}</driver>
-                                <url>${datasource.mine.jdbcUrl}</url>
-                                <user>${datasource.mine.username}</user>
-                                <password>${datasource.mine.password}</password>
+                                <driver>com.mysql.jdbc.Driver</driver>
+                                <url>jdbc:mysql://localhost/isy?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false</url>
+                                <user>root</user>
+                                <password>123456</password>
                             </jdbc>
                             <generator>
                                 <generate>
@@ -587,7 +564,7 @@
                                 <database>
                                     <name>org.jooq.util.mysql.MySQLDatabase</name>
                                     <includes>.*</includes>
-                                    <inputSchema>${datasource.schema}</inputSchema>
+                                    <inputSchema>isy</inputSchema>
                                 </database>
                                 <target>
                                     <packageName>top.zbeboy.isy.domain</packageName>

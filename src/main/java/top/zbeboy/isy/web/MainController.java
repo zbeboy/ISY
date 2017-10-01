@@ -14,6 +14,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Files;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
+import top.zbeboy.isy.service.system.AuthoritiesService;
 import top.zbeboy.isy.service.util.FilesUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -39,6 +40,9 @@ public class MainController {
 
     @Resource
     private FilesService filesService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
 
     /**
      * main page
@@ -68,7 +72,13 @@ public class MainController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
-        return "login";
+        String page;
+        if (authoritiesService.isRememberMeAuthenticated()) {
+            page = "redirect:/web/menu/backstage";
+        } else {
+            page = "login";
+        }
+        return page;
     }
 
     /**

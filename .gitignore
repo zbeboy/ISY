@@ -5,7 +5,7 @@
 /node_modules/
 /.idea/dataSources.xml
 /.idea/workspace.xml
-/src/main/resources/application-dev.properties
-/src/main/resources/application-secrecy.properties
-/src/main/resources/application-test.properties
-/src/main/resources/application-prod.properties
+/src/main/resources/application-secrecy.yml
+/src/main/resources/application-dev.yml
+/src/main/resources/application-prod.yml
+/src/main/resources/application-test.yml
