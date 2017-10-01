@@ -42,6 +42,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         defenseStatus: $(paramId.defenseStatus).val()
     };
 
+    /*
+     web storage key.
+    */
+    var webStorageKey = {
+        DEFENSE_ORDER_ID: "DEFENSE_ORDER_ID_"
+    };
+
     // 刷新时选中菜单
     nav_active(ajax_url.back);
 
@@ -441,7 +448,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         // 采用 html5 Storage存储
         // Check browser support
         if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("DEFENSE_ORDER_ID_" + id, timer * 60);
+            localStorage.setItem(webStorageKey.DEFENSE_ORDER_ID + id, timer * 60);
             $('#timerModal').modal('hide');
             window.open(web_path + ajax_url.timer_url + '?defenseOrderId=' + id + '&timer=' + timer);
         } else {

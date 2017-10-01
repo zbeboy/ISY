@@ -56,6 +56,13 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
             captcha: $(paramId.captcha).val().trim()
         };
 
+        /*
+        web storage key.
+         */
+        var webStorageKey = {
+            LOGIN_USERNAME: "LOGIN_USERNAME_KEY"
+        };
+
         /**
          * 初始化参数
          */
@@ -175,7 +182,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
                 // 采用 html5 Storage存储
                 // Check browser support
                 if (typeof(Storage) !== "undefined") {
-                    var storageEmail = localStorage.getItem("email");
+                    var storageEmail = localStorage.getItem(webStorageKey.LOGIN_USERNAME);
                     if (storageEmail !== null && storageEmail.indexOf(query) === 0) {
                         tempArr.push(storageEmail);
                     } else {
@@ -321,7 +328,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
                             // 存储到 web storage if support.
                             if (typeof(Storage) !== "undefined") {
                                 // Store
-                                localStorage.setItem("email", email);
+                                localStorage.setItem(webStorageKey.LOGIN_USERNAME, email);
                             }
                             var url = window.location.href;
                             var toBackstage = web_path + ajax_url.backstage;
