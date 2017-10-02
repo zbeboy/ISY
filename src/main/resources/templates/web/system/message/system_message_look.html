@@ -23,7 +23,7 @@
                 <div class="text-center">
                     <h4 th:text="${message.messageTitle}"></h4>
                 </div>
-                <p th:text="${message.realName}"></p>
+                <p th:text="${'发件人: ' + message.realName}"></p>
                 <p th:text="${message.messageContent}" style="padding-left: 20px;"></p>
                 <div class="text-right" th:text="${message.messageDateStr}"></div>
             </div>
