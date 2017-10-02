@@ -5,6 +5,23 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     function ($, Handlebars) {
 
         /*
+        参数
+        */
+        var param = {
+            nationName: '',
+            addNation: '',
+            updateNationId: '',
+            updateNation: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            NATION_NAME: 'DATA_NATION_NATION_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -50,6 +67,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -111,6 +129,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'), $(this).attr('data-value'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -136,16 +156,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            nationName: '',
-            addNation: '',
-            updateNationId: '',
-            updateNation: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -157,6 +167,35 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function initParam() {
             param.nationName = $(getParamId().nationName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.NATION_NAME, param.nationName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var nationName = null;
+            if (typeof(Storage) !== "undefined") {
+                nationName = sessionStorage.getItem(webStorageKey.NATION_NAME);
+            }
+            if (nationName !== null) {
+                param.nationName = nationName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var nationName = null;
+            if (typeof(Storage) !== "undefined") {
+                nationName = sessionStorage.getItem(webStorageKey.NATION_NAME);
+            }
+            if (nationName !== null) {
+                $(getParamId().nationName).val(nationName);
+            }
         }
 
         /*
@@ -164,6 +203,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function cleanParam() {
             $(getParamId().nationName).val('');
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.removeItem(webStorageKey.NATION_NAME);
+            }
         }
 
         $(getParamId().nationName).keyup(function (event) {
