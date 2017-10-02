@@ -5,6 +5,20 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
     function ($, Handlebars) {
 
         /*
+         参数
+        */
+        var param = {
+            roleName: ''
+        };
+
+        /*
+        web storage key.
+       */
+        var webStorageKey = {
+            ROLE_NAME: 'SYSTEM_ROLE_ROLE_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -47,6 +61,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -63,17 +78,17 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.roleId,
-                                    "role": c.roleName
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.roleId,
+                                        "role": c.roleName
+                                    }
+                                ]
+                            };
                         return template(context);
                     }
                 }
@@ -110,6 +125,8 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -126,13 +143,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         }
 
         /*
-         参数
-         */
-        var param = {
-            roleName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -144,6 +154,35 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
          */
         function initParam() {
             param.roleName = $(getParamId().roleName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.ROLE_NAME, param.roleName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+         */
+        function initSearchContent() {
+            var roleName = null;
+            if (typeof(Storage) !== "undefined") {
+                roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
+            }
+            if (roleName !== null) {
+                param.roleName = roleName;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var roleName = null;
+            if (typeof(Storage) !== "undefined") {
+                roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
+            }
+            if (roleName !== null) {
+                $(getParamId().roleName).val(roleName);
+            }
         }
 
         /*
@@ -151,6 +190,9 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
          */
         function cleanParam() {
             $(getParamId().roleName).val('');
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.removeItem(webStorageKey.ROLE_NAME);
+            }
         }
 
         $(getParamId().roleName).keyup(function (event) {
