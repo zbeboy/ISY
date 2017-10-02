@@ -5,6 +5,24 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
     function ($, Handlebars) {
 
         /*
+         参数
+        */
+        var param = {
+            schoolName: '',
+            collegeName: '',
+            roleName: ''
+        };
+
+        /*
+        web storage key.
+       */
+        var webStorageKey = {
+            SCHOOL_NAME: 'PLATFORM_ROLE_SCHOOL_NAME_SEARCH',
+            COLLEGE_NAME: 'PLATFORM_ROLE_COLLEGE_NAME_SEARCH',
+            ROLE_NAME: 'PLATFORM_ROLE_ROLE_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -49,6 +67,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -67,24 +86,24 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.roleId,
-                                    "role": c.roleName
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.roleId,
-                                    "role": c.roleName
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.roleId,
+                                        "role": c.roleName
+                                    },
+                                    {
+                                        "name": "删除",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.roleId,
+                                        "role": c.roleName
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }
@@ -126,6 +145,8 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 tableElement.delegate('.del', "click", function () {
                     role_del($(this).attr('data-id'), $(this).attr('data-role'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -145,15 +166,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         }
 
         /*
-         参数
-         */
-        var param = {
-            schoolName: '',
-            collegeName: '',
-            roleName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -167,6 +179,61 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             param.schoolName = $(getParamId().schoolName).val();
             param.collegeName = $(getParamId().collegeName).val();
             param.roleName = $(getParamId().roleName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+                sessionStorage.setItem(webStorageKey.ROLE_NAME, param.roleName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var schoolName = null;
+            var collegeName = null;
+            var roleName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
+            }
+            if (schoolName !== null) {
+                param.schoolName = schoolName;
+            }
+
+            if (collegeName !== null) {
+                param.collegeName = collegeName;
+            }
+
+            if (roleName !== null) {
+                param.roleName = roleName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var schoolName = null;
+            var collegeName = null;
+            var roleName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
+            }
+            if (schoolName !== null) {
+                $(getParamId().schoolName).val(schoolName);
+            }
+
+            if (collegeName !== null) {
+                $(getParamId().collegeName).val(collegeName);
+            }
+
+            if (roleName !== null) {
+                $(getParamId().roleName).val(roleName);
+            }
         }
 
         /*
@@ -176,6 +243,12 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             $(getParamId().schoolName).val('');
             $(getParamId().collegeName).val('');
             $(getParamId().roleName).val('');
+
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
+                sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
+                sessionStorage.removeItem(webStorageKey.ROLE_NAME);
+            }
         }
 
         $(getParamId().schoolName).keyup(function (event) {
