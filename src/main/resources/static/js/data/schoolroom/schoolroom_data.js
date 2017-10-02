@@ -318,13 +318,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         $(getParamId().collegeName).val('');
         $(getParamId().buildingName).val('');
         $(getParamId().buildingCode).val('');
-
-        if (typeof(Storage) !== "undefined") {
-            sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
-            sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
-            sessionStorage.removeItem(webStorageKey.BUILDING_NAME);
-            sessionStorage.removeItem(webStorageKey.BUILDING_CODE);
-        }
     }
 
     $(getParamId().schoolName).keyup(function (event) {

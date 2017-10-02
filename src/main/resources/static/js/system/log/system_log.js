@@ -205,11 +205,6 @@ require(["jquery", "datatables.responsive"],
             $(getParamId().username).val('');
             $(getParamId().behavior).val('');
             $(getParamId().ipAddress).val('');
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.USERNAME);
-                sessionStorage.removeItem(webStorageKey.BEHAVIOR);
-                sessionStorage.removeItem(webStorageKey.IP_ADDRESS);
-            }
         }
 
         $(getParamId().username).keyup(function (event) {

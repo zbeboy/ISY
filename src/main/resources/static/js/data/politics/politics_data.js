@@ -199,9 +199,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function cleanParam() {
             $(getParamId().politicalLandscapeName).val('');
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.POLITICAL_LANDSCAPE_NAME);
-            }
         }
 
         $(getParamId().politicalLandscapeName).keyup(function (event) {

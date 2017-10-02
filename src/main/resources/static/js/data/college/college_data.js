@@ -309,11 +309,6 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
         function cleanParam() {
             $(getParamId().schoolName).val('');
             $(getParamId().collegeName).val('');
-
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
-                sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
-            }
         }
 
         $(getParamId().schoolName).keyup(function (event) {

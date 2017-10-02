@@ -190,9 +190,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
          */
         function cleanParam() {
             $(getParamId().roleName).val('');
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.ROLE_NAME);
-            }
         }
 
         $(getParamId().roleName).keyup(function (event) {

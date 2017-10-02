@@ -316,13 +316,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         $(getParamId().collegeName).val('');
         $(getParamId().departmentName).val('');
         $(getParamId().scienceName).val('');
-
-        if (typeof(Storage) !== "undefined") {
-            sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
-            sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
-            sessionStorage.removeItem(webStorageKey.DEPARTMENT_NAME);
-            sessionStorage.removeItem(webStorageKey.SCIENCE_NAME);
-        }
     }
 
     $(getParamId().schoolName).keyup(function (event) {

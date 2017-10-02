@@ -203,9 +203,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function cleanParam() {
             $(getParamId().nationName).val('');
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.NATION_NAME);
-            }
         }
 
         $(getParamId().nationName).keyup(function (event) {

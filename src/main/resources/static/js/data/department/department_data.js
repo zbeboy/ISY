@@ -298,12 +298,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             $(getParamId().schoolName).val('');
             $(getParamId().collegeName).val('');
             $(getParamId().departmentName).val('');
-
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
-                sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
-                sessionStorage.removeItem(webStorageKey.DEPARTMENT_NAME);
-            }
         }
 
         $(getParamId().schoolName).keyup(function (event) {

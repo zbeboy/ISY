@@ -203,9 +203,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function cleanParam() {
             $(getParamId().academicTitleName).val('');
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.ACADEMIC_TITLE_NAME);
-            }
         }
 
         $(getParamId().academicTitleName).keyup(function (event) {

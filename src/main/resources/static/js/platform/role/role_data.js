@@ -243,12 +243,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             $(getParamId().schoolName).val('');
             $(getParamId().collegeName).val('');
             $(getParamId().roleName).val('');
-
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
-                sessionStorage.removeItem(webStorageKey.COLLEGE_NAME);
-                sessionStorage.removeItem(webStorageKey.ROLE_NAME);
-            }
         }
 
         $(getParamId().schoolName).keyup(function (event) {

@@ -165,9 +165,6 @@ require(["jquery", "datatables.responsive"], function ($) {
 
     function cleanParam() {
         $(getParamId().acceptPhone).val('');
-        if (typeof(Storage) !== "undefined") {
-            sessionStorage.removeItem(webStorageKey.ACCEPT_PHONE);
-        }
     }
 
     $(getParamId().acceptPhone).keyup(function (event) {

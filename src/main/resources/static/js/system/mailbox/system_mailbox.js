@@ -165,9 +165,6 @@ require(["jquery", "datatables.responsive"], function ($) {
 
     function cleanParam() {
         $(getParamId().acceptMail).val('');
-        if (typeof(Storage) !== "undefined") {
-            sessionStorage.removeItem(webStorageKey.ACCEPT_MAIL);
-        }
     }
 
     $(getParamId().acceptMail).keyup(function (event) {

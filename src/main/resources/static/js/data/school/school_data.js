@@ -264,10 +264,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function cleanParam() {
             $(getParamId().schoolName).val('');
-
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.SCHOOL_NAME);
-            }
         }
 
         $(getParamId().schoolName).keyup(function (event) {

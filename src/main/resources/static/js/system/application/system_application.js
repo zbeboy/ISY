@@ -264,11 +264,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             $(getParamId().applicationName).val('');
             $(getParamId().applicationEnName).val('');
             $(getParamId().applicationCode).val('');
-            if (typeof(Storage) !== "undefined") {
-                sessionStorage.removeItem(webStorageKey.APPLICATION_NAME);
-                sessionStorage.removeItem(webStorageKey.APPLICATION_EN_NAME);
-                sessionStorage.removeItem(webStorageKey.APPLICATION_CODE);
-            }
         }
 
         $(getParamId().applicationName).keyup(function (event) {

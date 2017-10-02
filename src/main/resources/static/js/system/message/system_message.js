@@ -23,6 +23,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            MESSAGE_TITLE: 'SYSTEM_MESSAGE_TITLE_SEARCH'
+        };
+
+        /*
          参数id
          */
         var paramId = {
@@ -52,11 +59,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 刷新查询参数
          */
         function refreshSearch() {
-            var params = {
-                messageTitle: $(paramId.messageTitle).val()
-            };
-            param.pageNum = 0;
-            param.searchParams = JSON.stringify(params);
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.MESSAGE_TITLE, $(paramId.messageTitle).val());
+            }
         }
 
         /*
@@ -100,17 +105,52 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         init();
+        initSearchInput();
 
         /**
          * 初始化数据
          */
         function init() {
+            initSearchContent();
             startLoading();
             $.get(web_path + ajax_url.message_data_url, param, function (data) {
                 endLoading();
                 createPage(data);
                 listData(data);
             });
+        }
+
+        /*
+       初始化搜索内容
+        */
+        function initSearchContent() {
+            var messageTitle = null;
+            var params = {
+                messageTitle: ''
+            };
+            if (typeof(Storage) !== "undefined") {
+                messageTitle = sessionStorage.getItem(webStorageKey.MESSAGE_TITLE);
+            }
+            if (messageTitle !== null) {
+                params.messageTitle = messageTitle;
+            } else {
+                params.messageTitle = $(paramId.messageTitle).val();
+            }
+            param.pageNum = 0;
+            param.searchParams = JSON.stringify(params);
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var messageTitle = null;
+            if (typeof(Storage) !== "undefined") {
+                messageTitle = sessionStorage.getItem(webStorageKey.MESSAGE_TITLE);
+            }
+            if (messageTitle !== null) {
+                $(paramId.messageTitle).val(messageTitle);
+            }
         }
 
         /**
