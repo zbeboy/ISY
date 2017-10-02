@@ -3,6 +3,20 @@
  */
 require(["jquery", "datatables.responsive"], function ($) {
 
+    /*
+     参数
+     */
+    var param = {
+        acceptPhone: ''
+    };
+
+    /*
+     web storage key.
+    */
+    var webStorageKey = {
+        ACCEPT_PHONE: 'SYSTEM_SMS_ACCEPT_PHONE_SEARCH'
+    };
+
     function getAjaxUrl() {
         return {
             smses: '/web/system/sms/data'
@@ -51,6 +65,7 @@ require(["jquery", "datatables.responsive"], function ($) {
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
+                initSearchContent();
                 var searchParam = getParam();
                 d.extra_search = JSON.stringify(searchParam);
                 d.extra_page = getPage();
@@ -87,7 +102,11 @@ require(["jquery", "datatables.responsive"], function ($) {
         },
         "dom": "<'row'<'col-sm-3'l><'#global_button.col-sm-2'><'col-sm-7'<'#mytoolbox'>>r>" +
         "t" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        initComplete: function () {
+            // 初始化搜索框中内容
+            initSearchInput();
+        }
     });
 
     var html = '<input type="text" id="search_phone" class="form-control input-sm" placeholder="手机号" />' +
@@ -105,13 +124,6 @@ require(["jquery", "datatables.responsive"], function ($) {
     }
 
     /*
-     参数
-     */
-    var param = {
-        acceptPhone: ''
-    };
-
-    /*
      得到参数
      */
     function getParam() {
@@ -120,10 +132,42 @@ require(["jquery", "datatables.responsive"], function ($) {
 
     function initParam() {
         param.acceptPhone = $(getParamId().acceptPhone).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.ACCEPT_PHONE, param.acceptPhone);
+        }
+    }
+
+    /*
+    初始化搜索内容
+    */
+    function initSearchContent() {
+        var acceptPhone = null;
+        if (typeof(Storage) !== "undefined") {
+            acceptPhone = sessionStorage.getItem(webStorageKey.ACCEPT_PHONE);
+        }
+        if (acceptPhone !== null) {
+            param.acceptPhone = acceptPhone;
+        }
+    }
+
+    /*
+   初始化搜索框
+    */
+    function initSearchInput() {
+        var acceptPhone = null;
+        if (typeof(Storage) !== "undefined") {
+            acceptPhone = sessionStorage.getItem(webStorageKey.ACCEPT_PHONE);
+        }
+        if (acceptPhone !== null) {
+            $(getParamId().acceptPhone).val(acceptPhone);
+        }
     }
 
     function cleanParam() {
         $(getParamId().acceptPhone).val('');
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.removeItem(webStorageKey.ACCEPT_PHONE);
+        }
     }
 
     $(getParamId().acceptPhone).keyup(function (event) {
