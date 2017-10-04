@@ -271,7 +271,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-      初始化搜索内容
+        初始化搜索内容
        */
         function initSearchContent() {
             var internshipTitle = null;
@@ -291,7 +291,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         /*
-       初始化搜索框
+        初始化搜索框
         */
         function initSearchInput() {
             var internshipTitle = null;
