@@ -49,6 +49,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_REGULATE_LIST_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_REGULATE_LIST_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            SCHOOL_GUIDANCE_TEACHER: 'INTERNSHIP_REGULATE_LIST_SCHOOL_GUIDANCE_TEACHER_SEARCH_' + init_page_param.internshipReleaseId,
+            CREATE_DATE: 'INTERNSHIP_REGULATE_LIST_CREATE_DATE_SEARCH_' + init_page_param.internshipReleaseId
+        };
+
+        /*
          检验id
          */
         var validId = {
@@ -124,6 +134,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -259,6 +270,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 tableElement.delegate('.del', "click", function () {
                     regulate_del($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -279,6 +292,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             param.studentNumber = $(getParamId().studentNumber).val();
             param.schoolGuidanceTeacher = $(getParamId().schoolGuidanceTeacher).val();
             param.createDate = $(getParamId().createDate).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER, param.schoolGuidanceTeacher);
+                sessionStorage.setItem(webStorageKey.CREATE_DATE, param.createDate);
+            }
         }
 
         // 创建日期
@@ -303,6 +322,68 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var schoolGuidanceTeacher = null;
+            var createDate = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (schoolGuidanceTeacher !== null) {
+                param.schoolGuidanceTeacher = schoolGuidanceTeacher;
+            }
+
+            if (createDate !== null) {
+                param.createDate = createDate;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            var schoolGuidanceTeacher = null;
+            var createDate = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (schoolGuidanceTeacher !== null) {
+                $(getParamId().schoolGuidanceTeacher).val(schoolGuidanceTeacher);
+            }
+
+            if (createDate !== null) {
+                $(getParamId().createDate).val(createDate);
+            }
+        }
 
         /*
          清空参数
