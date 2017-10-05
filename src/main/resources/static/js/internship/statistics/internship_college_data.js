@@ -1,8 +1,35 @@
 /**
  * Created by lenovo on 2016-12-11.
  */
-require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.address", "messenger"],
+    function ($, Handlebars, nav_active) {
+
+        /*
+        参数
+        */
+        var param = {
+            studentName: '',
+            studentNumber: '',
+            collegeClass: '',
+            phoneNumber: '',
+            headmaster: '',
+            schoolGuidanceTeacher: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_STATISTICS_COLLEGE_DATA_STUDENT_NAME_SEARCH',
+            STUDENT_NUMBER: 'INTERNSHIP_STATISTICS_COLLEGE_DATA_STUDENT_NUMBER_SEARCH',
+            COLLEGE_CLASS: 'INTERNSHIP_STATISTICS_COLLEGE_DATA_COLLEGE_CLASS_SEARCH',
+            PHONE_NUMBER: 'INTERNSHIP_STATISTICS_COLLEGE_DATA_PHONE_NUMBER_SEARCH',
+            HEADMASTER: 'INTERNSHIP_STATISTICS_COLLEGE_DATA_HEADMASTER_SEARCH',
+            SCHOOL_GUIDANCE_TEACHER: 'INTERNSHIP_STATISTICS_COLLEGE_DATA_SCHOOL_GUIDANCE_TEACHER_SEARCH'
+        };
+
+        // 刷新时选中菜单
+        nav_active(getAjaxUrl().back);
 
         /*
          ajax url
@@ -61,6 +88,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -162,7 +190,11 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             },
             "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-5'>r>" +
             "t" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            initComplete: function () {
+                // 初始化搜索框中内容
+                initSearchInput();
+            }
         });
 
         var global_button = '<button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
@@ -183,18 +215,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         }
 
         /*
-         参数
-         */
-        var param = {
-            studentName: '',
-            studentNumber: '',
-            collegeClass: '',
-            phoneNumber: '',
-            headmaster: '',
-            schoolGuidanceTeacher: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -211,6 +231,100 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             param.phoneNumber = $(getParamId().phoneNumber).val();
             param.headmaster = $(getParamId().headmaster).val();
             param.schoolGuidanceTeacher = $(getParamId().schoolGuidanceTeacher).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.COLLEGE_CLASS, param.collegeClass);
+                sessionStorage.setItem(webStorageKey.PHONE_NUMBER, param.phoneNumber);
+                sessionStorage.setItem(webStorageKey.HEADMASTER, param.headmaster);
+                sessionStorage.setItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER, param.schoolGuidanceTeacher);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var collegeClass = null;
+            var phoneNumber = null;
+            var headmaster = null;
+            var schoolGuidanceTeacher = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                collegeClass = sessionStorage.getItem(webStorageKey.COLLEGE_CLASS);
+                phoneNumber = sessionStorage.getItem(webStorageKey.PHONE_NUMBER);
+                headmaster = sessionStorage.getItem(webStorageKey.HEADMASTER);
+                schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (collegeClass !== null) {
+                param.collegeClass = collegeClass;
+            }
+
+            if (phoneNumber !== null) {
+                param.phoneNumber = phoneNumber;
+            }
+
+            if (headmaster !== null) {
+                param.headmaster = headmaster;
+            }
+
+            if (schoolGuidanceTeacher !== null) {
+                param.schoolGuidanceTeacher = schoolGuidanceTeacher;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            var collegeClass = null;
+            var phoneNumber = null;
+            var headmaster = null;
+            var schoolGuidanceTeacher = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                collegeClass = sessionStorage.getItem(webStorageKey.COLLEGE_CLASS);
+                phoneNumber = sessionStorage.getItem(webStorageKey.PHONE_NUMBER);
+                headmaster = sessionStorage.getItem(webStorageKey.HEADMASTER);
+                schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (collegeClass !== null) {
+                $(getParamId().collegeClass).val(collegeClass);
+            }
+
+            if (phoneNumber !== null) {
+                $(getParamId().phoneNumber).val(phoneNumber);
+            }
+
+            if (headmaster !== null) {
+                $(getParamId().headmaster).val(headmaster);
+            }
+
+            if (schoolGuidanceTeacher !== null) {
+                $(getParamId().schoolGuidanceTeacher).val(schoolGuidanceTeacher);
+            }
         }
 
         /*

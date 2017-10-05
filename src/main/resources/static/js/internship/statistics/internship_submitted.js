@@ -1,8 +1,33 @@
 /**
  * Created by lenovo on 2016-12-10.
  */
-require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.address", "messenger"],
+    function ($, Handlebars, nav_active) {
+
+        /*
+         参数
+        */
+        var param = {
+            studentName: '',
+            studentNumber: '',
+            scienceName: '',
+            organizeName: '',
+            internshipApplyState: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_STATISTICS_SUBMITTED_STUDENT_NAME_SEARCH',
+            STUDENT_NUMBER: 'INTERNSHIP_STATISTICS_SUBMITTED_STUDENT_NUMBER_SEARCH',
+            SCIENCE_NAME: 'INTERNSHIP_STATISTICS_SUBMITTED_SCIENCE_NAME_SEARCH',
+            ORGANIZE_NAME: 'INTERNSHIP_STATISTICS_SUBMITTED_ORGANIZE_NAME_SEARCH',
+            INTERNSHIP_APPLY_STATE: 'INTERNSHIP_STATISTICS_SUBMITTED_INTERNSHIP_APPLY_STATE_SEARCH'
+        };
+
+        // 刷新时选中菜单
+        nav_active(getAjaxUrl().back);
 
         /*
          ajax url
@@ -18,11 +43,9 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             };
         }
 
-        init();
+        var initSelectedOrganize = true;// 用于页面初始化搜索框内容时第一次选中班级
 
-        function init() {
-            initSearchSciences();
-        }
+        initSearchSciences();
 
         /**
          * 初始化专业数据
@@ -39,6 +62,15 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                     return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
                 });
                 $(getParamId().scienceName).html(template(data));
+
+                var scienceName = null;
+                if (typeof(Storage) !== "undefined") {
+                    scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+                }
+                if (scienceName !== null) {
+                    $(getParamId().scienceName).val(scienceName);
+                    changeOrganize(scienceName);
+                }
             });
         }
 
@@ -48,12 +80,12 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
          */
         function changeOrganize(science) {
 
-            if (science === 0) {
+            if (Number(science) == 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
                     listResult: [
-                        {name: "请选择班级", value: ""}
+                        {name: "请选择班级", value: 0}
                     ]
                 };
 
@@ -78,6 +110,17 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                         return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
                     });
                     $(getParamId().organizeName).html(template(data));
+
+                    if (initSelectedOrganize) {
+                        var organizeName = null;
+                        if (typeof(Storage) !== "undefined") {
+                            organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                        }
+                        if (organizeName !== null) {
+                            $(getParamId().organizeName).val(organizeName);
+                        }
+                        initSelectedOrganize = false;
+                    }
                 });
             }
         }
@@ -146,11 +189,13 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[1, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().submitted_data_url,
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -170,24 +215,24 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                     orderable: false,
                     render: function (a, b, c, d) {
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "申请记录",
-                                    "css": "apply_record",
-                                    "type": "primary",
-                                    "studentId": c.studentId,
-                                    "internshipReleaseId": c.internshipReleaseId
-                                },
-                                {
-                                    "name": "变更记录",
-                                    "css": "change_record",
-                                    "type": "primary",
-                                    "studentId": c.studentId,
-                                    "internshipReleaseId": c.internshipReleaseId
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "申请记录",
+                                        "css": "apply_record",
+                                        "type": "primary",
+                                        "studentId": c.studentId,
+                                        "internshipReleaseId": c.internshipReleaseId
+                                    },
+                                    {
+                                        "name": "变更记录",
+                                        "css": "change_record",
+                                        "type": "primary",
+                                        "studentId": c.studentId,
+                                        "internshipReleaseId": c.internshipReleaseId
+                                    }
+                                ]
+                            };
                         return template(context);
                     }
                 },
@@ -234,6 +279,9 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
                 tableElement.delegate('.change_record', "click", function () {
                     changeCompanyHistory($(this).attr('data-internshipReleaseId'), $(this).attr('data-studentId'));
                 });
+
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -254,17 +302,6 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         }
 
         /*
-         参数
-         */
-        var param = {
-            studentName: '',
-            studentNumber: '',
-            scienceName: '',
-            organizeName: '',
-            internshipApplyState: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -280,6 +317,75 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
             param.scienceName = $(getParamId().scienceName).val();
             param.organizeName = $(getParamId().organizeName).val();
             param.internshipApplyState = $(getParamId().internshipApplyState).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.SCIENCE_NAME, param.scienceName);
+                sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, param.organizeName);
+                sessionStorage.setItem(webStorageKey.INTERNSHIP_APPLY_STATE, param.internshipApplyState);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var scienceName = null;
+            var organizeName = null;
+            var internshipApplyState = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                internshipApplyState = sessionStorage.getItem(webStorageKey.INTERNSHIP_APPLY_STATE);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (scienceName !== null) {
+                param.scienceName = scienceName;
+            }
+
+            if (organizeName !== null) {
+                param.organizeName = organizeName;
+            }
+
+            if (internshipApplyState !== null) {
+                param.internshipApplyState = internshipApplyState;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            var internshipApplyState = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                internshipApplyState = sessionStorage.getItem(webStorageKey.INTERNSHIP_APPLY_STATE);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (internshipApplyState !== null) {
+                $(getParamId().internshipApplyState).val(internshipApplyState);
+            }
         }
 
         /*
@@ -308,9 +414,9 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         });
 
         $(getParamId().scienceName).change(function () {
-            initParam();
             var science = $(getParamId().scienceName).val();
             changeOrganize(science);
+            initParam();
             myTable.ajax.reload();
         });
 

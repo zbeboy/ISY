@@ -2,16 +2,20 @@
  * Created by lenovo on 2016-12-12.
  */
 //# sourceURL=internship_change_history.js
-require(["jquery", "handlebars", "jquery.address", "css!" + web_path + "/css/custom/timeline.css"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "nav_active", "jquery.address", "css!" + web_path + "/css/custom/timeline.css"],
+    function ($, Handlebars, nav_active) {
 
         /*
          ajax url.
          */
         var ajax_url = {
             data_url: '/web/internship/statistical/record/apply/data',
-            back: '/web/internship/statistical/submitted'
+            back: '/web/internship/statistical/submitted',
+            nav: '/web/menu/internship/statistical'
         };
+
+        // 刷新时选中菜单
+        nav_active(ajax_url.nav);
 
         /*
          返回
