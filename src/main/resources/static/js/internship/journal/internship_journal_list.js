@@ -19,10 +19,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         web storage key.
         */
         var webStorageKey = {
-            STUDENT_NAME: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NAME_SEARCH',
-            STUDENT_NUMBER: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NUMBER_SEARCH',
-            ORGANIZE: 'INTERNSHIP_JOURNAL_LIST_ORGANIZE_SEARCH',
-            GUIDANCE_TEACHER: 'INTERNSHIP_JOURNAL_LIST_GUIDANCE_TEACHER_SEARCH'
+            STUDENT_NAME: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            ORGANIZE: 'INTERNSHIP_JOURNAL_LIST_ORGANIZE_SEARCH_' + init_page_param.internshipReleaseId,
+            GUIDANCE_TEACHER: 'INTERNSHIP_JOURNAL_LIST_GUIDANCE_TEACHER_SEARCH_' + init_page_param.internshipReleaseId
         };
 
         /*

@@ -47,10 +47,10 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         web storage key.
         */
         var webStorageKey = {
-            STUDENT_NAME: 'INTERNSHIP_REVIEW_COMPANY_FILL_STUDENT_NAME_SEARCH',
-            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_COMPANY_FILL_STUDENT_NUMBER_SEARCH',
-            SCIENCE_NAME: 'INTERNSHIP_REVIEW_COMPANY_FILL_SCIENCE_NUMBER_SEARCH',
-            ORGANIZE_NAME: 'INTERNSHIP_REVIEW_COMPANY_FILL_ORGANIZE_NUMBER_SEARCH'
+            STUDENT_NAME: 'INTERNSHIP_REVIEW_COMPANY_FILL_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_COMPANY_FILL_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            SCIENCE_NAME: 'INTERNSHIP_REVIEW_COMPANY_FILL_SCIENCE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            ORGANIZE_NAME: 'INTERNSHIP_REVIEW_COMPANY_FILL_ORGANIZE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId
         };
 
         var tableData = '#tableData';
@@ -308,7 +308,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         */
         $(tableData).delegate('.check_all_apply', "click", function () {
             dataForm = $(this).parent().parent().prev().find('form');
-            $(dataForm[0]).find('.check').each(function(i,data){
+            $(dataForm[0]).find('.check').each(function (i, data) {
                 data.checked = true;
             });
         });

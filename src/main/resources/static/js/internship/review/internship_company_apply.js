@@ -44,10 +44,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         web storage key.
         */
         var webStorageKey = {
-            STUDENT_NAME: 'INTERNSHIP_REVIEW_COMPANY_APPLY_STUDENT_NAME_SEARCH',
-            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_COMPANY_APPLY_STUDENT_NUMBER_SEARCH',
-            SCIENCE_NAME: 'INTERNSHIP_REVIEW_COMPANY_APPLY_SCIENCE_NUMBER_SEARCH',
-            ORGANIZE_NAME: 'INTERNSHIP_REVIEW_COMPANY_APPLY_ORGANIZE_NUMBER_SEARCH'
+            STUDENT_NAME: 'INTERNSHIP_REVIEW_COMPANY_APPLY_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_COMPANY_APPLY_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            SCIENCE_NAME: 'INTERNSHIP_REVIEW_COMPANY_APPLY_SCIENCE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            ORGANIZE_NAME: 'INTERNSHIP_REVIEW_COMPANY_APPLY_ORGANIZE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId
         };
 
         var tableData = '#tableData';

@@ -44,7 +44,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
         web storage key.
         */
         var webStorageKey = {
-            CREATE_DATE: 'INTERNSHIP_JOURNAL_MY_CREATE_DATE_SEARCH'
+            CREATE_DATE: 'INTERNSHIP_JOURNAL_MY_CREATE_DATE_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.studentId
         };
 
         /*

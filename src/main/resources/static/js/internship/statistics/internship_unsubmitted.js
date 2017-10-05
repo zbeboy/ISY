@@ -18,10 +18,10 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         web storage key.
         */
         var webStorageKey = {
-            STUDENT_NAME: 'INTERNSHIP_STATISTICS_UNSUBMITTED_STUDENT_NAME_SEARCH',
-            STUDENT_NUMBER: 'INTERNSHIP_STATISTICS_UNSUBMITTED_STUDENT_NUMBER_SEARCH',
-            SCIENCE_NAME: 'INTERNSHIP_STATISTICS_UNSUBMITTED_SCIENCE_NAME_SEARCH',
-            ORGANIZE_NAME: 'INTERNSHIP_STATISTICS_UNSUBMITTED_ORGANIZE_NAME_SEARCH'
+            STUDENT_NAME: 'INTERNSHIP_STATISTICS_UNSUBMITTED_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_STATISTICS_UNSUBMITTED_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            SCIENCE_NAME: 'INTERNSHIP_STATISTICS_UNSUBMITTED_SCIENCE_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            ORGANIZE_NAME: 'INTERNSHIP_STATISTICS_UNSUBMITTED_ORGANIZE_NAME_SEARCH_' + init_page_param.internshipReleaseId
         };
 
         // 刷新时选中菜单

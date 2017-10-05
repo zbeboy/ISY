@@ -46,10 +46,10 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
        web storage key.
        */
         var webStorageKey = {
-            STUDENT_NAME: 'INTERNSHIP_REVIEW_FAIL_STUDENT_NAME_SEARCH',
-            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_FAIL_STUDENT_NUMBER_SEARCH',
-            SCIENCE_NAME: 'INTERNSHIP_REVIEW_FAIL_SCIENCE_NUMBER_SEARCH',
-            ORGANIZE_NAME: 'INTERNSHIP_REVIEW_FAIL_ORGANIZE_NUMBER_SEARCH'
+            STUDENT_NAME: 'INTERNSHIP_REVIEW_FAIL_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_FAIL_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            SCIENCE_NAME: 'INTERNSHIP_REVIEW_FAIL_SCIENCE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            ORGANIZE_NAME: 'INTERNSHIP_REVIEW_FAIL_ORGANIZE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId
         };
 
         var tableData = '#tableData';
@@ -298,7 +298,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         $(tableData).delegate('.check_all_apply', "click", function () {
             dataForm = $(this).parent().parent().prev().find('form');
-            $(dataForm[0]).find('.check').each(function(i,data){
+            $(dataForm[0]).find('.check').each(function (i, data) {
                 data.checked = true;
             });
         });
@@ -339,7 +339,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                 errorMessage: '保存数据失败',
                 progressMessage: '正在保存数据....'
             }, {
-                url: web_path +  ajax_url.audit_pass_url,
+                url: web_path + ajax_url.audit_pass_url,
                 type: 'post',
                 data: dataForm.serialize(),
                 success: function (data) {

@@ -79,10 +79,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         web storage key.
         */
         var webStorageKey = {
-            STUDENT_NAME: 'INTERNSHIP_JOURNAL_TEAM_STUDENT_NAME_SEARCH',
-            STUDENT_NUMBER: 'INTERNSHIP_JOURNAL_TEAM_STUDENT_NUMBER_SEARCH',
-            ORGANIZE: 'INTERNSHIP_JOURNAL_TEAM_ORGANIZE_SEARCH',
-            CREATE_DATE: 'INTERNSHIP_JOURNAL_TEAM_CREATE_DATE_SEARCH'
+            STUDENT_NAME: 'INTERNSHIP_JOURNAL_TEAM_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId,
+            STUDENT_NUMBER: 'INTERNSHIP_JOURNAL_TEAM_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId,
+            ORGANIZE: 'INTERNSHIP_JOURNAL_TEAM_ORGANIZE_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId,
+            CREATE_DATE: 'INTERNSHIP_JOURNAL_TEAM_CREATE_DATE_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId
         };
 
         /*
