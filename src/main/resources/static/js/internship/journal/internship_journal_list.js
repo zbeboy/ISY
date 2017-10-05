@@ -6,6 +6,26 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
     function ($, Handlebars, constants, nav_active) {
 
         /*
+        参数
+        */
+        var param = {
+            studentName: '',
+            studentNumber: '',
+            organize: '',
+            guidanceTeacher: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NAME_SEARCH',
+            STUDENT_NUMBER: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NUMBER_SEARCH',
+            ORGANIZE: 'INTERNSHIP_JOURNAL_LIST_ORGANIZE_SEARCH',
+            GUIDANCE_TEACHER: 'INTERNSHIP_JOURNAL_LIST_GUIDANCE_TEACHER_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -94,6 +114,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -125,39 +146,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                         // 当前用户查看自己的实习日志
                         if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "查看",
-                                        "css": "look",
-                                        "type": "info",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "下载",
-                                        "css": "download",
-                                        "type": "default",
-                                        "id": c.internshipJournalId
-                                    }
-                                ]
-                            };
-                        } else { // 该实习日志不属于当前用户
-                            // 当前用户角色为系统或管理员
-                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
-                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-                                context =
                                 {
                                     func: [
                                         {
@@ -186,11 +174,63 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                                         }
                                     ]
                                 };
+                        } else { // 该实习日志不属于当前用户
+                            // 当前用户角色为系统或管理员
+                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                                context =
+                                    {
+                                        func: [
+                                            {
+                                                "name": "查看",
+                                                "css": "look",
+                                                "type": "info",
+                                                "id": c.internshipJournalId
+                                            },
+                                            {
+                                                "name": "编辑",
+                                                "css": "edit",
+                                                "type": "primary",
+                                                "id": c.internshipJournalId
+                                            },
+                                            {
+                                                "name": "删除",
+                                                "css": "del",
+                                                "type": "danger",
+                                                "id": c.internshipJournalId
+                                            },
+                                            {
+                                                "name": "下载",
+                                                "css": "download",
+                                                "type": "default",
+                                                "id": c.internshipJournalId
+                                            }
+                                        ]
+                                    };
                             } else {// 非作者也非管理员
                                 // 若限制仅允许教职工查阅
                                 if (c.isSeeStaff == 1) {
                                     if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
                                         context =
+                                            {
+                                                func: [
+                                                    {
+                                                        "name": "查看",
+                                                        "css": "look",
+                                                        "type": "info",
+                                                        "id": c.internshipJournalId
+                                                    },
+                                                    {
+                                                        "name": "下载",
+                                                        "css": "download",
+                                                        "type": "default",
+                                                        "id": c.internshipJournalId
+                                                    }
+                                                ]
+                                            };
+                                    }
+                                } else {
+                                    context =
                                         {
                                             func: [
                                                 {
@@ -207,25 +247,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                                                 }
                                             ]
                                         };
-                                    }
-                                } else {
-                                    context =
-                                    {
-                                        func: [
-                                            {
-                                                "name": "查看",
-                                                "css": "look",
-                                                "type": "info",
-                                                "id": c.internshipJournalId
-                                            },
-                                            {
-                                                "name": "下载",
-                                                "css": "download",
-                                                "type": "default",
-                                                "id": c.internshipJournalId
-                                            }
-                                        ]
-                                    };
                                 }
                             }
                         }
@@ -281,6 +302,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 tableElement.delegate('.download', "click", function () {
                     download($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -307,16 +330,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         }
 
         /*
-         参数
-         */
-        var param = {
-            studentName: '',
-            studentNumber: '',
-            organize: '',
-            guidanceTeacher: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -331,6 +344,74 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organize = $(getParamId().organize).val();
             param.guidanceTeacher = $(getParamId().guidanceTeacher).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.ORGANIZE, param.organize);
+                sessionStorage.setItem(webStorageKey.GUIDANCE_TEACHER, param.guidanceTeacher);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var organize = null;
+            var guidanceTeacher = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+                guidanceTeacher = sessionStorage.getItem(webStorageKey.GUIDANCE_TEACHER);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (organize !== null) {
+                param.organize = organize;
+            }
+
+            if (guidanceTeacher !== null) {
+                param.guidanceTeacher = guidanceTeacher;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            var organize = null;
+            var guidanceTeacher = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+                guidanceTeacher = sessionStorage.getItem(webStorageKey.GUIDANCE_TEACHER);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (organize !== null) {
+                $(getParamId().organize).val(organize);
+            }
+
+            if (guidanceTeacher !== null) {
+                $(getParamId().guidanceTeacher).val(guidanceTeacher);
+            }
         }
 
         /*
