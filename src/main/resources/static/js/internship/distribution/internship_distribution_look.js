@@ -6,6 +6,30 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
     function ($, Handlebars, nav_active) {
 
         /*
+        参数
+        */
+        var param = {
+            studentUsername: '',
+            staffUsername: '',
+            studentNumber: '',
+            staffNumber: '',
+            username: '',
+            realName: ''
+        };
+
+        /*
+        web storage key.
+       */
+        var webStorageKey = {
+            STUDENT_USERNAME: 'INTERNSHIP_DISTRIBUTION_LOOK_STUDENT_USERNAME_SEARCH',
+            STAFF_USERNAME: 'INTERNSHIP_DISTRIBUTION_LOOK_STAFF_USERNAME_SEARCH',
+            STUDENT_NUMBER: 'INTERNSHIP_DISTRIBUTION_LOOK_STUDENT_NUMBER_SEARCH',
+            STAFF_NUMBER: 'INTERNSHIP_DISTRIBUTION_LOOK_STAFF_NUMBER_SEARCH',
+            USERNAME: 'INTERNSHIP_DISTRIBUTION_LOOK_USERNAME_SEARCH',
+            REAL_NAME: 'INTERNSHIP_DISTRIBUTION_LOOK_REAL_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -50,6 +74,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -103,7 +128,11 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             },
             "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-5'>r>" +
             "t" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            initComplete: function () {
+                // 初始化搜索框中内容
+                initSearchInput();
+            }
         });
 
         var global_button = '<button type="button" id="delete_not_apply" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>删除未申请学生分配</button>' +
@@ -125,18 +154,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         }
 
         /*
-         参数
-         */
-        var param = {
-            studentUsername: '',
-            staffUsername: '',
-            studentNumber: '',
-            staffNumber: '',
-            username: '',
-            realName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -153,6 +170,100 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             param.staffNumber = $(getParamId().staffNumber).val();
             param.username = $(getParamId().username).val();
             param.realName = $(getParamId().realName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_USERNAME, param.studentUsername);
+                sessionStorage.setItem(webStorageKey.STAFF_USERNAME, param.staffUsername);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.STAFF_NUMBER, param.staffNumber);
+                sessionStorage.setItem(webStorageKey.USERNAME, param.username);
+                sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var studentUsername = null;
+            var staffUsername = null;
+            var studentNumber = null;
+            var staffNumber = null;
+            var username = null;
+            var realName = null;
+            if (typeof(Storage) !== "undefined") {
+                studentUsername = sessionStorage.getItem(webStorageKey.STUDENT_USERNAME);
+                staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
+                username = sessionStorage.getItem(webStorageKey.USERNAME);
+                realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+            }
+            if (studentUsername !== null) {
+                param.studentUsername = studentUsername;
+            }
+
+            if (staffUsername !== null) {
+                param.staffUsername = staffUsername;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (staffNumber !== null) {
+                param.staffNumber = staffNumber;
+            }
+
+            if (username !== null) {
+                param.username = username;
+            }
+
+            if (realName !== null) {
+                param.realName = realName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentUsername = null;
+            var staffUsername = null;
+            var studentNumber = null;
+            var staffNumber = null;
+            var username = null;
+            var realName = null;
+            if (typeof(Storage) !== "undefined") {
+                studentUsername = sessionStorage.getItem(webStorageKey.STUDENT_USERNAME);
+                staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
+                username = sessionStorage.getItem(webStorageKey.USERNAME);
+                realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+            }
+            if (studentUsername !== null) {
+                $(getParamId().studentUsername).val(studentUsername);
+            }
+
+            if (staffUsername !== null) {
+                $(getParamId().staffUsername).val(staffUsername);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (staffNumber !== null) {
+                $(getParamId().staffNumber).val(staffNumber);
+            }
+
+            if (username !== null) {
+                $(getParamId().username).val(username);
+            }
+
+            if (realName !== null) {
+                $(getParamId().realName).val(realName);
+            }
         }
 
         /*
