@@ -157,6 +157,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "
 
         $('#jcaptcha').click(function () {
             changeJcaptcha();
+            $(paramId.captcha).val('');
         });
 
         /**
