@@ -327,7 +327,7 @@ public class GraduationDesignProposalController {
                     Result<Record> records = graduationDesignDatumService.findAllByPage(dataTablesUtils, otherCondition);
                     if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
                         graduationDesignDatumBeens = records.into(GraduationDesignDatumBean.class);
-                        graduationDesignDatumBeens.forEach(i -> i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime())));
+                        GraduationDesignDatumBeenFilter(graduationDesignDatumBeens);
                     }
                     dataTablesUtils.setData(graduationDesignDatumBeens);
                     dataTablesUtils.setiTotalRecords(graduationDesignDatumService.countAll(otherCondition));
@@ -373,7 +373,7 @@ public class GraduationDesignProposalController {
                     Result<Record> records = graduationDesignDatumService.findTeamAllByPage(dataTablesUtils, otherCondition);
                     if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
                         graduationDesignDatumBeens = records.into(GraduationDesignDatumBean.class);
-                        graduationDesignDatumBeens.forEach(i -> i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime())));
+                        GraduationDesignDatumBeenFilter(graduationDesignDatumBeens);
                     }
                     dataTablesUtils.setData(graduationDesignDatumBeens);
                     dataTablesUtils.setiTotalRecords(graduationDesignDatumService.countTeamAll(otherCondition));
@@ -382,6 +382,18 @@ public class GraduationDesignProposalController {
             }
         }
         return dataTablesUtils;
+    }
+
+    /**
+     * 过滤数据，保护隐私
+     *
+     * @param graduationDesignDatumBeens 数据
+     */
+    private void GraduationDesignDatumBeenFilter(List<GraduationDesignDatumBean> graduationDesignDatumBeens) {
+        graduationDesignDatumBeens.forEach(i -> {
+            i.setUpdateTimeStr(DateTimeUtils.formatDate(i.getUpdateTime()));
+            i.setRelativePath("");
+        });
     }
 
     /**
@@ -415,7 +427,10 @@ public class GraduationDesignProposalController {
                     Result<Record> records = graduationDesignDatumGroupService.findAllByPage(dataTablesUtils, otherCondition);
                     if (!ObjectUtils.isEmpty(records) && records.isNotEmpty()) {
                         graduationDesignDatumGroupBeens = records.into(GraduationDesignDatumGroupBean.class);
-                        graduationDesignDatumGroupBeens.forEach(i -> i.setUploadTimeStr(DateTimeUtils.formatDate(i.getUploadTime())));
+                        graduationDesignDatumGroupBeens.forEach(i -> {
+                            i.setUploadTimeStr(DateTimeUtils.formatDate(i.getUploadTime()));
+                            i.setRelativePath("");
+                        });
                     }
                     dataTablesUtils.setData(graduationDesignDatumGroupBeens);
                     dataTablesUtils.setiTotalRecords(graduationDesignDatumGroupService.countAll(otherCondition));
