@@ -155,7 +155,7 @@ public class MainController {
      */
     @RecordSystemLogging(module = "Main", methods = "backstage", description = "访问系统主页")
     @RequestMapping(value = "/web/menu/backstage", method = RequestMethod.GET)
-    public String backstage() {
+    public String backstage(HttpServletRequest request) {
         return "backstage";
     }
 
