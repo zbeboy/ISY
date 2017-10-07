@@ -7,6 +7,22 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
     function ($, Handlebars, nav_active) {
 
         /*
+        参数
+        */
+        var param = {
+            originalFileName: '',
+            graduationDesignDatumTypeName: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            ORIGINAL_FILE_NAME: 'GRADUATE_DESIGN_PROPOSAL_MY_ORIGINAL_FILE_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            GRADUATION_DESIGN_DATUM_TYPE_NAME: 'GRADUATE_DESIGN_PROPOSAL_MY_GRADUATION_DESIGN_DATUM_TYPE_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -57,6 +73,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
@@ -139,6 +156,8 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 tableElement.delegate('.del', "click", function () {
                     proposal_del($(this).attr('data-id'), $(this).attr('data-original-file-name'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -157,14 +176,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         }
 
         /*
-         参数
-         */
-        var param = {
-            originalFileName: '',
-            graduationDesignDatumTypeName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -177,6 +188,42 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         function initParam() {
             param.originalFileName = $(getParamId().originalFileName).val();
             param.graduationDesignDatumTypeName = $(getParamId().graduationDesignDatumTypeName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.ORIGINAL_FILE_NAME, param.originalFileName);
+                sessionStorage.setItem(webStorageKey.GRADUATION_DESIGN_DATUM_TYPE_NAME, param.graduationDesignDatumTypeName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var originalFileName = null;
+            var graduationDesignDatumTypeName = null;
+            if (typeof(Storage) !== "undefined") {
+                originalFileName = sessionStorage.getItem(webStorageKey.ORIGINAL_FILE_NAME);
+                graduationDesignDatumTypeName = sessionStorage.getItem(webStorageKey.GRADUATION_DESIGN_DATUM_TYPE_NAME);
+            }
+            if (originalFileName !== null) {
+                param.originalFileName = originalFileName;
+            }
+
+            if (graduationDesignDatumTypeName !== null) {
+                param.graduationDesignDatumTypeName = graduationDesignDatumTypeName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var originalFileName = null;
+            if (typeof(Storage) !== "undefined") {
+                originalFileName = sessionStorage.getItem(webStorageKey.ORIGINAL_FILE_NAME);
+            }
+            if (originalFileName !== null) {
+                $(getParamId().originalFileName).val(originalFileName);
+            }
         }
 
         /*
@@ -392,6 +439,13 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             var template = Handlebars.compile($("#datum-type-template").html());
             $(getParamId().graduationDesignDatumTypeName).html(template(data));
             $(addParamId.graduationDesignDatumTypeId).html(template(data));
+            var graduationDesignDatumTypeName = null;
+            if (typeof(Storage) !== "undefined") {
+                graduationDesignDatumTypeName = sessionStorage.getItem(webStorageKey.GRADUATION_DESIGN_DATUM_TYPE_NAME);
+            }
+            if (graduationDesignDatumTypeName !== null) {
+                $(getParamId().graduationDesignDatumTypeName).val(graduationDesignDatumTypeName);
+            }
         }
 
         /*

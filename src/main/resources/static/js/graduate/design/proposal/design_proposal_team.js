@@ -46,6 +46,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'GRADUATE_DESIGN_PROPOSAL_TEAM_STUDENT_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STUDENT_NUMBER: 'GRADUATE_DESIGN_PROPOSAL_TEAM_STUDENT_NUMBER_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            ORIGINAL_FILE_NAME: 'GRADUATE_DESIGN_PROPOSAL_TEAM_ORIGINAL_FILE_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            GRADUATION_DESIGN_DATUM_TYPE_NAME: 'GRADUATE_DESIGN_PROPOSAL_TEAM_GRADUATION_DESIGN_DATUM_TYPE_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId
+        };
+
+        /*
          得到参数
          */
         function getParam() {
@@ -98,6 +108,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
@@ -263,6 +274,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 tableElement.delegate('.download', "click", function () {
                     download($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -280,6 +293,68 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             param.studentNumber = $(getParamId().studentNumber).val();
             param.originalFileName = $(getParamId().originalFileName).val();
             param.graduationDesignDatumTypeName = $(getParamId().graduationDesignDatumTypeName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.ORIGINAL_FILE_NAME, param.originalFileName);
+                sessionStorage.setItem(webStorageKey.GRADUATION_DESIGN_DATUM_TYPE_NAME, param.graduationDesignDatumTypeName);
+            }
+        }
+
+        /*
+       初始化搜索内容
+      */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var originalFileName = null;
+            var graduationDesignDatumTypeName = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                originalFileName = sessionStorage.getItem(webStorageKey.ORIGINAL_FILE_NAME);
+                graduationDesignDatumTypeName = sessionStorage.getItem(webStorageKey.GRADUATION_DESIGN_DATUM_TYPE_NAME);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (originalFileName !== null) {
+                param.originalFileName = originalFileName;
+            }
+
+            if (graduationDesignDatumTypeName !== null) {
+                param.graduationDesignDatumTypeName = graduationDesignDatumTypeName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            var originalFileName = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                originalFileName = sessionStorage.getItem(webStorageKey.ORIGINAL_FILE_NAME);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (originalFileName !== null) {
+                $(getParamId().originalFileName).val(originalFileName);
+            }
         }
 
         /*
@@ -432,6 +507,14 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             var template = Handlebars.compile($("#datum-type-template").html());
             $(getParamId().graduationDesignDatumTypeName).html(template(data));
             $(addParamId.graduationDesignDatumTypeId).html(template(data));
+
+            var graduationDesignDatumTypeName = null;
+            if (typeof(Storage) !== "undefined") {
+                graduationDesignDatumTypeName = sessionStorage.getItem(webStorageKey.GRADUATION_DESIGN_DATUM_TYPE_NAME);
+            }
+            if (graduationDesignDatumTypeName !== null) {
+                $(getParamId().graduationDesignDatumTypeName).val(graduationDesignDatumTypeName);
+            }
         }
 
         /**

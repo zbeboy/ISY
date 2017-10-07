@@ -5,6 +5,26 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
     function ($, Handlebars, constants, nav_active, moment) {
 
         /*
+        参数
+        */
+        var param = {
+            presubjectTitle: '',
+            studentName: '',
+            studentNumber: '',
+            organize: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            PRESUBJECT_TITLE: 'GRADUATE_DESIGN_SUBJECT_LIST_PRESUBJECT_TITLE_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STUDENT_NAME: 'GRADUATE_DESIGN_SUBJECT_LIST_STUDENT_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STUDENT_NUMBER: 'GRADUATE_DESIGN_SUBJECT_LIST_STUDENT_NUMBER_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            ORGANIZE: 'GRADUATE_DESIGN_SUBJECT_LIST_ORGANIZE_SEARCH_' + init_page_param.graduationDesignReleaseId
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -64,6 +84,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
@@ -231,6 +252,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -250,16 +273,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         }
 
         /*
-         参数
-         */
-        var param = {
-            presubjectTitle: '',
-            studentName: '',
-            studentNumber: '',
-            organize: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -274,6 +287,74 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organize = $(getParamId().organize).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.PRESUBJECT_TITLE, param.presubjectTitle);
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.ORGANIZE, param.organize);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var presubjectTitle = null;
+            var studentName = null;
+            var studentNumber = null;
+            var organize = null;
+            if (typeof(Storage) !== "undefined") {
+                presubjectTitle = sessionStorage.getItem(webStorageKey.PRESUBJECT_TITLE);
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+            }
+            if (presubjectTitle !== null) {
+                param.presubjectTitle = presubjectTitle;
+            }
+
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (organize !== null) {
+                param.organize = organize;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var presubjectTitle = null;
+            var studentName = null;
+            var studentNumber = null;
+            var organize = null;
+            if (typeof(Storage) !== "undefined") {
+                presubjectTitle = sessionStorage.getItem(webStorageKey.PRESUBJECT_TITLE);
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+            }
+            if (presubjectTitle !== null) {
+                $(getParamId().presubjectTitle).val(presubjectTitle);
+            }
+
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (organize !== null) {
+                $(getParamId().organize).val(organize);
+            }
         }
 
         /*

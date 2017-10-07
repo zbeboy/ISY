@@ -31,6 +31,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         studentNumber: $(paramId.studentNumber).val()
     };
 
+    /*
+    web storage key.
+    */
+    var webStorageKey = {
+        STUDENT_NAME: 'GRADUATE_DESIGN_REPLAN_ORDER_LOOK_STUDENT_NAME_SEARCH_' + init_page_param.defenseGroupId,
+        STUDENT_NUMBER: 'GRADUATE_DESIGN_REPLAN_ORDER_LOOK_STUDENT_NUMBER_SEARCH_' + init_page_param.defenseGroupId
+    };
+
     // 刷新时选中菜单
     nav_active(ajax_url.nav);
 
@@ -60,8 +68,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      * 刷新查询参数
      */
     function refreshSearch() {
-        param.studentName = $(paramId.studentName).val();
-        param.studentNumber = $(paramId.studentNumber).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.STUDENT_NAME, $(paramId.studentName).val());
+            sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(paramId.studentNumber).val());
+        }
     }
 
     /*
@@ -105,8 +115,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     });
 
     init();
+    initSearchInput();
 
     function init() {
+        initSearchContent();
         startLoading();
         $.get(web_path + ajax_url.data_url, param, function (data) {
             endLoading();
@@ -120,6 +132,49 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                 });
             }
         });
+    }
+
+    /*
+    初始化搜索内容
+    */
+    function initSearchContent() {
+        var studentName = null;
+        var studentNumber = null;
+        if (typeof(Storage) !== "undefined") {
+            studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+            studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+        }
+        if (studentName !== null) {
+            param.studentName = studentName;
+        } else {
+            param.studentName = $(paramId.studentName).val();
+        }
+
+        if (studentNumber !== null) {
+            param.studentNumber = studentNumber;
+        } else {
+            param.studentNumber = $(paramId.studentNumber).val();
+        }
+
+    }
+
+    /*
+    初始化搜索框
+    */
+    function initSearchInput() {
+        var studentName = null;
+        var studentNumber = null;
+        if (typeof(Storage) !== "undefined") {
+            studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+            studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+        }
+        if (studentName !== null) {
+            $(paramId.studentName).val(studentName);
+        }
+
+        if (studentNumber !== null) {
+            $(paramId.studentNumber).val(studentNumber);
+        }
     }
 
     /**
