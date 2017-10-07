@@ -41,6 +41,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            CREATE_DATE: 'INTERNSHIP_JOURNAL_MY_CREATE_DATE_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.studentId
+        };
+
+        /*
          得到参数
          */
         function getParam() {
@@ -91,6 +98,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -120,34 +128,34 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "查看",
-                                    "css": "look",
-                                    "type": "info",
-                                    "id": c.internshipJournalId
-                                },
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.internshipJournalId
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.internshipJournalId
-                                },
-                                {
-                                    "name": "下载",
-                                    "css": "download",
-                                    "type": "default",
-                                    "id": c.internshipJournalId
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "查看",
+                                        "css": "look",
+                                        "type": "info",
+                                        "id": c.internshipJournalId
+                                    },
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.internshipJournalId
+                                    },
+                                    {
+                                        "name": "删除",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.internshipJournalId
+                                    },
+                                    {
+                                        "name": "下载",
+                                        "css": "download",
+                                        "type": "default",
+                                        "id": c.internshipJournalId
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }
@@ -197,6 +205,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
                 tableElement.delegate('.download', "click", function () {
                     download($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -211,6 +221,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
          */
         function initParam() {
             param.createDate = $(getParamId().createDate).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.CREATE_DATE, param.createDate);
+            }
         }
 
         // 创建日期
@@ -235,6 +248,32 @@ require(["jquery", "handlebars", "nav_active", "moment", "datatables.responsive"
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var createDate = null;
+            if (typeof(Storage) !== "undefined") {
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
+            }
+            if (createDate !== null) {
+                param.createDate = createDate;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var createDate = null;
+            if (typeof(Storage) !== "undefined") {
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
+            }
+            if (createDate !== null) {
+                $(getParamId().createDate).val(createDate);
+            }
+        }
 
         /*
          清空参数

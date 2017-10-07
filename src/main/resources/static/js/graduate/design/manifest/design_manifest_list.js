@@ -31,12 +31,20 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         }
 
         /*
-         参数
-         */
+        参数
+       */
         var param = {
             staffId: init_page_param.staffId,
             studentName: '',
             studentNumber: ''
+        };
+
+        /*
+        web storage key.
+       */
+        var webStorageKey = {
+            STUDENT_NAME: 'GRADUATE_DESIGN_MANIFEST_LIST_STUDENT_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STUDENT_NUMBER: 'GRADUATE_DESIGN_MANIFEST_LIST_STUDENT_NUMBER_SEARCH_' + init_page_param.graduationDesignReleaseId
         };
 
         /*
@@ -94,6 +102,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
@@ -208,6 +217,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 tableElement.delegate('.grade', "click", function () {
                     grade($(this).attr('data-id'), $(this).attr('data-staff'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -223,6 +234,48 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             param.staffId = $(getParamId().staffId).val();
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
         }
 
         /*

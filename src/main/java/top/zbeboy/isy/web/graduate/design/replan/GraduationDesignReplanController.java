@@ -489,7 +489,7 @@ public class GraduationDesignReplanController {
                 List<String> ids = SmallPropsUtils.StringIdsToStringList(defenseGroupIds);
                 ids.forEach(id -> {
                     List<DefenseOrder> defenseOrders = defenseOrderService.findByDefenseGroupId(id);
-                    defenseOrders.forEach(order-> defenseRateService.deleteByDefenseOrderId(order.getDefenseOrderId()));
+                    defenseOrders.forEach(order -> defenseRateService.deleteByDefenseOrderId(order.getDefenseOrderId()));
                     defenseOrderService.deleteByDefenseGroupId(id);
                     defenseGroupMemberService.deleteByDefenseGroupId(id);
                     defenseGroupService.deleteById(id);
@@ -759,6 +759,23 @@ public class GraduationDesignReplanController {
             Result<Record> records = defenseOrderService.findAll(condition);
             if (records.isNotEmpty()) {
                 defenseOrderBeens = records.into(DefenseOrderBean.class);
+                // 以下为保护个人隐私，仅在答辩时间内显示个人电话
+                boolean isEncrypt = true;
+                Optional<Record> defenseArrangementRecord = defenseArrangementService.findByGraduationDesignReleaseId(condition.getGraduationDesignReleaseId());
+                if (defenseArrangementRecord.isPresent()) {
+                    DefenseArrangement defenseArrangement = defenseArrangementRecord.get().into(DefenseArrangement.class);
+                    // 答辩时间内显示
+                    if (DateTimeUtils.timestampRangeDecide(defenseArrangement.getDefenseStartTime(), defenseArrangement.getDefenseEndTime())) {
+                        isEncrypt = false;
+                    }
+                }
+                if (isEncrypt) {
+                    final String encryptStr = "******";
+                    defenseOrderBeens.forEach(i -> {
+                        i.setStudentMobile(encryptStr);
+                        i.setScoreTypeName(encryptStr);
+                    });
+                }
             }
         }
         return ajaxUtils.success().msg("获取数据成功").listData(defenseOrderBeens);

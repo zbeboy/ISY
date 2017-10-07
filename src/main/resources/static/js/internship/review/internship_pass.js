@@ -43,6 +43,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             displayedPages: 3
         };
 
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_REVIEW_PASS_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_PASS_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            SCIENCE_NAME: 'INTERNSHIP_REVIEW_PASS_SCIENCE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
+            ORGANIZE_NAME: 'INTERNSHIP_REVIEW_PASS_ORGANIZE_NUMBER_SEARCH_' + init_page_param.internshipReleaseId
+        };
+
         var tableData = '#tableData';
 
         function startLoading() {
@@ -61,29 +71,20 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         function cleanParam() {
             $(paramId.studentName).val('');
             $(paramId.studentNumber).val('');
-            $(paramId.scienceName).val('');
-            $(paramId.organizeName).val('');
+            $(paramId.scienceName).val(0);
+            $(paramId.organizeName).val(0);
         }
 
         /**
          * 刷新查询参数
          */
         function refreshSearch() {
-            param.pageNum = 0;
-        }
-
-        /**
-         * 初始化参数
-         */
-        function initParam() {
-            var params = {
-                studentName: $(paramId.studentName).val(),
-                studentNumber: $(paramId.studentNumber).val(),
-                scienceName: $(paramId.scienceName).val(),
-                organizeName: $(paramId.organizeName).val(),
-                internshipReleaseId: init_page_param.internshipReleaseId
-            };
-            param.searchParams = JSON.stringify(params);
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, $(paramId.studentName).val());
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(paramId.studentNumber).val());
+                sessionStorage.setItem(webStorageKey.SCIENCE_NAME, $(paramId.scienceName).val());
+                sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, $(paramId.organizeName).val());
+            }
         }
 
         /**
@@ -158,9 +159,9 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         $(paramId.scienceName).change(function (event) {
-            refreshSearch();
             var science = $(paramId.scienceName).val();
             changeOrganize(science);
+            refreshSearch();
             init();
         });
 
@@ -502,15 +503,18 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             });
         }
 
+        var initSelectedOrganize = true;// 用于页面初始化搜索框内容时第一次选中班级
+
         init();
         initSearchSciences();
+        initSearchInput();
 
         /**
          * 初始化数据
          */
         function init() {
+            initSearchContent();
             startLoading();
-            initParam();
             $.get(web_path + ajax_url.pass_data_url, param, function (data) {
                 endLoading();
                 createPage(data);
@@ -533,7 +537,83 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                     return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
                 });
                 $(paramId.scienceName).html(template(data));
+
+                var scienceName = null;
+                if (typeof(Storage) !== "undefined") {
+                    scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+                }
+                if (scienceName !== null) {
+                    $(paramId.scienceName).val(scienceName);
+                    changeOrganize(scienceName);
+                }
             });
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var scienceName = null;
+            var organizeName = null;
+            var params = {
+                studentName: '',
+                studentNumber: '',
+                scienceName: '',
+                organizeName: '',
+                internshipReleaseId: init_page_param.internshipReleaseId
+            };
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+            }
+            if (studentName !== null) {
+                params.studentName = studentName;
+            } else {
+                params.studentName = $(paramId.studentName).val();
+            }
+
+            if (studentNumber !== null) {
+                params.studentNumber = studentNumber;
+            } else {
+                params.studentNumber = $(paramId.studentNumber).val();
+            }
+
+            if (scienceName !== null) {
+                params.scienceName = scienceName;
+            } else {
+                params.scienceName = $(paramId.scienceName).val();
+            }
+
+            if (organizeName !== null) {
+                params.organizeName = organizeName;
+            } else {
+                params.organizeName = $(paramId.organizeName).val();
+            }
+            param.pageNum = 0;
+            param.searchParams = JSON.stringify(params);
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            }
+            if (studentName !== null) {
+                $(paramId.studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(paramId.studentNumber).val(studentNumber);
+            }
         }
 
         /**
@@ -542,12 +622,12 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         function changeOrganize(science) {
 
-            if (science === 0) {
+            if (Number(science) == 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
                     listResult: [
-                        {name: "请选择班级", value: ""}
+                        {name: "请选择班级", value: 0}
                     ]
                 };
 
@@ -572,6 +652,16 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                         return new Handlebars.SafeString(Handlebars.escapeExpression(this.organizeName));
                     });
                     $(paramId.organizeName).html(template(data));
+                    if (initSelectedOrganize) {
+                        var organizeName = null;
+                        if (typeof(Storage) !== "undefined") {
+                            organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                        }
+                        if (organizeName !== null) {
+                            $(paramId.organizeName).val(organizeName);
+                        }
+                        initSelectedOrganize = false;
+                    }
                 });
             }
         }

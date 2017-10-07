@@ -5,6 +5,24 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     function ($, Handlebars) {
 
         /*
+         参数
+        */
+        var param = {
+            schoolName: '',
+            collegeName: '',
+            departmentName: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            SCHOOL_NAME: 'DATA_DEPARTMENT_SCHOOL_NAME_SEARCH',
+            COLLEGE_NAME: 'DATA_DEPARTMENT_COLLEGE_NAME_SEARCH',
+            DEPARTMENT_NAME: 'DATA_DEPARTMENT_DEPARTMENT_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -53,6 +71,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -83,44 +102,44 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
                         if (c.departmentIsDel == 0 || c.departmentIsDel == null) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.departmentId,
-                                        "department": c.departmentName
-                                    },
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.departmentId,
-                                        "department": c.departmentName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.departmentId,
+                                            "department": c.departmentName
+                                        },
+                                        {
+                                            "name": "注销",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.departmentId,
+                                            "department": c.departmentName
+                                        }
+                                    ]
+                                };
                         } else {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.departmentId,
-                                        "department": c.departmentName
-                                    },
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.departmentId,
-                                        "department": c.departmentName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.departmentId,
+                                            "department": c.departmentName
+                                        },
+                                        {
+                                            "name": "恢复",
+                                            "css": "recovery",
+                                            "type": "warning",
+                                            "id": c.departmentId,
+                                            "department": c.departmentName
+                                        }
+                                    ]
+                                };
                         }
 
                         return template(context);
@@ -177,6 +196,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.recovery', "click", function () {
                     department_recovery($(this).attr('data-id'), $(this).attr('data-department'));
                 });
+
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -198,15 +220,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            schoolName: '',
-            collegeName: '',
-            departmentName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -220,6 +233,62 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.schoolName = $(getParamId().schoolName).val();
             param.collegeName = $(getParamId().collegeName).val();
             param.departmentName = $(getParamId().departmentName).val();
+
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+                sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, param.departmentName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var schoolName = null;
+            var collegeName = null;
+            var departmentName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);
+            }
+            if (schoolName !== null) {
+                param.schoolName = schoolName;
+            }
+
+            if (collegeName !== null) {
+                param.collegeName = collegeName;
+            }
+
+            if (departmentName !== null) {
+                param.departmentName = departmentName;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var schoolName = null;
+            var collegeName = null;
+            var departmentName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);
+            }
+            if (schoolName !== null) {
+                $(getParamId().schoolName).val(schoolName);
+            }
+
+            if (collegeName !== null) {
+                $(getParamId().collegeName).val(collegeName);
+            }
+
+            if (departmentName !== null) {
+                $(getParamId().departmentName).val(departmentName);
+            }
         }
 
         /*

@@ -42,6 +42,17 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         defenseStatus: $(paramId.defenseStatus).val()
     };
 
+    /*
+     web storage key.
+    */
+    var webStorageKey = {
+        DEFENSE_ORDER_ID: 'DEFENSE_ORDER_ID_',
+        STUDENT_NAME: 'GRADUATE_DESIGN_REORDER_ORDER_STUDENT_NAME_SEARCH_' + init_page_param.defenseGroupId,
+        STUDENT_NUMBER: 'GRADUATE_DESIGN_REORDER_ORDER_STUDENT_NUMBER_SEARCH_' + init_page_param.defenseGroupId,
+        SCORE_TYPE_ID: 'GRADUATE_DESIGN_REORDER_ORDER_SCORE_TYPE_ID_SEARCH_' + init_page_param.defenseGroupId,
+        DEFENSE_STATUS: 'GRADUATE_DESIGN_REORDER_ORDER_DEFENSE_STATUS_SEARCH_' + init_page_param.defenseGroupId
+    };
+
     // 刷新时选中菜单
     nav_active(ajax_url.back);
 
@@ -73,10 +84,12 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      * 刷新查询参数
      */
     function refreshSearch() {
-        param.studentName = $(paramId.studentName).val();
-        param.studentNumber = $(paramId.studentNumber).val();
-        param.scoreTypeId = $(paramId.scoreTypeId).val();
-        param.defenseStatus = $(paramId.defenseStatus).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.STUDENT_NAME, $(paramId.studentName).val());
+            sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(paramId.studentNumber).val());
+            sessionStorage.setItem(webStorageKey.SCORE_TYPE_ID, $(paramId.scoreTypeId).val());
+            sessionStorage.setItem(webStorageKey.DEFENSE_STATUS, $(paramId.defenseStatus).val());
+        }
     }
 
     /*
@@ -131,8 +144,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
     init();
     initScore();
+    initSearchInput();
 
     function init() {
+        initSearchContent();
         startLoading();
         $.get(web_path + ajax_url.data_url, param, function (data) {
             endLoading();
@@ -146,6 +161,71 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                 });
             }
         });
+    }
+
+    /*
+    初始化搜索内容
+    */
+    function initSearchContent() {
+        var studentName = null;
+        var studentNumber = null;
+        var scoreTypeId = null;
+        var defenseStatus = null;
+        if (typeof(Storage) !== "undefined") {
+            studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+            studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            scoreTypeId = sessionStorage.getItem(webStorageKey.SCORE_TYPE_ID);
+            defenseStatus = sessionStorage.getItem(webStorageKey.DEFENSE_STATUS);
+        }
+        if (studentName !== null) {
+            param.studentName = studentName;
+        } else {
+            param.studentName = $(paramId.studentName).val();
+        }
+
+        if (studentNumber !== null) {
+            param.studentNumber = studentNumber;
+        } else {
+            param.studentNumber = $(paramId.studentNumber).val();
+        }
+
+        if (scoreTypeId !== null) {
+            param.scoreTypeId = scoreTypeId;
+        } else {
+            param.scoreTypeId = $(paramId.scoreTypeId).val();
+        }
+
+        if (defenseStatus !== null) {
+            param.defenseStatus = defenseStatus;
+        } else {
+            param.defenseStatus = $(paramId.defenseStatus).val();
+        }
+
+    }
+
+    /*
+    初始化搜索框
+    */
+    function initSearchInput() {
+        var studentName = null;
+        var studentNumber = null;
+        var defenseStatus = null;
+        if (typeof(Storage) !== "undefined") {
+            studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+            studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            defenseStatus = sessionStorage.getItem(webStorageKey.DEFENSE_STATUS);
+        }
+        if (studentName !== null) {
+            $(paramId.studentName).val(studentName);
+        }
+
+        if (studentNumber !== null) {
+            $(paramId.studentNumber).val(studentNumber);
+        }
+
+        if (defenseStatus !== null) {
+            $(paramId.defenseStatus).val(defenseStatus);
+        }
     }
 
     function initScore() {
@@ -207,6 +287,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
     function scoreData(data) {
         var template = Handlebars.compile($("#score-template").html());
         $(paramId.scoreTypeId).html(template(data));
+        var scoreTypeId = null;
+        if (typeof(Storage) !== "undefined") {
+            scoreTypeId = sessionStorage.getItem(webStorageKey.SCORE_TYPE_ID);
+        }
+        if (scoreTypeId !== null) {
+            $(paramId.scoreTypeId).val(scoreTypeId);
+        }
     }
 
     /**
@@ -441,7 +528,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         // 采用 html5 Storage存储
         // Check browser support
         if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("DEFENSE_ORDER_ID_" + id, timer * 60);
+            localStorage.setItem(webStorageKey.DEFENSE_ORDER_ID + id, timer * 60);
             $('#timerModal').modal('hide');
             window.open(web_path + ajax_url.timer_url + '?defenseOrderId=' + id + '&timer=' + timer);
         } else {

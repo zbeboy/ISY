@@ -43,6 +43,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_REGULATE_MY_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId,
+            STUDENT_NUMBER: 'INTERNSHIP_REGULATE_MY_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId
+        };
+
+        /*
          得到参数
          */
         function getParam() {
@@ -93,6 +101,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
@@ -122,28 +131,28 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "查看",
-                                    "css": "look",
-                                    "type": "info",
-                                    "id": c.internshipRegulateId
-                                },
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.internshipRegulateId
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.internshipRegulateId
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "查看",
+                                        "css": "look",
+                                        "type": "info",
+                                        "id": c.internshipRegulateId
+                                    },
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.internshipRegulateId
+                                    },
+                                    {
+                                        "name": "删除",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.internshipRegulateId
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }
@@ -189,6 +198,8 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 tableElement.delegate('.del', "click", function () {
                     regulate_del($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -203,6 +214,48 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
         function initParam() {
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
         }
 
         /*

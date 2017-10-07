@@ -3,6 +3,19 @@
  */
 require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "bootstrap", "messenger", "bootstrap-maxlength"],
     function ($, Handlebars) {
+        /*
+         参数
+        */
+        var param = {
+            politicalLandscapeName: ''
+        };
+
+        /*
+        web storage key.
+       */
+        var webStorageKey = {
+            POLITICAL_LANDSCAPE_NAME: 'DATA_POLITICS_LANDSCAPE_NAME_SEARCH'
+        };
 
         /*
          ajax url
@@ -50,6 +63,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -111,6 +125,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'), $(this).attr('data-value'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -136,13 +152,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            politicalLandscapeName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -154,6 +163,35 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function initParam() {
             param.politicalLandscapeName = $(getParamId().politicalLandscapeName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.POLITICAL_LANDSCAPE_NAME, param.politicalLandscapeName);
+            }
+        }
+
+        /*
+       初始化搜索内容
+        */
+        function initSearchContent() {
+            var politicalLandscapeName = null;
+            if (typeof(Storage) !== "undefined") {
+                politicalLandscapeName = sessionStorage.getItem(webStorageKey.POLITICAL_LANDSCAPE_NAME);
+            }
+            if (politicalLandscapeName !== null) {
+                param.politicalLandscapeName = politicalLandscapeName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var politicalLandscapeName = null;
+            if (typeof(Storage) !== "undefined") {
+                politicalLandscapeName = sessionStorage.getItem(webStorageKey.POLITICAL_LANDSCAPE_NAME);
+            }
+            if (politicalLandscapeName !== null) {
+                $(getParamId().politicalLandscapeName).val(politicalLandscapeName);
+            }
         }
 
         /*

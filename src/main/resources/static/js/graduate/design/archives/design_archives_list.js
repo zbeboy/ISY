@@ -44,6 +44,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
         };
 
         /*
+        web storage key.
+       */
+        var webStorageKey = {
+            STUDENT_NAME: 'GRADUATE_DESIGN_ARCHIVES_LIST_STUDENT_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STUDENT_NUMBER: 'GRADUATE_DESIGN_ARCHIVES_LIST_STUDENT_NUMBER_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STAFF_NAME: 'GRADUATE_DESIGN_ARCHIVES_LIST_STAFF_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STAFF_NUMBER: 'GRADUATE_DESIGN_ARCHIVES_LIST_STAFF_NUMBER_SEARCH_' + init_page_param.graduationDesignReleaseId
+        };
+
+        /*
          得到参数
          */
         function getParam() {
@@ -98,6 +108,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
@@ -256,6 +267,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 tableElement.delegate('.note', "click", function () {
                     note($(this).attr('data-id'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -272,6 +285,74 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
             param.studentNumber = $(getParamId().studentNumber).val();
             param.staffName = $(getParamId().staffName).val();
             param.staffNumber = $(getParamId().staffNumber).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.STAFF_NAME, param.staffName);
+                sessionStorage.setItem(webStorageKey.STAFF_NUMBER, param.staffNumber);
+            }
+        }
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var staffName = null;
+            var staffNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                staffName = sessionStorage.getItem(webStorageKey.STAFF_NAME);
+                staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (staffName !== null) {
+                param.staffName = staffName;
+            }
+
+            if (staffNumber !== null) {
+                param.staffNumber = staffNumber;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            var staffName = null;
+            var staffNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                staffName = sessionStorage.getItem(webStorageKey.STAFF_NAME);
+                staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (staffName !== null) {
+                $(getParamId().staffName).val(staffName);
+            }
+
+            if (staffNumber !== null) {
+                $(getParamId().staffNumber).val(staffNumber);
+            }
         }
 
         /*

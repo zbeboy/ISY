@@ -5,6 +5,24 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
     function ($, nav_active, Handlebars) {
 
         /*
+        参数
+       */
+        var param = {
+            studentName: '',
+            studentNumber: '',
+            organizeName: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'GRADUATE_DESIGN_ADJUSTECH_UNSUBMIT_STUDENT_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STUDENT_NUMBER: 'GRADUATE_DESIGN_ADJUSTECH_UNSUBMIT_STUDENT_NUMBER_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            ORGANIZE_NAME: 'GRADUATE_DESIGN_ADJUSTECH_UNSUBMIT_ORGANIZE_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -40,6 +58,14 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
             });
 
             $(getParamId().organizeName).html(template(data));
+
+            var organizeName = null;
+            if (typeof(Storage) !== "undefined") {
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+            }
+            if (organizeName !== null) {
+                $(getParamId().organizeName).val(organizeName);
+            }
         }
 
         /*
@@ -86,6 +112,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
@@ -159,6 +186,8 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'), $(this).attr('data-teacher'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -178,15 +207,6 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            studentName: '',
-            studentNumber: '',
-            organizeName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -200,6 +220,55 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organizeName = $(getParamId().organizeName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, param.organizeName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var organizeName = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (organizeName !== null) {
+                param.organizeName = organizeName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
         }
 
         /*

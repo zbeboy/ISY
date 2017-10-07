@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
+import top.zbeboy.isy.annotation.logging.RecordSystemLogging;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.Files;
 import top.zbeboy.isy.service.common.FilesService;
@@ -152,6 +153,7 @@ public class MainController {
      *
      * @return 后台欢迎页
      */
+    @RecordSystemLogging(module = "Main", methods = "backstage", description = "访问系统主页")
     @RequestMapping(value = "/web/menu/backstage", method = RequestMethod.GET)
     public String backstage() {
         return "backstage";

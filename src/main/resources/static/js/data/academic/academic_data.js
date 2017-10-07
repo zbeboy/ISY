@@ -5,6 +5,23 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     function ($, Handlebars) {
 
         /*
+         参数
+        */
+        var param = {
+            academicTitleName: '',
+            addAcademic: '',
+            updateAcademicId: '',
+            updateAcademic: ''
+        };
+
+        /*
+         web storage key.
+        */
+        var webStorageKey = {
+            ACADEMIC_TITLE_NAME: 'DATA_ACADEMIC_TITLE_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -50,6 +67,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -111,6 +129,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'), $(this).attr('data-value'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -136,16 +156,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            academicTitleName: '',
-            addAcademic: '',
-            updateAcademicId: '',
-            updateAcademic: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -157,6 +167,35 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
          */
         function initParam() {
             param.academicTitleName = $(getParamId().academicTitleName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.ACADEMIC_TITLE_NAME, param.academicTitleName);
+            }
+        }
+
+        /*
+       初始化搜索内容
+        */
+        function initSearchContent() {
+            var academicTitleName = null;
+            if (typeof(Storage) !== "undefined") {
+                academicTitleName = sessionStorage.getItem(webStorageKey.ACADEMIC_TITLE_NAME);
+            }
+            if (academicTitleName !== null) {
+                param.academicTitleName = academicTitleName;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var academicTitleName = null;
+            if (typeof(Storage) !== "undefined") {
+                academicTitleName = sessionStorage.getItem(webStorageKey.ACADEMIC_TITLE_NAME);
+            }
+            if (academicTitleName !== null) {
+                $(getParamId().academicTitleName).val(academicTitleName);
+            }
         }
 
         /*

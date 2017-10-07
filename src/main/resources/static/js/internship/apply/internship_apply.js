@@ -50,6 +50,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            INTERNSHIP_TITLE: 'INTERNSHIP_APPLY_INTERNSHIP_TITLE_SEARCH',
+            MY_INTERNSHIP_TITLE:'INTERNSHIP_APPLY_MY_INTERNSHIP_TITLE_SEARCH'
+        };
+
+        /*
          参数
          */
         var myParam = {
@@ -74,6 +82,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         };
 
         init();
+        initSearchInput();
 
         /**
          * 检验成功
@@ -135,11 +144,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 刷新查询参数
          */
         function refreshSearch() {
-            var params = {
-                internshipTitle: $(paramId.internshipTitle).val()
-            };
-            param.pageNum = 0;
-            param.searchParams = JSON.stringify(params);
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.INTERNSHIP_TITLE, $(paramId.internshipTitle).val());
+            }
         }
 
         /**
@@ -151,6 +158,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             };
             myParam.pageNum = 0;
             myParam.searchParams = JSON.stringify(params);
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.MY_INTERNSHIP_TITLE, $(myParamId.internshipTitle).val());
+            }
         }
 
         /*
@@ -313,12 +323,79 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 初始化数据
          */
         function init() {
+            initSearchContent();
             startLoading();
             $.get(web_path + ajax_url.internship_apply_data_url, param, function (data) {
                 endLoading();
                 createPage(data);
                 listData(data);
             });
+        }
+
+        /*
+       初始化搜索内容
+      */
+        function initSearchContent() {
+            var internshipTitle = null;
+            var params = {
+                internshipTitle: ''
+            };
+            if (typeof(Storage) !== "undefined") {
+                internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
+            }
+            if (internshipTitle !== null) {
+                params.internshipTitle = internshipTitle;
+            } else {
+                params.internshipTitle = $(paramId.internshipTitle).val();
+            }
+            param.pageNum = 0;
+            param.searchParams = JSON.stringify(params);
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var internshipTitle = null;
+            if (typeof(Storage) !== "undefined") {
+                internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
+            }
+            if (internshipTitle !== null) {
+                $(paramId.internshipTitle).val(internshipTitle);
+            }
+        }
+
+        /*
+        初始化我的申请搜索内容
+        */
+        function initMySearchContent() {
+            var internshipTitle = null;
+            var params = {
+                internshipTitle: ''
+            };
+            if (typeof(Storage) !== "undefined") {
+                internshipTitle = sessionStorage.getItem(webStorageKey.MY_INTERNSHIP_TITLE);
+            }
+            if (internshipTitle !== null) {
+                params.internshipTitle = internshipTitle;
+            } else {
+                params.internshipTitle = $(paramId.internshipTitle).val();
+            }
+            myParam.pageNum = 0;
+            myParam.searchParams = JSON.stringify(params);
+        }
+
+        /*
+        初始化我的申请搜索框
+        */
+        function initMySearchInput() {
+            var internshipTitle = null;
+            if (typeof(Storage) !== "undefined") {
+                internshipTitle = sessionStorage.getItem(webStorageKey.MY_INTERNSHIP_TITLE);
+            }
+            if (internshipTitle !== null) {
+                $(myParamId.internshipTitle).val(internshipTitle);
+            }
         }
 
         /*
@@ -703,8 +780,10 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             e.preventDefault();
             var t = $(this).text();
             if (t === '申请列表') {
+                initSearchInput();
                 init();
             } else if (t === '我的申请') {
+                initMySearchInput();
                 initMyData();
             }
         });
@@ -713,6 +792,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 初始化数据
          */
         function initMyData() {
+            initMySearchContent();
             startLoading();
             $.get(web_path + ajax_url.my_internship_apply_data_url, myParam, function (data) {
                 endLoading();

@@ -76,6 +76,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_JOURNAL_TEAM_STUDENT_NAME_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId,
+            STUDENT_NUMBER: 'INTERNSHIP_JOURNAL_TEAM_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId,
+            ORGANIZE: 'INTERNSHIP_JOURNAL_TEAM_ORGANIZE_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId,
+            CREATE_DATE: 'INTERNSHIP_JOURNAL_TEAM_CREATE_DATE_SEARCH_' + init_page_param.internshipReleaseId + init_page_param.staffId
+        };
+
+        /*
          得到参数
          */
         function getParam() {
@@ -126,8 +136,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
-                    console.log(searchParam);
                     d.extra_search = JSON.stringify(searchParam);
                     d.internshipReleaseId = init_page_param.internshipReleaseId;
                     d.staffId = init_page_param.staffId;
@@ -159,39 +169,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                         // 当前用户查看自己的实习日志
                         if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "查看",
-                                        "css": "look",
-                                        "type": "info",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.internshipJournalId
-                                    },
-                                    {
-                                        "name": "下载",
-                                        "css": "download",
-                                        "type": "default",
-                                        "id": c.internshipJournalId
-                                    }
-                                ]
-                            };
-                        } else { // 该实习日志不属于当前用户
-                            // 当前用户角色为管理员 或系统
-                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
-                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-                                context =
                                 {
                                     func: [
                                         {
@@ -220,11 +197,63 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                         }
                                     ]
                                 };
+                        } else { // 该实习日志不属于当前用户
+                            // 当前用户角色为管理员 或系统
+                            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
+                                init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                                context =
+                                    {
+                                        func: [
+                                            {
+                                                "name": "查看",
+                                                "css": "look",
+                                                "type": "info",
+                                                "id": c.internshipJournalId
+                                            },
+                                            {
+                                                "name": "编辑",
+                                                "css": "edit",
+                                                "type": "primary",
+                                                "id": c.internshipJournalId
+                                            },
+                                            {
+                                                "name": "删除",
+                                                "css": "del",
+                                                "type": "danger",
+                                                "id": c.internshipJournalId
+                                            },
+                                            {
+                                                "name": "下载",
+                                                "css": "download",
+                                                "type": "default",
+                                                "id": c.internshipJournalId
+                                            }
+                                        ]
+                                    };
                             } else {// 非作者也非管理员
                                 // 若限制仅允许教职工查阅
                                 if (c.isSeeStaff == 1) {
                                     if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
                                         context =
+                                            {
+                                                func: [
+                                                    {
+                                                        "name": "查看",
+                                                        "css": "look",
+                                                        "type": "info",
+                                                        "id": c.internshipJournalId
+                                                    },
+                                                    {
+                                                        "name": "下载",
+                                                        "css": "download",
+                                                        "type": "default",
+                                                        "id": c.internshipJournalId
+                                                    }
+                                                ]
+                                            };
+                                    }
+                                } else {
+                                    context =
                                         {
                                             func: [
                                                 {
@@ -241,25 +270,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                                 }
                                             ]
                                         };
-                                    }
-                                } else {
-                                    context =
-                                    {
-                                        func: [
-                                            {
-                                                "name": "查看",
-                                                "css": "look",
-                                                "type": "info",
-                                                "id": c.internshipJournalId
-                                            },
-                                            {
-                                                "name": "下载",
-                                                "css": "download",
-                                                "type": "default",
-                                                "id": c.internshipJournalId
-                                            }
-                                        ]
-                                    };
                                 }
                             }
                         }
@@ -315,6 +325,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 tableElement.delegate('.download', "click", function () {
                     download($(this).attr('data-id'));
                 });
+
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -342,6 +355,12 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organize = $(getParamId().organize).val();
             param.createDate = $(getParamId().createDate).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
+                sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
+                sessionStorage.setItem(webStorageKey.ORGANIZE, param.organize);
+                sessionStorage.setItem(webStorageKey.CREATE_DATE, param.createDate);
+            }
         }
 
         // 创建日期
@@ -366,6 +385,68 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
+
+        /*
+        初始化搜索内容
+       */
+        function initSearchContent() {
+            var studentName = null;
+            var studentNumber = null;
+            var organize = null;
+            var createDate = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
+            }
+            if (studentName !== null) {
+                param.studentName = studentName;
+            }
+
+            if (studentNumber !== null) {
+                param.studentNumber = studentNumber;
+            }
+
+            if (organize !== null) {
+                param.organize = organize;
+            }
+
+            if (createDate !== null) {
+                param.createDate = createDate;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var studentName = null;
+            var studentNumber = null;
+            var organize = null;
+            var createDate = null;
+            if (typeof(Storage) !== "undefined") {
+                studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
+                studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
+            }
+            if (studentName !== null) {
+                $(getParamId().studentName).val(studentName);
+            }
+
+            if (studentNumber !== null) {
+                $(getParamId().studentNumber).val(studentNumber);
+            }
+
+            if (organize !== null) {
+                $(getParamId().organize).val(organize);
+            }
+
+            if (createDate !== null) {
+                $(getParamId().createDate).val(createDate);
+            }
+        }
 
         /*
          清空参数

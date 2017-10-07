@@ -74,6 +74,28 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         };
 
         /*
+         web storage key.
+        */
+        var webStorageKey = {
+            PASS_SCHOOL: 'DATA_STAFF_PASS_SCHOOL_SEARCH',
+            PASS_COLLEGE: 'DATA_STAFF_PASS_COLLEGE_SEARCH',
+            PASS_DEPARTMENT: 'DATA_STAFF_PASS_DEPARTMENT_SEARCH',
+            PASS_POST: 'DATA_STAFF_PASS_POST_SEARCH',
+            PASS_STAFF_NUMBER: 'DATA_STAFF_PASS_STAFF_NUMBER_SEARCH',
+            PASS_USERNAME: 'DATA_STAFF_PASS_USERNAME_SEARCH',
+            PASS_MOBILE: 'DATA_STAFF_PASS_MOBILE_SEARCH',
+            PASS_ID_CARD: 'DATA_STAFF_PASS_ID_CARD_SEARCH',
+            PASS_REAL_NAME: 'DATA_STAFF_PASS_REAL_NAME_SEARCH',
+            PASS_SEX: 'DATA_STAFF_PASS_SEX_SEARCH',
+            WAIT_SCHOOL: 'DATA_STAFF_WAIT_SCHOOL_SEARCH',
+            WAIT_COLLEGE: 'DATA_STAFF_WAIT_COLLEGE_SEARCH',
+            WAIT_DEPARTMENT: 'DATA_STAFF_WAIT_DEPARTMENT_SEARCH',
+            WAIT_MOBILE: 'DATA_STAFF_WAIT_MOBILE_SEARCH',
+            WAIT_STAFF_NUMBER: 'DATA_STAFF_WAIT_STAFF_NUMBER_SEARCH',
+            WAIT_USERNAME: 'DATA_STAFF_WAIT_USERNAME_SEARCH'
+        };
+
+        /*
          得到参数
          */
         function getPassParam() {
@@ -95,6 +117,152 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             passParam.idCard = $(getPassParamId().idCard).val();
             passParam.realName = $(getPassParamId().realName).val();
             passParam.sex = $(getPassParamId().sex).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.PASS_SCHOOL, passParam.school);
+                sessionStorage.setItem(webStorageKey.PASS_COLLEGE, passParam.college);
+                sessionStorage.setItem(webStorageKey.PASS_DEPARTMENT, passParam.department);
+                sessionStorage.setItem(webStorageKey.PASS_POST, passParam.post);
+                sessionStorage.setItem(webStorageKey.PASS_STAFF_NUMBER, passParam.staffNumber);
+                sessionStorage.setItem(webStorageKey.PASS_USERNAME, passParam.username);
+                sessionStorage.setItem(webStorageKey.PASS_MOBILE, passParam.mobile);
+                sessionStorage.setItem(webStorageKey.PASS_ID_CARD, passParam.idCard);
+                sessionStorage.setItem(webStorageKey.PASS_REAL_NAME, passParam.realName);
+                sessionStorage.setItem(webStorageKey.PASS_SEX, passParam.sex);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initPassSearchContent() {
+            var school = null;
+            var college = null;
+            var department = null;
+            var post = null;
+            var staffNumber = null;
+            var username = null;
+            var mobile = null;
+            var idCard = null;
+            var realName = null;
+            var sex = null;
+            if (typeof(Storage) !== "undefined") {
+                school = sessionStorage.getItem(webStorageKey.PASS_SCHOOL);
+                college = sessionStorage.getItem(webStorageKey.PASS_COLLEGE);
+                department = sessionStorage.getItem(webStorageKey.PASS_DEPARTMENT);
+                post = sessionStorage.getItem(webStorageKey.PASS_POST);
+                staffNumber = sessionStorage.getItem(webStorageKey.PASS_STAFF_NUMBER);
+                username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
+                mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
+                idCard = sessionStorage.getItem(webStorageKey.PASS_ID_CARD);
+                realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
+                sex = sessionStorage.getItem(webStorageKey.PASS_SEX);
+            }
+            if (school !== null) {
+                passParam.school = school;
+            }
+
+            if (college !== null) {
+                passParam.college = college;
+            }
+
+            if (department !== null) {
+                passParam.department = department;
+            }
+
+            if (post !== null) {
+                passParam.post = post;
+            }
+
+            if (staffNumber !== null) {
+                passParam.staffNumber = staffNumber;
+            }
+
+            if (username !== null) {
+                passParam.username = username;
+            }
+
+            if (mobile !== null) {
+                passParam.mobile = mobile;
+            }
+
+            if (idCard !== null) {
+                passParam.idCard = idCard;
+            }
+
+            if (realName !== null) {
+                passParam.realName = realName;
+            }
+
+            if (sex !== null) {
+                passParam.sex = sex;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initPassSearchInput() {
+            var school = null;
+            var college = null;
+            var department = null;
+            var post = null;
+            var staffNumber = null;
+            var username = null;
+            var mobile = null;
+            var idCard = null;
+            var realName = null;
+            var sex = null;
+            if (typeof(Storage) !== "undefined") {
+                school = sessionStorage.getItem(webStorageKey.PASS_SCHOOL);
+                college = sessionStorage.getItem(webStorageKey.PASS_COLLEGE);
+                department = sessionStorage.getItem(webStorageKey.PASS_DEPARTMENT);
+                post = sessionStorage.getItem(webStorageKey.PASS_POST);
+                staffNumber = sessionStorage.getItem(webStorageKey.PASS_STAFF_NUMBER);
+                username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
+                mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
+                idCard = sessionStorage.getItem(webStorageKey.PASS_ID_CARD);
+                realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
+                sex = sessionStorage.getItem(webStorageKey.PASS_SEX);
+            }
+            if (school !== null) {
+                $(getPassParamId().school).val(school);
+            }
+
+            if (college !== null) {
+                $(getPassParamId().college).val(college);
+            }
+
+            if (department !== null) {
+                $(getPassParamId().department).val(department);
+            }
+
+            if (post !== null) {
+                $(getPassParamId().post).val(post);
+            }
+
+            if (staffNumber !== null) {
+                $(getPassParamId().staffNumber).val(staffNumber);
+            }
+
+            if (username !== null) {
+                $(getPassParamId().username).val(username);
+            }
+
+            if (mobile !== null) {
+                $(getPassParamId().mobile).val(mobile);
+            }
+
+            if (idCard !== null) {
+                $(getPassParamId().idCard).val(idCard);
+            }
+
+            if (realName !== null) {
+                $(getPassParamId().realName).val(realName);
+            }
+
+            if (sex !== null) {
+                $(getPassParamId().sex).val(sex);
+            }
         }
 
         /**
@@ -258,6 +426,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     "dataSrc": "data",
                     "data": function (d) {
                         // 添加额外的参数传给服务器
+                        initPassSearchContent();
                         var searchParam = getPassParam();
                         d.extra_search = JSON.stringify(searchParam);
                         d.extra_page = getPassPage();
@@ -407,6 +576,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     tableElement.delegate('.role', "click", function () {
                         role($(this).attr('data-id'), $(this).attr('data-role'));
                     });
+                    // 初始化搜索框中内容
+                    initPassSearchInput();
                 }
             });
 
@@ -704,6 +875,100 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             waitParam.mobile = $(getWaitParamId().mobile).val();
             waitParam.staffNumber = $(getWaitParamId().staffNumber).val();
             waitParam.username = $(getWaitParamId().username).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, waitParam.school);
+                sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, waitParam.college);
+                sessionStorage.setItem(webStorageKey.WAIT_DEPARTMENT, waitParam.department);
+                sessionStorage.setItem(webStorageKey.WAIT_MOBILE, waitParam.mobile);
+                sessionStorage.setItem(webStorageKey.WAIT_STAFF_NUMBER, waitParam.staffNumber);
+                sessionStorage.setItem(webStorageKey.WAIT_USERNAME, waitParam.username);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initWaitSearchContent() {
+            var school = null;
+            var college = null;
+            var department = null;
+            var mobile = null;
+            var staffNumber = null;
+            var username = null;
+            if (typeof(Storage) !== "undefined") {
+                school = sessionStorage.getItem(webStorageKey.WAIT_SCHOOL);
+                college = sessionStorage.getItem(webStorageKey.WAIT_COLLEGE);
+                department = sessionStorage.getItem(webStorageKey.WAIT_DEPARTMENT);
+                mobile = sessionStorage.getItem(webStorageKey.WAIT_MOBILE);
+                staffNumber = sessionStorage.getItem(webStorageKey.WAIT_STAFF_NUMBER);
+                username = sessionStorage.getItem(webStorageKey.WAIT_USERNAME);
+            }
+            if (school !== null) {
+                waitParam.school = school;
+            }
+
+            if (college !== null) {
+                waitParam.college = college;
+            }
+
+            if (department !== null) {
+                waitParam.department = department;
+            }
+
+            if (mobile !== null) {
+                waitParam.mobile = mobile;
+            }
+
+            if (staffNumber !== null) {
+                waitParam.staffNumber = staffNumber;
+            }
+
+            if (username !== null) {
+                waitParam.username = username;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initWaitSearchInput() {
+            var school = null;
+            var college = null;
+            var department = null;
+            var mobile = null;
+            var staffNumber = null;
+            var username = null;
+            if (typeof(Storage) !== "undefined") {
+                school = sessionStorage.getItem(webStorageKey.WAIT_SCHOOL);
+                college = sessionStorage.getItem(webStorageKey.WAIT_COLLEGE);
+                department = sessionStorage.getItem(webStorageKey.WAIT_DEPARTMENT);
+                mobile = sessionStorage.getItem(webStorageKey.WAIT_MOBILE);
+                staffNumber = sessionStorage.getItem(webStorageKey.WAIT_STAFF_NUMBER);
+                username = sessionStorage.getItem(webStorageKey.WAIT_USERNAME);
+            }
+            if (school !== null) {
+                $(getWaitParamId().school).val(school);
+            }
+
+            if (college !== null) {
+                $(getWaitParamId().college).val(college);
+            }
+
+            if (department !== null) {
+                $(getWaitParamId().department).val(department);
+            }
+
+            if (mobile !== null) {
+                $(getWaitParamId().mobile).val(mobile);
+            }
+
+            if (staffNumber !== null) {
+                $(getWaitParamId().staffNumber).val(staffNumber);
+            }
+
+            if (username !== null) {
+                $(getWaitParamId().username).val(username);
+            }
         }
 
         function cleanWaitParam() {
@@ -824,6 +1089,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     "dataSrc": "data",
                     "data": function (d) {
                         // 添加额外的参数传给服务器
+                        initWaitSearchContent();
                         var searchParam = getWaitParam();
                         d.extra_search = JSON.stringify(searchParam);
                         d.extra_page = getWaitPage();
@@ -933,6 +1199,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                     waitId.delegate('#wait_deletes', "click", function () {
                         usersDeletes();
                     });
+                    // 初始化搜索框中内容
+                    initWaitSearchInput();
                 }
             });
 

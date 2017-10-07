@@ -4,8 +4,8 @@
 requirejs.config({
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
-        "wow": ['https://cdn.bootcss.com/wow/1.1.2/wow.min', web_path + "/plugin/wow/wow.min"],
-        "vegas": ['https://cdn.bootcss.com/vegas/2.4.0/vegas.min', web_path + "/plugin/vegas/vegas.min"]
+        "wow": ["https://cdn.bootcss.com/wow/1.1.2/wow.min", web_path + "/plugin/wow/wow.min"],
+        "vegas": ["https://cdn.bootcss.com/vegas/2.4.0/vegas.min", web_path + "/plugin/vegas/vegas.min"]
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -43,8 +43,8 @@ require(["jquery", "bootstrap", "wow", "vegas"], function ($) {
     // pic
     $('body').vegas({
         slides: [
-            {src: web_path + '/images/slide-1.jpg'},
-            {src: web_path + '/images/slide-2.jpg'}
+            {src: web_path + '/images/slide-3.jpg'},
+            {src: web_path + '/images/slide-4.jpg'}
         ],
         timer: false,
         transition: ['zoomOut']

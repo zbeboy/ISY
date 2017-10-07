@@ -3,6 +3,14 @@
  */
 // require(["module/name", ...], function(params){ ... });
 require(["jquery", "bootstrap"], function ($) {
+
+    /*
+     web storage key.
+    */
+    var webStorageKey = {
+        DEFENSE_ORDER_ID: 'DEFENSE_ORDER_ID_'
+    };
+
     var clock = new clock();
     var countdown = $('#countdown');
     var w;
@@ -27,11 +35,11 @@ require(["jquery", "bootstrap"], function ($) {
 
     function clock() {
         /*s是clock()中的变量，非var那种全局变量，代表剩余秒数*/
-        this.s = localStorage.getItem("DEFENSE_ORDER_ID_" + defenseOrderId);
+        this.s = localStorage.getItem(webStorageKey.DEFENSE_ORDER_ID + defenseOrderId);
         this.move = function () {
             /*输出前先调用exchange函数进行秒到分秒的转换，因为exchange并非在主函数window.onload使用，因此不需要进行声明*/
             countdown.html(exchange(this.s));
-            localStorage.setItem("DEFENSE_ORDER_ID_" + defenseOrderId, this.s);
+            localStorage.setItem(webStorageKey.DEFENSE_ORDER_ID + defenseOrderId, this.s);
             /*每被调用一次，剩余秒数就自减*/
             this.s = this.s - 1;
             /*如果时间耗尽，那么，弹窗，使按钮不可用，停止不停调用clock函数中的move()*/
@@ -65,7 +73,7 @@ require(["jquery", "bootstrap"], function ($) {
     });
 
     $('#rePlay').click(function () {
-        localStorage.setItem("DEFENSE_ORDER_ID_" + defenseOrderId, reorder_timer * 60);
+        localStorage.setItem(webStorageKey.DEFENSE_ORDER_ID + defenseOrderId, reorder_timer * 60);
         location.reload();
     });
 

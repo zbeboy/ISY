@@ -14,8 +14,10 @@
                 <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;"
                    th:text="#{web.foot.gov.information}"></p></a>
         </div>
-        <p class="text-muted"><span th:utext="#{web.foot.signature}"></span> <span class="text-muted"
-                                                                                   th:text="#{web.foot.filing.information}"></span>
+        <p class="text-muted"><span>&copy;</span> <span
+                th:text="${#calendars.format(#dates.createToday(), 'yyyy')}"></span> <span
+                th:utext="#{web.foot.signature}"></span> <span class="text-muted"
+                                                               th:text="#{web.foot.filing.information}"></span>
         </p>
 
     </div>

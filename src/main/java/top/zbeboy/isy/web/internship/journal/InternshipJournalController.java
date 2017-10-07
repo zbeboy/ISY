@@ -274,6 +274,7 @@ public class InternshipJournalController {
                     i.setInternshipJournalContent("");
                     i.setInternshipJournalHtml("");
                     i.setInternshipJournalWord("");
+                    i.setInternshipJournalDate(null);
                 });
             }
             dataTablesUtils.setData(internshipJournalBeans);

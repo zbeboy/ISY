@@ -1,8 +1,26 @@
 /**
  * Created by lenovo on 2017/5/8.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, nav_active) {
+
+        /*
+        参数
+       */
+        var param = {
+            realName: '',
+            staffUsername: '',
+            staffNumber: ''
+        };
+
+        /*
+       web storage key.
+       */
+        var webStorageKey = {
+            REAL_NAME: 'GRADUATE_DESIGN_TEACHER_LOOK_REAL_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STAFF_USERNAME: 'GRADUATE_DESIGN_TEACHER_LOOK_STAFF_USERNAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+            STAFF_NUMBER: 'GRADUATE_DESIGN_TEACHER_LOOK_STAFF_NUMBER_SEARCH_' + init_page_param.graduationDesignReleaseId
+        };
 
         /*
          ajax url
@@ -15,6 +33,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 condition: '/web/graduate/design/tutor/condition'
             };
         }
+
+        // 刷新时选中菜单
+        nav_active(getAjaxUrl().back);
 
         /*
          返回
@@ -79,6 +100,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
@@ -117,7 +139,11 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             },
             "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-8'>r>" +
             "t" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            initComplete: function () {
+                // 初始化搜索框中内容
+                initSearchInput();
+            }
         });
 
         var global_button = '<button type="button" id="teacher_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
@@ -136,15 +162,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            realName: '',
-            staffUsername: '',
-            staffNumber: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -158,6 +175,61 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.realName = $(getParamId().realName).val();
             param.staffUsername = $(getParamId().staffUsername).val();
             param.staffNumber = $(getParamId().staffNumber).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
+                sessionStorage.setItem(webStorageKey.STAFF_USERNAME, param.staffUsername);
+                sessionStorage.setItem(webStorageKey.STAFF_NUMBER, param.staffNumber);
+            }
+        }
+
+        /*
+       初始化搜索内容
+      */
+        function initSearchContent() {
+            var realName = null;
+            var staffUsername = null;
+            var staffNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+                staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
+                staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
+            }
+            if (realName !== null) {
+                param.realName = realName;
+            }
+
+            if (staffUsername !== null) {
+                param.staffUsername = staffUsername;
+            }
+
+            if (staffNumber !== null) {
+                param.staffNumber = staffNumber;
+            }
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var realName = null;
+            var staffUsername = null;
+            var staffNumber = null;
+            if (typeof(Storage) !== "undefined") {
+                realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+                staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
+                staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
+            }
+            if (realName !== null) {
+                $(getParamId().realName).val(realName);
+            }
+
+            if (staffUsername !== null) {
+                $(getParamId().staffUsername).val(staffUsername);
+            }
+
+            if (staffNumber !== null) {
+                $(getParamId().staffNumber).val(staffNumber);
+            }
         }
 
         /*

@@ -5,6 +5,30 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     function ($, Handlebars) {
 
         /*
+        参数
+        */
+        var param = {
+            schoolName: '',
+            collegeName: '',
+            departmentName: '',
+            scienceName: '',
+            organizeName: '',
+            grade: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            SCHOOL_NAME: 'DATA_ORGANIZE_SCHOOL_NAME_SEARCH',
+            COLLEGE_NAME: 'DATA_ORGANIZE_COLLEGE_NAME_SEARCH',
+            DEPARTMENT_NAME: 'DATA_ORGANIZE_DEPARTMENT_NAME_SEARCH',
+            SCIENCE_NAME:'DATA_ORGANIZE_SCIENCE_NAME_SEARCH',
+            ORGANIZE_NAME:'DATA_ORGANIZE_ORGANIZE_NAME_SEARCH',
+            GRADE:'DATA_ORGANIZE_GRADE_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -59,12 +83,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[1, 'asc']],// 排序
+            "aaSorting": [[1, 'desc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().organizes,
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.extra_page = getPage();
@@ -193,6 +218,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.recovery', "click", function () {
                     organize_recovery($(this).attr('data-id'), $(this).attr('data-organize'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -217,18 +244,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            schoolName: '',
-            collegeName: '',
-            departmentName: '',
-            scienceName: '',
-            organizeName: '',
-            grade: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -245,6 +260,101 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.scienceName = $(getParamId().scienceName).val();
             param.organizeName = $(getParamId().organizeName).val();
             param.grade = $(getParamId().grade).val();
+
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+                sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, param.departmentName);
+                sessionStorage.setItem(webStorageKey.SCIENCE_NAME, param.scienceName);
+                sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, param.organizeName);
+                sessionStorage.setItem(webStorageKey.GRADE, param.grade);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var schoolName = null;
+            var collegeName = null;
+            var departmentName = null;
+            var scienceName = null;
+            var organizeName = null;
+            var grade = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);
+                scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                grade = sessionStorage.getItem(webStorageKey.GRADE);
+            }
+            if (schoolName !== null) {
+                param.schoolName = schoolName;
+            }
+
+            if (collegeName !== null) {
+                param.collegeName = collegeName;
+            }
+
+            if (departmentName !== null) {
+                param.departmentName = departmentName;
+            }
+
+            if (scienceName !== null) {
+                param.scienceName = scienceName;
+            }
+
+            if (organizeName !== null) {
+                param.organizeName = organizeName;
+            }
+
+            if (grade !== null) {
+                param.grade = grade;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var schoolName = null;
+            var collegeName = null;
+            var departmentName = null;
+            var scienceName = null;
+            var organizeName = null;
+            var grade = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);
+                scienceName = sessionStorage.getItem(webStorageKey.SCIENCE_NAME);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                grade = sessionStorage.getItem(webStorageKey.GRADE);
+            }
+            if (schoolName !== null) {
+                $(getParamId().schoolName).val(schoolName);
+            }
+
+            if (collegeName !== null) {
+                $(getParamId().collegeName).val(collegeName);
+            }
+
+            if (departmentName !== null) {
+                $(getParamId().departmentName).val(departmentName);
+            }
+
+            if (scienceName !== null) {
+                $(getParamId().scienceName).val(scienceName);
+            }
+
+            if (organizeName !== null) {
+                $(getParamId().organizeName).val(organizeName);
+            }
+
+            if (grade !== null) {
+                $(getParamId().grade).val(grade);
+            }
         }
 
         /*

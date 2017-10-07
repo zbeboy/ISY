@@ -5,6 +5,22 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
     function ($, Handlebars) {
 
         /*
+        参数
+        */
+        var param = {
+            schoolName: '',
+            collegeName: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            SCHOOL_NAME: 'DATA_COLLEGE_SCHOOL_NAME_SEARCH',
+            COLLEGE_NAME:"DATA_COLLEGE_COLLEGE_NAME_SEARCH"
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -54,6 +70,7 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -85,58 +102,58 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
 
                         if (c.collegeIsDel == 0 || c.collegeIsDel == null) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.collegeId,
-                                        "college": c.collegeName
-                                    },
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.collegeId,
-                                        "college": c.collegeName
-                                    },
-                                    {
-                                        "name": "挂载",
-                                        "css": "mount",
-                                        "type": "default",
-                                        "id": c.collegeId,
-                                        "college": c.collegeName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.collegeId,
+                                            "college": c.collegeName
+                                        },
+                                        {
+                                            "name": "注销",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.collegeId,
+                                            "college": c.collegeName
+                                        },
+                                        {
+                                            "name": "挂载",
+                                            "css": "mount",
+                                            "type": "default",
+                                            "id": c.collegeId,
+                                            "college": c.collegeName
+                                        }
+                                    ]
+                                };
                         } else {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.collegeId,
-                                        "college": c.collegeName
-                                    },
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.collegeId,
-                                        "college": c.collegeName
-                                    },
-                                    {
-                                        "name": "挂载",
-                                        "css": "mount",
-                                        "type": "default",
-                                        "id": c.collegeId,
-                                        "college": c.collegeName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.collegeId,
+                                            "college": c.collegeName
+                                        },
+                                        {
+                                            "name": "恢复",
+                                            "css": "recovery",
+                                            "type": "warning",
+                                            "id": c.collegeId,
+                                            "college": c.collegeName
+                                        },
+                                        {
+                                            "name": "挂载",
+                                            "css": "mount",
+                                            "type": "default",
+                                            "id": c.collegeId,
+                                            "college": c.collegeName
+                                        }
+                                    ]
+                                };
                         }
 
                         return template(context);
@@ -197,6 +214,9 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
                 tableElement.delegate('.mount', "click", function () {
                     college_mount($(this).attr('data-id'));
                 });
+
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -223,14 +243,6 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
         }
 
         /*
-         参数
-         */
-        var param = {
-            schoolName: '',
-            collegeName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -241,8 +253,54 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
          初始化参数
          */
         function initParam() {
-            param.schoolName = $(getParamId().schoolName).val()
-            param.collegeName = $(getParamId().collegeName).val()
+            param.schoolName = $(getParamId().schoolName).val();
+            param.collegeName = $(getParamId().collegeName).val();
+
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+            }
+
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var schoolName = null;
+            var collegeName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+            }
+            if (schoolName !== null) {
+                param.schoolName = schoolName;
+            }
+
+            if (collegeName !== null) {
+                param.collegeName = collegeName;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var schoolName = null;
+            var collegeName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+            }
+            if (schoolName !== null) {
+                $(getParamId().schoolName).val(schoolName);
+            }
+
+            if (collegeName !== null) {
+                $(getParamId().collegeName).val(collegeName);
+            }
         }
 
         /*

@@ -26,6 +26,13 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         };
 
         /*
+        web storage key.
+        */
+        var webStorageKey = {
+            GRADUATION_DESIGN_TITLE: 'GRADUATE_DESIGN_RELEASE_TITLE_SEARCH'
+        };
+
+        /*
          参数id
          */
         var paramId = {
@@ -55,11 +62,9 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          * 刷新查询参数
          */
         function refreshSearch() {
-            var params = {
-                graduationDesignTitle: $(paramId.graduationDesignTitle).val()
-            };
-            param.pageNum = 0;
-            param.searchParams = JSON.stringify(params);
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.GRADUATION_DESIGN_TITLE, $(paramId.graduationDesignTitle).val());
+            }
         }
 
         /*
@@ -254,17 +259,52 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         }
 
         init();
+        initSearchInput();
 
         /**
          * 初始化数据
          */
         function init() {
+            initSearchContent();
             startLoading();
             $.get(web_path + ajax_url.release_data_url, param, function (data) {
                 endLoading();
                 createPage(data);
                 listData(data);
             });
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var graduationDesignTitle = null;
+            var params = {
+                graduationDesignTitle: ''
+            };
+            if (typeof(Storage) !== "undefined") {
+                graduationDesignTitle = sessionStorage.getItem(webStorageKey.GRADUATION_DESIGN_TITLE);
+            }
+            if (graduationDesignTitle !== null) {
+                params.graduationDesignTitle = graduationDesignTitle;
+            } else {
+                params.graduationDesignTitle = $(paramId.graduationDesignTitle).val();
+            }
+            param.pageNum = 0;
+            param.searchParams = JSON.stringify(params);
+        }
+
+        /*
+        初始化搜索框
+        */
+        function initSearchInput() {
+            var graduationDesignTitle = null;
+            if (typeof(Storage) !== "undefined") {
+                graduationDesignTitle = sessionStorage.getItem(webStorageKey.GRADUATION_DESIGN_TITLE);
+            }
+            if (graduationDesignTitle !== null) {
+                $(paramId.graduationDesignTitle).val(graduationDesignTitle);
+            }
         }
 
         /**

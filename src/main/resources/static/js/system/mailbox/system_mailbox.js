@@ -3,6 +3,20 @@
  */
 require(["jquery", "datatables.responsive"], function ($) {
 
+    /*
+    参数
+    */
+    var param = {
+        acceptMail: ''
+    };
+
+    /*
+     web storage key.
+    */
+    var webStorageKey = {
+        ACCEPT_MAIL: 'SYSTEM_MAILBOX_ACCEPT_MAIL_SEARCH'
+    };
+
     function getAjaxUrl() {
         return {
             mailboxes: '/web/system/mailbox/data'
@@ -51,6 +65,7 @@ require(["jquery", "datatables.responsive"], function ($) {
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
+                initSearchContent();
                 var searchParam = getParam();
                 d.extra_search = JSON.stringify(searchParam);
                 d.extra_page = getPage();
@@ -87,7 +102,11 @@ require(["jquery", "datatables.responsive"], function ($) {
         },
         "dom": "<'row'<'col-sm-3'l><'#global_button.col-sm-2'><'col-sm-7'<'#mytoolbox'>>r>" +
         "t" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        initComplete: function () {
+            // 初始化搜索框中内容
+            initSearchInput();
+        }
     });
 
     var html = '<input type="email" id="search_email" class="form-control input-sm" placeholder="邮箱" />' +
@@ -105,13 +124,6 @@ require(["jquery", "datatables.responsive"], function ($) {
     }
 
     /*
-     参数
-     */
-    var param = {
-        acceptMail: ''
-    };
-
-    /*
      得到参数
      */
     function getParam() {
@@ -120,6 +132,35 @@ require(["jquery", "datatables.responsive"], function ($) {
 
     function initParam() {
         param.acceptMail = $(getParamId().acceptMail).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.ACCEPT_MAIL, param.acceptMail);
+        }
+    }
+
+    /*
+        初始化搜索内容
+         */
+    function initSearchContent() {
+        var acceptMail = null;
+        if (typeof(Storage) !== "undefined") {
+            acceptMail = sessionStorage.getItem(webStorageKey.ACCEPT_MAIL);
+        }
+        if (acceptMail !== null) {
+            param.acceptMail = acceptMail;
+        }
+    }
+
+    /*
+   初始化搜索框
+    */
+    function initSearchInput() {
+        var acceptMail = null;
+        if (typeof(Storage) !== "undefined") {
+            acceptMail = sessionStorage.getItem(webStorageKey.ACCEPT_MAIL);
+        }
+        if (acceptMail !== null) {
+            $(getParamId().acceptMail).val(acceptMail);
+        }
     }
 
     function cleanParam() {

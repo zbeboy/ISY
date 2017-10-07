@@ -32,6 +32,14 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
         defenseGroupId: $(paramId.defenseGroupId).val()
     };
 
+    /*
+    web storage key.
+    */
+    var webStorageKey = {
+        REAL_NAME: 'GRADUATE_DESIGN_REPLAN_DIVIDE_REAL_NAME_SEARCH_' + init_page_param.graduationDesignReleaseId,
+        DEFENSE_GROUP_ID: 'GRADUATE_DESIGN_REPLAN_DIVIDE_DEFENSE_GROUP_ID_SEARCH_' + init_page_param.graduationDesignReleaseId
+    };
+
     // 刷新时选中菜单
     nav_active(ajax_url.back);
 
@@ -61,8 +69,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
      * 刷新查询参数
      */
     function refreshSearch() {
-        param.realName = $(paramId.realName).val();
-        param.defenseGroupId = $(paramId.defenseGroupId).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.REAL_NAME, $(paramId.realName).val());
+            sessionStorage.setItem(webStorageKey.DEFENSE_GROUP_ID, $(paramId.defenseGroupId).val());
+        }
     }
 
     /*
@@ -105,8 +115,10 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
 
     init();
     initGroupData();
+    initSearchInput();
 
     function init() {
+        initSearchContent();
         startLoading();
         $.get(web_path + ajax_url.data_url, param, function (data) {
             endLoading();
@@ -120,6 +132,43 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
                 });
             }
         });
+    }
+
+    /*
+    初始化搜索内容
+    */
+    function initSearchContent() {
+        var realName = null;
+        var defenseGroupId = null;
+        if (typeof(Storage) !== "undefined") {
+            realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+            defenseGroupId = sessionStorage.getItem(webStorageKey.DEFENSE_GROUP_ID);
+        }
+        if (realName !== null) {
+            param.realName = realName;
+        } else {
+            param.realName = $(paramId.realName).val();
+        }
+
+        if (defenseGroupId !== null) {
+            param.defenseGroupId = defenseGroupId;
+        } else {
+            param.defenseGroupId = $(paramId.defenseGroupId).val();
+        }
+
+    }
+
+    /*
+    初始化搜索框
+    */
+    function initSearchInput() {
+        var realName = null;
+        if (typeof(Storage) !== "undefined") {
+            realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+        }
+        if (realName !== null) {
+            $(paramId.realName).val(realName);
+        }
     }
 
     /**
@@ -169,6 +218,13 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address",
             return new Handlebars.SafeString(Handlebars.escapeExpression(this.defenseGroupName));
         });
         $(paramId.defenseGroupId).html(template(data));
+        var defenseGroupId = null;
+        if (typeof(Storage) !== "undefined") {
+            defenseGroupId = sessionStorage.getItem(webStorageKey.DEFENSE_GROUP_ID);
+        }
+        if (defenseGroupId !== null) {
+            $(paramId.defenseGroupId).val(defenseGroupId);
+        }
     }
 
     /***

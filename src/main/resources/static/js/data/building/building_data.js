@@ -5,6 +5,24 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     function ($, Handlebars) {
 
         /*
+        参数
+        */
+        var param = {
+            schoolName: '',
+            collegeName: '',
+            buildingName: ''
+        };
+
+        /*
+        web storage key.
+       */
+        var webStorageKey = {
+            SCHOOL_NAME: 'DATA_BUILDING_SCHOOL_NAME_SEARCH',
+            COLLEGE_NAME: 'DATA_BUILDING_COLLEGE_NAME_SEARCH',
+            BUILDING_NAME: 'DATA_BUILDING_BUILDING_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -53,6 +71,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -83,44 +102,44 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
                         if (c.buildingIsDel == 0 || c.buildingIsDel == null) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.buildingId,
-                                        "building": c.buildingName
-                                    },
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.buildingId,
-                                        "building": c.buildingName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.buildingId,
+                                            "building": c.buildingName
+                                        },
+                                        {
+                                            "name": "注销",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.buildingId,
+                                            "building": c.buildingName
+                                        }
+                                    ]
+                                };
                         } else {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.buildingId,
-                                        "building": c.buildingName
-                                    },
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.buildingId,
-                                        "building": c.buildingName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.buildingId,
+                                            "building": c.buildingName
+                                        },
+                                        {
+                                            "name": "恢复",
+                                            "css": "recovery",
+                                            "type": "warning",
+                                            "id": c.buildingId,
+                                            "building": c.buildingName
+                                        }
+                                    ]
+                                };
                         }
 
                         return template(context);
@@ -177,6 +196,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.recovery', "click", function () {
                     building_recovery($(this).attr('data-id'), $(this).attr('data-building'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -198,15 +219,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            schoolName: '',
-            collegeName: '',
-            buildingName: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -220,6 +232,61 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.schoolName = $(getParamId().schoolName).val();
             param.collegeName = $(getParamId().collegeName).val();
             param.buildingName = $(getParamId().buildingName).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+                sessionStorage.setItem(webStorageKey.BUILDING_NAME, param.buildingName);
+            }
+        }
+
+        /*
+        初始化搜索内容
+         */
+        function initSearchContent() {
+            var schoolName = null;
+            var collegeName = null;
+            var buildingName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
+            }
+            if (schoolName !== null) {
+                param.schoolName = schoolName;
+            }
+
+            if (collegeName !== null) {
+                param.collegeName = collegeName;
+            }
+
+            if (buildingName !== null) {
+                param.buildingName = buildingName;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var schoolName = null;
+            var collegeName = null;
+            var buildingName = null;
+            if (typeof(Storage) !== "undefined") {
+                schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
+                collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
+            }
+            if (schoolName !== null) {
+                $(getParamId().schoolName).val(schoolName);
+            }
+
+            if (collegeName !== null) {
+                $(getParamId().collegeName).val(collegeName);
+            }
+
+            if (buildingName !== null) {
+                $(getParamId().buildingName).val(buildingName);
+            }
         }
 
         /*

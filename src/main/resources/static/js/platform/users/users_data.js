@@ -87,6 +87,20 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
     };
 
     /*
+     web storage key.
+    */
+    var webStorageKey = {
+        PASS_REAL_NAME: 'PLATFORM_USERS_PASS_REAL_NAME_SEARCH',
+        PASS_USERNAME: 'PLATFORM_USERS_PASS_USERNAME_SEARCH',
+        PASS_MOBILE: 'PLATFORM_USERS_PASS_MOBILE_SEARCH',
+        PASS_USERS_TYPE: 'PLATFORM_USERS_PASS_USERS_TYPE_SEARCH',
+        WAIT_REAL_NAME: 'PLATFORM_USERS_WAIT_REAL_NAME_SEARCH',
+        WAIT_USERNAME: 'PLATFORM_USERS_WAIT_USERNAME_SEARCH',
+        WAIT_MOBILE: 'PLATFORM_USERS_WAIT_MOBILE_SEARCH',
+        WAIT_USERS_TYPE: 'PLATFORM_USERS_WAIT_USERS_TYPE_SEARCH'
+    };
+
+    /*
      得到参数
      */
     function getPassParam() {
@@ -102,6 +116,74 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         passParam.username = $(getPassParamId().username).val();
         passParam.mobile = $(getPassParamId().mobile).val();
         passParam.usersType = $(getPassParamId().usersType).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.PASS_REAL_NAME, passParam.realName);
+            sessionStorage.setItem(webStorageKey.PASS_USERNAME, passParam.username);
+            sessionStorage.setItem(webStorageKey.PASS_MOBILE, passParam.mobile);
+            sessionStorage.setItem(webStorageKey.PASS_USERS_TYPE, passParam.usersType);
+        }
+    }
+
+    /*
+     初始化搜索内容
+    */
+    function initPassSearchContent() {
+        var realName = null;
+        var username = null;
+        var mobile = null;
+        var usersType = null;
+        if (typeof(Storage) !== "undefined") {
+            realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
+            username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
+            mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
+            usersType = sessionStorage.getItem(webStorageKey.PASS_USERS_TYPE);
+        }
+        if (realName !== null) {
+            passParam.realName = realName;
+        }
+
+        if (username !== null) {
+            passParam.username = username;
+        }
+
+        if (mobile !== null) {
+            passParam.mobile = mobile;
+        }
+
+        if (usersType !== null) {
+            passParam.usersType = usersType;
+        }
+    }
+
+    /*
+    初始化搜索框
+    */
+    function initPassSearchInput() {
+        var realName = null;
+        var username = null;
+        var mobile = null;
+        var usersType = null;
+        if (typeof(Storage) !== "undefined") {
+            realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
+            username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
+            mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
+            usersType = sessionStorage.getItem(webStorageKey.PASS_USERS_TYPE);
+        }
+        if (realName !== null) {
+            $(getPassParamId().realName).val(realName);
+        }
+
+        if (username !== null) {
+            $(getPassParamId().username).val(username);
+        }
+
+        if (mobile !== null) {
+            $(getPassParamId().mobile).val(mobile);
+        }
+
+        if (usersType !== null) {
+            $(getPassParamId().usersType).val(usersType);
+        }
     }
 
     /**
@@ -220,6 +302,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initPassSearchContent();
                     var searchParam = getPassParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.extra_page = getPassPage();
@@ -358,6 +441,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 tableElement.delegate('.role', "click", function () {
                     role($(this).attr('data-id'), $(this).attr('data-role'));
                 });
+                // 初始化搜索框中内容
+                initPassSearchInput();
             }
         });
 
@@ -652,6 +737,74 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         waitParam.username = $(getWaitParamId().username).val();
         waitParam.mobile = $(getWaitParamId().mobile).val();
         waitParam.usersType = $(getWaitParamId().usersType).val();
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.WAIT_REAL_NAME, waitParam.realName);
+            sessionStorage.setItem(webStorageKey.WAIT_USERNAME, waitParam.username);
+            sessionStorage.setItem(webStorageKey.WAIT_MOBILE, waitParam.mobile);
+            sessionStorage.setItem(webStorageKey.WAIT_USERS_TYPE, waitParam.usersType);
+        }
+    }
+
+    /*
+     初始化搜索内容
+    */
+    function initWaitSearchContent() {
+        var realName = null;
+        var username = null;
+        var mobile = null;
+        var usersType = null;
+        if (typeof(Storage) !== "undefined") {
+            realName = sessionStorage.getItem(webStorageKey.WAIT_REAL_NAME);
+            username = sessionStorage.getItem(webStorageKey.WAIT_USERNAME);
+            mobile = sessionStorage.getItem(webStorageKey.WAIT_MOBILE);
+            usersType = sessionStorage.getItem(webStorageKey.WAIT_USERS_TYPE);
+        }
+        if (realName !== null) {
+            waitParam.realName = realName;
+        }
+
+        if (username !== null) {
+            waitParam.username = username;
+        }
+
+        if (mobile !== null) {
+            waitParam.mobile = mobile;
+        }
+
+        if (usersType !== null) {
+            waitParam.usersType = usersType;
+        }
+    }
+
+    /*
+    初始化搜索框
+    */
+    function initWaitSearchInput() {
+        var realName = null;
+        var username = null;
+        var mobile = null;
+        var usersType = null;
+        if (typeof(Storage) !== "undefined") {
+            realName = sessionStorage.getItem(webStorageKey.WAIT_REAL_NAME);
+            username = sessionStorage.getItem(webStorageKey.WAIT_USERNAME);
+            mobile = sessionStorage.getItem(webStorageKey.WAIT_MOBILE);
+            usersType = sessionStorage.getItem(webStorageKey.WAIT_USERS_TYPE);
+        }
+        if (realName !== null) {
+            $(getWaitParamId().realName).val(realName);
+        }
+
+        if (username !== null) {
+            $(getWaitParamId().username).val(username);
+        }
+
+        if (mobile !== null) {
+            $(getWaitParamId().mobile).val(mobile);
+        }
+
+        if (usersType !== null) {
+            $(getWaitParamId().usersType).val(usersType);
+        }
     }
 
     function cleanWaitParam() {
@@ -760,6 +913,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initWaitSearchContent();
                     var searchParam = getWaitParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.extra_page = getWaitPage();
@@ -867,6 +1021,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 waitId.delegate('#wait_deletes', "click", function () {
                     usersDeletes();
                 });
+                // 初始化搜索框中内容
+                initWaitSearchInput();
             }
         });
 

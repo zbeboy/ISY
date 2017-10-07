@@ -4,6 +4,24 @@
 require(["jquery", "datatables.responsive"],
     function ($) {
 
+        /*
+        参数
+        */
+        var param = {
+            username: '',
+            behavior: '',
+            ipAddress: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            USERNAME: 'SYSTEM_LOG_USERNAME_SEARCH',
+            BEHAVIOR: 'SYSTEM_LOG_BEHAVIOR_SEARCH',
+            IP_ADDRESS: 'SYSTEM_LOG_IP_ADDRESS_SEARCH'
+        };
+
         function getAjaxUrl() {
             return {
                 logs: '/web/system/log/data'
@@ -52,6 +70,7 @@ require(["jquery", "datatables.responsive"],
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                     d.extra_page = getPage();
@@ -89,7 +108,11 @@ require(["jquery", "datatables.responsive"],
             },
             "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-2'><'col-sm-8'<'#mytoolbox'>>r>" +
             "t" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>"
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            initComplete: function () {
+                // 初始化搜索框中内容
+                initSearchInput();
+            }
         });
 
         var html = '<input type="email" id="search_email" class="form-control input-sm" placeholder="邮箱" />' +
@@ -111,15 +134,6 @@ require(["jquery", "datatables.responsive"],
         }
 
         /*
-         参数
-         */
-        var param = {
-            username: '',
-            behavior: '',
-            ipAddress: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -130,6 +144,61 @@ require(["jquery", "datatables.responsive"],
             param.username = $(getParamId().username).val();
             param.behavior = $(getParamId().behavior).val();
             param.ipAddress = $(getParamId().ipAddress).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.USERNAME, param.username);
+                sessionStorage.setItem(webStorageKey.BEHAVIOR, param.behavior);
+                sessionStorage.setItem(webStorageKey.IP_ADDRESS, param.ipAddress);
+            }
+        }
+
+        /*
+        初始化搜索内容
+         */
+        function initSearchContent() {
+            var username = null;
+            var behavior = null;
+            var ipAddress = null;
+            if (typeof(Storage) !== "undefined") {
+                username = sessionStorage.getItem(webStorageKey.USERNAME);
+                behavior = sessionStorage.getItem(webStorageKey.BEHAVIOR);
+                ipAddress = sessionStorage.getItem(webStorageKey.IP_ADDRESS);
+            }
+            if (username !== null) {
+                param.username = username;
+            }
+
+            if (behavior !== null) {
+                param.behavior = behavior;
+            }
+
+            if (ipAddress !== null) {
+                param.ipAddress = ipAddress;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var username = null;
+            var behavior = null;
+            var ipAddress = null;
+            if (typeof(Storage) !== "undefined") {
+                username = sessionStorage.getItem(webStorageKey.USERNAME);
+                behavior = sessionStorage.getItem(webStorageKey.BEHAVIOR);
+                ipAddress = sessionStorage.getItem(webStorageKey.IP_ADDRESS);
+            }
+            if (username !== null) {
+                $(getParamId().username).val(username);
+            }
+
+            if (behavior !== null) {
+                $(getParamId().behavior).val(behavior);
+            }
+
+            if (ipAddress !== null) {
+                $(getParamId().ipAddress).val(ipAddress);
+            }
         }
 
         function cleanParam() {

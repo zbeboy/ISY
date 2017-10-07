@@ -5,6 +5,24 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
     function ($, Handlebars) {
 
         /*
+         参数
+        */
+        var param = {
+            applicationName: '',
+            applicationEnName: '',
+            applicationCode: ''
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            APPLICATION_NAME: 'SYSTEM_APPLICATION_APPLICATION_NAME_SEARCH',
+            APPLICATION_EN_NAME: 'SYSTEM_APPLICATION_APPLICATION_EN_NAME_SEARCH',
+            APPLICATION_CODE: 'SYSTEM_APPLICATION_APPLICATION_CODE_NAME_SEARCH'
+        };
+
+        /*
          ajax url
          */
         function getAjaxUrl() {
@@ -52,6 +70,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
+                    initSearchContent();
                     var searchParam = getParam();
                     d.extra_search = JSON.stringify(searchParam);
                 }
@@ -82,24 +101,24 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                     render: function (a, b, c, d) {
 
                         var context =
-                        {
-                            func: [
-                                {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.applicationId,
-                                    "application": c.applicationName
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.applicationId,
-                                    "application": c.applicationName
-                                }
-                            ]
-                        };
+                            {
+                                func: [
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.applicationId,
+                                        "application": c.applicationName
+                                    },
+                                    {
+                                        "name": "删除",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.applicationId,
+                                        "application": c.applicationName
+                                    }
+                                ]
+                            };
                         return template(context);
                     }
                 }
@@ -140,6 +159,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 tableElement.delegate('.del', "click", function () {
                     application_del($(this).attr('data-id'), $(this).attr('data-application'));
                 });
+                // 初始化搜索框中内容
+                initSearchInput();
             }
         });
 
@@ -166,15 +187,6 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         /*
-         参数
-         */
-        var param = {
-            applicationName: '',
-            applicationEnName: '',
-            applicationCode: ''
-        };
-
-        /*
          得到参数
          */
         function getParam() {
@@ -188,6 +200,61 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.applicationName = $(getParamId().applicationName).val();
             param.applicationEnName = $(getParamId().applicationEnName).val();
             param.applicationCode = $(getParamId().applicationCode).val();
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.APPLICATION_NAME, param.applicationName);
+                sessionStorage.setItem(webStorageKey.APPLICATION_EN_NAME, param.applicationEnName);
+                sessionStorage.setItem(webStorageKey.APPLICATION_CODE, param.applicationCode);
+            }
+        }
+
+        /*
+        初始化搜索内容
+        */
+        function initSearchContent() {
+            var applicationName = null;
+            var applicationEnName = null;
+            var applicationCode = null;
+            if (typeof(Storage) !== "undefined") {
+                applicationName = sessionStorage.getItem(webStorageKey.APPLICATION_NAME);
+                applicationEnName = sessionStorage.getItem(webStorageKey.APPLICATION_EN_NAME);
+                applicationCode = sessionStorage.getItem(webStorageKey.APPLICATION_CODE);
+            }
+            if (applicationName !== null) {
+                param.applicationName = applicationName;
+            }
+
+            if (applicationEnName !== null) {
+                param.applicationEnName = applicationEnName;
+            }
+
+            if (applicationCode !== null) {
+                param.applicationCode = applicationCode;
+            }
+        }
+
+        /*
+       初始化搜索框
+        */
+        function initSearchInput() {
+            var applicationName = null;
+            var applicationEnName = null;
+            var applicationCode = null;
+            if (typeof(Storage) !== "undefined") {
+                applicationName = sessionStorage.getItem(webStorageKey.APPLICATION_NAME);
+                applicationEnName = sessionStorage.getItem(webStorageKey.APPLICATION_EN_NAME);
+                applicationCode = sessionStorage.getItem(webStorageKey.APPLICATION_CODE);
+            }
+            if (applicationName !== null) {
+                $(getParamId().applicationName).val(applicationName);
+            }
+
+            if (applicationEnName !== null) {
+                $(getParamId().applicationEnName).val(applicationEnName);
+            }
+
+            if (applicationCode !== null) {
+                $(getParamId().applicationCode).val(applicationCode);
+            }
         }
 
         /*
