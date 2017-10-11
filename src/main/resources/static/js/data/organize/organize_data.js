@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-25.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "lodash", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, D) {
 
         /*
         参数
@@ -23,9 +23,9 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             SCHOOL_NAME: 'DATA_ORGANIZE_SCHOOL_NAME_SEARCH',
             COLLEGE_NAME: 'DATA_ORGANIZE_COLLEGE_NAME_SEARCH',
             DEPARTMENT_NAME: 'DATA_ORGANIZE_DEPARTMENT_NAME_SEARCH',
-            SCIENCE_NAME:'DATA_ORGANIZE_SCIENCE_NAME_SEARCH',
-            ORGANIZE_NAME:'DATA_ORGANIZE_ORGANIZE_NAME_SEARCH',
-            GRADE:'DATA_ORGANIZE_GRADE_SEARCH'
+            SCIENCE_NAME: 'DATA_ORGANIZE_SCIENCE_NAME_SEARCH',
+            ORGANIZE_NAME: 'DATA_ORGANIZE_ORGANIZE_NAME_SEARCH',
+            GRADE: 'DATA_ORGANIZE_GRADE_SEARCH'
         };
 
         /*
@@ -124,44 +124,44 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
                         if (c.organizeIsDel == 0 || c.organizeIsDel == null) {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.organizeId,
-                                        "organize": c.organizeName
-                                    },
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.organizeId,
-                                        "organize": c.organizeName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.organizeId,
+                                            "organize": c.organizeName
+                                        },
+                                        {
+                                            "name": "注销",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.organizeId,
+                                            "organize": c.organizeName
+                                        }
+                                    ]
+                                };
                         } else {
                             context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.organizeId,
-                                        "organize": c.organizeName
-                                    },
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.organizeId,
-                                        "organize": c.organizeName
-                                    }
-                                ]
-                            };
+                                {
+                                    func: [
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.organizeId,
+                                            "organize": c.organizeName
+                                        },
+                                        {
+                                            "name": "恢复",
+                                            "css": "recovery",
+                                            "type": "warning",
+                                            "id": c.organizeId,
+                                            "organize": c.organizeName
+                                        }
+                                    ]
+                                };
                         }
 
                         return template(context);
@@ -262,13 +262,20 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             param.grade = $(getParamId().grade).val();
 
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
-                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, dealSearchUndefinedValue(param.schoolName));
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, dealSearchUndefinedValue(param.collegeName));
                 sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, param.departmentName);
                 sessionStorage.setItem(webStorageKey.SCIENCE_NAME, param.scienceName);
                 sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, param.organizeName);
                 sessionStorage.setItem(webStorageKey.GRADE, param.grade);
             }
+        }
+
+        /*
+        处理未定义的值
+         */
+        function dealSearchUndefinedValue(param) {
+            return D.isUndefined(param) ? '' : param;
         }
 
         /*
