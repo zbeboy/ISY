@@ -64,7 +64,7 @@
         <webjars.sockjs-client.version>1.1.1</webjars.sockjs-client.version>
         <webjars.stomp-websocket.version>2.3.3</webjars.stomp-websocket.version>
         <webjars.lato.version>0.3.0</webjars.lato.version>
-        <webjars.lodash.version>4.15.0</webjars.lodash.version>
+        <webjars.lodash.version>4.17.4</webjars.lodash.version>
     </properties>
 
     <!-- Inherit defaults from Spring Boot -->

@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-10-16.
  */
-require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenger"],
-    function ($, Handlebars) {
+require(["jquery", "handlebars", "lodash", "datatables.responsive", "check.all", "messenger"],
+    function ($, Handlebars, D) {
         /**
          * 角色数据展现
          * @param data json数据
@@ -102,6 +102,13 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             return passParam;
         }
 
+        /*
+        处理未定义的值
+         */
+        function dealSearchUndefinedValue(param) {
+            return D.isUndefined(param) ? '' : param;
+        }
+
         /**
          * init pass tab param.
          * @returns {{username: (*|jQuery), mobile: (*|jQuery), usersType: (*|jQuery)}}
@@ -118,8 +125,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             passParam.realName = $(getPassParamId().realName).val();
             passParam.sex = $(getPassParamId().sex).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.PASS_SCHOOL, passParam.school);
-                sessionStorage.setItem(webStorageKey.PASS_COLLEGE, passParam.college);
+                sessionStorage.setItem(webStorageKey.PASS_SCHOOL, dealSearchUndefinedValue(passParam.school));
+                sessionStorage.setItem(webStorageKey.PASS_COLLEGE, dealSearchUndefinedValue(passParam.college));
                 sessionStorage.setItem(webStorageKey.PASS_DEPARTMENT, passParam.department);
                 sessionStorage.setItem(webStorageKey.PASS_POST, passParam.post);
                 sessionStorage.setItem(webStorageKey.PASS_STAFF_NUMBER, passParam.staffNumber);
@@ -876,8 +883,8 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             waitParam.staffNumber = $(getWaitParamId().staffNumber).val();
             waitParam.username = $(getWaitParamId().username).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, waitParam.school);
-                sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, waitParam.college);
+                sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, dealSearchUndefinedValue(waitParam.school));
+                sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, dealSearchUndefinedValue(waitParam.college));
                 sessionStorage.setItem(webStorageKey.WAIT_DEPARTMENT, waitParam.department);
                 sessionStorage.setItem(webStorageKey.WAIT_MOBILE, waitParam.mobile);
                 sessionStorage.setItem(webStorageKey.WAIT_STAFF_NUMBER, waitParam.staffNumber);

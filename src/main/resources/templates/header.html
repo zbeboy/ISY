@@ -3,10 +3,12 @@
 <head th:fragment="header(metas,title,links)">
     <!-- Common metas -->
     <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta http-equiv="keywords" name="keywords" content="" th:content="#{web.meta.keywords}"/>
-    <meta http-equiv="description" name="description" content="" th:content="#{web.meta.description}"/>
+    <!-- 360 browser default use webkit -->
+    <meta name="renderer" content="webkit"/>
+    <meta name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta name="description" content="" th:content="#{web.meta.description}"/>
     <meta name="author" content="" th:content="#{web.meta.author}"/>
     <!--/* Per-page placeholder for additional metas */-->
     <th:block th:replace="${metas}" />
