@@ -306,7 +306,11 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
                     phrase: 'Retrying TIME',
                     action: function () {
                         msg.cancel();
-                        validRoleName();
+                        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
+                            validSchool();
+                        } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                            validRoleName();
+                        }
                     }
                 },
                 cancel: {
@@ -319,11 +323,36 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         });
     }
 
+    function validSchool() {
+        var schoolId = param.schoolId;
+        if (Number(schoolId) <= 0) {
+            Messenger().post({
+                message: '请选择学校',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validCollege();
+        }
+    }
+
+    function validCollege() {
+        var collegeId = param.collegeId;
+        if (Number(collegeId) <= 0) {
+            Messenger().post({
+                message: '请选择院',
+                type: 'error',
+                showCloseButton: true
+            });
+        } else {
+            validRoleName();
+        }
+    }
+
     /**
      * 添加时检验并提交数据
      */
     function validRoleName() {
-        initParam();
         var roleName = param.roleName.trim();
         if (roleName.length <= 0 || roleName.length > 50) {
             Messenger().post({
@@ -372,7 +401,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      * 发送数据到后台
      */
     function sendAjax() {
-        initParam();
         Messenger().run({
             successMessage: '保存数据成功',
             errorMessage: '保存数据失败',
