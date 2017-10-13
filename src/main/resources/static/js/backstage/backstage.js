@@ -51,7 +51,8 @@ requirejs.config({
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
         "icheck": web_path + "/plugin/icheck/icheck.min",
         "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min",
-        "sb-admin": web_path + "/plugin/sb-admin-2/js/sb-admin-2.min"
+        "sb-admin": web_path + "/plugin/sb-admin-2/js/sb-admin-2.min",
+        "lodash_plugin": web_path + "/js/util/lodash_plugin"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {

@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-24.
  */
-require(["jquery", "handlebars", "lodash", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, D) {
+require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, DP) {
 
         /*
          参数
@@ -240,18 +240,11 @@ require(["jquery", "handlebars", "lodash", "datatables.responsive", "check.all",
             param.scienceName = $(getParamId().scienceName).val();
 
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, dealSearchUndefinedValue(param.schoolName));
-                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, dealSearchUndefinedValue(param.collegeName));
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName));
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName));
                 sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, param.departmentName);
                 sessionStorage.setItem(webStorageKey.SCIENCE_NAME, param.scienceName);
             }
-        }
-
-        /*
-        处理未定义的值
-         */
-        function dealSearchUndefinedValue(param) {
-            return D.isUndefined(param) ? '' : param;
         }
 
         /*
