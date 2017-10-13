@@ -6,7 +6,7 @@ requirejs.config({
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
+        "attribute_extensions": web_path + "/js/util/attribute_extensions",
         "emails": web_path + "/js/util/emails",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
@@ -24,7 +24,7 @@ requirejs.config({
 
 // require(["module/name", ...], function(params){ ... });
 require(["jquery", "handlebars", "emails", "jquery.showLoading", "csrf",
-    "com", "bootstrap", "jquery.entropizer", "bootstrap-typeahead"], function ($, Handlebars, emails) {
+    "attribute_extensions", "bootstrap", "jquery.entropizer", "bootstrap-typeahead"], function ($, Handlebars, emails) {
 
     /*
      ajax url

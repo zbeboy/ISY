@@ -2,7 +2,7 @@
  * Created by lenovo on 2016-10-19.
  */
 require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength", "jquery.showLoading", "com"], function ($, Handlebars, constants, nav_active) {
+    "bootstrap-maxlength", "jquery.showLoading", "attribute_extensions"], function ($, Handlebars, constants, nav_active) {
 
     /*
      ajax url.

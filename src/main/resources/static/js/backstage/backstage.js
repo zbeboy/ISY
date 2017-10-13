@@ -16,7 +16,7 @@ requirejs.config({
         "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
         "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
+        "attribute_extensions": web_path + "/js/util/attribute_extensions",
         "nav": web_path + "/js/util/nav",
         "nav_active": web_path + "/js/util/nav_active",
         "files": web_path + "/js/util/files",

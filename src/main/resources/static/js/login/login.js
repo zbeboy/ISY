@@ -5,7 +5,7 @@ requirejs.config({
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
+        "attribute_extensions": web_path + "/js/util/attribute_extensions",
         "emails": web_path + "/js/util/emails",
         "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
             web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"]
@@ -18,7 +18,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "com", "bootstrap-typeahead", "bootstrap-notify"], function ($, domready, emails) {
+require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "attribute_extensions", "bootstrap-typeahead", "bootstrap-notify"], function ($, domready, emails) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
