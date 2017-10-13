@@ -95,7 +95,7 @@ require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csr
          */
         var param = {
             password: $(paramId.password).val().trim(),
-            confirmPassword: $(paramId.confirmPassword).val().trim(),
+            confirmPassword: $(paramId.confirmPassword).val().trim()
         };
 
         /*

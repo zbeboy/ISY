@@ -147,7 +147,7 @@ requirejs.onError = function (err) {
 };
 
 require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "sockjs-client", "moment-with-locales",
-        "csrf", "stomp-websocket", "com", "jquery.address", "nav", "bootstrap-notify"],
+        "csrf", "stomp-websocket", "jquery.address", "nav", "bootstrap-notify"],
     function ($, loadingView, domready, Handlebars, SockJS, moment, csrf) {
         domready(function () {
             //This function is called once the DOM is ready.
