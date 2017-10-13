@@ -325,7 +325,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files.toSize(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
@@ -358,7 +358,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files.toSize(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {

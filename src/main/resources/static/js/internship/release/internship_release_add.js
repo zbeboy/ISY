@@ -605,7 +605,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                 }
 
                 if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
-                    (init_page_param.departmentId == -1 && init_page_param.collegeId != -1))
+                        (init_page_param.departmentId == -1 && init_page_param.collegeId != -1))
                     && Number(param.departmentId) <= 0) {
                     Messenger().post({
                         message: '请选择系',
@@ -616,8 +616,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                 }
 
                 if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
-                    (init_page_param.departmentId == -1 && init_page_param.collegeId != -1) ||
-                    (init_page_param.departmentId != -1 && init_page_param.collegeId == -1))
+                        (init_page_param.departmentId == -1 && init_page_param.collegeId != -1) ||
+                        (init_page_param.departmentId != -1 && init_page_param.collegeId == -1))
                     && param.grade === '0') {
                     Messenger().post({
                         message: '请选择年级',
@@ -648,13 +648,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                     progress + '%'
                 );
             }
-        }).on('fileuploadadd', function(evt, data) {
+        }).on('fileuploadadd', function (evt, data) {
             var isOk = true;
             var $this = $(this);
             var validation = data.process(function () {
                 return $this.fileupload('process', data);
             });
-            validation.fail(function(data) {
+            validation.fail(function (data) {
                 isOk = false;
                 Messenger().post({
                     message: '上传失败: ' + data.files[0].error,
@@ -693,7 +693,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files.toSize(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {
