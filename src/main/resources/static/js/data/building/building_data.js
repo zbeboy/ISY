@@ -1,8 +1,8 @@
 /**
  * Created by zbeboy on 2017/5/27.
  */
-require(["jquery", "handlebars", "lodash", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, D) {
+require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, DP) {
 
         /*
         参数
@@ -233,17 +233,10 @@ require(["jquery", "handlebars", "lodash", "datatables.responsive", "check.all",
             param.collegeName = $(getParamId().collegeName).val();
             param.buildingName = $(getParamId().buildingName).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, dealSearchUndefinedValue(param.schoolName));
-                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, dealSearchUndefinedValue(param.collegeName));
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName));
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName));
                 sessionStorage.setItem(webStorageKey.BUILDING_NAME, param.buildingName);
             }
-        }
-
-        /*
-        处理未定义的值
-         */
-        function dealSearchUndefinedValue(param) {
-            return D.isUndefined(param) ? '' : param;
         }
 
         /*

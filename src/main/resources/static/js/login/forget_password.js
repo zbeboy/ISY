@@ -6,7 +6,7 @@ requirejs.config({
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com"
+        "attribute_extensions": web_path + "/js/util/attribute_extensions"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -17,7 +17,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csrf", "com"], function ($, domready) {
+require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csrf", "attribute_extensions"], function ($, domready) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate

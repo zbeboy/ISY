@@ -286,7 +286,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
             });
 
             Handlebars.registerHelper('size', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(files(this.size)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(files.toSize(this.size)));
             });
 
             Handlebars.registerHelper('lastPath', function () {

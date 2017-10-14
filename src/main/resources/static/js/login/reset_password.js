@@ -6,7 +6,7 @@ requirejs.config({
     paths: {
         "jquery.showLoading": web_path + "/plugin/loading/js/jquery.showLoading.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
+        "attribute_extensions": web_path + "/js/util/attribute_extensions",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min"
     },
@@ -19,7 +19,7 @@ requirejs.config({
     }
 });
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csrf", "com", "jquery.entropizer"], function ($, domready) {
+require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csrf", "attribute_extensions", "jquery.entropizer"], function ($, domready) {
     domready(function () {
         //This function is called once the DOM is ready.
         //It will be safe to query the DOM and manipulate
@@ -95,7 +95,7 @@ require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csr
          */
         var param = {
             password: $(paramId.password).val().trim(),
-            confirmPassword: $(paramId.confirmPassword).val().trim(),
+            confirmPassword: $(paramId.confirmPassword).val().trim()
         };
 
         /*

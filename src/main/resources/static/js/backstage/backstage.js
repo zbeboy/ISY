@@ -16,7 +16,7 @@ requirejs.config({
         "datatables.net": web_path + "/plugin/datatables/js/jquery.dataTables.min",
         "datatables.bootstrap": web_path + "/plugin/datatables/js/dataTables.bootstrap.min",
         "csrf": web_path + "/js/util/csrf",
-        "com": web_path + "/js/util/com",
+        "attribute_extensions": web_path + "/js/util/attribute_extensions",
         "nav": web_path + "/js/util/nav",
         "nav_active": web_path + "/js/util/nav_active",
         "files": web_path + "/js/util/files",
@@ -51,7 +51,8 @@ requirejs.config({
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
         "icheck": web_path + "/plugin/icheck/icheck.min",
         "tablesaw": web_path + "/plugin/tablesaw/tablesaw.jquery.min",
-        "sb-admin": web_path + "/plugin/sb-admin-2/js/sb-admin-2.min"
+        "sb-admin": web_path + "/plugin/sb-admin-2/js/sb-admin-2.min",
+        "lodash_plugin": web_path + "/js/util/lodash_plugin"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -146,7 +147,7 @@ requirejs.onError = function (err) {
 };
 
 require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "sockjs-client", "moment-with-locales",
-        "csrf", "stomp-websocket", "com", "jquery.address", "nav", "bootstrap-notify"],
+        "csrf", "stomp-websocket", "jquery.address", "nav", "bootstrap-notify"],
     function ($, loadingView, domready, Handlebars, SockJS, moment, csrf) {
         domready(function () {
             //This function is called once the DOM is ready.
