@@ -770,11 +770,7 @@ public class GraduationDesignReplanController {
                     }
                 }
                 if (isEncrypt) {
-                    final String encryptStr = "******";
-                    defenseOrderBeens.forEach(i -> {
-                        i.setStudentMobile(encryptStr);
-                        i.setScoreTypeName(encryptStr);
-                    });
+                    defenseOrderBeens.forEach(i -> i.setStudentMobile("******"));
                 }
             }
         }
