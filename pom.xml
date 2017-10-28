@@ -33,6 +33,15 @@
         <xmlbeans.version>2.6.0</xmlbeans.version>
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
 
+        <!-- support kotlin -->
+        <kotlin.version>1.1.51</kotlin.version>
+        <!--
+        To make your builds faster, you can enable incremental compilation for Maven (supported since Kotlin 1.1.2).
+        In order to do that, define the kotlin.compiler.incremental property:
+        Alternatively, run your build with the -Dkotlin.compiler.incremental=true option.
+        -->
+        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+
         <!-- poi relation-->
         <org.apache.poi.version>3.17</org.apache.poi.version>
         <ooxml-schemas.version>1.3</ooxml-schemas.version>
@@ -371,6 +380,20 @@
             </exclusions>
         </dependency>
 
+        <!-- support kotlin -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jre8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- webjars bootstrap -->
         <dependency>
             <groupId>org.webjars</groupId>
@@ -566,6 +589,61 @@
                         </configuration>
                     </plugin>
 
+                    <plugin>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <version>${kotlin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals> <goal>compile</goal> </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>test-compile</id>
+                                <goals> <goal>test-compile</goal> </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <executions>
+                            <!-- Replacing default-compile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-compile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- Replacing default-testCompile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-testCompile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>java-compile</id>
+                                <phase>compile</phase>
+                                <goals> <goal>compile</goal> </goals>
+                            </execution>
+                            <execution>
+                                <id>java-test-compile</id>
+                                <phase>test-compile</phase>
+                                <goals> <goal>testCompile</goal> </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!-- support git info -->
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
@@ -615,6 +693,61 @@
                         </configuration>
                     </plugin>
 
+                    <plugin>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <version>${kotlin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals> <goal>compile</goal> </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>test-compile</id>
+                                <goals> <goal>test-compile</goal> </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <executions>
+                            <!-- Replacing default-compile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-compile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- Replacing default-testCompile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-testCompile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>java-compile</id>
+                                <phase>compile</phase>
+                                <goals> <goal>compile</goal> </goals>
+                            </execution>
+                            <execution>
+                                <id>java-test-compile</id>
+                                <phase>test-compile</phase>
+                                <goals> <goal>testCompile</goal> </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!-- support git info -->
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
@@ -638,6 +771,62 @@
                             </arguments>
                         </configuration>
                     </plugin>
+
+                    <plugin>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <version>${kotlin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals> <goal>compile</goal> </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>test-compile</id>
+                                <goals> <goal>test-compile</goal> </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <executions>
+                            <!-- Replacing default-compile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-compile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- Replacing default-testCompile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-testCompile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>java-compile</id>
+                                <phase>compile</phase>
+                                <goals> <goal>compile</goal> </goals>
+                            </execution>
+                            <execution>
+                                <id>java-test-compile</id>
+                                <phase>test-compile</phase>
+                                <goals> <goal>testCompile</goal> </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!-- support git info -->
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
