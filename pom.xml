@@ -26,26 +26,25 @@
     <properties>
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
-        <fastJson.version>1.2.31</fastJson.version>
-        <jsoup.version>1.10.2</jsoup.version>
+        <fastJson.version>1.2.39</fastJson.version>
+        <jsoup.version>1.10.3</jsoup.version>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
-        <org.dom4j.version>2.0.0</org.dom4j.version>
-        <xmlbeans.version>2.3.0</xmlbeans.version>
+        <org.dom4j.version>2.1.0</org.dom4j.version>
+        <xmlbeans.version>2.6.0</xmlbeans.version>
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
 
         <!-- poi relation-->
-        <org.apache.poi.version>3.16</org.apache.poi.version>
+        <org.apache.poi.version>3.17</org.apache.poi.version>
         <ooxml-schemas.version>1.3</ooxml-schemas.version>
-        <org.apache.commons.compress.version>1.14</org.apache.commons.compress.version>
+        <org.apache.commons.compress.version>1.15</org.apache.commons.compress.version>
 
         <jcaptcha.version>2.0-alpha-1</jcaptcha.version>
         <jcaptcha-api.verison>1.0</jcaptcha-api.verison>
 
-        <commons-io.verson>2.4</commons-io.verson>
-        <vavr.version>0.9.0</vavr.version>
+        <commons-io.verson>2.6</commons-io.verson>
 
         <!-- thymeleaf -->
-        <thymeleaf.version>3.0.6.RELEASE</thymeleaf.version>
+        <thymeleaf.version>3.0.8.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
         <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 
@@ -71,7 +70,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.7.RELEASE</version>
+        <version>1.5.8.RELEASE</version>
     </parent>
 
     <!-- Add typical dependencies for a web application -->
@@ -298,13 +297,6 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-        </dependency>
-
-        <!-- vavr -->
-        <dependency>
-            <groupId>io.vavr</groupId>
-            <artifactId>vavr</artifactId>
-            <version>${vavr.version}</version>
         </dependency>
 
         <!-- dom4j -->

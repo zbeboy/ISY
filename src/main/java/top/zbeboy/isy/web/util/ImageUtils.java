@@ -49,8 +49,6 @@ public class ImageUtils {
         } catch (IOException e) {
             log.error("Get file size error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(input);
         }
     }
 
@@ -71,8 +69,6 @@ public class ImageUtils {
         } catch (FileNotFoundException e) {
             log.error("Get file size error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(input);
         }
     }
 
@@ -179,9 +175,6 @@ public class ImageUtils {
         } catch (Exception e) {
             log.error("Resize error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(input);
-            IOUtils.closeQuietly(output);
         }
 
     }
@@ -239,9 +232,6 @@ public class ImageUtils {
         } catch (FileNotFoundException e) {
             log.error("Resize error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(input);
-            IOUtils.closeQuietly(output);
         }
     }
 
@@ -326,9 +316,6 @@ public class ImageUtils {
         } catch (Exception e) {
             log.error("Crop error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(input);
-            IOUtils.closeQuietly(output);
         }
     }
 
@@ -420,9 +407,6 @@ public class ImageUtils {
         } catch (FileNotFoundException e) {
             log.error("Optimize error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(is);
-            IOUtils.closeQuietly(os);
         }
     }
 
@@ -445,9 +429,6 @@ public class ImageUtils {
         } catch (IOException e) {
             log.error("MakeRoundedCorner error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(in);
         }
 
     }
@@ -530,9 +511,6 @@ public class ImageUtils {
         } catch (IOException e) {
             log.error("makeRotate error : {}", e);
             throw new Exception(e);
-        } finally {
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(in);
         }
 
     }
