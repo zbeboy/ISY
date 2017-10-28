@@ -10,9 +10,10 @@
 4.Maven 3.5.0 +;  
 5.Node 6 +;  
 6.Elasticsearch 2.4.5;  
-7.Redis last version;  
+7.Redis 3.0.504;  
+8.Kotlin 1.51.
 # 安装
-1.Clone 代码;  
+1.Clone https://github.com/zbeboy/ISY.git;  
 2.配置application.properties,其它环境配置仅供开发者使用;  
 3.额外配置(settings目录),仅供开发者使用;  
 4.安装lombok插件.
