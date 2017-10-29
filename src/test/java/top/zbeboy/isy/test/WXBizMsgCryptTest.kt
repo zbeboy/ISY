@@ -25,14 +25,18 @@ class WXBizMsgCryptTest {
     private val xmlFormat = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%1\$s]]></Encrypt></xml>"
     private val randomStr = "aaaabbbbccccdddd"
 
-    @BeforeClass
-    @Throws(Exception::class)
-    fun setUpBeforeClass() {
-    }
+    companion object {
+        @BeforeClass
+        @Throws(Exception::class)
+        @JvmStatic
+        fun setUpBeforeClass() {
+        }
 
-    @AfterClass
-    @Throws(Exception::class)
-    fun tearDownAfterClass() {
+        @AfterClass
+        @Throws(Exception::class)
+        @JvmStatic
+        fun tearDownAfterClass() {
+        }
     }
 
     @Before
