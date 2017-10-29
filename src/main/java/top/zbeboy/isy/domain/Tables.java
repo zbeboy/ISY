@@ -62,7 +62,6 @@ import top.zbeboy.isy.domain.tables.PersistentLogins;
 import top.zbeboy.isy.domain.tables.PoliticalLandscape;
 import top.zbeboy.isy.domain.tables.Role;
 import top.zbeboy.isy.domain.tables.RoleApplication;
-import top.zbeboy.isy.domain.tables.SchemaVersion;
 import top.zbeboy.isy.domain.tables.School;
 import top.zbeboy.isy.domain.tables.Schoolroom;
 import top.zbeboy.isy.domain.tables.Science;
@@ -368,11 +367,6 @@ public class Tables {
      * The table <code>isy.role_application</code>.
      */
     public static final RoleApplication ROLE_APPLICATION = top.zbeboy.isy.domain.tables.RoleApplication.ROLE_APPLICATION;
-
-    /**
-     * The table <code>isy.schema_version</code>.
-     */
-    public static final SchemaVersion SCHEMA_VERSION = top.zbeboy.isy.domain.tables.SchemaVersion.SCHEMA_VERSION;
 
     /**
      * The table <code>isy.school</code>.

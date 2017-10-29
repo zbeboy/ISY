@@ -70,7 +70,6 @@ import top.zbeboy.isy.domain.tables.PersistentLogins;
 import top.zbeboy.isy.domain.tables.PoliticalLandscape;
 import top.zbeboy.isy.domain.tables.Role;
 import top.zbeboy.isy.domain.tables.RoleApplication;
-import top.zbeboy.isy.domain.tables.SchemaVersion;
 import top.zbeboy.isy.domain.tables.School;
 import top.zbeboy.isy.domain.tables.Schoolroom;
 import top.zbeboy.isy.domain.tables.Science;
@@ -97,7 +96,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = 1277958725;
+    private static final long serialVersionUID = -7397023;
 
     /**
      * The reference instance of <code>isy</code>
@@ -385,11 +384,6 @@ public class Isy extends SchemaImpl {
     public final RoleApplication ROLE_APPLICATION = top.zbeboy.isy.domain.tables.RoleApplication.ROLE_APPLICATION;
 
     /**
-     * The table <code>isy.schema_version</code>.
-     */
-    public final SchemaVersion SCHEMA_VERSION = top.zbeboy.isy.domain.tables.SchemaVersion.SCHEMA_VERSION;
-
-    /**
      * The table <code>isy.school</code>.
      */
     public final School SCHOOL = top.zbeboy.isy.domain.tables.School.SCHOOL;
@@ -525,7 +519,6 @@ public class Isy extends SchemaImpl {
             PoliticalLandscape.POLITICAL_LANDSCAPE,
             Role.ROLE,
             RoleApplication.ROLE_APPLICATION,
-            SchemaVersion.SCHEMA_VERSION,
             School.SCHOOL,
             Schoolroom.SCHOOLROOM,
             Science.SCIENCE,

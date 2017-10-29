@@ -12,13 +12,16 @@ import top.zbeboy.isy.config.ISYProperties
 @SpringBootApplication
 @EnableCaching
 @EnableConfigurationProperties(ISYProperties::class)
-open class Application
-
-/**
- * web start .
- *
- * @param args others params.
- */
-fun main(args: Array<String>) {
-    SpringApplication.run(Application::class.java, *args)
+open class Application {
+    companion object {
+        /**
+         * web start .
+         *
+         * @param args others params.
+         */
+        @JvmStatic
+        fun main(args: Array<String>) {
+            SpringApplication.run(Application::class.java, *args)
+        }
+    }
 }
