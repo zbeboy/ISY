@@ -1,4 +1,4 @@
-package top.zbeboy.isy.config
+package top.zbeboy.isy.service.cache
 
 /**
  * 缓存相关key 与 有效期配置

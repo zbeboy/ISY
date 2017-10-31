@@ -18,7 +18,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import top.zbeboy.isy.config.CacheBook;
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.pojos.Role;
