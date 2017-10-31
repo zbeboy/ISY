@@ -36,8 +36,8 @@ open class AsyncConfiguration : AsyncConfigurer {
         log.debug("Creating Async Task Executor")
         val executor = ThreadPoolTaskExecutor()
         executor.corePoolSize = this.isyProperties?.getAsync()!!.corePoolSize
-        executor.maxPoolSize = this.isyProperties.getAsync()!!.maxPoolSize
-        executor.setQueueCapacity(this.isyProperties.getAsync()!!.queueCapacity)
+        executor.maxPoolSize = this.isyProperties.getAsync().maxPoolSize
+        executor.setQueueCapacity(this.isyProperties.getAsync().queueCapacity)
         executor.threadNamePrefix = "isy-app-Executor-"
         return ExceptionHandlingAsyncTaskExecutor(executor)
     }

@@ -76,7 +76,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "attribu
          检验正则
          */
         var valid_regex = {
-            email_regex: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
+            email_regex: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+(([.-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
             password_regex: /^[a-zA-Z0-9]\w{5,17}$/,
             captcha_regex: /^\w+$/
         };
@@ -158,6 +158,7 @@ require(["jquery", "requirejs-domready", "emails", "bootstrap", "csrf", "attribu
         $('#jcaptcha').click(function () {
             changeJcaptcha();
             $(paramId.captcha).val('');
+            $(paramId.captcha).focus();
         });
 
         /**
