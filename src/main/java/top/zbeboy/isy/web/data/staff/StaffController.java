@@ -3,8 +3,6 @@ package top.zbeboy.isy.web.data.staff;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.jooq.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
@@ -24,7 +22,6 @@ import top.zbeboy.isy.glue.data.StaffGlue;
 import top.zbeboy.isy.glue.util.ResultUtils;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StaffService;
-import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.system.MailService;
 import top.zbeboy.isy.service.util.BCryptUtils;
@@ -62,9 +59,6 @@ public class StaffController {
 
     @Resource
     private CacheManageService cacheManageService;
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private MailService mailService;

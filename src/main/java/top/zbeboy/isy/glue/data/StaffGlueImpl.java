@@ -41,7 +41,7 @@ public class StaffGlueImpl implements StaffGlue {
     @Override
     public ResultUtils<List<StaffBean>> findAllByPageExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StaffBean>> resultUtils = ResultUtils.of();
+        ResultUtils<List<StaffBean>> resultUtils = new ResultUtils<>();
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
@@ -58,7 +58,7 @@ public class StaffGlueImpl implements StaffGlue {
     @Override
     public ResultUtils<List<StaffBean>> findAllByPageNotExistsAuthorities(DataTablesUtils<StaffBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StaffBean>> resultUtils = ResultUtils.of();
+        ResultUtils<List<StaffBean>> resultUtils = new ResultUtils<>();
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search, ElasticBook.NO_AUTHORITIES));
         Page<StaffElastic> staffElasticPage = staffElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build());
         return resultUtils.data(dataBuilder(staffElasticPage)).totalElements(staffElasticPage.getTotalElements());
@@ -90,7 +90,7 @@ public class StaffGlueImpl implements StaffGlue {
      * @param authorities 详见：ElasticBook
      * @return 其它条件
      */
-    public QueryBuilder prepositionCondition(JSONObject search, int authorities) {
+    private QueryBuilder prepositionCondition(JSONObject search, int authorities) {
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         boolqueryBuilder.must(QueryBuilders.termQuery("authorities", authorities));

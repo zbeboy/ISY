@@ -47,7 +47,7 @@ public class OrganizeGlueImpl extends ElasticPlugin<OrganizeBean> implements Org
     @Override
     public ResultUtils<List<OrganizeBean>> findAllByPage(DataTablesUtils<OrganizeBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<OrganizeBean>> resultUtils = ResultUtils.of();
+        ResultUtils<List<OrganizeBean>> resultUtils = new ResultUtils<>();
         // 分权限显示用户数据
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             Page<OrganizeElastic> organizeElasticPage = organizeElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));

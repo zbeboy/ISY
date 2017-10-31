@@ -42,7 +42,7 @@ public class StudentGlueImpl implements StudentGlue {
     @Override
     public ResultUtils<List<StudentBean>> findAllByPageExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StudentBean>> resultUtils = ResultUtils.of();
+        ResultUtils<List<StudentBean>> resultUtils = new ResultUtils<>();
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
@@ -59,7 +59,7 @@ public class StudentGlueImpl implements StudentGlue {
     @Override
     public ResultUtils<List<StudentBean>> findAllByPageNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<StudentBean>> resultUtils = ResultUtils.of();
+        ResultUtils<List<StudentBean>> resultUtils = new ResultUtils<>();
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(prepositionCondition(search, ElasticBook.NO_AUTHORITIES));
         Page<StudentElastic> studentElasticPage = studentElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build());
         return resultUtils.data(dataBuilder(studentElasticPage)).totalElements(studentElasticPage.getTotalElements());
@@ -91,7 +91,7 @@ public class StudentGlueImpl implements StudentGlue {
      * @param authorities 详见：ElasticBook
      * @return 其它条件
      */
-    public QueryBuilder prepositionCondition(JSONObject search, int authorities) {
+    private QueryBuilder prepositionCondition(JSONObject search, int authorities) {
         BoolQueryBuilder boolqueryBuilder = QueryBuilders.boolQuery();
         boolqueryBuilder.must(searchCondition(search));
         boolqueryBuilder.must(QueryBuilders.termQuery("authorities", authorities));

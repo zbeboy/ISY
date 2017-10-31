@@ -40,7 +40,7 @@ public class SystemMailboxGlueImpl extends ElasticPlugin<SystemMailboxBean> impl
     @Override
     public ResultUtils<List<SystemMailboxBean>> findAllByPage(DataTablesUtils<SystemMailboxBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<SystemMailboxBean>> resultUtils = ResultUtils.of();
+        ResultUtils<List<SystemMailboxBean>> resultUtils = new ResultUtils<>();
         Page<SystemMailboxElastic> systemMailboxElasticPage = systemMailboxElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
         return resultUtils.data(dataBuilder(systemMailboxElasticPage)).totalElements(systemMailboxElasticPage.getTotalElements());
     }

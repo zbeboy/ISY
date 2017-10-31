@@ -40,7 +40,7 @@ public class SystemSmsGlueImpl extends ElasticPlugin<SystemSmsBean> implements S
     @Override
     public ResultUtils<List<SystemSmsBean>> findAllByPage(DataTablesUtils<SystemSmsBean> dataTablesUtils) {
         JSONObject search = dataTablesUtils.getSearch();
-        ResultUtils<List<SystemSmsBean>> resultUtils = ResultUtils.of();
+        ResultUtils<List<SystemSmsBean>> resultUtils = new ResultUtils<>();
         Page<SystemSmsElastic> systemSmsElasticPage = systemSmsElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false));
         return resultUtils.data(dataBuilder(systemSmsElasticPage)).totalElements(systemSmsElasticPage.getTotalElements());
     }
