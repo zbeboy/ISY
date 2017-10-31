@@ -996,8 +996,8 @@ public class StaffServiceImpl implements StaffService {
     /**
      * 分页方式
      *
-     * @param dataTablesUtils
-     * @param selectConditionStep
+     * @param dataTablesUtils 工具类
+     * @param selectConditionStep 条件
      */
     public void pagination(DataTablesUtils<StaffBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep) {
         int start = dataTablesUtils.getStart();
