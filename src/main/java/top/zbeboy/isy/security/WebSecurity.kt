@@ -38,53 +38,48 @@ class WebSecurity {
      * @return true可访问 false 不可访问该路径
      */
     fun check(authentication: Authentication, request: HttpServletRequest): Boolean {
-        try {
-            val users = usersService!!.userFromSession
-            if (ObjectUtils.isEmpty(users)) {
-                return false
-            }
-            // 权限控制
-            val uri = StringUtils.trimAllWhitespace(request.requestURI)
-            // 欢迎页
-            if (uri.endsWith("/web/menu/backstage")) {
-                return true
-            }
-            var hasRole = false
-            val roleList = cacheManageService!!.findByUsernameWithRole(users.username)// 已缓存
-            val roleIds = ArrayList<String>()
-            roleIds.addAll(roleList.stream().map<String> { Role::getRoleId.toString() }.collect(Collectors.toList()))
+        val users = usersService!!.userFromSession
+        if (ObjectUtils.isEmpty(users)) {
+            return false
+        }
+        // 权限控制
+        val uri = StringUtils.trimAllWhitespace(request.requestURI)
+        // 欢迎页
+        if (uri.endsWith("/web/menu/backstage")) {
+            return true
+        }
+        var hasRole = false
+        val roleList = cacheManageService!!.findByUsernameWithRole(users.username)// 已缓存
+        val roleIds = ArrayList<String>()
+        roleIds.addAll(roleList.stream().map<String> { Role::getRoleId.toString() }.collect(Collectors.toList()))
 
-            val roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.username)// 已缓存
-            if (!roleApplications.isEmpty()) {
-                val applicationIds = ArrayList<String>()
-                // 防止重复菜单加载
-                roleApplications.stream().filter { roleApplication -> !applicationIds.contains(roleApplication.applicationId) }.forEach {// 防止重复菜单加载
-                    roleApplication ->
-                    applicationIds.add(roleApplication.applicationId)
+        val roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.username)// 已缓存
+        if (!roleApplications.isEmpty()) {
+            val applicationIds = ArrayList<String>()
+            // 防止重复菜单加载
+            roleApplications.stream().filter { roleApplication -> !applicationIds.contains(roleApplication.applicationId) }.forEach {// 防止重复菜单加载
+                roleApplication ->
+                applicationIds.add(roleApplication.applicationId)
+            }
+
+            val applications = cacheManageService.findInIdsWithUsername(applicationIds, users.username)// 已缓存
+            for (application in applications) {
+                if (uri.endsWith(application.applicationUrl)) {
+                    hasRole = true
+                    break
                 }
-
-                val applications = cacheManageService.findInIdsWithUsername(applicationIds, users.username)// 已缓存
-                for (application in applications) {
-                    if (uri.endsWith(application.applicationUrl)) {
-                        hasRole = true
-                        break
-                    }
-                    if (StringUtils.hasLength(application.applicationDataUrlStartWith)) {
-                        val urlMapping = cacheManageService.urlMapping(application)// 已缓存
-                        if (!ObjectUtils.isEmpty(urlMapping)) {
-                            val urlOne = urlMapping.stream().filter({ uri.endsWith(it) }).findFirst()
-                            if (urlOne.isPresent) {
-                                hasRole = true
-                                break
-                            }
+                if (StringUtils.hasLength(application.applicationDataUrlStartWith)) {
+                    val urlMapping = cacheManageService.urlMapping(application)// 已缓存
+                    if (!ObjectUtils.isEmpty(urlMapping)) {
+                        val urlOne = urlMapping.stream().filter({ uri.endsWith(it) }).findFirst()
+                        if (urlOne.isPresent) {
+                            hasRole = true
+                            break
                         }
                     }
                 }
             }
-            return hasRole
-        } catch (e: Exception) {
-            log.error("Web security exception is {}", e)
-            return false;
         }
+        return hasRole
     }
 }
