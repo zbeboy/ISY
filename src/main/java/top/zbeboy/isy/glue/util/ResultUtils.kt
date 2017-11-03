@@ -14,6 +14,13 @@ class ResultUtils<T> {
         this.totalElements = totalElements
     }
 
+    companion object {
+        @JvmStatic
+        fun <T> of(): ResultUtils<T> {
+            return ResultUtils<T>()
+        }
+    }
+
     fun data(data: T): ResultUtils<T> {
         this.data = data
         return this

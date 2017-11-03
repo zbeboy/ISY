@@ -53,40 +53,40 @@ open class ScheduledConfiguration {
     private val log = LoggerFactory.getLogger(ScheduledConfiguration::class.java)
 
     @Resource
-    private val internshipReleaseService: InternshipReleaseService? = null
+    lateinit open var internshipReleaseService: InternshipReleaseService
 
     @Resource
-    private val internshipApplyService: InternshipApplyService? = null
+    lateinit open var internshipApplyService: InternshipApplyService
 
     @Resource
-    private val systemAlertService: SystemAlertService? = null
+    lateinit open var systemAlertService: SystemAlertService
 
     @Resource
-    private val systemMessageService: SystemMessageService? = null
+    lateinit open var systemMessageService: SystemMessageService
 
     @Resource
-    private val usersService: UsersService? = null
+    lateinit open var usersService: UsersService
 
     @Resource
-    private val cacheManageService: CacheManageService? = null
+    lateinit open var cacheManageService: CacheManageService
 
     @Resource
-    private val staffService: StaffService? = null
+    lateinit open var staffService: StaffService
 
     @Resource
-    private val studentService: StudentService? = null
+    lateinit open var studentService: StudentService
 
     @Resource
-    private val authoritiesService: AuthoritiesService? = null
+    lateinit open var authoritiesService: AuthoritiesService
 
     @Autowired
-    private val usersElasticRepository: UsersElasticRepository? = null
+    lateinit open var usersElasticRepository: UsersElasticRepository
 
     @Autowired
-    private val studentElasticRepository: StudentElasticRepository? = null
+    lateinit open var studentElasticRepository: StudentElasticRepository
 
     @Autowired
-    private val staffElasticRepository: StaffElasticRepository? = null
+    lateinit open var staffElasticRepository: StaffElasticRepository
 
     /**
      * 清理未验证用户信息
@@ -97,19 +97,19 @@ open class ScheduledConfiguration {
         val dateTime = DateTime.now()
         val oldTime = dateTime.minusDays(30)
         // 查询未验证用户
-        val records = this.usersService!!.findByJoinDateAndVerifyMailbox(oldTime.toDate(), 0)
+        val records = this.usersService.findByJoinDateAndVerifyMailbox(oldTime.toDate(), 0)
         records.forEach { r ->
-            val usersType = this.cacheManageService!!.findByUsersTypeId(r.usersTypeId!!)
-            this.authoritiesService!!.deleteByUsername(r.username)
+            val usersType = this.cacheManageService.findByUsersTypeId(r.usersTypeId!!)
+            this.authoritiesService.deleteByUsername(r.username)
             if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                this.staffService!!.deleteByUsername(r.username)
-                this.staffElasticRepository!!.deleteByUsername(r.username)
+                this.staffService.deleteByUsername(r.username)
+                this.staffElasticRepository.deleteByUsername(r.username)
             } else if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                this.studentService!!.deleteByUsername(r.username)
-                this.studentElasticRepository!!.deleteByUsername(r.username)
+                this.studentService.deleteByUsername(r.username)
+                this.studentElasticRepository.deleteByUsername(r.username)
             }
             this.usersService.deleteById(r.username)
-            this.usersElasticRepository!!.delete(r.username)
+            this.usersElasticRepository.delete(r.username)
         }
         log.info(">>>>>>>>>>>>> scheduled ... clean users ")
     }
@@ -121,11 +121,11 @@ open class ScheduledConfiguration {
     fun internshipApply() {
         // 更改实习提交状态
         val now = Timestamp(Clock.systemDefaultZone().millis())
-        val internshipReleaseRecords = this.internshipReleaseService!!.findByEndTime(now)
+        val internshipReleaseRecords = this.internshipReleaseService.findByEndTime(now)
         for (r in internshipReleaseRecords) {
-            this.internshipApplyService!!.updateStateWithInternshipReleaseIdAndState(r.internshipReleaseId, 0, 1)
+            this.internshipApplyService.updateStateWithInternshipReleaseIdAndState(r.internshipReleaseId, 0, 1)
         }
-        this.internshipApplyService!!.updateStateByChangeFillEndTime(now, 5, 1)
+        this.internshipApplyService.updateStateByChangeFillEndTime(now, 5, 1)
         this.internshipApplyService.updateStateByChangeFillEndTime(now, 7, 1)
         log.info(">>>>>>>>>>>>> scheduled ... internshipApply state update. ")
     }
@@ -139,8 +139,8 @@ open class ScheduledConfiguration {
         val dateTime = DateTime.now()
         val oldTime = dateTime.minusYears(1)
         val ts = Timestamp(oldTime.millis)
-        this.systemAlertService!!.deleteByAlertDate(ts)
-        this.systemMessageService!!.deleteByMessageDate(ts)
+        this.systemAlertService.deleteByAlertDate(ts)
+        this.systemMessageService.deleteByMessageDate(ts)
         log.info(">>>>>>>>>>>>> scheduled ... clean alert , message ")
     }
 }

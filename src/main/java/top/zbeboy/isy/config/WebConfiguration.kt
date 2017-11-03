@@ -34,10 +34,10 @@ import javax.inject.Inject
 open class WebConfiguration : WebMvcConfigurerAdapter() {
 
     @Autowired
-    private val isyProperties: ISYProperties? = null
+    lateinit open var isyProperties: ISYProperties
 
     @Inject
-    private val env: Environment? = null
+    lateinit open var env: Environment
 
     /**
      * 切换语言
@@ -70,7 +70,7 @@ open class WebConfiguration : WebMvcConfigurerAdapter() {
     @Bean
     open fun undertow(): EmbeddedServletContainerFactory {
         val undertow = UndertowEmbeddedServletContainerFactory()
-        undertow.addBuilderCustomizers(UndertowBuilderCustomizer { builder -> builder.addHttpListener(isyProperties!!.getConstants().serverHttpPort, isyProperties.getConstants().undertowListenerIp) })
+        undertow.addBuilderCustomizers(UndertowBuilderCustomizer { builder -> builder.addHttpListener(isyProperties.getConstants().serverHttpPort, isyProperties.getConstants().undertowListenerIp) })
         undertow.addDeploymentInfoCustomizers(
                 UndertowDeploymentInfoCustomizer { deploymentInfo ->
                     deploymentInfo.addSecurityConstraint(SecurityConstraint()
@@ -80,11 +80,11 @@ open class WebConfiguration : WebMvcConfigurerAdapter() {
                             .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
                             .setDefaultEncoding(CharEncoding.UTF_8)
                             .setUrlEncoding(CharEncoding.UTF_8)
-                            .setConfidentialPortManager { isyProperties!!.getConstants().serverHttpsPort }
+                            .setConfidentialPortManager { isyProperties.getConstants().serverHttpsPort }
                 }
         )
-        if (this.env!!.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION, Workbook.SPRING_PROFILE_TEST)) {
-            val documentRoot = File(System.getProperty("user.dir") + "/" + this.isyProperties!!.getConstants().tempDir)
+        if (this.env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION, Workbook.SPRING_PROFILE_TEST)) {
+            val documentRoot = File(System.getProperty("user.dir") + "/" + this.isyProperties.getConstants().tempDir)
             if (!documentRoot.exists()) {
                 documentRoot.mkdirs()
             }

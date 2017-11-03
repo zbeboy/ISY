@@ -22,13 +22,11 @@ import javax.servlet.http.HttpServletRequest
  */
 class WebSecurity {
 
-    private val log = LoggerFactory.getLogger(WebSecurity::class.java)
-
     @Autowired
-    private val usersService: UsersService? = null
+    private lateinit var usersService: UsersService
 
     @Resource
-    private val cacheManageService: CacheManageService? = null
+    private lateinit var cacheManageService: CacheManageService
 
     /**
      * 权限控制检查
@@ -38,7 +36,7 @@ class WebSecurity {
      * @return true可访问 false 不可访问该路径
      */
     fun check(authentication: Authentication, request: HttpServletRequest): Boolean {
-        val users = usersService!!.userFromSession
+        val users = usersService.userFromSession
         if (ObjectUtils.isEmpty(users)) {
             return false
         }
@@ -49,7 +47,7 @@ class WebSecurity {
             return true
         }
         var hasRole = false
-        val roleList = cacheManageService!!.findByUsernameWithRole(users.username)// 已缓存
+        val roleList = cacheManageService.findByUsernameWithRole(users.username)// 已缓存
         val roleIds = ArrayList<String>()
         roleIds.addAll(roleList.stream().map<String> { Role::getRoleId.toString() }.collect(Collectors.toList()))
 

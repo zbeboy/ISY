@@ -28,21 +28,21 @@ import javax.annotation.Resource
 open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
 
     @Resource
-    private val systemLogElasticRepository: SystemLogElasticRepository? = null
+    lateinit open var systemLogElasticRepository: SystemLogElasticRepository
 
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<SystemLogBean>): ResultUtils<List<SystemLogBean>> {
         val search = dataTablesUtils.search
         val resultUtils = ResultUtils<List<SystemLogBean>>()
-        val systemLogElasticPage = systemLogElasticRepository!!.search(buildSearchQuery(search, dataTablesUtils, false))
+        val systemLogElasticPage = systemLogElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false))
         return resultUtils.data(dataBuilder(systemLogElasticPage)).totalElements(systemLogElasticPage.getTotalElements())
     }
 
     override fun countAll(): Long {
-        return systemLogElasticRepository!!.count()
+        return systemLogElasticRepository.count()
     }
 
     override fun save(systemLogElastic: SystemLogElastic) {
-        systemLogElasticRepository!!.save(systemLogElastic)
+        systemLogElasticRepository.save(systemLogElastic)
     }
 
     /**

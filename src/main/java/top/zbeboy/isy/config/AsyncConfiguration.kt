@@ -28,14 +28,14 @@ open class AsyncConfiguration : AsyncConfigurer {
     private val log = LoggerFactory.getLogger(AsyncConfiguration::class.java)
 
     @Autowired
-    private val isyProperties: ISYProperties? = null
+    lateinit open var isyProperties: ISYProperties
 
     @Override
     @Bean(name = arrayOf("taskExecutor"))
     override fun getAsyncExecutor(): Executor {
         log.debug("Creating Async Task Executor")
         val executor = ThreadPoolTaskExecutor()
-        executor.corePoolSize = this.isyProperties?.getAsync()!!.corePoolSize
+        executor.corePoolSize = this.isyProperties.getAsync().corePoolSize
         executor.maxPoolSize = this.isyProperties.getAsync().maxPoolSize
         executor.setQueueCapacity(this.isyProperties.getAsync().queueCapacity)
         executor.threadNamePrefix = "isy-app-Executor-"

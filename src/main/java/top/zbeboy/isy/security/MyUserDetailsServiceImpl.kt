@@ -25,17 +25,17 @@ class MyUserDetailsServiceImpl : UserDetailsService {
     private val log = LoggerFactory.getLogger(MyUserDetailsServiceImpl::class.java)
 
     @Autowired
-    private val usersService: UsersService? = null
+    private lateinit var usersService: UsersService
 
     @Autowired
-    private val authoritiesService: AuthoritiesService? = null
+    private lateinit var authoritiesService: AuthoritiesService
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(s: String): UserDetails {
         log.debug("Username is : {}", s)
         val username = StringUtils.trimWhitespace(s)
-        val users = usersService!!.findByUsername(username)
-        val authoritiesRecords = authoritiesService!!.findByUsername(username)
+        val users = usersService.findByUsername(username)
+        val authoritiesRecords = authoritiesService.findByUsername(username)
         val authorities = buildUserAuthority(authoritiesRecords)
         return buildUserForAuthentication(users, authorities)
     }
@@ -47,10 +47,9 @@ class MyUserDetailsServiceImpl : UserDetailsService {
      * @return 组装
      */
     private fun buildUserAuthority(authoritiesRecords: List<AuthoritiesRecord>): List<GrantedAuthority> {
-        val setAuths = HashSet<GrantedAuthority>()
-        for (userRole in authoritiesRecords) {
-            setAuths.add(SimpleGrantedAuthority(userRole.authority))
-        }
+        val setAuths = authoritiesRecords
+                .map { SimpleGrantedAuthority(it.authority) }
+                .toSet()
         return ArrayList(setAuths)
     }
 

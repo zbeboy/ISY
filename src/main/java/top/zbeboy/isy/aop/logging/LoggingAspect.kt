@@ -26,7 +26,7 @@ class LoggingAspect {
     private val log = LoggerFactory.getLogger(LoggingAspect::class.java)
 
     @Inject
-    private val env: Environment? = null
+    private lateinit var env: Environment
 
     /**
      * 日志切面
@@ -43,7 +43,7 @@ class LoggingAspect {
      */
     @AfterThrowing(pointcut = "loggingPointcut()", throwing = "e")
     fun logAfterThrowing(joinPoint: JoinPoint, e: Throwable) {
-        if (env!!.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
+        if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
             log.error("Exception in {}.{}() with cause = {} and exception {}", joinPoint.signature.declaringTypeName,
                     joinPoint.signature.name, e.cause, e)
         } else {
@@ -62,13 +62,13 @@ class LoggingAspect {
     @Around("loggingPointcut()")
     @Throws(Throwable::class)
     fun logAround(joinPoint: ProceedingJoinPoint): Any {
-        if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled) {
             log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.signature.declaringTypeName,
                     joinPoint.signature.name, Arrays.toString(joinPoint.args))
         }
         try {
             val result = joinPoint.proceed()
-            if (log.isDebugEnabled()) {
+            if (log.isDebugEnabled) {
                 log.debug("Exit: {}.{}() with result = {}", joinPoint.signature.declaringTypeName,
                         joinPoint.signature.name, result)
             }

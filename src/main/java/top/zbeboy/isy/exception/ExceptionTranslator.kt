@@ -10,11 +10,6 @@ import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator
  **/
 class ExceptionTranslator : DefaultExecuteListener() {
 
-    /**
-     * Generated UID
-     */
-    private val serialVersionUID = -2450323227461061152L
-
     override fun exception(ctx: ExecuteContext?) {
 
         // [#4391] Translate only SQLExceptions

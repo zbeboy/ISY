@@ -21,7 +21,7 @@ import javax.sql.DataSource
 open class JooqSpringBootConfiguration {
 
     @Autowired
-    private val isyProperties: ISYProperties? = null
+    lateinit open var isyProperties: ISYProperties
 
     /**
      * datasource transaction
@@ -97,6 +97,6 @@ open class JooqSpringBootConfiguration {
                 .derive(connectionProvider)
                 .derive(transactionProvider)
                 .derive(executeListenerProvider)
-                .derive(SQLDialect.valueOf(this.isyProperties!!.getConstants().jooqSqlDialect!!.toUpperCase()))
+                .derive(SQLDialect.valueOf(this.isyProperties.getConstants().jooqSqlDialect!!.toUpperCase()))
     }
 }

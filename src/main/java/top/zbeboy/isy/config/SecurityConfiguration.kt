@@ -35,16 +35,16 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Qualifier("dataSource")
     @Autowired
-    private val dataSource: DataSource? = null
+    lateinit open var dataSource: DataSource
 
     @Autowired
-    private val myUserDetailsService: MyUserDetailsServiceImpl? = null
+    lateinit open var myUserDetailsService: MyUserDetailsServiceImpl
 
     @Inject
-    private val ajaxAuthenticationSuccessHandler: AjaxAuthenticationSuccessHandler? = null
+    lateinit open var ajaxAuthenticationSuccessHandler: AjaxAuthenticationSuccessHandler
 
     @Inject
-    private val ajaxAuthenticationFailureHandler: AjaxAuthenticationFailureHandler? = null
+    lateinit open var ajaxAuthenticationFailureHandler: AjaxAuthenticationFailureHandler
 
     @Bean
     open fun passwordEncoder(): PasswordEncoder {
