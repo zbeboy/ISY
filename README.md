@@ -13,7 +13,7 @@
 7.Redis 3.0.504;  
 8.Kotlin 1.1.51.
 # 安装
-1.Clone https://github.com/zbeboy/ISY.git;  
+1.Clone ``` https://github.com/zbeboy/ISY.git ```;  
 2.配置application.properties,其它环境配置仅供开发者使用;  
 3.额外配置(settings目录),仅供开发者使用;  
 4.安装lombok插件;  
