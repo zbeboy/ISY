@@ -153,7 +153,7 @@ open class MainController {
      */
     @RecordSystemLogging(module = "Main", methods = "backstage", description = "访问系统主页")
     @RequestMapping(value = "/web/menu/backstage", method = arrayOf(RequestMethod.GET))
-    fun backstage(request: HttpServletRequest): String {
+    open fun backstage(request: HttpServletRequest): String {
         return "backstage"
     }
 

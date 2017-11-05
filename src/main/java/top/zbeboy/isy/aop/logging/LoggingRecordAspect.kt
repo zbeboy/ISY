@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest
 
 /**
  * Created by zbeboy 2017-10-31 .
+ * 使用该切面，方法必须 open .
  **/
 @Aspect
 class LoggingRecordAspect {
@@ -46,7 +47,7 @@ class LoggingRecordAspect {
      */
     @Around("loggingRecordPointcut()")
     @Throws(Throwable::class)
-    fun doRecord(point: ProceedingJoinPoint): Any {
+    fun doRecord(point: ProceedingJoinPoint): Any? {
         val targetName = point.target.javaClass.name
         val methodName = point.signature.name
         val arguments = point.args
