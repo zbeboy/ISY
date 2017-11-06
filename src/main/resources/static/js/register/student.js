@@ -241,6 +241,9 @@ require(["jquery", "handlebars", "emails", "jquery.showLoading", "csrf", "bootst
             schoolData(data);
         });
 
+        /**
+         * 初始化选择框
+         */
         function initAllSelectInput() {
             $(paramId.select_school).selectpicker({
                 maxOptions: 1
