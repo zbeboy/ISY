@@ -13,11 +13,11 @@
 7.Redis 3.0.504;  
 8.Kotlin 1.1.51.
 # 安装
-1.Clone https://github.com/zbeboy/ISY.git;  
-2.配置application.properties,其它环境配置仅供开发者使用;  
+1.`git clone https://github.com/zbeboy/ISY.git`;  
+2.配置`application.properties`,其它环境配置仅供开发者使用;  
 3.额外配置(settings目录),仅供开发者使用;  
 4.安装lombok插件;  
-5.若不使用Intellij IDEA,请自行安装kotlin plugin.
+5.若不使用Intellij IDEA,请自行安装Kotlin plugin.
 # 启动
 1.Elasticsearch;  
 2.Redis;  
