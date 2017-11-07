@@ -1,19 +1,17 @@
-package top.zbeboy.isy.service.system;
+package top.zbeboy.isy.service.system
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.SystemMessage;
-import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
-import top.zbeboy.isy.web.util.PaginationUtils;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.SystemMessage
+import top.zbeboy.isy.web.bean.system.message.SystemMessageBean
+import top.zbeboy.isy.web.util.PaginationUtils
+import java.sql.Timestamp
+import java.util.*
 
 /**
- * Created by lenovo on 2016-12-24.
- */
-public interface SystemMessageService {
+ * Created by zbeboy 2017-11-07 .
+ **/
+interface SystemMessageService {
 
     /**
      * 根据主键查询
@@ -21,7 +19,7 @@ public interface SystemMessageService {
      * @param id 主键
      * @return 数据
      */
-    SystemMessage findById(String id);
+    fun findById(id: String): SystemMessage
 
     /**
      * 通过id与接收者关联查询
@@ -30,7 +28,7 @@ public interface SystemMessageService {
      * @param acceptUser 接收者
      * @return 消息
      */
-    Optional<Record> findByIdAndAcceptUsersRelation(String id, String acceptUser);
+    fun findByIdAndAcceptUsersRelation(id: String, acceptUser: String): Optional<Record>
 
     /**
      * 系统导航栏消息显示用
@@ -41,7 +39,7 @@ public interface SystemMessageService {
      * @param isSee    是否已阅
      * @return 数据
      */
-    Result<Record> findAllByPageForShow(int pageNum, int pageSize, String username, boolean isSee);
+    fun findAllByPageForShow(pageNum: Int, pageSize: Int, username: String, isSee: Boolean): Result<Record>
 
     /**
      * 系统导航栏消息显示数据
@@ -50,7 +48,7 @@ public interface SystemMessageService {
      * @param isSee    是否已阅
      * @return 数据
      */
-    int countAllForShow(String username, boolean isSee);
+    fun countAllForShow(username: String, isSee: Boolean): Int
 
     /**
      * 分页查询全部
@@ -59,7 +57,7 @@ public interface SystemMessageService {
      * @param systemMessageBean 额外参数
      * @return 分页数据
      */
-    Result<Record> findAllByPage(PaginationUtils paginationUtils, SystemMessageBean systemMessageBean);
+    fun findAllByPage(paginationUtils: PaginationUtils, systemMessageBean: SystemMessageBean): Result<Record>
 
     /**
      * 处理返回数据
@@ -69,7 +67,7 @@ public interface SystemMessageService {
      * @param systemMessageBean 额外参数
      * @return 处理后的数据
      */
-    List<SystemMessageBean> dealData(PaginationUtils paginationUtils, Result<Record> records, SystemMessageBean systemMessageBean);
+    fun dealData(paginationUtils: PaginationUtils, records: Result<Record>, systemMessageBean: SystemMessageBean): List<SystemMessageBean>
 
     /**
      * 根据条件统计
@@ -78,26 +76,26 @@ public interface SystemMessageService {
      * @param systemMessageBean 额外参数
      * @return 统计
      */
-    int countByCondition(PaginationUtils paginationUtils, SystemMessageBean systemMessageBean);
+    fun countByCondition(paginationUtils: PaginationUtils, systemMessageBean: SystemMessageBean): Int
 
     /**
      * 保存
      *
      * @param systemMessage 消息
      */
-    void save(SystemMessage systemMessage);
+    fun save(systemMessage: SystemMessage)
 
     /**
      * 通过时间删除
      *
      * @param timestamp 时间
      */
-    void deleteByMessageDate(Timestamp timestamp);
+    fun deleteByMessageDate(timestamp: Timestamp)
 
     /**
      * 更新
      *
      * @param systemMessage 消息
      */
-    void update(SystemMessage systemMessage);
+    fun update(systemMessage: SystemMessage)
 }
