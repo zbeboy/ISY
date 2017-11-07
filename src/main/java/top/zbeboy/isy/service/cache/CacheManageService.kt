@@ -1,9 +1,6 @@
 package top.zbeboy.isy.service.cache
 
-import top.zbeboy.isy.domain.tables.pojos.Application
-import top.zbeboy.isy.domain.tables.pojos.Role
-import top.zbeboy.isy.domain.tables.pojos.RoleApplication
-import top.zbeboy.isy.domain.tables.pojos.UsersType
+import top.zbeboy.isy.domain.tables.pojos.*
 
 /**
  * Created by zbeboy 2017-11-07 .
@@ -25,6 +22,14 @@ interface CacheManageService {
      * @return 用户类型
      */
     fun findByUsersTypeId(usersTypeId: Int): UsersType
+
+    /**
+     * 通过类型名查询
+     *
+     * @param name 类型名
+     * @return 消息类型
+     */
+    fun findBySystemAlertTypeName(name: String): SystemAlertType
 
     /**
      * 通过角色id查询出应用id并生成菜单html

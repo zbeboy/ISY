@@ -35,6 +35,8 @@ open class CacheBook {
 
         const val QUERY_USER_TYPE_BY_ID = "QUERY_USER_TYPE_BY_ID"
 
+        const val QUERY_SYSTEM_ALERT_TYPE_BY_NAME = "QUERY_SYSTEM_ALERT_TYPE_BY_NAME"
+
         const val MENU_HTML = "MENU_HTML_"
 
         const val USER_APPLICATION_ID = "USER_APPLICATION_ID_"

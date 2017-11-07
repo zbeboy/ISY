@@ -13,17 +13,14 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 import top.zbeboy.isy.domain.Tables.*
+import top.zbeboy.isy.domain.tables.daos.SystemAlertTypeDao
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao
-import top.zbeboy.isy.domain.tables.pojos.Application
-import top.zbeboy.isy.domain.tables.pojos.Role
-import top.zbeboy.isy.domain.tables.pojos.RoleApplication
-import top.zbeboy.isy.domain.tables.pojos.UsersType
+import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord
 import top.zbeboy.isy.service.system.ApplicationService
 import java.util.*
 import java.util.concurrent.TimeUnit
-import java.util.stream.Collectors
 import javax.annotation.Resource
 
 /**
@@ -43,6 +40,9 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
 
     @Resource
     open lateinit var usersTypeDao: UsersTypeDao
+
+    @Resource
+    open lateinit var systemAlertTypeDao: SystemAlertTypeDao
 
     @Resource
     open lateinit var stringRedisTemplate: StringRedisTemplate
@@ -69,6 +69,11 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
         return usersTypeDao.findById(usersTypeId)
     }
 
+    @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_SYSTEM_ALERT_TYPE_BY_NAME), key = "#name")
+    override fun findBySystemAlertTypeName(name: String): SystemAlertType {
+        return systemAlertTypeDao.fetchOne(SYSTEM_ALERT_TYPE.NAME, name)
+    }
+
     override fun menuHtml(roles: List<Role>, username: String): String {
         val cacheKey = CacheBook.MENU_HTML + username
         val ops = this.stringRedisTemplate.opsForValue()
@@ -78,7 +83,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
         val roleIds = ArrayList<String>()
         var html = ""
 
-        roles.forEach{role-> roleIds.add(role.roleId)}
+        roles.forEach { role -> roleIds.add(role.roleId) }
 
         val roleApplications = findInRoleIdsWithUsername(roleIds, username)
         if (!roleApplications.isEmpty()) {

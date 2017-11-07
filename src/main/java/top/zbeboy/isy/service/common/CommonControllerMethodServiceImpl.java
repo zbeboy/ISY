@@ -11,13 +11,13 @@ import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.system.MailService;
 import top.zbeboy.isy.service.system.SystemAlertService;
-import top.zbeboy.isy.service.system.SystemAlertTypeService;
 import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
@@ -66,7 +66,7 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     private SystemMessageService systemMessageService;
 
     @Resource
-    private SystemAlertTypeService systemAlertTypeService;
+    private CacheManageService cacheManageService;
 
     @Override
     public void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap) {
@@ -131,7 +131,7 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
         systemMessageService.save(systemMessage);
         // 保存提醒
         SystemAlert systemAlert = new SystemAlert();
-        SystemAlertType systemAlertType = systemAlertTypeService.findByType(Workbook.ALERT_MESSAGE_TYPE);
+        SystemAlertType systemAlertType = cacheManageService.findBySystemAlertTypeName(Workbook.ALERT_MESSAGE_TYPE);
         systemAlert.setSystemAlertId(UUIDUtils.getUUID());
         systemAlert.setIsSee(isSee);
         systemAlert.setAlertContent("新消息");

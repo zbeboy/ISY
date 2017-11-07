@@ -14,9 +14,9 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.SystemAlert;
 import top.zbeboy.isy.domain.tables.pojos.SystemAlertType;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.system.SystemAlertService;
-import top.zbeboy.isy.service.system.SystemAlertTypeService;
 import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
@@ -44,7 +44,7 @@ public class SystemMessageController {
     private SystemAlertService systemAlertService;
 
     @Resource
-    private SystemAlertTypeService systemAlertTypeService;
+    private CacheManageService cacheManageService;
 
     /**
      * 系统消息数据
@@ -75,7 +75,7 @@ public class SystemMessageController {
             systemMessageBean.setIsSee(b);
             systemMessageService.update(systemMessageBean);
             // 若单独点击消息则需要更新提醒状态
-            SystemAlertType systemAlertType = systemAlertTypeService.findByType(Workbook.ALERT_MESSAGE_TYPE);
+            SystemAlertType systemAlertType = cacheManageService.findBySystemAlertTypeName(Workbook.ALERT_MESSAGE_TYPE);
             if (!ObjectUtils.isEmpty(systemAlertType)) {
                 Optional<Record> systemAlertRecord = systemAlertService.findByUsernameAndLinkIdAndSystemAlertTypeId(users.getUsername(), systemMessageBean.getSystemMessageId(), systemAlertType.getSystemAlertTypeId());
                 if (systemAlertRecord.isPresent()) {
