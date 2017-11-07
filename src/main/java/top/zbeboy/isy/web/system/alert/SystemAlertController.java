@@ -16,7 +16,6 @@ import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.system.SystemAlertService;
 import top.zbeboy.isy.service.system.SystemAlertTypeService;
-import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -41,9 +40,6 @@ public class SystemAlertController {
     @Resource
     private SystemAlertTypeService systemAlertTypeService;
 
-    @Resource
-    private SystemMessageService systemMessageService;
-
     /**
      * 系统提醒数据
      *
@@ -65,8 +61,8 @@ public class SystemAlertController {
     public String alertDetail(@RequestParam("id") String linkId, @RequestParam("type") int type) {
         String page = "";
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = systemAlertService.findByUsernameAndLinkId(users.getUsername(),linkId);
-        if(record.isPresent()){
+        Optional<Record> record = systemAlertService.findByUsernameAndLinkId(users.getUsername(), linkId);
+        if (record.isPresent()) {
             SystemAlertType systemAlertType = systemAlertTypeService.findById(type);
             if (!ObjectUtils.isEmpty(systemAlertType)) {
                 if (systemAlertType.getName().equals(Workbook.ALERT_MESSAGE_TYPE)) {
