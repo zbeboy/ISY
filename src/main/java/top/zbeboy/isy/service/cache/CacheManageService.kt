@@ -1,16 +1,14 @@
-package top.zbeboy.isy.service.cache;
+package top.zbeboy.isy.service.cache
 
-import top.zbeboy.isy.domain.tables.pojos.Application;
-import top.zbeboy.isy.domain.tables.pojos.Role;
-import top.zbeboy.isy.domain.tables.pojos.RoleApplication;
-import top.zbeboy.isy.domain.tables.pojos.UsersType;
-
-import java.util.List;
+import top.zbeboy.isy.domain.tables.pojos.Application
+import top.zbeboy.isy.domain.tables.pojos.Role
+import top.zbeboy.isy.domain.tables.pojos.RoleApplication
+import top.zbeboy.isy.domain.tables.pojos.UsersType
 
 /**
- * Created by lenovo on 2017-03-11.
- */
-public interface CacheManageService {
+ * Created by zbeboy 2017-11-07 .
+ **/
+interface CacheManageService {
 
     /**
      * 根据用户类型查询id
@@ -18,7 +16,7 @@ public interface CacheManageService {
      * @param usersTypeName 用户类型名
      * @return 用户类型
      */
-    UsersType findByUsersTypeName(String usersTypeName);
+    fun findByUsersTypeName(usersTypeName: String): UsersType
 
     /**
      * 根据用户id查询类型
@@ -26,7 +24,7 @@ public interface CacheManageService {
      * @param usersTypeId 用户类型id
      * @return 用户类型
      */
-    UsersType findByUsersTypeId(int usersTypeId);
+    fun findByUsersTypeId(usersTypeId: Int): UsersType
 
     /**
      * 通过角色id查询出应用id并生成菜单html
@@ -34,7 +32,7 @@ public interface CacheManageService {
      * @param roles 角色
      * @return 菜单html
      */
-    String menuHtml(List<Role> roles, String username);
+    fun menuHtml(roles: List<Role>, username: String): String
 
     /**
      * 通过ids查询
@@ -43,7 +41,7 @@ public interface CacheManageService {
      * @param username 用户账号 缓存
      * @return 应用
      */
-    List<Application> findInIdsWithUsername(List<String> ids, String username);
+    fun findInIdsWithUsername(ids: List<String>, username: String): List<Application>
 
     /**
      * 获取该菜单下的data url
@@ -51,7 +49,7 @@ public interface CacheManageService {
      * @param application 菜单
      * @return data url
      */
-    List<String> urlMapping(Application application);
+    fun urlMapping(application: Application): List<String>
 
     /**
      * 通过角色ids查询 缓存
@@ -60,7 +58,7 @@ public interface CacheManageService {
      * @param username 用户账号用于缓存
      * @return 数据
      */
-    List<RoleApplication> findInRoleIdsWithUsername(List<String> roleIds, String username);
+    fun findInRoleIdsWithUsername(roleIds: List<String>, username: String): List<RoleApplication>
 
     /**
      * 根据用户账号查询角色
@@ -68,5 +66,5 @@ public interface CacheManageService {
      * @param username 用户账号
      * @return 角色
      */
-    List<Role> findByUsernameWithRole(String username);
+    fun findByUsernameWithRole(username: String): List<Role>
 }

@@ -49,8 +49,7 @@ class WebSecurity {
         var hasRole = false
         val roleList = cacheManageService.findByUsernameWithRole(users.username)// 已缓存
         val roleIds = ArrayList<String>()
-        roleIds.addAll(roleList.stream().map<String> { Role::getRoleId.toString() }.collect(Collectors.toList()))
-
+        roleList.forEach{role->roleIds.add(role.roleId)}
         val roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.username)// 已缓存
         if (!roleApplications.isEmpty()) {
             val applicationIds = ArrayList<String>()
