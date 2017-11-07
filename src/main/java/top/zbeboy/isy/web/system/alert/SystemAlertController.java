@@ -4,24 +4,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ObjectUtils;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
-import top.zbeboy.isy.domain.tables.pojos.SystemAlert;
-import top.zbeboy.isy.domain.tables.pojos.SystemAlertType;
 import top.zbeboy.isy.domain.tables.pojos.Users;
+import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.system.SystemAlertService;
-import top.zbeboy.isy.service.system.SystemAlertTypeService;
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -38,7 +37,7 @@ public class SystemAlertController {
     private SystemAlertService systemAlertService;
 
     @Resource
-    private SystemAlertTypeService systemAlertTypeService;
+    private CommonControllerMethodService commonControllerMethodService;
 
     /**
      * 系统提醒数据
@@ -53,26 +52,23 @@ public class SystemAlertController {
     /**
      * 提醒详情
      *
-     * @param linkId 链接id
-     * @param type   类型
+     * @param systemAlertId 提醒id
      * @return 转发页
      */
     @RequestMapping(value = "/anyone/alert/detail", method = RequestMethod.GET)
-    public String alertDetail(@RequestParam("id") String linkId, @RequestParam("type") int type) {
-        String page = "";
+    public String alertDetail(@RequestParam("id") String systemAlertId, ModelMap modelMap) {
+        String page;
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = systemAlertService.findByUsernameAndLinkId(users.getUsername(), linkId);
+        Optional<Record> record = systemAlertService.findByUsernameAndId(users.getUsername(), systemAlertId);
         if (record.isPresent()) {
-            SystemAlertType systemAlertType = systemAlertTypeService.findById(type);
-            if (!ObjectUtils.isEmpty(systemAlertType)) {
-                if (systemAlertType.getName().equals(Workbook.ALERT_MESSAGE_TYPE)) {
-                    page = "redirect:/anyone/message/detail?id=" + linkId;
-                }
+            SystemAlertBean systemAlertBean = record.get().into(SystemAlertBean.class);
+            if (Objects.equals(systemAlertBean.getName(), Workbook.ALERT_MESSAGE_TYPE)) {
+                page = "redirect:/anyone/message/detail?id=" + systemAlertBean.getLinkId();
+            } else {
+                page = commonControllerMethodService.showTip(modelMap, "未查询到相关类型提醒");
             }
-            SystemAlert systemAlert = record.get().into(SystemAlert.class);
-            Byte b = 1;
-            systemAlert.setIsSee(b);
-            systemAlertService.update(systemAlert);
+        } else {
+            page = commonControllerMethodService.showTip(modelMap, "未查询到相关提醒");
         }
         return page;
     }

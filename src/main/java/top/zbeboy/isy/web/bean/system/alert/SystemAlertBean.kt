@@ -8,4 +8,5 @@ import top.zbeboy.isy.domain.tables.pojos.SystemAlert
 class SystemAlertBean : SystemAlert() {
     var icon: String? = null
     var alertDateStr: String? = null
+    var name: String? = null
 }

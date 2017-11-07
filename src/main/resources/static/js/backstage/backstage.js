@@ -364,7 +364,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          提醒详情
          */
         $('#wrapper').delegate('.alert_detail', "click", function () {
-            $.address.value(getAjaxUrl().alert_detail_url + '?id=' + $(this).attr('data-id') + '&type=' + $(this).attr('data-type'));
+            $.address.value(getAjaxUrl().alert_detail_url + '?id=' + $(this).attr('data-id'));
             getRemind();
         });
 

@@ -5,12 +5,18 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.zbeboy.isy.config.Workbook;
+import top.zbeboy.isy.domain.tables.pojos.SystemAlert;
+import top.zbeboy.isy.domain.tables.pojos.SystemAlertType;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.service.platform.UsersService;
+import top.zbeboy.isy.service.system.SystemAlertService;
+import top.zbeboy.isy.service.system.SystemAlertTypeService;
 import top.zbeboy.isy.service.system.SystemMessageService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean;
@@ -34,6 +40,12 @@ public class SystemMessageController {
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private SystemAlertService systemAlertService;
+
+    @Resource
+    private SystemAlertTypeService systemAlertTypeService;
+
     /**
      * 系统消息数据
      *
@@ -55,13 +67,23 @@ public class SystemMessageController {
     public String messageDetail(@RequestParam("id") String messageId, ModelMap modelMap) {
         SystemMessageBean systemMessageBean = new SystemMessageBean();
         Users users = usersService.getUserFromSession();
-        Optional<Record> record = systemMessageService.findByIdAndAcceptUsersRelation(messageId,users.getUsername());
+        Optional<Record> record = systemMessageService.findByIdAndAcceptUsersRelation(messageId, users.getUsername());
         if (record.isPresent()) {
             systemMessageBean = record.get().into(SystemMessageBean.class);
             systemMessageBean.setMessageDateStr(DateTimeUtils.formatDate(systemMessageBean.getMessageDate(), "yyyy年MM月dd日 hh:mm:ss"));
             Byte b = 1;
             systemMessageBean.setIsSee(b);
             systemMessageService.update(systemMessageBean);
+            // 若单独点击消息则需要更新提醒状态
+            SystemAlertType systemAlertType = systemAlertTypeService.findByType(Workbook.ALERT_MESSAGE_TYPE);
+            if (!ObjectUtils.isEmpty(systemAlertType)) {
+                Optional<Record> systemAlertRecord = systemAlertService.findByUsernameAndLinkIdAndSystemAlertTypeId(users.getUsername(), systemMessageBean.getSystemMessageId(), systemAlertType.getSystemAlertTypeId());
+                if (systemAlertRecord.isPresent()) {
+                    SystemAlert systemAlert = systemAlertRecord.get().into(SystemAlert.class);
+                    systemAlert.setIsSee(b);
+                    systemAlertService.update(systemAlert);
+                }
+            }
         }
         modelMap.addAttribute("message", systemMessageBean);
 

@@ -18,10 +18,6 @@ open class SystemAlertTypeServiceImpl : SystemAlertTypeService {
     @Resource
     open lateinit var systemAlertTypeDao: SystemAlertTypeDao
 
-    override fun findById(id: Int): SystemAlertType {
-        return systemAlertTypeDao.findById(id)
-    }
-
     override fun findByType(type: String): SystemAlertType {
         return systemAlertTypeDao.fetchOne(SYSTEM_ALERT_TYPE.NAME, type)
     }

@@ -20,6 +20,7 @@ import javax.annotation.Resource
 
 import top.zbeboy.isy.domain.Tables.SYSTEM_ALERT
 import top.zbeboy.isy.domain.Tables.SYSTEM_ALERT_TYPE
+import top.zbeboy.isy.domain.tables.records.SystemAlertRecord
 
 /**
  * Created by zbeboy 2017-11-07 .
@@ -33,10 +34,19 @@ open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext)
     @Resource
     open lateinit var systemAlertDao: SystemAlertDao
 
-    override fun findByUsernameAndLinkId(username: String, linkId: String): Optional<Record> {
+    override fun findByUsernameAndId(username: String, id: String): Optional<Record> {
         return create.select()
                 .from(SYSTEM_ALERT)
-                .where(SYSTEM_ALERT.USERNAME.eq(username).and(SYSTEM_ALERT.LINK_ID.eq(linkId)))
+                .join(SYSTEM_ALERT_TYPE)
+                .on(SYSTEM_ALERT.SYSTEM_ALERT_TYPE_ID.eq(SYSTEM_ALERT_TYPE.SYSTEM_ALERT_TYPE_ID))
+                .where(SYSTEM_ALERT.USERNAME.eq(username).and(SYSTEM_ALERT.SYSTEM_ALERT_ID.eq(id)))
+                .fetchOptional()
+    }
+
+    override fun findByUsernameAndLinkIdAndSystemAlertTypeId(username: String, linkId: String, systemAlertTypeId: Int): Optional<Record> {
+        return create.select()
+                .from(SYSTEM_ALERT)
+                .where(SYSTEM_ALERT.USERNAME.eq(username).and(SYSTEM_ALERT.LINK_ID.eq(linkId)).and(SYSTEM_ALERT.SYSTEM_ALERT_TYPE_ID.eq(systemAlertTypeId)))
                 .fetchOptional()
     }
 

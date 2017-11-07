@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.system
 import org.jooq.Record
 import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.SystemAlert
+import top.zbeboy.isy.domain.tables.records.SystemAlertRecord
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean
 import top.zbeboy.isy.web.util.PaginationUtils
 import java.sql.Timestamp
@@ -14,13 +15,18 @@ import java.util.*
 interface SystemAlertService {
 
     /**
-     * 通过用户账号和链接id查询
+     * 通过用户账号和主键查询
      *
      * @param username 用户账号
-     * @param linkId   链接id
+     * @param id   主键
      * @return 提醒内容
      */
-    fun findByUsernameAndLinkId(username: String, linkId: String): Optional<Record>
+    fun findByUsernameAndId(username: String, id: String): Optional<Record>
+
+    /**
+     * 通过用户账号，链接id，提醒类型id查询
+     */
+    fun findByUsernameAndLinkIdAndSystemAlertTypeId(username: String, linkId: String, systemAlertTypeId: Int): Optional<Record>
 
     /**
      * 系统导航栏提醒显示用
