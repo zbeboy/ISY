@@ -73,15 +73,15 @@ open class SystemMailboxGlueImpl : ElasticPlugin<SystemMailboxBean>(), SystemMai
      * @return 搜索条件
      */
     override fun searchCondition(search: JSONObject): QueryBuilder? {
-        val boolqueryBuilder = QueryBuilders.boolQuery()
+        val bluerBuilder = QueryBuilders.boolQuery()
         if (!ObjectUtils.isEmpty(search)) {
             val acceptMail = StringUtils.trimWhitespace(search.getString("acceptMail"))
             if (StringUtils.hasLength(acceptMail)) {
                 val wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptMail", SQLQueryUtils.elasticLikeAllParam(acceptMail))
-                boolqueryBuilder.must(wildcardQueryBuilder)
+                bluerBuilder.must(wildcardQueryBuilder)
             }
         }
-        return boolqueryBuilder
+        return bluerBuilder
     }
 
     /**

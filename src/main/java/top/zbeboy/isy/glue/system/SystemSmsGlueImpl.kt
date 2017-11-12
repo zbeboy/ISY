@@ -73,15 +73,15 @@ open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(),SystemSmsGlue{
      * @return 搜索条件
      */
     override fun searchCondition(search: JSONObject): QueryBuilder? {
-        val boolqueryBuilder = QueryBuilders.boolQuery()
+        val bluerBuilder = QueryBuilders.boolQuery()
         if (!ObjectUtils.isEmpty(search)) {
             val acceptPhone = StringUtils.trimWhitespace(search.getString("acceptPhone"))
             if (StringUtils.hasLength(acceptPhone)) {
                 val wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptPhone", SQLQueryUtils.elasticLikeAllParam(acceptPhone))
-                boolqueryBuilder.must(wildcardQueryBuilder)
+                bluerBuilder.must(wildcardQueryBuilder)
             }
         }
-        return boolqueryBuilder
+        return bluerBuilder
     }
 
     /**

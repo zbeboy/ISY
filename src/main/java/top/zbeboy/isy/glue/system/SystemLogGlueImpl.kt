@@ -74,27 +74,27 @@ open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
      * @return 搜索条件
      */
     override fun searchCondition(search: JSONObject): QueryBuilder? {
-        val boolqueryBuilder = QueryBuilders.boolQuery()
+        val bluerBuilder = QueryBuilders.boolQuery()
         if (!ObjectUtils.isEmpty(search)) {
             val username = StringUtils.trimWhitespace(search.getString("username"))
             val behavior = StringUtils.trimWhitespace(search.getString("behavior"))
             val ipAddress = StringUtils.trimWhitespace(search.getString("ipAddress"))
             if (StringUtils.hasLength(username)) {
                 val wildcardQueryBuilder = QueryBuilders.wildcardQuery("username", SQLQueryUtils.elasticLikeAllParam(username))
-                boolqueryBuilder.must(wildcardQueryBuilder)
+                bluerBuilder.must(wildcardQueryBuilder)
             }
 
             if (StringUtils.hasLength(behavior)) {
                 val matchQueryBuilder = QueryBuilders.matchPhraseQuery("behavior", behavior)
-                boolqueryBuilder.must(matchQueryBuilder)
+                bluerBuilder.must(matchQueryBuilder)
             }
 
             if (StringUtils.hasLength(ipAddress)) {
                 val wildcardQueryBuilder = QueryBuilders.wildcardQuery("ipAddress", SQLQueryUtils.elasticLikeAllParam(ipAddress))
-                boolqueryBuilder.must(wildcardQueryBuilder)
+                bluerBuilder.must(wildcardQueryBuilder)
             }
         }
-        return boolqueryBuilder
+        return bluerBuilder
     }
 
     /**
