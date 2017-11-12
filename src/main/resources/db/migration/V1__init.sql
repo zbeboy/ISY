@@ -127,7 +127,7 @@ CREATE TABLE political_landscape (
 
 CREATE TABLE nation (
   nation_id   INT AUTO_INCREMENT PRIMARY KEY,
-  nation_name VARCHAR(30) UNIQUE NOT NULL
+  nation_name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE academic_title (
