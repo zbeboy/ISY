@@ -1,19 +1,17 @@
-package top.zbeboy.isy.service.platform;
+package top.zbeboy.isy.service.platform
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.Role;
-import top.zbeboy.isy.domain.tables.records.RoleRecord;
-import top.zbeboy.isy.web.bean.platform.role.RoleBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.Role
+import top.zbeboy.isy.domain.tables.records.RoleRecord
+import top.zbeboy.isy.web.bean.platform.role.RoleBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by lenovo on 2016-10-04.
- */
-public interface RoleService {
+ * Created by zbeboy 2017-11-13 .
+ **/
+interface RoleService {
 
     /**
      * 通过角色名查询
@@ -21,7 +19,7 @@ public interface RoleService {
      * @param roleEnName 角色名
      * @return 角色
      */
-    Role findByRoleEnName(String roleEnName);
+    fun findByRoleEnName(roleEnName: String): Role
 
     /**
      * 通过角色名与角色类型查询
@@ -30,7 +28,7 @@ public interface RoleService {
      * @param roleType 角色类型
      * @return 数据
      */
-    Result<Record> findByRoleNameAndRoleType(String roleName, int roleType);
+    fun findByRoleNameAndRoleType(roleName: String, roleType: Int): Result<Record>
 
     /**
      * 通过角色名与角色类型查询 注：不等于角色id
@@ -40,7 +38,7 @@ public interface RoleService {
      * @param roleId   角色id
      * @return 数据
      */
-    Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, String roleId);
+    fun findByRoleNameAndRoleTypeNeRoleId(roleName: String, roleType: Int, roleId: String): Result<Record>
 
     /**
      * 通过主键查询
@@ -48,7 +46,7 @@ public interface RoleService {
      * @param id 主键
      * @return 角色
      */
-    Role findById(String id);
+    fun findById(id: String): Role
 
     /**
      * 根据角色id关联查询
@@ -56,7 +54,7 @@ public interface RoleService {
      * @param roleId 角色id
      * @return 关联查询结果
      */
-    Optional<Record> findByRoleIdRelation(String roleId);
+    fun findByRoleIdRelation(roleId: String): Optional<Record>
 
     /**
      * 通过角色名和院id查询
@@ -65,7 +63,7 @@ public interface RoleService {
      * @param collegeId 院id
      * @return 结果集
      */
-    Result<Record> findByRoleNameAndCollegeId(String roleName, int collegeId);
+    fun findByRoleNameAndCollegeId(roleName: String, collegeId: Int): Result<Record>
 
     /**
      * 通过角色名和院id查询 注不等于角色id
@@ -75,28 +73,28 @@ public interface RoleService {
      * @param roleId    角色id
      * @return 结果集
      */
-    Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, String roleId);
+    fun findByRoleNameAndCollegeIdNeRoleId(roleName: String, collegeId: Int, roleId: String): Result<Record>
 
     /**
      * 保存
      *
      * @param role 角色
      */
-    void save(Role role);
+    fun save(role: Role)
 
     /**
      * 更新
      *
      * @param role 角色
      */
-    void update(Role role);
+    fun update(role: Role)
 
     /**
      * 通过主键删除
      *
      * @param id 主键
      */
-    void deleteById(String id);
+    fun deleteById(id: String)
 
     /**
      * 批量查询
@@ -104,7 +102,7 @@ public interface RoleService {
      * @param ids ids
      * @return roles
      */
-    Result<RoleRecord> findInRoleId(List<String> ids);
+    fun findInRoleId(ids: List<String>): Result<RoleRecord>
 
     /**
      * 分页查询
@@ -112,21 +110,21 @@ public interface RoleService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<RoleBean> dataTablesUtils, RoleBean roleBean);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Result<Record>?
 
     /**
      * 角色总数
      *
      * @return 总数
      */
-    int countAll(RoleBean roleBean);
+    fun countAll(roleBean: RoleBean): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<RoleBean> dataTablesUtils, RoleBean roleBean);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Int
 
     /**
      * 查询不在院与角色关联表中的角色
@@ -134,7 +132,7 @@ public interface RoleService {
      * @param roleName 角色名
      * @return 数据
      */
-    Result<RoleRecord> findByRoleNameNotExistsCollegeRole(String roleName);
+    fun findByRoleNameNotExistsCollegeRole(roleName: String): Result<RoleRecord>
 
     /**
      * 查询不在院与角色关联表中的角色 注：不等于角色id
@@ -143,7 +141,7 @@ public interface RoleService {
      * @param roleId   角色id
      * @return 结果集
      */
-    Result<RoleRecord> findByRoleNameNotExistsCollegeRoleNeRoleId(String roleName, String roleId);
+    fun findByRoleNameNotExistsCollegeRoleNeRoleId(roleName: String, roleId: String): Result<RoleRecord>
 
     /**
      * 检查当前用户是否有此权限
@@ -151,7 +149,7 @@ public interface RoleService {
      * @param role 权限
      * @return true 有 false 无
      */
-    boolean isCurrentUserInRole(String role);
+    fun isCurrentUserInRole(role: String): Boolean
 
     /**
      * 获取角色院id
@@ -159,7 +157,7 @@ public interface RoleService {
      * @param record 数据库信息
      * @return id
      */
-    int getRoleCollegeId(Optional<Record> record);
+    fun getRoleCollegeId(record: Optional<Record>): Int
 
     /**
      * 获取角色系id
@@ -167,5 +165,5 @@ public interface RoleService {
      * @param record 数据库信息
      * @return id
      */
-    int getRoleDepartmentId(Optional<Record> record);
+    fun getRoleDepartmentId(record: Optional<Record>): Int
 }
