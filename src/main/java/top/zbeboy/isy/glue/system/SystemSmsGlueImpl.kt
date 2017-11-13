@@ -3,8 +3,6 @@ package top.zbeboy.isy.glue.system
 import com.alibaba.fastjson.JSONObject
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
-import org.elasticsearch.search.sort.SortBuilders
-import org.elasticsearch.search.sort.SortOrder
 import org.springframework.data.domain.Page
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Repository
@@ -13,19 +11,20 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.elastic.pojo.SystemSmsElastic
 import top.zbeboy.isy.elastic.repository.SystemSmsElasticRepository
 import top.zbeboy.isy.glue.plugin.ElasticPlugin
+import top.zbeboy.isy.glue.sort.system.SystemSmsGlueSort
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.system.sms.SystemSmsBean
 import top.zbeboy.isy.web.util.DataTablesUtils
-import java.util.ArrayList
+import java.util.*
 import javax.annotation.Resource
 
 /**
  * Created by zbeboy 2017-11-11 .
  **/
 @Repository("systemSmsGlue")
-open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(),SystemSmsGlue{
+open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(), SystemSmsGlue {
 
     @Resource
     open lateinit var systemSmsElasticRepository: SystemSmsElasticRepository
@@ -95,41 +94,14 @@ open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(),SystemSmsGlue{
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
-            if ("system_sms_id".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
 
-            if ("send_time".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.ASC).unmappedType("long"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.DESC).unmappedType("long"))
-                }
-            }
+            SystemSmsGlueSort.sortSystemSmsId(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("accept_phone".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            SystemSmsGlueSort.sortSendTime(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("send_condition".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            SystemSmsGlueSort.sortAcceptPhone(nativeSearchQueryBuilder, isAsc, orderColumnName)
+
+            SystemSmsGlueSort.sortSendCondition(nativeSearchQueryBuilder, isAsc, orderColumnName)
         }
         return nativeSearchQueryBuilder
     }
