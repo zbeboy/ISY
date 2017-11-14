@@ -278,10 +278,11 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
             init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-            var temp = '<button type="button" id="regulate_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-                '  <button type="button" id="regulate_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+            var temp = '  <button type="button" id="regulate_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp + global_button;
         }
+        global_button = '<button type="button" id="regulate_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+            global_button;
         $('#global_button').append(global_button);
 
         /*
