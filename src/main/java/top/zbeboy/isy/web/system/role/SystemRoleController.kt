@@ -2,7 +2,6 @@ package top.zbeboy.isy.web.system.role
 
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
-import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -17,11 +16,9 @@ import top.zbeboy.isy.web.bean.platform.role.RoleBean
 import top.zbeboy.isy.web.bean.tree.TreeBean
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
-import java.util.ArrayList
+import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
-
-import top.zbeboy.isy.domain.Tables.ROLE
 
 /**
  * Created by zbeboy 2017-11-13 .
@@ -69,16 +66,7 @@ open class SystemRoleController {
         otherCondition.roleType = 1
         val dataTablesUtils = DataTablesUtils<RoleBean>(request, headers)
         val records = roleService.findAllByPage(dataTablesUtils, otherCondition)
-        val roleBeens = ArrayList<RoleBean>()
-        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
-            for (record in records) {
-                val roleBean = RoleBean()
-                roleBean.roleId = record.getValue<String>(ROLE.ROLE_ID)
-                roleBean.roleName = record.getValue<String>(ROLE.ROLE_NAME)
-                roleBean.roleEnName = record.getValue<String>(ROLE.ROLE_EN_NAME)
-                roleBeens.add(roleBean)
-            }
-        }
+        val roleBeens = roleService.dealData(records)
         dataTablesUtils.data = roleBeens
         dataTablesUtils.setiTotalRecords(roleService.countAll(otherCondition).toLong())
         dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils, otherCondition).toLong())
@@ -93,13 +81,7 @@ open class SystemRoleController {
     @RequestMapping(value = "/web/system/role/edit", method = arrayOf(RequestMethod.GET))
     fun roleEdit(@RequestParam("id") roleId: String, modelMap: ModelMap): String {
         val record = roleService.findByRoleIdRelation(roleId)
-        val roleBean = RoleBean()
-        if (record.isPresent) {
-            val temp = record.get()
-            roleBean.roleId = temp.getValue<String>(ROLE.ROLE_ID)
-            roleBean.roleName = temp.getValue<String>(ROLE.ROLE_NAME)
-            roleBean.roleEnName = temp.getValue<String>(ROLE.ROLE_EN_NAME)
-        }
+        val roleBean = roleService.dealDataSingle(record)
         modelMap.addAttribute("role", roleBean)
         return "web/system/role/system_role_edit::#page-wrapper"
     }

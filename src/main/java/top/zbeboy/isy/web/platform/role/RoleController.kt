@@ -2,14 +2,12 @@ package top.zbeboy.isy.web.platform.role
 
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
-import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.pojos.CollegeRole
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication
@@ -91,20 +89,7 @@ open class RoleController {
         otherCondition.roleType = 2
         val dataTablesUtils = DataTablesUtils<RoleBean>(request, headers)
         val records = roleService.findAllByPage(dataTablesUtils, otherCondition)
-        val roleBeens = ArrayList<RoleBean>()
-        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
-            for (record in records) {
-                val roleBean = RoleBean()
-                roleBean.roleId = record.getValue<String>(ROLE.ROLE_ID)
-                roleBean.roleName = record.getValue<String>(ROLE.ROLE_NAME)
-                roleBean.roleEnName = record.getValue<String>(ROLE.ROLE_EN_NAME)
-                roleBean.collegeId = record.getValue<Int>(COLLEGE.COLLEGE_ID)
-                roleBean.collegeName = record.getValue<String>(COLLEGE.COLLEGE_NAME)
-                roleBean.schoolId = record.getValue<Int>(SCHOOL.SCHOOL_ID)
-                roleBean.schoolName = record.getValue<String>(SCHOOL.SCHOOL_NAME)
-                roleBeens.add(roleBean)
-            }
-        }
+        val roleBeens = roleService.dealDataRelation(records)
         dataTablesUtils.setData(roleBeens)
         dataTablesUtils.setiTotalRecords(roleService.countAll(otherCondition).toLong())
         dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils, otherCondition).toLong())
@@ -133,17 +118,7 @@ open class RoleController {
     @RequestMapping(value = "/web/platform/role/edit", method = arrayOf(RequestMethod.GET))
     fun roleEdit(@RequestParam("id") roleId: String, modelMap: ModelMap): String {
         val record = roleService.findByRoleIdRelation(roleId)
-        val roleBean = RoleBean()
-        if (record.isPresent) {
-            val temp = record.get()
-            roleBean.roleId = temp.getValue<String>(ROLE.ROLE_ID)
-            roleBean.roleName = temp.getValue<String>(ROLE.ROLE_NAME)
-            roleBean.roleEnName = temp.getValue<String>(ROLE.ROLE_EN_NAME)
-            roleBean.collegeId = temp.getValue<Int>(COLLEGE.COLLEGE_ID)
-            roleBean.collegeName = temp.getValue<String>(COLLEGE.COLLEGE_NAME)
-            roleBean.schoolId = temp.getValue<Int>(SCHOOL.SCHOOL_ID)
-            roleBean.schoolName = temp.getValue<String>(SCHOOL.SCHOOL_NAME)
-        }
+        val roleBean = roleService.dealDataRelationSingle(record)
         modelMap.addAttribute("role", roleBean)
         commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap)
         return "web/platform/role/role_edit::#page-wrapper"
@@ -309,14 +284,12 @@ open class RoleController {
     @ResponseBody
     fun roleDelete(@RequestParam("roleId") roleId: String): AjaxUtils<*> {
         val record = roleService.findByRoleIdRelation(roleId)
-        if (record.isPresent) {
-            val temp = record.get()
-            collegeRoleService.deleteByRoleId(roleId)
-            roleApplicationService.deleteByRoleId(roleId)
-            authoritiesService.deleteByAuthorities(temp.getValue<String>(ROLE.ROLE_EN_NAME))
-            roleService.deleteById(roleId)
-            elasticSyncService.collegeRoleNameUpdate(temp.getValue<Int>(COLLEGE.COLLEGE_ID), temp.getValue<String>(ROLE.ROLE_NAME))
-        }
+        val roleBean = roleService.dealDataRelationSingle(record)
+        collegeRoleService.deleteByRoleId(roleId)
+        roleApplicationService.deleteByRoleId(roleId)
+        authoritiesService.deleteByAuthorities(roleBean.roleEnName!!)
+        roleService.deleteById(roleId)
+        elasticSyncService.collegeRoleNameUpdate(roleBean.collegeId!!, roleBean.roleName!!)
         return AjaxUtils.of<Any>().success().msg("删除成功")
     }
 

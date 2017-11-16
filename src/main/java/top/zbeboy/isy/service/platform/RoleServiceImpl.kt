@@ -264,6 +264,64 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         } else 0
     }
 
+    override fun dealData(records: Result<Record>?): ArrayList<RoleBean> {
+        val roleBeens = ArrayList<RoleBean>()
+        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
+            for (record in records) {
+                val roleBean = RoleBean()
+                roleBean.roleId = record.getValue<String>(ROLE.ROLE_ID)
+                roleBean.roleName = record.getValue<String>(ROLE.ROLE_NAME)
+                roleBean.roleEnName = record.getValue<String>(ROLE.ROLE_EN_NAME)
+                roleBeens.add(roleBean)
+            }
+        }
+        return roleBeens
+    }
+
+    override fun dealDataSingle(records: Optional<Record>): RoleBean {
+        val roleBean = RoleBean()
+        if (records.isPresent) {
+            val temp = records.get()
+            roleBean.roleId = temp.getValue<String>(ROLE.ROLE_ID)
+            roleBean.roleName = temp.getValue<String>(ROLE.ROLE_NAME)
+            roleBean.roleEnName = temp.getValue<String>(ROLE.ROLE_EN_NAME)
+        }
+        return roleBean
+    }
+
+    override fun dealDataRelation(records: Result<Record>?): ArrayList<RoleBean> {
+        val roleBeens = ArrayList<RoleBean>()
+        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
+            for (record in records) {
+                val roleBean = RoleBean()
+                roleBean.roleId = record.getValue<String>(ROLE.ROLE_ID)
+                roleBean.roleName = record.getValue<String>(ROLE.ROLE_NAME)
+                roleBean.roleEnName = record.getValue<String>(ROLE.ROLE_EN_NAME)
+                roleBean.collegeId = record.getValue<Int>(COLLEGE.COLLEGE_ID)
+                roleBean.collegeName = record.getValue<String>(COLLEGE.COLLEGE_NAME)
+                roleBean.schoolId = record.getValue<Int>(SCHOOL.SCHOOL_ID)
+                roleBean.schoolName = record.getValue<String>(SCHOOL.SCHOOL_NAME)
+                roleBeens.add(roleBean)
+            }
+        }
+        return roleBeens
+    }
+
+    override fun dealDataRelationSingle(records: Optional<Record>): RoleBean {
+        val roleBean = RoleBean()
+        if (records.isPresent) {
+            val temp = records.get()
+            roleBean.roleId = temp.getValue<String>(ROLE.ROLE_ID)
+            roleBean.roleName = temp.getValue<String>(ROLE.ROLE_NAME)
+            roleBean.roleEnName = temp.getValue<String>(ROLE.ROLE_EN_NAME)
+            roleBean.collegeId = temp.getValue<Int>(COLLEGE.COLLEGE_ID)
+            roleBean.collegeName = temp.getValue<String>(COLLEGE.COLLEGE_NAME)
+            roleBean.schoolId = temp.getValue<Int>(SCHOOL.SCHOOL_ID)
+            roleBean.schoolName = temp.getValue<String>(SCHOOL.SCHOOL_NAME)
+        }
+        return roleBean
+    }
+
     override fun findByRoleNameNotExistsCollegeRole(roleName: String): Result<RoleRecord> {
         val select = create.selectFrom<CollegeRoleRecord>(COLLEGE_ROLE)
                 .where(COLLEGE_ROLE.ROLE_ID.eq(ROLE.ROLE_ID))

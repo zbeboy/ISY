@@ -127,6 +127,38 @@ interface RoleService {
     fun countByCondition(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Int
 
     /**
+     * 处理角色数据
+     *
+     * @param records 待处理数据
+     * @return 集合数据
+     */
+    fun dealData(records: Result<Record>?): ArrayList<RoleBean>
+
+    /**
+     * 处理单条数据
+     *
+     * @param records 待处理数据
+     * @return 单条数据
+     */
+    fun dealDataSingle(records: Optional<Record>): RoleBean
+
+    /**
+     * 处理角色关联数据
+     *
+     * @param records 待处理数据
+     * @return 集合数据
+     */
+    fun dealDataRelation(records: Result<Record>?): ArrayList<RoleBean>
+
+    /**
+     * 处理角色关联单条数据
+     *
+     * @param records 待处理数据
+     * @return 单条数据
+     */
+    fun dealDataRelationSingle(records: Optional<Record>): RoleBean
+
+    /**
      * 查询不在院与角色关联表中的角色
      *
      * @param roleName 角色名
