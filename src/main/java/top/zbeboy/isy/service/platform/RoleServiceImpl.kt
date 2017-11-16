@@ -113,155 +113,71 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
     }
 
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Result<Record>? {
-        var records: Result<Record>? = null
-        val defaultRoles = getDefaultRoles()
+        val records: Result<Record>?
         val a = searchCondition(dataTablesUtils)
         if (ObjectUtils.isEmpty(a)) {
-            // 分权限显示用户数据
-            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
-                val selectConditionStep = create.select()
-                        .from(ROLE)
-                        .leftJoin(COLLEGE_ROLE)
-                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .leftJoin(COLLEGE)
-                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                        .leftJoin(SCHOOL)
-                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                records = selectConditionStep.fetch()
-            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.userFromSession
-                val record = usersService.findUserSchoolInfo(users)
-                val collegeId = getRoleCollegeId(record)
-                val selectConditionStep = create.select()
-                        .from(ROLE)
-                        .leftJoin(COLLEGE_ROLE)
-                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .leftJoin(COLLEGE)
-                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                        .leftJoin(SCHOOL)
-                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                records = selectConditionStep.fetch()
-            }
+            val selectConditionStep = create.select()
+                    .from(ROLE)
+                    .leftJoin(COLLEGE_ROLE)
+                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                    .leftJoin(COLLEGE)
+                    .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .leftJoin(SCHOOL)
+                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                    .where(buildRoleCondition().and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
+            sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            records = selectConditionStep.fetch()
         } else {
-            // 分权限显示用户数据
-            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
-                val selectConditionStep = create.select()
-                        .from(ROLE)
-                        .leftJoin(COLLEGE_ROLE)
-                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .leftJoin(COLLEGE)
-                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                        .leftJoin(SCHOOL)
-                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                records = selectConditionStep.fetch()
-            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.userFromSession
-                val record = usersService.findUserSchoolInfo(users)
-                val collegeId = getRoleCollegeId(record)
-                val selectConditionStep = create.select()
-                        .from(ROLE)
-                        .leftJoin(COLLEGE_ROLE)
-                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .leftJoin(COLLEGE)
-                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                        .leftJoin(SCHOOL)
-                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                records = selectConditionStep.fetch()
-            }
+            val selectConditionStep = create.select()
+                    .from(ROLE)
+                    .leftJoin(COLLEGE_ROLE)
+                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                    .leftJoin(COLLEGE)
+                    .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .leftJoin(SCHOOL)
+                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                    .where(buildRoleCondition().and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
+            sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            records = selectConditionStep.fetch()
         }
         return records
     }
 
     override fun countAll(roleBean: RoleBean): Int {
-        // 分权限显示用户数据
-        if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
-            val defaultRoles = getDefaultRoles()
-            val count = create.selectCount()
-                    .from(ROLE)
-                    .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                    .fetchOne()
-            return count.value1()
-        } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            val users = usersService.userFromSession
-            val record = usersService.findUserSchoolInfo(users)
-            val collegeId = getRoleCollegeId(record)
-            val count = create.selectCount()
-                    .from(ROLE)
-                    .leftJoin(COLLEGE_ROLE)
-                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                    .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                    .fetchOne()
-            return count.value1()
-        }
-        return 0
+        val count = create.selectCount()
+                .from(ROLE)
+                .leftJoin(COLLEGE_ROLE)
+                .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                .where(buildRoleCondition().and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
+                .fetchOne()
+        return count.value1()
     }
 
     override fun countByCondition(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Int {
-        var count: Record1<Int>? = null
+        val count: Record1<Int>?
         val a = searchCondition(dataTablesUtils)
-        val defaultRoles = getDefaultRoles()
         if (ObjectUtils.isEmpty(a)) {
-            // 分权限显示用户数据
-            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
-                val selectConditionStep = create.selectCount()
-                        .from(ROLE)
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                count = selectConditionStep.fetchOne()
-            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.userFromSession
-                val record = usersService.findUserSchoolInfo(users)
-                val collegeId = getRoleCollegeId(record)
-                val selectConditionStep = create.selectCount()
-                        .from(ROLE)
-                        .leftJoin(COLLEGE_ROLE)
-                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                count = selectConditionStep.fetchOne()
-            }
+            val selectConditionStep = create.selectCount()
+                    .from(ROLE)
+                    .leftJoin(COLLEGE_ROLE)
+                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                    .where(buildRoleCondition().and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
+            count = selectConditionStep.fetchOne()
         } else {
-            // 分权限显示用户数据
-            if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
-                val selectConditionStep = create.selectCount()
-                        .from(ROLE)
-                        .leftJoin(COLLEGE_ROLE)
-                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .leftJoin(COLLEGE)
-                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                        .leftJoin(SCHOOL)
-                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(ROLE.ROLE_EN_NAME.notIn(defaultRoles).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                count = selectConditionStep.fetchOne()
-            } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.userFromSession
-                val record = usersService.findUserSchoolInfo(users)
-                val collegeId = getRoleCollegeId(record)
-                val selectConditionStep = create.selectCount()
-                        .from(ROLE)
-                        .leftJoin(COLLEGE_ROLE)
-                        .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                        .leftJoin(COLLEGE)
-                        .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                        .leftJoin(SCHOOL)
-                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(COLLEGE.COLLEGE_ID.eq(collegeId).and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                count = selectConditionStep.fetchOne()
-            }
+            val selectConditionStep = create.selectCount()
+                    .from(ROLE)
+                    .leftJoin(COLLEGE_ROLE)
+                    .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                    .leftJoin(COLLEGE)
+                    .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .leftJoin(SCHOOL)
+                    .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                    .where(buildRoleCondition().and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
+            count = selectConditionStep.fetchOne()
         }
-        return if (!ObjectUtils.isEmpty(count)) {
-            count!!.value1()
-        } else 0
+        return count.value1()
     }
 
     override fun dealData(records: Result<Record>?): ArrayList<RoleBean> {
@@ -269,9 +185,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
             for (record in records) {
                 val roleBean = RoleBean()
-                roleBean.roleId = record.getValue<String>(ROLE.ROLE_ID)
-                roleBean.roleName = record.getValue<String>(ROLE.ROLE_NAME)
-                roleBean.roleEnName = record.getValue<String>(ROLE.ROLE_EN_NAME)
+                buildRoleBean(roleBean, record)
                 roleBeens.add(roleBean)
             }
         }
@@ -282,11 +196,28 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         val roleBean = RoleBean()
         if (records.isPresent) {
             val temp = records.get()
-            roleBean.roleId = temp.getValue<String>(ROLE.ROLE_ID)
-            roleBean.roleName = temp.getValue<String>(ROLE.ROLE_NAME)
-            roleBean.roleEnName = temp.getValue<String>(ROLE.ROLE_EN_NAME)
+            buildRoleBean(roleBean, temp)
         }
         return roleBean
+    }
+
+    /**
+     * 构建role bean.
+     */
+    private fun buildRoleBean(roleBean: RoleBean, record: Record) {
+        roleBean.roleId = record.getValue<String>(ROLE.ROLE_ID)
+        roleBean.roleName = record.getValue<String>(ROLE.ROLE_NAME)
+        roleBean.roleEnName = record.getValue<String>(ROLE.ROLE_EN_NAME)
+    }
+
+    /**
+     * 构建role bean plugin.
+     */
+    private fun buildRoleBeanPlugin(roleBean: RoleBean, record: Record) {
+        roleBean.collegeId = record.getValue<Int>(COLLEGE.COLLEGE_ID)
+        roleBean.collegeName = record.getValue<String>(COLLEGE.COLLEGE_NAME)
+        roleBean.schoolId = record.getValue<Int>(SCHOOL.SCHOOL_ID)
+        roleBean.schoolName = record.getValue<String>(SCHOOL.SCHOOL_NAME)
     }
 
     override fun dealDataRelation(records: Result<Record>?): ArrayList<RoleBean> {
@@ -294,13 +225,8 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
             for (record in records) {
                 val roleBean = RoleBean()
-                roleBean.roleId = record.getValue<String>(ROLE.ROLE_ID)
-                roleBean.roleName = record.getValue<String>(ROLE.ROLE_NAME)
-                roleBean.roleEnName = record.getValue<String>(ROLE.ROLE_EN_NAME)
-                roleBean.collegeId = record.getValue<Int>(COLLEGE.COLLEGE_ID)
-                roleBean.collegeName = record.getValue<String>(COLLEGE.COLLEGE_NAME)
-                roleBean.schoolId = record.getValue<Int>(SCHOOL.SCHOOL_ID)
-                roleBean.schoolName = record.getValue<String>(SCHOOL.SCHOOL_NAME)
+                buildRoleBean(roleBean, record)
+                buildRoleBeanPlugin(roleBean, record)
                 roleBeens.add(roleBean)
             }
         }
@@ -311,13 +237,8 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         val roleBean = RoleBean()
         if (records.isPresent) {
             val temp = records.get()
-            roleBean.roleId = temp.getValue<String>(ROLE.ROLE_ID)
-            roleBean.roleName = temp.getValue<String>(ROLE.ROLE_NAME)
-            roleBean.roleEnName = temp.getValue<String>(ROLE.ROLE_EN_NAME)
-            roleBean.collegeId = temp.getValue<Int>(COLLEGE.COLLEGE_ID)
-            roleBean.collegeName = temp.getValue<String>(COLLEGE.COLLEGE_NAME)
-            roleBean.schoolId = temp.getValue<Int>(SCHOOL.SCHOOL_ID)
-            roleBean.schoolName = temp.getValue<String>(SCHOOL.SCHOOL_NAME)
+            buildRoleBean(roleBean, temp)
+            buildRoleBeanPlugin(roleBean, temp)
         }
         return roleBean
     }
@@ -477,5 +398,23 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         }
 
         sortToFinish(selectConditionStep, selectJoinStep, type, *sortField!!)
+    }
+
+    /**
+     * 构建该角色查询条件
+     */
+    private fun buildRoleCondition(): Condition {
+        var condition: Condition? = null
+        val defaultRoles = getDefaultRoles()
+        // 分权限显示用户数据
+        if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
+            condition = ROLE.ROLE_EN_NAME.notIn(defaultRoles)
+        } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
+            val users = usersService.userFromSession
+            val record = usersService.findUserSchoolInfo(users)
+            val collegeId = getRoleCollegeId(record)
+            condition = COLLEGE.COLLEGE_ID.eq(collegeId)
+        }
+        return condition!!
     }
 }
