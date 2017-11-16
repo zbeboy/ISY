@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils;
 import top.zbeboy.isy.domain.tables.daos.ApplicationDao;
 import top.zbeboy.isy.domain.tables.pojos.Application;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
-import top.zbeboy.isy.service.platform.RoleApplicationService;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
 import top.zbeboy.isy.web.bean.system.application.ApplicationBean;
@@ -38,9 +37,6 @@ public class ApplicationServiceImpl extends DataTablesPlugin<ApplicationBean> im
 
     @Resource
     private ApplicationDao applicationDao;
-
-    @Resource
-    private RoleApplicationService roleApplicationService;
 
     @Autowired
     public ApplicationServiceImpl(DSLContext dslContext) {
