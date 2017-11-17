@@ -2,7 +2,6 @@ package top.zbeboy.isy.service.graduate.design;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import top.zbeboy.isy.domain.tables.daos.GraduationDesignDatumGroupDao;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDatumGroup;
 import top.zbeboy.isy.service.plugin.DataTablesPlugin;
 import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumGroupBean;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 

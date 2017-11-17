@@ -125,8 +125,8 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                     .leftJoin(SCHOOL)
                     .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .where(buildRoleCondition().and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-            sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-            pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
             records = selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
@@ -138,8 +138,8 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                     .leftJoin(SCHOOL)
                     .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .where(buildRoleCondition().and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-            sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-            pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
+            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
             records = selectConditionStep.fetch()
         }
         return records
@@ -345,7 +345,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
-    override fun sortCondition(dataTablesUtils: DataTablesUtils<RoleBean>, selectConditionStep: SelectConditionStep<Record>, selectJoinStep: SelectJoinStep<Record>?, type: Int) {
+    override fun sortCondition(dataTablesUtils: DataTablesUtils<RoleBean>, selectConditionStep: SelectConditionStep<Record>?, selectJoinStep: SelectJoinStep<Record>?, type: Int) {
         val orderColumnName = dataTablesUtils.orderColumnName
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
