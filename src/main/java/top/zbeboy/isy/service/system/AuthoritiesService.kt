@@ -1,14 +1,12 @@
-package top.zbeboy.isy.service.system;
+package top.zbeboy.isy.service.system
 
-import top.zbeboy.isy.domain.tables.pojos.Authorities;
-import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-
-import java.util.List;
+import top.zbeboy.isy.domain.tables.pojos.Authorities
+import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord
 
 /**
- * Created by lenovo on 2016-02-21.
- */
-public interface AuthoritiesService {
+ * Created by zbeboy 2017-11-17 .
+ **/
+interface AuthoritiesService {
 
     /**
      * 通过用户名查询
@@ -16,33 +14,33 @@ public interface AuthoritiesService {
      * @param username 账号
      * @return 权限
      */
-    List<AuthoritiesRecord> findByUsername(String username);
+    fun findByUsername(username: String): List<AuthoritiesRecord>
 
     /**
      * 保存
      *
      * @param authorities 权限
      */
-    void save(Authorities authorities);
+    fun save(authorities: Authorities)
 
     /**
      * 通过用户账号删除
      *
      * @param username 用户账号
      */
-    void deleteByUsername(String username);
+    fun deleteByUsername(username: String)
 
     /**
      * 通过权限删除
      *
      * @param authorities 权限
      */
-    void deleteByAuthorities(String authorities);
+    fun deleteByAuthorities(authorities: String)
 
     /**
      * Check if user is login by remember me cookie, refer
      * org.springframework.security.authentication.AuthenticationTrustResolverImpl
      * @return true or false
      */
-    boolean isRememberMeAuthenticated();
+    fun isRememberMeAuthenticated(): Boolean
 }

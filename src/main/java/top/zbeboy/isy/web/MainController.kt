@@ -73,7 +73,7 @@ open class MainController {
     @RequestMapping(value = "/login", method = arrayOf(RequestMethod.GET))
     fun login(): String {
         val page: String
-        if (authoritiesService.isRememberMeAuthenticated) {
+        if (authoritiesService.isRememberMeAuthenticated()) {
             page = "redirect:/web/menu/backstage"
         } else {
             page = "login"
