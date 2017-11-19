@@ -2,6 +2,7 @@ package top.zbeboy.isy.glue.data;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -108,7 +109,7 @@ public class StudentGlueImpl implements StudentGlue {
         List<StudentBean> students = new ArrayList<>();
         for (StudentElastic studentElastic : studentElasticPage.getContent()) {
             StudentBean studentBean = new StudentBean();
-            studentBean.setStudentId(studentElastic.getStudentId());
+            studentBean.setStudentId(NumberUtils.toInt(studentElastic.getStudentId()));
             studentBean.setStudentNumber(studentElastic.getStudentNumber());
             studentBean.setBirthday(studentElastic.getBirthday());
             studentBean.setSex(studentElastic.getSex());

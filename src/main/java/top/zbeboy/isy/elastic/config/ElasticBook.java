@@ -6,7 +6,7 @@ package top.zbeboy.isy.elastic.config;
 public class ElasticBook {
 
     /*
-      无权限
+    无权限
      */
     public static final int NO_AUTHORITIES = 99999;
     /*

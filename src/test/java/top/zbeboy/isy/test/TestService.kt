@@ -12,17 +12,17 @@ import javax.annotation.Resource
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = arrayOf(Application::class))
-class TestService {
+open class TestService {
 
     @Resource
-    private val applicationService: ApplicationService? = null
+    open lateinit var applicationService: ApplicationService
 
     @Resource
-    private val studentElasticRepository: StudentElasticRepository? = null
+    open lateinit var studentElasticRepository: StudentElasticRepository
 
     @Test
     fun testApplicationToJsonMethod() {
-        val treeBeens = applicationService?.getApplicationJson("0")
+        val treeBeens = applicationService.getApplicationJson("0")
         println(treeBeens)
         val json = JSON.toJSONString(treeBeens, true)
         println(json)
@@ -30,10 +30,10 @@ class TestService {
 
     @Test
     fun deleteStudentByUsername() {
-        val studentElastic = studentElasticRepository?.findByUsername("1006367538@qq.com")
+        val studentElastic = studentElasticRepository.findByUsername("1006367538@qq.com")
         println(studentElastic)
 
-        val studentElastics = studentElasticRepository?.findAll()
+        val studentElastics = studentElasticRepository.findAll()
         studentElastics?.forEach { student -> println(student) }
 //        studentElasticRepository?.deleteByUsername("")
     }

@@ -1,7 +1,6 @@
 package top.zbeboy.isy.elastic.repository;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import top.zbeboy.isy.elastic.pojo.StudentElastic;
 
 import java.util.Collection;

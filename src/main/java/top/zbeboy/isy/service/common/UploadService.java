@@ -1,12 +1,10 @@
 package top.zbeboy.isy.service.common;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.web.bean.file.FileBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.List;
 
 /**

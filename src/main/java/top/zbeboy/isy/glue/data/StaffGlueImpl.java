@@ -2,6 +2,7 @@ package top.zbeboy.isy.glue.data;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -107,7 +108,7 @@ public class StaffGlueImpl implements StaffGlue {
         List<StaffBean> staffs = new ArrayList<>();
         for (StaffElastic staffElastic : staffElasticPage.getContent()) {
             StaffBean staffBean = new StaffBean();
-            staffBean.setStaffId(staffElastic.getStaffId());
+            staffBean.setStaffId(NumberUtils.toInt(staffElastic.getStaffId()));
             staffBean.setStaffNumber(staffElastic.getStaffNumber());
             staffBean.setBirthday(staffElastic.getBirthday());
             staffBean.setSex(staffElastic.getSex());
