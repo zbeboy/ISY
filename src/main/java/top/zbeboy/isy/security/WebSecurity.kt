@@ -36,7 +36,7 @@ class WebSecurity {
      * @return true可访问 false 不可访问该路径
      */
     fun check(authentication: Authentication, request: HttpServletRequest): Boolean {
-        val users = usersService.userFromSession
+        val users = usersService.getUserFromSession()
         if (ObjectUtils.isEmpty(users)) {
             return false
         }
@@ -47,7 +47,7 @@ class WebSecurity {
             return true
         }
         var hasRole = false
-        val roleList = cacheManageService.findByUsernameWithRole(users.username)// 已缓存
+        val roleList = cacheManageService.findByUsernameWithRole(users!!.username)// 已缓存
         val roleIds = ArrayList<String>()
         roleList.forEach{role->roleIds.add(role.roleId)}
         val roleApplications = cacheManageService.findInRoleIdsWithUsername(roleIds, users.username)// 已缓存

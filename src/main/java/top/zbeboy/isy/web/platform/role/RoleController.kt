@@ -138,8 +138,8 @@ open class RoleController {
         val roleName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(roleName)) {
             if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.userFromSession
-                val record = usersService.findUserSchoolInfo(users)
+                val users = usersService.getUserFromSession()
+                val record = usersService.findUserSchoolInfo(users!!)
                 tempCollegeId = roleService.getRoleCollegeId(record)
             }
             if (tempCollegeId > 0) {
@@ -177,8 +177,8 @@ open class RoleController {
         val roleName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(roleName)) {
             if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.userFromSession
-                val record = usersService.findUserSchoolInfo(users)
+                val users = usersService.getUserFromSession()
+                val record = usersService.findUserSchoolInfo(users!!)
                 tempCollegeId = roleService.getRoleCollegeId(record)
             }
             if (tempCollegeId > 0) {
@@ -220,8 +220,8 @@ open class RoleController {
         role.roleType = 2
         roleService.save(role)
         if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            val users = usersService.userFromSession
-            val record = usersService.findUserSchoolInfo(users)
+            val users = usersService.getUserFromSession()
+            val record = usersService.findUserSchoolInfo(users!!)
             tempCollegeId = roleService.getRoleCollegeId(record)
         }
         saveOrUpdate(tempCollegeId, applicationIds, roleId)
@@ -250,8 +250,8 @@ open class RoleController {
         // 当是系统角色时，可能改变这个角色到其它院下
         collegeRoleService.deleteByRoleId(roleId)
         if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            val users = usersService.userFromSession
-            val record = usersService.findUserSchoolInfo(users)
+            val users = usersService.getUserFromSession()
+            val record = usersService.findUserSchoolInfo(users!!)
             tempCollegeId = roleService.getRoleCollegeId(record)
         }
         saveOrUpdate(tempCollegeId, applicationIds, roleId)

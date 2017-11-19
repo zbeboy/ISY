@@ -31,8 +31,8 @@ open class UsersTypeServiceImpl @Autowired constructor(dslContext: DSLContext) :
     }
 
     override fun isCurrentUsersTypeName(usersTypeName: String): Boolean {
-        val users = usersService.userFromSession
-        val usersType = usersTypeDao.fetchOneByUsersTypeId(users.usersTypeId).usersTypeName
+        val users = usersService.getUserFromSession()
+        val usersType = usersTypeDao.fetchOneByUsersTypeId(users!!.usersTypeId).usersTypeName
         return usersTypeName == usersType
     }
 }

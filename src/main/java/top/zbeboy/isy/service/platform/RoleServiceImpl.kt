@@ -410,8 +410,8 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 系统
             condition = ROLE.ROLE_EN_NAME.notIn(defaultRoles)
         } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            val users = usersService.userFromSession
-            val record = usersService.findUserSchoolInfo(users)
+            val users = usersService.getUserFromSession()
+            val record = usersService.findUserSchoolInfo(users!!)
             val collegeId = getRoleCollegeId(record)
             condition = COLLEGE.COLLEGE_ID.eq(collegeId)
         }

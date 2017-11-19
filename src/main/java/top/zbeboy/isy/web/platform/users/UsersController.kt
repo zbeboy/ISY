@@ -211,8 +211,8 @@ open class UsersController {
     @ResponseBody
     fun validIsStudent(): AjaxUtils<*> {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            val users = usersService.userFromSession
-            val student = studentService.findByUsername(users.username)
+            val users = usersService.getUserFromSession()
+            val student = studentService.findByUsername(users!!.username)
             return AjaxUtils.of<Any>().success().msg("学生用户").obj(student.studentId!!)
         }
         return AjaxUtils.of<Any>().fail().msg("非学生用户")
@@ -227,8 +227,8 @@ open class UsersController {
     @ResponseBody
     fun validIsStaff(): AjaxUtils<*> {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            val users = usersService.userFromSession
-            val staff = staffService.findByUsername(users.username)
+            val users = usersService.getUserFromSession()
+            val staff = staffService.findByUsername(users!!.username)
             return AjaxUtils.of<Any>().success().msg("教职工用户").obj(staff.staffId!!)
         }
         return AjaxUtils.of<Any>().fail().msg("非教职工用户")
@@ -283,7 +283,7 @@ open class UsersController {
     fun validEmail(@RequestParam("key") key: String, @RequestParam("username") username: String, modelMap: ModelMap): String {
         val users = usersService.findByUsername(username)
         if (!ObjectUtils.isEmpty(users)) {
-            val mailboxVerifyValid = users.mailboxVerifyValid
+            val mailboxVerifyValid = users!!.mailboxVerifyValid
             val now = Timestamp(Clock.systemDefaultZone().millis())
             if (now.before(mailboxVerifyValid)) {
                 if (key == users.mailboxVerifyCode) {
@@ -314,7 +314,7 @@ open class UsersController {
     fun anewSendVerifyMail(@RequestParam("username") username: String, request: HttpServletRequest, modelMap: ModelMap): String {
         val users = usersService.findByUsername(username)
         if (!ObjectUtils.isEmpty(users)) {
-            if (users.verifyMailbox <= 0) {
+            if (users!!.verifyMailbox <= 0) {
                 var dateTime = DateTime.now()
                 dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID)
                 val mailboxVerifyCode = RandomUtils.generateEmailCheckKey()
@@ -457,7 +457,7 @@ open class UsersController {
         val ajaxUtils = AjaxUtils.of<Any>()
         val users = usersService.findByUsername(email)
         if (!ObjectUtils.isEmpty(users)) {
-            if (!ObjectUtils.isEmpty(users.verifyMailbox) && users.verifyMailbox > 0) {
+            if (!ObjectUtils.isEmpty(users!!.verifyMailbox) && users.verifyMailbox > 0) {
                 ajaxUtils.success().msg("邮箱正常")
             } else {
                 ajaxUtils.fail().msg("该邮箱未激活")
@@ -486,7 +486,7 @@ open class UsersController {
                 var dateTime = DateTime.now()
                 dateTime = dateTime.plusDays(Workbook.MAILBOX_FORGET_PASSWORD_VALID)
                 val passwordResetKey = RandomUtils.generateResetKey()
-                users.passwordResetKey = passwordResetKey
+                users!!.passwordResetKey = passwordResetKey
                 users.passwordResetKeyValid = Timestamp(dateTime.toDate().time)
                 usersService.update(users)
                 if (isyProperties.getMail().isOpen) {
@@ -520,7 +520,7 @@ open class UsersController {
         if (StringUtils.hasLength(resetKey) && StringUtils.hasLength(username)) {
             val users = usersService.findByUsername(username)
             if (!ObjectUtils.isEmpty(users)) {
-                val passwordResetKeyValid = users.passwordResetKeyValid
+                val passwordResetKeyValid = users!!.passwordResetKeyValid
                 val now = Timestamp(Clock.systemDefaultZone().millis())
                 msg = if (now.before(passwordResetKeyValid)) {
                     if (resetKey == users.passwordResetKey) {
@@ -560,7 +560,7 @@ open class UsersController {
             if (password == confirmPassword) {
                 val users = usersService.findByUsername(username)
                 if (!ObjectUtils.isEmpty(users)) {
-                    users.password = BCryptUtils.bCryptPassword(confirmPassword)
+                    users!!.password = BCryptUtils.bCryptPassword(confirmPassword)
                     usersService.update(users)
                     ajaxUtils.success().msg("密码更新成功")
                 } else {
@@ -610,7 +610,7 @@ open class UsersController {
         }
         // 根据此用户账号查询院下所有角色
         val users = usersService.findByUsername(username)
-        val record = usersService.findUserSchoolInfo(users)
+        val record = usersService.findUserSchoolInfo(users!!)
         if (record.isPresent) {
             val college = record.get().into(College::class.java)
             val collegeRoleRecords = collegeRoleService.findByCollegeId(college.collegeId!!)
@@ -639,7 +639,7 @@ open class UsersController {
         if (StringUtils.hasLength(roles)) {
             val users = usersService.findByUsername(username)
             if (!ObjectUtils.isEmpty(users)) {
-                if (!ObjectUtils.isEmpty(users.verifyMailbox) && users.verifyMailbox > 0) {
+                if (!ObjectUtils.isEmpty(users!!.verifyMailbox) && users.verifyMailbox > 0) {
                     val roleList = SmallPropsUtils.StringIdsToStringList(roles)
                     // 禁止非系统用户 提升用户权限到系统或管理员级别权限
                     if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
@@ -680,7 +680,7 @@ open class UsersController {
                         staffElasticRepository.deleteByUsername(username)
                         staffElasticRepository.save(staffElastic)
                     }
-                    val curUsers = usersService.userFromSession
+                    val curUsers = usersService.getUserFromSession()
                     val notify = "您的权限已变更为" + usersElastic.roleName + " ，请登录查看。"
                     commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request)
                     ajaxUtils.success().msg("更改用户角色成功")
@@ -798,7 +798,7 @@ open class UsersController {
                 } else {
                     val users = usersService.findByUsername(id)
                     if (!ObjectUtils.isEmpty(users)) {
-                        val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
+                        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId)
                         when (usersType.usersTypeName) {
                             Workbook.STUDENT_USERS_TYPE  // 学生
                             -> {
@@ -834,8 +834,8 @@ open class UsersController {
      */
     @RequestMapping("/anyone/users/profile")
     fun usersProfile(modelMap: ModelMap, request: HttpServletRequest): String {
-        val users = usersService.userFromSession
-        val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
+        val users = usersService.getUserFromSession()
+        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId)
         val page: String
         when (usersType.usersTypeName) {
             Workbook.STUDENT_USERS_TYPE  // 学生
@@ -867,8 +867,8 @@ open class UsersController {
      */
     @RequestMapping("/anyone/users/profile/edit")
     fun usersProfileEdit(modelMap: ModelMap, request: HttpServletRequest): String {
-        val users = usersService.userFromSession
-        val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
+        val users = usersService.getUserFromSession()
+        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId)
         val page: String
         when (usersType.usersTypeName) {
             Workbook.STUDENT_USERS_TYPE  // 学生
@@ -941,7 +941,7 @@ open class UsersController {
      */
     private fun profileSystem(users: Users, modelMap: ModelMap, request: HttpServletRequest) {
         val newUsers = usersService.findByUsername(users.username)
-        modelMap.addAttribute("avatarForSaveOrUpdate", newUsers.avatar)
+        modelMap.addAttribute("avatarForSaveOrUpdate", newUsers!!.avatar)
         val showAvatar = getAvatar(newUsers.avatar, request)
         newUsers.avatar = showAvatar
         modelMap.addAttribute("user", newUsers)
@@ -972,7 +972,7 @@ open class UsersController {
      */
     @RequestMapping(value = "/anyone/users/setting", method = arrayOf(RequestMethod.GET))
     fun userSetting(modelMap: ModelMap): String {
-        val users = usersService.userFromSession
+        val users = usersService.getUserFromSession()
         modelMap.addAttribute("user", users)
         return "web/platform/users/users_setting::#page-wrapper"
     }
@@ -988,8 +988,8 @@ open class UsersController {
     @ResponseBody
     fun validIdCard(@RequestParam("username") username: String, @RequestParam("idCard") idCard: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val users = usersService.userFromSession
-        val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
+        val users = usersService.getUserFromSession()
+        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId)
         when (usersType.usersTypeName) {
             Workbook.STUDENT_USERS_TYPE  // 学生
             -> {
@@ -1028,9 +1028,9 @@ open class UsersController {
     fun usersUploadAvatar(multipartHttpServletRequest: MultipartHttpServletRequest, request: HttpServletRequest): AjaxUtils<FileBean> {
         val data = AjaxUtils.of<FileBean>()
         try {
-            val users = usersService.userFromSession
+            val users = usersService.getUserFromSession()
             val fileBeen = uploadService.upload(multipartHttpServletRequest,
-                    RequestUtils.getRealPath(request) + Workbook.avatarPath(users), request.remoteAddr)
+                    RequestUtils.getRealPath(request) + Workbook.avatarPath(users!!), request.remoteAddr)
             val avatarVo = JSON.parseObject(request.getParameter("avatar_data"), AvatarVo::class.java)
             val x = avatarVo.x!!
             val y = avatarVo.y!!
@@ -1115,7 +1115,7 @@ open class UsersController {
                             } else {
                                 val users = usersService.findByUsername(username)
                                 if (!ObjectUtils.isEmpty(users)) {
-                                    users.mobile = newMobile
+                                    users!!.mobile = newMobile
                                     usersService.update(users)
                                     //清空session
                                     session.removeAttribute("mobileExpiry")
@@ -1157,7 +1157,7 @@ open class UsersController {
             if (okPassword == newPassword) {
                 val users = usersService.findByUsername(username)
                 if (!ObjectUtils.isEmpty(users)) {
-                    users.password = BCryptUtils.bCryptPassword(newPassword)
+                    users!!.password = BCryptUtils.bCryptPassword(newPassword)
                     usersService.update(users)
                     ajaxUtils.success().msg("更新密码成功")
                 } else {
@@ -1183,9 +1183,9 @@ open class UsersController {
     @ResponseBody
     fun usersUpdate(@Valid usersVo: UsersVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors()) {
-            val updateUsers = usersService.findByUsername(usersVo.username)
+            val updateUsers = usersService.findByUsername(usersVo.username!!)
             if (!ObjectUtils.isEmpty(updateUsers)) {
-                updateUsers.realName = usersVo.realName
+                updateUsers!!.realName = usersVo.realName
                 updateUsers.avatar = usersVo.avatar
                 usersService.update(updateUsers)
                 return AjaxUtils.of<Any>().success().msg("更新成功")

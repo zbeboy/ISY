@@ -37,7 +37,7 @@ class MyUserDetailsServiceImpl : UserDetailsService {
         val users = usersService.findByUsername(username)
         val authoritiesRecords = authoritiesService.findByUsername(username)
         val authorities = buildUserAuthority(authoritiesRecords)
-        return buildUserForAuthentication(users, authorities)
+        return buildUserForAuthentication(users!!, authorities)
     }
 
     /**

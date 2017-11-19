@@ -57,8 +57,8 @@ open class SystemMessageController {
     @RequestMapping(value = "/anyone/message/detail", method = arrayOf(RequestMethod.GET))
     fun messageDetail(@RequestParam("id") messageId: String, modelMap: ModelMap): String {
         var systemMessageBean = SystemMessageBean()
-        val users = usersService.userFromSession
-        val record = systemMessageService.findByIdAndAcceptUsersRelation(messageId, users.username)
+        val users = usersService.getUserFromSession()
+        val record = systemMessageService.findByIdAndAcceptUsersRelation(messageId, users!!.username)
         if (record.isPresent) {
             systemMessageBean = record.get().into(SystemMessageBean::class.java)
             systemMessageBean.messageDateStr = DateTimeUtils.formatDate(systemMessageBean.messageDate, "yyyy年MM月dd日 hh:mm:ss")
@@ -90,8 +90,8 @@ open class SystemMessageController {
     fun messageDatas(paginationUtils: PaginationUtils): AjaxUtils<SystemMessageBean> {
         val ajaxUtils = AjaxUtils.of<SystemMessageBean>()
         val systemMessageBean = SystemMessageBean()
-        val users = usersService.userFromSession
-        systemMessageBean.acceptUsers = users.username
+        val users = usersService.getUserFromSession()
+        systemMessageBean.acceptUsers = users!!.username
         val records = systemMessageService.findAllByPage(paginationUtils, systemMessageBean)
         val systemMessageBeens = systemMessageService.dealData(paginationUtils, records, systemMessageBean)
         return ajaxUtils.success().msg("获取数据成功").listData(systemMessageBeens).paginationUtils(paginationUtils)

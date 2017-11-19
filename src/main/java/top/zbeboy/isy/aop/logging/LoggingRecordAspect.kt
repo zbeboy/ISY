@@ -59,8 +59,8 @@ class LoggingRecordAspect {
                 if (clazzs.size == arguments.size) {
                     for (o in arguments) {
                         if (o is HttpServletRequest) {
-                            val users = usersService.userFromSession
-                            val systemLog = SystemLogElastic(UUIDUtils.getUUID(), method.getAnnotation(RecordSystemLogging::class.java).description, Timestamp(Clock.systemDefaultZone().millis()), users.username, RequestUtils.getIpAddress(o))
+                            val users = usersService.getUserFromSession()
+                            val systemLog = SystemLogElastic(UUIDUtils.getUUID(), method.getAnnotation(RecordSystemLogging::class.java).description, Timestamp(Clock.systemDefaultZone().millis()), users!!.username, RequestUtils.getIpAddress(o))
                             systemLogGlue.save(systemLog)
                             log.info(" Record operator logging to database , the module is {} , the method is {} ", method.getAnnotation(RecordSystemLogging::class.java).module, method.getAnnotation(RecordSystemLogging::class.java).methods)
                             break

@@ -49,8 +49,8 @@ open class SystemAlertController {
     @RequestMapping(value = "/anyone/alert/detail", method = arrayOf(RequestMethod.GET))
     fun alertDetail(@RequestParam("id") systemAlertId: String, modelMap: ModelMap): String {
         val page: String
-        val users = usersService.userFromSession
-        val record = systemAlertService.findByUsernameAndId(users.username, systemAlertId)
+        val users = usersService.getUserFromSession()
+        val record = systemAlertService.findByUsernameAndId(users!!.username, systemAlertId)
         page = if (record.isPresent) {
             val systemAlertBean = record.get().into(SystemAlertBean::class.java)
             if (systemAlertBean.name == Workbook.ALERT_MESSAGE_TYPE) {
@@ -74,8 +74,8 @@ open class SystemAlertController {
     fun alertDatas(paginationUtils: PaginationUtils): AjaxUtils<SystemAlertBean> {
         val ajaxUtils = AjaxUtils.of<SystemAlertBean>()
         val systemAlertBean = SystemAlertBean()
-        val users = usersService.userFromSession
-        systemAlertBean.username = users.username
+        val users = usersService.getUserFromSession()
+        systemAlertBean.username = users!!.username
         val records = systemAlertService.findAllByPage(paginationUtils, systemAlertBean)
         val systemAlertBeans = systemAlertService.dealData(paginationUtils, records, systemAlertBean)
         return ajaxUtils.success().msg("获取数据成功").listData(systemAlertBeans).paginationUtils(paginationUtils)

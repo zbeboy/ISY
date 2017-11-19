@@ -35,7 +35,7 @@ class SecurityLoginFilter : Filter {
                                     .getBean("usersService") as UsersService
                             val users = usersService.findByUsername(email)
                             if (!ObjectUtils.isEmpty(users)) {// 用户是否存在
-                                if (!ObjectUtils.isEmpty(users.enabled) && users.enabled > 0) {// 用户是否已被注销
+                                if (!ObjectUtils.isEmpty(users!!.enabled) && users.enabled > 0) {// 用户是否已被注销
                                     if (!ObjectUtils.isEmpty(users.verifyMailbox) && users.verifyMailbox > 0) {// 用户邮箱是否已被验证
                                         val isDel = usersService.validSCDSOIsDel(users)
                                         if (!isDel) {// 用户所在院校是否已被注销

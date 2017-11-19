@@ -26,9 +26,9 @@ class MenuInterceptor : HandlerInterceptor {
                 .getBean("usersService") as UsersService
         val cacheManageService = ctx
                 .getBean("cacheManageService") as CacheManageService
-        val users = usersService.userFromSession
+        val users = usersService.getUserFromSession()
         if (!ObjectUtils.isEmpty(users)) {
-            val roleList = cacheManageService.findByUsernameWithRole(users.username)// 已缓存
+            val roleList = cacheManageService.findByUsernameWithRole(users!!.username)// 已缓存
             val menuHtml = cacheManageService.menuHtml(roleList, users.username)
             request.setAttribute("menu", menuHtml)
         }

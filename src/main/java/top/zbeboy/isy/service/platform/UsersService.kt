@@ -1,32 +1,27 @@
-package top.zbeboy.isy.service.platform;
+package top.zbeboy.isy.service.platform
 
-
-import org.jooq.Record;
-import org.jooq.Record1;
-import org.jooq.Result;
-import org.jooq.Select;
-import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.isy.domain.tables.records.UsersRecord;
-import top.zbeboy.isy.web.bean.platform.users.UsersBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Record1
+import org.jooq.Result
+import org.jooq.Select
+import top.zbeboy.isy.domain.tables.pojos.Users
+import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord
+import top.zbeboy.isy.domain.tables.records.UsersRecord
+import top.zbeboy.isy.web.bean.platform.users.UsersBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by lenovo on 2016-01-05.
- */
-public interface UsersService {
-
+ * Created by zbeboy 2017-11-19 .
+ **/
+interface UsersService {
     /**
      * 根据用户名获取Users表完整信息
      *
      * @param username 用户账号
      * @return 用户信息
      */
-    Users findByUsername(String username);
+    fun findByUsername(username: String): Users?
 
     /**
      * 注意 用于定时 查询未验证用户
@@ -35,21 +30,21 @@ public interface UsersService {
      * @param verifyMailbox 验证否
      * @return 用户
      */
-    Result<UsersRecord> findByJoinDateAndVerifyMailbox(Date joinDate, Byte verifyMailbox);
+    fun findByJoinDateAndVerifyMailbox(joinDate: Date, verifyMailbox: Byte?): Result<UsersRecord>
 
     /**
      * 从session中获取用户完整信息
      *
      * @return session中的用户信息
      */
-    Users getUserFromSession();
+    fun getUserFromSession(): Users?
 
     /**
      * 获取用户学校相关信息 注：用户必须是学生或教职工
      *
      * @return 用户学校相关信息
      */
-    Optional<Record> findUserSchoolInfo(Users users);
+    fun findUserSchoolInfo(users: Users): Optional<Record>
 
     /**
      * 根据手机号查询用户
@@ -57,7 +52,7 @@ public interface UsersService {
      * @param mobile 手机号
      * @return 用户们
      */
-    List<Users> findByMobile(String mobile);
+    fun findByMobile(mobile: String): List<Users>
 
     /**
      * 根据手机号查询用户 注：不等于用户账号
@@ -66,21 +61,21 @@ public interface UsersService {
      * @param username 用户账号
      * @return 用户们
      */
-    Result<UsersRecord> findByMobileNeUsername(String mobile, String username);
+    fun findByMobileNeUsername(mobile: String, username: String): Result<UsersRecord>
 
     /**
      * 保存用户
      *
      * @param users 用户
      */
-    void save(Users users);
+    fun save(users: Users)
 
     /**
      * 更新用户
      *
      * @param users 用户
      */
-    void update(Users users);
+    fun update(users: Users)
 
     /**
      * 更新注销状态
@@ -88,14 +83,14 @@ public interface UsersService {
      * @param ids     ids
      * @param enabled 状态
      */
-    void updateEnabled(List<String> ids, Byte enabled);
+    fun updateEnabled(ids: List<String>, enabled: Byte?)
 
     /**
      * 通过id删除
      *
      * @param username 用户账号
      */
-    void deleteById(String username);
+    fun deleteById(username: String)
 
     /**
      * 检验用户所在院校系专业班级是否已被注销
@@ -103,7 +98,7 @@ public interface UsersService {
      * @param users 用户信息
      * @return true 被注销 false 未被注销
      */
-    boolean validSCDSOIsDel(Users users);
+    fun validSCDSOIsDel(users: Users): Boolean
 
     /**
      * 根据用户账号查询角色 无缓存
@@ -111,14 +106,14 @@ public interface UsersService {
      * @param username 用户账号
      * @return 角色
      */
-    Result<Record1<String>> findByUsernameWithRole(String username);
+    fun findByUsernameWithRole(username: String): Result<Record1<String>>
 
     /**
      * 根据当前用户权限查询低于当前用户权限的用户的 select
      *
      * @return 条件
      */
-    Select<AuthoritiesRecord> existsAuthoritiesSelect();
+    fun existsAuthoritiesSelect(): Select<AuthoritiesRecord>
 
     /**
      * 分页查询有权限的用户
@@ -126,7 +121,7 @@ public interface UsersService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
+    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record>
 
     /**
      * 分页查询无权限的用户
@@ -134,21 +129,21 @@ public interface UsersService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    Result<Record> findAllByPageNotExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
+    fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record>
 
     /**
      * 统计有权限的用户
      *
      * @return 总数
      */
-    int countAllExistsAuthorities();
+    fun countAllExistsAuthorities(): Int
 
     /**
      * 统计无权限的用户
      *
      * @return 总数
      */
-    int countAllNotExistsAuthorities();
+    fun countAllNotExistsAuthorities(): Int
 
     /**
      * 根据条件统计有权限的用户
@@ -156,7 +151,7 @@ public interface UsersService {
      * @param dataTablesUtils datatables工具类
      * @return 数量
      */
-    int countByConditionExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
+    fun countByConditionExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Int
 
     /**
      * 根据条件统计无权限的用户
@@ -164,5 +159,5 @@ public interface UsersService {
      * @param dataTablesUtils datatables工具类
      * @return 数量
      */
-    int countByConditionNotExistsAuthorities(DataTablesUtils<UsersBean> dataTablesUtils);
+    fun countByConditionNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Int
 }
