@@ -1,18 +1,18 @@
-package top.zbeboy.isy.service.weixin;
+package top.zbeboy.isy.service.weixin
 
-import top.zbeboy.isy.web.vo.weixin.WeixinVo;
+import top.zbeboy.isy.web.vo.weixin.WeixinVo
 
 /**
- * Created by zbeboy on 2016/11/15.
- */
-public interface WeixinService {
+ * Created by zbeboy 2017-11-20 .
+ **/
+interface WeixinService {
     /**
      * 检验签名
      *
      * @param weixinVo 参数
      * @return true or false
      */
-    boolean checkSignature(WeixinVo weixinVo);
+    fun checkSignature(weixinVo: WeixinVo): Boolean
 
     /**
      * 加密消息
@@ -21,7 +21,7 @@ public interface WeixinService {
      * @param weixinVo 微信参数
      * @return 加密后的内容
      */
-    String encryptMsg(String msg, WeixinVo weixinVo);
+    fun encryptMsg(msg: String, weixinVo: WeixinVo): String
 
     /**
      * 解密消息
@@ -30,5 +30,5 @@ public interface WeixinService {
      * @param weixinVo 微信参数
      * @return 加密后的内容
      */
-    String decryptMsg(String msg, WeixinVo weixinVo);
+    fun decryptMsg(msg: String, weixinVo: WeixinVo): String
 }
