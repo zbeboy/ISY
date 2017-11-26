@@ -11,55 +11,55 @@ import javax.validation.constraints.Size
 open class StudentVo {
     @NotNull
     @Min(1)
-    val school: Int? = null
-    val schoolName: String? = null
+    var school: Int? = null
+    var schoolName: String? = null
 
     @NotNull
     @Min(1)
-    val college: Int? = null
-    val collegeName: String? = null
+    var college: Int? = null
+    var collegeName: String? = null
 
     @NotNull
     @Min(1)
-    val department: Int? = null
-    val departmentName: String? = null
+    var department: Int? = null
+    var departmentName: String? = null
 
     @NotNull
     @Min(1)
-    val science: Int? = null
-    val scienceName: String? = null
+    var science: Int? = null
+    var scienceName: String? = null
 
     @NotNull
-    val grade: String? = null
+    var grade: String? = null
 
     @NotNull
     @Min(1)
-    val organize: Int? = null
-    val organizeName: String? = null
+    var organize: Int? = null
+    var organizeName: String? = null
 
     @NotNull
     @Pattern(regexp = "^[\\d]{13,}$")
-    val studentNumber: String? = null
+    var studentNumber: String? = null
 
     @NotNull
     @Pattern(regexp = "^\\w+((-\\w+)|(\\.\\w+))*\\@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$")
-    val email: String? = null
+    var email: String? = null
 
     @NotNull
     @Pattern(regexp = "^1[0-9]{10}")
-    val mobile: String? = null
+    var mobile: String? = null
 
     @NotNull
     @Size(max = 30)
-    val realName: String? = null
+    var realName: String? = null
 
     @NotNull
-    val phoneVerifyCode: String? = null
+    var phoneVerifyCode: String? = null
 
     @NotNull
     @Pattern(regexp = "^[a-zA-Z0-9]\\w{5,17}$")
-    val password: String? = null
+    var password: String? = null
 
     @NotNull
-    val confirmPassword: String? = null
+    var confirmPassword: String? = null
 }

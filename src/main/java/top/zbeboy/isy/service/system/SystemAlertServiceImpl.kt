@@ -78,8 +78,8 @@ open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext)
     }
 
     override fun findAllByPage(paginationUtils: PaginationUtils, systemAlertBean: SystemAlertBean): Result<Record> {
-        val pageNum = paginationUtils.pageNum
-        val pageSize = paginationUtils.pageSize
+        val pageNum = paginationUtils.getPageNum()
+        val pageSize = paginationUtils.getPageSize()
         var a = searchCondition(paginationUtils)
         a = otherCondition(a, systemAlertBean)
         return create.select()
@@ -97,7 +97,7 @@ open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext)
         if (records.isNotEmpty) {
             systemAlertBeens = records.into(SystemAlertBean::class.java)
             systemAlertBeens.forEach { i -> i.alertDateStr = DateTimeUtils.formatDate(i.alertDate, "yyyy年MM月dd日 HH:mm:ss") }
-            paginationUtils.totalDatas = countByCondition(paginationUtils, systemAlertBean)
+            paginationUtils.setTotalDatas(countByCondition(paginationUtils, systemAlertBean))
         }
         return systemAlertBeens
     }
@@ -142,7 +142,7 @@ open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext)
      */
     fun searchCondition(paginationUtils: PaginationUtils): Condition? {
         var a: Condition? = null
-        val search = JSON.parseObject(paginationUtils.searchParams)
+        val search = JSON.parseObject(paginationUtils.getSearchParams())
         if (!ObjectUtils.isEmpty(search)) {
             val alertContent = StringUtils.trimWhitespace(search.getString("alertContent"))
             if (StringUtils.hasLength(alertContent)) {

@@ -9,9 +9,9 @@ import javax.validation.constraints.Size
 open class UsersVo {
     @NotNull
     @Size(max = 200)
-    val username: String? = null
+    var username: String? = null
     @NotNull
     @Size(max = 30)
-    val realName: String? = null
-    val avatar: String? = null
+    var realName: String? = null
+    var avatar: String? = null
 }

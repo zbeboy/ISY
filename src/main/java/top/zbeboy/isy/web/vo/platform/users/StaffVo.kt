@@ -10,20 +10,20 @@ import javax.validation.constraints.Size
 open class StaffVo {
     @NotNull
     @Pattern(regexp = "^[\\d]{8,}$")
-    val staffNumber: String? = null
-    val birthday: String? = null
-    val sex: String? = null
-    val idCard: String? = null
-    val familyResidence: String? = null
-    val politicalLandscapeId: Int? = null
-    val nationId: Int? = null
-    val academicTitleId: Int? = null
-    val post: String? = null
-    val departmentId: Int? = null
+    var staffNumber: String? = null
+    var birthday: String? = null
+    var sex: String? = null
+    var idCard: String? = null
+    var familyResidence: String? = null
+    var politicalLandscapeId: Int? = null
+    var nationId: Int? = null
+    var academicTitleId: Int? = null
+    var post: String? = null
+    var departmentId: Int? = null
     @NotNull
-    val username: String? = null
+    var username: String? = null
     @NotNull
     @Size(max = 30)
-    val realName: String? = null
-    val avatar: String? = null
+    var realName: String? = null
+    var avatar: String? = null
 }

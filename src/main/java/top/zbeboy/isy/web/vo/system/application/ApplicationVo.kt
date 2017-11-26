@@ -10,21 +10,21 @@ open class ApplicationVo {
     val applicationId: String? = null
     @NotNull
     @Size(max = 30)
-    val applicationName: String? = null
-    val applicationSort: Int? = null
+    var applicationName: String? = null
+    var applicationSort: Int? = null
     @NotNull
-    val applicationPid: String? = null
+    var applicationPid: String? = null
     @NotNull
     @Size(max = 300)
-    val applicationUrl: String? = null
+    var applicationUrl: String? = null
     @NotNull
     @Size(max = 100)
-    val applicationCode: String? = null
+    var applicationCode: String? = null
     @NotNull
     @Size(max = 100)
-    val applicationEnName: String? = null
+    var applicationEnName: String? = null
     @Size(max = 20)
-    val icon: String? = null
+    var icon: String? = null
     @Size(max = 300)
-    val applicationDataUrlStartWith: String? = null
+    var applicationDataUrlStartWith: String? = null
 }

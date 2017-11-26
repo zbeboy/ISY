@@ -73,8 +73,8 @@ open class SystemMessageServiceImpl @Autowired constructor(dslContext: DSLContex
     }
 
     override fun findAllByPage(paginationUtils: PaginationUtils, systemMessageBean: SystemMessageBean): Result<Record> {
-        val pageNum = paginationUtils.pageNum
-        val pageSize = paginationUtils.pageSize
+        val pageNum = paginationUtils.getPageNum()
+        val pageSize = paginationUtils.getPageSize()
         var a = searchCondition(paginationUtils)
         a = otherCondition(a, systemMessageBean)
         return create.select()
@@ -92,7 +92,7 @@ open class SystemMessageServiceImpl @Autowired constructor(dslContext: DSLContex
         if (records.isNotEmpty) {
             systemMessageBeens = records.into(SystemMessageBean::class.java)
             systemMessageBeens.forEach { i -> i.messageDateStr = DateTimeUtils.formatDate(i.messageDate, "yyyy年MM月dd日 HH:mm:ss") }
-            paginationUtils.totalDatas = countByCondition(paginationUtils, systemMessageBean)
+            paginationUtils.setTotalDatas(countByCondition(paginationUtils, systemMessageBean))
         }
         return systemMessageBeens
     }
@@ -137,7 +137,7 @@ open class SystemMessageServiceImpl @Autowired constructor(dslContext: DSLContex
      */
     fun searchCondition(paginationUtils: PaginationUtils): Condition? {
         var a: Condition? = null
-        val search = JSON.parseObject(paginationUtils.searchParams)
+        val search = JSON.parseObject(paginationUtils.getSearchParams())
         if (!ObjectUtils.isEmpty(search)) {
             val messageTitle = StringUtils.trimWhitespace(search.getString("messageTitle"))
             if (StringUtils.hasLength(messageTitle)) {

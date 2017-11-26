@@ -10,21 +10,21 @@ import javax.validation.constraints.Size
 open class StudentVo {
     @NotNull
     @Pattern(regexp = "^[\\d]{13,}$")
-    val studentNumber: String? = null
-    val birthday: String? = null
-    val sex: String? = null
-    val idCard: String? = null
-    val familyResidence: String? = null
-    val politicalLandscapeId: Int? = null
-    val nationId: Int? = null
-    val dormitoryNumber: String? = null
-    val parentName: String? = null
-    val parentContactPhone: String? = null
-    val placeOrigin: String? = null
+    var studentNumber: String? = null
+    var birthday: String? = null
+    var sex: String? = null
+    var idCard: String? = null
+    var familyResidence: String? = null
+    var politicalLandscapeId: Int? = null
+    var nationId: Int? = null
+    var dormitoryNumber: String? = null
+    var parentName: String? = null
+    var parentContactPhone: String? = null
+    var placeOrigin: String? = null
     @NotNull
-    val username: String? = null
+    var username: String? = null
     @NotNull
     @Size(max = 30)
-    val realName: String? = null
-    val avatar: String? = null
+    var realName: String? = null
+    var avatar: String? = null
 }
