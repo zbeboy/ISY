@@ -105,8 +105,8 @@ public class BuildingController {
             buildingBeens = records.into(BuildingBean.class);
         }
         dataTablesUtils.setData(buildingBeens);
-        dataTablesUtils.setiTotalRecords(buildingService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(buildingService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setITotalRecords(buildingService.countAll());
+        dataTablesUtils.setITotalDisplayRecords(buildingService.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 

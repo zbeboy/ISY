@@ -81,8 +81,8 @@ public class PoliticalLandscapeController {
             politics = records.into(PoliticalLandscape.class);
         }
         dataTablesUtils.setData(politics);
-        dataTablesUtils.setiTotalRecords(politicalLandscapeService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(politicalLandscapeService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setITotalRecords(politicalLandscapeService.countAll());
+        dataTablesUtils.setITotalDisplayRecords(politicalLandscapeService.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 

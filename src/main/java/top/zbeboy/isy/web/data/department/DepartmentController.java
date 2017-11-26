@@ -105,8 +105,8 @@ public class DepartmentController {
             departmentBeen = records.into(DepartmentBean.class);
         }
         dataTablesUtils.setData(departmentBeen);
-        dataTablesUtils.setiTotalRecords(departmentService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(departmentService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setITotalRecords(departmentService.countAll());
+        dataTablesUtils.setITotalDisplayRecords(departmentService.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 

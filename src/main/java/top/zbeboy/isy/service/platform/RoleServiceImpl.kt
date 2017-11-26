@@ -313,7 +313,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
 
         val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
-            val schoolName = StringUtils.trimWhitespace(search.getString("schoolName"))
+            val schoolName = StringUtils.trimWhitespace(search!!.getString("schoolName"))
             val collegeName = StringUtils.trimWhitespace(search.getString("collegeName"))
             val roleName = StringUtils.trimWhitespace(search.getString("roleName"))
             if (StringUtils.hasLength(schoolName)) {

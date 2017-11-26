@@ -132,8 +132,8 @@ public class SchoolroomController {
             schoolroomBeen = records.into(SchoolroomBean.class);
         }
         dataTablesUtils.setData(schoolroomBeen);
-        dataTablesUtils.setiTotalRecords(schoolroomService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(schoolroomService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setITotalRecords(schoolroomService.countAll());
+        dataTablesUtils.setITotalDisplayRecords(schoolroomService.countByCondition(dataTablesUtils));
 
         return dataTablesUtils;
     }

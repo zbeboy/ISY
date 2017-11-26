@@ -202,7 +202,7 @@ open class ApplicationServiceImpl @Autowired constructor(dslContext: DSLContext)
 
         val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
-            val applicationName = StringUtils.trimWhitespace(search.getString("applicationName"))
+            val applicationName = StringUtils.trimWhitespace(search!!.getString("applicationName"))
             val applicationEnName = StringUtils.trimWhitespace(search.getString("applicationEnName"))
             val applicationCode = StringUtils.trimWhitespace(search.getString("applicationCode"))
             if (StringUtils.hasLength(applicationName)) {

@@ -81,8 +81,8 @@ public class AcademicTitleController {
             academicTitles = records.into(AcademicTitle.class);
         }
         dataTablesUtils.setData(academicTitles);
-        dataTablesUtils.setiTotalRecords(academicTitleService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(academicTitleService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setITotalRecords(academicTitleService.countAll());
+        dataTablesUtils.setITotalDisplayRecords(academicTitleService.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 

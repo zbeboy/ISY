@@ -233,8 +233,8 @@ public class InternshipStatisticsController {
                 internshipStatisticsBeens = records.into(InternshipStatisticsBean.class);
             }
             dataTablesUtils.setData(internshipStatisticsBeens);
-            dataTablesUtils.setiTotalRecords(internshipStatisticsService.submittedCountAll(internshipStatisticsBean));
-            dataTablesUtils.setiTotalDisplayRecords(internshipStatisticsService.submittedCountByCondition(dataTablesUtils, internshipStatisticsBean));
+            dataTablesUtils.setITotalRecords(internshipStatisticsService.submittedCountAll(internshipStatisticsBean));
+            dataTablesUtils.setITotalDisplayRecords(internshipStatisticsService.submittedCountByCondition(dataTablesUtils, internshipStatisticsBean));
         }
         return dataTablesUtils;
     }
@@ -314,8 +314,8 @@ public class InternshipStatisticsController {
                 internshipStatisticsBeens = records.into(InternshipStatisticsBean.class);
             }
             dataTablesUtils.setData(internshipStatisticsBeens);
-            dataTablesUtils.setiTotalRecords(internshipStatisticsService.unsubmittedCountAll(internshipStatisticsBean));
-            dataTablesUtils.setiTotalDisplayRecords(internshipStatisticsService.unsubmittedCountByCondition(dataTablesUtils, internshipStatisticsBean));
+            dataTablesUtils.setITotalRecords(internshipStatisticsService.unsubmittedCountAll(internshipStatisticsBean));
+            dataTablesUtils.setITotalDisplayRecords(internshipStatisticsService.unsubmittedCountByCondition(dataTablesUtils, internshipStatisticsBean));
         }
         return dataTablesUtils;
     }
@@ -366,8 +366,8 @@ public class InternshipStatisticsController {
                 internshipColleges = records.into(InternshipCollege.class);
             }
             dataTablesUtils.setData(internshipColleges);
-            dataTablesUtils.setiTotalRecords(internshipCollegeService.countAll(internshipCollege));
-            dataTablesUtils.setiTotalDisplayRecords(internshipCollegeService.countByCondition(dataTablesUtils, internshipCollege));
+            dataTablesUtils.setITotalRecords(internshipCollegeService.countAll(internshipCollege));
+            dataTablesUtils.setITotalDisplayRecords(internshipCollegeService.countByCondition(dataTablesUtils, internshipCollege));
         }
         return dataTablesUtils;
     }
@@ -468,8 +468,8 @@ public class InternshipStatisticsController {
                 internshipCompanies = records.into(InternshipCompany.class);
             }
             dataTablesUtils.setData(internshipCompanies);
-            dataTablesUtils.setiTotalRecords(internshipCompanyService.countAll(internshipCompany));
-            dataTablesUtils.setiTotalDisplayRecords(internshipCompanyService.countByCondition(dataTablesUtils, internshipCompany));
+            dataTablesUtils.setITotalRecords(internshipCompanyService.countAll(internshipCompany));
+            dataTablesUtils.setITotalDisplayRecords(internshipCompanyService.countByCondition(dataTablesUtils, internshipCompany));
         }
         return dataTablesUtils;
     }
@@ -570,8 +570,8 @@ public class InternshipStatisticsController {
                 graduationPracticeCompanies = records.into(GraduationPracticeCompany.class);
             }
             dataTablesUtils.setData(graduationPracticeCompanies);
-            dataTablesUtils.setiTotalRecords(graduationPracticeCompanyService.countAll(graduationPracticeCompany));
-            dataTablesUtils.setiTotalDisplayRecords(graduationPracticeCompanyService.countByCondition(dataTablesUtils, graduationPracticeCompany));
+            dataTablesUtils.setITotalRecords(graduationPracticeCompanyService.countAll(graduationPracticeCompany));
+            dataTablesUtils.setITotalDisplayRecords(graduationPracticeCompanyService.countByCondition(dataTablesUtils, graduationPracticeCompany));
         }
         return dataTablesUtils;
     }
@@ -672,8 +672,8 @@ public class InternshipStatisticsController {
                 graduationPracticeColleges = records.into(GraduationPracticeCollege.class);
             }
             dataTablesUtils.setData(graduationPracticeColleges);
-            dataTablesUtils.setiTotalRecords(graduationPracticeCollegeService.countAll(graduationPracticeCollege));
-            dataTablesUtils.setiTotalDisplayRecords(graduationPracticeCollegeService.countByCondition(dataTablesUtils, graduationPracticeCollege));
+            dataTablesUtils.setITotalRecords(graduationPracticeCollegeService.countAll(graduationPracticeCollege));
+            dataTablesUtils.setITotalDisplayRecords(graduationPracticeCollegeService.countByCondition(dataTablesUtils, graduationPracticeCollege));
         }
         return dataTablesUtils;
     }
@@ -774,8 +774,8 @@ public class InternshipStatisticsController {
                 graduationPracticeUnifies = records.into(GraduationPracticeUnify.class);
             }
             dataTablesUtils.setData(graduationPracticeUnifies);
-            dataTablesUtils.setiTotalRecords(graduationPracticeUnifyService.countAll(graduationPracticeUnify));
-            dataTablesUtils.setiTotalDisplayRecords(graduationPracticeUnifyService.countByCondition(dataTablesUtils, graduationPracticeUnify));
+            dataTablesUtils.setITotalRecords(graduationPracticeUnifyService.countAll(graduationPracticeUnify));
+            dataTablesUtils.setITotalDisplayRecords(graduationPracticeUnifyService.countByCondition(dataTablesUtils, graduationPracticeUnify));
         }
         return dataTablesUtils;
     }

@@ -419,7 +419,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
 
         val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
-            val username = StringUtils.trimWhitespace(search.getString("username"))
+            val username = StringUtils.trimWhitespace(search!!.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
             val usersType = StringUtils.trimWhitespace(search.getString("usersType"))
             if (StringUtils.hasLength(username)) {

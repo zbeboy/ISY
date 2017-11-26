@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.glue.system.SystemSmsGlue
 import top.zbeboy.isy.web.bean.system.sms.SystemSmsBean
 import top.zbeboy.isy.web.util.DataTablesUtils
-import java.util.ArrayList
+import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 
@@ -47,9 +47,9 @@ open class SystemSmsController {
         headers.add("send_condition")
         val dataTablesUtils = DataTablesUtils<SystemSmsBean>(request, headers)
         val resultUtils = systemSmsGlue.findAllByPage(dataTablesUtils)
-        dataTablesUtils.setData(resultUtils.getData())
-        dataTablesUtils.setiTotalRecords(systemSmsGlue.countAll())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        dataTablesUtils.data = resultUtils.getData()
+        dataTablesUtils.iTotalRecords = systemSmsGlue.countAll()
+        dataTablesUtils.iTotalDisplayRecords = resultUtils.getTotalElements()
         return dataTablesUtils
     }
 }

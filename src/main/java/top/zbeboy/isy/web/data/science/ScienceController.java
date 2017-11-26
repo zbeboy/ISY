@@ -117,8 +117,8 @@ public class ScienceController {
             scienceBeen = records.into(ScienceBean.class);
         }
         dataTablesUtils.setData(scienceBeen);
-        dataTablesUtils.setiTotalRecords(scienceService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(scienceService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setITotalRecords(scienceService.countAll());
+        dataTablesUtils.setITotalDisplayRecords(scienceService.countByCondition(dataTablesUtils));
 
         return dataTablesUtils;
     }

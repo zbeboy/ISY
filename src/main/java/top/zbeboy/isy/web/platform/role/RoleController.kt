@@ -90,9 +90,9 @@ open class RoleController {
         val dataTablesUtils = DataTablesUtils<RoleBean>(request, headers)
         val records = roleService.findAllByPage(dataTablesUtils, otherCondition)
         val roleBeens = roleService.dealDataRelation(records)
-        dataTablesUtils.setData(roleBeens)
-        dataTablesUtils.setiTotalRecords(roleService.countAll(otherCondition).toLong())
-        dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils, otherCondition).toLong())
+        dataTablesUtils.data = roleBeens
+        dataTablesUtils.iTotalRecords = roleService.countAll(otherCondition).toLong()
+        dataTablesUtils.iTotalDisplayRecords = roleService.countByCondition(dataTablesUtils, otherCondition).toLong()
         return dataTablesUtils
     }
 

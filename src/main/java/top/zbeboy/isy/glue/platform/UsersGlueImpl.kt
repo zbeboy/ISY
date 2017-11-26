@@ -83,7 +83,7 @@ open class UsersGlueImpl: UsersGlue {
      * @param authorities 详见：ElasticBook
      * @return 其它条件
      */
-    private fun prepositionCondition(search: JSONObject, authorities: Int): QueryBuilder {
+    private fun prepositionCondition(search: JSONObject?, authorities: Int): QueryBuilder {
         val boolqueryBuilder = QueryBuilders.boolQuery()
         boolqueryBuilder.must(searchCondition(search))
         boolqueryBuilder.must(QueryBuilders.termQuery("authorities", authorities))
@@ -120,10 +120,10 @@ open class UsersGlueImpl: UsersGlue {
      * @param search 搜索条件
      * @return 查询条件
      */
-    fun searchCondition(search: JSONObject): QueryBuilder {
+    fun searchCondition(search: JSONObject?): QueryBuilder {
         val boolqueryBuilder = QueryBuilders.boolQuery()
         if (!ObjectUtils.isEmpty(search)) {
-            val realName = StringUtils.trimWhitespace(search.getString("realName"))
+            val realName = StringUtils.trimWhitespace(search!!.getString("realName"))
             val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
             val usersType = StringUtils.trimWhitespace(search.getString("usersType"))

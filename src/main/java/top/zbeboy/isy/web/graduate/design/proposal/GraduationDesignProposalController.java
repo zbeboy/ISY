@@ -330,8 +330,8 @@ public class GraduationDesignProposalController {
                         GraduationDesignDatumBeenFilter(graduationDesignDatumBeens);
                     }
                     dataTablesUtils.setData(graduationDesignDatumBeens);
-                    dataTablesUtils.setiTotalRecords(graduationDesignDatumService.countAll(otherCondition));
-                    dataTablesUtils.setiTotalDisplayRecords(graduationDesignDatumService.countByCondition(dataTablesUtils, otherCondition));
+                    dataTablesUtils.setITotalRecords(graduationDesignDatumService.countAll(otherCondition));
+                    dataTablesUtils.setITotalDisplayRecords(graduationDesignDatumService.countByCondition(dataTablesUtils, otherCondition));
                 }
             }
         }
@@ -376,8 +376,8 @@ public class GraduationDesignProposalController {
                         GraduationDesignDatumBeenFilter(graduationDesignDatumBeens);
                     }
                     dataTablesUtils.setData(graduationDesignDatumBeens);
-                    dataTablesUtils.setiTotalRecords(graduationDesignDatumService.countTeamAll(otherCondition));
-                    dataTablesUtils.setiTotalDisplayRecords(graduationDesignDatumService.countTeamByCondition(dataTablesUtils, otherCondition));
+                    dataTablesUtils.setITotalRecords(graduationDesignDatumService.countTeamAll(otherCondition));
+                    dataTablesUtils.setITotalDisplayRecords(graduationDesignDatumService.countTeamByCondition(dataTablesUtils, otherCondition));
                 }
             }
         }
@@ -433,8 +433,8 @@ public class GraduationDesignProposalController {
                         });
                     }
                     dataTablesUtils.setData(graduationDesignDatumGroupBeens);
-                    dataTablesUtils.setiTotalRecords(graduationDesignDatumGroupService.countAll(otherCondition));
-                    dataTablesUtils.setiTotalDisplayRecords(graduationDesignDatumGroupService.countByCondition(dataTablesUtils, otherCondition));
+                    dataTablesUtils.setITotalRecords(graduationDesignDatumGroupService.countAll(otherCondition));
+                    dataTablesUtils.setITotalDisplayRecords(graduationDesignDatumGroupService.countByCondition(dataTablesUtils, otherCondition));
                 }
             }
         }

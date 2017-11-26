@@ -367,8 +367,8 @@ public class GraduationDesignAdjustechController {
             condition.setGraduationDesignReleaseId(request.getParameter("graduationDesignReleaseId"));
             List<GraduationDesignTutorBean> graduationDesignTutorBeens = graduationDesignTutorService.findAllFillByPage(dataTablesUtils, condition);
             dataTablesUtils.setData(graduationDesignTutorBeens);
-            dataTablesUtils.setiTotalRecords(graduationDesignTutorService.countAllFill(condition));
-            dataTablesUtils.setiTotalDisplayRecords(graduationDesignTutorService.countFillByCondition(dataTablesUtils, condition));
+            dataTablesUtils.setITotalRecords(graduationDesignTutorService.countAllFill(condition));
+            dataTablesUtils.setITotalDisplayRecords(graduationDesignTutorService.countFillByCondition(dataTablesUtils, condition));
         }
         return dataTablesUtils;
     }
@@ -399,8 +399,8 @@ public class GraduationDesignAdjustechController {
                 studentBeens = records.into(StudentBean.class);
             }
             dataTablesUtils.setData(studentBeens);
-            dataTablesUtils.setiTotalRecords(graduationDesignTutorService.countAllNotFill(condition));
-            dataTablesUtils.setiTotalDisplayRecords(graduationDesignTutorService.countNotFillByCondition(dataTablesUtils, condition));
+            dataTablesUtils.setITotalRecords(graduationDesignTutorService.countAllNotFill(condition));
+            dataTablesUtils.setITotalDisplayRecords(graduationDesignTutorService.countNotFillByCondition(dataTablesUtils, condition));
         }
         return dataTablesUtils;
     }

@@ -18,7 +18,7 @@ open class ElasticPlugin<T> {
      * @param search 条件内容
      * @return 其它条件
      */
-    open fun prepositionCondition(search: JSONObject): QueryBuilder? {
+    open fun prepositionCondition(search: JSONObject?): QueryBuilder? {
         return null
     }
 
@@ -30,7 +30,7 @@ open class ElasticPlugin<T> {
      * @param hasPreposition  是否有前置条件
      * @return 条件
      */
-    protected fun buildSearchQuery(search: JSONObject, dataTablesUtils: DataTablesUtils<T>, hasPreposition: Boolean): SearchQuery {
+    protected fun buildSearchQuery(search: JSONObject?, dataTablesUtils: DataTablesUtils<T>, hasPreposition: Boolean): SearchQuery {
         val nativeSearchQueryBuilder: NativeSearchQueryBuilder
         if (hasPreposition) {
             nativeSearchQueryBuilder = NativeSearchQueryBuilder().withQuery(prepositionCondition(search))
@@ -46,7 +46,7 @@ open class ElasticPlugin<T> {
      * @param search 搜索条件
      * @return 查询条件
      */
-    open fun searchCondition(search: JSONObject): QueryBuilder? {
+    open fun searchCondition(search: JSONObject?): QueryBuilder? {
         return null
     }
 

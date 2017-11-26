@@ -16,7 +16,7 @@ class AjaxUtils<T> {
     companion object {
         @JvmStatic
         fun <T> of(): AjaxUtils<T> {
-            return AjaxUtils<T>()
+            return AjaxUtils()
         }
     }
 

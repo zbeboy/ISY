@@ -155,8 +155,8 @@ public class GraduationDesignManifestController {
             otherCondition.setStaffId(staffId);
             List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignManifestService.findAllManifestByPage(dataTablesUtils, otherCondition);
             dataTablesUtils.setData(graduationDesignDeclareBeens);
-            dataTablesUtils.setiTotalRecords(graduationDesignManifestService.countAllManifest(otherCondition));
-            dataTablesUtils.setiTotalDisplayRecords(graduationDesignManifestService.countManifestByCondition(dataTablesUtils, otherCondition));
+            dataTablesUtils.setITotalRecords(graduationDesignManifestService.countAllManifest(otherCondition));
+            dataTablesUtils.setITotalDisplayRecords(graduationDesignManifestService.countManifestByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
     }

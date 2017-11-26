@@ -71,10 +71,10 @@ open class SystemMailboxGlueImpl : ElasticPlugin<SystemMailboxBean>(), SystemMai
      * @param search 搜索参数
      * @return 搜索条件
      */
-    override fun searchCondition(search: JSONObject): QueryBuilder? {
+    override fun searchCondition(search: JSONObject?): QueryBuilder? {
         val bluerBuilder = QueryBuilders.boolQuery()
         if (!ObjectUtils.isEmpty(search)) {
-            val acceptMail = StringUtils.trimWhitespace(search.getString("acceptMail"))
+            val acceptMail = StringUtils.trimWhitespace(search!!.getString("acceptMail"))
             if (StringUtils.hasLength(acceptMail)) {
                 val wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptMail", SQLQueryUtils.elasticLikeAllParam(acceptMail))
                 bluerBuilder.must(wildcardQueryBuilder)
@@ -95,7 +95,7 @@ open class SystemMailboxGlueImpl : ElasticPlugin<SystemMailboxBean>(), SystemMai
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
 
-            SystemMailboxGlueSort.sortSystemMailboxId(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            SystemMailboxGlueSort.sortSystemMailboxId(nativeSearchQueryBuilder, isAsc, orderColumnName!!)
 
             SystemMailboxGlueSort.sortSendTime(nativeSearchQueryBuilder, isAsc, orderColumnName)
 

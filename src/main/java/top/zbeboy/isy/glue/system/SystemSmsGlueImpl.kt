@@ -71,10 +71,10 @@ open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(), SystemSmsGlue {
      * @param search 搜索参数
      * @return 搜索条件
      */
-    override fun searchCondition(search: JSONObject): QueryBuilder? {
+    override fun searchCondition(search: JSONObject?): QueryBuilder? {
         val bluerBuilder = QueryBuilders.boolQuery()
         if (!ObjectUtils.isEmpty(search)) {
-            val acceptPhone = StringUtils.trimWhitespace(search.getString("acceptPhone"))
+            val acceptPhone = StringUtils.trimWhitespace(search!!.getString("acceptPhone"))
             if (StringUtils.hasLength(acceptPhone)) {
                 val wildcardQueryBuilder = QueryBuilders.wildcardQuery("acceptPhone", SQLQueryUtils.elasticLikeAllParam(acceptPhone))
                 bluerBuilder.must(wildcardQueryBuilder)
@@ -95,7 +95,7 @@ open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(), SystemSmsGlue {
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
 
-            SystemSmsGlueSort.sortSystemSmsId(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            SystemSmsGlueSort.sortSystemSmsId(nativeSearchQueryBuilder, isAsc, orderColumnName!!)
 
             SystemSmsGlueSort.sortSendTime(nativeSearchQueryBuilder, isAsc, orderColumnName)
 

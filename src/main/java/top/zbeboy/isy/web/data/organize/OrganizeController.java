@@ -159,8 +159,8 @@ public class OrganizeController {
         DataTablesUtils<OrganizeBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<OrganizeBean>> resultUtils = organizeGlue.findAllByPage(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setiTotalRecords(organizeGlue.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
+        dataTablesUtils.setITotalRecords(organizeGlue.countAll());
+        dataTablesUtils.setITotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

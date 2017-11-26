@@ -72,10 +72,10 @@ open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
      * @param search 搜索参数
      * @return 搜索条件
      */
-    override fun searchCondition(search: JSONObject): QueryBuilder? {
+    override fun searchCondition(search: JSONObject?): QueryBuilder? {
         val bluerBuilder = QueryBuilders.boolQuery()
         if (!ObjectUtils.isEmpty(search)) {
-            val username = StringUtils.trimWhitespace(search.getString("username"))
+            val username = StringUtils.trimWhitespace(search!!.getString("username"))
             val behavior = StringUtils.trimWhitespace(search.getString("behavior"))
             val ipAddress = StringUtils.trimWhitespace(search.getString("ipAddress"))
             if (StringUtils.hasLength(username)) {
@@ -108,7 +108,7 @@ open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
 
-            SystemLogGlueSort.sortSystemLogId(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            SystemLogGlueSort.sortSystemLogId(nativeSearchQueryBuilder, isAsc, orderColumnName!!)
 
             SystemLogGlueSort.sortUsername(nativeSearchQueryBuilder, isAsc, orderColumnName)
 

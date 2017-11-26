@@ -278,8 +278,8 @@ public class InternshipJournalController {
                 });
             }
             dataTablesUtils.setData(internshipJournalBeans);
-            dataTablesUtils.setiTotalRecords(internshipJournalService.countAll(otherCondition));
-            dataTablesUtils.setiTotalDisplayRecords(internshipJournalService.countByCondition(dataTablesUtils, otherCondition));
+            dataTablesUtils.setITotalRecords(internshipJournalService.countAll(otherCondition));
+            dataTablesUtils.setITotalDisplayRecords(internshipJournalService.countByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
     }

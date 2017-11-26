@@ -68,8 +68,8 @@ open class SystemRoleController {
         val records = roleService.findAllByPage(dataTablesUtils, otherCondition)
         val roleBeens = roleService.dealData(records)
         dataTablesUtils.data = roleBeens
-        dataTablesUtils.setiTotalRecords(roleService.countAll(otherCondition).toLong())
-        dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils, otherCondition).toLong())
+        dataTablesUtils.iTotalRecords = roleService.countAll(otherCondition).toLong()
+        dataTablesUtils.iTotalDisplayRecords = roleService.countByCondition(dataTablesUtils, otherCondition).toLong()
         return dataTablesUtils
     }
 

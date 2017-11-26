@@ -90,8 +90,8 @@ public class SchoolController {
             schools = records.into(School.class);
         }
         dataTablesUtils.setData(schools);
-        dataTablesUtils.setiTotalRecords(schoolService.countAll());
-        dataTablesUtils.setiTotalDisplayRecords(schoolService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setITotalRecords(schoolService.countAll());
+        dataTablesUtils.setITotalDisplayRecords(schoolService.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 
