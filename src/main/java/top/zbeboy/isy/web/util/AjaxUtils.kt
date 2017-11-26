@@ -4,14 +4,14 @@ package top.zbeboy.isy.web.util
  * Created by zbeboy 2017-11-03 .
  * ajax消息以及数据封装
  **/
-class AjaxUtils<T> {
+open class AjaxUtils<T> {
 
-    private var state: Boolean = false//消息状态
-    private var msg: String? = null//消息
-    private var mapResult: Map<String, Any>? = null//map数据
-    private var listResult: List<T>? = null//list数据
-    private var objectResult: Any? = null//单个对象数据
-    private var paginationUtils: PaginationUtils? = null//分页数据
+    var state: Boolean = false//消息状态
+    var msg: String? = null//消息
+    var mapResult: Map<String, Any>? = null//map数据
+    var listResult: List<T>? = null//list数据
+    var objectResult: Any? = null//单个对象数据
+    var paginationUtils: PaginationUtils? = null//分页数据
 
     companion object {
         @JvmStatic
@@ -53,53 +53,5 @@ class AjaxUtils<T> {
     fun paginationUtils(paginationUtils: PaginationUtils): AjaxUtils<T> {
         this.paginationUtils = paginationUtils
         return this
-    }
-
-    fun isState(): Boolean {
-        return state
-    }
-
-    fun setState(state: Boolean) {
-        this.state = state
-    }
-
-    fun getPaginationUtils(): PaginationUtils? {
-        return paginationUtils
-    }
-
-    fun setPaginationUtils(paginationUtils: PaginationUtils) {
-        this.paginationUtils = paginationUtils
-    }
-
-    fun getMsg(): String? {
-        return msg
-    }
-
-    fun setMsg(msg: String) {
-        this.msg = msg
-    }
-
-    fun getObjectResult(): Any? {
-        return objectResult
-    }
-
-    fun setObjectResult(obj: Any) {
-        this.objectResult = obj
-    }
-
-    fun getMapResult(): Map<String, Any>? {
-        return mapResult
-    }
-
-    fun setMapResult(mapResult: Map<String, Any>) {
-        this.mapResult = mapResult
-    }
-
-    fun getListResult(): List<T>? {
-        return listResult
-    }
-
-    fun setListResult(listResult: List<T>) {
-        this.listResult = listResult
     }
 }
