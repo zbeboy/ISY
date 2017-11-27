@@ -49,8 +49,8 @@ open class SystemLogController {
         val dataTablesUtils = DataTablesUtils<SystemLogBean>(request, headers)
         val resultUtils = systemLogGlue.findAllByPage(dataTablesUtils)
         dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.iTotalRecords = systemLogGlue.countAll()
-        dataTablesUtils.iTotalDisplayRecords = resultUtils.getTotalElements()
+        dataTablesUtils.setiTotalRecords(systemLogGlue.countAll())
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
         return dataTablesUtils
     }
 }

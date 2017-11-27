@@ -69,19 +69,6 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
     private CacheManageService cacheManageService;
 
     @Override
-    public void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap) {
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = roleService.getRoleCollegeId(record);
-            modelMap.addAttribute("collegeId", collegeId);
-        }
-    }
-
-    @Override
     public Map<String, Integer> accessRoleCondition() {
         Map<String, Integer> map = new HashMap<>();
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)

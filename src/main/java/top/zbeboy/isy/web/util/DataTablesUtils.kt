@@ -21,12 +21,12 @@ open class DataTablesUtils<T> {
     /*
     数据总数
      */
-    var iTotalRecords: Long = 0
+    private var iTotalRecords: Long = 0
 
     /*
     过滤条件下的总数
      */
-    var iTotalDisplayRecords: Long = 0
+    private var iTotalDisplayRecords: Long = 0
 
     /*
     从哪页开始
@@ -135,5 +135,21 @@ open class DataTablesUtils<T> {
             this.draw = NumberUtils.toInt(dramParam)
         }
 
+    }
+
+    fun getiTotalRecords(): Long {
+        return iTotalRecords
+    }
+
+    fun setiTotalRecords(iTotalRecords: Long) {
+        this.iTotalRecords = iTotalRecords
+    }
+
+    fun getiTotalDisplayRecords(): Long {
+        return iTotalDisplayRecords
+    }
+
+    fun setiTotalDisplayRecords(iTotalDisplayRecords: Long) {
+        this.iTotalDisplayRecords = iTotalDisplayRecords
     }
 }

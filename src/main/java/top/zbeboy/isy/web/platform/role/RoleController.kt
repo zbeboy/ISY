@@ -23,6 +23,7 @@ import top.zbeboy.isy.service.util.RandomUtils
 import top.zbeboy.isy.service.util.UUIDUtils
 import top.zbeboy.isy.web.bean.platform.role.RoleBean
 import top.zbeboy.isy.web.bean.tree.TreeBean
+import top.zbeboy.isy.web.common.PageParamCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
@@ -51,7 +52,7 @@ open class RoleController {
     open lateinit var collegeRoleService: CollegeRoleService
 
     @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
+    open lateinit var pageParamCommon: PageParamCommon
 
     @Resource
     open lateinit var applicationService: ApplicationService
@@ -91,8 +92,8 @@ open class RoleController {
         val records = roleService.findAllByPage(dataTablesUtils, otherCondition)
         val roleBeens = roleService.dealDataRelation(records)
         dataTablesUtils.data = roleBeens
-        dataTablesUtils.iTotalRecords = roleService.countAll(otherCondition).toLong()
-        dataTablesUtils.iTotalDisplayRecords = roleService.countByCondition(dataTablesUtils, otherCondition).toLong()
+        dataTablesUtils.setiTotalRecords(roleService.countAll(otherCondition).toLong())
+        dataTablesUtils.setiTotalDisplayRecords(roleService.countByCondition(dataTablesUtils, otherCondition).toLong())
         return dataTablesUtils
     }
 
@@ -104,7 +105,7 @@ open class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/add", method = arrayOf(RequestMethod.GET))
     fun roleAdd(modelMap: ModelMap): String {
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap)
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
         return "web/platform/role/role_add::#page-wrapper"
     }
 
@@ -120,7 +121,7 @@ open class RoleController {
         val record = roleService.findByRoleIdRelation(roleId)
         val roleBean = roleService.dealDataRelationSingle(record)
         modelMap.addAttribute("role", roleBean)
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap)
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
         return "web/platform/role/role_edit::#page-wrapper"
     }
 

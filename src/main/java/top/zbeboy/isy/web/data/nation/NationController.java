@@ -81,8 +81,8 @@ public class NationController {
             nations = records.into(Nation.class);
         }
         dataTablesUtils.setData(nations);
-        dataTablesUtils.setITotalRecords(nationService.countAll());
-        dataTablesUtils.setITotalDisplayRecords(nationService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalRecords(nationService.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(nationService.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 

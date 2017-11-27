@@ -48,8 +48,8 @@ open class SystemSmsController {
         val dataTablesUtils = DataTablesUtils<SystemSmsBean>(request, headers)
         val resultUtils = systemSmsGlue.findAllByPage(dataTablesUtils)
         dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.iTotalRecords = systemSmsGlue.countAll()
-        dataTablesUtils.iTotalDisplayRecords = resultUtils.getTotalElements()
+        dataTablesUtils.setiTotalRecords(systemSmsGlue.countAll())
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
         return dataTablesUtils
     }
 }

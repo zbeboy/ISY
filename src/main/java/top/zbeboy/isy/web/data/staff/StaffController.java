@@ -256,8 +256,8 @@ public class StaffController {
         DataTablesUtils<StaffBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<StaffBean>> resultUtils = staffGlue.findAllByPageExistsAuthorities(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setITotalRecords(staffGlue.countAllExistsAuthorities());
-        dataTablesUtils.setITotalDisplayRecords(resultUtils.getTotalElements());
+        dataTablesUtils.setiTotalRecords(staffGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -286,8 +286,8 @@ public class StaffController {
         DataTablesUtils<StaffBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<StaffBean>> resultUtils = staffGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setITotalRecords(staffGlue.countAllNotExistsAuthorities());
-        dataTablesUtils.setITotalDisplayRecords(resultUtils.getTotalElements());
+        dataTablesUtils.setiTotalRecords(staffGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

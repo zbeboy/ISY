@@ -730,8 +730,8 @@ open class UsersController {
         val dataTablesUtils = DataTablesUtils<UsersBean>(request, headers)
         val resultUtils = usersGlue.findAllByPageExistsAuthorities(dataTablesUtils)
         dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.iTotalRecords = usersGlue.countAllExistsAuthorities()
-        dataTablesUtils.iTotalDisplayRecords = resultUtils.getTotalElements()
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllExistsAuthorities())
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
         return dataTablesUtils
     }
 
@@ -757,8 +757,8 @@ open class UsersController {
         val dataTablesUtils = DataTablesUtils<UsersBean>(request, headers)
         val resultUtils = usersGlue.findAllByPageNotExistsAuthorities(dataTablesUtils)
         dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.iTotalRecords = usersGlue.countAllNotExistsAuthorities()
-        dataTablesUtils.iTotalDisplayRecords = resultUtils.getTotalElements()
+        dataTablesUtils.setiTotalRecords(usersGlue.countAllNotExistsAuthorities())
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
         return dataTablesUtils
     }
 

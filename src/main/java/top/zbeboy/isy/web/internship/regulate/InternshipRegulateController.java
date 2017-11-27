@@ -194,8 +194,8 @@ public class InternshipRegulateController {
                 internshipRegulateBeans.forEach(i -> i.setCreateDateStr(DateTimeUtils.formatDate(i.getCreateDate())));
             }
             dataTablesUtils.setData(internshipRegulateBeans);
-            dataTablesUtils.setITotalRecords(internshipRegulateService.countAll(otherCondition));
-            dataTablesUtils.setITotalDisplayRecords(internshipRegulateService.countByCondition(dataTablesUtils, otherCondition));
+            dataTablesUtils.setiTotalRecords(internshipRegulateService.countAll(otherCondition));
+            dataTablesUtils.setiTotalDisplayRecords(internshipRegulateService.countByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
     }

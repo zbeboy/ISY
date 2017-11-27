@@ -17,6 +17,7 @@ import top.zbeboy.isy.domain.tables.records.SchoolroomRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.SchoolroomService;
 import top.zbeboy.isy.web.bean.data.schoolroom.SchoolroomBean;
+import top.zbeboy.isy.web.common.PageParamCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -40,7 +41,7 @@ public class SchoolroomController {
     private SchoolroomService schoolroomService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private PageParamCommon pageParamCommon;
 
     /**
      * 通过楼id获取全部教室
@@ -81,7 +82,7 @@ public class SchoolroomController {
      */
     @RequestMapping(value = "/web/data/schoolroom/add", method = RequestMethod.GET)
     public String schoolroomAdd(ModelMap modelMap) {
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/schoolroom/schoolroom_add::#page-wrapper";
     }
 
@@ -102,7 +103,7 @@ public class SchoolroomController {
             schoolroomBean = new SchoolroomBean();
         }
         modelMap.addAttribute("schoolroom", schoolroomBean);
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/schoolroom/schoolroom_edit::#page-wrapper";
     }
 
@@ -132,8 +133,8 @@ public class SchoolroomController {
             schoolroomBeen = records.into(SchoolroomBean.class);
         }
         dataTablesUtils.setData(schoolroomBeen);
-        dataTablesUtils.setITotalRecords(schoolroomService.countAll());
-        dataTablesUtils.setITotalDisplayRecords(schoolroomService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalRecords(schoolroomService.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(schoolroomService.countByCondition(dataTablesUtils));
 
         return dataTablesUtils;
     }

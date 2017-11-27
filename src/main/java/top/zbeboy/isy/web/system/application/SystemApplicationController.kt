@@ -92,8 +92,8 @@ open class SystemApplicationController {
             }
         }
         dataTablesUtils.data = applicationBeen
-        dataTablesUtils.iTotalRecords = applicationService.countAll().toLong()
-        dataTablesUtils.iTotalDisplayRecords = applicationService.countByCondition(dataTablesUtils).toLong()
+        dataTablesUtils.setiTotalRecords(applicationService.countAll().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(applicationService.countByCondition(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 

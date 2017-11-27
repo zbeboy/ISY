@@ -145,8 +145,8 @@ public class GraduationDesignArchivesController {
             otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
             List<GraduationDesignArchivesBean> graduationDesignArchivesBeans = graduationDesignArchivesService.findAllByPage(dataTablesUtils, otherCondition);
             dataTablesUtils.setData(graduationDesignArchivesBeans);
-            dataTablesUtils.setITotalRecords(graduationDesignArchivesService.countAll(otherCondition));
-            dataTablesUtils.setITotalDisplayRecords(graduationDesignArchivesService.countByCondition(dataTablesUtils, otherCondition));
+            dataTablesUtils.setiTotalRecords(graduationDesignArchivesService.countAll(otherCondition));
+            dataTablesUtils.setiTotalDisplayRecords(graduationDesignArchivesService.countByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
     }

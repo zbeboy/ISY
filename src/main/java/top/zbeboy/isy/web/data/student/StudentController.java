@@ -266,8 +266,8 @@ public class StudentController {
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageExistsAuthorities(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setITotalRecords(studentGlue.countAllExistsAuthorities());
-        dataTablesUtils.setITotalDisplayRecords(resultUtils.getTotalElements());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -299,8 +299,8 @@ public class StudentController {
         DataTablesUtils<StudentBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<StudentBean>> resultUtils = studentGlue.findAllByPageNotExistsAuthorities(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setITotalRecords(studentGlue.countAllNotExistsAuthorities());
-        dataTablesUtils.setITotalDisplayRecords(resultUtils.getTotalElements());
+        dataTablesUtils.setiTotalRecords(studentGlue.countAllNotExistsAuthorities());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 

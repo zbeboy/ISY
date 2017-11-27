@@ -195,8 +195,8 @@ public class GraduationDesignSubjectController {
                 );
             }
             dataTablesUtils.setData(graduationDesignPresubjectBeens);
-            dataTablesUtils.setITotalRecords(graduationDesignPresubjectService.countAll(otherCondition));
-            dataTablesUtils.setITotalDisplayRecords(graduationDesignPresubjectService.countByCondition(dataTablesUtils, otherCondition));
+            dataTablesUtils.setiTotalRecords(graduationDesignPresubjectService.countAll(otherCondition));
+            dataTablesUtils.setiTotalDisplayRecords(graduationDesignPresubjectService.countByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
     }
@@ -248,8 +248,8 @@ public class GraduationDesignSubjectController {
                     otherCondition.setStaffId(staffId);
                     List<GraduationDesignDeclareBean> graduationDesignDeclareBeens = graduationDesignDeclareService.findAllByPage(dataTablesUtils, otherCondition);
                     dataTablesUtils.setData(graduationDesignDeclareBeens);
-                    dataTablesUtils.setITotalRecords(graduationDesignDeclareService.countAll(otherCondition));
-                    dataTablesUtils.setITotalDisplayRecords(graduationDesignDeclareService.countByCondition(dataTablesUtils, otherCondition));
+                    dataTablesUtils.setiTotalRecords(graduationDesignDeclareService.countAll(otherCondition));
+                    dataTablesUtils.setiTotalDisplayRecords(graduationDesignDeclareService.countByCondition(dataTablesUtils, otherCondition));
                 }
             }
         }

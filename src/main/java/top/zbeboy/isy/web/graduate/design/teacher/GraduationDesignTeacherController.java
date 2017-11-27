@@ -151,8 +151,8 @@ public class GraduationDesignTeacherController {
             otherCondition.setGraduationDesignReleaseId(graduationDesignReleaseId);
             List<GraduationDesignTeacherBean> graduationDesignTeacherBeens = graduationDesignTeacherService.findAllByPage(dataTablesUtils, otherCondition);
             dataTablesUtils.setData(graduationDesignTeacherBeens);
-            dataTablesUtils.setITotalRecords(graduationDesignTeacherService.countAll(otherCondition));
-            dataTablesUtils.setITotalDisplayRecords(graduationDesignTeacherService.countByCondition(dataTablesUtils, otherCondition));
+            dataTablesUtils.setiTotalRecords(graduationDesignTeacherService.countAll(otherCondition));
+            dataTablesUtils.setiTotalDisplayRecords(graduationDesignTeacherService.countByCondition(dataTablesUtils, otherCondition));
         }
         return dataTablesUtils;
     }

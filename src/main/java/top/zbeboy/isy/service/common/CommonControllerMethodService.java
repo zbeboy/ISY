@@ -12,13 +12,6 @@ import java.util.Map;
 public interface CommonControllerMethodService {
 
     /**
-     * 当前用户的角色名与院id
-     *
-     * @param modelMap 页面对象
-     */
-    void currentUserRoleNameAndCollegeIdPageParam(ModelMap modelMap);
-
-    /**
      * 获取实习数据 判断角色
      *
      * @return 根据角色返回相应数据

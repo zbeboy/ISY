@@ -218,8 +218,8 @@ public class InternshipTeacherDistributionController {
         dataTablesUtils = new DataTablesUtils<>(request, headers);
         List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeens = internshipTeacherDistributionService.findAllByPage(dataTablesUtils, internshipReleaseId);
         dataTablesUtils.setData(internshipTeacherDistributionBeens);
-        dataTablesUtils.setITotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
-        dataTablesUtils.setITotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId));
+        dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
+        dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId));
         return dataTablesUtils;
     }
 

@@ -48,8 +48,8 @@ open class SystemMailboxController {
         val dataTablesUtils = DataTablesUtils<SystemMailboxBean>(request, headers)
         val resultUtils = systemMailboxGlue.findAllByPage(dataTablesUtils)
         dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.iTotalRecords = systemMailboxGlue.countAll()
-        dataTablesUtils.iTotalDisplayRecords = resultUtils.getTotalElements()
+        dataTablesUtils.setiTotalRecords(systemMailboxGlue.countAll())
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
         return dataTablesUtils
     }
 }

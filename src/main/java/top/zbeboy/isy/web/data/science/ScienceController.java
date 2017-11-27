@@ -18,6 +18,7 @@ import top.zbeboy.isy.domain.tables.records.ScienceRecord;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.ScienceService;
 import top.zbeboy.isy.web.bean.data.science.ScienceBean;
+import top.zbeboy.isy.web.common.PageParamCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -41,7 +42,7 @@ public class ScienceController {
     private ScienceService scienceService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private PageParamCommon pageParamCommon;
 
     /**
      * 通过系id获取全部专业
@@ -117,8 +118,8 @@ public class ScienceController {
             scienceBeen = records.into(ScienceBean.class);
         }
         dataTablesUtils.setData(scienceBeen);
-        dataTablesUtils.setITotalRecords(scienceService.countAll());
-        dataTablesUtils.setITotalDisplayRecords(scienceService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalRecords(scienceService.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(scienceService.countByCondition(dataTablesUtils));
 
         return dataTablesUtils;
     }
@@ -130,7 +131,7 @@ public class ScienceController {
      */
     @RequestMapping(value = "/web/data/science/add", method = RequestMethod.GET)
     public String scienceAdd(ModelMap modelMap) {
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/science/science_add::#page-wrapper";
     }
 
@@ -151,7 +152,7 @@ public class ScienceController {
             scienceBean = new ScienceBean();
         }
         modelMap.addAttribute("science", scienceBean);
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/science/science_edit::#page-wrapper";
     }
 

@@ -107,8 +107,8 @@ public class CollegeController {
             colleges = records.into(CollegeBean.class);
         }
         dataTablesUtils.setData(colleges);
-        dataTablesUtils.setITotalRecords(collegeService.countAll());
-        dataTablesUtils.setITotalDisplayRecords(collegeService.countByCondition(dataTablesUtils));
+        dataTablesUtils.setiTotalRecords(collegeService.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(collegeService.countByCondition(dataTablesUtils));
         return dataTablesUtils;
     }
 

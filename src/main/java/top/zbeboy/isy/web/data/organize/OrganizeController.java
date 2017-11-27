@@ -24,6 +24,7 @@ import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean;
+import top.zbeboy.isy.web.common.PageParamCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SelectUtils;
@@ -48,7 +49,7 @@ public class OrganizeController {
     private OrganizeService organizeService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private PageParamCommon pageParamCommon;
 
     @Resource
     private OrganizeGlue organizeGlue;
@@ -159,8 +160,8 @@ public class OrganizeController {
         DataTablesUtils<OrganizeBean> dataTablesUtils = new DataTablesUtils<>(request, headers);
         ResultUtils<List<OrganizeBean>> resultUtils = organizeGlue.findAllByPage(dataTablesUtils);
         dataTablesUtils.setData(resultUtils.getData());
-        dataTablesUtils.setITotalRecords(organizeGlue.countAll());
-        dataTablesUtils.setITotalDisplayRecords(resultUtils.getTotalElements());
+        dataTablesUtils.setiTotalRecords(organizeGlue.countAll());
+        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements());
         return dataTablesUtils;
     }
 
@@ -171,7 +172,7 @@ public class OrganizeController {
      */
     @RequestMapping(value = "/web/data/organize/add", method = RequestMethod.GET)
     public String organizeAdd(ModelMap modelMap) {
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/organize/organize_add::#page-wrapper";
     }
 
@@ -192,7 +193,7 @@ public class OrganizeController {
             organizeBean = new OrganizeBean();
         }
         modelMap.addAttribute("organize", organizeBean);
-        commonControllerMethodService.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/organize/organize_edit::#page-wrapper";
     }
 
