@@ -68,4 +68,11 @@ public class CollegeRoleDao extends DAOImpl<CollegeRoleRecord, top.zbeboy.isy.do
     public List<top.zbeboy.isy.domain.tables.pojos.CollegeRole> fetchByCollegeId(Integer... values) {
         return fetch(CollegeRole.COLLEGE_ROLE.COLLEGE_ID, values);
     }
+
+    /**
+     * Fetch records that have <code>allow_agent IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.CollegeRole> fetchByAllowAgent(Byte... values) {
+        return fetch(CollegeRole.COLLEGE_ROLE.ALLOW_AGENT, values);
+    }
 }

@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CollegeRole extends TableImpl<CollegeRoleRecord> {
 
-    private static final long serialVersionUID = -1284454467;
+    private static final long serialVersionUID = 1738115868;
 
     /**
      * The reference instance of <code>isy.college_role</code>
@@ -59,6 +59,11 @@ public class CollegeRole extends TableImpl<CollegeRoleRecord> {
      * The column <code>isy.college_role.college_id</code>.
      */
     public final TableField<CollegeRoleRecord, Integer> COLLEGE_ID = createField("college_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.college_role.allow_agent</code>.
+     */
+    public final TableField<CollegeRoleRecord, Byte> ALLOW_AGENT = createField("allow_agent", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
 
     /**
      * Create a <code>isy.college_role</code> table reference

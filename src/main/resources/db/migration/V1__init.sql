@@ -87,8 +87,9 @@ CREATE TABLE college_application (
 );
 
 CREATE TABLE college_role (
-  role_id    VARCHAR(64) NOT NULL,
-  college_id INT         NOT NULL,
+  role_id     VARCHAR(64) NOT NULL,
+  college_id  INT         NOT NULL,
+  allow_agent BOOLEAN DEFAULT 0,
   FOREIGN KEY (role_id) REFERENCES role (role_id),
   FOREIGN KEY (college_id) REFERENCES college (college_id),
   PRIMARY KEY (role_id, college_id)
@@ -267,7 +268,7 @@ CREATE TABLE internship_change_company_history (
   company_address                      VARCHAR(500),
   company_contacts                     VARCHAR(10),
   company_tel                          VARCHAR(20),
-  change_time                          DATETIME(3)    NOT NULL,
+  change_time                          DATETIME(3) NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id)
 );
@@ -441,7 +442,7 @@ CREATE TABLE internship_journal (
   internship_journal_id            VARCHAR(64) PRIMARY KEY,
   student_name                     VARCHAR(30)  NOT NULL,
   student_number                   VARCHAR(20)  NOT NULL,
-  organize                         VARCHAR(200)  NOT NULL,
+  organize                         VARCHAR(200) NOT NULL,
   school_guidance_teacher          VARCHAR(30)  NOT NULL,
   graduation_practice_company_name VARCHAR(200) NOT NULL,
   internship_journal_content       TEXT         NOT NULL,

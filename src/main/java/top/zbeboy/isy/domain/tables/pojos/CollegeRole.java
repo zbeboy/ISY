@@ -24,24 +24,28 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CollegeRole implements Serializable {
 
-    private static final long serialVersionUID = -1073032061;
+    private static final long serialVersionUID = 1094430833;
 
     private String  roleId;
     private Integer collegeId;
+    private Byte    allowAgent;
 
     public CollegeRole() {}
 
     public CollegeRole(CollegeRole value) {
         this.roleId = value.roleId;
         this.collegeId = value.collegeId;
+        this.allowAgent = value.allowAgent;
     }
 
     public CollegeRole(
         String  roleId,
-        Integer collegeId
+        Integer collegeId,
+        Byte    allowAgent
     ) {
         this.roleId = roleId;
         this.collegeId = collegeId;
+        this.allowAgent = allowAgent;
     }
 
     @NotNull
@@ -63,12 +67,21 @@ public class CollegeRole implements Serializable {
         this.collegeId = collegeId;
     }
 
+    public Byte getAllowAgent() {
+        return this.allowAgent;
+    }
+
+    public void setAllowAgent(Byte allowAgent) {
+        this.allowAgent = allowAgent;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CollegeRole (");
 
         sb.append(roleId);
         sb.append(", ").append(collegeId);
+        sb.append(", ").append(allowAgent);
 
         sb.append(")");
         return sb.toString();

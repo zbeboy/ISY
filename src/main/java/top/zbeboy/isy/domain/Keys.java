@@ -240,7 +240,6 @@ public class Keys {
     public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY;
     public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_TYPE_PRIMARY;
     public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = UniqueKeys0.KEY_NATION_PRIMARY;
-    public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = UniqueKeys0.KEY_NATION_NATION_NAME;
     public static final UniqueKey<OauthAccessTokenRecord> KEY_OAUTH_ACCESS_TOKEN_PRIMARY = UniqueKeys0.KEY_OAUTH_ACCESS_TOKEN_PRIMARY;
     public static final UniqueKey<OauthClientDetailsRecord> KEY_OAUTH_CLIENT_DETAILS_PRIMARY = UniqueKeys0.KEY_OAUTH_CLIENT_DETAILS_PRIMARY;
     public static final UniqueKey<OauthClientTokenRecord> KEY_OAUTH_CLIENT_TOKEN_PRIMARY = UniqueKeys0.KEY_OAUTH_CLIENT_TOKEN_PRIMARY;
@@ -441,7 +440,6 @@ public class Keys {
         public static final UniqueKey<InternshipTeacherDistributionRecord> KEY_INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = createUniqueKey(InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, "KEY_internship_teacher_distribution_PRIMARY", InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID);
         public static final UniqueKey<InternshipTypeRecord> KEY_INTERNSHIP_TYPE_PRIMARY = createUniqueKey(InternshipType.INTERNSHIP_TYPE, "KEY_internship_type_PRIMARY", InternshipType.INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID);
         public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = createUniqueKey(Nation.NATION, "KEY_nation_PRIMARY", Nation.NATION.NATION_ID);
-        public static final UniqueKey<NationRecord> KEY_NATION_NATION_NAME = createUniqueKey(Nation.NATION, "KEY_nation_nation_name", Nation.NATION.NATION_NAME);
         public static final UniqueKey<OauthAccessTokenRecord> KEY_OAUTH_ACCESS_TOKEN_PRIMARY = createUniqueKey(OauthAccessToken.OAUTH_ACCESS_TOKEN, "KEY_oauth_access_token_PRIMARY", OauthAccessToken.OAUTH_ACCESS_TOKEN.AUTHENTICATION_ID);
         public static final UniqueKey<OauthClientDetailsRecord> KEY_OAUTH_CLIENT_DETAILS_PRIMARY = createUniqueKey(OauthClientDetails.OAUTH_CLIENT_DETAILS, "KEY_oauth_client_details_PRIMARY", OauthClientDetails.OAUTH_CLIENT_DETAILS.CLIENT_ID);
         public static final UniqueKey<OauthClientTokenRecord> KEY_OAUTH_CLIENT_TOKEN_PRIMARY = createUniqueKey(OauthClientToken.OAUTH_CLIENT_TOKEN, "KEY_oauth_client_token_PRIMARY", OauthClientToken.OAUTH_CLIENT_TOKEN.AUTHENTICATION_ID);
