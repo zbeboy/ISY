@@ -2,8 +2,8 @@
  * Created by lenovo on 2016-10-16.
  */
 //# sourceURL=role_add.js
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength", "jquery.showLoading", "attribute_extensions"], function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "messenger", "bootstrap-treeview", "jquery.address",
+    "bootstrap-maxlength", "jquery.showLoading", "attribute_extensions"], function ($, Handlebars, constants, nav_active, DP) {
 
     /*
      ajax url.
@@ -26,7 +26,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     var paramId = {
         schoolId: '#select_school',
         collegeId: '#select_college',
-        roleName: '#roleName'
+        roleName: '#roleName',
+        allowAgent: '#allowAgent'
     };
 
     /*
@@ -36,6 +37,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         schoolId: $(paramId.schoolId).val(),
         collegeId: $(paramId.collegeId).val(),
         roleName: $(paramId.roleName).val(),
+        allowAgent: DP.defaultUndefinedValue($('input[name="allowAgent"]:checked').val(), 0),
         applicationIds: ''
     };
 
@@ -103,6 +105,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         param.schoolId = $(paramId.schoolId).val();
         param.collegeId = $(paramId.collegeId).val();
         param.roleName = $(paramId.roleName).val();
+        param.allowAgent = DP.defaultUndefinedValue($('input[name="allowAgent"]:checked').val(), 0);
         param.applicationIds = getAllCheckedData();
     }
 

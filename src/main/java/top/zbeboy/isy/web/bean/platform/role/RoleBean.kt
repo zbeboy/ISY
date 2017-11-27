@@ -11,4 +11,5 @@ class RoleBean : Role() {
     var schoolId: Int? = null
     var schoolName: String? = null
     var applicationId: Int? = null
+    var allowAgent: Byte? = null
 }

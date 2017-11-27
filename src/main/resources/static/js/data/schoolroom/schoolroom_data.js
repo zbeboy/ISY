@@ -242,8 +242,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             param.buildingName = $(getParamId().buildingName).val();
             param.buildingCode = $(getParamId().buildingCode).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName));
-                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName));
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
                 sessionStorage.setItem(webStorageKey.BUILDING_NAME, param.buildingName);
                 sessionStorage.setItem(webStorageKey.BUILDING_CODE, param.buildingCode);
             }

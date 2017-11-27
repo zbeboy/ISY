@@ -118,8 +118,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             passParam.realName = $(getPassParamId().realName).val();
             passParam.sex = $(getPassParamId().sex).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.PASS_SCHOOL, DP.defaultUndefinedValue(passParam.school));
-                sessionStorage.setItem(webStorageKey.PASS_COLLEGE, DP.defaultUndefinedValue(passParam.college));
+                sessionStorage.setItem(webStorageKey.PASS_SCHOOL, DP.defaultUndefinedValue(passParam.school, ''));
+                sessionStorage.setItem(webStorageKey.PASS_COLLEGE, DP.defaultUndefinedValue(passParam.college, ''));
                 sessionStorage.setItem(webStorageKey.PASS_DEPARTMENT, passParam.department);
                 sessionStorage.setItem(webStorageKey.PASS_POST, passParam.post);
                 sessionStorage.setItem(webStorageKey.PASS_STAFF_NUMBER, passParam.staffNumber);
@@ -876,8 +876,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             waitParam.staffNumber = $(getWaitParamId().staffNumber).val();
             waitParam.username = $(getWaitParamId().username).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, DP.defaultUndefinedValue(waitParam.school));
-                sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, DP.defaultUndefinedValue(waitParam.college));
+                sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, DP.defaultUndefinedValue(waitParam.school, ''));
+                sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, DP.defaultUndefinedValue(waitParam.college, ''));
                 sessionStorage.setItem(webStorageKey.WAIT_DEPARTMENT, waitParam.department);
                 sessionStorage.setItem(webStorageKey.WAIT_MOBILE, waitParam.mobile);
                 sessionStorage.setItem(webStorageKey.WAIT_STAFF_NUMBER, waitParam.staffNumber);

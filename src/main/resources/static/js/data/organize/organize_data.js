@@ -262,8 +262,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             param.grade = $(getParamId().grade).val();
 
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName));
-                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName));
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
                 sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, param.departmentName);
                 sessionStorage.setItem(webStorageKey.SCIENCE_NAME, param.scienceName);
                 sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, param.organizeName);

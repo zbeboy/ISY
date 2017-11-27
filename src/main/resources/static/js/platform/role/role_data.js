@@ -29,6 +29,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
             return {
                 roles: '/web/platform/role/data',
                 del: '/web/platform/role/delete',
+                agent: '/web/platform/role/agent',
                 add: '/web/platform/role/add',
                 edit: '/web/platform/role/edit'
             };
@@ -77,33 +78,82 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
                 {"data": "schoolName"},
                 {"data": "collegeName"},
                 {"data": "roleEnName"},
+                {"data": "allowAgent"},
                 {"data": null}
             ],
             columnDefs: [
                 {
                     targets: 4,
+                    render: function (a, b, c, d) {
+                        if (c.allowAgent == 0 || c.allowAgent == null) {
+                            return "否";
+                        } else {
+                            return "是";
+                        }
+                    }
+                },
+                {
+                    targets: 5,
                     orderable: false,
                     render: function (a, b, c, d) {
 
-                        var context =
-                            {
-                                func: [
-                                    {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.roleId,
-                                        "role": c.roleName
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.roleId,
-                                        "role": c.roleName
-                                    }
-                                ]
-                            };
+                        var context = {};
+
+                        if (c.allowAgent == 0 || c.allowAgent == null) {
+                            context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "设置代理",
+                                            "css": "setAgent",
+                                            "type": "info",
+                                            "id": c.roleId,
+                                            "role": c.roleName
+                                        },
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.roleId,
+                                            "role": c.roleName
+                                        },
+                                        {
+                                            "name": "删除",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.roleId,
+                                            "role": c.roleName
+                                        }
+                                    ]
+                                };
+                        } else {
+                            context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "取消代理",
+                                            "css": "cancelAgent",
+                                            "type": "default",
+                                            "id": c.roleId,
+                                            "role": c.roleName
+                                        },
+                                        {
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.roleId,
+                                            "role": c.roleName
+                                        },
+                                        {
+                                            "name": "删除",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.roleId,
+                                            "role": c.roleName
+                                        }
+                                    ]
+                                };
+                        }
 
                         return template(context);
                     }
@@ -138,6 +188,14 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
+                tableElement.delegate('.setAgent', "click", function () {
+                    operatorAgent($(this).attr('data-id'), $(this).attr('data-role'), 1, '设置');
+                });
+
+                tableElement.delegate('.cancelAgent', "click", function () {
+                    operatorAgent($(this).attr('data-id'), $(this).attr('data-role'), 0, '取消');
+                });
+
                 tableElement.delegate('.edit', "click", function () {
                     edit($(this).attr('data-id'));
                 });
@@ -180,8 +238,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
             param.collegeName = $(getParamId().collegeName).val();
             param.roleName = $(getParamId().roleName).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName));
-                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName));
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
                 sessionStorage.setItem(webStorageKey.ROLE_NAME, param.roleName);
             }
         }
@@ -289,6 +347,65 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
         });
 
         /*
+        代理
+        */
+        function operatorAgent(roleId, roleName, allowAgent, message) {
+            var msg;
+            msg = Messenger().post({
+                message: "确定" + message + "角色 '" + roleName + "' 代理吗?",
+                actions: {
+                    retry: {
+                        label: '确定',
+                        phrase: 'Retrying TIME',
+                        action: function () {
+                            msg.cancel();
+                            agent(roleId, allowAgent, message);
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        action: function () {
+                            return msg.cancel();
+                        }
+                    }
+                }
+            });
+        }
+
+        function agent(roleId, allowAgent, message) {
+            sendAgentAjax(roleId, allowAgent, message)
+        }
+
+        /**
+         * 代理ajax
+         * @param roleId
+         * @param allowAgent
+         * @param message
+         */
+        function sendAgentAjax(roleId, allowAgent, message) {
+            Messenger().run({
+                successMessage: message + '角色代理成功',
+                errorMessage: message + '角色代理失败',
+                progressMessage: '正在' + message + '角色代理....'
+            }, {
+                url: web_path + getAjaxUrl().agent,
+                type: 'post',
+                data: {roleId: roleId, allowAgent: allowAgent},
+                success: function (data) {
+                    if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (xhr) {
+                    if ((xhr != null ? xhr.status : void 0) === 404) {
+                        return "请求失败";
+                    }
+                    return true;
+                }
+            });
+        }
+
+        /*
          编辑页面
          */
         function edit(roleId) {
@@ -322,7 +439,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
         }
 
         function del(roleId) {
-            sendDelAjax(roleId, '删除', 1);
+            sendDelAjax(roleId, '删除');
         }
 
         /**
@@ -338,7 +455,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
             }, {
                 url: web_path + getAjaxUrl().del,
                 type: 'post',
-                data: {roleId: roleId,},
+                data: {roleId: roleId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();

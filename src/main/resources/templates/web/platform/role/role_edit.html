@@ -43,6 +43,18 @@
                         <p class="text-danger hidden" id="role_name_error_msg"></p>
                         <input type="hidden" id="roleId" name="roleId" th:value="${role.roleId}"/>
                     </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label th:if="${role.allowAgent == 0 || role.allowAgent == null}">
+                                <input type="checkbox" name="allowAgent" id="allowAgent"
+                                       value="1"/>允许代理该角色
+                            </label>
+                            <label th:if="${role.allowAgent == 1}">
+                                <input type="checkbox" name="allowAgent" id="allowAgent"
+                                       value="1" checked="checked"/>允许代理该角色
+                            </label>
+                        </div>
+                    </div>
                     <div class="row">
                         <hr/>
                         <h2>应用</h2>

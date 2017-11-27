@@ -2,14 +2,18 @@ package top.zbeboy.isy.service.data;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.isy.domain.tables.daos.CollegeRoleDao;
 import top.zbeboy.isy.domain.tables.pojos.CollegeRole;
 import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.isy.domain.Tables.COLLEGE_ROLE;
 
@@ -23,6 +27,9 @@ public class CollegeRoleServiceImpl implements CollegeRoleService {
 
     private final DSLContext create;
 
+    @Resource
+    private CollegeRoleDao collegeRoleDao;
+
     @Autowired
     public CollegeRoleServiceImpl(DSLContext dslContext) {
         this.create = dslContext;
@@ -35,13 +42,23 @@ public class CollegeRoleServiceImpl implements CollegeRoleService {
                 .fetch();
     }
 
+    @Override
+    public Optional<Record> findByRoleId(String roleId) {
+        return create.select()
+                .from(COLLEGE_ROLE)
+                .where(COLLEGE_ROLE.ROLE_ID.eq(roleId))
+                .fetchOptional();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void save(CollegeRole collegeRole) {
-        create.insertInto(COLLEGE_ROLE)
-                .set(COLLEGE_ROLE.ROLE_ID, collegeRole.getRoleId())
-                .set(COLLEGE_ROLE.COLLEGE_ID, collegeRole.getCollegeId())
-                .execute();
+        collegeRoleDao.insert(collegeRole);
+    }
+
+    @Override
+    public void update(CollegeRole collegeRole) {
+        collegeRoleDao.update(collegeRole);
     }
 
     @Override

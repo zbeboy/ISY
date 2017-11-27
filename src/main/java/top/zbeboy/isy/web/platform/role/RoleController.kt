@@ -11,7 +11,6 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.CollegeRole
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.data.CollegeRoleService
 import top.zbeboy.isy.service.data.ElasticSyncService
 import top.zbeboy.isy.service.platform.RoleApplicationService
@@ -85,6 +84,7 @@ open class RoleController {
         headers.add("school_name")
         headers.add("college_name")
         headers.add("role_en_name")
+        headers.add("allow_agent")
         headers.add("operator")
         val otherCondition = RoleBean()
         otherCondition.roleType = 2
@@ -207,11 +207,13 @@ open class RoleController {
      * @param collegeId      院id
      * @param roleName       角色名
      * @param applicationIds 应用ids
+     * @param allowAgent 允许代理该角色
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/platform/role/save", method = arrayOf(RequestMethod.POST))
     @ResponseBody
-    fun roleSave(@RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int, @RequestParam("roleName") roleName: String, applicationIds: String): AjaxUtils<*> {
+    fun roleSave(@RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int, @RequestParam("roleName") roleName: String,
+                 allowAgent: Byte, applicationIds: String): AjaxUtils<*> {
         var tempCollegeId = collegeId
         val role = Role()
         val roleId = UUIDUtils.getUUID()
@@ -225,7 +227,7 @@ open class RoleController {
             val record = usersService.findUserSchoolInfo(users!!)
             tempCollegeId = roleService.getRoleCollegeId(record)
         }
-        saveOrUpdate(tempCollegeId, applicationIds, roleId)
+        saveOrUpdate(tempCollegeId, applicationIds, roleId, allowAgent)
         return AjaxUtils.of<Any>().success().msg("保存成功")
     }
 
@@ -236,11 +238,13 @@ open class RoleController {
      * @param collegeId      院id
      * @param roleName       角色名
      * @param applicationIds 应用ids
+     * @param allowAgent 允许代理该角色
      * @return true 保存成功 false 保存失败
      */
     @RequestMapping(value = "/web/platform/role/update", method = arrayOf(RequestMethod.POST))
     @ResponseBody
-    fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int, @RequestParam("roleName") roleName: String, applicationIds: String): AjaxUtils<*> {
+    fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int,
+                   @RequestParam("roleName") roleName: String, allowAgent: Byte, applicationIds: String): AjaxUtils<*> {
         var tempCollegeId = collegeId
         val role = roleService.findById(roleId)
         val oldRoleName = role.roleName
@@ -255,7 +259,7 @@ open class RoleController {
             val record = usersService.findUserSchoolInfo(users!!)
             tempCollegeId = roleService.getRoleCollegeId(record)
         }
-        saveOrUpdate(tempCollegeId, applicationIds, roleId)
+        saveOrUpdate(tempCollegeId, applicationIds, roleId, allowAgent)
         elasticSyncService.collegeRoleNameUpdate(tempCollegeId, oldRoleName)
         return AjaxUtils.of<Any>().success().msg("更新成功")
     }
@@ -266,11 +270,12 @@ open class RoleController {
      * @param collegeId      院id
      * @param applicationIds 应用ids
      * @param roleId         角色id
+     * @param allowAgent 允许代理该角色
      */
-    private fun saveOrUpdate(collegeId: Int, applicationIds: String, roleId: String) {
+    private fun saveOrUpdate(collegeId: Int, applicationIds: String, roleId: String, allowAgent: Byte) {
         roleApplicationService.batchSaveRoleApplication(applicationIds, roleId)
         if (collegeId > 0) {
-            val collegeRole = CollegeRole(roleId, collegeId)
+            val collegeRole = CollegeRole(roleId, collegeId, allowAgent)
             collegeRoleService.save(collegeRole)
         }
     }
@@ -292,6 +297,29 @@ open class RoleController {
         roleService.deleteById(roleId)
         elasticSyncService.collegeRoleNameUpdate(roleBean.collegeId!!, roleBean.roleName!!)
         return AjaxUtils.of<Any>().success().msg("删除成功")
+    }
+
+    /**
+     * 操作角色代理
+     *
+     * @param roleId 角色id
+     * @param allowAgent 允许代理该角色
+     * @return 消息
+     */
+    @RequestMapping(value = "/web/platform/role/agent", method = arrayOf((RequestMethod.POST)))
+    @ResponseBody
+    fun roleAgent(@RequestParam("roleId") roleId: String, @RequestParam("allowAgent") allowAgent: Byte): AjaxUtils<*> {
+        val ajaxUtils = AjaxUtils.of<Any>()
+        val record = collegeRoleService.findByRoleId(roleId)
+        if (record.isPresent) {
+            val collegeRole = record.get().into(CollegeRole::class.java)
+            collegeRole.allowAgent = allowAgent
+            collegeRoleService.update(collegeRole)
+            ajaxUtils.success().msg("操作角色代理成功")
+        } else {
+            ajaxUtils.fail().msg("未查询到该角色，操作角色代理失败")
+        }
+        return ajaxUtils
     }
 
     /**

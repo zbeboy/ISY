@@ -218,6 +218,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         roleBean.collegeName = record.getValue<String>(COLLEGE.COLLEGE_NAME)
         roleBean.schoolId = record.getValue<Int>(SCHOOL.SCHOOL_ID)
         roleBean.schoolName = record.getValue<String>(SCHOOL.SCHOOL_NAME)
+        roleBean.allowAgent = record.getValue<Byte>(COLLEGE_ROLE.ALLOW_AGENT)
     }
 
     override fun dealDataRelation(records: Result<Record>?): ArrayList<RoleBean> {
@@ -391,6 +392,17 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                     sortField[1] = ROLE.ROLE_ID.asc()
                 } else {
                     sortField[0] = ROLE.ROLE_EN_NAME.desc()
+                    sortField[1] = ROLE.ROLE_ID.desc()
+                }
+            }
+
+            if ("allow_agent".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
+                if (isAsc) {
+                    sortField[0] = COLLEGE_ROLE.ALLOW_AGENT.asc()
+                    sortField[1] = ROLE.ROLE_ID.asc()
+                } else {
+                    sortField[0] = COLLEGE_ROLE.ALLOW_AGENT.desc()
                     sortField[1] = ROLE.ROLE_ID.desc()
                 }
             }
