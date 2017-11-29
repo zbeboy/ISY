@@ -73,25 +73,31 @@ open class UsersController {
 
     private val log = LoggerFactory.getLogger(UsersController::class.java)
 
-    /*
-    检验邮箱使用
-     */
-    private val VALID_EMAIL = 1
+    companion object {
+        /*
+        检验邮箱使用
+         */
+        @JvmField
+        val VALID_EMAIL = 1
 
-    /*
-    检验手机号使用
-     */
-    private val VALID_MOBILE = 2
+        /*
+        检验手机号使用
+         */
+        @JvmField
+        val VALID_MOBILE = 2
 
-    /*
-    验证码错误码
-     */
-    private val CAPTCHA_ERROR = 0
+        /*
+        验证码错误码
+         */
+        @JvmField
+        val CAPTCHA_ERROR = 0
 
-    /*
-    无效的验证码
-     */
-    private val CAPTCHA_INVALID = 1
+        /*
+        无效的验证码
+         */
+        @JvmField
+        val CAPTCHA_INVALID = 1
+    }
 
     @Resource
     open lateinit var usersService: UsersService
@@ -157,7 +163,7 @@ open class UsersController {
      */
     @RequestMapping(value = "/user/register/valid/users", method = arrayOf(RequestMethod.POST))
     @ResponseBody
-    fun validUsers(username: String, mobile: String, validType: Int): AjaxUtils<*> {
+    fun validUsers(username: String?, mobile: String?, validType: Int): AjaxUtils<*> {
         if (validType == VALID_EMAIL) {
             val tempUsers = usersService.findByUsername(StringUtils.trimWhitespace(username))
             return if (!ObjectUtils.isEmpty(tempUsers)) {

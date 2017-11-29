@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.CollegeRole
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication
@@ -134,32 +133,20 @@ open class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/save/valid", method = arrayOf(RequestMethod.POST))
     @ResponseBody
-    fun saveValid(@RequestParam("roleName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int): AjaxUtils<*> {
-        var tempCollegeId = collegeId
+    fun saveValid(@RequestParam("roleName") name: String, @RequestParam(value = "collegeId") collegeId: Int): AjaxUtils<*> {
+        val ajaxUtils = AjaxUtils.of<Any>()
         val roleName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(roleName)) {
-            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                tempCollegeId = roleService.getRoleCollegeId(record)
-            }
-            if (tempCollegeId > 0) {
-                val records = roleService.findByRoleNameAndCollegeId(roleName, tempCollegeId)
-                return if (records.isEmpty()) {
-                    AjaxUtils.of<Any>().success().msg("角色名不重复")
-                } else {
-                    AjaxUtils.of<Any>().fail().msg("角色名重复")
-                }
+            val records = roleService.findByRoleNameAndCollegeId(roleName, collegeId)
+            return if (records.isEmpty()) {
+                ajaxUtils.success().msg("角色名不重复")
             } else {
-                val roleRecords = roleService.findByRoleNameNotExistsCollegeRole(roleName)
-                return if (roleRecords.isEmpty()) {
-                    AjaxUtils.of<Any>().success().msg("角色名不重复")
-                } else {
-                    AjaxUtils.of<Any>().fail().msg("角色名重复")
-                }
+                ajaxUtils.fail().msg("角色名重复")
             }
+        } else {
+            ajaxUtils.fail().msg("角色名不能为空")
         }
-        return AjaxUtils.of<Any>().fail().msg("角色名不能为空")
+        return ajaxUtils
     }
 
     /**
@@ -172,33 +159,21 @@ open class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/update/valid", method = arrayOf(RequestMethod.POST))
     @ResponseBody
-    fun updateValid(@RequestParam("roleName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int,
+    fun updateValid(@RequestParam("roleName") name: String, @RequestParam(value = "collegeId") collegeId: Int,
                     @RequestParam("roleId") roleId: String): AjaxUtils<*> {
-        var tempCollegeId = collegeId
+        val ajaxUtils = AjaxUtils.of<Any>()
         val roleName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(roleName)) {
-            if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-                val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                tempCollegeId = roleService.getRoleCollegeId(record)
-            }
-            if (tempCollegeId > 0) {
-                val records = roleService.findByRoleNameAndCollegeIdNeRoleId(roleName, tempCollegeId, roleId)
-                return if (records.isEmpty()) {
-                    AjaxUtils.of<Any>().success().msg("角色名不重复")
-                } else {
-                    AjaxUtils.of<Any>().fail().msg("角色名重复")
-                }
+            val records = roleService.findByRoleNameAndCollegeIdNeRoleId(roleName, collegeId, roleId)
+            return if (records.isEmpty()) {
+                ajaxUtils.success().msg("角色名不重复")
             } else {
-                val roleRecords = roleService.findByRoleNameNotExistsCollegeRoleNeRoleId(roleName, roleId)
-                return if (roleRecords.isEmpty()) {
-                    AjaxUtils.of<Any>().success().msg("角色名不重复")
-                } else {
-                    AjaxUtils.of<Any>().fail().msg("角色名重复")
-                }
+                ajaxUtils.fail().msg("角色名重复")
             }
+        } else {
+            ajaxUtils.fail().msg("角色名不能为空")
         }
-        return AjaxUtils.of<Any>().fail().msg("角色名不能为空")
+        return ajaxUtils
     }
 
     /**
@@ -212,9 +187,8 @@ open class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/save", method = arrayOf(RequestMethod.POST))
     @ResponseBody
-    fun roleSave(@RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int, @RequestParam("roleName") roleName: String,
+    fun roleSave(@RequestParam(value = "collegeId") collegeId: Int, @RequestParam("roleName") roleName: String,
                  allowAgent: Byte, applicationIds: String): AjaxUtils<*> {
-        var tempCollegeId = collegeId
         val role = Role()
         val roleId = UUIDUtils.getUUID()
         role.roleId = roleId
@@ -222,12 +196,7 @@ open class RoleController {
         role.roleEnName = "ROLE_" + RandomUtils.generateRoleEnName().toUpperCase()
         role.roleType = 2
         roleService.save(role)
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            tempCollegeId = roleService.getRoleCollegeId(record)
-        }
-        saveOrUpdate(tempCollegeId, applicationIds, roleId, allowAgent)
+        saveOrUpdate(collegeId, applicationIds, roleId, allowAgent)
         return AjaxUtils.of<Any>().success().msg("保存成功")
     }
 
@@ -243,9 +212,8 @@ open class RoleController {
      */
     @RequestMapping(value = "/web/platform/role/update", method = arrayOf(RequestMethod.POST))
     @ResponseBody
-    fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int,
+    fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam(value = "collegeId") collegeId: Int,
                    @RequestParam("roleName") roleName: String, allowAgent: Byte, applicationIds: String): AjaxUtils<*> {
-        var tempCollegeId = collegeId
         val role = roleService.findById(roleId)
         val oldRoleName = role.roleName
         role.roleName = StringUtils.trimAllWhitespace(roleName)
@@ -254,13 +222,8 @@ open class RoleController {
         roleApplicationService.deleteByRoleId(roleId)
         // 当是系统角色时，可能改变这个角色到其它院下
         collegeRoleService.deleteByRoleId(roleId)
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            tempCollegeId = roleService.getRoleCollegeId(record)
-        }
-        saveOrUpdate(tempCollegeId, applicationIds, roleId, allowAgent)
-        elasticSyncService.collegeRoleNameUpdate(tempCollegeId, oldRoleName)
+        saveOrUpdate(collegeId, applicationIds, roleId, allowAgent)
+        elasticSyncService.collegeRoleNameUpdate(collegeId, oldRoleName)
         return AjaxUtils.of<Any>().success().msg("更新成功")
     }
 

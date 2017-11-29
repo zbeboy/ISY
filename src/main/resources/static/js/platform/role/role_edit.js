@@ -105,7 +105,15 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
      */
     function initParam() {
         param.schoolId = $(paramId.schoolId).val();
-        param.collegeId = $(paramId.collegeId).val();
+
+        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
+            param.collegeId = $(paramId.collegeId).val();
+        }
+
+        if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+            param.collegeId = init_page_param.collegeId;
+        }
+
         param.roleName = $(paramId.roleName).val();
         param.allowAgent = DP.defaultUndefinedValue($('input[name="allowAgent"]:checked').val(), 0);
         console.log('allowAgent : ' + param.allowAgent);
