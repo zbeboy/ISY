@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.*
+import top.zbeboy.isy.domain.tables.pojos.Authorities
+import top.zbeboy.isy.domain.tables.pojos.Role
+import top.zbeboy.isy.domain.tables.pojos.Users
+import top.zbeboy.isy.domain.tables.pojos.UsersType
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.repository.StaffElasticRepository
 import top.zbeboy.isy.elastic.repository.StudentElasticRepository
@@ -26,7 +29,6 @@ import top.zbeboy.isy.glue.platform.UsersGlue
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.common.UploadService
-import top.zbeboy.isy.service.data.CollegeRoleService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
 import top.zbeboy.isy.service.platform.RoleService
@@ -116,9 +118,6 @@ open class UsersController {
 
     @Resource
     open lateinit var staffService: StaffService
-
-    @Resource
-    open lateinit var collegeRoleService: CollegeRoleService
 
     @Resource
     open lateinit var roleService: RoleService
@@ -609,25 +608,7 @@ open class UsersController {
     @ResponseBody
     fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
         val ajaxUtils = AjaxUtils.of<Role>()
-        val roles = ArrayList<Role>()
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            roles.add(roleService.findByRoleEnName(Workbook.ADMIN_AUTHORITIES))
-            roles.add(roleService.findByRoleEnName(Workbook.OPS_AUTHORITIES))
-        }
-        // 根据此用户账号查询院下所有角色
-        val users = usersService.findByUsername(username)
-        val record = usersService.findUserSchoolInfo(users!!)
-        if (record.isPresent) {
-            val college = record.get().into(College::class.java)
-            val collegeRoleRecords = collegeRoleService.findByCollegeId(college.collegeId!!)
-            if (!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()) {
-                val roleIds = ArrayList<String>()
-                collegeRoleRecords.forEach { role -> roleIds.add(role.roleId) }
-                val roleRecords = roleService.findInRoleId(roleIds)
-                roles.addAll(roleRecords.into(Role::class.java))
-            }
-        }
-        return ajaxUtils.success().listData(roles)
+        return ajaxUtils.success().listData(roleService.getRoleData(username))
     }
 
     /**
@@ -662,12 +643,10 @@ open class UsersController {
                         roleEnNames.add(tempRole.roleEnName)
                         stringBuilder.append(tempRole.roleName).append(" ")
                     }
-                    if (roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES)) {
-                        usersElastic.authorities = ElasticBook.SYSTEM_AUTHORITIES
-                    } else if (roleEnNames.contains(Workbook.ADMIN_AUTHORITIES)) {
-                        usersElastic.authorities = ElasticBook.ADMIN_AUTHORITIES
-                    } else {
-                        usersElastic.authorities = ElasticBook.HAS_AUTHORITIES
+                    when {
+                        roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES) -> usersElastic.authorities = ElasticBook.SYSTEM_AUTHORITIES
+                        roleEnNames.contains(Workbook.ADMIN_AUTHORITIES) -> usersElastic.authorities = ElasticBook.ADMIN_AUTHORITIES
+                        else -> usersElastic.authorities = ElasticBook.HAS_AUTHORITIES
                     }
                     usersElastic.roleName = stringBuilder.toString().trim { it <= ' ' }
                     usersElasticRepository.delete(username)
@@ -961,13 +940,11 @@ open class UsersController {
      * @return 处理过的头像
      */
     private fun getAvatar(avatar: String, request: HttpServletRequest): String {
-        val showAvatar: String
-        if (avatar == Workbook.USERS_AVATAR) {
-            showAvatar = requestUtils.getBaseUrl(request) + "/" + avatar
+        return if (avatar == Workbook.USERS_AVATAR) {
+            requestUtils.getBaseUrl(request) + "/" + avatar
         } else {
-            showAvatar = requestUtils.getBaseUrl(request) + "/anyone/users/review/avatar?path=" + avatar
+            requestUtils.getBaseUrl(request) + "/anyone/users/review/avatar?path=" + avatar
         }
-        return showAvatar
     }
 
     /**
@@ -1120,16 +1097,16 @@ open class UsersController {
                                 return AjaxUtils.of<Any>().fail().msg("验证码错误")
                             } else {
                                 val users = usersService.findByUsername(username)
-                                if (!ObjectUtils.isEmpty(users)) {
+                                return if (!ObjectUtils.isEmpty(users)) {
                                     users!!.mobile = newMobile
                                     usersService.update(users)
                                     //清空session
                                     session.removeAttribute("mobileExpiry")
                                     session.removeAttribute("mobile")
                                     session.removeAttribute("mobileCode")
-                                    return AjaxUtils.of<Any>().success().msg("更新手机号成功")
+                                    AjaxUtils.of<Any>().success().msg("更新手机号成功")
                                 } else {
-                                    return AjaxUtils.of<Any>().fail().msg("未查询到用户信息")
+                                    AjaxUtils.of<Any>().fail().msg("未查询到用户信息")
                                 }
                             }
                         } else {
@@ -1190,13 +1167,13 @@ open class UsersController {
     fun usersUpdate(@Valid usersVo: UsersVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors()) {
             val updateUsers = usersService.findByUsername(usersVo.username!!)
-            if (!ObjectUtils.isEmpty(updateUsers)) {
+            return if (!ObjectUtils.isEmpty(updateUsers)) {
                 updateUsers!!.realName = usersVo.realName
                 updateUsers.avatar = usersVo.avatar
                 usersService.update(updateUsers)
-                return AjaxUtils.of<Any>().success().msg("更新成功")
+                AjaxUtils.of<Any>().success().msg("更新成功")
             } else {
-                return AjaxUtils.of<Any>().fail().msg("未查询到用户")
+                AjaxUtils.of<Any>().fail().msg("未查询到用户")
             }
         }
         return AjaxUtils.of<Any>().fail().msg("参数异常")

@@ -21,6 +21,15 @@ public interface CollegeRoleService {
     List<CollegeRoleRecord> findByCollegeId(int collegeId);
 
     /**
+     * 通过学院Id和允许代理字段查询
+     *
+     * @param collegeId  学院id
+     * @param allowAgent 允许代理字段
+     * @return 数据
+     */
+    List<CollegeRoleRecord> findByCollegeIdAndAllowAgent(int collegeId, Byte allowAgent);
+
+    /**
      * 通过角色Id查询
      *
      * @param roleId 角色id

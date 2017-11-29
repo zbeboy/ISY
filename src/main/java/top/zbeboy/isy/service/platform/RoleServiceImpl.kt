@@ -18,6 +18,7 @@ import top.zbeboy.isy.domain.tables.pojos.Department
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord
 import top.zbeboy.isy.domain.tables.records.RoleRecord
+import top.zbeboy.isy.service.data.CollegeRoleService
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.platform.role.RoleBean
@@ -39,6 +40,9 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
 
     @Resource
     open lateinit var usersService: UsersService
+
+    @Resource
+    open lateinit var collegeRoleService: CollegeRoleService
 
     override fun findByRoleEnName(roleEnName: String): Role {
         return roleDao.fetchOne(ROLE.ROLE_EN_NAME, roleEnName)
@@ -298,6 +302,33 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
             }
         }
         return departmentId
+    }
+
+    override fun getRoleData(username: String): ArrayList<Role> {
+        val roles = ArrayList<Role>()
+        if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            roles.add(findByRoleEnName(Workbook.ADMIN_AUTHORITIES))
+            roles.add(findByRoleEnName(Workbook.OPS_AUTHORITIES))
+        }
+        // 根据此用户账号查询院下所有角色
+        val users = usersService.findByUsername(username)
+        val record = usersService.findUserSchoolInfo(users!!)
+        if (record.isPresent) {
+            val college = record.get().into(College::class.java)
+            val collegeRoleRecords: List<CollegeRoleRecord>
+            if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+                collegeRoleRecords = collegeRoleService.findByCollegeId(college.collegeId!!)
+            } else {
+                collegeRoleRecords = collegeRoleService.findByCollegeIdAndAllowAgent(college.collegeId!!, 1)
+            }
+            if (!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()) {
+                val roleIds = ArrayList<String>()
+                collegeRoleRecords.forEach { role -> roleIds.add(role.roleId) }
+                val roleRecords = findInRoleId(roleIds)
+                roles.addAll(roleRecords.into(Role::class.java))
+            }
+        }
+        return roles
     }
 
     /**

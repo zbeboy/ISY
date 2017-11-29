@@ -43,6 +43,13 @@ public class CollegeRoleServiceImpl implements CollegeRoleService {
     }
 
     @Override
+    public List<CollegeRoleRecord> findByCollegeIdAndAllowAgent(int collegeId, Byte allowAgent) {
+        return create.selectFrom(COLLEGE_ROLE)
+                .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId).and(COLLEGE_ROLE.ALLOW_AGENT.eq(allowAgent)))
+                .fetch();
+    }
+
+    @Override
     public Optional<Record> findByRoleId(String roleId) {
         return create.select()
                 .from(COLLEGE_ROLE)
