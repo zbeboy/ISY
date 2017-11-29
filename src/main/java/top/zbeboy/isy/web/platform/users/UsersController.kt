@@ -319,7 +319,7 @@ open class UsersController {
     fun anewSendVerifyMail(@RequestParam("username") username: String, request: HttpServletRequest, modelMap: ModelMap): String {
         val users = usersService.findByUsername(username)
         if (!ObjectUtils.isEmpty(users)) {
-            if (users!!.verifyMailbox <= 0) {
+            if (ObjectUtils.isEmpty(users!!.verifyMailbox) || users.verifyMailbox <= 0) {
                 var dateTime = DateTime.now()
                 dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID)
                 val mailboxVerifyCode = RandomUtils.generateEmailCheckKey()
