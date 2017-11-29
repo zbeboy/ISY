@@ -30,7 +30,7 @@ require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csr
          */
         var valid_regex = {
             student_number_valid_regex: /^\d{13,}$/,
-            email_valid_regex: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
+            email_valid_regex: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+(([.-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
             mobile_valid_regex: /^1[0-9]{10}/,
             phone_verify_code_valid_regex: /^\w+$/,
             password_valid_regex: /^[a-zA-Z0-9]\w{5,17}$/
@@ -63,7 +63,7 @@ require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csr
          */
         var ajax_url = {
             password_reset: '/user/login/password/reset',
-            finish: '/user/password/reset/finish'
+            finish: '/user/login/password/reset/finish'
         };
 
         /*

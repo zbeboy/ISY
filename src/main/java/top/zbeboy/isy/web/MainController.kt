@@ -140,7 +140,7 @@ open class MainController {
      * @param modelMap 页面对象
      * @return 重置成功页面
      */
-    @RequestMapping(value = "/user/password/reset/finish", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = "/user/login/password/reset/finish", method = arrayOf(RequestMethod.GET))
     fun passwordResetFinish(modelMap: ModelMap): String {
         modelMap.put("msg", "密码重置成功。")
         return "msg"

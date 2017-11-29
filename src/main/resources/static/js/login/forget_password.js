@@ -71,7 +71,7 @@ require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csr
          验证正则
          */
         var valid_regex = {
-            email: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            email: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+(([.-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
         };
 
         /*
@@ -93,16 +93,6 @@ require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csr
          */
         function endLoading() {
             $('#loading_region').hideLoading();
-        }
-
-        /**
-         * 验证正确
-         * @param validId 验证id
-         * @param errorMsgId 错误验证id
-         */
-        function validSuccessDom(validId, errorMsgId) {
-            $(validId).removeClass('has-error');
-            $(errorMsgId).addClass('hidden').text('');
         }
 
         /**

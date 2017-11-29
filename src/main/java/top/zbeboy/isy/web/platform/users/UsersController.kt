@@ -52,7 +52,7 @@ import top.zbeboy.isy.web.util.ImageUtils
 import top.zbeboy.isy.web.util.SmallPropsUtils
 import top.zbeboy.isy.web.vo.platform.users.AvatarVo
 import top.zbeboy.isy.web.vo.platform.users.UsersVo
-import top.zbeboy.isy.web.vo.register.student.StudentVo
+import top.zbeboy.isy.web.vo.register.reset.ResetVo
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -550,18 +550,18 @@ open class UsersController {
     /**
      * 重置密码
      *
-     * @param studentVo     页面对象
+     * @param resetVo     页面对象
      * @param bindingResult 检验
      * @return true重置成功 false重置失败
      */
     @RequestMapping("/user/login/password/reset")
     @ResponseBody
-    fun loginPasswordReset(studentVo: StudentVo, bindingResult: BindingResult): AjaxUtils<*> {
+    fun loginPasswordReset(@Valid resetVo: ResetVo, bindingResult: BindingResult): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
         if (!bindingResult.hasErrors()) {
-            val username = StringUtils.trimWhitespace(studentVo.email)
-            val password = StringUtils.trimWhitespace(studentVo.password)
-            val confirmPassword = StringUtils.trimWhitespace(studentVo.confirmPassword)
+            val username = StringUtils.trimWhitespace(resetVo.email)
+            val password = StringUtils.trimWhitespace(resetVo.password)
+            val confirmPassword = StringUtils.trimWhitespace(resetVo.confirmPassword)
             if (password == confirmPassword) {
                 val users = usersService.findByUsername(username)
                 if (!ObjectUtils.isEmpty(users)) {
