@@ -59,7 +59,7 @@ open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
             systemLogBean.operatingTime = s.operatingTime
             systemLogBean.username = s.username
             systemLogBean.ipAddress = s.ipAddress
-            val date = DateTimeUtils.timestampToDate(s.operatingTime)
+            val date = DateTimeUtils.timestampToDate(s.operatingTime!!)
             systemLogBean.operatingTimeNew = DateTimeUtils.formatDate(date)
             systemLogs.add(systemLogBean)
         }

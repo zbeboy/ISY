@@ -28,7 +28,7 @@ class AjaxAuthenticationFailureHandler : SimpleUrlAuthenticationFailureHandler()
         val context = request.session.servletContext
         val ctx = WebApplicationContextUtils
                 .getWebApplicationContext(context)
-        val systemLog = SystemLogElastic(UUIDUtils.getUUID(), "登录系统失败", Timestamp(Clock.systemDefaultZone().millis()), request.getParameter("username"), RequestUtils.getIpAddress(request))
+        val systemLog = SystemLogElastic(UUIDUtils.getUUID(), "登录系统失败", Timestamp(Clock.systemDefaultZone().millis()), request.getParameter("username"), RequestUtils.getIpAddress(request)!!)
         val systemLogGlue = ctx
                 .getBean("systemLogGlue") as SystemLogGlue
         systemLogGlue.save(systemLog)

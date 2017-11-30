@@ -58,7 +58,7 @@ open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(), SystemSmsGlue {
             systemSmsBean.sendTime = systemSmsElastic.sendTime
             systemSmsBean.acceptPhone = systemSmsElastic.acceptPhone
             systemSmsBean.sendCondition = systemSmsElastic.sendCondition
-            val date = DateTimeUtils.timestampToDate(systemSmsElastic.sendTime)
+            val date = DateTimeUtils.timestampToDate(systemSmsElastic.sendTime!!)
             systemSmsBean.sendTimeNew = DateTimeUtils.formatDate(date)
             systemSmses.add(systemSmsBean)
         }

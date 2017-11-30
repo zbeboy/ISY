@@ -29,7 +29,7 @@ class TestUtil : TestCase() {
     fun testUUIDUtils() {
         println("::" + UUIDUtils.getUUID())
         val ss = UUIDUtils.getUUID(20)
-        for (s in ss) {
+        for (s in ss!!) {
             println(s)
         }
     }

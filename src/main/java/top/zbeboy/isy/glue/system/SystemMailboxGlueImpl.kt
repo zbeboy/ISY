@@ -58,7 +58,7 @@ open class SystemMailboxGlueImpl : ElasticPlugin<SystemMailboxBean>(), SystemMai
             systemMailboxBean.sendTime = systemMailboxElastic.sendTime
             systemMailboxBean.acceptMail = systemMailboxElastic.acceptMail
             systemMailboxBean.sendCondition = systemMailboxElastic.sendCondition
-            val date = DateTimeUtils.timestampToDate(systemMailboxElastic.sendTime)
+            val date = DateTimeUtils.timestampToDate(systemMailboxElastic.sendTime!!)
             systemMailboxBean.sendTimeNew = DateTimeUtils.formatDate(date)
             systemMailboxes.add(systemMailboxBean)
         }

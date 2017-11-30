@@ -28,7 +28,7 @@ class AjaxAuthenticationSuccessHandler : SimpleUrlAuthenticationSuccessHandler()
         val context = request.session.servletContext
         val ctx = WebApplicationContextUtils
                 .getWebApplicationContext(context)
-        val systemLog = SystemLogElastic(UUIDUtils.getUUID(), "登录系统成功", Timestamp(Clock.systemDefaultZone().millis()), request.getParameter("username"), RequestUtils.getIpAddress(request))
+        val systemLog = SystemLogElastic(UUIDUtils.getUUID(), "登录系统成功", Timestamp(Clock.systemDefaultZone().millis()), request.getParameter("username"), RequestUtils.getIpAddress(request)!!)
         val systemLogGlue = ctx
                 .getBean("systemLogGlue") as SystemLogGlue
         systemLogGlue.save(systemLog)
