@@ -108,7 +108,7 @@ public class StaffGlueImpl implements StaffGlue {
         List<StaffBean> staffs = new ArrayList<>();
         for (StaffElastic staffElastic : staffElasticPage.getContent()) {
             StaffBean staffBean = new StaffBean();
-            staffBean.setStaffId(NumberUtils.toInt(staffElastic.getStaffId()));
+            staffBean.setStaffId(staffElastic.getStaffId());
             staffBean.setStaffNumber(staffElastic.getStaffNumber());
             staffBean.setBirthday(staffElastic.getBirthday());
             staffBean.setSex(staffElastic.getSex());

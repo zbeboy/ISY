@@ -11,7 +11,7 @@ import java.sql.Date
 @Document(indexName = "student", type = "student", shards = 1, replicas = 0, refreshInterval = "-1")
 open class StudentElastic {
     @Id
-    var studentId: String? = null
+    private var studentId: String? = null
     var studentNumber: String? = null
     var birthday: Date? = null
     var sex: String? = null
@@ -91,6 +91,10 @@ open class StudentElastic {
         this.joinDate = joinDate
         this.authorities = authorities
         this.roleName = roleName
+    }
+
+    fun getStudentId(): Int? {
+        return NumberUtils.toInt(studentId)
     }
 
     fun setStudentId(studentId: Int?) {

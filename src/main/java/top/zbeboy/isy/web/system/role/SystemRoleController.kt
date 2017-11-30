@@ -43,7 +43,7 @@ open class SystemRoleController {
      *
      * @return 页面
      */
-    @RequestMapping(value = "/web/menu/system/role", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/menu/system/role"], method = [(RequestMethod.GET)])
     fun platformRole(): String {
         return "web/system/role/system_role::#page-wrapper"
     }
@@ -54,7 +54,7 @@ open class SystemRoleController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/web/system/role/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/system/role/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun roleDatas(request: HttpServletRequest): DataTablesUtils<RoleBean> {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
@@ -78,7 +78,7 @@ open class SystemRoleController {
      *
      * @return 编辑页面
      */
-    @RequestMapping(value = "/web/system/role/edit", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/system/role/edit"], method = [(RequestMethod.GET)])
     fun roleEdit(@RequestParam("id") roleId: String, modelMap: ModelMap): String {
         val record = roleService.findByRoleIdRelation(roleId)
         val roleBean = roleService.dealDataSingle(record)
@@ -93,7 +93,7 @@ open class SystemRoleController {
      * @param roleId 角色id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/system/role/update/valid", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/role/update/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun updateValid(@RequestParam("roleName") name: String, @RequestParam("roleId") roleId: String): AjaxUtils<*> {
         val roleName = StringUtils.trimWhitespace(name)
@@ -116,7 +116,7 @@ open class SystemRoleController {
      * @param applicationIds 应用ids
      * @return true 保存成功 false 保存失败
      */
-    @RequestMapping(value = "/web/system/role/update", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/role/update"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam("roleName") roleName: String, applicationIds: String): AjaxUtils<*> {
         val role = roleService.findById(roleId)
@@ -135,7 +135,7 @@ open class SystemRoleController {
      * @param roleId 角色id
      * @return 应用
      */
-    @RequestMapping(value = "/web/system/role/application/data", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/role/application/data"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleApplicationData(@RequestParam("roleId") roleId: String): AjaxUtils<RoleApplication> {
         val ajaxUtils = AjaxUtils.of<RoleApplication>()
@@ -152,7 +152,7 @@ open class SystemRoleController {
      *
      * @return json
      */
-    @RequestMapping(value = "/web/system/role/application/json", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/system/role/application/json"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun applicationJson(): AjaxUtils<TreeBean> {
         val ajaxUtils = AjaxUtils.of<TreeBean>()

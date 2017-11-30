@@ -109,7 +109,7 @@ public class StudentGlueImpl implements StudentGlue {
         List<StudentBean> students = new ArrayList<>();
         for (StudentElastic studentElastic : studentElasticPage.getContent()) {
             StudentBean studentBean = new StudentBean();
-            studentBean.setStudentId(NumberUtils.toInt(studentElastic.getStudentId()));
+            studentBean.setStudentId(studentElastic.getStudentId());
             studentBean.setStudentNumber(studentElastic.getStudentNumber());
             studentBean.setBirthday(studentElastic.getBirthday());
             studentBean.setSex(studentElastic.getSex());

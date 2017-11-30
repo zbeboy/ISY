@@ -51,7 +51,7 @@ open class SystemApplicationController {
      *
      * @return 系统应用页面
      */
-    @RequestMapping(value = "/web/menu/system/application", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/menu/system/application"], method = [(RequestMethod.GET)])
     fun systemLog(): String {
         return "web/system/application/system_application::#page-wrapper"
     }
@@ -62,7 +62,7 @@ open class SystemApplicationController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/web/system/application/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/system/application/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun applicationDatas(request: HttpServletRequest): DataTablesUtils<ApplicationBean> {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
@@ -102,7 +102,7 @@ open class SystemApplicationController {
      *
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/system/application/add", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/system/application/add"], method = [(RequestMethod.GET)])
     fun applicationAdd(): String {
         return "web/system/application/system_application_add::#page-wrapper"
     }
@@ -112,7 +112,7 @@ open class SystemApplicationController {
      *
      * @return 更新页面
      */
-    @RequestMapping(value = "/web/system/application/edit", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/system/application/edit"], method = [(RequestMethod.GET)])
     fun applicationEdit(@RequestParam("id") id: String, modelMap: ModelMap): String {
         val application = applicationService.findById(id)
         modelMap.addAttribute("sys_application", application)
@@ -124,7 +124,7 @@ open class SystemApplicationController {
      *
      * @return 页面数据
      */
-    @RequestMapping(value = "/web/system/application/init", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/system/application/init"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun init(): AjaxUtils<*> {
         // 一级与二级菜单
@@ -134,10 +134,7 @@ open class SystemApplicationController {
         application.applicationName = "无"
         applicationPids.add(application)
         applicationPids.addAll(applicationService.findByPid("0"))
-        val pids = ArrayList<String>()
-        for (i in 1..applicationPids.size - 1) {
-            pids.add(applicationPids[i].applicationId)
-        }
+        val pids = (1 until applicationPids.size).map { applicationPids[it].applicationId }
         val applicationRecords = applicationService.findInPids(pids)
         if (applicationRecords.isNotEmpty) {
             val secondLevelIds = applicationRecords.into(Application::class.java)
@@ -155,7 +152,7 @@ open class SystemApplicationController {
      * @param applicationName 应用名
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/name", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/save/valid/name"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun saveValidName(@RequestParam("applicationName") applicationName: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationName)) {
@@ -176,7 +173,7 @@ open class SystemApplicationController {
      * @param applicationId   应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/name", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/update/valid/name"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun updateValidName(@RequestParam("applicationName") applicationName: String, @RequestParam("applicationId") applicationId: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationName)) {
@@ -196,7 +193,7 @@ open class SystemApplicationController {
      * @param applicationEnName 应用英文名
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/en_name", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/save/valid/en_name"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun saveValidEnName(@RequestParam("applicationEnName") applicationEnName: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationEnName)) {
@@ -217,7 +214,7 @@ open class SystemApplicationController {
      * @param applicationId     应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/en_name", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/update/valid/en_name"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun updateValidEnName(@RequestParam("applicationEnName") applicationEnName: String, @RequestParam("applicationId") applicationId: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationEnName)) {
@@ -237,7 +234,7 @@ open class SystemApplicationController {
      * @param applicationUrl 应用链接
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/url", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/save/valid/url"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun saveValidUrl(@RequestParam("applicationUrl") applicationUrl: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationUrl)) {
@@ -258,7 +255,7 @@ open class SystemApplicationController {
      * @param applicationId  应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/url", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/update/valid/url"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun updateValidUrl(@RequestParam("applicationUrl") applicationUrl: String, @RequestParam("applicationId") applicationId: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationUrl)) {
@@ -278,7 +275,7 @@ open class SystemApplicationController {
      * @param applicationCode 应用识别码
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/save/valid/code", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/save/valid/code"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun saveValidCode(@RequestParam("applicationCode") applicationCode: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationCode)) {
@@ -299,7 +296,7 @@ open class SystemApplicationController {
      * @param applicationId   应用id
      * @return true 不重复 false重复
      */
-    @RequestMapping(value = "/web/system/application/update/valid/code", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/update/valid/code"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun updateValidCode(@RequestParam("applicationCode") applicationCode: String, @RequestParam("applicationId") applicationId: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationCode)) {
@@ -320,7 +317,7 @@ open class SystemApplicationController {
      * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
-    @RequestMapping(value = "/web/system/application/save", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/save"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun applicationSave(@Valid applicationVo: ApplicationVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors()) {
@@ -351,7 +348,7 @@ open class SystemApplicationController {
      * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
-    @RequestMapping(value = "/web/system/application/update", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/update"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun applicationUpdate(@Valid applicationVo: ApplicationVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(applicationVo.applicationId)) {
@@ -376,7 +373,7 @@ open class SystemApplicationController {
      * @param applicationIds 应用ids
      * @return true删除成功
      */
-    @RequestMapping(value = "/web/system/application/update/del", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/system/application/update/del"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun applicationUpdateDel(applicationIds: String): AjaxUtils<*> {
         if (StringUtils.hasLength(applicationIds)) {

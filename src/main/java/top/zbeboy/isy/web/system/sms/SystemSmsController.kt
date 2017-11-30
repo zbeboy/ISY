@@ -37,7 +37,7 @@ open class SystemSmsController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/system/sms/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/system/sms/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun systemSmses(request: HttpServletRequest): DataTablesUtils<SystemSmsBean> {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用

@@ -42,7 +42,7 @@ open class SystemMessageController {
      *
      * @return 系统数据页面
      */
-    @RequestMapping(value = "/anyone/message", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/message"], method = [(RequestMethod.GET)])
     fun message(): String {
         return "web/system/message/system_message::#page-wrapper"
     }
@@ -54,7 +54,7 @@ open class SystemMessageController {
      * @param modelMap  页面对象
      * @return 页面
      */
-    @RequestMapping(value = "/anyone/message/detail", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/message/detail"], method = [(RequestMethod.GET)])
     fun messageDetail(@RequestParam("id") messageId: String, modelMap: ModelMap): String {
         var systemMessageBean = SystemMessageBean()
         val users = usersService.getUserFromSession()
@@ -85,7 +85,7 @@ open class SystemMessageController {
      *
      * @return 数据
      */
-    @RequestMapping(value = "/anyone/message/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/message/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun messageDatas(paginationUtils: PaginationUtils): AjaxUtils<SystemMessageBean> {
         val ajaxUtils = AjaxUtils.of<SystemMessageBean>()

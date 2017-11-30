@@ -37,7 +37,7 @@ open class SystemMailboxController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/system/mailbox/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/system/mailbox/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun systemMailboxes(request: HttpServletRequest): DataTablesUtils<SystemMailboxBean> {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用

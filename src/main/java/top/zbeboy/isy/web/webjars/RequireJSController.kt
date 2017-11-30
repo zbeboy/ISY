@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 open class RequireJSController {
     @ResponseBody
-    @RequestMapping(value = "/webjarsjs", produces = arrayOf("application/javascript"))
+    @RequestMapping(value = ["/webjarsjs"], produces = ["application/javascript"])
     fun webjarjs(request: HttpServletRequest): String {
         return RequireJS.getSetupJavaScript(request.contextPath + "/webjars/")
     }

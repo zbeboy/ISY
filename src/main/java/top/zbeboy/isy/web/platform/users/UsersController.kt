@@ -160,7 +160,7 @@ open class UsersController {
      * @param validType 检验类型：1.邮箱；2.手机号
      * @return true 检验通过 false 不通过
      */
-    @RequestMapping(value = "/user/register/valid/users", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/user/register/valid/users"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun validUsers(username: String?, mobile: String?, validType: Int): AjaxUtils<*> {
         if (validType == VALID_EMAIL) {
@@ -192,7 +192,7 @@ open class UsersController {
      * @param validType 检验类型：2.手机号
      * @return true 检验通过 false 不通过
      */
-    @RequestMapping(value = "/anyone/valid/users", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/anyone/valid/users"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun validLoginUsers(@RequestParam("username") username: String, mobile: String, validType: Int): AjaxUtils<*> {
         if (validType == VALID_MOBILE) {
@@ -212,7 +212,7 @@ open class UsersController {
      *
      * @return true or false
      */
-    @RequestMapping(value = "/anyone/valid/cur/is/student", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/valid/cur/is/student"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun validIsStudent(): AjaxUtils<*> {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
@@ -228,7 +228,7 @@ open class UsersController {
      *
      * @return true or false
      */
-    @RequestMapping(value = "/anyone/valid/cur/is/staff", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/valid/cur/is/staff"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun validIsStaff(): AjaxUtils<*> {
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
@@ -247,7 +247,7 @@ open class UsersController {
      * @param session         session
      * @return true 通过 false 不通过
      */
-    @RequestMapping(value = "/user/register/valid/mobile", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/user/register/valid/mobile"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun validMobile(@RequestParam("mobile") mobile: String, @RequestParam("phoneVerifyCode") phoneVerifyCode: String, session: HttpSession): AjaxUtils<*> {
         if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
@@ -349,7 +349,7 @@ open class UsersController {
      * @param session session
      * @return 发送验证码到手机
      */
-    @RequestMapping(value = "/user/register/mobile/code", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/user/register/mobile/code"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun mobileCode(@RequestParam("mobile") mobile: String, session: HttpSession): AjaxUtils<*> {
         val regex = "1[0-9]{10}"
@@ -456,7 +456,7 @@ open class UsersController {
      * @param email 邮箱
      * @return true or false
      */
-    @RequestMapping(value = "/user/login/valid/email", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/user/login/valid/email"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun validEmail(@RequestParam("email") email: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
@@ -585,7 +585,7 @@ open class UsersController {
      *
      * @return 数据
      */
-    @RequestMapping(value = "/web/platform/users/type/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/platform/users/type/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun usersTypeData(): AjaxUtils<UsersType> {
         val ajaxUtils = AjaxUtils.of<UsersType>()
@@ -604,7 +604,7 @@ open class UsersController {
      * @param username 用户账号
      * @return 数据
      */
-    @RequestMapping(value = "/special/channel/users/role/data", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/special/channel/users/role/data"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
         val ajaxUtils = AjaxUtils.of<Role>()
@@ -619,7 +619,7 @@ open class UsersController {
      * @param request  请求
      * @return true 成功 false 角色为空
      */
-    @RequestMapping(value = "/special/channel/users/role/save", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/special/channel/users/role/save"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleSave(@RequestParam("username") username: String, @RequestParam("roles") roles: String, request: HttpServletRequest): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
@@ -686,7 +686,7 @@ open class UsersController {
      *
      * @return 平台用户页面
      */
-    @RequestMapping(value = "/web/menu/platform/users", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/menu/platform/users"], method = [(RequestMethod.GET)])
     fun platformUsers(): String {
         return "web/platform/users/users_data::#page-wrapper"
     }
@@ -697,7 +697,7 @@ open class UsersController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/web/platform/users/pass/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/platform/users/pass/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun platformPassDatas(request: HttpServletRequest): DataTablesUtils<UsersBean> {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
@@ -726,7 +726,7 @@ open class UsersController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/web/platform/users/wait/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/platform/users/wait/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun platformWaitDatas(request: HttpServletRequest): DataTablesUtils<UsersBean> {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
@@ -953,7 +953,7 @@ open class UsersController {
      * @param modelMap 页面对象
      * @return 配置页面
      */
-    @RequestMapping(value = "/anyone/users/setting", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/users/setting"], method = [(RequestMethod.GET)])
     fun userSetting(modelMap: ModelMap): String {
         val users = usersService.getUserFromSession()
         modelMap.addAttribute("user", users)
@@ -967,7 +967,7 @@ open class UsersController {
      * @param idCard   身份证号
      * @return true 可以用 false 不可以
      */
-    @RequestMapping(value = "/anyone/users/valid/id_card", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/anyone/users/valid/id_card"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun validIdCard(@RequestParam("username") username: String, @RequestParam("idCard") idCard: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
@@ -1006,7 +1006,7 @@ open class UsersController {
      * @param request                     请求
      * @return 文件信息
      */
-    @RequestMapping(value = "/anyone/users/upload/avatar")
+    @RequestMapping("/anyone/users/upload/avatar")
     @ResponseBody
     fun usersUploadAvatar(multipartHttpServletRequest: MultipartHttpServletRequest, request: HttpServletRequest): AjaxUtils<FileBean> {
         val data = AjaxUtils.of<FileBean>()
@@ -1062,7 +1062,7 @@ open class UsersController {
      *
      * @param request 请求
      */
-    @RequestMapping(value = "/anyone/users/review/avatar", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/users/review/avatar"], method = [(RequestMethod.GET)])
     fun reviewAvatar(@RequestParam("path") path: String, request: HttpServletRequest, response: HttpServletResponse) {
         uploadService.reviewPic("/" + path, request, response)
     }
@@ -1076,7 +1076,7 @@ open class UsersController {
      * @param session         手机信息
      * @return true or false
      */
-    @RequestMapping(value = "/anyone/user/mobile/update", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/anyone/user/mobile/update"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun mobileUpdate(@RequestParam("username") username: String, @RequestParam("newMobile") newMobile: String,
                      @RequestParam("phoneVerifyCode") phoneVerifyCode: String, session: HttpSession): AjaxUtils<*> {
@@ -1130,7 +1130,7 @@ open class UsersController {
      * @param okPassword  确认密码
      * @return true or false
      */
-    @RequestMapping(value = "/anyone/user/password/update", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/anyone/user/password/update"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun passwordUpdate(@RequestParam("username") username: String, @RequestParam("newPassword") newPassword: String,
                        @RequestParam("okPassword") okPassword: String): AjaxUtils<*> {
@@ -1162,7 +1162,7 @@ open class UsersController {
      * @param bindingResult 检验
      * @return true or false
      */
-    @RequestMapping(value = "/anyone/users/update", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/anyone/users/update"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun usersUpdate(@Valid usersVo: UsersVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors()) {

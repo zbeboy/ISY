@@ -63,7 +63,7 @@ open class RoleController {
      *
      * @return 页面
      */
-    @RequestMapping(value = "/web/menu/platform/role", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/menu/platform/role"], method = [(RequestMethod.GET)])
     fun platformRole(): String {
         return "web/platform/role/role_data::#page-wrapper"
     }
@@ -74,7 +74,7 @@ open class RoleController {
      * @param request 请求
      * @return datatables数据
      */
-    @RequestMapping(value = "/web/platform/role/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/platform/role/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun roleDatas(request: HttpServletRequest): DataTablesUtils<RoleBean> {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
@@ -102,7 +102,7 @@ open class RoleController {
      * @param modelMap 页面对象
      * @return 添加页面
      */
-    @RequestMapping(value = "/web/platform/role/add", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/platform/role/add"], method = [(RequestMethod.GET)])
     fun roleAdd(modelMap: ModelMap): String {
         pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
         return "web/platform/role/role_add::#page-wrapper"
@@ -115,7 +115,7 @@ open class RoleController {
      * @param modelMap 页面对象
      * @return 编辑页面
      */
-    @RequestMapping(value = "/web/platform/role/edit", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/platform/role/edit"], method = [(RequestMethod.GET)])
     fun roleEdit(@RequestParam("id") roleId: String, modelMap: ModelMap): String {
         val record = roleService.findByRoleIdRelation(roleId)
         val roleBean = roleService.dealDataRelationSingle(record)
@@ -131,7 +131,7 @@ open class RoleController {
      * @param collegeId 院id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/platform/role/save/valid", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/platform/role/save/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun saveValid(@RequestParam("roleName") name: String, @RequestParam(value = "collegeId") collegeId: Int): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
@@ -157,7 +157,7 @@ open class RoleController {
      * @param roleId    角色id
      * @return true 合格 false 不合格
      */
-    @RequestMapping(value = "/web/platform/role/update/valid", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/platform/role/update/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun updateValid(@RequestParam("roleName") name: String, @RequestParam(value = "collegeId") collegeId: Int,
                     @RequestParam("roleId") roleId: String): AjaxUtils<*> {
@@ -185,7 +185,7 @@ open class RoleController {
      * @param allowAgent 允许代理该角色
      * @return true 保存成功 false 保存失败
      */
-    @RequestMapping(value = "/web/platform/role/save", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/platform/role/save"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleSave(@RequestParam(value = "collegeId") collegeId: Int, @RequestParam("roleName") roleName: String,
                  allowAgent: Byte, applicationIds: String): AjaxUtils<*> {
@@ -210,7 +210,7 @@ open class RoleController {
      * @param allowAgent 允许代理该角色
      * @return true 保存成功 false 保存失败
      */
-    @RequestMapping(value = "/web/platform/role/update", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/platform/role/update"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam(value = "collegeId") collegeId: Int,
                    @RequestParam("roleName") roleName: String, allowAgent: Byte, applicationIds: String): AjaxUtils<*> {
@@ -249,7 +249,7 @@ open class RoleController {
      * @param roleId 角色id
      * @return true成功
      */
-    @RequestMapping(value = "/web/platform/role/delete", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/platform/role/delete"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleDelete(@RequestParam("roleId") roleId: String): AjaxUtils<*> {
         val record = roleService.findByRoleIdRelation(roleId)
@@ -269,7 +269,7 @@ open class RoleController {
      * @param allowAgent 允许代理该角色
      * @return 消息
      */
-    @RequestMapping(value = "/web/platform/role/agent", method = arrayOf((RequestMethod.POST)))
+    @RequestMapping(value = ["/web/platform/role/agent"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleAgent(@RequestParam("roleId") roleId: String, @RequestParam("allowAgent") allowAgent: Byte): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
@@ -291,7 +291,7 @@ open class RoleController {
      * @param roleId 角色id
      * @return 应用
      */
-    @RequestMapping(value = "/web/platform/role/application/data", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/web/platform/role/application/data"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleApplicationData(@RequestParam("roleId") roleId: String): AjaxUtils<RoleApplication> {
         val ajaxUtils = AjaxUtils.of<RoleApplication>()
@@ -309,7 +309,7 @@ open class RoleController {
      * @param collegeId 院id
      * @return json
      */
-    @RequestMapping(value = "/web/platform/role/application/json", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/platform/role/application/json"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun applicationJson(@RequestParam("collegeId") collegeId: Int): AjaxUtils<TreeBean> {
         val ajaxUtils = AjaxUtils.of<TreeBean>()

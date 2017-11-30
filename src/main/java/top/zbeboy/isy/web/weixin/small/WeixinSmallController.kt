@@ -29,7 +29,7 @@ open class WeixinSmallController {
      * @param weixinVo 参数
      * @return 接入值
      */
-    @RequestMapping(value = "/weixin/small/msg/words", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/weixin/small/msg/words"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun weixinValid(weixinVo: WeixinVo): String {
         weixinVo.token = isyProperties.getWeixin().smallToken

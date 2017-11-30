@@ -35,7 +35,7 @@ open class SystemAlertController {
      *
      * @return 系统数据页面
      */
-    @RequestMapping(value = "/anyone/alert", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/alert"], method = [(RequestMethod.GET)])
     fun alert(): String {
         return "web/system/alert/system_alert::#page-wrapper"
     }
@@ -46,7 +46,7 @@ open class SystemAlertController {
      * @param systemAlertId 提醒id
      * @return 转发页
      */
-    @RequestMapping(value = "/anyone/alert/detail", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/alert/detail"], method = [(RequestMethod.GET)])
     fun alertDetail(@RequestParam("id") systemAlertId: String, modelMap: ModelMap): String {
         val page: String
         val users = usersService.getUserFromSession()
@@ -69,7 +69,7 @@ open class SystemAlertController {
      *
      * @return 数据
      */
-    @RequestMapping(value = "/anyone/alert/data", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/anyone/alert/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun alertDatas(paginationUtils: PaginationUtils): AjaxUtils<SystemAlertBean> {
         val ajaxUtils = AjaxUtils.of<SystemAlertBean>()

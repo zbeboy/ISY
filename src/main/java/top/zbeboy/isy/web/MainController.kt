@@ -64,21 +64,18 @@ open class MainController {
         return "index"
     }
 
-
     /**
      * 登录页
      *
      * @return 登录页.
      */
-    @RequestMapping(value = "/login", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/login"], method = [(RequestMethod.GET)])
     fun login(): String {
-        val page: String
-        if (authoritiesService.isRememberMeAuthenticated()) {
-            page = "redirect:/web/menu/backstage"
+        return if (authoritiesService.isRememberMeAuthenticated()) {
+            "redirect:/web/menu/backstage"
         } else {
-            page = "login"
+            "login"
         }
-        return page
     }
 
     /**
@@ -87,7 +84,7 @@ open class MainController {
      * @param type 注册类型(学生，教职工)
      * @return 注册页
      */
-    @RequestMapping(value = "/register", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/register"], method = [(RequestMethod.GET)])
     fun register(@RequestParam("type") type: String): String {
         // 注册学生
         if (type.equals(Workbook.STUDENT_REGIST, ignoreCase = true)) {
@@ -106,7 +103,7 @@ open class MainController {
      * @param modelMap 页面对象
      * @return 完成页面
      */
-    @RequestMapping(value = "/register/finish", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/register/finish"], method = [(RequestMethod.GET)])
     fun registerFinish(modelMap: ModelMap): String {
         modelMap.put("msg", "验证邮件已发送至您的邮箱，请登录邮箱进行验证！")
         return "msg"
@@ -117,7 +114,7 @@ open class MainController {
      *
      * @return 忘记密码页面
      */
-    @RequestMapping(value = "/user/login/password/forget", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/user/login/password/forget"], method = [(RequestMethod.GET)])
     fun loginPasswordForget(): String {
         return "forget_password"
     }
@@ -128,7 +125,7 @@ open class MainController {
      * @param modelMap 页面对象
      * @return 完成页面
      */
-    @RequestMapping(value = "/user/login/password/forget/finish", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/user/login/password/forget/finish"], method = [(RequestMethod.GET)])
     fun loginPasswordForgetFinish(modelMap: ModelMap): String {
         modelMap.put("msg", "密码重置邮件已发送至您的邮箱。")
         return "msg"
@@ -140,7 +137,7 @@ open class MainController {
      * @param modelMap 页面对象
      * @return 重置成功页面
      */
-    @RequestMapping(value = "/user/login/password/reset/finish", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/user/login/password/reset/finish"], method = [(RequestMethod.GET)])
     fun passwordResetFinish(modelMap: ModelMap): String {
         modelMap.put("msg", "密码重置成功。")
         return "msg"
@@ -152,7 +149,7 @@ open class MainController {
      * @return 后台欢迎页
      */
     @RecordSystemLogging(module = "Main", methods = "backstage", description = "访问系统主页")
-    @RequestMapping(value = "/web/menu/backstage", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/web/menu/backstage"], method = [(RequestMethod.GET)])
     open fun backstage(request: HttpServletRequest): String {
         return "backstage"
     }
@@ -226,7 +223,7 @@ open class MainController {
      *
      * @return 服务器是否正常运行
      */
-    @RequestMapping(value = "/server/probe", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/server/probe"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun serverHealthCheck(): AjaxUtils<*> {
         return AjaxUtils.of<Any>().success().msg("Server is running ...")
