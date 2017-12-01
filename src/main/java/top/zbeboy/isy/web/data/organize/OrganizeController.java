@@ -19,7 +19,6 @@ import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
 import top.zbeboy.isy.elastic.pojo.OrganizeElastic;
 import top.zbeboy.isy.glue.data.OrganizeGlue;
 import top.zbeboy.isy.glue.util.ResultUtils;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.platform.RoleService;

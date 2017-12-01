@@ -1,39 +1,36 @@
-package top.zbeboy.isy.service.data;
+package top.zbeboy.isy.service.data
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.School;
-import top.zbeboy.isy.domain.tables.records.SchoolRecord;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.School
+import top.zbeboy.isy.domain.tables.records.SchoolRecord
+import top.zbeboy.isy.web.util.DataTablesUtils
 
 /**
- * Created by lenovo on 2016-08-21.
- */
-public interface SchoolService {
-
+ * Created by zbeboy 2017-12-01 .
+ **/
+interface SchoolService {
     /**
      * 查询全部学校
      *
      * @param b 状态
      * @return 全部学校
      */
-    Result<SchoolRecord> findByIsDel(Byte b);
+    fun findByIsDel(b: Byte?): Result<SchoolRecord>
 
     /**
      * 保存
      *
      * @param school 学校
      */
-    void save(School school);
+    fun save(school: School)
 
     /**
      * 更新
      *
      * @param school 学校
      */
-    void update(School school);
+    fun update(school: School)
 
     /**
      * 分页查询
@@ -41,21 +38,21 @@ public interface SchoolService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<School> dataTablesUtils);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<School>): Result<Record>
 
     /**
      * 学校总数
      *
      * @return 总数
      */
-    int countAll();
+    fun countAll(): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<School> dataTablesUtils);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<School>): Int
 
     /**
      * 根据学校名查询 注：等于学校名
@@ -63,7 +60,7 @@ public interface SchoolService {
      * @param schoolName 学校名
      * @return 数据
      */
-    List<School> findBySchoolName(String schoolName);
+    fun findBySchoolName(schoolName: String): List<School>
 
     /**
      * 查找不等于该学校id的学校名
@@ -72,7 +69,7 @@ public interface SchoolService {
      * @param schoolId   学校id
      * @return 数据
      */
-    Result<SchoolRecord> findBySchoolNameNeSchoolId(String schoolName, int schoolId);
+    fun findBySchoolNameNeSchoolId(schoolName: String, schoolId: Int): Result<SchoolRecord>
 
     /**
      * 通过id更新is_del状态
@@ -80,7 +77,7 @@ public interface SchoolService {
      * @param ids   ids
      * @param isDel is_del
      */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    fun updateIsDel(ids: List<Int>, isDel: Byte?)
 
     /**
      * 通过id查询学校
@@ -88,5 +85,5 @@ public interface SchoolService {
      * @param id id
      * @return 学校
      */
-    School findById(int id);
+    fun findById(id: Int): School
 }
