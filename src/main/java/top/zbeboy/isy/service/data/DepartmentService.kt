@@ -1,20 +1,17 @@
-package top.zbeboy.isy.service.data;
+package top.zbeboy.isy.service.data
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.Department;
-import top.zbeboy.isy.domain.tables.records.DepartmentRecord;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.Department
+import top.zbeboy.isy.domain.tables.records.DepartmentRecord
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by lenovo on 2016-08-21.
- */
-public interface DepartmentService {
-
+ * Created by zbeboy 2017-12-02 .
+ **/
+interface DepartmentService {
     /**
      * 通过院id查询全部系
      *
@@ -22,21 +19,21 @@ public interface DepartmentService {
      * @param b         状态
      * @return 院下全部系
      */
-    Result<DepartmentRecord> findByCollegeIdAndIsDel(int collegeId, Byte b);
+    fun findByCollegeIdAndIsDel(collegeId: Int, b: Byte?): Result<DepartmentRecord>
 
     /**
      * 保存
      *
      * @param department 系
      */
-    void save(Department department);
+    fun save(department: Department)
 
     /**
      * 更新
      *
      * @param department 系
      */
-    void update(Department department);
+    fun update(department: Department)
 
     /**
      * 通过id更新is_del状态
@@ -44,7 +41,7 @@ public interface DepartmentService {
      * @param ids   ids
      * @param isDel is_del
      */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    fun updateIsDel(ids: List<Int>, isDel: Byte?)
 
     /**
      * 分页查询
@@ -52,21 +49,21 @@ public interface DepartmentService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<DepartmentBean> dataTablesUtils);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<DepartmentBean>): Result<Record>
 
     /**
      * 系总数
      *
      * @return 总数
      */
-    int countAll();
+    fun countAll(): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<DepartmentBean> dataTablesUtils);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<DepartmentBean>): Int
 
     /**
      * 院下 系名查询 注：等于系名
@@ -75,7 +72,7 @@ public interface DepartmentService {
      * @param collegeId      院id
      * @return 数据
      */
-    Result<DepartmentRecord> findByDepartmentNameAndCollegeId(String departmentName, int collegeId);
+    fun findByDepartmentNameAndCollegeId(departmentName: String, collegeId: Int): Result<DepartmentRecord>
 
     /**
      * 查找院下不等于该系id的系名
@@ -85,7 +82,7 @@ public interface DepartmentService {
      * @param collegeId      院id
      * @return 数据
      */
-    Result<DepartmentRecord> findByDepartmentNameAndCollegeIdNeDepartmentId(String departmentName, int departmentId, int collegeId);
+    fun findByDepartmentNameAndCollegeIdNeDepartmentId(departmentName: String, departmentId: Int, collegeId: Int): Result<DepartmentRecord>
 
     /**
      * 通过id关联查询系
@@ -93,7 +90,7 @@ public interface DepartmentService {
      * @param id 系id
      * @return 系
      */
-    Optional<Record> findByIdRelation(int id);
+    fun findByIdRelation(id: Int): Optional<Record>
 
     /**
      * 通过id查询系
@@ -101,5 +98,5 @@ public interface DepartmentService {
      * @param id 系id
      * @return 系
      */
-    Department findById(int id);
+    fun findById(id: Int): Department
 }

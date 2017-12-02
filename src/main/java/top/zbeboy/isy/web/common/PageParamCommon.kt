@@ -35,4 +35,17 @@ open class PageParamCommon {
             modelMap.addAttribute("collegeId", collegeId)
         }
     }
+
+    /**
+     * 当前用户的角色名
+     *
+     * @param modelMap 页面对象
+     */
+    fun currentUserRoleNamePageParam(modelMap: ModelMap) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME)
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME)
+        }
+    }
 }
