@@ -16,6 +16,7 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.pojo.UsersElastic
 import top.zbeboy.isy.elastic.repository.UsersElasticRepository
+import top.zbeboy.isy.glue.sort.platform.UsersGlueSort
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -28,7 +29,7 @@ import javax.annotation.Resource
  * Created by zbeboy 2017-11-19 .
  **/
 @Repository("usersGlue")
-open class UsersGlueImpl: UsersGlue {
+open class UsersGlueImpl : UsersGlue {
     @Resource
     open lateinit var usersElasticRepository: UsersElasticRepository
 
@@ -60,16 +61,14 @@ open class UsersGlueImpl: UsersGlue {
     }
 
     override fun countAllExistsAuthorities(): Long {
-        val count: Long
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+        return if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             val list = ArrayList<Int>()
             list.add(ElasticBook.SYSTEM_AUTHORITIES)
             list.add(ElasticBook.NO_AUTHORITIES)
-            count = usersElasticRepository.countByAuthoritiesNotIn(list)
+            usersElasticRepository.countByAuthoritiesNotIn(list)
         } else {
-            count = usersElasticRepository.countByAuthorities(ElasticBook.HAS_AUTHORITIES)
+            usersElasticRepository.countByAuthorities(ElasticBook.HAS_AUTHORITIES)
         }
-        return count
     }
 
     override fun countAllNotExistsAuthorities(): Long {
@@ -164,81 +163,21 @@ open class UsersGlueImpl: UsersGlue {
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
-            if ("username".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortUsername(nativeSearchQueryBuilder, isAsc, orderColumnName!!)
 
-            if ("mobile".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("mobile").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("mobile").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortMobile(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("real_name".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("realName").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("realName").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortRealName(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("role_name".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("roleName").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("roleName").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortRoleName(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("users_type_name".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("usersTypeName").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("usersTypeName").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortUsersTypeName(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("enabled".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("enabled").order(SortOrder.ASC).unmappedType("byte"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("enabled").order(SortOrder.DESC).unmappedType("byte"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortEnabled(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("lang_key".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("langKey").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("langKey").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortLangKey(nativeSearchQueryBuilder, isAsc, orderColumnName)
 
-            if ("join_date".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("joinDate").order(SortOrder.ASC).unmappedType("date"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("joinDate").order(SortOrder.DESC).unmappedType("date"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
+            UsersGlueSort.sortJoinDate(nativeSearchQueryBuilder, isAsc, orderColumnName)
         }
         return nativeSearchQueryBuilder
     }

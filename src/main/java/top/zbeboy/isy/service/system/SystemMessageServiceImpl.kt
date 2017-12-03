@@ -46,9 +46,10 @@ open class SystemMessageServiceImpl @Autowired constructor(dslContext: DSLContex
     }
 
     override fun findAllByPageForShow(pageNum: Int, pageSize: Int, username: String, isSee: Boolean): Result<Record> {
-        var b: Byte? = 0
-        if (isSee) {
-            b = 1
+        val b: Byte = if (isSee) {
+            1
+        } else {
+            0
         }
         return create.select()
                 .from(SYSTEM_MESSAGE)
@@ -61,9 +62,10 @@ open class SystemMessageServiceImpl @Autowired constructor(dslContext: DSLContex
     }
 
     override fun countAllForShow(username: String, isSee: Boolean): Int {
-        var b: Byte? = 0
-        if (isSee) {
-            b = 1
+        val b: Byte = if (isSee) {
+            1
+        } else {
+            0
         }
         val record = create.selectCount()
                 .from(SYSTEM_MESSAGE)

@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
+import top.zbeboy.isy.domain.Tables.SYSTEM_ALERT
+import top.zbeboy.isy.domain.Tables.SYSTEM_ALERT_TYPE
 import top.zbeboy.isy.domain.tables.daos.SystemAlertDao
 import top.zbeboy.isy.domain.tables.pojos.SystemAlert
 import top.zbeboy.isy.service.util.DateTimeUtils
@@ -18,16 +20,12 @@ import java.sql.Timestamp
 import java.util.*
 import javax.annotation.Resource
 
-import top.zbeboy.isy.domain.Tables.SYSTEM_ALERT
-import top.zbeboy.isy.domain.Tables.SYSTEM_ALERT_TYPE
-import top.zbeboy.isy.domain.tables.records.SystemAlertRecord
-
 /**
  * Created by zbeboy 2017-11-07 .
  **/
 @Service("systemAlertService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext) : SystemAlertService{
+open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext) : SystemAlertService {
 
     private val create: DSLContext = dslContext
 
@@ -51,9 +49,10 @@ open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext)
     }
 
     override fun findAllByPageForShow(pageNum: Int, pageSize: Int, username: String, isSee: Boolean): Result<Record> {
-        var b: Byte? = 0
-        if (isSee) {
-            b = 1
+        val b: Byte = if (isSee) {
+            1
+        } else {
+            0
         }
         return create.select()
                 .from(SYSTEM_ALERT)
@@ -66,9 +65,10 @@ open class SystemAlertServiceImpl @Autowired constructor(dslContext: DSLContext)
     }
 
     override fun countAllForShow(username: String, isSee: Boolean): Int {
-        var b: Byte? = 0
-        if (isSee) {
-            b = 1
+        val b: Byte = if (isSee) {
+            1
+        } else {
+            0
         }
         val record = create.selectCount()
                 .from(SYSTEM_ALERT)

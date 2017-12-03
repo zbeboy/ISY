@@ -110,7 +110,7 @@ interface RoleService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    fun findAllByPage(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Result<Record>?
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Result<Record>
 
     /**
      * 角色总数

@@ -279,9 +279,8 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
     override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record> {
         val users = getUserFromSession()
         val select = existsAuthoritiesSelect()
-        val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(USERS)
                     .join(USERS_TYPE)
@@ -289,7 +288,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                     .whereExists(select).and(USERS.USERNAME.ne(users!!.username))
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(USERS)
@@ -298,17 +297,15 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                     .where(a).andExists(select).and(USERS.USERNAME.ne(users!!.username))
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     override fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record> {
         val select = create.selectFrom<AuthoritiesRecord>(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME))
-        val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(USERS)
                     .join(USERS_TYPE)
@@ -316,7 +313,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                     .whereNotExists(select)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(USERS)
@@ -325,29 +322,26 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                     .where(a).andNotExists(select)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     override fun countAllExistsAuthorities(): Int {
         val users = getUserFromSession()
         val select = existsAuthoritiesSelect()
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(USERS)
                 .whereExists(select).and(USERS.USERNAME.ne(users!!.username))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countAllNotExistsAuthorities(): Int {
         val select = create.selectFrom<AuthoritiesRecord>(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME))
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(USERS)
                 .whereNotExists(select)
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countByConditionExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Int {
@@ -355,18 +349,18 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
         val select = existsAuthoritiesSelect()
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.selectCount()
                     .from(USERS)
                     .whereExists(select).and(USERS.USERNAME.ne(users!!.username))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
                     .where(a).andExists(select).and(USERS.USERNAME.ne(users!!.username))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
     }
@@ -376,18 +370,18 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME))
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.selectCount()
                     .from(USERS)
                     .whereNotExists(select)
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
                     .where(a).andNotExists(select)
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
 

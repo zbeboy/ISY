@@ -135,16 +135,14 @@ open class ScienceController {
      */
     @RequestMapping(value = ["/web/data/science/edit"], method = [(RequestMethod.GET)])
     fun scienceEdit(@RequestParam("id") id: Int, modelMap: ModelMap): String {
-        val page: String
         val record = scienceService.findByIdRelation(id)
-        if (record.isPresent) {
+        return if (record.isPresent) {
             modelMap.addAttribute("science", record.get().into(ScienceBean::class.java))
             pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
-            page = "web/data/science/science_edit::#page-wrapper"
+            "web/data/science/science_edit::#page-wrapper"
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到相关专业信息")
+            commonControllerMethodService.showTip(modelMap, "未查询到相关专业信息")
         }
-        return page
     }
 
     /**

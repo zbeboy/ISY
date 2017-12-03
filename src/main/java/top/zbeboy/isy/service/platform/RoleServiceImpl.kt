@@ -116,10 +116,9 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                 .fetch()
     }
 
-    override fun findAllByPage(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Result<Record>? {
-        val records: Result<Record>?
+    override fun findAllByPage(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Result<Record> {
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(ROLE)
                     .leftJoin(COLLEGE_ROLE)
@@ -131,7 +130,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                     .where(buildRoleCondition().and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(ROLE)
@@ -144,13 +143,12 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                     .where(buildRoleCondition().and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     override fun countAll(roleBean: RoleBean): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(ROLE)
                 .leftJoin(COLLEGE_ROLE)
                 .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
@@ -159,14 +157,13 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                 .leftJoin(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                 .where(buildRoleCondition().and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countByCondition(dataTablesUtils: DataTablesUtils<RoleBean>, roleBean: RoleBean): Int {
-        val count: Record1<Int>?
+        val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.selectCount()
                     .from(ROLE)
                     .leftJoin(COLLEGE_ROLE)
@@ -176,7 +173,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                     .leftJoin(SCHOOL)
                     .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .where(buildRoleCondition().and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(ROLE)
@@ -187,7 +184,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
                     .leftJoin(SCHOOL)
                     .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                     .where(buildRoleCondition().and(a).and(ROLE.ROLE_TYPE.eq(roleBean.roleType)))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
     }

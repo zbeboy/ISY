@@ -42,16 +42,15 @@ open class CollegeServiceImpl @Autowired constructor(dslContext: DSLContext) : D
     }
 
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<CollegeBean>): Result<Record> {
-        val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectJoinStep = create.select()
                     .from(COLLEGE)
                     .join(SCHOOL)
                     .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
             sortCondition(dataTablesUtils, null, selectJoinStep, DataTablesPlugin.JOIN_TYPE)
             pagination(dataTablesUtils, null, selectJoinStep, DataTablesPlugin.JOIN_TYPE)
-            records = selectJoinStep.fetch()
+            selectJoinStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(COLLEGE)
@@ -60,9 +59,8 @@ open class CollegeServiceImpl @Autowired constructor(dslContext: DSLContext) : D
                     .where(a)
             sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     override fun countAll(): Int {
@@ -72,17 +70,15 @@ open class CollegeServiceImpl @Autowired constructor(dslContext: DSLContext) : D
     override fun countByCondition(dataTablesUtils: DataTablesUtils<CollegeBean>): Int {
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
-            val selectJoinStep = create.selectCount()
-                    .from(COLLEGE)
-            count = selectJoinStep.fetchOne()
+        count = if (ObjectUtils.isEmpty(a)) {
+            create.selectCount()
+                    .from(COLLEGE).fetchOne()
         } else {
-            val selectConditionStep = create.selectCount()
+            create.selectCount()
                     .from(COLLEGE)
                     .join(SCHOOL)
                     .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                    .where(a)
-            count = selectConditionStep.fetchOne()
+                    .where(a).fetchOne()
         }
         return count.value1()
     }

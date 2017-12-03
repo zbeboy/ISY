@@ -72,10 +72,9 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
     }
 
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<DepartmentBean>): Result<Record> {
-        val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
         val roleCondition = buildDepartmentCondition()
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             if (ObjectUtils.isEmpty(roleCondition)) {
                 val selectJoinStep = create.select()
                         .from(DEPARTMENT)
@@ -85,7 +84,7 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                 sortCondition(dataTablesUtils, null, selectJoinStep, DataTablesPlugin.JOIN_TYPE)
                 pagination(dataTablesUtils, null, selectJoinStep, DataTablesPlugin.JOIN_TYPE)
-                records = selectJoinStep.fetch()
+                selectJoinStep.fetch()
             } else {
                 val selectConditionStep = create.select()
                         .from(DEPARTMENT)
@@ -96,7 +95,7 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
                         .where(roleCondition)
                 sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
                 pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                records = selectConditionStep.fetch()
+                selectConditionStep.fetch()
             }
         } else {
             if (ObjectUtils.isEmpty(roleCondition)) {
@@ -109,7 +108,7 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
                         .where(a)
                 sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
                 pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                records = selectConditionStep.fetch()
+                selectConditionStep.fetch()
             } else {
                 val selectConditionStep = create.select()
                         .from(DEPARTMENT)
@@ -120,10 +119,9 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
                         .where(roleCondition!!.and(a))
                 sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
                 pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-                records = selectConditionStep.fetch()
+                selectConditionStep.fetch()
             }
         }
-        return records
     }
 
     override fun countAll(): Int {
@@ -131,13 +129,12 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
         return if (ObjectUtils.isEmpty(roleCondition)) {
             statisticsAll(create, DEPARTMENT)
         } else {
-            val count = create.selectCount()
+            create.selectCount()
                     .from(DEPARTMENT)
                     .join(COLLEGE)
                     .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                     .where(roleCondition)
-                    .fetchOne()
-            count.value1()
+                    .fetchOne().value1()
         }
     }
 
@@ -145,8 +142,8 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
         val roleCondition = buildDepartmentCondition()
-        if (ObjectUtils.isEmpty(a)) {
-            count = if (ObjectUtils.isEmpty(roleCondition)) {
+        count = if (ObjectUtils.isEmpty(a)) {
+            if (ObjectUtils.isEmpty(roleCondition)) {
                 val selectJoinStep = create.selectCount()
                         .from(DEPARTMENT)
                 selectJoinStep.fetchOne()
@@ -159,7 +156,7 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
                 selectConditionStep.fetchOne()
             }
         } else {
-            count = if (ObjectUtils.isEmpty(roleCondition)) {
+            if (ObjectUtils.isEmpty(roleCondition)) {
                 val selectConditionStep = create.selectCount()
                         .from(DEPARTMENT)
                         .join(COLLEGE)

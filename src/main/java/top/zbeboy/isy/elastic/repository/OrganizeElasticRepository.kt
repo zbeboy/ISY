@@ -16,6 +16,14 @@ interface OrganizeElasticRepository : ElasticsearchRepository<OrganizeElastic, S
     fun countByCollegeId(collegeId: Int): Long
 
     /**
+     * 通过系id统计
+     *
+     * @param departmentId 系id
+     * @return 数量
+     */
+    fun countByDepartmentId(departmentId: Int): Long
+
+    /**
      * 根据学校id查询
      *
      * @param schoolId 学校id

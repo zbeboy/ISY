@@ -9,15 +9,16 @@ import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
-import top.zbeboy.isy.domain.tables.daos.ScienceDao
-import top.zbeboy.isy.domain.tables.pojos.Science
-import top.zbeboy.isy.domain.tables.records.ScienceRecord
+import top.zbeboy.isy.domain.tables.daos.OrganizeDao
+import top.zbeboy.isy.domain.tables.pojos.Organize
+import top.zbeboy.isy.domain.tables.records.OrganizeRecord
+import top.zbeboy.isy.elastic.pojo.OrganizeElastic
 import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
-import top.zbeboy.isy.web.bean.data.science.ScienceBean
+import top.zbeboy.isy.web.bean.data.organize.OrganizeBean
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
 import javax.annotation.Resource
@@ -25,14 +26,14 @@ import javax.annotation.Resource
 /**
  * Created by zbeboy 2017-12-03 .
  **/
-@Service("scienceService")
+@Service("organizeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : DataTablesPlugin<ScienceBean>(), ScienceService {
+open class OrganizeServiceImpl @Autowired constructor(dslContext: DSLContext) : DataTablesPlugin<OrganizeBean>(), OrganizeService {
 
     private val create: DSLContext = dslContext
 
     @Resource
-    open lateinit var scienceDao: ScienceDao
+    open lateinit var organizeDao: OrganizeDao
 
     @Resource
     open lateinit var roleService: RoleService
@@ -43,68 +44,124 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
     @Resource
     open lateinit var organizeElasticRepository: OrganizeElasticRepository
 
-
-    override fun findByDepartmentIdAndIsDel(departmentId: Int, b: Byte?): Result<ScienceRecord> {
-        return create.selectFrom(SCIENCE)
-                .where(SCIENCE.SCIENCE_IS_DEL.eq(b).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
+    override fun findByScienceIdAndDistinctGradeAndIsDel(scienceId: Int, b: Byte?): Result<Record1<String>> {
+        return create.selectDistinct<String>(ORGANIZE.GRADE)
+                .from(ORGANIZE)
+                .where(ORGANIZE.SCIENCE_ID.eq(scienceId).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
+                .orderBy(ORGANIZE.ORGANIZE_ID.desc())
+                .limit(0, 6)
                 .fetch()
     }
 
-    override fun findByGradeAndDepartmentId(grade: String, departmentId: Int): Result<Record2<String, Int>> {
-        return create.selectDistinct(SCIENCE.SCIENCE_NAME, SCIENCE.SCIENCE_ID)
-                .from(SCIENCE)
-                .join(ORGANIZE)
+    override fun findInScienceIdsAndGradeAndIsDel(scienceIds: List<Int>, grade: String, b: Byte?): Result<OrganizeRecord> {
+        return create.selectFrom<OrganizeRecord>(ORGANIZE)
+                .where(ORGANIZE.SCIENCE_ID.`in`(scienceIds).and(ORGANIZE.GRADE.eq(grade)).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
+                .fetch()
+    }
+
+    override fun findByScienceIdAndGradeAndIsDel(scienceId: Int, grade: String, b: Byte?): Result<OrganizeRecord> {
+        return create.selectFrom<OrganizeRecord>(ORGANIZE)
+                .where(ORGANIZE.SCIENCE_ID.eq(scienceId).and(ORGANIZE.GRADE.eq(grade)).and(ORGANIZE.ORGANIZE_IS_DEL.eq(b)))
+                .fetch()
+    }
+
+    override fun findByScienceId(scienceId: Int): List<Organize> {
+        return organizeDao.fetchByScienceId(scienceId)
+    }
+
+    override fun findByDepartmentIdAndDistinctGrade(departmentId: Int): Result<Record1<String>> {
+        return create.selectDistinct<String>(ORGANIZE.GRADE)
+                .from(ORGANIZE)
+                .join(SCIENCE)
                 .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
-                .where(SCIENCE.SCIENCE_IS_DEL.eq(0).and(ORGANIZE.GRADE.eq(grade)).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .where(DEPARTMENT.DEPARTMENT_ID.eq(departmentId).and(ORGANIZE.ORGANIZE_IS_DEL.eq(0)))
+                .orderBy(ORGANIZE.GRADE.desc())
+                .limit(0, 6)
+                .fetch()
+    }
+
+    override fun findByOrganizeNameAndScienceIdNeOrganizeId(organizeName: String, organizeId: Int, scienceId: Int): Result<OrganizeRecord> {
+        return create.selectFrom<OrganizeRecord>(ORGANIZE)
+                .where(ORGANIZE.ORGANIZE_NAME.eq(organizeName).and(ORGANIZE.SCIENCE_ID.eq(scienceId)).and(ORGANIZE.ORGANIZE_ID.ne(organizeId)))
+                .fetch()
+    }
+
+    override fun findByGradeAndScienceId(grade: String, scienceId: Int): Result<OrganizeRecord> {
+        return create.selectFrom<OrganizeRecord>(ORGANIZE)
+                .where(ORGANIZE.ORGANIZE_IS_DEL.eq(0).and(ORGANIZE.GRADE.eq(grade)).and(ORGANIZE.SCIENCE_ID.eq(scienceId)))
+                .fetch()
+    }
+
+    override fun findByGradeAndScienceIdNotIsDel(grade: String, scienceId: Int): Result<OrganizeRecord> {
+        return create.selectFrom<OrganizeRecord>(ORGANIZE)
+                .where(ORGANIZE.GRADE.eq(grade).and(ORGANIZE.SCIENCE_ID.eq(scienceId)))
                 .fetch()
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    override fun save(science: Science) {
-        scienceDao.insert(science)
+    override fun save(organizeElastic: OrganizeElastic) {
+        val record = create.insertInto<OrganizeRecord>(ORGANIZE)
+                .set<String>(ORGANIZE.ORGANIZE_NAME, organizeElastic.organizeName)
+                .set<Byte>(ORGANIZE.ORGANIZE_IS_DEL, organizeElastic.organizeIsDel)
+                .set<Int>(ORGANIZE.SCIENCE_ID, organizeElastic.scienceId)
+                .set<String>(ORGANIZE.GRADE, organizeElastic.grade)
+                .returning(ORGANIZE.ORGANIZE_ID)
+                .fetchOne()
+        organizeElastic.setOrganizeId(record.getOrganizeId())
+        organizeElasticRepository.save(organizeElastic)
     }
 
-    override fun update(science: Science) {
-        scienceDao.update(science)
-        val records = organizeElasticRepository.findByScienceId(science.scienceId!!)
-        records.forEach { organizeElastic ->
-            organizeElastic.scienceId = science.scienceId
-            organizeElastic.scienceName = science.scienceName
+    override fun update(organize: Organize) {
+        organizeDao.update(organize)
+        val organizeElastic = organizeElasticRepository.findOne(organize.organizeId!!.toString() + "")
+        organizeElastic.organizeIsDel = organize.organizeIsDel
+        organizeElastic.organizeName = organize.organizeName
+        organizeElastic.scienceId = organize.scienceId
+        organizeElastic.grade = organize.grade
+        organizeElasticRepository.delete(organizeElastic)
+        organizeElasticRepository.save(organizeElastic)
+    }
+
+    override fun updateIsDel(ids: List<Int>, isDel: Byte?) {
+        ids.forEach { id ->
+            create.update<OrganizeRecord>(ORGANIZE).set<Byte>(ORGANIZE.ORGANIZE_IS_DEL, isDel).where(ORGANIZE.ORGANIZE_ID.eq(id)).execute()
+            val organizeElastic = organizeElasticRepository.findOne(id.toString() + "")
+            organizeElastic.organizeIsDel = isDel
             organizeElasticRepository.delete(organizeElastic)
             organizeElasticRepository.save(organizeElastic)
         }
     }
 
-    override fun updateIsDel(ids: List<Int>, isDel: Byte?) {
-        for (id in ids) {
-            create.update(SCIENCE).set(SCIENCE.SCIENCE_IS_DEL, isDel).where(SCIENCE.SCIENCE_ID.eq(id)).execute()
-        }
-    }
-
-    override fun findById(id: Int): Science {
-        return scienceDao.findById(id)
-    }
-
     override fun findByIdRelation(id: Int): Optional<Record> {
         return create.select()
-                .from(SCIENCE)
+                .from(ORGANIZE)
+                .join(SCIENCE)
+                .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                 .join(DEPARTMENT)
                 .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                 .join(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                .where(SCIENCE.SCIENCE_ID.eq(id))
+                .where(ORGANIZE.ORGANIZE_ID.eq(id))
                 .fetchOptional()
     }
 
-    override fun findAllByPage(dataTablesUtils: DataTablesUtils<ScienceBean>): Result<Record> {
+    override fun findById(id: Int): Organize {
+        return organizeDao.findById(id)
+    }
+
+    override fun findAllByPage(dataTablesUtils: DataTablesUtils<OrganizeBean>): Result<Record> {
         val a = searchCondition(dataTablesUtils)
-        val roleCondition = buildScienceCondition()
+        val roleCondition = buildOrganizeCondition()
         return if (ObjectUtils.isEmpty(a)) {
             if (ObjectUtils.isEmpty(roleCondition)) {
                 val selectJoinStep = create.select()
-                        .from(SCIENCE)
+                        .from(ORGANIZE)
+                        .join(SCIENCE)
+                        .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                         .join(DEPARTMENT)
                         .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                         .join(COLLEGE)
@@ -116,7 +173,9 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
                 selectJoinStep.fetch()
             } else {
                 val selectConditionStep = create.select()
-                        .from(SCIENCE)
+                        .from(ORGANIZE)
+                        .join(SCIENCE)
+                        .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                         .join(DEPARTMENT)
                         .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                         .join(COLLEGE)
@@ -131,7 +190,9 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
         } else {
             if (ObjectUtils.isEmpty(roleCondition)) {
                 val selectConditionStep = create.select()
-                        .from(SCIENCE)
+                        .from(ORGANIZE)
+                        .join(SCIENCE)
+                        .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                         .join(DEPARTMENT)
                         .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                         .join(COLLEGE)
@@ -144,7 +205,9 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
                 selectConditionStep.fetch()
             } else {
                 val selectConditionStep = create.select()
-                        .from(SCIENCE)
+                        .from(ORGANIZE)
+                        .join(SCIENCE)
+                        .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                         .join(DEPARTMENT)
                         .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                         .join(COLLEGE)
@@ -160,12 +223,14 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
     }
 
     override fun countAll(): Int {
-        val roleCondition = buildScienceCondition()
+        val roleCondition = buildOrganizeCondition()
         return if (ObjectUtils.isEmpty(roleCondition)) {
-            statisticsAll(create, SCIENCE)
+            statisticsAll(create, ORGANIZE)
         } else {
             create.selectCount()
-                    .from(SCIENCE)
+                    .from(ORGANIZE)
+                    .join(SCIENCE)
+                    .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                     .join(DEPARTMENT)
                     .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(COLLEGE)
@@ -175,84 +240,68 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
         }
     }
 
-    override fun countByCondition(dataTablesUtils: DataTablesUtils<ScienceBean>): Int {
+    override fun countByCondition(dataTablesUtils: DataTablesUtils<OrganizeBean>): Int {
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        val roleCondition = buildScienceCondition()
+        val roleCondition = buildOrganizeCondition()
         count = if (ObjectUtils.isEmpty(a)) {
             if (ObjectUtils.isEmpty(roleCondition)) {
-                val selectJoinStep = create.selectCount()
-                        .from(SCIENCE)
-                selectJoinStep.fetchOne()
+                create.selectCount()
+                        .from(ORGANIZE).fetchOne()
             } else {
-                val selectConditionStep = create.selectCount()
-                        .from(SCIENCE)
+                create.selectCount()
+                        .from(ORGANIZE)
+                        .join(SCIENCE)
+                        .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                         .join(DEPARTMENT)
                         .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                         .join(COLLEGE)
                         .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                        .where(roleCondition)
-                selectConditionStep.fetchOne()
+                        .where(roleCondition).fetchOne()
             }
         } else {
             if (ObjectUtils.isEmpty(roleCondition)) {
-                val selectConditionStep = create.selectCount()
-                        .from(SCIENCE)
+                create.selectCount()
+                        .from(ORGANIZE)
+                        .join(SCIENCE)
+                        .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                         .join(DEPARTMENT)
                         .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                         .join(COLLEGE)
                         .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(a)
-                selectConditionStep.fetchOne()
+                        .where(a).fetchOne()
             } else {
-                val selectConditionStep = create.selectCount()
-                        .from(SCIENCE)
+                create.selectCount()
+                        .from(ORGANIZE)
+                        .join(SCIENCE)
+                        .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                         .join(DEPARTMENT)
                         .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                         .join(COLLEGE)
                         .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                        .where(roleCondition!!.and(a))
-                selectConditionStep.fetchOne()
+                        .where(roleCondition!!.and(a)).fetchOne()
             }
         }
         return count.value1()
     }
 
-    override fun findByScienceNameAndDepartmentId(scienceName: String, departmentId: Int): Result<ScienceRecord> {
-        return create.selectFrom(SCIENCE)
-                .where(SCIENCE.SCIENCE_NAME.eq(scienceName).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
-                .fetch()
-    }
-
-    override fun findByScienceCode(scienceCode: String): Result<ScienceRecord> {
-        return create.selectFrom(SCIENCE)
-                .where(SCIENCE.SCIENCE_CODE.eq(scienceCode))
-                .fetch()
-    }
-
-    override fun findByScienceNameAndDepartmentIdNeScienceId(scienceName: String, scienceId: Int, departmentId: Int): Result<ScienceRecord> {
-        return create.selectFrom(SCIENCE)
-                .where(SCIENCE.SCIENCE_NAME.eq(scienceName).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
-                .fetch()
-    }
-
-    override fun findByScienceCodeNeScienceId(scienceCode: String, scienceId: Int): Result<ScienceRecord> {
-        return create.selectFrom(SCIENCE)
-                .where(SCIENCE.SCIENCE_CODE.eq(scienceCode).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
+    override fun findByOrganizeNameAndScienceId(organizeName: String, scienceId: Int): Result<OrganizeRecord> {
+        return create.selectFrom<OrganizeRecord>(ORGANIZE)
+                .where(ORGANIZE.ORGANIZE_NAME.eq(organizeName).and(ORGANIZE.SCIENCE_ID.eq(scienceId)))
                 .fetch()
     }
 
     /**
-     * 专业数据全局搜索条件
+     * 班级数据全局搜索条件
      *
      * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
-    override fun searchCondition(dataTablesUtils: DataTablesUtils<ScienceBean>): Condition? {
+    override fun searchCondition(dataTablesUtils: DataTablesUtils<OrganizeBean>): Condition? {
         var a: Condition? = null
 
         val search = dataTablesUtils.search
@@ -261,6 +310,8 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
             val collegeName = StringUtils.trimWhitespace(search.getString("collegeName"))
             val departmentName = StringUtils.trimWhitespace(search.getString("departmentName"))
             val scienceName = StringUtils.trimWhitespace(search.getString("scienceName"))
+            val grade = StringUtils.trimWhitespace(search.getString("grade"))
+            val organizeName = StringUtils.trimWhitespace(search.getString("organizeName"))
             if (StringUtils.hasLength(schoolName)) {
                 a = SCHOOL.SCHOOL_NAME.like(SQLQueryUtils.likeAllParam(schoolName))
             }
@@ -289,28 +340,44 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
                 }
             }
 
+            if (StringUtils.hasLength(grade)) {
+                a = if (ObjectUtils.isEmpty(a)) {
+                    ORGANIZE.GRADE.like(SQLQueryUtils.likeAllParam(grade))
+                } else {
+                    a!!.and(ORGANIZE.GRADE.like(SQLQueryUtils.likeAllParam(grade)))
+                }
+            }
+
+            if (StringUtils.hasLength(organizeName)) {
+                a = if (ObjectUtils.isEmpty(a)) {
+                    ORGANIZE.ORGANIZE_NAME.like(SQLQueryUtils.likeAllParam(organizeName))
+                } else {
+                    a!!.and(ORGANIZE.ORGANIZE_NAME.like(SQLQueryUtils.likeAllParam(organizeName)))
+                }
+            }
+
         }
         return a
     }
 
     /**
-     * 专业数据排序
+     * 班级数据排序
      *
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
-    override fun sortCondition(dataTablesUtils: DataTablesUtils<ScienceBean>, selectConditionStep: SelectConditionStep<Record>?, selectJoinStep: SelectJoinStep<Record>?, type: Int) {
+    override fun sortCondition(dataTablesUtils: DataTablesUtils<OrganizeBean>, selectConditionStep: SelectConditionStep<Record>?, selectJoinStep: SelectJoinStep<Record>?, type: Int) {
         val orderColumnName = dataTablesUtils.orderColumnName
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         var sortField: Array<SortField<*>?>? = null
         if (StringUtils.hasLength(orderColumnName)) {
-            if ("science_id".equals(orderColumnName!!, ignoreCase = true)) {
+            if ("organize_id".equals(orderColumnName!!, ignoreCase = true)) {
                 sortField = arrayOfNulls(1)
                 if (isAsc) {
-                    sortField[0] = SCIENCE.SCIENCE_ID.asc()
+                    sortField[0] = ORGANIZE.ORGANIZE_ID.asc()
                 } else {
-                    sortField[0] = SCIENCE.SCIENCE_ID.desc()
+                    sortField[0] = ORGANIZE.ORGANIZE_ID.desc()
                 }
             }
 
@@ -318,10 +385,10 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
                     sortField[0] = SCHOOL.SCHOOL_NAME.asc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.asc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.asc()
                 } else {
                     sortField[0] = SCHOOL.SCHOOL_NAME.desc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.desc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.desc()
                 }
             }
 
@@ -329,10 +396,10 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
                     sortField[0] = COLLEGE.COLLEGE_NAME.asc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.asc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.asc()
                 } else {
                     sortField[0] = COLLEGE.COLLEGE_NAME.desc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.desc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.desc()
                 }
             }
 
@@ -340,39 +407,52 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
                     sortField[0] = DEPARTMENT.DEPARTMENT_NAME.asc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.asc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.asc()
                 } else {
                     sortField[0] = DEPARTMENT.DEPARTMENT_NAME.desc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.desc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.desc()
                 }
             }
 
             if ("science_name".equals(orderColumnName, ignoreCase = true)) {
-                sortField = arrayOfNulls(1)
-                if (isAsc) {
-                    sortField[0] = SCIENCE.SCIENCE_NAME.asc()
-                } else {
-                    sortField[0] = SCIENCE.SCIENCE_NAME.desc()
-                }
-            }
-
-            if ("science_code".equals(orderColumnName, ignoreCase = true)) {
-                sortField = arrayOfNulls(1)
-                if (isAsc) {
-                    sortField[0] = SCIENCE.SCIENCE_CODE.asc()
-                } else {
-                    sortField[0] = SCIENCE.SCIENCE_CODE.desc()
-                }
-            }
-
-            if ("science_is_del".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = SCIENCE.SCIENCE_IS_DEL.asc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.asc()
+                    sortField[0] = SCIENCE.SCIENCE_NAME.asc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.asc()
                 } else {
-                    sortField[0] = SCIENCE.SCIENCE_IS_DEL.desc()
-                    sortField[1] = SCIENCE.SCIENCE_ID.desc()
+                    sortField[0] = SCIENCE.SCIENCE_NAME.desc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.desc()
+                }
+            }
+
+            if ("grade".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
+                if (isAsc) {
+                    sortField[0] = ORGANIZE.GRADE.asc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.asc()
+                } else {
+                    sortField[0] = ORGANIZE.GRADE.desc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.desc()
+                }
+            }
+
+            if ("organize_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(1)
+                if (isAsc) {
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.asc()
+                } else {
+                    sortField[0] = ORGANIZE.ORGANIZE_NAME.desc()
+                }
+            }
+
+            if ("organize_is_del".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
+                if (isAsc) {
+                    sortField[0] = ORGANIZE.ORGANIZE_IS_DEL.asc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.asc()
+                } else {
+                    sortField[0] = ORGANIZE.ORGANIZE_IS_DEL.desc()
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.desc()
                 }
             }
 
@@ -384,7 +464,7 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
     /**
      * 构建该角色查询条件
      */
-    private fun buildScienceCondition(): Condition? {
+    private fun buildOrganizeCondition(): Condition? {
         val condition: Condition? = null // 分权限显示用户数据
         if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {// 系统角色直接回避
             return condition
@@ -401,4 +481,5 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
             DEPARTMENT.DEPARTMENT_ID.eq(departmentId)
         }
     }
+
 }

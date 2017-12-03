@@ -127,16 +127,14 @@ open class DepartmentController {
      */
     @RequestMapping(value = ["/web/data/department/edit"], method = [(RequestMethod.GET)])
     fun departmentEdit(@RequestParam("id") id: Int, modelMap: ModelMap): String {
-        val page:String
         val record = departmentService.findByIdRelation(id)
-        if (record.isPresent) {
+        return if (record.isPresent) {
             modelMap.addAttribute("department", record.get().into(DepartmentBean::class.java))
             pageParamCommon.currentUserRoleNamePageParam(modelMap)
-            page = "web/data/department/department_edit::#page-wrapper"
+            "web/data/department/department_edit::#page-wrapper"
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到相关系信息")
+            commonControllerMethodService.showTip(modelMap, "未查询到相关系信息")
         }
-        return page
     }
 
     /**
