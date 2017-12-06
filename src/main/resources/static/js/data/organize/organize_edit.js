@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-25.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
-    function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
+    function ($, Handlebars, constants, nav_active, DP) {
 
         /*
          ajax url.
@@ -34,7 +34,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             scienceName: '#scienceName',
             grade: '#select_grade',
             organizeId: '#organizeId',
-            organizeName: '#organizeName'
+            organizeName: '#organizeName',
+            organizeIsDel: '#organizeIsDel'
         };
 
         /*
@@ -51,7 +52,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             scienceName: '',
             grade: $(paramId.grade).val(),
             organizeId: $(paramId.organizeId).val(),
-            organizeName: $(paramId.organizeName).val()
+            organizeName: $(paramId.organizeName).val(),
+            organizeIsDel: DP.defaultUndefinedValue($('input[name="organizeIsDel"]:checked').val(), 0)
         };
 
         /*
@@ -134,13 +136,19 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             param.schoolName = $(paramId.schoolId).find('option:selected').text();
             param.collegeId = $(paramId.collegeId).val();
             param.collegeName = $(paramId.collegeId).find('option:selected').text();
-            param.departmentId = $(paramId.departmentId).val();
+            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role
+                || init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                param.departmentId = $(paramId.departmentId).val();
+            } else {
+                param.departmentId = init_page_param.departmentId;
+            }
             param.departmentName = $(paramId.departmentId).find('option:selected').text();
             param.scienceId = $(paramId.scienceId).val();
             param.scienceName = $(paramId.scienceId).find('option:selected').text();
             param.grade = $(paramId.grade).val();
             param.organizeId = $(paramId.organizeId).val();
             param.organizeName = $(paramId.organizeName).val();
+            param.organizeIsDel = DP.defaultUndefinedValue($('input[name="organizeIsDel"]:checked').val(), 0);
         }
 
         /*
@@ -183,6 +191,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                 });
             } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                 changeDepartment(init_page_param.collegeId);
+            } else {
+                changeScience(init_page_param.departmentId);
             }
 
             initMaxLength();
@@ -648,6 +658,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                                 validSchoolId();
                             } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                                 validDepartmentId();
+                            } else {
+                                validScienceId();
                             }
                         }
                     },
@@ -796,7 +808,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             }, {
                 url: web_path + ajax_url.update,
                 type: 'post',
-                data: $('#edit_form').serialize(),
+                data: param,
                 success: function (data) {
                     if (data.state) {
                         $.address.value(ajax_url.back);

@@ -38,7 +38,8 @@
                         <p class="text-danger hidden" id="college_error_msg"></p>
                         <input type="hidden" id="collegeId" th:value="${organize.collegeId}"/>
                     </div>
-                    <div class="form-group" id="valid_department">
+                    <div class="form-group" id="valid_department"
+                         sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                         <select class="form-control" name="departmentId" id="select_department">
                             <option>请选择系</option>
                         </select>
@@ -124,7 +125,8 @@
             /*页面参数*/
             var init_page_param = {
                 'currentUserRoleName': /*[[${currentUserRoleName}]]*/ '',
-                'collegeId': /*[[${collegeId}]]*/ 0
+                'collegeId': /*[[${collegeId}]]*/ 0,
+                'departmentId': /*[[${departmentId}]]*/ 0
             };
         </script>
         <input type="hidden" class="dy_script" value="/js/data/organize/organize_edit.js"/>

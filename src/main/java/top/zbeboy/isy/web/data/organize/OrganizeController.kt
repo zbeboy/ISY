@@ -154,7 +154,7 @@ open class OrganizeController {
      */
     @RequestMapping(value = ["/web/data/organize/add"], method = [(RequestMethod.GET)])
     fun organizeAdd(modelMap: ModelMap): String {
-        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
+        pageParamCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
         return "web/data/organize/organize_add::#page-wrapper"
     }
 
@@ -170,7 +170,7 @@ open class OrganizeController {
         val record = organizeService.findByIdRelation(id)
         return if (record.isPresent) {
             modelMap.addAttribute("organize", record.get().into(OrganizeBean::class.java))
-            pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
+            pageParamCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
             "web/data/organize/organize_edit::#page-wrapper"
         } else {
             commonControllerMethodService.showTip(modelMap, "未查询到相关班级信息")
@@ -238,7 +238,6 @@ open class OrganizeController {
             organizeElastic.scienceId = organizeVo.scienceId
             organizeElastic.grade = organizeVo.grade
             organizeElastic.departmentId = organizeVo.departmentId
-            organizeElastic.departmentName = organizeVo.departmentName
             organizeElastic.scienceName = organizeVo.scienceName
 
             // 非系统角色用户
@@ -250,6 +249,7 @@ open class OrganizeController {
                     organizeElastic.schoolName = organizeBean.schoolName
                     organizeElastic.collegeId = organizeBean.collegeId
                     organizeElastic.collegeName = organizeBean.collegeName
+                    organizeElastic.departmentName = organizeBean.departmentName
                     organizeService.save(organizeElastic)
                     ajaxUtils.success().msg("保存成功")
                 } else {
@@ -260,6 +260,7 @@ open class OrganizeController {
                 organizeElastic.schoolName = organizeVo.schoolName
                 organizeElastic.collegeId = organizeVo.collegeId
                 organizeElastic.collegeName = organizeVo.collegeName
+                organizeElastic.departmentName = organizeVo.departmentName
                 organizeService.save(organizeElastic)
                 ajaxUtils.success().msg("保存成功")
             }

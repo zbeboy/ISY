@@ -25,7 +25,7 @@
                             <input type="text" id="search_college" class="form-control input-sm" placeholder="院"/>
                         </div>
                     </div>
-                    <div class="row" style="margin-top:2px;">
+                    <div class="row" style="margin-top:2px;" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                         <div class="col-md-6">
                             <input type="text" id="search_department" class="form-control input-sm" placeholder="系"/>
                         </div>
@@ -33,11 +33,22 @@
                             <input type="text" id="search_science" class="form-control input-sm" placeholder="专业"/>
                         </div>
                     </div>
-                    <div class="row" style="margin-top:2px;">
+                    <div class="row" style="margin-top:2px;" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                         <div class="col-md-6">
                             <input type="text" id="search_grade" class="form-control input-sm" placeholder="年级"/>
                         </div>
                         <div class="col-md-6">
+                            <input type="text" id="search_organize" class="form-control input-sm" placeholder="班级"/>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2px;" sec:authorize="!hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
+                        <div class="col-md-4">
+                            <input type="text" id="search_science" class="form-control input-sm" placeholder="专业"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="search_grade" class="form-control input-sm" placeholder="年级"/>
+                        </div>
+                        <div class="col-md-4">
                             <input type="text" id="search_organize" class="form-control input-sm" placeholder="班级"/>
                         </div>
                     </div>
