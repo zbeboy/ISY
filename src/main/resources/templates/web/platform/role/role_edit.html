@@ -46,11 +46,11 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label th:if="${role.allowAgent == 0 || role.allowAgent == null}">
-                                <input type="checkbox" name="allowAgent" id="allowAgent"
+                                <input type="checkbox" name="allowAgent"
                                        value="1"/>允许代理该角色
                             </label>
                             <label th:if="${role.allowAgent == 1}">
-                                <input type="checkbox" name="allowAgent" id="allowAgent"
+                                <input type="checkbox" name="allowAgent"
                                        value="1" checked="checked"/>允许代理该角色
                             </label>
                         </div>

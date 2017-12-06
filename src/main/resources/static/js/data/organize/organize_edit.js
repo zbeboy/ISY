@@ -34,8 +34,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
             scienceName: '#scienceName',
             grade: '#select_grade',
             organizeId: '#organizeId',
-            organizeName: '#organizeName',
-            organizeIsDel: '#organizeIsDel'
+            organizeName: '#organizeName'
         };
 
         /*

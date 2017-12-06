@@ -61,10 +61,10 @@
                         <label>状态</label>
                         <div class="checkbox">
                             <label th:if="${science.scienceIsDel == 0 || science.scienceIsDel == null}">
-                                <input type="checkbox" name="scienceIsDel" id="scienceIsDel" value="1"/>注销
+                                <input type="checkbox" name="scienceIsDel" value="1"/>注销
                             </label>
                             <label th:if="${science.scienceIsDel == 1}">
-                                <input type="checkbox" name="scienceIsDel" id="scienceIsDel" checked="checked"
+                                <input type="checkbox" name="scienceIsDel" checked="checked"
                                        value="1"/>注销
                             </label>
                         </div>

@@ -27,7 +27,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
         schoolId: '#select_school',
         collegeId: '#select_college',
         roleName: '#roleName',
-        allowAgent: '#allowAgent',
         roleId: '#roleId'
     };
 

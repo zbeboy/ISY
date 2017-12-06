@@ -28,8 +28,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
             departmentId: '#select_department',
             scienceId: '#scienceId',
             scienceName: '#scienceName',
-            scienceCode: '#scienceCode',
-            scienceIsDel: '#scienceIsDel'
+            scienceCode: '#scienceCode'
         };
 
         /*

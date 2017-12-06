@@ -27,8 +27,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
             collegeId: '#select_college',
             departmentId: '#select_department',
             scienceName: '#scienceName',
-            scienceCode: '#scienceCode',
-            scienceIsDel: '#scienceIsDel'
+            scienceCode: '#scienceCode'
         };
 
         /*

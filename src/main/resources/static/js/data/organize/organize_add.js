@@ -33,8 +33,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
             scienceId: '#select_science',
             scienceName: '#scienceName',
             grade: '#select_grade',
-            organizeName: '#organizeName',
-            organizeIsDel: '#organizeIsDel'
+            organizeName: '#organizeName'
         };
 
         /*
