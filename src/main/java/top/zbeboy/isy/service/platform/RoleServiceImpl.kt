@@ -302,10 +302,12 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
     }
 
     override fun getRoleData(username: String): ArrayList<Role> {
+        var isSystemAuthorities: Boolean = false
         val roles = ArrayList<Role>()
         if (isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             roles.add(findByRoleEnName(Workbook.ADMIN_AUTHORITIES))
             roles.add(findByRoleEnName(Workbook.OPS_AUTHORITIES))
+            isSystemAuthorities = true
         }
         // 根据此用户账号查询院下所有角色
         val users = usersService.findByUsername(username)
@@ -313,7 +315,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         if (record.isPresent) {
             val college = record.get().into(College::class.java)
             val collegeRoleRecords: List<CollegeRoleRecord>
-            if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            if (isSystemAuthorities || isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
                 collegeRoleRecords = collegeRoleService.findByCollegeId(college.collegeId!!)
             } else {
                 collegeRoleRecords = collegeRoleService.findByCollegeIdAndAllowAgent(college.collegeId!!, 1)
