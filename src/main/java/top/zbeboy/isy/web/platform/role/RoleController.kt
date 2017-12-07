@@ -21,7 +21,7 @@ import top.zbeboy.isy.service.util.RandomUtils
 import top.zbeboy.isy.service.util.UUIDUtils
 import top.zbeboy.isy.web.bean.platform.role.RoleBean
 import top.zbeboy.isy.web.bean.tree.TreeBean
-import top.zbeboy.isy.web.common.PageParamCommon
+import top.zbeboy.isy.web.common.PageParamControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
@@ -50,7 +50,7 @@ open class RoleController {
     open lateinit var collegeRoleService: CollegeRoleService
 
     @Resource
-    open lateinit var pageParamCommon: PageParamCommon
+    open lateinit var pageParamControllerCommon: PageParamControllerCommon
 
     @Resource
     open lateinit var applicationService: ApplicationService
@@ -104,7 +104,7 @@ open class RoleController {
      */
     @RequestMapping(value = ["/web/platform/role/add"], method = [(RequestMethod.GET)])
     fun roleAdd(modelMap: ModelMap): String {
-        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
+        pageParamControllerCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
         return "web/platform/role/role_add::#page-wrapper"
     }
 
@@ -120,7 +120,7 @@ open class RoleController {
         val record = roleService.findByRoleIdRelation(roleId)
         val roleBean = roleService.dealDataRelationSingle(record)
         modelMap.addAttribute("role", roleBean)
-        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
+        pageParamControllerCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
         return "web/platform/role/role_edit::#page-wrapper"
     }
 

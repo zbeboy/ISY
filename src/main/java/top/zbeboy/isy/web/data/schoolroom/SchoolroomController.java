@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.Schoolroom;
 import top.zbeboy.isy.domain.tables.records.SchoolroomRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.SchoolroomService;
 import top.zbeboy.isy.web.bean.data.schoolroom.SchoolroomBean;
-import top.zbeboy.isy.web.common.PageParamCommon;
+import top.zbeboy.isy.web.common.PageParamControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -41,7 +40,7 @@ public class SchoolroomController {
     private SchoolroomService schoolroomService;
 
     @Resource
-    private PageParamCommon pageParamCommon;
+    private PageParamControllerCommon pageParamControllerCommon;
 
     /**
      * 通过楼id获取全部教室
@@ -82,7 +81,7 @@ public class SchoolroomController {
      */
     @RequestMapping(value = "/web/data/schoolroom/add", method = RequestMethod.GET)
     public String schoolroomAdd(ModelMap modelMap) {
-        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamControllerCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/schoolroom/schoolroom_add::#page-wrapper";
     }
 
@@ -103,7 +102,7 @@ public class SchoolroomController {
             schoolroomBean = new SchoolroomBean();
         }
         modelMap.addAttribute("schoolroom", schoolroomBean);
-        pageParamCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
+        pageParamControllerCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap);
         return "web/data/schoolroom/schoolroom_edit::#page-wrapper";
     }
 

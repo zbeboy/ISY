@@ -11,7 +11,7 @@ import javax.annotation.Resource
  * Created by zbeboy 2017-11-27 .
  **/
 @Component
-open class PageParamCommon {
+open class PageParamControllerCommon {
 
     @Resource
     open lateinit var roleService: RoleService

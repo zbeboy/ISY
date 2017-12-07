@@ -1,28 +1,25 @@
-package top.zbeboy.isy.service.data;
+package top.zbeboy.isy.service.data
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.Building;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
-import top.zbeboy.isy.domain.tables.records.BuildingRecord;
-import top.zbeboy.isy.web.bean.data.building.BuildingBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.Building
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease
+import top.zbeboy.isy.domain.tables.records.BuildingRecord
+import top.zbeboy.isy.web.bean.data.building.BuildingBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by zbeboy on 2017/5/27.
- */
-public interface BuildingService {
-
+ * Created by zbeboy 2017-12-07 .
+ **/
+interface BuildingService {
     /**
      * 根据主键查询
      *
      * @param id 主键
      * @return 楼
      */
-    Building findById(int id);
+    fun findById(id: Int): Building
 
     /**
      * 通过id关联查询楼
@@ -30,7 +27,7 @@ public interface BuildingService {
      * @param id 楼id
      * @return 楼
      */
-    Optional<Record> findByIdRelation(int id);
+    fun findByIdRelation(id: Int): Optional<Record>
 
     /**
      * 分页查询
@@ -38,7 +35,7 @@ public interface BuildingService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<BuildingBean> dataTablesUtils);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<BuildingBean>): Result<Record>
 
     /**
      * 根据楼名与院id查询
@@ -47,7 +44,7 @@ public interface BuildingService {
      * @param collegeId    院
      * @return 数据
      */
-    Result<BuildingRecord> findByBuildingNameAndCollegeId(String buildingName, int collegeId);
+    fun findByBuildingNameAndCollegeId(buildingName: String, collegeId: Int): Result<BuildingRecord>
 
     /**
      * 根据院id和状态查询全部楼
@@ -56,7 +53,7 @@ public interface BuildingService {
      * @param isDel     状态
      * @return 数据
      */
-    Result<BuildingRecord> findByCollegeIdAndIsDel(int collegeId, Byte isDel);
+    fun findByCollegeIdAndIsDel(collegeId: Int, isDel: Byte?): Result<BuildingRecord>
 
     /**
      * 查找院下不等于该楼id的楼名
@@ -66,35 +63,35 @@ public interface BuildingService {
      * @param buildingId   楼id
      * @return 数据
      */
-    Result<BuildingRecord> findByBuildingNameAndCollegeIdNeBuildingId(String buildingName, int collegeId, int buildingId);
+    fun findByBuildingNameAndCollegeIdNeBuildingId(buildingName: String, collegeId: Int, buildingId: Int): Result<BuildingRecord>
 
     /**
      * 总数
      *
      * @return 总数
      */
-    int countAll();
+    fun countAll(): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<BuildingBean> dataTablesUtils);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<BuildingBean>): Int
 
     /**
      * 保存
      *
      * @param building 数据
      */
-    void save(Building building);
+    fun save(building: Building)
 
     /**
      * 更新
      *
      * @param building 数据
      */
-    void update(Building building);
+    fun update(building: Building)
 
     /**
      * 通过id更新is_del状态
@@ -102,7 +99,7 @@ public interface BuildingService {
      * @param ids   ids
      * @param isDel is_del
      */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    fun updateIsDel(ids: List<Int>, isDel: Byte?)
 
     /**
      * 通过毕业设计发布 生成楼数据
@@ -110,5 +107,5 @@ public interface BuildingService {
      * @param graduationDesignRelease 毕业设计发布
      * @return 楼
      */
-    List<Building> generateBuildFromGraduationDesignRelease(GraduationDesignRelease graduationDesignRelease);
+    fun generateBuildFromGraduationDesignRelease(graduationDesignRelease: GraduationDesignRelease): List<Building>
 }

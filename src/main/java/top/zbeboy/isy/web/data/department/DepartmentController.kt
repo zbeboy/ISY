@@ -9,14 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.Department
 import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.data.DepartmentService
-import top.zbeboy.isy.service.platform.RoleService
-import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean
-import top.zbeboy.isy.web.common.PageParamCommon
+import top.zbeboy.isy.web.common.MethodControllerCommon
+import top.zbeboy.isy.web.common.PageParamControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.SmallPropsUtils
@@ -36,13 +34,10 @@ open class DepartmentController {
     open lateinit var departmentService: DepartmentService
 
     @Resource
-    open lateinit var usersService: UsersService
+    open lateinit var pageParamControllerCommon: PageParamControllerCommon
 
     @Resource
-    open lateinit var roleService: RoleService
-
-    @Resource
-    open lateinit var pageParamCommon: PageParamCommon
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     @Resource
     open lateinit var commonControllerMethodService: CommonControllerMethodService
@@ -114,7 +109,7 @@ open class DepartmentController {
      */
     @RequestMapping(value = ["/web/data/department/add"], method = [(RequestMethod.GET)])
     fun departmentAdd(modelMap: ModelMap): String {
-        pageParamCommon.currentUserRoleNamePageParam(modelMap)
+        pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
         return "web/data/department/department_add::#page-wrapper"
     }
 
@@ -130,7 +125,7 @@ open class DepartmentController {
         val record = departmentService.findByIdRelation(id)
         return if (record.isPresent) {
             modelMap.addAttribute("department", record.get().into(DepartmentBean::class.java))
-            pageParamCommon.currentUserRoleNamePageParam(modelMap)
+            pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
             "web/data/department/department_edit::#page-wrapper"
         } else {
             commonControllerMethodService.showTip(modelMap, "未查询到相关系信息")
@@ -147,9 +142,9 @@ open class DepartmentController {
     @RequestMapping(value = ["/web/data/department/save/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun saveValid(@RequestParam("departmentName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int): AjaxUtils<*> {
-        val tempCollegeId = roleCollegeId(collegeId)
+        val tempCollegeId = methodControllerCommon.roleCollegeId(collegeId)
         val departmentName = StringUtils.trimWhitespace(name)
-        if (StringUtils.hasLength(departmentName) && tempCollegeId > 0) {
+        if (StringUtils.hasLength(departmentName) && tempCollegeId!! > 0) {
             val departmentRecords = departmentService.findByDepartmentNameAndCollegeId(departmentName, tempCollegeId)
             return if (ObjectUtils.isEmpty(departmentRecords)) {
                 AjaxUtils.of<Any>().success().msg("系名不存在")
@@ -171,9 +166,9 @@ open class DepartmentController {
     @RequestMapping(value = ["/web/data/department/update/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun updateValid(@RequestParam("departmentId") id: Int, @RequestParam("departmentName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int): AjaxUtils<*> {
-        val tempCollegeId = roleCollegeId(collegeId)
+        val tempCollegeId = methodControllerCommon.roleCollegeId(collegeId)
         val departmentName = StringUtils.trimWhitespace(name)
-        if (StringUtils.hasLength(departmentName) && tempCollegeId > 0) {
+        if (StringUtils.hasLength(departmentName) && tempCollegeId!! > 0) {
             val departmentRecords = departmentService.findByDepartmentNameAndCollegeIdNeDepartmentId(departmentName, id, tempCollegeId)
             return if (departmentRecords.isEmpty()) {
                 AjaxUtils.of<Any>().success().msg("系名不重复")
@@ -202,8 +197,8 @@ open class DepartmentController {
                 0
             }
             department.departmentName = StringUtils.trimWhitespace(departmentVo.departmentName)
-            val collegeId = saveOrUpdateCollegeId(departmentVo)
-            return if (collegeId > 0) {
+            val collegeId = methodControllerCommon.roleCollegeId(departmentVo.collegeId)
+            return if (collegeId!! > 0) {
                 department.collegeId = collegeId
                 departmentService.save(department)
                 AjaxUtils.of<Any>().success().msg("保存成功")
@@ -233,8 +228,8 @@ open class DepartmentController {
                     0
                 }
                 department.departmentName = departmentVo.departmentName
-                val collegeId = saveOrUpdateCollegeId(departmentVo)
-                return if (collegeId > 0) {
+                val collegeId = methodControllerCommon.roleCollegeId(departmentVo.collegeId)
+                return if (collegeId!! > 0) {
                     department.collegeId = collegeId
                     departmentService.update(department)
                     AjaxUtils.of<Any>().success().msg("更改成功")
@@ -244,35 +239,6 @@ open class DepartmentController {
             }
         }
         return AjaxUtils.of<Any>().fail().msg("更改失败")
-    }
-
-    /**
-     * 保存或更新时获取院id
-     *
-     * @param departmentVo 系
-     * @return 院id
-     */
-    private fun saveOrUpdateCollegeId(departmentVo: DepartmentVo): Int {
-        return if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 管理员或其它角色
-            roleCollegeId(0)
-        } else {
-            departmentVo.collegeId!!
-        }
-    }
-
-    /**
-     * 根据角色获取院id
-     *
-     * @param collegeId 页面院id
-     */
-    private fun roleCollegeId(collegeId: Int): Int {
-        return if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 管理员或其它角色
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            roleService.getRoleCollegeId(record)
-        } else {
-            collegeId
-        }
     }
 
     /**

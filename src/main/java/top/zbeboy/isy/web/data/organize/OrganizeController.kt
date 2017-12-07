@@ -18,7 +18,7 @@ import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.data.OrganizeService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean
-import top.zbeboy.isy.web.common.PageParamCommon
+import top.zbeboy.isy.web.common.PageParamControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.SelectUtils
@@ -39,7 +39,7 @@ open class OrganizeController {
     open lateinit var organizeService: OrganizeService
 
     @Resource
-    open lateinit var pageParamCommon: PageParamCommon
+    open lateinit var pageParamControllerCommon: PageParamControllerCommon
 
     @Resource
     open lateinit var commonControllerMethodService: CommonControllerMethodService
@@ -154,7 +154,7 @@ open class OrganizeController {
      */
     @RequestMapping(value = ["/web/data/organize/add"], method = [(RequestMethod.GET)])
     fun organizeAdd(modelMap: ModelMap): String {
-        pageParamCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
+        pageParamControllerCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
         return "web/data/organize/organize_add::#page-wrapper"
     }
 
@@ -170,7 +170,7 @@ open class OrganizeController {
         val record = organizeService.findByIdRelation(id)
         return if (record.isPresent) {
             modelMap.addAttribute("organize", record.get().into(OrganizeBean::class.java))
-            pageParamCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
+            pageParamControllerCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
             "web/data/organize/organize_edit::#page-wrapper"
         } else {
             commonControllerMethodService.showTip(modelMap, "未查询到相关班级信息")
