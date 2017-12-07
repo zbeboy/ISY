@@ -7,14 +7,12 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
-import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.ScienceDao
 import top.zbeboy.isy.domain.tables.pojos.Science
 import top.zbeboy.isy.domain.tables.records.ScienceRecord
 import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
-import top.zbeboy.isy.service.platform.RoleService
-import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.science.ScienceBean
@@ -35,10 +33,7 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
     open lateinit var scienceDao: ScienceDao
 
     @Resource
-    open lateinit var roleService: RoleService
-
-    @Resource
-    open lateinit var usersService: UsersService
+    open lateinit var methodServiceCommon: MethodServiceCommon
 
     @Resource
     open lateinit var organizeElasticRepository: OrganizeElasticRepository
@@ -385,20 +380,6 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
      * 构建该角色查询条件
      */
     private fun buildScienceCondition(): Condition? {
-        val condition: Condition? = null // 分权限显示用户数据
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {// 系统角色直接回避
-            return condition
-        }
-        return if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {// 管理员
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
-            COLLEGE.COLLEGE_ID.eq(collegeId)
-        } else {// 其它学校自由角色
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val departmentId = roleService.getRoleDepartmentId(record)
-            DEPARTMENT.DEPARTMENT_ID.eq(departmentId)
-        }
+        return methodServiceCommon.buildDepartmentCondition()
     }
 }

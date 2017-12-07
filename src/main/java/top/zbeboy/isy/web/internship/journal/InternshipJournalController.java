@@ -37,6 +37,7 @@ import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -108,6 +109,9 @@ public class InternshipJournalController {
     private RoleService roleService;
 
     @Resource
+    private MethodControllerCommon methodControllerCommon;
+
+    @Resource
     private CommonControllerMethodService commonControllerMethodService;
 
     /**
@@ -173,7 +177,7 @@ public class InternshipJournalController {
         if (canUse) {
             page = "web/internship/journal/internship_journal_my::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -225,7 +229,7 @@ public class InternshipJournalController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/journal/internship_journal_team_list::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到教师信息");
+            page = methodControllerCommon.showTip(modelMap, "未查询到教师信息");
         }
         return page;
     }
@@ -363,7 +367,7 @@ public class InternshipJournalController {
             modelMap.addAttribute("internshipJournal", internshipJournal);
             page = "web/internship/journal/internship_journal_add::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -385,10 +389,10 @@ public class InternshipJournalController {
                 modelMap.addAttribute("internshipJournal", internshipJournal);
                 page = "web/internship/journal/internship_journal_edit::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -410,10 +414,10 @@ public class InternshipJournalController {
                 modelMap.addAttribute("internshipJournal", internshipJournal);
                 page = "web/internship/journal/internship_journal_look::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "该日志已限制查阅");
+                page = methodControllerCommon.showTip(modelMap, "该日志已限制查阅");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+            page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
         }
         return page;
     }

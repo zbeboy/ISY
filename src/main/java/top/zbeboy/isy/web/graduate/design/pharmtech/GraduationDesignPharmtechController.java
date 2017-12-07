@@ -21,7 +21,6 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignHopeTutor;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.Student;
 import top.zbeboy.isy.domain.tables.pojos.Users;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignHopeTutorService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
@@ -33,6 +32,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 
 import javax.annotation.Resource;
@@ -62,7 +62,7 @@ public class GraduationDesignPharmtechController {
     private GraduationDesignReleaseService graduationDesignReleaseService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private GraduationDesignTutorService graduationDesignTutorService;
@@ -106,7 +106,7 @@ public class GraduationDesignPharmtechController {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             page = "web/graduate/design/pharmtech/design_pharmtech_wish::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "仅支持学生用户使用");
+            page = methodControllerCommon.showTip(modelMap, "仅支持学生用户使用");
         }
         return page;
     }
@@ -129,10 +129,10 @@ public class GraduationDesignPharmtechController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/pharmtech/design_pharmtech_apply::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请先填写志愿");
+                page = methodControllerCommon.showTip(modelMap, "请先填写志愿");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }

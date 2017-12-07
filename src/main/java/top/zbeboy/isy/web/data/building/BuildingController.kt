@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.domain.tables.pojos.Building
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.data.BuildingService
 import top.zbeboy.isy.web.bean.data.building.BuildingBean
 import top.zbeboy.isy.web.common.MethodControllerCommon
@@ -38,9 +37,6 @@ open class BuildingController {
 
     @Resource
     open lateinit var pageParamControllerCommon: PageParamControllerCommon
-
-    @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
 
     /**
      * 通过院id获取全部楼
@@ -127,7 +123,7 @@ open class BuildingController {
             pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
             "web/data/building/building_edit::#page-wrapper"
         } else {
-            commonControllerMethodService.showTip(modelMap, "未查询到相关楼信息")
+            methodControllerCommon.showTip(modelMap, "未查询到相关楼信息")
         }
     }
 

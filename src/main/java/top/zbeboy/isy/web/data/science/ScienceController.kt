@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.domain.tables.pojos.Science
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.data.ScienceService
 import top.zbeboy.isy.web.bean.data.science.ScienceBean
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.common.PageParamControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
@@ -36,7 +36,7 @@ open class ScienceController {
     open lateinit var pageParamControllerCommon: PageParamControllerCommon
 
     @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     /**
      * 通过系id获取全部专业
@@ -141,7 +141,7 @@ open class ScienceController {
             pageParamControllerCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
             "web/data/science/science_edit::#page-wrapper"
         } else {
-            commonControllerMethodService.showTip(modelMap, "未查询到相关专业信息")
+            methodControllerCommon.showTip(modelMap, "未查询到相关专业信息")
         }
     }
 

@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service.common;
 
-import org.springframework.ui.ModelMap;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +16,6 @@ public interface CommonControllerMethodService {
      * @return 根据角色返回相应数据
      */
     Map<String, Integer> accessRoleCondition();
-
-    /**
-     * 组装提示信息
-     *
-     * @param modelMap 页面对象
-     * @param tip      提示内容
-     */
-    String showTip(ModelMap modelMap, String tip);
 
     /**
      * 发送邮件通知

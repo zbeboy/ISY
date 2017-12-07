@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -34,6 +33,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumGroupBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.vo.graduate.design.proposal.GraduationDesignProposalAddVo;
@@ -55,7 +55,7 @@ import java.util.*;
 public class GraduationDesignProposalController {
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private GraduationDesignReleaseService graduationDesignReleaseService;
@@ -140,7 +140,7 @@ public class GraduationDesignProposalController {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             page = "web/graduate/design/proposal/design_proposal_affix::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -163,10 +163,10 @@ public class GraduationDesignProposalController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/proposal/design_proposal_my::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+                page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "目前仅提供学生使用");
+            page = methodControllerCommon.showTip(modelMap, "目前仅提供学生使用");
         }
         return page;
     }
@@ -230,10 +230,10 @@ public class GraduationDesignProposalController {
                 page = "web/graduate/design/proposal/design_proposal_team::#page-wrapper";
 
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请等待确认毕业设计指导教师调整后查看");
+                page = methodControllerCommon.showTip(modelMap, "请等待确认毕业设计指导教师调整后查看");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -284,13 +284,13 @@ public class GraduationDesignProposalController {
                     modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                     page = "web/graduate/design/proposal/design_proposal_group::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+                    page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请等待确认毕业设计指导教师调整后查看");
+                page = methodControllerCommon.showTip(modelMap, "请等待确认毕业设计指导教师调整后查看");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }

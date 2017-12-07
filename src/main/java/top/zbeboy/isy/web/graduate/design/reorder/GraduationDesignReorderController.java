@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.DefenseRateRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.graduate.design.*;
 import top.zbeboy.isy.service.platform.RoleService;
@@ -26,6 +25,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.reorder.DefenseRateBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.vo.graduate.design.reorder.DefenseOrderVo;
 
@@ -53,7 +53,7 @@ public class GraduationDesignReorderController {
     private DefenseTimeService defenseTimeService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private DefenseGroupService defenseGroupService;
@@ -111,10 +111,10 @@ public class GraduationDesignReorderController {
                 modelMap.addAttribute("defenseTimes", defenseTimes);
                 page = "web/graduate/design/reorder/design_reorder_arrange::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未进行毕业设计答辩设置");
+                page = methodControllerCommon.showTip(modelMap, "未进行毕业设计答辩设置");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -197,7 +197,7 @@ public class GraduationDesignReorderController {
             modelMap.addAttribute("defenseGroupId", defenseGroupId);
             page = "web/graduate/design/reorder/design_reorder_order::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -582,13 +582,13 @@ public class GraduationDesignReorderController {
                         page = "web/graduate/design/reorder/design_reorder_question::#page-wrapper";
                     }
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关顺序");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到相关顺序");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+                page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "参数异常");
+            page = methodControllerCommon.showTip(modelMap, "参数异常");
         }
         return page;
     }

@@ -20,7 +20,6 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.data.ScienceService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -35,6 +34,7 @@ import top.zbeboy.isy.web.bean.data.science.ScienceBean;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -55,7 +55,7 @@ import java.util.concurrent.TimeUnit;
 public class GraduationDesignTeacherController {
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private GraduationDesignReleaseService graduationDesignReleaseService;
@@ -123,7 +123,7 @@ public class GraduationDesignTeacherController {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             page = "web/graduate/design/teacher/design_teacher_add::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }

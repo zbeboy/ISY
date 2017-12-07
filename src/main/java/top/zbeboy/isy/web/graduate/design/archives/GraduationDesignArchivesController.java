@@ -19,7 +19,6 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignArchivesRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.export.GraduationDesignArchivesExport;
@@ -33,6 +32,7 @@ import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.archives.GraduationDesignArchivesBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 
@@ -70,7 +70,7 @@ public class GraduationDesignArchivesController {
     private UploadService uploadService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     /**
      * 毕业设计归档
@@ -100,7 +100,7 @@ public class GraduationDesignArchivesController {
             modelMap.addAttribute("upYear", DateTime.now().getYear() - 1);
             page = "web/graduate/design/archives/design_archives_list::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到毕业设计相关信息");
+            page = methodControllerCommon.showTip(modelMap, "未查询到毕业设计相关信息");
         }
         return page;
     }
@@ -244,9 +244,9 @@ public class GraduationDesignArchivesController {
         String num = "";
         if (sort < 10) {
             num = "00" + sort;
-        } else if (sort >= 10 && sort < 100) {
+        } else if (sort < 100) {
             num = "0" + sort;
-        } else if (sort >= 100) {
+        } else {
             num = sort + "";
         }
         return num;

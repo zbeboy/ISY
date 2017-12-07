@@ -24,6 +24,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -79,6 +80,9 @@ public class InternshipReviewController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private InternshipChangeHistoryService internshipChangeHistoryService;
@@ -167,7 +171,7 @@ public class InternshipReviewController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_audit::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -187,7 +191,7 @@ public class InternshipReviewController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_pass::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -207,7 +211,7 @@ public class InternshipReviewController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_fail::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -227,7 +231,7 @@ public class InternshipReviewController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_base_info_apply::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -247,7 +251,7 @@ public class InternshipReviewController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_base_info_fill::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -267,7 +271,7 @@ public class InternshipReviewController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_company_apply::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -287,7 +291,7 @@ public class InternshipReviewController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_company_fill::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -315,7 +319,7 @@ public class InternshipReviewController {
                         modelMap.addAttribute("internshipData", internshipCollege);
                         page = "web/internship/review/internship_college_detail::#page-wrapper";
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                     }
                     break;
                 case Workbook.INTERNSHIP_COMPANY_TYPE:
@@ -325,7 +329,7 @@ public class InternshipReviewController {
                         modelMap.addAttribute("internshipData", internshipCompany);
                         page = "web/internship/review/internship_company_detail::#page-wrapper";
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
@@ -335,7 +339,7 @@ public class InternshipReviewController {
                         modelMap.addAttribute("internshipData", graduationPracticeCollege);
                         page = "web/internship/review/graduation_practice_college_detail::#page-wrapper";
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
@@ -345,7 +349,7 @@ public class InternshipReviewController {
                         modelMap.addAttribute("internshipData", graduationPracticeUnify);
                         page = "web/internship/review/graduation_practice_unify_detail::#page-wrapper";
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                     }
                     break;
                 case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
@@ -355,14 +359,14 @@ public class InternshipReviewController {
                         modelMap.addAttribute("internshipData", graduationPracticeCompany);
                         page = "web/internship/review/graduation_practice_company_detail::#page-wrapper";
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                     }
                     break;
                 default:
-                    page = commonControllerMethodService.showTip(modelMap, "未找到相关实习类型页面");
+                    page = methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -38,6 +37,7 @@ import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -75,7 +75,7 @@ public class InternshipRegulateController {
     private RoleService roleService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private InternshipRegulateService internshipRegulateService;
@@ -153,7 +153,7 @@ public class InternshipRegulateController {
         if (canUse) {
             page = "web/internship/regulate/internship_regulate_my::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -269,7 +269,7 @@ public class InternshipRegulateController {
             modelMap.addAttribute("internshipRegulate", internshipRegulate);
             page = "web/internship/regulate/internship_regulate_add::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -291,10 +291,10 @@ public class InternshipRegulateController {
                 modelMap.addAttribute("internshipRegulate", internshipRegulate);
                 page = "web/internship/regulate/internship_regulate_edit::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到相关监管信息");
+                page = methodControllerCommon.showTip(modelMap, "未查询到相关监管信息");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -315,7 +315,7 @@ public class InternshipRegulateController {
             modelMap.addAttribute("internshipRegulate", internshipRegulate);
             page = "web/internship/regulate/internship_regulate_look::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到相关监管信息");
+            page = methodControllerCommon.showTip(modelMap, "未查询到相关监管信息");
         }
         return page;
     }

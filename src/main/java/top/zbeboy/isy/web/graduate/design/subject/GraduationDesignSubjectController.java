@@ -20,7 +20,6 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -40,6 +39,7 @@ import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBe
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.subject.GraduationDesignPresubjectBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -68,7 +68,7 @@ public class GraduationDesignSubjectController {
     private GraduationDesignReleaseService graduationDesignReleaseService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private GraduationDesignPresubjectService graduationDesignPresubjectService;
@@ -156,7 +156,7 @@ public class GraduationDesignSubjectController {
             modelMap.addAttribute("endTime", DateTimeUtils.formatDate(graduationDesignRelease.getEndTime()));
             page = "web/graduate/design/subject/design_subject_list::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -369,13 +369,13 @@ public class GraduationDesignSubjectController {
                     modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                     page = "web/graduate/design/subject/design_subject_look::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "您不符合查看条件");
+                    page = methodControllerCommon.showTip(modelMap, "您不符合查看条件");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到相关毕业设计题目信息");
+                page = methodControllerCommon.showTip(modelMap, "未查询到相关毕业设计题目信息");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -402,13 +402,13 @@ public class GraduationDesignSubjectController {
                     modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
                     page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "您不符合编辑条件");
+                    page = methodControllerCommon.showTip(modelMap, "您不符合编辑条件");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
+                page = methodControllerCommon.showTip(modelMap, "不在毕业时间范围，无法操作");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -440,10 +440,10 @@ public class GraduationDesignSubjectController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/subject/design_subject_my::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "您可能不是学生用户或不符合进入条件");
+                page = methodControllerCommon.showTip(modelMap, "您可能不是学生用户或不符合进入条件");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -508,10 +508,10 @@ public class GraduationDesignSubjectController {
                 page = "web/graduate/design/subject/design_subject_declare::#page-wrapper";
 
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请等待确认指导教师调整后查看");
+                page = methodControllerCommon.showTip(modelMap, "请等待确认指导教师调整后查看");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -537,7 +537,7 @@ public class GraduationDesignSubjectController {
             modelMap.addAttribute("staffId", staffId);
             page = "web/graduate/design/subject/design_subject_declare_title::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -569,13 +569,13 @@ public class GraduationDesignSubjectController {
                     modelMap.addAttribute("staffId", staffId);
                     page = "web/graduate/design/subject/design_subject_declare_apply::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+                    page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到指导教师信息");
+                page = methodControllerCommon.showTip(modelMap, "未查询到指导教师信息");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "未查询到相关题目信息");
+            page = methodControllerCommon.showTip(modelMap, "未查询到相关题目信息");
         }
         return page;
     }
@@ -726,7 +726,7 @@ public class GraduationDesignSubjectController {
                         if (ObjectUtils.isEmpty(graduationDesignDeclare) || ObjectUtils.isEmpty(graduationDesignDeclare.getIsOkApply()) || graduationDesignDeclare.getIsOkApply() != 1) {
                             page = "web/graduate/design/subject/design_subject_my_edit::#page-wrapper";
                         } else {
-                            page = commonControllerMethodService.showTip(modelMap, "您的题目已确认申报，无法更改");
+                            page = methodControllerCommon.showTip(modelMap, "您的题目已确认申报，无法更改");
                         }
                     } else {
                         graduationDesignPresubject = new GraduationDesignPresubject();
@@ -735,13 +735,13 @@ public class GraduationDesignSubjectController {
                     modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                     modelMap.addAttribute("graduationDesignPresubject", graduationDesignPresubject);
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "您可能不是学生用户或不符合进入条件");
+                    page = methodControllerCommon.showTip(modelMap, "您可能不是学生用户或不符合进入条件");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
+                page = methodControllerCommon.showTip(modelMap, "不在毕业时间范围，无法操作");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -1043,19 +1043,19 @@ public class GraduationDesignSubjectController {
                             modelMap.addAttribute("graduationDesignPresubjectIds", stringBuilder.substring(0, stringBuilder.lastIndexOf(",")));
                             page = "web/graduate/design/subject/design_subject_declare_all::#page-wrapper";
                         } else {
-                            page = commonControllerMethodService.showTip(modelMap, "您不满足条件，无法进入");
+                            page = methodControllerCommon.showTip(modelMap, "您不满足条件，无法进入");
                         }
                     } else {
-                        page = commonControllerMethodService.showTip(modelMap, "未发现未申报的数据");
+                        page = methodControllerCommon.showTip(modelMap, "未发现未申报的数据");
                     }
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未确认毕业设计指导教师调整");
+                    page = methodControllerCommon.showTip(modelMap, "未确认毕业设计指导教师调整");
                 }
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "不在毕业时间范围，无法操作");
+                page = methodControllerCommon.showTip(modelMap, "不在毕业时间范围，无法操作");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
 
         return page;

@@ -34,6 +34,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.internship.apply.*;
@@ -107,6 +108,9 @@ public class InternshipApplyController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private UploadService uploadService;
@@ -277,10 +281,10 @@ public class InternshipApplyController {
                     }
                     break;
                 default:
-                    page = commonControllerMethodService.showTip(modelMap, "未找到相关实习类型页面");
+                    page = methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -299,7 +303,7 @@ public class InternshipApplyController {
         Users users = usersService.getUserFromSession();
         Student student = studentService.findByUsername(users.getUsername());
         if (Objects.isNull(student)) {
-            page = commonControllerMethodService.showTip(modelMap, "查询学生信息为空");
+            page = methodControllerCommon.showTip(modelMap, "查询学生信息为空");
             return page;
         }
         int studentId = student.getStudentId();
@@ -313,7 +317,7 @@ public class InternshipApplyController {
                     modelMap.addAttribute("internshipData", internshipCollege);
                     page = "web/internship/apply/internship_college_detail::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                 }
                 break;
             case Workbook.INTERNSHIP_COMPANY_TYPE:
@@ -323,7 +327,7 @@ public class InternshipApplyController {
                     modelMap.addAttribute("internshipData", internshipCompany);
                     page = "web/internship/apply/internship_company_detail::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                 }
                 break;
             case Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE:
@@ -333,7 +337,7 @@ public class InternshipApplyController {
                     modelMap.addAttribute("internshipData", graduationPracticeCollege);
                     page = "web/internship/apply/graduation_practice_college_detail::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                 }
                 break;
             case Workbook.GRADUATION_PRACTICE_UNIFY_TYPE:
@@ -343,7 +347,7 @@ public class InternshipApplyController {
                     modelMap.addAttribute("internshipData", graduationPracticeUnify);
                     page = "web/internship/apply/graduation_practice_unify_detail::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                 }
                 break;
             case Workbook.GRADUATION_PRACTICE_COMPANY_TYPE:
@@ -353,11 +357,11 @@ public class InternshipApplyController {
                     modelMap.addAttribute("internshipData", graduationPracticeCompany);
                     page = "web/internship/apply/graduation_practice_company_detail::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到相关实习信息");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息");
                 }
                 break;
             default:
-                page = commonControllerMethodService.showTip(modelMap, "未找到相关实习类型页面");
+                page = methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面");
         }
         return page;
     }

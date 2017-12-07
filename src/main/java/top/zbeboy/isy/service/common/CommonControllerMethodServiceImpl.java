@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import top.zbeboy.isy.config.ISYProperties;
 import top.zbeboy.isy.config.Workbook;
@@ -85,15 +84,6 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
             map.put("collegeId", collegeId);
         }
         return map;
-    }
-
-    @Override
-    public String showTip(ModelMap modelMap, String tip) {
-        modelMap.addAttribute("showTip", true);
-        modelMap.addAttribute("tip", tip);
-        modelMap.addAttribute("showButton", true);
-        modelMap.addAttribute("buttonText", "返回上一页");
-        return Workbook.TIP_PAGE;
     }
 
     @Override

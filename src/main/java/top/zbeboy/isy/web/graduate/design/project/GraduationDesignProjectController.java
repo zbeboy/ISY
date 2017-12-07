@@ -17,7 +17,6 @@ import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.BuildingService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignPlanService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
@@ -31,6 +30,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectAddVo;
@@ -62,16 +62,10 @@ public class GraduationDesignProjectController {
     private GraduationDesignTeacherService graduationDesignTeacherService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
-
-    @Resource
     private GraduationDesignPlanService graduationDesignPlanService;
 
     @Resource
     private GraduationDesignTutorService graduationDesignTutorService;
-
-    @Resource
-    private BuildingService buildingService;
 
     @Resource
     private FilesService filesService;
@@ -81,6 +75,9 @@ public class GraduationDesignProjectController {
 
     @Resource
     private UsersTypeService usersTypeService;
+
+    @Resource
+    private MethodControllerCommon methodControllerCommon;
 
     /**
      * 毕业设计规划
@@ -112,7 +109,7 @@ public class GraduationDesignProjectController {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             page = "web/graduate/design/project/design_project_list::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -137,13 +134,13 @@ public class GraduationDesignProjectController {
                     modelMap.addAttribute("staffRealName", staffUser.getRealName());
                     page = "web/graduate/design/project/design_project_detail::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到教师信息");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到教师信息");
                 }
             }
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("staffId", staffId);
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -168,13 +165,13 @@ public class GraduationDesignProjectController {
                     modelMap.addAttribute("staffRealName", staffUser.getRealName());
                     page = "web/graduate/design/project/design_project_students::#page-wrapper";
                 } else {
-                    page = commonControllerMethodService.showTip(modelMap, "未查询到教师信息");
+                    page = methodControllerCommon.showTip(modelMap, "未查询到教师信息");
                 }
             }
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("staffId", staffId);
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -214,7 +211,7 @@ public class GraduationDesignProjectController {
             modelMap.addAttribute("staffId", staff.getStaffId());
             page = "web/graduate/design/project/design_project_my::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -236,10 +233,10 @@ public class GraduationDesignProjectController {
                 modelMap.addAttribute("staffId", staff.getStaffId());
                 page = "web/graduate/design/project/design_project_my_students::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未确认指导教师调整，无法操作");
+                page = methodControllerCommon.showTip(modelMap, "未确认指导教师调整，无法操作");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -288,7 +285,7 @@ public class GraduationDesignProjectController {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("graduationDesignPlanRecently", graduationDesignPlan);
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -322,11 +319,11 @@ public class GraduationDesignProjectController {
                 modelMap.addAttribute("graduationDesignPlanRecently", graduationDesignPlanRecently);
                 modelMap.addAttribute("graduationDesignPlan", graduationDesignPlan);
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到相关信息");
+                page = methodControllerCommon.showTip(modelMap, "未查询到相关信息");
             }
 
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -424,7 +421,7 @@ public class GraduationDesignProjectController {
         AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            ajaxUtils.success().msg("获取楼数据成功！").listData(buildingService.generateBuildFromGraduationDesignRelease(errorBean.getData()));
+            ajaxUtils.success().msg("获取楼数据成功！").listData(methodControllerCommon.generateBuildFromGraduationDesignRelease(errorBean.getData()));
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }

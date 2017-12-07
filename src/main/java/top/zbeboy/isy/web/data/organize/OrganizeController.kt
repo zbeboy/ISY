@@ -13,11 +13,11 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.Organize
 import top.zbeboy.isy.elastic.pojo.OrganizeElastic
 import top.zbeboy.isy.glue.data.OrganizeGlue
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.data.OrganizeService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.common.PageParamControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
@@ -42,7 +42,7 @@ open class OrganizeController {
     open lateinit var pageParamControllerCommon: PageParamControllerCommon
 
     @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     @Resource
     open lateinit var organizeGlue: OrganizeGlue
@@ -173,7 +173,7 @@ open class OrganizeController {
             pageParamControllerCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
             "web/data/organize/organize_edit::#page-wrapper"
         } else {
-            commonControllerMethodService.showTip(modelMap, "未查询到相关班级信息")
+            methodControllerCommon.showTip(modelMap, "未查询到相关班级信息")
         }
     }
 

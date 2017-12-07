@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.SystemAlertService
 import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.PaginationUtils
 import javax.annotation.Resource
@@ -28,7 +28,7 @@ open class SystemAlertController {
     open lateinit var systemAlertService: SystemAlertService
 
     @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     /**
      * 系统提醒数据
@@ -56,10 +56,10 @@ open class SystemAlertController {
             if (systemAlertBean.name == Workbook.ALERT_MESSAGE_TYPE) {
                 "redirect:/anyone/message/detail?id=" + systemAlertBean.linkId
             } else {
-                commonControllerMethodService.showTip(modelMap, "未查询到相关类型提醒")
+                methodControllerCommon.showTip(modelMap, "未查询到相关类型提醒")
             }
         } else {
-            commonControllerMethodService.showTip(modelMap, "未查询到相关提醒")
+            methodControllerCommon.showTip(modelMap, "未查询到相关提醒")
         }
         return page
     }

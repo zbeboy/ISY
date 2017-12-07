@@ -7,15 +7,11 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
-import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.BuildingDao
 import top.zbeboy.isy.domain.tables.pojos.Building
-import top.zbeboy.isy.domain.tables.pojos.College
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease
 import top.zbeboy.isy.domain.tables.records.BuildingRecord
-import top.zbeboy.isy.service.platform.RoleService
-import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.building.BuildingBean
@@ -36,13 +32,7 @@ open class BuildingServiceImpl @Autowired constructor(dslContext: DSLContext) : 
     open lateinit var buildingDao: BuildingDao
 
     @Resource
-    open lateinit var roleService: RoleService
-
-    @Resource
-    open lateinit var usersService: UsersService
-
-    @Resource
-    open lateinit var departmentService: DepartmentService
+    open lateinit var methodServiceCommon: MethodServiceCommon
 
     override fun findById(id: Int): Building {
         return buildingDao.findById(id)
@@ -200,20 +190,6 @@ open class BuildingServiceImpl @Autowired constructor(dslContext: DSLContext) : 
         }
     }
 
-    override fun generateBuildFromGraduationDesignRelease(graduationDesignRelease: GraduationDesignRelease): List<Building> {
-        val buildings = ArrayList<Building>()
-        val isDel: Byte = 0
-        val building = Building(0, "请选择楼", isDel, 0)
-        buildings.add(building)
-        val record = departmentService.findByIdRelation(graduationDesignRelease.departmentId!!)
-        if (record.isPresent) {
-            val college = record.get().into(College::class.java)
-            val buildingRecords = findByCollegeIdAndIsDel(college.collegeId!!, isDel)
-            buildingRecords.mapTo(buildings) { Building(it.buildingId, it.buildingName, it.buildingIsDel, it.collegeId) }
-        }
-        return buildings
-    }
-
     /**
      * 全局搜索条件
      *
@@ -325,14 +301,7 @@ open class BuildingServiceImpl @Autowired constructor(dslContext: DSLContext) : 
      * 构建该角色查询条件
      */
     private fun buildBuildingCondition(): Condition? {
-        var condition: Condition? = null // 分权限显示用户数据
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 管理员或其它角色,除系统
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
-            condition = COLLEGE.COLLEGE_ID.eq(collegeId)
-        }
-        return condition
+        return methodServiceCommon.buildCollegeCondition()
     }
 
 }

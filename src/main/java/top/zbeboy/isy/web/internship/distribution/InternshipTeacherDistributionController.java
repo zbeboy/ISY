@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseScienceRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
@@ -28,6 +27,7 @@ import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
@@ -65,7 +65,7 @@ public class InternshipTeacherDistributionController {
     private UsersService usersService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     /**
      * 实习教师分配
@@ -110,7 +110,7 @@ public class InternshipTeacherDistributionController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_distribution_condition::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -129,7 +129,7 @@ public class InternshipTeacherDistributionController {
             page = "web/internship/distribution/internship_distribution_look::#page-wrapper";
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -238,7 +238,7 @@ public class InternshipTeacherDistributionController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_add_distribution::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -271,7 +271,7 @@ public class InternshipTeacherDistributionController {
             modelMap.addAttribute("student", studentBean);
             page = "web/internship/distribution/internship_edit_distribution::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }
@@ -291,7 +291,7 @@ public class InternshipTeacherDistributionController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/distribution/internship_batch_distribution::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }

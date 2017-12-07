@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.DefenseGroupMemberRecord;
 import top.zbeboy.isy.domain.tables.records.DefenseOrderRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
-import top.zbeboy.isy.service.data.BuildingService;
 import top.zbeboy.isy.service.graduate.design.*;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
@@ -27,6 +25,7 @@ import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseOrderBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.replan.*;
@@ -47,9 +46,6 @@ public class GraduationDesignReplanController {
     private GraduationDesignReleaseService graduationDesignReleaseService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
-
-    @Resource
     private DefenseArrangementService defenseArrangementService;
 
     @Resource
@@ -59,7 +55,7 @@ public class GraduationDesignReplanController {
     private DefenseGroupService defenseGroupService;
 
     @Resource
-    private BuildingService buildingService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private DefenseOrderService defenseOrderService;
@@ -106,7 +102,7 @@ public class GraduationDesignReplanController {
                 page = "web/graduate/design/replan/design_replan_arrange_add::#page-wrapper";
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -127,10 +123,10 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("defenseArrangement", defenseArrangement);
                 page = "web/graduate/design/replan/design_replan_group::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业设计答辩设置");
+                page = methodControllerCommon.showTip(modelMap, "请先进行毕业设计答辩设置");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -151,10 +147,10 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/replan/design_replan_divide::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未确认毕业设计指导教师");
+                page = methodControllerCommon.showTip(modelMap, "未确认毕业设计指导教师");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -175,10 +171,10 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("defenseArrangement", defenseArrangement);
                 page = "web/graduate/design/replan/design_replan_order::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业设计答辩设置");
+                page = methodControllerCommon.showTip(modelMap, "请先进行毕业设计答辩设置");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -197,7 +193,7 @@ public class GraduationDesignReplanController {
             modelMap.addAttribute("defenseGroupId", defenseGroupId);
             page = "web/graduate/design/replan/design_replan_order_look::#page-wrapper";
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -243,10 +239,10 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/replan/design_replan_group_add::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "请先进行毕业设计答辩设置");
+                page = methodControllerCommon.showTip(modelMap, "请先进行毕业设计答辩设置");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -270,10 +266,10 @@ public class GraduationDesignReplanController {
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/replan/design_replan_group_edit::#page-wrapper";
             } else {
-                page = commonControllerMethodService.showTip(modelMap, "未查询到相关组信息");
+                page = methodControllerCommon.showTip(modelMap, "未查询到相关组信息");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, errorBean.getErrorMsg());
+            page = methodControllerCommon.showTip(modelMap, errorBean.getErrorMsg());
         }
         return page;
     }
@@ -875,7 +871,7 @@ public class GraduationDesignReplanController {
         AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
-            ajaxUtils.success().msg("获取楼数据成功！").listData(buildingService.generateBuildFromGraduationDesignRelease(errorBean.getData()));
+            ajaxUtils.success().msg("获取楼数据成功！").listData(methodControllerCommon.generateBuildFromGraduationDesignRelease(errorBean.getData()));
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }

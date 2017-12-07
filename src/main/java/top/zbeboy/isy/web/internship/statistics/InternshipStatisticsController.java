@@ -27,6 +27,7 @@ import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipChangeCompanyHistoryBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipChangeHistoryBean;
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -73,6 +74,9 @@ public class InternshipStatisticsController {
 
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
+
+    @Resource
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private InternshipChangeHistoryService internshipChangeHistoryService;
@@ -171,10 +175,10 @@ public class InternshipStatisticsController {
                     page = "web/internship/statistics/graduation_practice_company_data::#page-wrapper";
                     break;
                 default:
-                    page = commonControllerMethodService.showTip(modelMap, "未找到相关实习类型页面");
+                    page = methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面");
             }
         } else {
-            page = commonControllerMethodService.showTip(modelMap, "您不符合进入条件");
+            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件");
         }
         return page;
     }

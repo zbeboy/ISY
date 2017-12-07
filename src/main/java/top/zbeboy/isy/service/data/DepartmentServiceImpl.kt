@@ -7,14 +7,12 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
-import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.DepartmentDao
 import top.zbeboy.isy.domain.tables.pojos.Department
 import top.zbeboy.isy.domain.tables.records.DepartmentRecord
 import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
-import top.zbeboy.isy.service.platform.RoleService
-import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean
@@ -35,10 +33,7 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
     open lateinit var departmentDao: DepartmentDao
 
     @Resource
-    open lateinit var roleService: RoleService
-
-    @Resource
-    open lateinit var usersService: UsersService
+    open lateinit var methodServiceCommon: MethodServiceCommon
 
     @Resource
     open lateinit var organizeElasticRepository: OrganizeElasticRepository
@@ -315,14 +310,7 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
      * 构建该角色查询条件
      */
     private fun buildDepartmentCondition(): Condition? {
-        var condition: Condition? = null // 分权限显示用户数据
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 管理员或其它角色,除系统
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
-            condition = COLLEGE.COLLEGE_ID.eq(collegeId)
-        }
-        return condition
+        return methodServiceCommon.buildCollegeCondition()
     }
 
 }

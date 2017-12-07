@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.domain.tables.pojos.Department
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.common.MethodControllerCommon
@@ -38,9 +37,6 @@ open class DepartmentController {
 
     @Resource
     open lateinit var methodControllerCommon: MethodControllerCommon
-
-    @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
 
     /**
      * 根据院id获取全部系
@@ -128,7 +124,7 @@ open class DepartmentController {
             pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
             "web/data/department/department_edit::#page-wrapper"
         } else {
-            commonControllerMethodService.showTip(modelMap, "未查询到相关系信息")
+            methodControllerCommon.showTip(modelMap, "未查询到相关系信息")
         }
     }
 
