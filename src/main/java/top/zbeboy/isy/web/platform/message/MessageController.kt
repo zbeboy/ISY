@@ -1,6 +1,5 @@
-package top.zbeboy.isy.web
+package top.zbeboy.isy.web.platform.message
 
-import org.slf4j.LoggerFactory
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.annotation.SendToUser
 import org.springframework.stereotype.Controller
@@ -11,8 +10,7 @@ import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean
 import top.zbeboy.isy.web.bean.system.message.SystemMessageBean
 import top.zbeboy.isy.web.util.AjaxUtils
 import java.security.Principal
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 import javax.annotation.Resource
 
 /**
@@ -35,7 +33,7 @@ open class MessageController {
      * @throws InterruptedException 异常
      */
     @MessageMapping("/remind")
-    @SendToUser(destinations = arrayOf("/topic/reminds"), broadcast = false)
+    @SendToUser(destinations = ["/topic/reminds"], broadcast = false)
     @Throws(InterruptedException::class)
     fun reminds(principal: Principal): AjaxUtils<*> {
         Thread.sleep(3000)
@@ -45,7 +43,7 @@ open class MessageController {
         val pageSize = 5
 
         // 提醒
-        var systemAlertBeens: List<SystemAlertBean> = ArrayList<SystemAlertBean>()
+        var systemAlertBeens: List<SystemAlertBean> = ArrayList()
         val systemAlertRecord = systemAlertService.findAllByPageForShow(pageNum, pageSize, username, false)
         if (systemAlertRecord.isNotEmpty) {
             systemAlertBeens = systemAlertRecord.into(SystemAlertBean::class.java)
