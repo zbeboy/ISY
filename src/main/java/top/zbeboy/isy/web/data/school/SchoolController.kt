@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.domain.tables.pojos.School
 import top.zbeboy.isy.service.data.SchoolService
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.SmallPropsUtils
 import top.zbeboy.isy.web.vo.data.school.SchoolVo
-import java.util.ArrayList
+import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -29,6 +30,9 @@ open class SchoolController {
     @Resource
     open lateinit var schoolService: SchoolService
 
+    @Resource
+    open lateinit var methodControllerCommon: MethodControllerCommon
+
     /**
      * 获取全部学校
      *
@@ -39,7 +43,7 @@ open class SchoolController {
     fun schools(): AjaxUtils<School> {
         val ajaxUtils = AjaxUtils.of<School>()
         val schools = ArrayList<School>()
-        val isDel:Byte = 0
+        val isDel: Byte = 0
         val school = School(0, "请选择学校", isDel)
         schools.add(school)
         val schoolRecords = schoolService.findByIsDel(isDel)
@@ -105,14 +109,16 @@ open class SchoolController {
     @RequestMapping(value = ["/web/data/school/edit"], method = [(RequestMethod.GET)])
     fun schoolEdit(@RequestParam("id") id: Int, modelMap: ModelMap): String {
         val school = schoolService.findById(id)
-        modelMap.addAttribute("school", school)
-        return "web/data/school/school_edit::#page-wrapper"
+        return if (!ObjectUtils.isEmpty(school)) {
+            modelMap.addAttribute("school", school)
+            "web/data/school/school_edit::#page-wrapper"
+        } else methodControllerCommon.showTip(modelMap, "未查询到相关学校信息")
     }
 
     /**
      * 保存时检验学校名是否重复
      *
-     * @param schoolName 学校名
+     * @param name      学校名
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = ["/web/data/school/save/valid"], method = [(RequestMethod.POST)])
@@ -158,7 +164,7 @@ open class SchoolController {
      * 检验编辑时学校名重复
      *
      * @param id         学校id
-     * @param schoolName 学校名
+     * @param name       学校名
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = ["/web/data/school/update/valid"], method = [(RequestMethod.POST)])

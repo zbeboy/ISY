@@ -125,9 +125,8 @@ open class DepartmentController {
             modelMap.addAttribute("collegeId", departmentBean.collegeId)
             pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
             "web/data/department/department_edit::#page-wrapper"
-        } else {
-            methodControllerCommon.showTip(modelMap, "未查询到相关系信息")
-        }
+        } else methodControllerCommon.showTip(modelMap, "未查询到相关系信息")
+
     }
 
     /**

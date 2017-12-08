@@ -1,27 +1,24 @@
-package top.zbeboy.isy.service.data;
+package top.zbeboy.isy.service.data
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.Schoolroom;
-import top.zbeboy.isy.domain.tables.records.SchoolroomRecord;
-import top.zbeboy.isy.web.bean.data.schoolroom.SchoolroomBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.Schoolroom
+import top.zbeboy.isy.domain.tables.records.SchoolroomRecord
+import top.zbeboy.isy.web.bean.data.schoolroom.SchoolroomBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by zbeboy on 2017/5/31.
- */
-public interface SchoolroomService {
-
+ * Created by zbeboy 2017-12-08 .
+ **/
+interface SchoolroomService {
     /**
      * 根据主键查询
      *
      * @param id 主键
      * @return 教室
      */
-    Schoolroom findById(int id);
+    fun findById(id: Int): Schoolroom
 
     /**
      * 根据主键关联查询
@@ -29,7 +26,7 @@ public interface SchoolroomService {
      * @param id 主键
      * @return 数据
      */
-    Optional<Record> findByIdRelation(int id);
+    fun findByIdRelation(id: Int): Optional<Record>
 
     /**
      * 通过教室与楼id查询
@@ -38,7 +35,7 @@ public interface SchoolroomService {
      * @param buildingId   楼id
      * @return 数据
      */
-    Result<SchoolroomRecord> findByBuildingCodeAndBuildingId(String buildingCode, int buildingId);
+    fun findByBuildingCodeAndBuildingId(buildingCode: String, buildingId: Int): Result<SchoolroomRecord>
 
     /**
      * 检验一栋里是否有相同教室名
@@ -48,7 +45,7 @@ public interface SchoolroomService {
      * @param buildingId   楼id
      * @return 数据
      */
-    Result<SchoolroomRecord> findByBuildingCodeAndBuildingIdNeSchoolroomId(String buildingCode, int schoolroomId, int buildingId);
+    fun findByBuildingCodeAndBuildingIdNeSchoolroomId(buildingCode: String, schoolroomId: Int, buildingId: Int): Result<SchoolroomRecord>
 
     /**
      * 通过楼id与状态查询
@@ -57,7 +54,7 @@ public interface SchoolroomService {
      * @param b          状态
      * @return 数据
      */
-    Result<SchoolroomRecord> findByBuildingIdAndIsDel(int buildingId, Byte b);
+    fun findByBuildingIdAndIsDel(buildingId: Int, b: Byte?): Result<SchoolroomRecord>
 
     /**
      * 分页查询
@@ -65,35 +62,35 @@ public interface SchoolroomService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<SchoolroomBean> dataTablesUtils);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<SchoolroomBean>): Result<Record>
 
     /**
      * 专业总数
      *
      * @return 总数
      */
-    int countAll();
+    fun countAll(): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<SchoolroomBean> dataTablesUtils);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<SchoolroomBean>): Int
 
     /**
      * 保存
      *
      * @param schoolroom 数据
      */
-    void save(Schoolroom schoolroom);
+    fun save(schoolroom: Schoolroom)
 
     /**
      * 更新
      *
      * @param schoolroom 数据
      */
-    void update(Schoolroom schoolroom);
+    fun update(schoolroom: Schoolroom)
 
     /**
      * 通过id更新is_del状态
@@ -101,5 +98,5 @@ public interface SchoolroomService {
      * @param ids   ids
      * @param isDel is_del
      */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    fun updateIsDel(ids: List<Int>, isDel: Byte?)
 }

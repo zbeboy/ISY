@@ -140,15 +140,14 @@ open class ScienceController {
             modelMap.addAttribute("science", record.get().into(ScienceBean::class.java))
             pageParamControllerCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
             "web/data/science/science_edit::#page-wrapper"
-        } else {
-            methodControllerCommon.showTip(modelMap, "未查询到相关专业信息")
-        }
+        } else methodControllerCommon.showTip(modelMap, "未查询到相关专业信息")
+
     }
 
     /**
      * 保存时检验专业名是否重复
      *
-     * @param scienceName  专业名
+     * @param name          专业名
      * @param departmentId 系id
      * @return true 合格 false 不合格
      */
@@ -170,7 +169,7 @@ open class ScienceController {
     /**
      * 保存时检验专业代码是否重复
      *
-     * @param scienceCode 专业代码
+     * @param code      专业代码
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = ["/web/data/science/save/valid/code"], method = [(RequestMethod.POST)])
@@ -192,7 +191,7 @@ open class ScienceController {
      * 检验编辑时专业名重复
      *
      * @param id           专业id
-     * @param scienceName  专业名
+     * @param name          专业名
      * @param departmentId 系id
      * @return true 合格 false 不合格
      */
@@ -211,7 +210,7 @@ open class ScienceController {
      * 检验编辑时专业代码重复
      *
      * @param id          专业id
-     * @param scienceCode 专业代码
+     * @param code      专业代码
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = ["/web/data/science/update/valid/code"], method = [(RequestMethod.POST)])

@@ -16,6 +16,7 @@ import top.zbeboy.isy.service.data.CollegeService
 import top.zbeboy.isy.service.system.ApplicationService
 import top.zbeboy.isy.web.bean.data.college.CollegeBean
 import top.zbeboy.isy.web.bean.tree.TreeBean
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.SmallPropsUtils
@@ -39,6 +40,9 @@ open class CollegeController {
 
     @Resource
     open lateinit var applicationService: ApplicationService
+
+    @Resource
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     /**
      * 通过学校id获取全部院
@@ -120,14 +124,16 @@ open class CollegeController {
     @RequestMapping(value = ["/web/data/college/edit"], method = [(RequestMethod.GET)])
     fun collegeEdit(@RequestParam("id") id: Int, modelMap: ModelMap): String {
         val college = collegeService.findById(id)
-        modelMap.addAttribute("college", college)
-        return "web/data/college/college_edit::#page-wrapper"
+        return if(!ObjectUtils.isEmpty(college)){
+            modelMap.addAttribute("college", college)
+            "web/data/college/college_edit::#page-wrapper"
+        } else methodControllerCommon.showTip(modelMap,"未查询到相关院信息")
     }
 
     /**
      * 保存时检验院名是否重复
      *
-     * @param collegeName 院名
+     * @param name         院名
      * @param schoolId    学校id
      * @return true 合格 false 不合格
      */
@@ -149,7 +155,7 @@ open class CollegeController {
     /**
      * 检验院代码是否重复
      *
-     * @param collegeCode 院代码
+     * @param code      院代码
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = ["/web/data/college/save/valid/code"], method = [(RequestMethod.POST)])
@@ -171,7 +177,7 @@ open class CollegeController {
      * 检验编辑时院名重复
      *
      * @param id          院id
-     * @param collegeName 院名
+     * @param name        院名
      * @param schoolId    学校id
      * @return true 合格 false 不合格
      */
@@ -190,7 +196,7 @@ open class CollegeController {
      * 检验编辑时院代码重复
      *
      * @param id          院id
-     * @param collegeCode 院代码
+     * @param code       院代码
      * @return true 合格 false 不合格
      */
     @RequestMapping(value = ["/web/data/college/update/valid/code"], method = [(RequestMethod.POST)])

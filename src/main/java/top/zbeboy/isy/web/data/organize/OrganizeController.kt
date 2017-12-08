@@ -172,15 +172,13 @@ open class OrganizeController {
             modelMap.addAttribute("organize", record.get().into(OrganizeBean::class.java))
             pageParamControllerCommon.currentUserRoleNameAndCollegeIdAndDepartmentIdPageParam(modelMap)
             "web/data/organize/organize_edit::#page-wrapper"
-        } else {
-            methodControllerCommon.showTip(modelMap, "未查询到相关班级信息")
-        }
+        } else methodControllerCommon.showTip(modelMap, "未查询到相关班级信息")
     }
 
     /**
      * 保存时检验班级名是否重复
      *
-     * @param organizeName 班级名
+     * @param name          班级名
      * @param scienceId    专业id
      * @return true 合格 false 不合格
      */
@@ -203,7 +201,7 @@ open class OrganizeController {
      * 检验编辑时班级名重复
      *
      * @param id           班级id
-     * @param organizeName 班级名
+     * @param name         班级名
      * @param scienceId    专业id
      * @return true 合格 false 不合格
      */
