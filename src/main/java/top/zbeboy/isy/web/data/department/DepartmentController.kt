@@ -105,7 +105,7 @@ open class DepartmentController {
      */
     @RequestMapping(value = ["/web/data/department/add"], method = [(RequestMethod.GET)])
     fun departmentAdd(modelMap: ModelMap): String {
-        pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
+        pageParamControllerCommon.currentUserRoleNameAndCollegeIdPageParam(modelMap)
         return "web/data/department/department_add::#page-wrapper"
     }
 
@@ -120,7 +120,9 @@ open class DepartmentController {
     fun departmentEdit(@RequestParam("id") id: Int, modelMap: ModelMap): String {
         val record = departmentService.findByIdRelation(id)
         return if (record.isPresent) {
-            modelMap.addAttribute("department", record.get().into(DepartmentBean::class.java))
+            val departmentBean = record.get().into(DepartmentBean::class.java)
+            modelMap.addAttribute("department", departmentBean)
+            modelMap.addAttribute("collegeId", departmentBean.collegeId)
             pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
             "web/data/department/department_edit::#page-wrapper"
         } else {
@@ -137,11 +139,10 @@ open class DepartmentController {
      */
     @RequestMapping(value = ["/web/data/department/save/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValid(@RequestParam("departmentName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int): AjaxUtils<*> {
-        val tempCollegeId = methodControllerCommon.roleCollegeId(collegeId)
+    fun saveValid(@RequestParam("departmentName") name: String, @RequestParam(value = "collegeId") collegeId: Int): AjaxUtils<*> {
         val departmentName = StringUtils.trimWhitespace(name)
-        if (StringUtils.hasLength(departmentName) && tempCollegeId!! > 0) {
-            val departmentRecords = departmentService.findByDepartmentNameAndCollegeId(departmentName, tempCollegeId)
+        if (StringUtils.hasLength(departmentName)) {
+            val departmentRecords = departmentService.findByDepartmentNameAndCollegeId(departmentName, collegeId)
             return if (ObjectUtils.isEmpty(departmentRecords)) {
                 AjaxUtils.of<Any>().success().msg("系名不存在")
             } else {
@@ -161,11 +162,10 @@ open class DepartmentController {
      */
     @RequestMapping(value = ["/web/data/department/update/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValid(@RequestParam("departmentId") id: Int, @RequestParam("departmentName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int): AjaxUtils<*> {
-        val tempCollegeId = methodControllerCommon.roleCollegeId(collegeId)
+    fun updateValid(@RequestParam("departmentId") id: Int, @RequestParam("departmentName") name: String, @RequestParam(value = "collegeId") collegeId: Int): AjaxUtils<*> {
         val departmentName = StringUtils.trimWhitespace(name)
-        if (StringUtils.hasLength(departmentName) && tempCollegeId!! > 0) {
-            val departmentRecords = departmentService.findByDepartmentNameAndCollegeIdNeDepartmentId(departmentName, id, tempCollegeId)
+        if (StringUtils.hasLength(departmentName)) {
+            val departmentRecords = departmentService.findByDepartmentNameAndCollegeIdNeDepartmentId(departmentName, id, collegeId)
             return if (departmentRecords.isEmpty()) {
                 AjaxUtils.of<Any>().success().msg("系名不重复")
             } else {
@@ -193,14 +193,9 @@ open class DepartmentController {
                 0
             }
             department.departmentName = StringUtils.trimWhitespace(departmentVo.departmentName)
-            val collegeId = methodControllerCommon.roleCollegeId(departmentVo.collegeId)
-            return if (collegeId!! > 0) {
-                department.collegeId = collegeId
-                departmentService.save(department)
-                AjaxUtils.of<Any>().success().msg("保存成功")
-            } else {
-                AjaxUtils.of<Any>().fail().msg("保存失败，缺失必要参数")
-            }
+            department.collegeId = departmentVo.collegeId
+            departmentService.save(department)
+            return AjaxUtils.of<Any>().success().msg("保存成功")
         }
         return AjaxUtils.of<Any>().fail().msg("填写信息错误，请检查")
     }
@@ -224,14 +219,9 @@ open class DepartmentController {
                     0
                 }
                 department.departmentName = departmentVo.departmentName
-                val collegeId = methodControllerCommon.roleCollegeId(departmentVo.collegeId)
-                return if (collegeId!! > 0) {
-                    department.collegeId = collegeId
-                    departmentService.update(department)
-                    AjaxUtils.of<Any>().success().msg("更改成功")
-                } else {
-                    AjaxUtils.of<Any>().fail().msg("更新失败，缺失必要参数")
-                }
+                department.collegeId = departmentVo.collegeId
+                departmentService.update(department)
+                return AjaxUtils.of<Any>().success().msg("更改成功")
             }
         }
         return AjaxUtils.of<Any>().fail().msg("更改失败")
