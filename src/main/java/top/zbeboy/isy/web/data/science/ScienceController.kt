@@ -154,7 +154,8 @@ open class ScienceController {
      */
     @RequestMapping(value = ["/web/data/science/save/valid/name"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValidName(@RequestParam("scienceName") scienceName: String, @RequestParam("departmentId") departmentId: Int): AjaxUtils<*> {
+    fun saveValidName(@RequestParam("scienceName") name: String, @RequestParam("departmentId") departmentId: Int): AjaxUtils<*> {
+        val scienceName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(scienceName)) {
             val scienceRecords = scienceService.findByScienceNameAndDepartmentId(scienceName, departmentId)
             return if (ObjectUtils.isEmpty(scienceRecords)) {
@@ -174,7 +175,8 @@ open class ScienceController {
      */
     @RequestMapping(value = ["/web/data/science/save/valid/code"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValidCode(@RequestParam("scienceCode") scienceCode: String): AjaxUtils<*> {
+    fun saveValidCode(@RequestParam("scienceCode") code: String): AjaxUtils<*> {
+        val scienceCode = StringUtils.trimWhitespace(code)
         if (StringUtils.hasLength(scienceCode)) {
             val scienceRecords = scienceService.findByScienceCode(scienceCode)
             return if (ObjectUtils.isEmpty(scienceRecords)) {
@@ -196,7 +198,8 @@ open class ScienceController {
      */
     @RequestMapping(value = ["/web/data/science/update/valid/name"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValidName(@RequestParam("scienceId") id: Int, @RequestParam("scienceName") scienceName: String, @RequestParam("departmentId") departmentId: Int): AjaxUtils<*> {
+    fun updateValidName(@RequestParam("scienceId") id: Int, @RequestParam("scienceName") name: String, @RequestParam("departmentId") departmentId: Int): AjaxUtils<*> {
+        val scienceName = StringUtils.trimWhitespace(name)
         val scienceRecords = scienceService.findByScienceNameAndDepartmentIdNeScienceId(scienceName, id, departmentId)
         return if (scienceRecords.isEmpty()) {
             AjaxUtils.of<Any>().success().msg("专业名不重复")
@@ -213,7 +216,8 @@ open class ScienceController {
      */
     @RequestMapping(value = ["/web/data/science/update/valid/code"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValidCode(@RequestParam("scienceId") id: Int, @RequestParam("scienceCode") scienceCode: String): AjaxUtils<*> {
+    fun updateValidCode(@RequestParam("scienceId") id: Int, @RequestParam("scienceCode") code: String): AjaxUtils<*> {
+        val scienceCode = StringUtils.trimWhitespace(code)
         val scienceRecords = scienceService.findByScienceCodeNeScienceId(scienceCode, id)
         return if (scienceRecords.isEmpty()) {
             AjaxUtils.of<Any>().success().msg("专业代码不重复")
@@ -238,8 +242,8 @@ open class ScienceController {
             } else {
                 0
             }
-            science.scienceName = scienceVo.scienceName
-            science.scienceCode = scienceVo.scienceCode
+            science.scienceName = StringUtils.trimWhitespace(scienceVo.scienceName)
+            science.scienceCode = StringUtils.trimWhitespace(scienceVo.scienceCode)
             science.departmentId = scienceVo.departmentId
             scienceService.save(science)
             return AjaxUtils.of<Any>().success().msg("保存成功")
@@ -265,8 +269,8 @@ open class ScienceController {
                 } else {
                     0
                 }
-                science.scienceName = scienceVo.scienceName
-                science.scienceCode = scienceVo.scienceCode
+                science.scienceName = StringUtils.trimWhitespace(scienceVo.scienceName)
+                science.scienceCode = StringUtils.trimWhitespace(scienceVo.scienceCode)
                 science.departmentId = scienceVo.departmentId
                 scienceService.update(science)
                 return AjaxUtils.of<Any>().success().msg("更改成功")

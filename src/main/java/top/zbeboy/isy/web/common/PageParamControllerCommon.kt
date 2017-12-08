@@ -37,6 +37,23 @@ open class PageParamControllerCommon {
     }
 
     /**
+     * 当前用户的角色名与院id
+     *
+     * @param modelMap 页面对象
+     */
+    fun currentUserRoleNameAndCollegeIdNoAdminPageParam(modelMap: ModelMap) {
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME)
+        } else {
+            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME)
+            val users = usersService.getUserFromSession()
+            val record = usersService.findUserSchoolInfo(users!!)
+            val collegeId = roleService.getRoleCollegeId(record)
+            modelMap.addAttribute("collegeId", collegeId)
+        }
+    }
+
+    /**
      * 当前用户的角色名,院id与系id
      *
      * @param modelMap 页面对象

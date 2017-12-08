@@ -117,7 +117,8 @@ open class SchoolController {
      */
     @RequestMapping(value = ["/web/data/school/save/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValid(@RequestParam("schoolName") schoolName: String): AjaxUtils<*> {
+    fun saveValid(@RequestParam("schoolName") name: String): AjaxUtils<*> {
+        val schoolName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(schoolName)) {
             val schools = schoolService.findBySchoolName(schoolName)
             return if (ObjectUtils.isEmpty(schools)) {
@@ -146,7 +147,7 @@ open class SchoolController {
                 isDel = 1
             }
             school.schoolIsDel = isDel
-            school.schoolName = schoolVo.schoolName
+            school.schoolName = StringUtils.trimWhitespace(schoolVo.schoolName)
             schoolService.save(school)
             return AjaxUtils.of<Any>().success().msg("保存成功")
         }
@@ -162,7 +163,8 @@ open class SchoolController {
      */
     @RequestMapping(value = ["/web/data/school/update/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValid(@RequestParam("schoolId") id: Int, @RequestParam("schoolName") schoolName: String): AjaxUtils<*> {
+    fun updateValid(@RequestParam("schoolId") id: Int, @RequestParam("schoolName") name: String): AjaxUtils<*> {
+        val schoolName = StringUtils.trimWhitespace(name)
         val schoolRecords = schoolService.findBySchoolNameNeSchoolId(schoolName, id)
         return if (schoolRecords.isEmpty()) {
             AjaxUtils.of<Any>().success().msg("学校名不重复")
@@ -188,7 +190,7 @@ open class SchoolController {
                     isDel = 1
                 }
                 school.schoolIsDel = isDel
-                school.schoolName = schoolVo.schoolName
+                school.schoolName = StringUtils.trimWhitespace(schoolVo.schoolName)
                 schoolService.update(school)
                 return AjaxUtils.of<Any>().success().msg("更改成功")
             }

@@ -1,8 +1,8 @@
 /**
  * Created by zbeboy on 2017/5/31.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
-    function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
+    function ($, Handlebars, constants, nav_active, DP) {
 
         /*
          ajax url.
@@ -33,7 +33,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
         var param = {
             schoolId: $(paramId.schoolId).val(),
             collegeId: $(paramId.collegeId).val(),
-            buildingName: $(paramId.buildingName).val()
+            buildingName: $(paramId.buildingName).val(),
+            buildingIsDel: DP.defaultUndefinedValue($('input[name="buildingIsDel"]:checked').val(), 0)
         };
 
         /*
@@ -98,8 +99,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function initParam() {
             param.schoolId = $(paramId.schoolId).val();
-            param.collegeId = $(paramId.collegeId).val();
+            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
+                param.collegeId = $(paramId.collegeId).val();
+            } else {
+                param.collegeId = init_page_param.collegeId;
+            }
             param.buildingName = $(paramId.buildingName).val();
+            param.buildingIsDel = DP.defaultUndefinedValue($('input[name="buildingIsDel"]:checked').val(), 0);
         }
 
         /*
@@ -395,7 +401,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             }, {
                 url: web_path + ajax_url.save,
                 type: 'post',
-                data: $('#add_form').serialize(),
+                data: param,
                 success: function (data) {
                     if (data.state) {
                         $.address.value(ajax_url.back);

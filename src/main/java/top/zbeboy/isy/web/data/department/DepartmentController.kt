@@ -218,7 +218,7 @@ open class DepartmentController {
                 } else {
                     0
                 }
-                department.departmentName = departmentVo.departmentName
+                department.departmentName = StringUtils.trimWhitespace(departmentVo.departmentName)
                 department.collegeId = departmentVo.collegeId
                 departmentService.update(department)
                 return AjaxUtils.of<Any>().success().msg("更改成功")

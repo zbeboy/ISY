@@ -133,7 +133,8 @@ open class CollegeController {
      */
     @RequestMapping(value = ["/web/data/college/save/valid/name"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValidName(@RequestParam("collegeName") collegeName: String, @RequestParam("schoolId") schoolId: Int): AjaxUtils<*> {
+    fun saveValidName(@RequestParam("collegeName") name: String, @RequestParam("schoolId") schoolId: Int): AjaxUtils<*> {
+        val collegeName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(collegeName)) {
             val collegeRecords = collegeService.findByCollegeNameAndSchoolId(collegeName, schoolId)
             return if (collegeRecords.isEmpty()) {
@@ -153,7 +154,8 @@ open class CollegeController {
      */
     @RequestMapping(value = ["/web/data/college/save/valid/code"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValidCode(@RequestParam("collegeCode") collegeCode: String): AjaxUtils<*> {
+    fun saveValidCode(@RequestParam("collegeCode") code: String): AjaxUtils<*> {
+        val collegeCode = StringUtils.trimWhitespace(code)
         if (StringUtils.hasLength(collegeCode)) {
             val collegeRecords = collegeService.findByCollegeCode(collegeCode)
             return if (collegeRecords.isEmpty()) {
@@ -175,7 +177,8 @@ open class CollegeController {
      */
     @RequestMapping(value = ["/web/data/college/update/valid/name"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValidName(@RequestParam("collegeId") id: Int, @RequestParam("collegeName") collegeName: String, @RequestParam("schoolId") schoolId: Int): AjaxUtils<*> {
+    fun updateValidName(@RequestParam("collegeId") id: Int, @RequestParam("collegeName") name: String, @RequestParam("schoolId") schoolId: Int): AjaxUtils<*> {
+        val collegeName = StringUtils.trimWhitespace(name)
         val collegeRecords = collegeService.findByCollegeNameAndSchoolIdNeCollegeId(collegeName, id, schoolId)
         return if (collegeRecords.isEmpty()) {
             AjaxUtils.of<Any>().success().msg("院名不重复")
@@ -192,7 +195,8 @@ open class CollegeController {
      */
     @RequestMapping(value = ["/web/data/college/update/valid/code"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValidName(@RequestParam("collegeId") id: Int, @RequestParam("collegeCode") collegeCode: String): AjaxUtils<*> {
+    fun updateValidName(@RequestParam("collegeId") id: Int, @RequestParam("collegeCode") code: String): AjaxUtils<*> {
+        val collegeCode = StringUtils.trimWhitespace(code)
         val collegeRecords = collegeService.findByCollegeCodeNeCollegeId(collegeCode, id)
         return if (collegeRecords.isEmpty()) {
             AjaxUtils.of<Any>().success().msg("院代码不重复")
@@ -218,9 +222,9 @@ open class CollegeController {
                     isDel = 1
                 }
                 college.collegeIsDel = isDel
-                college.collegeName = collegeVo.collegeName
-                college.collegeCode = collegeVo.collegeCode
-                college.collegeAddress = collegeVo.collegeAddress
+                college.collegeName = StringUtils.trimWhitespace(collegeVo.collegeName)
+                college.collegeCode = StringUtils.trimWhitespace(collegeVo.collegeCode)
+                college.collegeAddress = StringUtils.trimWhitespace(collegeVo.collegeAddress)
                 college.schoolId = collegeVo.schoolId
                 collegeService.update(college)
                 return AjaxUtils.of<Any>().success().msg("更改成功")
@@ -246,9 +250,9 @@ open class CollegeController {
                 isDel = 1
             }
             college.collegeIsDel = isDel
-            college.collegeName = collegeVo.collegeName
-            college.collegeCode = collegeVo.collegeCode
-            college.collegeAddress = collegeVo.collegeAddress
+            college.collegeName = StringUtils.trimWhitespace(collegeVo.collegeName)
+            college.collegeCode = StringUtils.trimWhitespace(collegeVo.collegeCode)
+            college.collegeAddress = StringUtils.trimWhitespace(collegeVo.collegeAddress)
             college.schoolId = collegeVo.schoolId
             collegeService.save(college)
             return AjaxUtils.of<Any>().success().msg("保存成功")

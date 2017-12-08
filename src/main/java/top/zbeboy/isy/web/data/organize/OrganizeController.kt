@@ -186,7 +186,8 @@ open class OrganizeController {
      */
     @RequestMapping(value = ["/web/data/organize/save/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValid(@RequestParam("organizeName") organizeName: String, @RequestParam("scienceId") scienceId: Int): AjaxUtils<*> {
+    fun saveValid(@RequestParam("organizeName") name: String, @RequestParam("scienceId") scienceId: Int): AjaxUtils<*> {
+        val organizeName = StringUtils.trimWhitespace(name)
         if (StringUtils.hasLength(organizeName)) {
             val scienceRecords = organizeService.findByOrganizeNameAndScienceId(organizeName, scienceId)
             return if (ObjectUtils.isEmpty(scienceRecords)) {
@@ -208,7 +209,8 @@ open class OrganizeController {
      */
     @RequestMapping(value = ["/web/data/organize/update/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValid(@RequestParam("organizeId") id: Int, @RequestParam("organizeName") organizeName: String, @RequestParam("scienceId") scienceId: Int): AjaxUtils<*> {
+    fun updateValid(@RequestParam("organizeId") id: Int, @RequestParam("organizeName") name: String, @RequestParam("scienceId") scienceId: Int): AjaxUtils<*> {
+        val organizeName = StringUtils.trimWhitespace(name)
         val organizeRecords = organizeService.findByOrganizeNameAndScienceIdNeOrganizeId(organizeName, id, scienceId)
         return if (organizeRecords.isEmpty()) {
             AjaxUtils.of<Any>().success().msg("班级名不重复")
@@ -229,7 +231,7 @@ open class OrganizeController {
         val ajaxUtils = AjaxUtils.of<Any>()
         if (!bindingResult.hasErrors()) {
             val organizeElastic = OrganizeElastic()
-            organizeElastic.organizeName = organizeVo.organizeName
+            organizeElastic.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName)
             organizeElastic.organizeIsDel = if (!ObjectUtils.isEmpty(organizeVo.organizeIsDel) && organizeVo.organizeIsDel == 1.toByte()) {
                 1
             } else {
@@ -288,7 +290,7 @@ open class OrganizeController {
                 } else {
                     0
                 }
-                organize.organizeName = organizeVo.organizeName
+                organize.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName)
                 organize.scienceId = organizeVo.scienceId
                 organize.grade = organizeVo.grade
                 organizeService.update(organize)

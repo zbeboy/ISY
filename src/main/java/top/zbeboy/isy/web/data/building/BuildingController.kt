@@ -104,7 +104,7 @@ open class BuildingController {
      */
     @RequestMapping(value = ["/web/data/building/add"], method = [(RequestMethod.GET)])
     fun buildingAdd(modelMap: ModelMap): String {
-        pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
+        pageParamControllerCommon.currentUserRoleNameAndCollegeIdNoAdminPageParam(modelMap)
         return "web/data/building/building_add::#page-wrapper"
     }
 
@@ -119,7 +119,9 @@ open class BuildingController {
     fun buildingEdit(@RequestParam("id") id: Int, modelMap: ModelMap): String {
         val record = buildingService.findByIdRelation(id)
         return if (record.isPresent) {
-            modelMap.addAttribute("building", record.get().into(BuildingBean::class.java))
+            val buildingBean = record.get().into(BuildingBean::class.java)
+            modelMap.addAttribute("building", buildingBean)
+            modelMap.addAttribute("collegeId", buildingBean.collegeId)
             pageParamControllerCommon.currentUserRoleNamePageParam(modelMap)
             "web/data/building/building_edit::#page-wrapper"
         } else {
@@ -136,11 +138,10 @@ open class BuildingController {
      */
     @RequestMapping(value = ["/web/data/building/save/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun saveValid(@RequestParam("buildingName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int): AjaxUtils<*> {
-        val tempCollegeId = methodControllerCommon.roleCollegeId(collegeId)
+    fun saveValid(@RequestParam("buildingName") name: String, @RequestParam(value = "collegeId") collegeId: Int): AjaxUtils<*> {
         val buildingName = StringUtils.trimWhitespace(name)
-        if (StringUtils.hasLength(buildingName) && tempCollegeId!! > 0) {
-            val buildingRecords = buildingService.findByBuildingNameAndCollegeId(buildingName, tempCollegeId)
+        if (StringUtils.hasLength(buildingName)) {
+            val buildingRecords = buildingService.findByBuildingNameAndCollegeId(buildingName, collegeId)
             return if (ObjectUtils.isEmpty(buildingRecords)) {
                 AjaxUtils.of<Any>().success().msg("楼名不存在")
             } else {
@@ -160,11 +161,10 @@ open class BuildingController {
      */
     @RequestMapping(value = ["/web/data/building/update/valid"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun updateValid(@RequestParam("buildingId") id: Int, @RequestParam("buildingName") name: String, @RequestParam(value = "collegeId", defaultValue = "0") collegeId: Int): AjaxUtils<*> {
-        val tempCollegeId = methodControllerCommon.roleCollegeId(collegeId)
+    fun updateValid(@RequestParam("buildingId") id: Int, @RequestParam("buildingName") name: String, @RequestParam(value = "collegeId") collegeId: Int): AjaxUtils<*> {
         val buildingName = StringUtils.trimWhitespace(name)
-        if (StringUtils.hasLength(buildingName) && tempCollegeId!! > 0) {
-            val buildingRecords = buildingService.findByBuildingNameAndCollegeIdNeBuildingId(buildingName, id, tempCollegeId)
+        if (StringUtils.hasLength(buildingName)) {
+            val buildingRecords = buildingService.findByBuildingNameAndCollegeIdNeBuildingId(buildingName, id, collegeId)
             return if (buildingRecords.isEmpty()) {
                 AjaxUtils.of<Any>().success().msg("楼名不重复")
             } else {
@@ -192,14 +192,9 @@ open class BuildingController {
                 0
             }
             building.buildingName = StringUtils.trimWhitespace(buildingVo.buildingName)
-            val collegeId = methodControllerCommon.roleCollegeId(buildingVo.collegeId)
-            return if (collegeId!! > 0) {
-                building.collegeId = collegeId
-                buildingService.save(building)
-                AjaxUtils.of<Any>().success().msg("保存成功")
-            } else {
-                AjaxUtils.of<Any>().fail().msg("保存失败，缺失必要参数")
-            }
+            building.collegeId = buildingVo.collegeId
+            buildingService.save(building)
+            return AjaxUtils.of<Any>().success().msg("保存成功")
         }
         return AjaxUtils.of<Any>().fail().msg("填写信息错误，请检查")
     }
@@ -222,15 +217,10 @@ open class BuildingController {
                 } else {
                     0
                 }
-                building.buildingName = buildingVo.buildingName
-                val collegeId = methodControllerCommon.roleCollegeId(buildingVo.collegeId)
-                return if (collegeId!! > 0) {
-                    building.collegeId = collegeId
-                    buildingService.update(building)
-                    AjaxUtils.of<Any>().success().msg("更改成功")
-                } else {
-                    AjaxUtils.of<Any>().fail().msg("更新失败，缺失必要参数")
-                }
+                building.buildingName = StringUtils.trimWhitespace(buildingVo.buildingName)
+                building.collegeId = buildingVo.collegeId
+                buildingService.update(building)
+                return AjaxUtils.of<Any>().success().msg("更改成功")
             }
         }
         return AjaxUtils.of<Any>().fail().msg("更改失败")
