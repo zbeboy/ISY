@@ -190,7 +190,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                 studentElasticRepository.delete(studentElastic)
                 studentElasticRepository.save(studentElastic)
             } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                val staffElastic = staffElasticRepository.findByUsername(usersElastic.username)
+                val staffElastic = staffElasticRepository.findByUsername(usersElastic.username!!)
                 staffElastic.enabled = usersElastic.enabled
                 staffElasticRepository.delete(staffElastic)
                 staffElasticRepository.save(staffElastic)
