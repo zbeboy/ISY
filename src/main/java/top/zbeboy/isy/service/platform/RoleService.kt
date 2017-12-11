@@ -198,12 +198,4 @@ interface RoleService {
      * @return id
      */
     fun getRoleDepartmentId(record: Optional<Record>): Int
-
-    /**
-     * 获取设置角色时的角色数据
-     *
-     * @param username 被设置人的账号
-     * @return 角色数据
-     */
-    fun getRoleData(username: String): ArrayList<Role>
 }

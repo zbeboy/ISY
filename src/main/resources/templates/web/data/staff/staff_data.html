@@ -36,7 +36,7 @@
                                            placeholder="院"/>
                                 </div>
                             </div>
-                            <div class="row" style="margin-top:2px;">
+                            <div class="row" style="margin-top:2px;" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                                 <div class="col-md-6">
                                     <input type="text" id="pass_search_department" class="form-control input-sm"
                                            placeholder="系"/>
@@ -159,7 +159,7 @@
                                            placeholder="院"/>
                                 </div>
                             </div>
-                            <div class="row" style="margin-top:2px;">
+                            <div class="row" style="margin-top:2px;" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                                 <div class="col-md-6">
                                     <input type="text" id="wait_search_department" class="form-control input-sm"
                                            placeholder="系"/>
@@ -169,12 +169,26 @@
                                            placeholder="手机号"/>
                                 </div>
                             </div>
-                            <div class="row" style="margin-top:2px;">
+                            <div class="row" style="margin-top:2px;" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                                 <div class="col-md-6">
                                     <input type="text" id="wait_search_staff_number" class="form-control input-sm"
                                            placeholder="工号"/>
                                 </div>
                                 <div class="col-md-6">
+                                    <input type="text" id="wait_search_username" class="form-control input-sm"
+                                           placeholder="邮箱"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:2px;" sec:authorize="!hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
+                                <div class="col-md-4">
+                                    <input type="text" id="wait_search_mobile" class="form-control input-sm"
+                                           placeholder="手机号"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="wait_search_staff_number" class="form-control input-sm"
+                                           placeholder="工号"/>
+                                </div>
+                                <div class="col-md-4">
                                     <input type="text" id="wait_search_username" class="form-control input-sm"
                                            placeholder="邮箱"/>
                                 </div>

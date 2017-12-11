@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
+import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.glue.data.StaffGlue
@@ -25,6 +26,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.RandomUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.vo.register.staff.StaffVo
@@ -65,6 +67,9 @@ open class StaffController {
 
     @Resource
     open lateinit var staffGlue: StaffGlue
+
+    @Resource
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
 
     /**
@@ -138,7 +143,7 @@ open class StaffController {
                                         // 注册成功
                                         val saveUsers = Users()
                                         val saveStaff = StaffElastic()
-                                        val enabled:Byte = 1
+                                        val enabled: Byte = 1
                                         saveUsers.username = email
                                         saveUsers.enabled = enabled
                                         saveStaff.enabled = enabled
@@ -286,6 +291,57 @@ open class StaffController {
     }
 
     /**
+     * 用户角色数据
+     *
+     * @param username 用户账号
+     * @return 数据
+     */
+    @RequestMapping(value = ["/web/data/staff/role/data"], method = [(RequestMethod.POST)])
+    @ResponseBody
+    fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
+        return AjaxUtils.of<Role>().success().listData(methodControllerCommon.getRoleData(username))
+    }
+
+    /**
+     * 保存用户角色
+     *
+     * @param username 用户账号
+     * @param roles    角色
+     * @param request  请求
+     * @return true 成功 false 角色为空
+     */
+    @RequestMapping(value = ["/web/data/staff/role/save"], method = [(RequestMethod.POST)])
+    @ResponseBody
+    fun roleSave(@RequestParam("username") username: String, @RequestParam("roles") roles: String, request: HttpServletRequest): AjaxUtils<*> {
+        return methodControllerCommon.roleSave(username, roles, request)
+    }
+
+    /**
+     * 更新用户状态
+     *
+     * @param userIds ids
+     * @param enabled 状态
+     * @return true 成功 false 失败
+     */
+    @RequestMapping("/web/data/staff/users/update/enabled")
+    @ResponseBody
+    fun usersUpdateEnabled(userIds: String, enabled: Byte?): AjaxUtils<*> {
+        return methodControllerCommon.usersUpdateEnabled(userIds, enabled)
+    }
+
+    /**
+     * 删除无角色关联的用户
+     *
+     * @param userIds 用户账号
+     * @return true 成功 false 失败
+     */
+    @RequestMapping("/web/data/staff/users/deletes")
+    @ResponseBody
+    fun deleteUsers(@RequestParam("username") userIds: String): AjaxUtils<*> {
+        return methodControllerCommon.deleteUsers(userIds)
+    }
+
+    /**
      * 更新用户学校信息
      *
      * @param department 系id
@@ -296,7 +352,7 @@ open class StaffController {
     fun staffSchoolUpdate(@RequestParam("department") department: Int): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
         val users = usersService.getUserFromSession()
-        return if(!ObjectUtils.isEmpty(users)){
+        return if (!ObjectUtils.isEmpty(users)) {
             val staff = staffService.findByUsername(users!!.username)
             staff.departmentId = department
             staffService.update(staff)

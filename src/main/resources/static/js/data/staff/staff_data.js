@@ -28,10 +28,10 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             return {
                 passData: '/web/data/staff/pass/data',
                 waitData: '/web/data/staff/wait/data',
-                roleData: '/special/channel/users/role/data',
-                saveRole: '/special/channel/users/role/save',
-                updateEnabled: '/special/channel/users/update/enabled',
-                deleteUsers: '/special/channel/users/deletes'
+                roleData: '/web/data/staff/role/data',
+                saveRole: '/web/data/staff/role/save',
+                updateEnabled: '/web/data/staff/users/update/enabled',
+                deleteUsers: '/web/data/staff/users/deletes'
             };
         }
 
@@ -120,8 +120,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.PASS_SCHOOL, DP.defaultUndefinedValue(passParam.school, ''));
                 sessionStorage.setItem(webStorageKey.PASS_COLLEGE, DP.defaultUndefinedValue(passParam.college, ''));
-                sessionStorage.setItem(webStorageKey.PASS_DEPARTMENT, passParam.department);
-                sessionStorage.setItem(webStorageKey.PASS_POST, passParam.post);
+                sessionStorage.setItem(webStorageKey.PASS_DEPARTMENT, DP.defaultUndefinedValue(passParam.department, ''));
+                sessionStorage.setItem(webStorageKey.PASS_POST, DP.defaultUndefinedValue(passParam.post, ''));
                 sessionStorage.setItem(webStorageKey.PASS_STAFF_NUMBER, passParam.staffNumber);
                 sessionStorage.setItem(webStorageKey.PASS_USERNAME, passParam.username);
                 sessionStorage.setItem(webStorageKey.PASS_MOBILE, passParam.mobile);
@@ -878,7 +878,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, DP.defaultUndefinedValue(waitParam.school, ''));
                 sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, DP.defaultUndefinedValue(waitParam.college, ''));
-                sessionStorage.setItem(webStorageKey.WAIT_DEPARTMENT, waitParam.department);
+                sessionStorage.setItem(webStorageKey.WAIT_DEPARTMENT, DP.defaultUndefinedValue(waitParam.department, ''));
                 sessionStorage.setItem(webStorageKey.WAIT_MOBILE, waitParam.mobile);
                 sessionStorage.setItem(webStorageKey.WAIT_STAFF_NUMBER, waitParam.staffNumber);
                 sessionStorage.setItem(webStorageKey.WAIT_USERNAME, waitParam.username);

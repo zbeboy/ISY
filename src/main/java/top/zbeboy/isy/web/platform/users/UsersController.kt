@@ -17,21 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.Authorities
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.domain.tables.pojos.UsersType
-import top.zbeboy.isy.elastic.config.ElasticBook
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository
-import top.zbeboy.isy.elastic.repository.StudentElasticRepository
-import top.zbeboy.isy.elastic.repository.UsersElasticRepository
 import top.zbeboy.isy.glue.platform.UsersGlue
 import top.zbeboy.isy.service.cache.CacheManageService
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
-import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersTypeService
 import top.zbeboy.isy.service.system.AuthoritiesService
@@ -45,11 +38,11 @@ import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.bean.file.FileBean
 import top.zbeboy.isy.web.bean.platform.users.UsersBean
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.jcaptcha.CaptchaServiceSingleton
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.ImageUtils
-import top.zbeboy.isy.web.util.SmallPropsUtils
 import top.zbeboy.isy.web.vo.platform.users.AvatarVo
 import top.zbeboy.isy.web.vo.platform.users.UsersVo
 import top.zbeboy.isy.web.vo.register.reset.ResetVo
@@ -120,9 +113,6 @@ open class UsersController {
     open lateinit var staffService: StaffService
 
     @Resource
-    open lateinit var roleService: RoleService
-
-    @Resource
     open lateinit var mailService: MailService
 
     @Resource
@@ -138,19 +128,10 @@ open class UsersController {
     open lateinit var requestUtils: RequestUtils
 
     @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
-
-    @Resource
-    open lateinit var usersElasticRepository: UsersElasticRepository
-
-    @Resource
-    open lateinit var studentElasticRepository: StudentElasticRepository
-
-    @Resource
-    open lateinit var staffElasticRepository: StaffElasticRepository
-
-    @Resource
     open lateinit var usersGlue: UsersGlue
+
+    @Resource
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     /**
      * 检验注册表单
@@ -607,8 +588,7 @@ open class UsersController {
     @RequestMapping(value = ["/special/channel/users/role/data"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
-        val ajaxUtils = AjaxUtils.of<Role>()
-        return ajaxUtils.success().listData(roleService.getRoleData(username))
+        return AjaxUtils.of<Role>().success().listData(methodControllerCommon.getRoleData(username))
     }
 
     /**
@@ -622,63 +602,7 @@ open class UsersController {
     @RequestMapping(value = ["/special/channel/users/role/save"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleSave(@RequestParam("username") username: String, @RequestParam("roles") roles: String, request: HttpServletRequest): AjaxUtils<*> {
-        val ajaxUtils = AjaxUtils.of<Any>()
-        if (StringUtils.hasLength(roles)) {
-            val users = usersService.findByUsername(username)
-            if (!ObjectUtils.isEmpty(users)) {
-                if (!ObjectUtils.isEmpty(users!!.verifyMailbox) && users.verifyMailbox > 0) {
-                    val roleList = SmallPropsUtils.StringIdsToStringList(roles)
-                    // 禁止非系统用户 提升用户权限到系统或管理员级别权限
-                    if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
-                        return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限")
-                    }
-                    authoritiesService.deleteByUsername(username)
-                    val usersElastic = usersElasticRepository.findOne(username)
-                    val roleEnNames = ArrayList<String>()
-                    val stringBuilder = StringBuilder()
-                    roleList.forEach { role ->
-                        val authorities = Authorities(username, role)
-                        authoritiesService.save(authorities)
-                        val tempRole = roleService.findByRoleEnName(role)
-                        roleEnNames.add(tempRole.roleEnName)
-                        stringBuilder.append(tempRole.roleName).append(" ")
-                    }
-                    when {
-                        roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES) -> usersElastic.authorities = ElasticBook.SYSTEM_AUTHORITIES
-                        roleEnNames.contains(Workbook.ADMIN_AUTHORITIES) -> usersElastic.authorities = ElasticBook.ADMIN_AUTHORITIES
-                        else -> usersElastic.authorities = ElasticBook.HAS_AUTHORITIES
-                    }
-                    usersElastic.roleName = stringBuilder.toString().trim { it <= ' ' }
-                    usersElasticRepository.delete(username)
-                    usersElasticRepository.save(usersElastic)
-                    val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
-                    if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                        val studentElastic = studentElasticRepository.findByUsername(username)
-                        studentElastic.authorities = usersElastic.authorities
-                        studentElastic.roleName = usersElastic.roleName
-                        studentElasticRepository.deleteByUsername(username)
-                        studentElasticRepository.save(studentElastic)
-                    } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                        val staffElastic = staffElasticRepository.findByUsername(username)
-                        staffElastic.authorities = usersElastic.authorities
-                        staffElastic.roleName = usersElastic.roleName
-                        staffElasticRepository.deleteByUsername(username)
-                        staffElasticRepository.save(staffElastic)
-                    }
-                    val curUsers = usersService.getUserFromSession()
-                    val notify = "您的权限已变更为" + usersElastic.roleName + " ，请登录查看。"
-                    commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request)
-                    ajaxUtils.success().msg("更改用户角色成功")
-                } else {
-                    ajaxUtils.fail().msg("该用户未激活账号")
-                }
-            } else {
-                ajaxUtils.fail().msg("未查询到该用户信息")
-            }
-        } else {
-            ajaxUtils.fail().msg("用户角色参数异常")
-        }
-        return ajaxUtils
+        return methodControllerCommon.roleSave(username, roles, request)
     }
 
     /**
@@ -757,11 +681,7 @@ open class UsersController {
     @RequestMapping("/special/channel/users/update/enabled")
     @ResponseBody
     fun usersUpdateEnabled(userIds: String, enabled: Byte?): AjaxUtils<*> {
-        if (StringUtils.hasLength(userIds)) {
-            usersService.updateEnabled(SmallPropsUtils.StringIdsToStringList(userIds), enabled)
-            return AjaxUtils.of<Any>().success().msg("注销用户成功")
-        }
-        return AjaxUtils.of<Any>().fail().msg("注销用户失败")
+        return methodControllerCommon.usersUpdateEnabled(userIds, enabled)
     }
 
     /**
@@ -773,41 +693,7 @@ open class UsersController {
     @RequestMapping("/special/channel/users/deletes")
     @ResponseBody
     fun deleteUsers(@RequestParam("username") userIds: String): AjaxUtils<*> {
-        val ajaxUtils = AjaxUtils.of<Any>()
-        if (StringUtils.hasLength(userIds)) {
-            val ids = SmallPropsUtils.StringIdsToStringList(userIds)
-            ids.forEach { id ->
-                val authoritiesRecords = authoritiesService.findByUsername(id)
-                if (!ObjectUtils.isEmpty(authoritiesRecords) && !authoritiesRecords.isEmpty()) {
-                    ajaxUtils.fail().msg("用户存在角色关联，无法删除")
-                } else {
-                    val users = usersService.findByUsername(id)
-                    if (!ObjectUtils.isEmpty(users)) {
-                        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId)
-                        when (usersType.usersTypeName) {
-                            Workbook.STUDENT_USERS_TYPE  // 学生
-                            -> {
-                                studentService.deleteByUsername(id)
-                                usersService.deleteById(id)
-                                ajaxUtils.success().msg("删除用户成功")
-                            }
-                            Workbook.STAFF_USERS_TYPE  // 教职工
-                            -> {
-                                staffService.deleteByUsername(id)
-                                usersService.deleteById(id)
-                                ajaxUtils.success().msg("删除用户成功")
-                            }
-                            else -> ajaxUtils.fail().msg("未获取到用户类型")
-                        }
-                    } else {
-                        ajaxUtils.fail().msg("未查询到用户")
-                    }
-                }
-            }
-        } else {
-            ajaxUtils.fail().msg("用户账号为空")
-        }
-        return ajaxUtils
+        return methodControllerCommon.deleteUsers(userIds)
     }
 
     /**
