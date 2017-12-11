@@ -185,7 +185,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
             usersElasticRepository.save(usersElastic)
             val usersType = cacheManageService.findByUsersTypeId(usersElastic.usersTypeId!!)
             if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                val studentElastic = studentElasticRepository.findByUsername(usersElastic.username)
+                val studentElastic = studentElasticRepository.findByUsername(usersElastic.username!!)
                 studentElastic.enabled = usersElastic.enabled
                 studentElasticRepository.delete(studentElastic)
                 studentElasticRepository.save(studentElastic)

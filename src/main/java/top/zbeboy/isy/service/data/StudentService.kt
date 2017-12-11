@@ -1,28 +1,25 @@
-package top.zbeboy.isy.service.data;
+package top.zbeboy.isy.service.data
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.Student;
-import top.zbeboy.isy.domain.tables.records.StudentRecord;
-import top.zbeboy.isy.elastic.pojo.StudentElastic;
-import top.zbeboy.isy.web.bean.data.student.StudentBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.Student
+import top.zbeboy.isy.domain.tables.records.StudentRecord
+import top.zbeboy.isy.elastic.pojo.StudentElastic
+import top.zbeboy.isy.web.bean.data.student.StudentBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by lenovo on 2016-08-22.
- */
-public interface StudentService {
-
+ * Created by zbeboy 2017-12-11 .
+ **/
+interface StudentService {
     /**
      * 通过id查询
      *
      * @param id 主键
      * @return 学生
      */
-    Student findById(int id);
+    fun findById(id: Int): Student
 
     /**
      * 通过id关联查询
@@ -30,7 +27,7 @@ public interface StudentService {
      * @param id 主键
      * @return 数据
      */
-    Optional<Record> findByIdRelation(int id);
+    fun findByIdRelation(id: Int): Optional<Record>
 
     /**
      * 通过id关联查询 (注：只关联users表)
@@ -38,7 +35,7 @@ public interface StudentService {
      * @param id 主键
      * @return 数据
      */
-    Optional<Record> findByIdRelationForUsers(int id);
+    fun findByIdRelationForUsers(id: Int): Optional<Record>
 
     /**
      * 根据学号查询学生
@@ -46,7 +43,7 @@ public interface StudentService {
      * @param studentNumber 学号
      * @return 学生
      */
-    Student findByStudentNumber(String studentNumber);
+    fun findByStudentNumber(studentNumber: String): Student?
 
     /**
      * 根据班级id集合查询有权限未注销的学生
@@ -56,7 +53,7 @@ public interface StudentService {
      * @param verifyMailbox 是否已验证邮箱
      * @return 学生们
      */
-    Result<Record> findInOrganizeIdsAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(List<Integer> organizeIds, Byte b, Byte verifyMailbox);
+    fun findInOrganizeIdsAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(organizeIds: List<Int>, b: Byte?, verifyMailbox: Byte?): Result<Record>
 
     /**
      * 通过账号与系id查询
@@ -65,7 +62,7 @@ public interface StudentService {
      * @param departmentId 系id
      * @return 数据
      */
-    Optional<Record> findByUsernameAndDepartmentId(String username, int departmentId);
+    fun findByUsernameAndDepartmentId(username: String, departmentId: Int): Optional<Record>
 
     /**
      * 通过账号与系id查询
@@ -74,7 +71,7 @@ public interface StudentService {
      * @param departmentId  系id
      * @return 数据
      */
-    Optional<Record> findByStudentNumberAndDepartmentId(String studentNumber, int departmentId);
+    fun findByStudentNumberAndDepartmentId(studentNumber: String, departmentId: Int): Optional<Record>
 
     /**
      * 根据学号查询 注：不等于用户账号
@@ -83,7 +80,7 @@ public interface StudentService {
      * @param studentNumber 学号
      * @return 学生
      */
-    Result<StudentRecord> findByStudentNumberNeUsername(String username, String studentNumber);
+    fun findByStudentNumberNeUsername(username: String, studentNumber: String): Result<StudentRecord>
 
     /**
      * 根据身份证号号查询 注：不等于用户账号
@@ -92,7 +89,7 @@ public interface StudentService {
      * @param idCard   身份证号
      * @return 学生
      */
-    Result<StudentRecord> findByIdCardNeUsername(String username, String idCard);
+    fun findByIdCardNeUsername(username: String, idCard: String): Result<StudentRecord>
 
     /**
      * 根据身份证号号查询
@@ -100,21 +97,21 @@ public interface StudentService {
      * @param idCard 身份证号
      * @return 学生
      */
-    List<Student> findByIdCard(String idCard);
+    fun findByIdCard(idCard: String): List<Student>
 
     /**
      * 保存学生信息
      *
      * @param studentElastic 学生
      */
-    void save(StudentElastic studentElastic);
+    fun save(studentElastic: StudentElastic)
 
     /**
      * 更新学生信息
      *
      * @param student 学生
      */
-    void update(Student student);
+    fun update(student: Student)
 
     /**
      * 通过用户账号关联查询 注：信息包括学校等 建议用于验证，效率不高
@@ -122,7 +119,7 @@ public interface StudentService {
      * @param username 用户账号
      * @return 关联信息
      */
-    Optional<Record> findByUsernameRelation(String username);
+    fun findByUsernameRelation(username: String): Optional<Record>
 
     /**
      * 通过用户账号,专业id,年级关联查询
@@ -132,7 +129,7 @@ public interface StudentService {
      * @param grade     年级
      * @return 关联信息
      */
-    Optional<Record> findByUsernameAndScienceIdAndGradeRelation(String username, int scienceId, String grade);
+    fun findByUsernameAndScienceIdAndGradeRelation(username: String, scienceId: Int, grade: String): Optional<Record>
 
     /**
      * 通过用户账号查询
@@ -140,14 +137,14 @@ public interface StudentService {
      * @param username 用户账号
      * @return 学生
      */
-    Student findByUsername(String username);
+    fun findByUsername(username: String): Student
 
     /**
      * 通过账号删除
      *
      * @param username 用户账号
      */
-    void deleteByUsername(String username);
+    fun deleteByUsername(username: String)
 
     /**
      * 分页查询有权限的用户
@@ -155,7 +152,7 @@ public interface StudentService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    Result<Record> findAllByPageExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
+    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): Result<Record>
 
     /**
      * 分页查询无权限的用户
@@ -163,21 +160,21 @@ public interface StudentService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    Result<Record> findAllByPageNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
+    fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): Result<Record>
 
     /**
      * 统计有权限的用户
      *
      * @return 总数
      */
-    int countAllExistsAuthorities();
+    fun countAllExistsAuthorities(): Int
 
     /**
      * 统计无权限的用户
      *
      * @return 总数
      */
-    int countAllNotExistsAuthorities();
+    fun countAllNotExistsAuthorities(): Int
 
     /**
      * 根据条件统计有权限的用户
@@ -185,7 +182,7 @@ public interface StudentService {
      * @param dataTablesUtils datatables工具类
      * @return 数量
      */
-    int countByConditionExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
+    fun countByConditionExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): Int
 
     /**
      * 根据条件统计无权限的用户
@@ -193,7 +190,7 @@ public interface StudentService {
      * @param dataTablesUtils datatables工具类
      * @return 数量
      */
-    int countByConditionNotExistsAuthorities(DataTablesUtils<StudentBean> dataTablesUtils);
+    fun countByConditionNotExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): Int
 
     /**
      * 根据班级id，状态 统计有权限用户
@@ -202,5 +199,5 @@ public interface StudentService {
      * @param b          状态
      * @return 数量
      */
-    int countByOrganizeIdAndEnabledExistsAuthorities(int organizeId, Byte b);
+    fun countByOrganizeIdAndEnabledExistsAuthorities(organizeId: Int, b: Byte?): Int
 }

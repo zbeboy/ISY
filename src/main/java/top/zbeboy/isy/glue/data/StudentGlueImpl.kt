@@ -14,25 +14,25 @@ import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.elastic.config.ElasticBook
-import top.zbeboy.isy.elastic.pojo.StaffElastic
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository
+import top.zbeboy.isy.elastic.pojo.StudentElastic
+import top.zbeboy.isy.elastic.repository.StudentElasticRepository
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.SQLQueryUtils
-import top.zbeboy.isy.web.bean.data.staff.StaffBean
+import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.util.DataTablesUtils
-import java.util.*
+import java.util.ArrayList
 import javax.annotation.Resource
 
 /**
- * Created by zbeboy 2017-12-09 .
+ * Created by zbeboy 2017-12-11 .
  **/
-@Repository("staffGlue")
-open class StaffGlueImpl : StaffGlue {
+@Repository("studentGlue")
+open class StudentGlueImpl : StudentGlue {
 
     @Resource
-    open lateinit var staffElasticRepository: StaffElasticRepository
+    open lateinit var studentElasticRepository: StudentElasticRepository
 
     @Resource
     open lateinit var roleService: RoleService
@@ -40,24 +40,24 @@ open class StaffGlueImpl : StaffGlue {
     @Resource
     open lateinit var usersService: UsersService
 
-    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): ResultUtils<List<StaffBean>> {
+    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): ResultUtils<List<StudentBean>> {
         val search = dataTablesUtils.search
-        val resultUtils = ResultUtils<List<StaffBean>>()
-        val boolqueryBuilder = buildStaffExistsAuthoritiesCondition()
+        val resultUtils = ResultUtils<List<StudentBean>>()
+        val boolqueryBuilder = buildStudentExistsAuthoritiesCondition()
         boolqueryBuilder.must(searchCondition(search))
         val nativeSearchQueryBuilder = NativeSearchQueryBuilder().withQuery(boolqueryBuilder)
-        val staffElasticPage = staffElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build())
-        return resultUtils.data(dataBuilder(staffElasticPage)).totalElements(staffElasticPage.totalElements)
+        val studentElasticPage = studentElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build())
+        return resultUtils.data(dataBuilder(studentElasticPage)).totalElements(studentElasticPage.totalElements)
     }
 
-    override fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): ResultUtils<List<StaffBean>> {
+    override fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): ResultUtils<List<StudentBean>> {
         val search = dataTablesUtils.search
-        val resultUtils = ResultUtils<List<StaffBean>>()
-        val boolqueryBuilder = buildStaffNoExistsAuthoritiesCondition()
+        val resultUtils = ResultUtils<List<StudentBean>>()
+        val boolqueryBuilder = buildStudentNoExistsAuthoritiesCondition()
         boolqueryBuilder.must(searchCondition(search))
         val nativeSearchQueryBuilder = NativeSearchQueryBuilder().withQuery(boolqueryBuilder)
-        val staffElasticPage = staffElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build())
-        return resultUtils.data(dataBuilder(staffElasticPage)).totalElements(staffElasticPage.totalElements)
+        val studentElasticPage = studentElasticRepository.search(sortCondition(dataTablesUtils, nativeSearchQueryBuilder).withPageable(pagination(dataTablesUtils)).build())
+        return resultUtils.data(dataBuilder(studentElasticPage)).totalElements(studentElasticPage.totalElements)
     }
 
     override fun countAllExistsAuthorities(): Long {
@@ -66,37 +66,37 @@ open class StaffGlueImpl : StaffGlue {
                 val list = ArrayList<Int>()
                 list.add(ElasticBook.SYSTEM_AUTHORITIES)
                 list.add(ElasticBook.NO_AUTHORITIES)
-                staffElasticRepository.countByAuthoritiesNotIn(list)
+                studentElasticRepository.countByAuthoritiesNotIn(list)
             }
             roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {
                 val users = usersService.getUserFromSession()
                 val record = usersService.findUserSchoolInfo(users!!)
                 val collegeId = roleService.getRoleCollegeId(record)
-                staffElasticRepository.countByAuthoritiesAndCollegeId(ElasticBook.HAS_AUTHORITIES, collegeId)
+                studentElasticRepository.countByAuthoritiesAndCollegeId(ElasticBook.HAS_AUTHORITIES, collegeId)
             }
             else -> {
                 val users = usersService.getUserFromSession()
                 val record = usersService.findUserSchoolInfo(users!!)
                 val departmentId = roleService.getRoleDepartmentId(record)
-                staffElasticRepository.countByAuthoritiesAndDepartmentIdAndUsernameNot(ElasticBook.HAS_AUTHORITIES, departmentId, users.username)
+                studentElasticRepository.countByAuthoritiesAndDepartmentIdAndUsernameNot(ElasticBook.HAS_AUTHORITIES, departmentId, users.username)
             }
         }
     }
 
     override fun countAllNotExistsAuthorities(): Long {
         return when {
-            roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> staffElasticRepository.countByAuthorities(ElasticBook.NO_AUTHORITIES)
+            roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> studentElasticRepository.countByAuthorities(ElasticBook.NO_AUTHORITIES)
             roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {
                 val users = usersService.getUserFromSession()
                 val record = usersService.findUserSchoolInfo(users!!)
                 val collegeId = roleService.getRoleCollegeId(record)
-                staffElasticRepository.countByAuthoritiesAndCollegeId(ElasticBook.NO_AUTHORITIES, collegeId)
+                studentElasticRepository.countByAuthoritiesAndCollegeId(ElasticBook.NO_AUTHORITIES, collegeId)
             }
             else -> {
                 val users = usersService.getUserFromSession()
                 val record = usersService.findUserSchoolInfo(users!!)
                 val departmentId = roleService.getRoleDepartmentId(record)
-                staffElasticRepository.countByAuthoritiesAndDepartmentIdAndUsernameNot(ElasticBook.NO_AUTHORITIES, departmentId, users.username)
+                studentElasticRepository.countByAuthoritiesAndDepartmentIdAndUsernameNot(ElasticBook.NO_AUTHORITIES, departmentId, users.username)
             }
         }
     }
@@ -104,44 +104,50 @@ open class StaffGlueImpl : StaffGlue {
     /**
      * 构建新数据
      *
-     * @param staffElasticPage 分页数据
+     * @param studentElasticPage 分页数据
      * @return 新数据
      */
-    private fun dataBuilder(staffElasticPage: Page<StaffElastic>): List<StaffBean> {
-        val staffs = ArrayList<StaffBean>()
-        for (staffElastic in staffElasticPage.content) {
-            val staffBean = StaffBean()
-            staffBean.staffId = staffElastic.getStaffId()
-            staffBean.staffNumber = staffElastic.staffNumber
-            staffBean.birthday = staffElastic.birthday
-            staffBean.sex = staffElastic.sex
-            staffBean.idCard = staffElastic.idCard
-            staffBean.familyResidence = staffElastic.familyResidence
-            staffBean.politicalLandscapeId = staffElastic.politicalLandscapeId
-            staffBean.politicalLandscapeName = staffElastic.politicalLandscapeName
-            staffBean.nationId = staffElastic.nationId
-            staffBean.nationName = staffElastic.nationName
-            staffBean.academicTitleId = staffElastic.academicTitleId
-            staffBean.academicTitleName = staffElastic.academicTitleName
-            staffBean.post = staffElastic.post
-            staffBean.schoolId = staffElastic.schoolId
-            staffBean.schoolName = staffElastic.schoolName
-            staffBean.collegeId = staffElastic.collegeId
-            staffBean.collegeName = staffElastic.collegeName
-            staffBean.departmentId = staffElastic.departmentId
-            staffBean.departmentName = staffElastic.departmentName
-            staffBean.username = staffElastic.username
-            staffBean.enabled = staffElastic.enabled
-            staffBean.realName = staffElastic.realName
-            staffBean.mobile = staffElastic.mobile
-            staffBean.avatar = staffElastic.avatar
-            staffBean.verifyMailbox = staffElastic.verifyMailbox
-            staffBean.langKey = staffElastic.langKey
-            staffBean.joinDate = staffElastic.joinDate
-            staffBean.roleName = staffElastic.roleName
-            staffs.add(staffBean)
+    private fun dataBuilder(studentElasticPage: Page<StudentElastic>): List<StudentBean> {
+        val students = ArrayList<StudentBean>()
+        for (studentElastic in studentElasticPage.content) {
+            val studentBean = StudentBean()
+            studentBean.studentId = studentElastic.getStudentId()
+            studentBean.studentNumber = studentElastic.studentNumber
+            studentBean.birthday = studentElastic.birthday
+            studentBean.sex = studentElastic.sex
+            studentBean.idCard = studentElastic.idCard
+            studentBean.familyResidence = studentElastic.familyResidence
+            studentBean.politicalLandscapeId = studentElastic.politicalLandscapeId
+            studentBean.politicalLandscapeName = studentElastic.politicalLandscapeName
+            studentBean.nationId = studentElastic.nationId
+            studentBean.nationName = studentElastic.nationName
+            studentBean.dormitoryNumber = studentElastic.dormitoryNumber
+            studentBean.parentName = studentElastic.parentName
+            studentBean.parentContactPhone = studentElastic.parentContactPhone
+            studentBean.placeOrigin = studentElastic.placeOrigin
+            studentBean.schoolId = studentElastic.schoolId
+            studentBean.schoolName = studentElastic.schoolName
+            studentBean.collegeId = studentElastic.collegeId
+            studentBean.collegeName = studentElastic.collegeName
+            studentBean.departmentId = studentElastic.departmentId
+            studentBean.departmentName = studentElastic.departmentName
+            studentBean.scienceId = studentElastic.scienceId
+            studentBean.scienceName = studentElastic.scienceName
+            studentBean.grade = studentElastic.grade
+            studentBean.organizeId = studentElastic.organizeId
+            studentBean.organizeName = studentElastic.organizeName
+            studentBean.username = studentElastic.username
+            studentBean.enabled = studentElastic.enabled
+            studentBean.realName = studentElastic.realName
+            studentBean.mobile = studentElastic.mobile
+            studentBean.avatar = studentElastic.avatar
+            studentBean.verifyMailbox = studentElastic.verifyMailbox
+            studentBean.langKey = studentElastic.langKey
+            studentBean.joinDate = studentElastic.joinDate
+            studentBean.roleName = studentElastic.roleName
+            students.add(studentBean)
         }
-        return staffs
+        return students
     }
 
     /**
@@ -156,8 +162,10 @@ open class StaffGlueImpl : StaffGlue {
             val school = StringUtils.trimWhitespace(search!!.getString("school"))
             val college = StringUtils.trimWhitespace(search.getString("college"))
             val department = StringUtils.trimWhitespace(search.getString("department"))
-            val post = StringUtils.trimWhitespace(search.getString("post"))
-            val staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"))
+            val science = StringUtils.trimWhitespace(search.getString("science"))
+            val grade = StringUtils.trimWhitespace(search.getString("grade"))
+            val organize = StringUtils.trimWhitespace(search.getString("organize"))
+            val studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"))
             val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
             val idCard = StringUtils.trimWhitespace(search.getString("idCard"))
@@ -179,13 +187,23 @@ open class StaffGlueImpl : StaffGlue {
                 boolqueryBuilder.must(matchQueryBuilder)
             }
 
-            if (StringUtils.hasLength(post)) {
-                val matchQueryBuilder = QueryBuilders.matchPhraseQuery("post", department)
+            if (StringUtils.hasLength(science)) {
+                val matchQueryBuilder = QueryBuilders.matchPhraseQuery("scienceName", science)
                 boolqueryBuilder.must(matchQueryBuilder)
             }
 
-            if (StringUtils.hasLength(staffNumber)) {
-                val wildcardQueryBuilder = QueryBuilders.wildcardQuery("staffNumber", SQLQueryUtils.elasticLikeAllParam(staffNumber))
+            if (StringUtils.hasLength(grade)) {
+                val wildcardQueryBuilder = QueryBuilders.wildcardQuery("grade", SQLQueryUtils.elasticLikeAllParam(grade))
+                boolqueryBuilder.must(wildcardQueryBuilder)
+            }
+
+            if (StringUtils.hasLength(organize)) {
+                val matchQueryBuilder = QueryBuilders.matchPhraseQuery("organizeName", organize)
+                boolqueryBuilder.must(matchQueryBuilder)
+            }
+
+            if (StringUtils.hasLength(studentNumber)) {
+                val wildcardQueryBuilder = QueryBuilders.wildcardQuery("studentNumber", SQLQueryUtils.elasticLikeAllParam(studentNumber))
                 boolqueryBuilder.must(wildcardQueryBuilder)
             }
 
@@ -223,16 +241,16 @@ open class StaffGlueImpl : StaffGlue {
      * @param dataTablesUtils          datatables工具类
      * @param nativeSearchQueryBuilder builer
      */
-    fun sortCondition(dataTablesUtils: DataTablesUtils<StaffBean>, nativeSearchQueryBuilder: NativeSearchQueryBuilder): NativeSearchQueryBuilder {
+    fun sortCondition(dataTablesUtils: DataTablesUtils<StudentBean>, nativeSearchQueryBuilder: NativeSearchQueryBuilder): NativeSearchQueryBuilder {
         val orderColumnName = dataTablesUtils.orderColumnName
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
-            if ("staff_number".equals(orderColumnName!!, ignoreCase = true)) {
+            if ("student_number".equals(orderColumnName!!, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("staffNumber").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("studentNumber").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("staffNumber").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("studentNumber").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
@@ -300,22 +318,32 @@ open class StaffGlueImpl : StaffGlue {
                 }
             }
 
-            if ("academic_title_name".equals(orderColumnName, ignoreCase = true)) {
+            if ("science_name".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("academicTitleName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("scienceName").order(SortOrder.ASC).unmappedType("string"))
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("academicTitleName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("scienceName").order(SortOrder.DESC).unmappedType("string"))
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
-            if ("post".equals(orderColumnName, ignoreCase = true)) {
+            if ("grade".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("post").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("grade").order(SortOrder.ASC).unmappedType("string"))
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("post").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("grade").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
+
+            if ("organize_name".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeName").order(SortOrder.DESC).unmappedType("string"))
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
@@ -356,6 +384,46 @@ open class StaffGlueImpl : StaffGlue {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
                 } else {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("politicalLandscapeName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
+
+            if ("dormitory_number".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("dormitoryNumber").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("dormitoryNumber").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
+
+            if ("place_origin".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("placeOrigin").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("placeOrigin").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
+
+            if ("parent_name".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("parentName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("parentName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
+
+            if ("parent_contact_phone".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("parentContactPhone").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("parentContactPhone").order(SortOrder.DESC).unmappedType("string"))
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
@@ -408,14 +476,14 @@ open class StaffGlueImpl : StaffGlue {
      *
      * @param dataTablesUtils datatables工具类
      */
-    fun pagination(dataTablesUtils: DataTablesUtils<StaffBean>): PageRequest {
+    fun pagination(dataTablesUtils: DataTablesUtils<StudentBean>): PageRequest {
         return PageRequest(dataTablesUtils.extraPage, dataTablesUtils.length)
     }
 
     /**
      * 构建该角色查询条件
      */
-    private fun buildStaffExistsAuthoritiesCondition(): BoolQueryBuilder {
+    private fun buildStudentExistsAuthoritiesCondition(): BoolQueryBuilder {
         val boolqueryBuilder = QueryBuilders.boolQuery()
         when {
             roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> {
@@ -444,7 +512,7 @@ open class StaffGlueImpl : StaffGlue {
     /**
      * 构建该角色查询条件
      */
-    private fun buildStaffNoExistsAuthoritiesCondition(): BoolQueryBuilder {
+    private fun buildStudentNoExistsAuthoritiesCondition(): BoolQueryBuilder {
         val boolqueryBuilder = QueryBuilders.boolQuery()
         when {
             roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
