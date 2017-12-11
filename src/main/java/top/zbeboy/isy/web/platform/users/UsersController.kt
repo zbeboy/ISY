@@ -585,7 +585,7 @@ open class UsersController {
      * @param username 用户账号
      * @return 数据
      */
-    @RequestMapping(value = ["/special/channel/users/role/data"], method = [(RequestMethod.POST)])
+    @RequestMapping(value = ["/web/platform/users/role/data"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
         return AjaxUtils.of<Role>().success().listData(methodControllerCommon.getRoleData(username))
@@ -599,7 +599,7 @@ open class UsersController {
      * @param request  请求
      * @return true 成功 false 角色为空
      */
-    @RequestMapping(value = ["/special/channel/users/role/save"], method = [(RequestMethod.POST)])
+    @RequestMapping(value = ["/web/platform/users/role/save"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleSave(@RequestParam("username") username: String, @RequestParam("roles") roles: String, request: HttpServletRequest): AjaxUtils<*> {
         return methodControllerCommon.roleSave(username, roles, request)
@@ -678,7 +678,7 @@ open class UsersController {
      * @param enabled 状态
      * @return true 成功 false 失败
      */
-    @RequestMapping("/special/channel/users/update/enabled")
+    @RequestMapping("/web/platform/users/update/enabled")
     @ResponseBody
     fun usersUpdateEnabled(userIds: String, enabled: Byte?): AjaxUtils<*> {
         return methodControllerCommon.usersUpdateEnabled(userIds, enabled)
@@ -690,7 +690,7 @@ open class UsersController {
      * @param userIds 用户账号
      * @return true 成功 false 失败
      */
-    @RequestMapping("/special/channel/users/deletes")
+    @RequestMapping("/web/platform/users/deletes")
     @ResponseBody
     fun deleteUsers(@RequestParam("username") userIds: String): AjaxUtils<*> {
         return methodControllerCommon.deleteUsers(userIds)

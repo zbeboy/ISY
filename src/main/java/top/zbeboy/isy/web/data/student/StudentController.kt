@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
+import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.elastic.pojo.StudentElastic
 import top.zbeboy.isy.glue.data.StudentGlue
@@ -25,6 +26,7 @@ import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.RandomUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.web.bean.data.student.StudentBean
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.vo.register.student.StudentVo
@@ -66,6 +68,8 @@ open class StudentController {
     @Resource
     open lateinit var studentGlue: StudentGlue
 
+    @Resource
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     /**
      * 判断学号是否已被注册
@@ -296,6 +300,57 @@ open class StudentController {
         dataTablesUtils.setiTotalRecords(studentGlue.countAllNotExistsAuthorities())
         dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
         return dataTablesUtils
+    }
+
+    /**
+     * 用户角色数据
+     *
+     * @param username 用户账号
+     * @return 数据
+     */
+    @RequestMapping(value = ["/web/data/student/role/data"], method = [(RequestMethod.POST)])
+    @ResponseBody
+    fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
+        return AjaxUtils.of<Role>().success().listData(methodControllerCommon.getRoleData(username))
+    }
+
+    /**
+     * 保存用户角色
+     *
+     * @param username 用户账号
+     * @param roles    角色
+     * @param request  请求
+     * @return true 成功 false 角色为空
+     */
+    @RequestMapping(value = ["/web/data/student/role/save"], method = [(RequestMethod.POST)])
+    @ResponseBody
+    fun roleSave(@RequestParam("username") username: String, @RequestParam("roles") roles: String, request: HttpServletRequest): AjaxUtils<*> {
+        return methodControllerCommon.roleSave(username, roles, request)
+    }
+
+    /**
+     * 更新用户状态
+     *
+     * @param userIds ids
+     * @param enabled 状态
+     * @return true 成功 false 失败
+     */
+    @RequestMapping("/web/data/student/users/update/enabled")
+    @ResponseBody
+    fun usersUpdateEnabled(userIds: String, enabled: Byte?): AjaxUtils<*> {
+        return methodControllerCommon.usersUpdateEnabled(userIds, enabled)
+    }
+
+    /**
+     * 删除无角色关联的用户
+     *
+     * @param userIds 用户账号
+     * @return true 成功 false 失败
+     */
+    @RequestMapping("/web/data/student/users/deletes")
+    @ResponseBody
+    fun deleteUsers(@RequestParam("username") userIds: String): AjaxUtils<*> {
+        return methodControllerCommon.deleteUsers(userIds)
     }
 
     /**

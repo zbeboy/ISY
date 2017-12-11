@@ -28,10 +28,10 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             return {
                 passData: '/web/data/student/pass/data',
                 waitData: '/web/data/student/wait/data',
-                roleData: '/special/channel/users/role/data',
-                saveRole: '/special/channel/users/role/save',
-                updateEnabled: '/special/channel/users/update/enabled',
-                deleteUsers: '/special/channel/users/deletes'
+                roleData: '/web/data/student/role/data',
+                saveRole: '/web/data/student/role/save',
+                updateEnabled: '/web/data/student/users/update/enabled',
+                deleteUsers: '/web/data/student/users/deletes'
             };
         }
 

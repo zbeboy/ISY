@@ -16,6 +16,7 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.elastic.repository.StaffElasticRepository
+import top.zbeboy.isy.glue.common.MethodGlueCommon
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
@@ -39,6 +40,9 @@ open class StaffGlueImpl : StaffGlue {
 
     @Resource
     open lateinit var usersService: UsersService
+
+    @Resource
+    open lateinit var methodGlueCommon: MethodGlueCommon
 
     override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): ResultUtils<List<StaffBean>> {
         val search = dataTablesUtils.search
@@ -416,54 +420,13 @@ open class StaffGlueImpl : StaffGlue {
      * 构建该角色查询条件
      */
     private fun buildStaffExistsAuthoritiesCondition(): BoolQueryBuilder {
-        val boolqueryBuilder = QueryBuilders.boolQuery()
-        when {
-            roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> {
-                boolqueryBuilder.mustNot(QueryBuilders.termQuery("authorities", ElasticBook.SYSTEM_AUTHORITIES))
-                boolqueryBuilder.mustNot(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
-            }
-            roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {// 管理员
-                val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val collegeId = roleService.getRoleCollegeId(record)
-                boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.HAS_AUTHORITIES))
-                boolqueryBuilder.must(QueryBuilders.termQuery("collegeId", collegeId))
-            }
-            else -> {
-                val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val departmentId = roleService.getRoleDepartmentId(record)
-                boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.HAS_AUTHORITIES))
-                boolqueryBuilder.must(QueryBuilders.termQuery("departmentId", departmentId))
-                boolqueryBuilder.mustNot(QueryBuilders.termQuery("username", users.username))
-            }
-        }
-        return boolqueryBuilder
+        return methodGlueCommon.buildExistsAuthoritiesCondition()
     }
 
     /**
      * 构建该角色查询条件
      */
     private fun buildStaffNoExistsAuthoritiesCondition(): BoolQueryBuilder {
-        val boolqueryBuilder = QueryBuilders.boolQuery()
-        when {
-            roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
-            roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {// 管理员
-                val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val collegeId = roleService.getRoleCollegeId(record)
-                boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
-                boolqueryBuilder.must(QueryBuilders.termQuery("collegeId", collegeId))
-            }
-            else -> {
-                val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val departmentId = roleService.getRoleDepartmentId(record)
-                boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
-                boolqueryBuilder.must(QueryBuilders.termQuery("departmentId", departmentId))
-                boolqueryBuilder.mustNot(QueryBuilders.termQuery("username", users.username))
-            }
-        }
-        return boolqueryBuilder
+        return methodGlueCommon.buildNoExistsAuthoritiesCondition()
     }
 }

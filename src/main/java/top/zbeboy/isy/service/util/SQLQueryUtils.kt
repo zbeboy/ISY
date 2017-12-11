@@ -37,5 +37,15 @@ class SQLQueryUtils {
         fun rightLikeParam(param: String): String {
             return param + "%"
         }
+
+        /**
+         * 精确匹配系统用户账号处理
+         *
+         * @param param 参数
+         * @return 处理结果
+         */
+        fun phraseQueryingUsername(param: String): String {
+            return param.substring(0, param.lastIndexOf('@'))
+        }
     }
 }
