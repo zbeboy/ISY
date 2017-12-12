@@ -3,6 +3,8 @@ package top.zbeboy.isy.glue.system
 import com.alibaba.fastjson.JSONObject
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.search.sort.SortBuilders
+import org.elasticsearch.search.sort.SortOrder
 import org.springframework.data.domain.Page
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Repository
@@ -11,7 +13,6 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.elastic.pojo.SystemLogElastic
 import top.zbeboy.isy.elastic.repository.SystemLogElasticRepository
 import top.zbeboy.isy.glue.plugin.ElasticPlugin
-import top.zbeboy.isy.glue.sort.system.SystemLogGlueSort
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -108,15 +109,51 @@ open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
 
-            SystemLogGlueSort.sortSystemLogId(nativeSearchQueryBuilder, isAsc, orderColumnName!!)
+            if ("system_log_id".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            SystemLogGlueSort.sortUsername(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("username".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            SystemLogGlueSort.sortBehavior(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("behavior".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("behavior").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("behavior").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            SystemLogGlueSort.sortOperatingTime(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("operating_time".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("operatingTime").order(SortOrder.ASC).unmappedType("long"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("operatingTime").order(SortOrder.DESC).unmappedType("long"))
+                }
+            }
 
-            SystemLogGlueSort.sortIpAddress(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("ip_address".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("ipAddress").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("ipAddress").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemLogId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
         }
         return nativeSearchQueryBuilder
     }

@@ -3,6 +3,8 @@ package top.zbeboy.isy.glue.system
 import com.alibaba.fastjson.JSONObject
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.search.sort.SortBuilders
+import org.elasticsearch.search.sort.SortOrder
 import org.springframework.data.domain.Page
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Repository
@@ -11,7 +13,6 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.elastic.pojo.SystemMailboxElastic
 import top.zbeboy.isy.elastic.repository.SystemMailboxElasticRepository
 import top.zbeboy.isy.glue.plugin.ElasticPlugin
-import top.zbeboy.isy.glue.sort.system.SystemMailboxGlueSort
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -95,13 +96,41 @@ open class SystemMailboxGlueImpl : ElasticPlugin<SystemMailboxBean>(), SystemMai
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
 
-            SystemMailboxGlueSort.sortSystemMailboxId(nativeSearchQueryBuilder, isAsc, orderColumnName!!)
+            if ("system_mailbox_id".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            SystemMailboxGlueSort.sortSendTime(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("send_time".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.ASC).unmappedType("long"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendTime").order(SortOrder.DESC).unmappedType("long"))
+                }
+            }
 
-            SystemMailboxGlueSort.sortAcceptMail(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("accept_mail".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            SystemMailboxGlueSort.sortSendCondition(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("send_condition".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
         }
         return nativeSearchQueryBuilder

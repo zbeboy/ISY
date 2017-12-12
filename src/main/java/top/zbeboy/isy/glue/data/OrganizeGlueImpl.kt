@@ -3,6 +3,8 @@ package top.zbeboy.isy.glue.data
 import com.alibaba.fastjson.JSONObject
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.search.sort.SortBuilders
+import org.elasticsearch.search.sort.SortOrder
 import org.springframework.data.domain.Page
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Repository
@@ -12,7 +14,6 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.elastic.pojo.OrganizeElastic
 import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.glue.plugin.ElasticPlugin
-import top.zbeboy.isy.glue.sort.data.OrganizeGlueSort
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
@@ -177,21 +178,83 @@ open class OrganizeGlueImpl : ElasticPlugin<OrganizeBean>(), OrganizeGlue {
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
         if (StringUtils.hasLength(orderColumnName)) {
-            OrganizeGlueSort.sortOrganizeId(nativeSearchQueryBuilder, isAsc, orderColumnName!!)
+            if ("organize_id".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            OrganizeGlueSort.sortSchoolName(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("school_name".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("schoolName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("schoolName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            OrganizeGlueSort.sortCollegeName(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("college_name".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("collegeName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("collegeName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            OrganizeGlueSort.sortDepartmentName(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("department_name".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("departmentName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("departmentName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            OrganizeGlueSort.sortScienceName(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("science_name".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("scienceName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("scienceName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            OrganizeGlueSort.sortGrade(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("grade".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("grade").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("grade").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            OrganizeGlueSort.sortOrganizeName(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("organize_name".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeName").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeName").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
 
-            OrganizeGlueSort.sortOrganizeIsDel(nativeSearchQueryBuilder, isAsc, orderColumnName)
+            if ("organize_is_del".equals(orderColumnName, ignoreCase = true)) {
+                if (isAsc) {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeIsDel").order(SortOrder.ASC).unmappedType("byte"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.ASC).unmappedType("string"))
+                } else {
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeIsDel").order(SortOrder.DESC).unmappedType("byte"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeId").order(SortOrder.DESC).unmappedType("string"))
+                }
+            }
         }
         return nativeSearchQueryBuilder
     }
