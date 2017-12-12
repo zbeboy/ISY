@@ -1,44 +1,43 @@
-package top.zbeboy.isy.service.data;
+package top.zbeboy.isy.service.data
 
 /**
- * Created by zhaoyin on 17-8-8.
- */
-public interface ElasticSyncService {
-
+ * Created by zbeboy 2017-12-12 .
+ **/
+interface ElasticSyncService {
     /**
      * 清理日志
      */
-    void cleanSystemLog();
+    fun cleanSystemLog()
 
     /**
      * 清理邮件日志
      */
-    void cleanSystemMailbox();
+    fun cleanSystemMailbox()
 
     /**
      * 清理短信日志
      */
-    void cleanSystemSms();
+    fun cleanSystemSms()
 
     /**
      * 同步班级数据
      */
-    void syncOrganizeData();
+    fun syncOrganizeData()
 
     /**
      * 同步用户数据
      */
-    void syncUsersData();
+    fun syncUsersData()
 
     /**
      * 同步学生数据
      */
-    void syncStudentData();
+    fun syncStudentData()
 
     /**
      * 同步教职工数据
      */
-    void syncStaffData();
+    fun syncStaffData()
 
     /**
      * 更新院级自定义角色名
@@ -46,12 +45,12 @@ public interface ElasticSyncService {
      * @param collegeId 院id
      * @param roleName  角色名
      */
-    void collegeRoleNameUpdate(int collegeId, String roleName);
+    fun collegeRoleNameUpdate(collegeId: Int, roleName: String)
 
     /**
      * 更新系统级角色名
      *
      * @param roleName 角色名
      */
-    void systemRoleNameUpdate(String roleName);
+    fun systemRoleNameUpdate(roleName: String)
 }
