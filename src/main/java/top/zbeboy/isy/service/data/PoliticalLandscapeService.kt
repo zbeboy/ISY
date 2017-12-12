@@ -1,24 +1,21 @@
-package top.zbeboy.isy.service.data;
+package top.zbeboy.isy.service.data
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.PoliticalLandscape;
-import top.zbeboy.isy.domain.tables.records.PoliticalLandscapeRecord;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.PoliticalLandscape
+import top.zbeboy.isy.domain.tables.records.PoliticalLandscapeRecord
+import top.zbeboy.isy.web.util.DataTablesUtils
 
 /**
- * Created by lenovo on 2016-10-30.
- */
-public interface PoliticalLandscapeService {
-
+ * Created by zbeboy 2017-12-12 .
+ **/
+interface PoliticalLandscapeService {
     /**
      * 查询全部政治面貌
      *
      * @return 全部政治面貌
      */
-    List<PoliticalLandscape> findAll();
+    fun findAll(): List<PoliticalLandscape>
 
     /**
      * 通过主键查询
@@ -26,7 +23,7 @@ public interface PoliticalLandscapeService {
      * @param id 主键
      * @return 政治面貌
      */
-    PoliticalLandscape findById(int id);
+    fun findById(id: Int): PoliticalLandscape
 
     /**
      * 通过政治面貌查询
@@ -34,21 +31,21 @@ public interface PoliticalLandscapeService {
      * @param politicalLandscapeName 政治面貌
      * @return 政治面貌
      */
-    List<PoliticalLandscape> findByPoliticalLandscapeName(String politicalLandscapeName);
+    fun findByPoliticalLandscapeName(politicalLandscapeName: String): List<PoliticalLandscape>
 
     /**
      * 保存
      *
      * @param politicalLandscape 政治面貌
      */
-    void save(PoliticalLandscape politicalLandscape);
+    fun save(politicalLandscape: PoliticalLandscape)
 
     /**
      * 更新
      *
      * @param politicalLandscape 政治面貌
      */
-    void update(PoliticalLandscape politicalLandscape);
+    fun update(politicalLandscape: PoliticalLandscape)
 
     /**
      * 通过政治面貌查询 注：不等于政治面貌id
@@ -57,7 +54,7 @@ public interface PoliticalLandscapeService {
      * @param politicalLandscapeId   政治面貌id
      * @return 政治面貌
      */
-    Result<PoliticalLandscapeRecord> findByNationNameNePoliticalLandscapeId(String politicalLandscapeName, int politicalLandscapeId);
+    fun findByNationNameNePoliticalLandscapeId(politicalLandscapeName: String, politicalLandscapeId: Int): Result<PoliticalLandscapeRecord>
 
     /**
      * 分页查询
@@ -65,19 +62,19 @@ public interface PoliticalLandscapeService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<PoliticalLandscape> dataTablesUtils);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<PoliticalLandscape>): Result<Record>
 
     /**
      * 总数
      *
      * @return 总数
      */
-    int countAll();
+    fun countAll(): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<PoliticalLandscape> dataTablesUtils);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<PoliticalLandscape>): Int
 }
