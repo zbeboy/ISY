@@ -85,7 +85,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
                 {
                     targets: 4,
                     render: function (a, b, c, d) {
-                        if (c.allowAgent == 0 || c.allowAgent == null) {
+                        if (c.allowAgent === 0 || c.allowAgent == null) {
                             return "否";
                         } else {
                             return "是";
@@ -99,7 +99,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
 
                         var context = {};
 
-                        if (c.allowAgent == 0 || c.allowAgent == null) {
+                        if (c.allowAgent === 0 || c.allowAgent == null) {
                             context =
                                 {
                                     func: [
@@ -304,21 +304,21 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "jque
         }
 
         $(getParamId().schoolName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().collegeName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().roleName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

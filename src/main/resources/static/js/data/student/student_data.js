@@ -329,77 +329,77 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
         var passTable = null;
 
         $(getPassParamId().school).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().college).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().department).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().science).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().grade).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().organize).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().username).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().mobile).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().idCard).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().realName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
@@ -527,7 +527,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                     {
                         targets: 22,
                         render: function (a, b, c, d) {
-                            if (c.enabled == 0 || c.enabled == null) {
+                            if (c.enabled === 0 || c.enabled == null) {
                                 return "<span class='text-danger'>已注销</span>";
                             }
                             return "<span class='text-info'>正常</span>";
@@ -540,7 +540,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
 
                             var context = null;
 
-                            if (c.enabled == 1) {
+                            if (c.enabled === 1) {
                                 context =
                                     {
                                         func: [
@@ -1074,56 +1074,56 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
         var waitTable = null;
 
         $(getWaitParamId().school).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().college).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().department).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().science).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().grade).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().organize).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().username).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }

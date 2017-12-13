@@ -113,7 +113,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var realDepartmentId = init_page_param.departmentId;
             var departmentChildrens = $('#select_department').children();
             for (var i = 0; i < departmentChildrens.length; i++) {
-                if (Number($(departmentChildrens[i]).val()) == realDepartmentId) {
+                if (Number($(departmentChildrens[i]).val()) === realDepartmentId) {
                     $(departmentChildrens[i]).prop('selected', true);
                     break;
                 }
@@ -127,7 +127,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var text = '';
             var departmentChildrens = $('#select_department').children();
             for (var i = 0; i < departmentChildrens.length; i++) {
-                if (Number($(departmentChildrens[i]).val()) == Number(id)) {
+                if (Number($(departmentChildrens[i]).val()) === Number(id)) {
                     text = $(departmentChildrens[i]).text();
                     break;
                 }
@@ -150,7 +150,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          */
         function changeDepartment(college_id) {
 
-            if (Number(college_id) == 0) {
+            if (Number(college_id) === 0) {
                 var template = Handlebars.compile($("#department-template").html());
 
                 var context = {

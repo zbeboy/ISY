@@ -193,7 +193,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
          * @param school_id 学校id
          */
         function changeCollege(school_id) {
-            if (Number(school_id) == 0) {
+            if (Number(school_id) === 0) {
                 var source = $("#college-template").html();
                 var template = Handlebars.compile(source);
 
@@ -318,7 +318,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
 
         /**
          * 检验学校id
-         * @param msg
          */
         function validSchoolId() {
             initParam();

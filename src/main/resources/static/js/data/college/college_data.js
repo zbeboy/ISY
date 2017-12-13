@@ -100,7 +100,7 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
 
                         var context = null;
 
-                        if (c.collegeIsDel == 0 || c.collegeIsDel == null) {
+                        if (c.collegeIsDel === 0 || c.collegeIsDel == null) {
                             context =
                                 {
                                     func: [
@@ -162,7 +162,7 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
                 {
                     targets: 6,
                     render: function (a, b, c, d) {
-                        if (c.collegeIsDel == 0 || c.collegeIsDel == null) {
+                        if (c.collegeIsDel === 0 || c.collegeIsDel == null) {
                             return "<span class='text-info'>正常</span>";
                         } else {
                             return "<span class='text-danger'>已注销</span>";
@@ -312,14 +312,14 @@ require(["jquery", "handlebars", "messenger", "datatables.responsive", "check.al
         }
 
         $(getParamId().schoolName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().collegeName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

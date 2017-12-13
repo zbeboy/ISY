@@ -254,7 +254,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
      * @param school_id 学校id
      */
     function changeCollege(school_id) {
-        if (Number(school_id) == 0) {
+        if (Number(school_id) === 0) {
             var template = Handlebars.compile($("#college-template").html());
 
             var context = {
@@ -307,7 +307,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
             validErrorDom(validId.roleName, errorMsgId.roleName, '角色名50个字符以内');
         } else {
             // 检验字符之前是否含有空格
-            if (roleName.indexOf(" ") == -1) {
+            if (roleName.indexOf(" ") === -1) {
                 // 角色名是否重复
                 Messenger().run({
                     errorMessage: '请求失败'
@@ -420,7 +420,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
             });
         } else {
             // 检验字符之前是否含有空格
-            if (roleName.indexOf(" ") == -1) {
+            if (roleName.indexOf(" ") === -1) {
                 Messenger().run({
                     errorMessage: '请求失败'
                 }, {
@@ -501,7 +501,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
     }
 
     function treeViewData(data) {
-        var $checkableTree = treeviewId.treeview({
+        treeviewId.treeview({
             data: data,
             showIcon: false,
             showCheckbox: true,
@@ -530,7 +530,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
                 var unCheckeds = treeviewId.treeview('getUnchecked');
                 for (var i = 0; i < list.length; i++) {
                     for (var j = 0; j < unCheckeds.length; j++) {
-                        if (list[i].applicationId == unCheckeds[j].dataId) {
+                        if (list[i].applicationId === unCheckeds[j].dataId) {
                             treeviewId.treeview('checkNode', [unCheckeds[j], {silent: true}]);
                             break;
                         }
@@ -545,7 +545,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
      * @param node
      */
     function checkAllParentNode(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId != undefined) {
+        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
             var parentNode = treeviewId.treeview('getParent', node);
             checkAllParentNode(parentNode);
         }
@@ -593,13 +593,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
     }
 
     function getAllParent(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId != undefined) {
+        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
             var parentNode = treeviewId.treeview('getParent', node);
             childrenArr = [];
             getAllChildren(parentNode);
             var parentNodeIsChecked = false;
             for (var i = 0; i < childrenArr.length; i++) {
-                if (childrenArr[i].nodeId != parentNode.nodeId && childrenArr[i].state.checked) {
+                if (childrenArr[i].nodeId !== parentNode.nodeId && childrenArr[i].state.checked) {
                     parentNodeIsChecked = true;
                 }
             }

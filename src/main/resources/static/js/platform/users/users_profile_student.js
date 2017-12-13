@@ -189,7 +189,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var realDepartmentId = init_page_param.departmentId;
             var departmentChildrens = $('#select_department').children();
             for (var i = 0; i < departmentChildrens.length; i++) {
-                if (Number($(departmentChildrens[i]).val()) == realDepartmentId) {
+                if (Number($(departmentChildrens[i]).val()) === realDepartmentId) {
                     $(departmentChildrens[i]).prop('selected', true);
                     changeScience($(departmentChildrens[i]).val());
                     break;
@@ -204,7 +204,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var text = '';
             var departmentChildrens = $('#select_department').children();
             for (var i = 0; i < departmentChildrens.length; i++) {
-                if (Number($(departmentChildrens[i]).val()) == Number(id)) {
+                if (Number($(departmentChildrens[i]).val()) === Number(id)) {
                     text = $(departmentChildrens[i]).text();
                     break;
                 }
@@ -219,7 +219,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var realScienceId = init_page_param.scienceId;
             var scienceChildrens = $('#select_science').children();
             for (var i = 0; i < scienceChildrens.length; i++) {
-                if (Number($(scienceChildrens[i]).val()) == realScienceId) {
+                if (Number($(scienceChildrens[i]).val()) === realScienceId) {
                     $(scienceChildrens[i]).prop('selected', true);
                     changeGrade($(scienceChildrens[i]).val());
                     break;
@@ -234,7 +234,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var text = '';
             var scienceChildrens = $('#select_science').children();
             for (var i = 0; i < scienceChildrens.length; i++) {
-                if (Number($(scienceChildrens[i]).val()) == Number(id)) {
+                if (Number($(scienceChildrens[i]).val()) === Number(id)) {
                     text = $(scienceChildrens[i]).text();
                     break;
                 }
@@ -280,7 +280,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var realOrganize = init_page_param.organizeId;
             var organizeChildrens = $('#select_organize').children();
             for (var i = 0; i < organizeChildrens.length; i++) {
-                if (Number($(organizeChildrens[i]).val()) == realOrganize) {
+                if (Number($(organizeChildrens[i]).val()) === realOrganize) {
                     $(organizeChildrens[i]).prop('selected', true);
                     break;
                 }
@@ -294,7 +294,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
             var text = '';
             var organizeChildrens = $('#select_organize').children();
             for (var i = 0; i < organizeChildrens.length; i++) {
-                if (Number($(organizeChildrens[i]).val()) == Number(id)) {
+                if (Number($(organizeChildrens[i]).val()) === Number(id)) {
                     text = $(organizeChildrens[i]).text();
                     break;
                 }
@@ -317,7 +317,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          */
         function changeDepartment(college_id) {
 
-            if (Number(college_id) == 0) {
+            if (Number(college_id) === 0) {
                 var template = Handlebars.compile($("#department-template").html());
 
                 var context = {
@@ -368,7 +368,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          */
         function changeScience(department_id) {
 
-            if (Number(department_id) == 0) {
+            if (Number(department_id) === 0) {
                 var template = Handlebars.compile($("#science-template").html());
 
                 var context = {
@@ -419,7 +419,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          */
         function changeGrade(science_id) {
 
-            if (Number(science_id) == 0) {
+            if (Number(science_id) === 0) {
                 var template = Handlebars.compile($("#grade-template").html());
 
                 var context = {
@@ -471,7 +471,7 @@ require(["jquery", "handlebars", "jquery.showLoading", "messenger", "bootstrap",
          */
         function changeOrganize(grade, scienceId) {
 
-            if (grade == 0 || grade === '' || scienceId <= 0) {
+            if (grade === 0 || grade === '' || scienceId <= 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {

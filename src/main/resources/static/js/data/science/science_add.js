@@ -230,7 +230,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
          * @param school_id 学校id
          */
         function changeCollege(school_id) {
-            if (Number(school_id) == 0) {
+            if (Number(school_id) === 0) {
                 var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
@@ -274,7 +274,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
          */
         function changeDepartment(college_id) {
 
-            if (Number(college_id) == 0) {
+            if (Number(college_id) === 0) {
                 var template = Handlebars.compile($("#department-template").html());
 
                 var context = {

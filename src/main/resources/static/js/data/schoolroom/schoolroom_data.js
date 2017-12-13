@@ -106,7 +106,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
 
                         var context = null;
 
-                        if (c.schoolroomIsDel == 0 || c.schoolroomIsDel == null) {
+                        if (c.schoolroomIsDel === 0 || c.schoolroomIsDel == null) {
                             context =
                                 {
                                     func: [
@@ -154,7 +154,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 {
                     targets: 6,
                     render: function (a, b, c, d) {
-                        if (c.schoolroomIsDel == 0 || c.schoolroomIsDel == null) {
+                        if (c.schoolroomIsDel === 0 || c.schoolroomIsDel == null) {
                             return "<span class='text-info'>正常</span>";
                         } else {
                             return "<span class='text-danger'>已注销</span>";
@@ -322,28 +322,28 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
         }
 
         $(getParamId().schoolName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().collegeName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().buildingName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().buildingCode).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

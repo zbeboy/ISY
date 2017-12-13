@@ -27,8 +27,8 @@ require(["jquery", "nav_active", "messenger", "jquery.address", "bootstrap-maxle
      参数
      */
     var param = {
-        schoolId: $(paramId.schoolId).val().trim(),
-        schoolName: $(paramId.schoolName).val().trim()
+        schoolId: $(paramId.schoolId).val(),
+        schoolName: $(paramId.schoolName).val()
     };
 
     /*
@@ -70,8 +70,8 @@ require(["jquery", "nav_active", "messenger", "jquery.address", "bootstrap-maxle
      * 初始化参数
      */
     function initParam() {
-        param.schoolId = $(paramId.schoolId).val().trim()
-        param.schoolName = $(paramId.schoolName).val().trim();
+        param.schoolId = $(paramId.schoolId).val();
+        param.schoolName = $(paramId.schoolName).val();
     }
 
     init();

@@ -370,7 +370,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
          * @param school_id 学校id
          */
         function changeCollege(school_id) {
-            if (Number(school_id) == 0) {
+            if (Number(school_id) === 0) {
                 var source = $("#college-template").html();
                 var template = Handlebars.compile(source);
 
@@ -427,7 +427,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
          */
         function changeDepartment(college_id) {
 
-            if (Number(college_id) == 0) {
+            if (Number(college_id) === 0) {
                 var source = $("#department-template").html();
                 var template = Handlebars.compile(source);
 
@@ -484,7 +484,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "me
          */
         function changeScience(department_id) {
 
-            if (Number(department_id) == 0) {
+            if (Number(department_id) === 0) {
                 var source = $("#science-template").html();
                 var template = Handlebars.compile(source);
 
