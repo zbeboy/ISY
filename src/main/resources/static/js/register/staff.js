@@ -56,7 +56,7 @@ require(["jquery", "handlebars", "emails",
          */
         var valid_regex = {
             staff_number_valid_regex: /^\d{8,}$/,
-            email_valid_regex: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
+            email_valid_regex: /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+(([.\-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
             mobile_valid_regex: /^1[0-9]{10}$/,
             phone_verify_code_valid_regex: /^\w+$/,
             password_valid_regex: /^[a-zA-Z0-9]\w{5,17}$/
@@ -307,7 +307,7 @@ require(["jquery", "handlebars", "emails",
          * @param school_id 学校id
          */
         function changeCollege(school_id) {
-            if (Number(school_id) == 0) {
+            if (Number(school_id) === 0) {
                 var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
@@ -357,7 +357,7 @@ require(["jquery", "handlebars", "emails",
          */
         function changeDepartment(college_id) {
 
-            if (Number(college_id) == 0) {
+            if (Number(college_id) === 0) {
                 var template = Handlebars.compile($("#department-template").html());
 
                 var context = {
@@ -583,7 +583,7 @@ require(["jquery", "handlebars", "emails",
 
         //timer处理函数
         function SetRemainTime() {
-            if (curCount == 0) {
+            if (curCount === 0) {
                 window.clearInterval(InterValObj);//停止计时器
                 $(btnId).removeAttr("disabled");//启用按钮
                 $(btnId).val("重新发送验证码");

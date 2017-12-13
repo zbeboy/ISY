@@ -71,7 +71,7 @@ require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csr
          验证正则
          */
         var valid_regex = {
-            email: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+(([.-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            email: /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+(([.-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
         };
 
         /*
