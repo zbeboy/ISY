@@ -192,7 +192,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.18" level="project" />
     <orderEntry type="library" name="Maven: com.octo.captcha:jcaptcha:2.0-alpha-1" level="project" />
     <orderEntry type="library" name="Maven: com.octo.captcha:jcaptcha-api:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.41" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.42" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.10.3" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
