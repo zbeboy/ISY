@@ -40,48 +40,6 @@ open class MethodControllerCommon {
     @Resource
     open lateinit var buildingService: BuildingService
 
-    @Resource
-    open lateinit var collegeRoleService: CollegeRoleService
-
-    @Resource
-    open lateinit var authoritiesService: AuthoritiesService
-
-    @Resource
-    open lateinit var usersElasticRepository: UsersElasticRepository
-
-    @Resource
-    open lateinit var studentElasticRepository: StudentElasticRepository
-
-    @Resource
-    open lateinit var staffElasticRepository: StaffElasticRepository
-
-    @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
-
-    @Resource
-    open lateinit var cacheManageService: CacheManageService
-
-    @Resource
-    open lateinit var studentService: StudentService
-
-    @Resource
-    open lateinit var staffService: StaffService
-
-    /**
-     * 根据角色获取院id
-     *
-     * @param collegeId 页面院id
-     */
-    fun roleCollegeId(collegeId: Int?): Int? {
-        return if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) { // 管理员或其它角色
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            roleService.getRoleCollegeId(record)
-        } else {
-            collegeId
-        }
-    }
-
     /**
      * 通过毕业设计发布 生成楼数据
      *
@@ -117,165 +75,23 @@ open class MethodControllerCommon {
     }
 
     /**
-     * 获取设置角色时的角色数据
+     * 如果是管理员则获取院id，如果是普通学生或教职工角色则获取系id
      *
-     * @param username 被设置人的账号
-     * @return 角色数据
+     * @return 根据角色返回相应数据
      */
-    fun getRoleData(username: String): ArrayList<Role> {
-        // 根据此用户账号查询院下所有角色
-        val users = usersService.findByUsername(username)
-        val roles = ArrayList<Role>()
-        if (!ObjectUtils.isEmpty(users)) {
-            var isSystemAuthorities = false
-            if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-                roles.add(roleService.findByRoleEnName(Workbook.ADMIN_AUTHORITIES))
-                roles.add(roleService.findByRoleEnName(Workbook.OPS_AUTHORITIES))
-                isSystemAuthorities = true
-            }
+    fun adminOrNormalData(): Map<String, Int> {
+        val map = HashMap<String, Int>()
+        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            val users = usersService.getUserFromSession()
             val record = usersService.findUserSchoolInfo(users!!)
-            if (record.isPresent) {
-                val college = record.get().into(College::class.java)
-                val collegeRoleRecords = if (isSystemAuthorities || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                    collegeRoleService.findByCollegeId(college.collegeId!!)
-                } else {
-                    collegeRoleService.findByCollegeIdAndAllowAgent(college.collegeId!!, 1)
-                }
-                if (!ObjectUtils.isEmpty(collegeRoleRecords) && !collegeRoleRecords.isEmpty()) {
-                    val roleIds = ArrayList<String>()
-                    collegeRoleRecords.forEach { role -> roleIds.add(role.roleId) }
-                    val roleRecords = roleService.findInRoleId(roleIds)
-                    roles.addAll(roleRecords.into(Role::class.java))
-                }
-            }
+            val collegeId = roleService.getRoleCollegeId(record)
+            map.put("collegeId", collegeId)
+        } else if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            val users = usersService.getUserFromSession()
+            val record = usersService.findUserSchoolInfo(users!!)
+            val departmentId = roleService.getRoleDepartmentId(record)
+            map.put("departmentId", departmentId)
         }
-        return roles
-    }
-
-    /**
-     * 保存角色数据
-     */
-    fun roleSave(username: String, roles: String, request: HttpServletRequest): AjaxUtils<*> {
-        val ajaxUtils = AjaxUtils.of<Any>()
-        if (StringUtils.hasLength(roles)) {
-            val users = usersService.findByUsername(username)
-            if (!ObjectUtils.isEmpty(users)) {
-                if (!ObjectUtils.isEmpty(users!!.verifyMailbox) && users.verifyMailbox > 0) {
-                    val roleList = SmallPropsUtils.StringIdsToStringList(roles)
-                    // 禁止非系统用户 提升用户权限到系统或管理员级别权限
-                    if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && (roleList.contains(Workbook.ADMIN_AUTHORITIES) || roleList.contains(Workbook.SYSTEM_AUTHORITIES))) {
-                        return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限")
-                    }
-                    authoritiesService.deleteByUsername(username)
-                    val usersElastic = usersElasticRepository.findOne(username)
-                    val roleEnNames = ArrayList<String>()
-                    val stringBuilder = StringBuilder()
-                    roleList.forEach { role ->
-                        val authorities = Authorities(username, role)
-                        authoritiesService.save(authorities)
-                        val tempRole = roleService.findByRoleEnName(role)
-                        roleEnNames.add(tempRole.roleEnName)
-                        stringBuilder.append(tempRole.roleName).append(" ")
-                    }
-                    when {
-                        roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES) -> usersElastic.authorities = ElasticBook.SYSTEM_AUTHORITIES
-                        roleEnNames.contains(Workbook.ADMIN_AUTHORITIES) -> usersElastic.authorities = ElasticBook.ADMIN_AUTHORITIES
-                        else -> usersElastic.authorities = ElasticBook.HAS_AUTHORITIES
-                    }
-                    usersElastic.roleName = stringBuilder.toString().trim { it <= ' ' }
-                    usersElasticRepository.delete(username)
-                    usersElasticRepository.save(usersElastic)
-                    val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
-                    if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                        val studentElastic = studentElasticRepository.findByUsername(username)
-                        studentElastic.authorities = usersElastic.authorities
-                        studentElastic.roleName = usersElastic.roleName
-                        studentElasticRepository.deleteByUsername(username)
-                        studentElasticRepository.save(studentElastic)
-                    } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                        val staffElastic = staffElasticRepository.findByUsername(username)
-                        staffElastic.authorities = usersElastic.authorities
-                        staffElastic.roleName = usersElastic.roleName
-                        staffElasticRepository.deleteByUsername(username)
-                        staffElasticRepository.save(staffElastic)
-                    }
-                    val curUsers = usersService.getUserFromSession()
-                    val notify = "您的权限已变更为" + usersElastic.roleName + " ，请登录查看。"
-                    commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request)
-                    ajaxUtils.success().msg("更改用户角色成功")
-                } else {
-                    ajaxUtils.fail().msg("该用户未激活账号")
-                }
-            } else {
-                ajaxUtils.fail().msg("未查询到该用户信息")
-            }
-        } else {
-            ajaxUtils.fail().msg("用户角色参数异常")
-        }
-        return ajaxUtils
-    }
-
-    /**
-     * 更新用户状态
-     *
-     * @param userIds ids
-     * @param enabled 状态
-     * @return true 成功 false 失败
-     */
-    fun usersUpdateEnabled(userIds: String, enabled: Byte?): AjaxUtils<*> {
-        if (StringUtils.hasLength(userIds)) {
-            usersService.updateEnabled(SmallPropsUtils.StringIdsToStringList(userIds), enabled)
-            return AjaxUtils.of<Any>().success().msg("注销用户成功")
-        }
-        return AjaxUtils.of<Any>().fail().msg("注销用户失败")
-    }
-
-    /**
-     * 删除无角色关联的用户
-     *
-     * @param userIds 用户账号
-     * @return true 成功 false 失败
-     */
-    fun deleteUsers(userIds: String): AjaxUtils<*> {
-        val ajaxUtils = AjaxUtils.of<Any>()
-        if (StringUtils.hasLength(userIds)) {
-            val ids = SmallPropsUtils.StringIdsToStringList(userIds)
-            loop@ for (id in ids) {
-                val authoritiesRecords = authoritiesService.findByUsername(id)
-                if (!ObjectUtils.isEmpty(authoritiesRecords) && !authoritiesRecords.isEmpty()) {
-                    ajaxUtils.fail().msg("用户'$id'存在角色关联，无法删除")
-                    break
-                } else {
-                    val users = usersService.findByUsername(id)
-                    if (!ObjectUtils.isEmpty(users)) {
-                        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId)
-                        when (usersType.usersTypeName) {
-                            Workbook.STUDENT_USERS_TYPE  // 学生
-                            -> {
-                                studentService.deleteByUsername(id)
-                                usersService.deleteById(id)
-                                ajaxUtils.success().msg("删除用户成功")
-                            }
-                            Workbook.STAFF_USERS_TYPE  // 教职工
-                            -> {
-                                staffService.deleteByUsername(id)
-                                usersService.deleteById(id)
-                                ajaxUtils.success().msg("删除用户成功")
-                            }
-                            else -> {
-                                ajaxUtils.fail().msg("未获取到用户'$id'类型")
-                                break@loop
-                            }
-                        }
-                    } else {
-                        ajaxUtils.fail().msg("未查询到用户'$id'")
-                        break
-                    }
-                }
-            }
-        } else {
-            ajaxUtils.fail().msg("用户账号为空")
-        }
-        return ajaxUtils
+        return map
     }
 }

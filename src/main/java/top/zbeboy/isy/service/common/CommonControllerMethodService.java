@@ -3,19 +3,11 @@ package top.zbeboy.isy.service.common;
 import top.zbeboy.isy.domain.tables.pojos.Users;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * Created by lenovo on 2016-10-15.
  */
 public interface CommonControllerMethodService {
-
-    /**
-     * 获取实习数据 判断角色
-     *
-     * @return 根据角色返回相应数据
-     */
-    Map<String, Integer> accessRoleCondition();
 
     /**
      * 发送邮件通知

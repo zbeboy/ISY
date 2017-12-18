@@ -31,6 +31,7 @@ import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.graduate.design.release.GraduationDesignReleaseAddVo;
@@ -55,7 +56,7 @@ import java.util.Optional;
 public class GraduationDesignReleaseController {
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private GraduationDesignReleaseService graduationDesignReleaseService;
@@ -96,7 +97,7 @@ public class GraduationDesignReleaseController {
     public AjaxUtils<GraduationDesignReleaseBean> releaseDatas(PaginationUtils paginationUtils) {
         AjaxUtils<GraduationDesignReleaseBean> ajaxUtils = AjaxUtils.of();
         GraduationDesignReleaseBean graduationDesignReleaseBean = new GraduationDesignReleaseBean();
-        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        Map<String, Integer> commonData = methodControllerCommon.adminOrNormalData();
         graduationDesignReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         graduationDesignReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
@@ -117,7 +118,7 @@ public class GraduationDesignReleaseController {
         Byte isDel = 0;
         GraduationDesignReleaseBean graduationDesignReleaseBean = new GraduationDesignReleaseBean();
         graduationDesignReleaseBean.setGraduationDesignIsDel(isDel);
-        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        Map<String, Integer> commonData = methodControllerCommon.adminOrNormalData();
         graduationDesignReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         graduationDesignReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
@@ -156,7 +157,7 @@ public class GraduationDesignReleaseController {
      */
     @RequestMapping(value = "/web/graduate/design/release/add", method = RequestMethod.GET)
     public String releaseAdd(ModelMap modelMap) {
-        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        Map<String, Integer> commonData = methodControllerCommon.adminOrNormalData();
         modelMap.addAttribute("departmentId", StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         modelMap.addAttribute("collegeId", StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         return "web/graduate/design/release/design_release_add::#page-wrapper";

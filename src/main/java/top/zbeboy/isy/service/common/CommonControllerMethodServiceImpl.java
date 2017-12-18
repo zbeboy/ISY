@@ -1,7 +1,6 @@
 package top.zbeboy.isy.service.common;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,9 +24,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.time.Clock;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by lenovo on 2016-10-15.
@@ -66,25 +62,6 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
 
     @Resource
     private CacheManageService cacheManageService;
-
-    @Override
-    public Map<String, Integer> accessRoleCondition() {
-        Map<String, Integer> map = new HashMap<>();
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)
-                && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int departmentId = roleService.getRoleDepartmentId(record);
-            map.put("departmentId", departmentId);
-        }
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = roleService.getRoleCollegeId(record);
-            map.put("collegeId", collegeId);
-        }
-        return map;
-    }
 
     @Override
     public void sendNotify(Users users, Users curUsers, String messageTitle, String notify, HttpServletRequest request) {
@@ -126,9 +103,7 @@ public class CommonControllerMethodServiceImpl implements CommonControllerMethod
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 Users users = usersService.getUserFromSession();
                 Student student = studentService.findByUsername(users.getUsername());
-                if (!ObjectUtils.isEmpty(student) && student.getStudentId() != studentId) {
-                    return false;
-                }
+                return ObjectUtils.isEmpty(student) || student.getStudentId() == studentId;
             }
         }
         return true;

@@ -38,8 +38,9 @@ import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.bean.file.FileBean
 import top.zbeboy.isy.web.bean.platform.users.UsersBean
-import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.jcaptcha.CaptchaServiceSingleton
+import top.zbeboy.isy.web.platform.common.RoleControllerCommon
+import top.zbeboy.isy.web.platform.common.UsersControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.ImageUtils
@@ -131,7 +132,10 @@ open class UsersController {
     open lateinit var usersGlue: UsersGlue
 
     @Resource
-    open lateinit var methodControllerCommon: MethodControllerCommon
+    open lateinit var roleControllerCommon: RoleControllerCommon
+
+    @Resource
+    open lateinit var usersControllerCommon: UsersControllerCommon
 
     /**
      * 检验注册表单
@@ -588,7 +592,7 @@ open class UsersController {
     @RequestMapping(value = ["/web/platform/users/role/data"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
-        return AjaxUtils.of<Role>().success().listData(methodControllerCommon.getRoleData(username))
+        return AjaxUtils.of<Role>().success().listData(roleControllerCommon.getRoleData(username))
     }
 
     /**
@@ -602,7 +606,7 @@ open class UsersController {
     @RequestMapping(value = ["/web/platform/users/role/save"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleSave(@RequestParam("username") username: String, @RequestParam("roles") roles: String, request: HttpServletRequest): AjaxUtils<*> {
-        return methodControllerCommon.roleSave(username, roles, request)
+        return roleControllerCommon.roleSave(username, roles, request)
     }
 
     /**
@@ -681,7 +685,7 @@ open class UsersController {
     @RequestMapping("/web/platform/users/update/enabled")
     @ResponseBody
     fun usersUpdateEnabled(userIds: String, enabled: Byte?): AjaxUtils<*> {
-        return methodControllerCommon.usersUpdateEnabled(userIds, enabled)
+        return usersControllerCommon.usersUpdateEnabled(userIds, enabled)
     }
 
     /**
@@ -693,7 +697,7 @@ open class UsersController {
     @RequestMapping("/web/platform/users/deletes")
     @ResponseBody
     fun deleteUsers(@RequestParam("username") userIds: String): AjaxUtils<*> {
-        return methodControllerCommon.deleteUsers(userIds)
+        return usersControllerCommon.deleteUsers(userIds)
     }
 
     /**

@@ -121,7 +121,7 @@ public class InternshipReviewController {
         Byte isDel = 0;
         InternshipReleaseBean internshipReleaseBean = new InternshipReleaseBean();
         internshipReleaseBean.setInternshipReleaseIsDel(isDel);
-        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        Map<String, Integer> commonData = methodControllerCommon.adminOrNormalData();
         internshipReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         internshipReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean);

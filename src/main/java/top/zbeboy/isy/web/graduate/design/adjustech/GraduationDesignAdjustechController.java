@@ -34,6 +34,7 @@ import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignHopeTut
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
+import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -57,7 +58,7 @@ import java.util.concurrent.TimeUnit;
 public class GraduationDesignAdjustechController {
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
+    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private GraduationDesignReleaseService graduationDesignReleaseService;
@@ -185,7 +186,7 @@ public class GraduationDesignAdjustechController {
         Byte isDel = 0;
         GraduationDesignReleaseBean graduationDesignReleaseBean = new GraduationDesignReleaseBean();
         graduationDesignReleaseBean.setGraduationDesignIsDel(isDel);
-        Map<String, Integer> commonData = commonControllerMethodService.accessRoleCondition();
+        Map<String, Integer> commonData = methodControllerCommon.adminOrNormalData();
         graduationDesignReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         graduationDesignReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
         Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
