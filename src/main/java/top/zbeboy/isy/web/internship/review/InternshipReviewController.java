@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.*;
@@ -77,9 +76,6 @@ public class InternshipReviewController {
 
     @Resource
     private GraduationPracticeUnifyService graduationPracticeUnifyService;
-
-    @Resource
-    private CommonControllerMethodService commonControllerMethodService;
 
     @Resource
     private MethodControllerCommon methodControllerCommon;
@@ -548,7 +544,7 @@ public class InternshipReviewController {
                         Users users = userRecord.get().into(Users.class);
                         Users curUsers = usersService.getUserFromSession();
                         String notify = "您的自主实习 " + internshipRelease.getInternshipTitle() + " 申请已通过。";
-                        commonControllerMethodService.sendNotify(users, curUsers, internshipRelease.getInternshipTitle(), notify, request);
+                        methodControllerCommon.sendNotify(users, curUsers, internshipRelease.getInternshipTitle(), notify, request);
                     }
                     ajaxUtils.success().msg("保存成功");
                 } else {
@@ -772,7 +768,7 @@ public class InternshipReviewController {
                         Users users = userRecord.get().into(Users.class);
                         Users curUsers = usersService.getUserFromSession();
                         String notify = "已同意您的实习变更申请，请尽快登录系统在填写时间范围变更您的内容。";
-                        commonControllerMethodService.sendNotify(users, curUsers, "同意实习变更申请", notify, request);
+                        methodControllerCommon.sendNotify(users, curUsers, "同意实习变更申请", notify, request);
                     }
                 } else {
                     ajaxUtils.fail().msg("未查询到相关实习申请信息");
@@ -819,7 +815,7 @@ public class InternshipReviewController {
                     Users users = userRecord.get().into(Users.class);
                     Users curUsers = usersService.getUserFromSession();
                     String notify = "已拒绝您的实习变更申请。";
-                    commonControllerMethodService.sendNotify(users, curUsers, "拒绝实习变更申请", notify, request);
+                    methodControllerCommon.sendNotify(users, curUsers, "拒绝实习变更申请", notify, request);
                 }
             } else {
                 ajaxUtils.fail().msg("未查询到相关实习申请信息");
@@ -865,7 +861,7 @@ public class InternshipReviewController {
                 Users users = userRecord.get().into(Users.class);
                 Users curUsers = usersService.getUserFromSession();
                 String notify = "您的自主实习申请未通过，具体原因：" + reason;
-                commonControllerMethodService.sendNotify(users, curUsers, "实习申请未通过", notify, request);
+                methodControllerCommon.sendNotify(users, curUsers, "实习申请未通过", notify, request);
             }
         } else {
             ajaxUtils.fail().msg("未查询到相关申请信息");
@@ -897,7 +893,7 @@ public class InternshipReviewController {
                 Users users = userRecord.get().into(Users.class);
                 Users curUsers = usersService.getUserFromSession();
                 String notify = "您的自主实习可能存在问题，已被管理员删除此次申请，若您有任何疑问，请联系管理员";
-                commonControllerMethodService.sendNotify(users, curUsers, "实习申请被删除", notify, request);
+                methodControllerCommon.sendNotify(users, curUsers, "实习申请被删除", notify, request);
             }
             ajaxUtils.success().msg("删除申请成功");
         } else {

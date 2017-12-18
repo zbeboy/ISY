@@ -12,11 +12,11 @@ import top.zbeboy.isy.elastic.repository.StaffElasticRepository
 import top.zbeboy.isy.elastic.repository.StudentElasticRepository
 import top.zbeboy.isy.elastic.repository.UsersElasticRepository
 import top.zbeboy.isy.service.cache.CacheManageService
-import top.zbeboy.isy.service.common.CommonControllerMethodService
 import top.zbeboy.isy.service.data.CollegeRoleService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.AuthoritiesService
+import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.SmallPropsUtils
 import java.util.*
@@ -51,7 +51,7 @@ open class RoleMethodControllerCommon {
     open lateinit var staffElasticRepository: StaffElasticRepository
 
     @Resource
-    open lateinit var commonControllerMethodService: CommonControllerMethodService
+    open lateinit var methodControllerCommon: MethodControllerCommon
 
     @Resource
     open lateinit var cacheManageService: CacheManageService
@@ -141,7 +141,7 @@ open class RoleMethodControllerCommon {
                     }
                     val curUsers = usersService.getUserFromSession()
                     val notify = "您的权限已变更为" + usersElastic.roleName + " ，请登录查看。"
-                    commonControllerMethodService.sendNotify(users, curUsers, "权限变更", notify, request)
+                    methodControllerCommon.sendNotify(users, curUsers!!, "权限变更", notify, request)
                     ajaxUtils.success().msg("更改用户角色成功")
                 } else {
                     ajaxUtils.fail().msg("该用户未激活账号")

@@ -1,23 +1,23 @@
 package top.zbeboy.isy.web.common
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.ui.ModelMap
-import org.springframework.util.ObjectUtils
-import org.springframework.util.StringUtils
+import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.*
-import top.zbeboy.isy.elastic.config.ElasticBook
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository
-import top.zbeboy.isy.elastic.repository.StudentElasticRepository
-import top.zbeboy.isy.elastic.repository.UsersElasticRepository
 import top.zbeboy.isy.service.cache.CacheManageService
-import top.zbeboy.isy.service.common.CommonControllerMethodService
-import top.zbeboy.isy.service.data.*
+import top.zbeboy.isy.service.data.BuildingService
+import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
-import top.zbeboy.isy.service.system.AuthoritiesService
-import top.zbeboy.isy.web.util.AjaxUtils
-import top.zbeboy.isy.web.util.SmallPropsUtils
+import top.zbeboy.isy.service.system.MailService
+import top.zbeboy.isy.service.system.SystemAlertService
+import top.zbeboy.isy.service.system.SystemMessageService
+import top.zbeboy.isy.service.util.RequestUtils
+import top.zbeboy.isy.service.util.UUIDUtils
+import java.sql.Timestamp
+import java.time.Clock
 import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
@@ -39,6 +39,24 @@ open class MethodControllerCommon {
 
     @Resource
     open lateinit var buildingService: BuildingService
+
+    @Autowired
+    open lateinit var isyProperties: ISYProperties
+
+    @Autowired
+    open lateinit var requestUtils: RequestUtils
+
+    @Resource
+    open lateinit var mailService: MailService
+
+    @Resource
+    open lateinit var systemAlertService: SystemAlertService
+
+    @Resource
+    open lateinit var systemMessageService: SystemMessageService
+
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
 
     /**
      * 通过毕业设计发布 生成楼数据
@@ -93,5 +111,45 @@ open class MethodControllerCommon {
             map.put("departmentId", departmentId)
         }
         return map
+    }
+
+    /**
+     * 发送邮件通知
+     *
+     * @param users        接收者
+     * @param curUsers     发送者
+     * @param messageTitle 消息标题
+     * @param notify       通知内容
+     */
+    fun sendNotify(users: Users, curUsers: Users, messageTitle: String, notify: String, request: HttpServletRequest) {
+        //发送验证邮件
+        if (isyProperties.getMail().isOpen) {
+            mailService.sendNotifyMail(users, requestUtils.getBaseUrl(request), notify)
+        }
+
+        // 保存消息
+        val systemMessage = SystemMessage()
+        val messageId = UUIDUtils.getUUID()
+        val isSee: Byte = 0
+        val now = Timestamp(Clock.systemDefaultZone().millis())
+        systemMessage.systemMessageId = messageId
+        systemMessage.acceptUsers = users.username
+        systemMessage.isSee = isSee
+        systemMessage.sendUsers = curUsers.username
+        systemMessage.messageTitle = messageTitle
+        systemMessage.messageContent = notify
+        systemMessage.messageDate = now
+        systemMessageService.save(systemMessage)
+        // 保存提醒
+        val systemAlert = SystemAlert()
+        val systemAlertType = cacheManageService.findBySystemAlertTypeName(Workbook.ALERT_MESSAGE_TYPE)
+        systemAlert.systemAlertId = UUIDUtils.getUUID()
+        systemAlert.isSee = isSee
+        systemAlert.alertContent = "新消息"
+        systemAlert.linkId = messageId
+        systemAlert.systemAlertTypeId = systemAlertType.systemAlertTypeId
+        systemAlert.username = users.username
+        systemAlert.alertDate = now
+        systemAlertService.save(systemAlert)
     }
 }
