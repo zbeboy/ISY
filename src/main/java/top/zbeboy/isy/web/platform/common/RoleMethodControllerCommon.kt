@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest
  * Created by zbeboy 2017-12-18 .
  **/
 @Component
-open class RoleControllerCommon {
+open class RoleMethodControllerCommon {
 
     @Resource
     open lateinit var usersService: UsersService

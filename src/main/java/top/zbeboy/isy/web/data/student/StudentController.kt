@@ -26,8 +26,8 @@ import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.RandomUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.web.bean.data.student.StudentBean
-import top.zbeboy.isy.web.platform.common.RoleControllerCommon
-import top.zbeboy.isy.web.platform.common.UsersControllerCommon
+import top.zbeboy.isy.web.platform.common.RoleMethodControllerCommon
+import top.zbeboy.isy.web.platform.common.UsersMethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.vo.register.student.StudentVo
@@ -70,10 +70,10 @@ open class StudentController {
     open lateinit var studentGlue: StudentGlue
 
     @Resource
-    open lateinit var roleControllerCommon: RoleControllerCommon
+    open lateinit var roleMethodControllerCommon: RoleMethodControllerCommon
 
     @Resource
-    open lateinit var usersControllerCommon: UsersControllerCommon
+    open lateinit var usersMethodControllerCommon: UsersMethodControllerCommon
 
     /**
      * 判断学号是否已被注册
@@ -315,7 +315,7 @@ open class StudentController {
     @RequestMapping(value = ["/web/data/student/role/data"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleData(@RequestParam("username") username: String): AjaxUtils<Role> {
-        return AjaxUtils.of<Role>().success().listData(roleControllerCommon.getRoleData(username))
+        return AjaxUtils.of<Role>().success().listData(roleMethodControllerCommon.getRoleData(username))
     }
 
     /**
@@ -329,7 +329,7 @@ open class StudentController {
     @RequestMapping(value = ["/web/data/student/role/save"], method = [(RequestMethod.POST)])
     @ResponseBody
     fun roleSave(@RequestParam("username") username: String, @RequestParam("roles") roles: String, request: HttpServletRequest): AjaxUtils<*> {
-        return roleControllerCommon.roleSave(username, roles, request)
+        return roleMethodControllerCommon.roleSave(username, roles, request)
     }
 
     /**
@@ -342,7 +342,7 @@ open class StudentController {
     @RequestMapping("/web/data/student/users/update/enabled")
     @ResponseBody
     fun usersUpdateEnabled(userIds: String, enabled: Byte?): AjaxUtils<*> {
-        return usersControllerCommon.usersUpdateEnabled(userIds, enabled)
+        return usersMethodControllerCommon.usersUpdateEnabled(userIds, enabled)
     }
 
     /**
@@ -354,7 +354,7 @@ open class StudentController {
     @RequestMapping("/web/data/student/users/deletes")
     @ResponseBody
     fun deleteUsers(@RequestParam("username") userIds: String): AjaxUtils<*> {
-        return usersControllerCommon.deleteUsers(userIds)
+        return usersMethodControllerCommon.deleteUsers(userIds)
     }
 
     /**

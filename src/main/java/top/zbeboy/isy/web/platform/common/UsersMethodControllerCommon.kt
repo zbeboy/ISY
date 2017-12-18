@@ -17,7 +17,7 @@ import javax.annotation.Resource
  * Created by zbeboy 2017-12-18 .
  **/
 @Component
-open class UsersControllerCommon {
+open class UsersMethodControllerCommon {
 
     @Resource
     open lateinit var usersService: UsersService
