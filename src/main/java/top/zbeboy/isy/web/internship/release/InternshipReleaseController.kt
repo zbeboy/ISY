@@ -13,23 +13,22 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartHttpServletRequest
-import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.*
-import top.zbeboy.isy.service.common.CommonControllerMethodService
+import top.zbeboy.isy.domain.tables.pojos.Files
+import top.zbeboy.isy.domain.tables.pojos.InternshipFile
+import top.zbeboy.isy.domain.tables.pojos.InternshipRelease
+import top.zbeboy.isy.domain.tables.pojos.Science
 import top.zbeboy.isy.service.common.FilesService
 import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.internship.InternshipFileService
 import top.zbeboy.isy.service.internship.InternshipReleaseScienceService
 import top.zbeboy.isy.service.internship.InternshipReleaseService
-import top.zbeboy.isy.service.internship.InternshipTypeService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.DateTimeUtils
-import top.zbeboy.isy.service.util.FilesUtils
-import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.service.util.UUIDUtils
 import top.zbeboy.isy.web.bean.file.FileBean
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean
 import top.zbeboy.isy.web.common.MethodControllerCommon
+import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.PaginationUtils
 import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseAddVo
@@ -37,7 +36,7 @@ import top.zbeboy.isy.web.vo.internship.release.InternshipReleaseUpdateVo
 import java.sql.Timestamp
 import java.text.ParseException
 import java.time.Clock
-import java.util.ArrayList
+import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -51,9 +50,6 @@ open class InternshipReleaseController {
     private val log = LoggerFactory.getLogger(InternshipReleaseController::class.java)
 
     @Resource
-    open lateinit var internshipTypeService: InternshipTypeService
-
-    @Resource
     open lateinit var internshipReleaseService: InternshipReleaseService
 
     @Resource
@@ -61,6 +57,9 @@ open class InternshipReleaseController {
 
     @Resource
     open lateinit var methodControllerCommon: MethodControllerCommon
+
+    @Resource
+    open lateinit var internshipMethodControllerCommon: InternshipMethodControllerCommon
 
     @Resource
     open lateinit var usersService: UsersService
@@ -105,26 +104,6 @@ open class InternshipReleaseController {
     }
 
     /**
-     * 获取实习列表数据 用于实习教师分配等通用列表数据
-     *
-     * @param paginationUtils 分页工具
-     * @return 数据
-     */
-    @RequestMapping(value = ["/anyone/internship/data"], method = [(RequestMethod.GET)])
-    @ResponseBody
-    fun internshipListDatas(paginationUtils: PaginationUtils): AjaxUtils<InternshipReleaseBean> {
-        val ajaxUtils = AjaxUtils.of<InternshipReleaseBean>()
-        val internshipReleaseBean = InternshipReleaseBean()
-        internshipReleaseBean.internshipReleaseIsDel = 0
-        val commonData = methodControllerCommon.adminOrNormalData()
-        internshipReleaseBean.departmentId = if (StringUtils.isEmpty(commonData["departmentId"])) -1 else commonData["departmentId"]
-        internshipReleaseBean.collegeId = if (StringUtils.isEmpty(commonData["collegeId"])) -1 else commonData["collegeId"]
-        val records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean)
-        val internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean)
-        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils)
-    }
-
-    /**
      * 实习发布添加页面
      *
      * @param modelMap 页面对象
@@ -160,40 +139,6 @@ open class InternshipReleaseController {
         modelMap.addAttribute("internshipRelease", internshipRelease)
         modelMap.addAttribute("sciences", sciences)
         return "web/internship/release/internship_release_edit::#page-wrapper"
-    }
-
-    /**
-     * 获取实习类型数据
-     *
-     * @return 实习类型数据
-     */
-    @RequestMapping(value = ["/user/internship/types"], method = [(RequestMethod.GET)])
-    @ResponseBody
-    fun internshipTypes(): AjaxUtils<InternshipType> {
-        val ajaxUtils = AjaxUtils.of<InternshipType>()
-        val internshipTypes = ArrayList<InternshipType>()
-        val internshipType = InternshipType(0, "请选择实习类型")
-        internshipTypes.add(internshipType)
-        internshipTypes.addAll(internshipTypeService.findAll())
-        return ajaxUtils.success().msg("获取实习类型数据成功").listData(internshipTypes)
-    }
-
-    /**
-     * 获取实习附件数据
-     *
-     * @param internshipReleaseId 实习发布id
-     * @return 实习附件数据
-     */
-    @RequestMapping(value = ["/user/internship/files"], method = [(RequestMethod.GET)])
-    @ResponseBody
-    fun internshipFiles(@RequestParam("internshipReleaseId") internshipReleaseId: String): AjaxUtils<Files> {
-        val ajaxUtils = AjaxUtils.of<Files>()
-        var files: List<Files> = ArrayList()
-        val records = internshipFileService.findByInternshipReleaseId(internshipReleaseId)
-        if (records.isNotEmpty) {
-            files = records.into(Files::class.java)
-        }
-        return ajaxUtils.success().msg("获取实习附件数据成功").listData(files)
     }
 
     /**
@@ -373,21 +318,28 @@ open class InternshipReleaseController {
      * @param multipartHttpServletRequest 文件请求
      * @return 文件信息
      */
-    @RequestMapping("/anyone/users/upload/internship")
+    @RequestMapping("/web/internship/release/upload/file/internship")
     @ResponseBody
-    fun usersUploadInternship(schoolId: Int, collegeId: Int, @RequestParam("departmentId") departmentId: Int,
-                              multipartHttpServletRequest: MultipartHttpServletRequest): AjaxUtils<FileBean> {
-        val data = AjaxUtils.of<FileBean>()
-        try {
-            val path = Workbook.internshipPath(uploadService.schoolInfoPath(schoolId, collegeId, departmentId))
-            val fileBeen = uploadService.upload(multipartHttpServletRequest,
-                    RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.remoteAddr)
-            data.success().listData(fileBeen).obj(path)
-        } catch (e: Exception) {
-            log.error("Upload file exception,is {}", e)
-        }
+    fun uploadFileInternship(schoolId: Int, collegeId: Int, @RequestParam("departmentId") departmentId: Int,
+                             multipartHttpServletRequest: MultipartHttpServletRequest): AjaxUtils<FileBean> {
+        return internshipMethodControllerCommon.uploadFileInternship(schoolId, collegeId, departmentId, multipartHttpServletRequest)
+    }
 
-        return data
+    /**
+     * 删除实习附件
+     *
+     * @param filePath            文件路径
+     * @param request             请求
+     * @return true or false
+     */
+    @RequestMapping("/web/internship/release/delete/file")
+    @ResponseBody
+    fun deleteFile(@RequestParam("filePath") filePath: String, request: HttpServletRequest): AjaxUtils<*> {
+        return if (methodControllerCommon.deleteFile(filePath, request)) {
+            AjaxUtils.of<Any>().success().msg("删除文件成功")
+        } else {
+            AjaxUtils.of<Any>().fail().msg("删除文件失败")
+        }
     }
 
     /**
@@ -399,23 +351,10 @@ open class InternshipReleaseController {
      * @param request             请求
      * @return true or false
      */
-    @RequestMapping("/anyone/users/delete/file/internship")
+    @RequestMapping("/web/internship/release/delete/file/internship")
     @ResponseBody
     fun deleteFileInternship(@RequestParam("filePath") filePath: String, @RequestParam("fileId") fileId: String,
                              @RequestParam("internshipReleaseId") internshipReleaseId: String, request: HttpServletRequest): AjaxUtils<*> {
-        val ajaxUtils = AjaxUtils.of<Any>()
-        try {
-            if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
-                internshipFileService.deleteByFileIdAndInternshipReleaseId(fileId, internshipReleaseId)
-                filesService.deleteById(fileId)
-                ajaxUtils.success().msg("删除文件成功")
-            } else {
-                ajaxUtils.fail().msg("删除文件失败")
-            }
-        } catch (e: Exception) {
-            log.error("Delete file exception, is {}", e)
-        }
-
-        return ajaxUtils
+        return internshipMethodControllerCommon.deleteFileInternship(filePath, fileId, internshipReleaseId, request)
     }
 }

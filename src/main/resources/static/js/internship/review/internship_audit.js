@@ -18,7 +18,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
             back: '/web/menu/internship/review',
-            download_file: '/anyone/users/download/file'
+            download_file: '/web/internship/review/download/file'
         };
 
         // 刷新时选中菜单

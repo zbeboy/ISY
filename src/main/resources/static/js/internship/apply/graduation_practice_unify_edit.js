@@ -11,8 +11,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
         var ajax_url = {
             update: '/web/internship/apply/graduation/unify/update',
             teacher_data_url: '/web/internship/apply/teachers',
-            internship_files_url: '/user/internship/files',
-            download_file: '/anyone/users/download/file',
+            internship_files_url: '/anyone/internship/files',
+            download_file: '/web/internship/apply/download/file',
             back: '/web/menu/internship/apply'
         };
 

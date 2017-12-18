@@ -17,7 +17,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             science_data_url: '/user/grade/sciences',
             valid: '/web/graduate/design/release/save/valid',
             file_upload_url: '/anyone/users/upload/graduate/design',
-            delete_file_url: '/anyone/users/delete/file',
+            delete_file_url: '/web/graduate/design/release/delete/file',
             save: '/web/graduate/design/release/save',
             back: '/web/menu/graduate/design/release'
         };

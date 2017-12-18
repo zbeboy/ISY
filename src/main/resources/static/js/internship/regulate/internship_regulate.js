@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            internship_regulate_data_url: '/anyone/internship/data',
+            internship_regulate_data_url: '/web/internship/regulate/internship/data',
             regulate_url: '/web/internship/regulate/list',
             my_regulate: '/web/internship/regulate/my/list',
             my_regulate_condition: '/web/internship/regulate/my/list/condition',

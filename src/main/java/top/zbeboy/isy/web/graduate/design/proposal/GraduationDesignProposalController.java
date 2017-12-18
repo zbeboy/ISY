@@ -146,6 +146,18 @@ public class GraduationDesignProposalController {
     }
 
     /**
+     * 文件下载
+     *
+     * @param fileId   文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    @RequestMapping("/web/graduate/design/proposal/download/file")
+    public void downloadFile(@RequestParam("fileId") String fileId, HttpServletRequest request, HttpServletResponse response) {
+        methodControllerCommon.downloadFile(fileId, request, response);
+    }
+
+    /**
      * 我的资料页面
      *
      * @param graduationDesignReleaseId 毕业设计发布id

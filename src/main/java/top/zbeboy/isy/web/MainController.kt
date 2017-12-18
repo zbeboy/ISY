@@ -1,9 +1,7 @@
 package top.zbeboy.isy.web
 
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
-import org.springframework.util.ObjectUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,13 +10,8 @@ import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.ModelAndView
 import top.zbeboy.isy.annotation.logging.RecordSystemLogging
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.service.common.FilesService
-import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.system.AuthoritiesService
-import top.zbeboy.isy.service.util.FilesUtils
-import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.web.util.AjaxUtils
-import java.io.IOException
 import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
@@ -30,16 +23,8 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 open class MainController {
 
-    private val log = LoggerFactory.getLogger(MainController::class.java)
-
     @Resource
     lateinit open var localeResolver: LocaleResolver
-
-    @Resource
-    lateinit open var uploadService: UploadService
-
-    @Resource
-    lateinit open var filesService: FilesService
 
     @Resource
     lateinit open var authoritiesService: AuthoritiesService
@@ -152,46 +137,6 @@ open class MainController {
     @RequestMapping(value = ["/web/menu/backstage"], method = [(RequestMethod.GET)])
     open fun backstage(request: HttpServletRequest): String {
         return "backstage"
-    }
-
-    /**
-     * 删除文件
-     *
-     * @param filePath 文件路径
-     * @param request  请求
-     * @return true or false
-     */
-    @RequestMapping("/anyone/users/delete/file")
-    @ResponseBody
-    fun deleteFile(@RequestParam("filePath") filePath: String, request: HttpServletRequest): AjaxUtils<*> {
-        val ajaxUtils = AjaxUtils.of<Any>()
-        try {
-            if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
-                ajaxUtils.success().msg("删除文件成功")
-            } else {
-                ajaxUtils.fail().msg("删除文件失败")
-            }
-        } catch (e: IOException) {
-            log.error(" delete file is exception.", e)
-            ajaxUtils.fail().msg("删除文件异常")
-        }
-
-        return ajaxUtils
-    }
-
-    /**
-     * 文件下载
-     *
-     * @param fileId   文件id
-     * @param request  请求
-     * @param response 响应
-     */
-    @RequestMapping("/anyone/users/download/file")
-    fun downloadFile(@RequestParam("fileId") fileId: String, request: HttpServletRequest, response: HttpServletResponse) {
-        val files = filesService.findById(fileId)
-        if (!ObjectUtils.isEmpty(files)) {
-            uploadService.download(files.originalFileName, "/" + files.relativePath, response, request)
-        }
     }
 
     /**

@@ -1,12 +1,16 @@
 package top.zbeboy.isy.web.common
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.ui.ModelMap
+import org.springframework.util.ObjectUtils
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.service.cache.CacheManageService
+import top.zbeboy.isy.service.common.FilesService
+import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.data.BuildingService
 import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.platform.RoleService
@@ -14,19 +18,24 @@ import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.MailService
 import top.zbeboy.isy.service.system.SystemAlertService
 import top.zbeboy.isy.service.system.SystemMessageService
+import top.zbeboy.isy.service.util.FilesUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.service.util.UUIDUtils
+import java.io.IOException
 import java.sql.Timestamp
 import java.time.Clock
 import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by zbeboy 2017-12-07 .
  **/
 @Component
 open class MethodControllerCommon {
+
+    private val log = LoggerFactory.getLogger(MethodControllerCommon::class.java)
 
     @Resource
     open lateinit var usersService: UsersService
@@ -57,6 +66,12 @@ open class MethodControllerCommon {
 
     @Resource
     open lateinit var cacheManageService: CacheManageService
+
+    @Resource
+    lateinit open var uploadService: UploadService
+
+    @Resource
+    lateinit open var filesService: FilesService
 
     /**
      * 通过毕业设计发布 生成楼数据
@@ -151,5 +166,35 @@ open class MethodControllerCommon {
         systemAlert.username = users.username
         systemAlert.alertDate = now
         systemAlertService.save(systemAlert)
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param filePath            文件路径
+     * @param request             请求
+     * @return true or false
+     */
+    fun deleteFile(filePath: String, request: HttpServletRequest): Boolean {
+        return try {
+            FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)
+        } catch (e: IOException) {
+            log.error(" delete file is exception.", e)
+            false
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileId   文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    fun downloadFile(fileId: String, request: HttpServletRequest, response: HttpServletResponse) {
+        val files = filesService.findById(fileId)
+        if (!ObjectUtils.isEmpty(files)) {
+            uploadService.download(files.originalFileName, "/" + files.relativePath, response, request)
+        }
     }
 }

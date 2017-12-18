@@ -15,10 +15,10 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             department_data_url: '/user/departments',
             grade_data_url: '/user/department/grades',
             science_data_url: '/user/grade/sciences',
-            internship_type_url: '/user/internship/types',
+            internship_type_url: '/anyone/internship/types',
             valid: '/web/internship/release/save/valid',
-            file_upload_url: '/anyone/users/upload/internship',
-            delete_file_url: '/anyone/users/delete/file',
+            file_upload_url: '/web/internship/release/upload/file/internship',
+            delete_file_url: '/web/internship/release/delete/file',
             save: '/web/internship/release/save',
             back: '/web/menu/internship/release'
         };

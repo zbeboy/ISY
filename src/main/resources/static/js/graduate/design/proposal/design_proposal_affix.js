@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "nav_active", "files", "messenger", "jquery.add
          */
         var ajax_url = {
             graduate_design_release_files_url: '/user/graduate/design/files',
-            download_file: '/anyone/users/download/file',
+            download_file: '/web/graduate/design/proposal/download/file',
             back: '/web/menu/graduate/design/proposal'
         };
 

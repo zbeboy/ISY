@@ -18,7 +18,6 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.OrganizeService;
@@ -391,6 +390,25 @@ public class GraduationDesignReleaseController {
     }
 
     /**
+     * 删除附件
+     *
+     * @param filePath 文件路径
+     * @param request  请求
+     * @return true or false
+     */
+    @RequestMapping("/web/graduate/design/release/delete/file")
+    @ResponseBody
+    public AjaxUtils deleteFile(@RequestParam("filePath") String filePath, HttpServletRequest request) {
+        AjaxUtils ajaxUtils = AjaxUtils.of();
+        if (methodControllerCommon.deleteFile(filePath, request)) {
+            ajaxUtils.success().msg("删除文件成功");
+        } else {
+            ajaxUtils.fail().msg("删除文件失败");
+        }
+        return ajaxUtils;
+    }
+
+    /**
      * 删除毕业设计附件
      *
      * @param filePath                  文件路径
@@ -401,7 +419,7 @@ public class GraduationDesignReleaseController {
      */
     @RequestMapping("/anyone/users/delete/file/graduate/design")
     @ResponseBody
-    public AjaxUtils deleteFileInternship(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId,
+    public AjaxUtils deleteFileGraduateDesign(@RequestParam("filePath") String filePath, @RequestParam("fileId") String fileId,
                                           @RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId, HttpServletRequest request) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         try {

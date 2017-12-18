@@ -29,6 +29,7 @@ import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Clock;
@@ -1027,5 +1028,17 @@ public class InternshipReviewController {
         organizes.add(organize);
         organizes.addAll(organizeService.findByScienceId(scienceId));
         return ajaxUtils.success().msg("获取班级数据成功").listData(organizes);
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileId   文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    @RequestMapping("/web/internship/review/download/file")
+    public void downloadFile(@RequestParam("fileId") String fileId, HttpServletRequest request, HttpServletResponse response) {
+        methodControllerCommon.downloadFile(fileId, request, response);
     }
 }

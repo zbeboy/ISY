@@ -11,9 +11,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          */
         var ajax_url = {
             valid: '/web/internship/release/update/valid',
-            file_upload_url: '/anyone/users/upload/internship',
-            delete_file_url: '/anyone/users/delete/file/internship',
-            internship_files_url: '/user/internship/files',
+            file_upload_url: '/web/internship/release/upload/file/internship',
+            delete_file_url: '/web/internship/release/delete/file/internship',
+            internship_files_url: '/anyone/internship/files',
             update: '/web/internship/release/update',
             back: '/web/menu/internship/release'
         };

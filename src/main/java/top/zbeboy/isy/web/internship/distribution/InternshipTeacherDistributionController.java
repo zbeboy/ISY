@@ -27,9 +27,12 @@ import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
+import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;
@@ -67,6 +70,9 @@ public class InternshipTeacherDistributionController {
     @Resource
     private MethodControllerCommon methodControllerCommon;
 
+    @Resource
+    private InternshipMethodControllerCommon internshipMethodControllerCommon;
+
     /**
      * 实习教师分配
      *
@@ -75,6 +81,18 @@ public class InternshipTeacherDistributionController {
     @RequestMapping(value = "/web/menu/internship/teacher_distribution", method = RequestMethod.GET)
     public String teacherDistribution() {
         return "web/internship/distribution/internship_teacher_distribution::#page-wrapper";
+    }
+
+    /**
+     * 获取实习列表数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/teacher_distribution/internship/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        return internshipMethodControllerCommon.internshipListDatas(paginationUtils);
     }
 
     /**

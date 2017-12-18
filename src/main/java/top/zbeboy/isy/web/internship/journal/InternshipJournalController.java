@@ -37,9 +37,12 @@ import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
+import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.internship.journal.InternshipJournalVo;
 
@@ -114,6 +117,9 @@ public class InternshipJournalController {
     @Resource
     private CommonControllerMethodService commonControllerMethodService;
 
+    @Resource
+    private InternshipMethodControllerCommon internshipMethodControllerCommon;
+
     /**
      * 实习日志
      *
@@ -122,6 +128,18 @@ public class InternshipJournalController {
     @RequestMapping(value = "/web/menu/internship/journal", method = RequestMethod.GET)
     public String internshipJournal() {
         return "web/internship/journal/internship_journal::#page-wrapper";
+    }
+
+    /**
+     * 获取实习列表数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/internship/journal/internship/data", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxUtils<InternshipReleaseBean> internshipListDatas(PaginationUtils paginationUtils) {
+        return internshipMethodControllerCommon.internshipListDatas(paginationUtils);
     }
 
     /**

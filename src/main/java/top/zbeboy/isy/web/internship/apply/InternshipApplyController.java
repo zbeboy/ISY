@@ -41,6 +41,7 @@ import top.zbeboy.isy.web.vo.internship.apply.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -1382,6 +1383,18 @@ public class InternshipApplyController {
             data.fail().msg("删除文件异常");
         }
         return data;
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileId   文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    @RequestMapping("/web/internship/apply/download/file")
+    public void downloadFile(@RequestParam("fileId") String fileId, HttpServletRequest request, HttpServletResponse response) {
+        methodControllerCommon.downloadFile(fileId, request, response);
     }
 
     /**

@@ -19,7 +19,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             valid_student: '/web/internship/apply/valid/student',
             access_condition_url: '/web/internship/apply/condition',
             file_upload_url: '/web/internship/apply/upload',
-            download_file: '/anyone/users/download/file',
+            download_file: '/web/internship/apply/download/file',
             delete_file: '/web/internship/apply/delete/file'
         };
 
