@@ -13,12 +13,17 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
+import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.SystemAlertTypeDao
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao
 import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord
+import top.zbeboy.isy.service.data.CollegeService
+import top.zbeboy.isy.service.data.DepartmentService
+import top.zbeboy.isy.service.data.SchoolService
+import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.ApplicationService
 import java.util.*
@@ -48,6 +53,18 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
 
     @Resource
     open lateinit var usersService: UsersService
+
+    @Resource
+    open lateinit var roleService: RoleService
+
+    @Resource
+    open lateinit var schoolService: SchoolService
+
+    @Resource
+    open lateinit var collegeService: CollegeService
+
+    @Resource
+    open lateinit var departmentService: DepartmentService
 
     @Resource
     open lateinit var stringRedisTemplate: StringRedisTemplate
@@ -109,6 +126,35 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
             }
         }
         return departmentId
+    }
+
+    override fun schoolInfoPath(schoolId: Int?, collegeId: Int?, departmentId: Int): String {
+        val cacheKey = CacheBook.SCHOOL_INFO + departmentId
+        val ops = this.stringRedisTemplate.opsForValue()
+        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
+            return ops.get(cacheKey)
+        }
+        var path = "temp/"
+        var school: School? = null
+        var college: College? = null
+        var department: Department? = null
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            school = schoolService.findById(schoolId!!)
+            college = collegeService.findById(collegeId!!)
+            department = departmentService.findById(departmentId)
+        } else {
+            val record = departmentService.findByIdRelation(departmentId)
+            if (record.isPresent()) {
+                school = record.get().into(School::class.java)
+                college = record.get().into(College::class.java)
+                department = record.get().into(Department::class.java)
+            }
+        }
+        if (!ObjectUtils.isEmpty(school) && !ObjectUtils.isEmpty(college) && !ObjectUtils.isEmpty(department)) {
+            path = school!!.schoolName + "/" + college!!.collegeName + "/" + department!!.departmentName + "/"
+            ops.set(cacheKey, path, CacheBook.EXPIRES_SCHOOL_INFO_DAYS, TimeUnit.DAYS)
+        }
+        return path
     }
 
     @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_SYSTEM_ALERT_TYPE_BY_NAME), key = "#name")

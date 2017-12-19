@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import top.zbeboy.isy.config.Workbook
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.FilesService
 import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.internship.InternshipFileService
@@ -40,6 +41,9 @@ open class InternshipMethodControllerCommon {
     open lateinit var filesService: FilesService
 
     @Resource
+    open lateinit var cacheManageService: CacheManageService
+
+    @Resource
     open lateinit var internshipFileService: InternshipFileService
 
     /**
@@ -73,7 +77,7 @@ open class InternshipMethodControllerCommon {
                              multipartHttpServletRequest: MultipartHttpServletRequest): AjaxUtils<FileBean> {
         val data = AjaxUtils.of<FileBean>()
         try {
-            val path = Workbook.internshipPath(uploadService.schoolInfoPath(schoolId, collegeId, departmentId))
+            val path = Workbook.internshipPath(cacheManageService.schoolInfoPath(schoolId, collegeId, departmentId))
             val fileBeen = uploadService.upload(multipartHttpServletRequest,
                     RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.remoteAddr)
             data.success().listData(fileBeen).obj(path)

@@ -89,14 +89,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();
@@ -132,7 +124,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             param.teacherDistributionTime = $(paramId.teacherDistributionTime).val();
             param.time = $(paramId.time).val();
             param.internshipReleaseIsDel = $('input[name="internshipReleaseIsDel"]:checked').val();
-            if (typeof(param.internshipReleaseIsDel) == "undefined") {
+            if (typeof(param.internshipReleaseIsDel) === "undefined") {
                 param.internshipReleaseIsDel = 0;
             }
             var f = $('.fileobj');

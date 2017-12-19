@@ -28,6 +28,8 @@ open class CacheBook {
         val EXPIRES_APPLICATION_ID_DAYS: Long = 2
         @JvmField
         val EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_DAYS: Long = 30
+        @JvmField
+        val EXPIRES_SCHOOL_INFO_DAYS: Long = 300
         /*
         配置 KEY
          */
@@ -38,6 +40,8 @@ open class CacheBook {
         const val QUERY_SYSTEM_ALERT_TYPE_BY_NAME = "QUERY_SYSTEM_ALERT_TYPE_BY_NAME"
 
         const val MENU_HTML = "MENU_HTML_"
+
+        const val SCHOOL_INFO = "SCHOOL_INFO_"
 
         const val USER_APPLICATION_ID = "USER_APPLICATION_ID_"
 

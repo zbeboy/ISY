@@ -39,14 +39,4 @@ public interface UploadService {
      * @param response 响应
      */
     void reviewPic(String filePath, HttpServletRequest request, HttpServletResponse response);
-
-    /**
-     * 获取当前用户学校路径
-     *
-     * @param schoolId     学校id
-     * @param collegeId    院id
-     * @param departmentId 系id
-     * @return 路径
-     */
-    String schoolInfoPath(int schoolId, int collegeId, int departmentId);
 }

@@ -18,6 +18,7 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.OrganizeService;
@@ -74,6 +75,9 @@ public class GraduationDesignReleaseController {
 
     @Resource
     private OrganizeService organizeService;
+
+    @Resource
+    private CacheManageService cacheManageService;
 
     /**
      * 毕业设计发布
@@ -379,7 +383,7 @@ public class GraduationDesignReleaseController {
                                       MultipartHttpServletRequest multipartHttpServletRequest) {
         AjaxUtils<FileBean> data = AjaxUtils.of();
         try {
-            String path = Workbook.graduateDesignPath(uploadService.schoolInfoPath(schoolId, collegeId, departmentId));
+            String path = Workbook.graduateDesignPath(cacheManageService.schoolInfoPath(schoolId, collegeId, departmentId));
             List<FileBean> fileBeen = uploadService.upload(multipartHttpServletRequest,
                     RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.getRemoteAddr());
             data.success().listData(fileBeen).obj(path);

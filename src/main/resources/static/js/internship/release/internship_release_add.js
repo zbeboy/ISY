@@ -137,13 +137,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             param.teacherDistributionTime = $(paramId.teacherDistributionTime).val();
             param.time = $(paramId.time).val();
             param.schoolId = $(paramId.schoolId).val();
-            if (init_page_param.collegeId != -1) {
+            if (init_page_param.collegeId !== -1) {
                 param.collegeId = init_page_param.collegeId;
                 param.schoolId = 0;
             } else {
                 param.collegeId = $(paramId.collegeId).val();
             }
-            if (init_page_param.departmentId != -1) {
+            if (init_page_param.departmentId !== -1) {
                 param.departmentId = init_page_param.departmentId;
                 param.schoolId = 0;
                 param.collegeId = 0;
@@ -153,7 +153,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             param.grade = $(paramId.grade).val().trim();
             param.scienceId = $(paramId.scienceId).val();
             param.internshipReleaseIsDel = $('input[name="internshipReleaseIsDel"]:checked').val();
-            if (typeof(param.internshipReleaseIsDel) == "undefined") {
+            if (typeof(param.internshipReleaseIsDel) === "undefined") {
                 param.internshipReleaseIsDel = 0;
             }
             var f = $('.fileobj');
@@ -242,9 +242,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                 internshipTypeData(data);
             });
 
-            if (init_page_param.departmentId != -1) {
+            if (init_page_param.departmentId !== -1) {
                 changeGrade(init_page_param.departmentId);
-            } else if (init_page_param.collegeId != -1) {
+            } else if (init_page_param.collegeId !== -1) {
                 changeDepartment(init_page_param.collegeId);
             } else {
                 $.get(web_path + ajax_url.school_data_url, function (data) {
@@ -427,7 +427,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          * @param school_id 学校id
          */
         function changeCollege(school_id) {
-            if (Number(school_id) == 0) {
+            if (Number(school_id) === 0) {
                 var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
@@ -469,7 +469,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          */
         function changeDepartment(college_id) {
 
-            if (Number(college_id) == 0) {
+            if (Number(college_id) === 0) {
                 var template = Handlebars.compile($("#department-template").html());
 
                 var context = {
@@ -510,7 +510,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          * @param department_id 系id
          */
         function changeGrade(department_id) {
-            if (Number(department_id) == 0) {
+            if (Number(department_id) === 0) {
                 var template = Handlebars.compile($("#grade-template").html());
 
                 var context = {
@@ -553,7 +553,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          */
         function changeScience(grade, department) {
 
-            if (Number(grade) == 0) {
+            if (Number(grade) === 0) {
                 $(paramId.scienceId).html('');
                 $(paramId.scienceId).selectpicker('refresh');
             } else {
@@ -586,7 +586,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             },
             submit: function (e, data) {
                 initParam();
-                if (init_page_param.departmentId == -1 && init_page_param.collegeId == -1 && Number(param.schoolId) <= 0) {
+                if (init_page_param.departmentId === -1 && init_page_param.collegeId === -1 && Number(param.schoolId) <= 0) {
                     Messenger().post({
                         message: '请选择学校',
                         type: 'error',
@@ -595,7 +595,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                     return false;
                 }
 
-                if (init_page_param.departmentId == -1 && init_page_param.collegeId == -1 && Number(param.collegeId) <= 0) {
+                if (init_page_param.departmentId === -1 && init_page_param.collegeId === -1 && Number(param.collegeId) <= 0) {
                     Messenger().post({
                         message: '请选择院',
                         type: 'error',
@@ -604,8 +604,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                     return false;
                 }
 
-                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
-                        (init_page_param.departmentId == -1 && init_page_param.collegeId != -1))
+                if (((init_page_param.departmentId === -1 && init_page_param.collegeId === -1) ||
+                        (init_page_param.departmentId === -1 && init_page_param.collegeId !== -1))
                     && Number(param.departmentId) <= 0) {
                     Messenger().post({
                         message: '请选择系',
@@ -615,9 +615,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
                     return false;
                 }
 
-                if (((init_page_param.departmentId == -1 && init_page_param.collegeId == -1) ||
-                        (init_page_param.departmentId == -1 && init_page_param.collegeId != -1) ||
-                        (init_page_param.departmentId != -1 && init_page_param.collegeId == -1))
+                if (((init_page_param.departmentId === -1 && init_page_param.collegeId === -1) ||
+                        (init_page_param.departmentId === -1 && init_page_param.collegeId !== -1) ||
+                        (init_page_param.departmentId !== -1 && init_page_param.collegeId === -1))
                     && param.grade === '0') {
                     Messenger().post({
                         message: '请选择年级',
@@ -817,9 +817,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             var internshipTypeId = param.internshipTypeId;
             // 改变选项时，检验
             if (Number(internshipTypeId) > 0) {
-                if (init_page_param.departmentId != -1) {
+                if (init_page_param.departmentId !== -1) {
                     validGrade();
-                } else if (init_page_param.collegeId != -1) {
+                } else if (init_page_param.collegeId !== -1) {
                     validDepartmentId();
                 } else {
                     validSchoolId();

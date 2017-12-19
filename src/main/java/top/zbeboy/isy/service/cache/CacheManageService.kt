@@ -40,6 +40,16 @@ interface CacheManageService {
     fun getRoleDepartmentId(users: Users): Int
 
     /**
+     * 获取当前用户学校路径
+     *
+     * @param schoolId     学校id
+     * @param collegeId    院id
+     * @param departmentId 系id
+     * @return 路径
+     */
+    fun schoolInfoPath(schoolId: Int?, collegeId: Int?, departmentId: Int): String
+
+    /**
      * 通过类型名查询
      *
      * @param name 类型名
