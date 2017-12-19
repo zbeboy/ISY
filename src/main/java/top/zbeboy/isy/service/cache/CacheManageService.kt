@@ -24,6 +24,22 @@ interface CacheManageService {
     fun findByUsersTypeId(usersTypeId: Int): UsersType
 
     /**
+     * 获取角色院id
+     *
+     * @param users 用户信息
+     * @return id
+     */
+    fun getRoleCollegeId(users: Users): Int
+
+    /**
+     * 获取角色系id
+     *
+     * @param users 用户信息
+     * @return id
+     */
+    fun getRoleDepartmentId(users: Users): Int
+
+    /**
      * 通过类型名查询
      *
      * @param name 类型名

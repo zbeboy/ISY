@@ -3,6 +3,7 @@ package top.zbeboy.isy.web.common
 import org.springframework.stereotype.Component
 import org.springframework.ui.ModelMap
 import top.zbeboy.isy.config.Workbook
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import javax.annotation.Resource
@@ -19,6 +20,9 @@ open class PageParamControllerCommon {
     @Resource
     open lateinit var usersService: UsersService
 
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
+
     /**
      * 当前用户的角色名与院id
      *
@@ -30,8 +34,7 @@ open class PageParamControllerCommon {
         } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME)
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
+            val collegeId = cacheManageService.getRoleCollegeId(users!!)
             modelMap.addAttribute("collegeId", collegeId)
         }
     }
@@ -47,8 +50,7 @@ open class PageParamControllerCommon {
         } else {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME)
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
+            val collegeId = cacheManageService.getRoleCollegeId(users!!)
             modelMap.addAttribute("collegeId", collegeId)
         }
     }
@@ -64,13 +66,11 @@ open class PageParamControllerCommon {
         } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME)
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
+            val collegeId = cacheManageService.getRoleCollegeId(users!!)
             modelMap.addAttribute("collegeId", collegeId)
         } else {
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val departmentId = roleService.getRoleDepartmentId(record)
+            val departmentId = cacheManageService.getRoleDepartmentId(users!!)
             modelMap.addAttribute("departmentId", departmentId)
         }
     }

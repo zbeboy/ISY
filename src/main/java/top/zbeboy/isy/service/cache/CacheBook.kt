@@ -27,7 +27,7 @@ open class CacheBook {
         @JvmField
         val EXPIRES_APPLICATION_ID_DAYS: Long = 2
         @JvmField
-        val EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT: Long = 30
+        val EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_DAYS: Long = 30
         /*
         配置 KEY
          */
@@ -46,6 +46,10 @@ open class CacheBook {
         const val USER_ROLE_ID = "USER_ROLE_ID_"
 
         const val USER_ROLE = "USER_ROLE_"
+
+        const val USER_COLLEGE_ID = "USER_COLLEGE_ID_"
+
+        const val USER_DEPARTMENT_ID = "USER_DEPARTMENT_ID_"
 
         const val GRADUATION_DESIGN_TEACHER_STUDENT_COUNT = "GRADUATION_DESIGN_TEACHER_STUDENT_COUNT_"
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
@@ -123,6 +124,9 @@ public class InternshipApplyController {
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
 
+    @Resource
+    private CacheManageService cacheManageService;
+
     /**
      * 实习申请
      *
@@ -150,7 +154,7 @@ public class InternshipApplyController {
                 && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int departmentId = roleService.getRoleDepartmentId(record);
+            int departmentId = cacheManageService.getRoleDepartmentId(users);
             internshipReleaseBean.setDepartmentId(departmentId);
             if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 Organize organize = record.get().into(Organize.class);
@@ -160,7 +164,7 @@ public class InternshipApplyController {
         if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             Users users = usersService.getUserFromSession();
             Optional<Record> record = usersService.findUserSchoolInfo(users);
-            int collegeId = roleService.getRoleCollegeId(record);
+            int collegeId = cacheManageService.getRoleCollegeId(users);
             internshipReleaseBean.setCollegeId(collegeId);
             if (record.isPresent() && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 Organize organize = record.get().into(Organize.class);

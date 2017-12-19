@@ -5,6 +5,7 @@ import org.elasticsearch.index.query.QueryBuilders
 import org.springframework.stereotype.Component
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.elastic.config.ElasticBook
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -22,6 +23,9 @@ open class MethodGlueCommon {
     @Resource
     open lateinit var usersService: UsersService
 
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
+
     /**
      * 构建该角色查询条件
      */
@@ -34,15 +38,13 @@ open class MethodGlueCommon {
             }
             roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {// 管理员
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val collegeId = roleService.getRoleCollegeId(record)
+                val collegeId = cacheManageService.getRoleCollegeId(users!!)
                 boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.HAS_AUTHORITIES))
                 boolqueryBuilder.must(QueryBuilders.termQuery("collegeId", collegeId))
             }
             else -> {
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val departmentId = roleService.getRoleDepartmentId(record)
+                val departmentId = cacheManageService.getRoleDepartmentId(users!!)
                 boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.HAS_AUTHORITIES))
                 boolqueryBuilder.must(QueryBuilders.termQuery("departmentId", departmentId))
                 boolqueryBuilder.mustNot(QueryBuilders.termQuery("username", SQLQueryUtils.phraseQueryingUsername(users.username)))
@@ -60,15 +62,13 @@ open class MethodGlueCommon {
             roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
             roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {// 管理员
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val collegeId = roleService.getRoleCollegeId(record)
+                val collegeId = cacheManageService.getRoleCollegeId(users!!)
                 boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
                 boolqueryBuilder.must(QueryBuilders.termQuery("collegeId", collegeId))
             }
             else -> {
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val departmentId = roleService.getRoleDepartmentId(record)
+                val departmentId = cacheManageService.getRoleDepartmentId(users!!)
                 boolqueryBuilder.must(QueryBuilders.termQuery("authorities", ElasticBook.NO_AUTHORITIES))
                 boolqueryBuilder.must(QueryBuilders.termQuery("departmentId", departmentId))
                 boolqueryBuilder.mustNot(QueryBuilders.termQuery("username", SQLQueryUtils.phraseQueryingUsername(users.username)))

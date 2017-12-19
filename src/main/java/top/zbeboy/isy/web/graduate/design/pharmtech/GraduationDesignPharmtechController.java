@@ -304,7 +304,7 @@ public class GraduationDesignPharmtechController {
                         if (isNewSelect) {
                             stringValueOperations.set(studentKey,
                                     graduationDesignTeacherId + "," + student.getStudentId(),
-                                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT, TimeUnit.DAYS);
+                                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_DAYS, TimeUnit.DAYS);
                         } else {
                             stringValueOperations.set(studentKey,
                                     graduationDesignTeacherId + "," + student.getStudentId());

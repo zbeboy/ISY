@@ -13,11 +13,10 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.RoleDao
-import top.zbeboy.isy.domain.tables.pojos.College
-import top.zbeboy.isy.domain.tables.pojos.Department
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.records.CollegeRoleRecord
 import top.zbeboy.isy.domain.tables.records.RoleRecord
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.platform.role.RoleBean
@@ -39,6 +38,9 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
 
     @Resource
     open lateinit var usersService: UsersService
+
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
 
     override fun findByRoleEnName(roleEnName: String): Role {
         return roleDao.fetchOne(ROLE.ROLE_EN_NAME, roleEnName)
@@ -275,28 +277,6 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
         return false
     }
 
-    override fun getRoleCollegeId(record: Optional<Record>): Int {
-        var collegeId = 0
-        if (record.isPresent) {
-            val college = record.get().into(College::class.java)
-            if (!ObjectUtils.isEmpty(college)) {
-                collegeId = college.collegeId!!
-            }
-        }
-        return collegeId
-    }
-
-    override fun getRoleDepartmentId(record: Optional<Record>): Int {
-        var departmentId = 0
-        if (record.isPresent) {
-            val department = record.get().into(Department::class.java)
-            if (!ObjectUtils.isEmpty(department)) {
-                departmentId = department.departmentId!!
-            }
-        }
-        return departmentId
-    }
-
     /**
      * 获取系统默认角色
      *
@@ -428,8 +408,7 @@ open class RoleServiceImpl @Autowired constructor(dslContext: DSLContext) : Data
             condition = ROLE.ROLE_EN_NAME.notIn(defaultRoles)
         } else if (isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = getRoleCollegeId(record)
+            val collegeId = cacheManageService.getRoleCollegeId(users!!)
             condition = COLLEGE.COLLEGE_ID.eq(collegeId)
         }
         return condition!!

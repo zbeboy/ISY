@@ -19,6 +19,7 @@ import top.zbeboy.isy.elastic.pojo.StudentElastic
 import top.zbeboy.isy.elastic.repository.StudentElasticRepository
 import top.zbeboy.isy.glue.common.MethodGlueCommon
 import top.zbeboy.isy.glue.util.ResultUtils
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -44,6 +45,9 @@ open class StudentGlueImpl : StudentGlue {
 
     @Resource
     open lateinit var methodGlueCommon: MethodGlueCommon
+
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
 
     override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): ResultUtils<List<StudentBean>> {
         val search = dataTablesUtils.search
@@ -75,14 +79,12 @@ open class StudentGlueImpl : StudentGlue {
             }
             roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val collegeId = roleService.getRoleCollegeId(record)
+                val collegeId = cacheManageService.getRoleCollegeId(users!!)
                 studentElasticRepository.countByAuthoritiesAndCollegeId(ElasticBook.HAS_AUTHORITIES, collegeId)
             }
             else -> {
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val departmentId = roleService.getRoleDepartmentId(record)
+                val departmentId = cacheManageService.getRoleDepartmentId(users!!)
                 studentElasticRepository.countByAuthoritiesAndDepartmentIdAndUsernameNot(ElasticBook.HAS_AUTHORITIES, departmentId, users.username)
             }
         }
@@ -93,14 +95,12 @@ open class StudentGlueImpl : StudentGlue {
             roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) -> studentElasticRepository.countByAuthorities(ElasticBook.NO_AUTHORITIES)
             roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES) -> {
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val collegeId = roleService.getRoleCollegeId(record)
+                val collegeId = cacheManageService.getRoleCollegeId(users!!)
                 studentElasticRepository.countByAuthoritiesAndCollegeId(ElasticBook.NO_AUTHORITIES, collegeId)
             }
             else -> {
                 val users = usersService.getUserFromSession()
-                val record = usersService.findUserSchoolInfo(users!!)
-                val departmentId = roleService.getRoleDepartmentId(record)
+                val departmentId = cacheManageService.getRoleDepartmentId(users!!)
                 studentElasticRepository.countByAuthoritiesAndDepartmentIdAndUsernameNot(ElasticBook.NO_AUTHORITIES, departmentId, users.username)
             }
         }

@@ -15,6 +15,7 @@ import top.zbeboy.isy.elastic.pojo.OrganizeElastic
 import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.glue.plugin.ElasticPlugin
 import top.zbeboy.isy.glue.util.ResultUtils
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -38,6 +39,9 @@ open class OrganizeGlueImpl : ElasticPlugin<OrganizeBean>(), OrganizeGlue {
     @Resource
     open lateinit var usersService: UsersService
 
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
+
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<OrganizeBean>): ResultUtils<List<OrganizeBean>> {
         val search = dataTablesUtils.search
         val resultUtils = ResultUtils<List<OrganizeBean>>()
@@ -57,13 +61,11 @@ open class OrganizeGlueImpl : ElasticPlugin<OrganizeBean>(), OrganizeGlue {
             organizeElasticRepository.count()
         } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) { // 管理员
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
+            val collegeId = cacheManageService.getRoleCollegeId(users!!)
             organizeElasticRepository.countByCollegeId(collegeId)
         } else { // 其它学校自由角色
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val departmentId = roleService.getRoleDepartmentId(record)
+            val departmentId = cacheManageService.getRoleDepartmentId(users!!)
             organizeElasticRepository.countByDepartmentId(departmentId)
         }
     }
@@ -106,13 +108,11 @@ open class OrganizeGlueImpl : ElasticPlugin<OrganizeBean>(), OrganizeGlue {
         boolqueryBuilder.must(searchCondition(search))
         if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {// 管理员
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
+            val collegeId = cacheManageService.getRoleCollegeId(users!!)
             boolqueryBuilder.must(QueryBuilders.termQuery("collegeId", collegeId))
         } else {// 其它学校自由角色
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val departmentId = roleService.getRoleDepartmentId(record)
+            val departmentId = cacheManageService.getRoleDepartmentId(users!!)
             boolqueryBuilder.must(QueryBuilders.termQuery("departmentId", departmentId))
         }
         return boolqueryBuilder

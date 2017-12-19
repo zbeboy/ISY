@@ -305,14 +305,14 @@ public class GraduationDesignTeacherController {
                                     ops.set(
                                             CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.getGraduationDesignTeacherId(),
                                             graduationDesignTeacher.getStudentCount() + "",
-                                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
+                                            CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_DAYS,
                                             TimeUnit.DAYS)
                             );
                             // 列表刷到缓存
                             stringListValueOperations.set(
                                     CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId,
                                     graduationDesignTeachers,
-                                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT,
+                                    CacheBook.EXPIRES_GRADUATION_DESIGN_TEACHER_STUDENT_DAYS,
                                     TimeUnit.DAYS
                             );
                             Byte b = 1;

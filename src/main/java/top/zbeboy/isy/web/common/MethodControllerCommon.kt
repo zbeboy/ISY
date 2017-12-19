@@ -116,13 +116,11 @@ open class MethodControllerCommon {
         val map = HashMap<String, Int>()
         if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = roleService.getRoleCollegeId(record)
+            val collegeId = cacheManageService.getRoleCollegeId(users!!)
             map.put("collegeId", collegeId)
         } else if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val departmentId = roleService.getRoleDepartmentId(record)
+            val departmentId = cacheManageService.getRoleDepartmentId(users!!)
             map.put("departmentId", departmentId)
         }
         return map

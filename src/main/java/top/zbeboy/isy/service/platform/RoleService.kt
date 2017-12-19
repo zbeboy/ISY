@@ -182,20 +182,4 @@ interface RoleService {
      * @return true 有 false 无
      */
     fun isCurrentUserInRole(role: String): Boolean
-
-    /**
-     * 获取角色院id
-     *
-     * @param record 数据库信息
-     * @return id
-     */
-    fun getRoleCollegeId(record: Optional<Record>): Int
-
-    /**
-     * 获取角色系id
-     *
-     * @param record 数据库信息
-     * @return id
-     */
-    fun getRoleDepartmentId(record: Optional<Record>): Int
 }

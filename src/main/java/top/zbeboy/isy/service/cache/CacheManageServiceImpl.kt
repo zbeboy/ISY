@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.cache
 
 import org.jooq.DSLContext
+import org.jooq.Record
 import org.jooq.Result
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,6 +19,7 @@ import top.zbeboy.isy.domain.tables.daos.UsersTypeDao
 import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord
+import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.ApplicationService
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -45,6 +47,9 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     open lateinit var systemAlertTypeDao: SystemAlertTypeDao
 
     @Resource
+    open lateinit var usersService: UsersService
+
+    @Resource
     open lateinit var stringRedisTemplate: StringRedisTemplate
 
     @Resource(name = "redisTemplate")
@@ -59,6 +64,9 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     @Resource(name = "redisTemplate")
     open lateinit var roleValueOperations: ValueOperations<String, List<Role>>
 
+    @Resource(name = "redisTemplate")
+    open lateinit var integerValueOperations: ValueOperations<String, Int>
+
     @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_USER_TYPE_BY_NAME), key = "#usersTypeName")
     override fun findByUsersTypeName(usersTypeName: String): UsersType {
         return usersTypeDao.fetchOne(USERS_TYPE.USERS_TYPE_NAME, usersTypeName)
@@ -67,6 +75,40 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_USER_TYPE_BY_ID), key = "#usersTypeId")
     override fun findByUsersTypeId(usersTypeId: Int): UsersType {
         return usersTypeDao.findById(usersTypeId)
+    }
+
+    override fun getRoleCollegeId(users: Users): Int {
+        val cacheKey = CacheBook.USER_COLLEGE_ID + users.username
+        if (integerValueOperations.operations.hasKey(cacheKey)!!) {
+            return integerValueOperations.get(cacheKey)
+        }
+        var collegeId = 0
+        val record = usersService.findUserSchoolInfo(users)
+        if (record.isPresent) {
+            val college = record.get().into(College::class.java)
+            if (!ObjectUtils.isEmpty(college)) {
+                collegeId = college.collegeId!!
+                integerValueOperations.set(cacheKey, collegeId, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
+            }
+        }
+        return collegeId
+    }
+
+    override fun getRoleDepartmentId(users: Users): Int {
+        val cacheKey = CacheBook.USER_DEPARTMENT_ID + users.username
+        if (integerValueOperations.operations.hasKey(cacheKey)!!) {
+            return integerValueOperations.get(cacheKey)
+        }
+        var departmentId = 0
+        val record = usersService.findUserSchoolInfo(users)
+        if (record.isPresent) {
+            val department = record.get().into(Department::class.java)
+            if (!ObjectUtils.isEmpty(department)) {
+                departmentId = department.departmentId!!
+                integerValueOperations.set(cacheKey, departmentId, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
+            }
+        }
+        return departmentId
     }
 
     @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_SYSTEM_ALERT_TYPE_BY_NAME), key = "#name")
