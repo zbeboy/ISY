@@ -39,6 +39,7 @@ import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistribu
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -62,9 +63,6 @@ import java.util.*;
 @Slf4j
 @Controller
 public class InternshipJournalController {
-
-    @Resource
-    private InternshipReleaseService internshipReleaseService;
 
     @Resource
     private InternshipApplyService internshipApplyService;
@@ -119,6 +117,9 @@ public class InternshipJournalController {
 
     @Resource
     private InternshipMethodControllerCommon internshipMethodControllerCommon;
+
+    @Resource
+    private InternshipConditionCommon internshipConditionCommon;
 
     /**
      * 实习日志
@@ -791,7 +792,7 @@ public class InternshipJournalController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
                 errorBean.setHasError(true);

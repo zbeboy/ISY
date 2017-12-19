@@ -29,6 +29,7 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -72,6 +73,9 @@ public class InternshipTeacherDistributionController {
 
     @Resource
     private InternshipMethodControllerCommon internshipMethodControllerCommon;
+
+    @Resource
+    private InternshipConditionCommon internshipConditionCommon;
 
     /**
      * 实习教师分配
@@ -142,7 +146,7 @@ public class InternshipTeacherDistributionController {
     @RequestMapping("/web/internship/teacher_distribution/distribution/look")
     public String distributionLook(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             page = "web/internship/distribution/internship_distribution_look::#page-wrapper";
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
@@ -159,7 +163,7 @@ public class InternshipTeacherDistributionController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId) {
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
             if (DateTimeUtils.timestampRangeDecide(internshipRelease.getTeacherDistributionStartTime(), internshipRelease.getTeacherDistributionEndTime())) {
@@ -186,7 +190,7 @@ public class InternshipTeacherDistributionController {
         if (StringUtils.hasLength(internshipReleaseId)) {
             ErrorBean<InternshipRelease> errorBean = accessCondition(internshipReleaseId);
             if (!errorBean.isHasError()) {
-                dataTablesUtils = getData(request, dataTablesUtils, internshipReleaseId);
+                getData(request, dataTablesUtils, internshipReleaseId);
             }
         }
         return dataTablesUtils;
@@ -204,9 +208,9 @@ public class InternshipTeacherDistributionController {
         String internshipReleaseId = request.getParameter("internshipReleaseId");
         DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils = DataTablesUtils.of();
         if (StringUtils.hasLength(internshipReleaseId)) {
-            ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+            ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
             if (!errorBean.isHasError()) {
-                dataTablesUtils = getData(request, dataTablesUtils, internshipReleaseId);
+                getData(request, dataTablesUtils, internshipReleaseId);
             }
         }
         return dataTablesUtils;
@@ -220,7 +224,7 @@ public class InternshipTeacherDistributionController {
      * @param internshipReleaseId 实习发布id
      * @return 数据
      */
-    private DataTablesUtils<InternshipTeacherDistributionBean> getData(HttpServletRequest request, DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, String internshipReleaseId) {
+    private void getData(HttpServletRequest request, DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, String internshipReleaseId) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
         headers.add("select");
@@ -238,7 +242,6 @@ public class InternshipTeacherDistributionController {
         dataTablesUtils.setData(internshipTeacherDistributionBeens);
         dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId));
         dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId));
-        return dataTablesUtils;
     }
 
     /**
@@ -678,7 +681,7 @@ public class InternshipTeacherDistributionController {
     @ResponseBody
     public AjaxUtils deleteNotApply(@RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             internshipTeacherDistributionService.deleteNotApply(internshipReleaseId);
             ajaxUtils.success().msg("删除成功");

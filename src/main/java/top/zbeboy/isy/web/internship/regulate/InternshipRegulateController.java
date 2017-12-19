@@ -39,6 +39,7 @@ import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
@@ -97,6 +98,9 @@ public class InternshipRegulateController {
 
     @Resource
     private InternshipMethodControllerCommon internshipMethodControllerCommon;
+
+    @Resource
+    private InternshipConditionCommon internshipConditionCommon;
 
     /**
      * 实习监管
@@ -570,7 +574,7 @@ public class InternshipRegulateController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int staffId) {
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             // 强制身份判断
             if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {

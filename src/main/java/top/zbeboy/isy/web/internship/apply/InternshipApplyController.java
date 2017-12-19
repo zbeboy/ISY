@@ -35,6 +35,7 @@ import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.internship.apply.*;
@@ -118,6 +119,9 @@ public class InternshipApplyController {
 
     @Resource
     private FilesService filesService;
+
+    @Resource
+    private InternshipConditionCommon internshipConditionCommon;
 
     /**
      * 实习申请
@@ -1404,7 +1408,7 @@ public class InternshipApplyController {
      * @return true or false
      */
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
                 errorBean.setHasError(true);

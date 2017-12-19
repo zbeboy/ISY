@@ -24,6 +24,7 @@ import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 
@@ -96,6 +97,9 @@ public class InternshipReviewController {
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private InternshipConditionCommon internshipConditionCommon;
+
     /**
      * 实习审核
      *
@@ -145,7 +149,7 @@ public class InternshipReviewController {
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String internshipReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
@@ -163,7 +167,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit", method = RequestMethod.GET)
     public String reviewAudit(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_audit::#page-wrapper";
@@ -183,7 +187,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/pass", method = RequestMethod.GET)
     public String reviewPass(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_pass::#page-wrapper";
@@ -203,7 +207,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/fail", method = RequestMethod.GET)
     public String reviewFail(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_fail::#page-wrapper";
@@ -223,7 +227,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/base_info_apply", method = RequestMethod.GET)
     public String reviewBaseInfoApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_base_info_apply::#page-wrapper";
@@ -243,7 +247,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/base_info_fill", method = RequestMethod.GET)
     public String reviewBaseInfoFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_base_info_fill::#page-wrapper";
@@ -263,7 +267,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/company_apply", method = RequestMethod.GET)
     public String reviewCompanyApply(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_company_apply::#page-wrapper";
@@ -283,7 +287,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/company_fill", method = RequestMethod.GET)
     public String reviewCompanyFill(@RequestParam("id") String internshipReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId);
             page = "web/internship/review/internship_company_fill::#page-wrapper";
@@ -304,7 +308,7 @@ public class InternshipReviewController {
     @RequestMapping(value = "/web/internship/review/audit/detail", method = RequestMethod.GET)
     public String auditDetail(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, ModelMap modelMap) {
         String page;
-        ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReleaseId);
+        ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
             InternshipRelease internshipRelease = errorBean.getData();
             InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());
@@ -496,7 +500,7 @@ public class InternshipReviewController {
     public AjaxUtils auditSave(InternshipReviewBean internshipReviewBean) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!ObjectUtils.isEmpty(internshipReviewBean.getInternshipReleaseId()) && !ObjectUtils.isEmpty(internshipReviewBean.getStudentId())) {
-            ErrorBean<InternshipRelease> errorBean = internshipReleaseService.basicCondition(internshipReviewBean.getInternshipReleaseId());
+            ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReviewBean.getInternshipReleaseId());
             if (!errorBean.isHasError()) {
                 InternshipRelease internshipRelease = errorBean.getData();
                 InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());

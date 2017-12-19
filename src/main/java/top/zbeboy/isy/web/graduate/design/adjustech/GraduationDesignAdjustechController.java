@@ -21,7 +21,6 @@ import top.zbeboy.isy.service.cache.CacheBook;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignHopeTutorService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;

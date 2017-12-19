@@ -235,7 +235,7 @@ open class InternshipReleaseController {
             val teacherDistributionTime = internshipReleaseUpdateVo.teacherDistributionTime
             val time = internshipReleaseUpdateVo.time
             val files = internshipReleaseUpdateVo.files
-            val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
+            val internshipRelease = internshipReleaseService.findById(internshipReleaseId!!)
             internshipRelease.internshipTitle = internshipReleaseUpdateVo.releaseTitle
             saveOrUpdateTime(internshipRelease, teacherDistributionTime!!, time!!)
             internshipRelease.internshipReleaseIsDel = internshipReleaseUpdateVo.internshipReleaseIsDel
@@ -246,7 +246,7 @@ open class InternshipReleaseController {
                 val internshipFiles = records.into(InternshipFile::class.java)
                 internshipFiles.forEach { f -> filesService.deleteById(f.fileId) }
             }
-            saveOrUpdateFiles(files, internshipReleaseId!!)
+            saveOrUpdateFiles(files, internshipReleaseId)
             return AjaxUtils.of<Any>().success().msg("保存成功")
         }
         return AjaxUtils.of<Any>().fail().msg("保存失败")
