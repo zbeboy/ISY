@@ -112,7 +112,7 @@ public class UploadServiceImpl implements UploadService {
         return lastPath;
     }
 
-    private List<FileBean> buildList(FileBean fileBean, List<FileBean> list, String path, String filename, MultipartFile multipartFile) {
+    private void buildList(FileBean fileBean, List<FileBean> list, String path, String filename, MultipartFile multipartFile) {
         try {
             if (!StringUtils.isEmpty(path.split(":")[0])) {
                 fileBean.setLastPath(buildPath(path, filename, multipartFile));
@@ -121,7 +121,6 @@ public class UploadServiceImpl implements UploadService {
         } catch (IOException e) {
             log.error("Build File list exception, is {}", e);
         }
-        return list;
     }
 
     @Override
