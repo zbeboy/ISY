@@ -31,7 +31,7 @@ open class AsyncConfiguration : AsyncConfigurer {
     lateinit open var isyProperties: ISYProperties
 
     @Override
-    @Bean(name = arrayOf("taskExecutor"))
+    @Bean(name = ["taskExecutor"])
     override fun getAsyncExecutor(): Executor {
         log.debug("Creating Async Task Executor")
         val executor = ThreadPoolTaskExecutor()
