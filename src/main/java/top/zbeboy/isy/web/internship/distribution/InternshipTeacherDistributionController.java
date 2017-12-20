@@ -19,7 +19,6 @@ import top.zbeboy.isy.service.data.OrganizeService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.internship.InternshipReleaseScienceService;
-import top.zbeboy.isy.service.internship.InternshipReleaseService;
 import top.zbeboy.isy.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
@@ -46,9 +45,6 @@ import java.util.*;
 @Slf4j
 @Controller
 public class InternshipTeacherDistributionController {
-
-    @Resource
-    private InternshipReleaseService internshipReleaseService;
 
     @Resource
     private InternshipTeacherDistributionService internshipTeacherDistributionService;

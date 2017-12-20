@@ -73,7 +73,7 @@ open class InternshipMethodControllerCommon {
      * @param multipartHttpServletRequest 文件请求
      * @return 文件信息
      */
-    fun uploadFileInternship(schoolId: Int, collegeId: Int, departmentId: Int,
+    fun uploadFileInternship(schoolId: Int?, collegeId: Int?, departmentId: Int,
                              multipartHttpServletRequest: MultipartHttpServletRequest): AjaxUtils<FileBean> {
         val data = AjaxUtils.of<FileBean>()
         try {
