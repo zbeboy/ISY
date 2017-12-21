@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipRelease implements Serializable {
 
-    private static final long serialVersionUID = -358562925;
+    private static final long serialVersionUID = 1671327409;
 
     private String    internshipReleaseId;
     private String    internshipTitle;
@@ -39,6 +39,8 @@ public class InternshipRelease implements Serializable {
     private Byte      internshipReleaseIsDel;
     private Integer   departmentId;
     private Integer   internshipTypeId;
+    private Integer   collegeId;
+    private String    publisher;
 
     public InternshipRelease() {}
 
@@ -55,6 +57,8 @@ public class InternshipRelease implements Serializable {
         this.internshipReleaseIsDel = value.internshipReleaseIsDel;
         this.departmentId = value.departmentId;
         this.internshipTypeId = value.internshipTypeId;
+        this.collegeId = value.collegeId;
+        this.publisher = value.publisher;
     }
 
     public InternshipRelease(
@@ -69,7 +73,9 @@ public class InternshipRelease implements Serializable {
         Timestamp endTime,
         Byte      internshipReleaseIsDel,
         Integer   departmentId,
-        Integer   internshipTypeId
+        Integer   internshipTypeId,
+        Integer   collegeId,
+        String    publisher
     ) {
         this.internshipReleaseId = internshipReleaseId;
         this.internshipTitle = internshipTitle;
@@ -83,6 +89,8 @@ public class InternshipRelease implements Serializable {
         this.internshipReleaseIsDel = internshipReleaseIsDel;
         this.departmentId = departmentId;
         this.internshipTypeId = internshipTypeId;
+        this.collegeId = collegeId;
+        this.publisher = publisher;
     }
 
     @NotNull
@@ -196,6 +204,25 @@ public class InternshipRelease implements Serializable {
         this.internshipTypeId = internshipTypeId;
     }
 
+    @NotNull
+    public Integer getCollegeId() {
+        return this.collegeId;
+    }
+
+    public void setCollegeId(Integer collegeId) {
+        this.collegeId = collegeId;
+    }
+
+    @NotNull
+    @Size(max = 30)
+    public String getPublisher() {
+        return this.publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("InternshipRelease (");
@@ -212,6 +239,8 @@ public class InternshipRelease implements Serializable {
         sb.append(", ").append(internshipReleaseIsDel);
         sb.append(", ").append(departmentId);
         sb.append(", ").append(internshipTypeId);
+        sb.append(", ").append(collegeId);
+        sb.append(", ").append(publisher);
 
         sb.append(")");
         return sb.toString();

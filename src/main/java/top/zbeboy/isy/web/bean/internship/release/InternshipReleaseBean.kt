@@ -14,7 +14,6 @@ class InternshipReleaseBean: InternshipRelease() {
     var internshipTypeName: String? = null
     var sciences: List<Science>? = null
     var schoolId: Int? = 0
-    var collegeId: Int? = 0
     var teacherDistributionStartTimeStr: String? = null
     var teacherDistributionEndTimeStr: String? = null
     var startTimeStr: String? = null

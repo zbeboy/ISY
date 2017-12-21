@@ -199,9 +199,12 @@ CREATE TABLE internship_release (
   internship_release_is_del       BOOLEAN      NOT NULL,
   department_id                   INT          NOT NULL,
   internship_type_id              INT          NOT NULL,
+  college_id                      INT          NOT NULL,
+  publisher                       VARCHAR(30)  NOT NULL,
   FOREIGN KEY (username) REFERENCES users (username),
   FOREIGN KEY (department_id) REFERENCES department (department_id),
-  FOREIGN KEY (internship_type_id) REFERENCES internship_type (internship_type_id)
+  FOREIGN KEY (internship_type_id) REFERENCES internship_type (internship_type_id),
+  FOREIGN KEY (college_id) REFERENCES college (college_id)
 );
 
 CREATE TABLE internship_release_science (
