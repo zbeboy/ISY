@@ -7,13 +7,13 @@ import top.zbeboy.isy.domain.tables.pojos.Science
  * Created by zbeboy 2017-12-18 .
  **/
 class InternshipReleaseBean: InternshipRelease() {
-    var realName: String? = null
     var departmentName: String? = null
     var schoolName: String? = null
     var collegeName: String? = null
     var internshipTypeName: String? = null
     var sciences: List<Science>? = null
     var schoolId: Int? = 0
+    var collegeId: Int? = 0
     var teacherDistributionStartTimeStr: String? = null
     var teacherDistributionEndTimeStr: String? = null
     var startTimeStr: String? = null

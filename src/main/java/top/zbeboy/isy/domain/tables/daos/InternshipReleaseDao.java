@@ -147,13 +147,6 @@ public class InternshipReleaseDao extends DAOImpl<InternshipReleaseRecord, top.z
     }
 
     /**
-     * Fetch records that have <code>college_id IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.InternshipRelease> fetchByCollegeId(Integer... values) {
-        return fetch(InternshipRelease.INTERNSHIP_RELEASE.COLLEGE_ID, values);
-    }
-
-    /**
      * Fetch records that have <code>publisher IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.InternshipRelease> fetchByPublisher(String... values) {

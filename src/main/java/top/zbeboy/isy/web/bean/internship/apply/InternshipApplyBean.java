@@ -31,7 +31,7 @@ public class InternshipApplyBean extends InternshipApply {
     private String startTimeStr;
     private String endTimeStr;
     private String releaseTimeStr;
-    private String realName;
+    private String publisher;
     private String departmentName;
     private String schoolName;
     private String collegeName;

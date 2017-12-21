@@ -201,9 +201,9 @@ open class InternshipReleaseController {
             internshipRelease.releaseTime = Timestamp(Clock.systemDefaultZone().millis())
             val users = usersService.getUserFromSession()
             internshipRelease.username = users!!.username
+            internshipRelease.publisher = users.realName
             saveOrUpdateTime(internshipRelease, teacherDistributionTime!!, time!!)
             internshipRelease.allowGrade = internshipReleaseAddVo.grade
-
             internshipRelease.departmentId = internshipReleaseAddVo.departmentId
             internshipRelease.internshipReleaseIsDel = internshipReleaseAddVo.internshipReleaseIsDel
             internshipRelease.internshipTypeId = internshipReleaseAddVo.internshipTypeId

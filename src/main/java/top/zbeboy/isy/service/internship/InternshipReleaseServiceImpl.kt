@@ -88,8 +88,6 @@ open class InternshipReleaseServiceImpl @Autowired constructor(dslContext: DSLCo
         a = otherCondition(a, internshipReleaseBean)
         return create.select()
                 .from(INTERNSHIP_RELEASE)
-                .join(USERS)
-                .on(INTERNSHIP_RELEASE.USERNAME.eq(USERS.USERNAME))
                 .join(DEPARTMENT)
                 .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                 .join(INTERNSHIP_TYPE)
@@ -135,8 +133,6 @@ open class InternshipReleaseServiceImpl @Autowired constructor(dslContext: DSLCo
         } else {
             val selectConditionStep = create.selectCount()
                     .from(INTERNSHIP_RELEASE)
-                    .join(USERS)
-                    .on(INTERNSHIP_RELEASE.USERNAME.eq(USERS.USERNAME))
                     .join(DEPARTMENT)
                     .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(INTERNSHIP_TYPE)
