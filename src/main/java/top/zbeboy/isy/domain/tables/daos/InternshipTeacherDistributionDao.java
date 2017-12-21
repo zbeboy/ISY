@@ -82,4 +82,18 @@ public class InternshipTeacherDistributionDao extends DAOImpl<InternshipTeacherD
     public List<top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution> fetchByUsername(String... values) {
         return fetch(InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME, values);
     }
+
+    /**
+     * Fetch records that have <code>student_real_name IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution> fetchByStudentRealName(String... values) {
+        return fetch(InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME, values);
+    }
+
+    /**
+     * Fetch records that have <code>assigner IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution> fetchByAssigner(String... values) {
+        return fetch(InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER, values);
+    }
 }

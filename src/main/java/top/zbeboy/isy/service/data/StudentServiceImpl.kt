@@ -108,6 +108,8 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
     override fun findByUsernameAndDepartmentId(username: String, departmentId: Int): Optional<Record> {
         return create.select()
                 .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .join(ORGANIZE)
                 .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                 .join(SCIENCE)
@@ -121,6 +123,8 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
     override fun findByStudentNumberAndDepartmentId(studentNumber: String, departmentId: Int): Optional<Record> {
         return create.select()
                 .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .join(ORGANIZE)
                 .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                 .join(SCIENCE)

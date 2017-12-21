@@ -350,9 +350,9 @@ public class InternshipJournalController {
             }
             Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentIdForStaff(internshipReleaseId, studentId);
             if (internshipTeacherDistributionRecord.isPresent()) {
-                InternshipTeacherDistributionBean internshipTeacherDistributionBean = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistributionBean.class);
-                internshipJournal.setSchoolGuidanceTeacher(internshipTeacherDistributionBean.getRealName());
-                internshipJournal.setStaffId(internshipTeacherDistributionBean.getStaffId());
+                StaffBean staffBean = internshipTeacherDistributionRecord.get().into(StaffBean.class);
+                internshipJournal.setSchoolGuidanceTeacher(staffBean.getRealName());
+                internshipJournal.setStaffId(staffBean.getStaffId());
             }
             InternshipRelease internshipRelease = errorBean.getData();
             InternshipType internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.getInternshipTypeId());

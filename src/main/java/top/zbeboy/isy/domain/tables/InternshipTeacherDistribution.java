@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDistributionRecord> {
 
-    private static final long serialVersionUID = -34033131;
+    private static final long serialVersionUID = 1130196409;
 
     /**
      * The reference instance of <code>isy.internship_teacher_distribution</code>
@@ -69,6 +69,16 @@ public class InternshipTeacherDistribution extends TableImpl<InternshipTeacherDi
      * The column <code>isy.internship_teacher_distribution.username</code>.
      */
     public final TableField<InternshipTeacherDistributionRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.internship_teacher_distribution.student_real_name</code>.
+     */
+    public final TableField<InternshipTeacherDistributionRecord, String> STUDENT_REAL_NAME = createField("student_real_name", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.internship_teacher_distribution.assigner</code>.
+     */
+    public final TableField<InternshipTeacherDistributionRecord, String> ASSIGNER = createField("assigner", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
 
     /**
      * Create a <code>isy.internship_teacher_distribution</code> table reference

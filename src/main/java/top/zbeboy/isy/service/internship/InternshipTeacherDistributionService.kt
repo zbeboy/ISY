@@ -1,6 +1,9 @@
 package top.zbeboy.isy.service.internship
 
-import org.jooq.*
+import org.jooq.Record
+import org.jooq.Record1
+import org.jooq.Record3
+import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution
 import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean
@@ -34,7 +37,7 @@ interface InternshipTeacherDistributionService {
      * @param internshipReleaseIds 实习发布ids
      * @return 数据
      */
-    fun findInInternshipReleaseIdsDistinctStudentId(internshipReleaseIds: List<String>): Result<Record2<Int, Int>>
+    fun findInInternshipReleaseIdsDistinctStudentId(internshipReleaseIds: List<String>): Result<Record3<Int, String, Int>>
 
     /**
      * 根据发布id查询所有指导教师

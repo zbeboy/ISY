@@ -203,7 +203,7 @@ open class InternshipTeacherDistributionController {
         headers.add("staff_real_name")
         headers.add("staff_username")
         headers.add("staff_number")
-        headers.add("real_name")
+        headers.add("assigner")
         headers.add("username")
         headers.add("operator")
         dataTablesUtils = DataTablesUtils(request, headers)
@@ -442,7 +442,7 @@ open class InternshipTeacherDistributionController {
                 val staffIds = SmallPropsUtils.StringIdsToList(staffId)
                 var i = 0
                 val users = usersService.getUserFromSession()
-                var students: List<Student> = ArrayList()
+                var students: List<StudentBean> = ArrayList()
                 // 筛选学生数据
                 val enabled: Byte = 1
                 val verifyMailbox: Byte = 1
@@ -451,12 +451,12 @@ open class InternshipTeacherDistributionController {
                     // 查询并排除掉其它实习的学生
                     val studentRecords = internshipTeacherDistributionService.findStudentForBatchDistributionEnabledAndVerifyMailbox(organizeIds, excludeInternshipReleaseIds, enabled, verifyMailbox)
                     if (studentRecords.isNotEmpty) {
-                        students = studentRecords.into(Student::class.java)
+                        students = studentRecords.into(StudentBean::class.java)
                     }
                 } else {
                     val studentRecords = studentService.findInOrganizeIdsAndEnabledAndVerifyMailboxExistsAuthoritiesRelation(organizeIds, enabled, verifyMailbox)
                     if (studentRecords.isNotEmpty) {
-                        students = studentRecords.into(Student::class.java)
+                        students = studentRecords.into(StudentBean::class.java)
                     }
                 }
                 // 删除以前的分配记录
@@ -466,7 +466,7 @@ open class InternshipTeacherDistributionController {
                         i = 0
                     }
                     val tempStaffId = staffIds[i]
-                    val internshipTeacherDistribution = InternshipTeacherDistribution(tempStaffId, s.studentId, internshipReleaseId, users!!.username)
+                    val internshipTeacherDistribution = InternshipTeacherDistribution(tempStaffId, s.studentId, internshipReleaseId, users!!.username, s.realName, users.realName)
                     internshipTeacherDistributionService.save(internshipTeacherDistribution)
                     i++
                 }
@@ -507,8 +507,8 @@ open class InternshipTeacherDistributionController {
                 record = studentService.findByStudentNumberAndDepartmentId(info, departmentId)
             }
             if (record.isPresent) {
-                val student = record.get().into(Student::class.java)
-                val internshipTeacherDistribution = InternshipTeacherDistribution(staffId, student.studentId, internshipReleaseId, users!!.username)
+                val student = record.get().into(StudentBean::class.java)
+                val internshipTeacherDistribution = InternshipTeacherDistribution(staffId, student.studentId, internshipReleaseId, users!!.username, student.realName, users.realName)
                 internshipTeacherDistributionService.save(internshipTeacherDistribution)
                 ajaxUtils.success().msg("保存成功")
             } else {
@@ -620,7 +620,7 @@ open class InternshipTeacherDistributionController {
                 if (records.isNotEmpty) {
                     val internshipTeacherDistributions = records.into(InternshipTeacherDistribution::class.java)
                     internshipTeacherDistributions.forEach { r ->
-                        val internshipTeacherDistribution = InternshipTeacherDistribution(r.staffId, r.studentId, internshipReleaseId, users!!.username)
+                        val internshipTeacherDistribution = InternshipTeacherDistribution(r.staffId, r.studentId, internshipReleaseId, users!!.username, r.studentRealName, users.realName)
                         internshipTeacherDistributionService.save(internshipTeacherDistribution)
                     }
                 }

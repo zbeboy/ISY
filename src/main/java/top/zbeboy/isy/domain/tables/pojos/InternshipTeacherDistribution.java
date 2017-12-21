@@ -24,12 +24,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipTeacherDistribution implements Serializable {
 
-    private static final long serialVersionUID = -117666730;
+    private static final long serialVersionUID = -1041360538;
 
     private Integer staffId;
     private Integer studentId;
     private String  internshipReleaseId;
     private String  username;
+    private String  studentRealName;
+    private String  assigner;
 
     public InternshipTeacherDistribution() {}
 
@@ -38,18 +40,24 @@ public class InternshipTeacherDistribution implements Serializable {
         this.studentId = value.studentId;
         this.internshipReleaseId = value.internshipReleaseId;
         this.username = value.username;
+        this.studentRealName = value.studentRealName;
+        this.assigner = value.assigner;
     }
 
     public InternshipTeacherDistribution(
         Integer staffId,
         Integer studentId,
         String  internshipReleaseId,
-        String  username
+        String  username,
+        String  studentRealName,
+        String  assigner
     ) {
         this.staffId = staffId;
         this.studentId = studentId;
         this.internshipReleaseId = internshipReleaseId;
         this.username = username;
+        this.studentRealName = studentRealName;
+        this.assigner = assigner;
     }
 
     @NotNull
@@ -90,6 +98,26 @@ public class InternshipTeacherDistribution implements Serializable {
         this.username = username;
     }
 
+    @NotNull
+    @Size(max = 30)
+    public String getStudentRealName() {
+        return this.studentRealName;
+    }
+
+    public void setStudentRealName(String studentRealName) {
+        this.studentRealName = studentRealName;
+    }
+
+    @NotNull
+    @Size(max = 30)
+    public String getAssigner() {
+        return this.assigner;
+    }
+
+    public void setAssigner(String assigner) {
+        this.assigner = assigner;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("InternshipTeacherDistribution (");
@@ -98,6 +126,8 @@ public class InternshipTeacherDistribution implements Serializable {
         sb.append(", ").append(studentId);
         sb.append(", ").append(internshipReleaseId);
         sb.append(", ").append(username);
+        sb.append(", ").append(studentRealName);
+        sb.append(", ").append(assigner);
 
         sb.append(")");
         return sb.toString();

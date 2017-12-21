@@ -42,8 +42,8 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
                 .fetchOptional()
     }
 
-    override fun findInInternshipReleaseIdsDistinctStudentId(internshipReleaseIds: List<String>): Result<Record2<Int, Int>> {
-        return create.selectDistinct(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID, INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID)
+    override fun findInInternshipReleaseIdsDistinctStudentId(internshipReleaseIds: List<String>): Result<Record3<Int, String, Int>> {
+        return create.selectDistinct(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID, INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME, INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID)
                 .from(INTERNSHIP_TEACHER_DISTRIBUTION)
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.`in`(internshipReleaseIds))
                 .fetch()
@@ -159,12 +159,12 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
         if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(INTERNSHIP_TEACHER_DISTRIBUTION)
-                    .join(STAFF.join(USERS.`as`("S")).on(STAFF.USERNAME.eq(USERS.`as`("S").USERNAME)))
+                    .join(STAFF)
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(STUDENT.join(USERS.`as`("T")).on(STUDENT.USERNAME.eq(USERS.`as`("T").USERNAME)))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .join(STUDENT)
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(USERS.`as`("U"))
-                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.eq(USERS.`as`("U").USERNAME))
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
             sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
@@ -172,12 +172,12 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
         } else {
             val selectConditionStep = create.select()
                     .from(INTERNSHIP_TEACHER_DISTRIBUTION)
-                    .join(STAFF.join(USERS.`as`("S")).on(STAFF.USERNAME.eq(USERS.`as`("S").USERNAME)))
+                    .join(STAFF)
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(STUDENT.join(USERS.`as`("T")).on(STUDENT.USERNAME.eq(USERS.`as`("T").USERNAME)))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .join(STUDENT)
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(USERS.`as`("U"))
-                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.eq(USERS.`as`("U").USERNAME))
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)).and(a)
             sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
@@ -186,15 +186,15 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
 
         for (r in records) {
             val internshipTeacherDistributionBeen = InternshipTeacherDistributionBean()
-            internshipTeacherDistributionBeen.studentRealName = r.getValue(USERS.`as`("T").REAL_NAME)
-            internshipTeacherDistributionBeen.studentUsername = r.getValue(USERS.`as`("T").USERNAME)
+            internshipTeacherDistributionBeen.studentRealName = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME)
+            internshipTeacherDistributionBeen.studentUsername = r.getValue(STUDENT.USERNAME)
             internshipTeacherDistributionBeen.studentNumber = r.getValue(STUDENT.STUDENT_NUMBER)
             internshipTeacherDistributionBeen.studentId = r.getValue(STUDENT.STUDENT_ID)
-            internshipTeacherDistributionBeen.staffRealName = r.getValue(USERS.`as`("S").REAL_NAME)
-            internshipTeacherDistributionBeen.staffUsername = r.getValue(USERS.`as`("S").USERNAME)
+            internshipTeacherDistributionBeen.staffRealName = r.getValue(USERS.REAL_NAME)
+            internshipTeacherDistributionBeen.staffUsername = r.getValue(STAFF.USERNAME)
             internshipTeacherDistributionBeen.staffNumber = r.getValue(STAFF.STAFF_NUMBER)
-            internshipTeacherDistributionBeen.realName = r.getValue(USERS.`as`("U").REAL_NAME)
-            internshipTeacherDistributionBeen.username = r.getValue(USERS.`as`("U").USERNAME)
+            internshipTeacherDistributionBeen.assigner = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER)
+            internshipTeacherDistributionBeen.username = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME)
             internshipTeacherDistributionBeens.add(internshipTeacherDistributionBeen)
         }
 
@@ -220,12 +220,12 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
         } else {
             val selectConditionStep = create.selectCount()
                     .from(INTERNSHIP_TEACHER_DISTRIBUTION)
-                    .join(STAFF.join(USERS.`as`("S")).on(STAFF.USERNAME.eq(USERS.`as`("S").USERNAME)))
+                    .join(STAFF)
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(STUDENT.join(USERS.`as`("T")).on(STUDENT.USERNAME.eq(USERS.`as`("T").USERNAME)))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .join(STUDENT)
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(USERS.`as`("U"))
-                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.eq(USERS.`as`("U").USERNAME))
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)).and(a)
             count = selectConditionStep.fetchOne()
         }
@@ -247,17 +247,17 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
             val staffUsername = StringUtils.trimWhitespace(search.getString("staffUsername"))
             val studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"))
             val staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"))
-            val realName = StringUtils.trimWhitespace(search.getString("realName"))
+            val assigner = StringUtils.trimWhitespace(search.getString("assigner"))
             val username = StringUtils.trimWhitespace(search.getString("username"))
             if (StringUtils.hasLength(studentUsername)) {
-                a = USERS.`as`("T").USERNAME.like(SQLQueryUtils.likeAllParam(studentUsername))
+                a = STUDENT.USERNAME.like(SQLQueryUtils.likeAllParam(studentUsername))
             }
 
             if (StringUtils.hasLength(staffUsername)) {
                 if (ObjectUtils.isEmpty(a)) {
-                    a = USERS.`as`("S").USERNAME.like(SQLQueryUtils.likeAllParam(staffUsername))
+                    a = STAFF.USERNAME.like(SQLQueryUtils.likeAllParam(staffUsername))
                 } else {
-                    a = a!!.and(USERS.`as`("S").USERNAME.like(SQLQueryUtils.likeAllParam(staffUsername)))
+                    a = a!!.and(STAFF.USERNAME.like(SQLQueryUtils.likeAllParam(staffUsername)))
                 }
             }
 
@@ -277,19 +277,19 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
                 }
             }
 
-            if (StringUtils.hasLength(realName)) {
+            if (StringUtils.hasLength(assigner)) {
                 if (ObjectUtils.isEmpty(a)) {
-                    a = USERS.`as`("U").REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
+                    a = INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER.like(SQLQueryUtils.likeAllParam(assigner))
                 } else {
-                    a = a!!.and(USERS.`as`("U").REAL_NAME.like(SQLQueryUtils.likeAllParam(realName)))
+                    a = a!!.and(INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER.like(SQLQueryUtils.likeAllParam(assigner)))
                 }
             }
 
             if (StringUtils.hasLength(username)) {
                 if (ObjectUtils.isEmpty(a)) {
-                    a = USERS.`as`("U").USERNAME.like(SQLQueryUtils.likeAllParam(username))
+                    a = INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.like(SQLQueryUtils.likeAllParam(username))
                 } else {
-                    a = a!!.and(USERS.`as`("U").USERNAME.like(SQLQueryUtils.likeAllParam(username)))
+                    a = a!!.and(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.like(SQLQueryUtils.likeAllParam(username)))
                 }
             }
         }
@@ -312,20 +312,20 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
             if ("student_real_name".equals(orderColumnName!!, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("T").REAL_NAME.asc()
-                    sortField[1] = USERS.`as`("T").USERNAME.asc()
+                    sortField[0] = INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME.asc()
+                    sortField[1] = STUDENT.STUDENT_NUMBER.asc()
                 } else {
-                    sortField[0] = USERS.`as`("T").REAL_NAME.desc()
-                    sortField[1] = USERS.`as`("T").USERNAME.desc()
+                    sortField[0] = INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME.desc()
+                    sortField[1] = STUDENT.STUDENT_NUMBER.desc()
                 }
             }
 
             if ("student_username".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(1)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("T").USERNAME.asc()
+                    sortField[0] = STUDENT.USERNAME.asc()
                 } else {
-                    sortField[0] = USERS.`as`("T").USERNAME.desc()
+                    sortField[0] = STUDENT.USERNAME.desc()
                 }
             }
 
@@ -341,21 +341,21 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
             if ("staff_real_name".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("S").REAL_NAME.asc()
-                    sortField[1] = USERS.`as`("S").USERNAME.asc()
+                    sortField[0] = USERS.REAL_NAME.asc()
+                    sortField[1] = STUDENT.STUDENT_NUMBER.asc()
                 } else {
-                    sortField[0] = USERS.`as`("S").REAL_NAME.desc()
-                    sortField[1] = USERS.`as`("S").USERNAME.desc()
+                    sortField[0] = USERS.REAL_NAME.desc()
+                    sortField[1] = STUDENT.STUDENT_NUMBER.desc()
                 }
             }
 
             if ("staff_username".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("S").USERNAME.asc()
+                    sortField[0] = STAFF.USERNAME.asc()
                     sortField[1] = STUDENT.STUDENT_NUMBER.asc()
                 } else {
-                    sortField[0] = USERS.`as`("S").USERNAME.desc()
+                    sortField[0] = STAFF.USERNAME.desc()
                     sortField[1] = STUDENT.STUDENT_NUMBER.desc()
                 }
             }
@@ -374,10 +374,10 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
             if ("real_name".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("U").REAL_NAME.asc()
+                    sortField[0] = INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER.asc()
                     sortField[1] = STUDENT.STUDENT_NUMBER.asc()
                 } else {
-                    sortField[0] = USERS.`as`("U").REAL_NAME.desc()
+                    sortField[0] = INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER.desc()
                     sortField[1] = STUDENT.STUDENT_NUMBER.desc()
                 }
             }
@@ -385,10 +385,10 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
             if ("username".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("U").USERNAME.asc()
+                    sortField[0] = INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.asc()
                     sortField[1] = STUDENT.STUDENT_NUMBER.asc()
                 } else {
-                    sortField[0] = USERS.`as`("U").USERNAME.desc()
+                    sortField[0] = INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME.desc()
                     sortField[1] = STUDENT.STUDENT_NUMBER.desc()
                 }
             }

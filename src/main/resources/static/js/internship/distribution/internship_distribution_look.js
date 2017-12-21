@@ -14,7 +14,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             studentNumber: '',
             staffNumber: '',
             username: '',
-            realName: ''
+            assigner: ''
         };
 
         /*
@@ -26,7 +26,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             STUDENT_NUMBER: 'INTERNSHIP_DISTRIBUTION_LOOK_STUDENT_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
             STAFF_NUMBER: 'INTERNSHIP_DISTRIBUTION_LOOK_STAFF_NUMBER_SEARCH_' + init_page_param.internshipReleaseId,
             USERNAME: 'INTERNSHIP_DISTRIBUTION_LOOK_USERNAME_SEARCH_' + init_page_param.internshipReleaseId,
-            REAL_NAME: 'INTERNSHIP_DISTRIBUTION_LOOK_REAL_NAME_SEARCH_' + init_page_param.internshipReleaseId
+            ASSIGNER: 'INTERNSHIP_DISTRIBUTION_LOOK_ASSIGNER_SEARCH_' + init_page_param.internshipReleaseId
         };
 
         /*
@@ -90,7 +90,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 {"data": "staffRealName"},
                 {"data": "staffUsername"},
                 {"data": "staffNumber"},
-                {"data": "realName"},
+                {"data": "assigner"},
                 {"data": "username"}
             ],
             columnDefs: [
@@ -150,7 +150,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 studentNumber: '#search_student_number',
                 staffNumber: '#search_staff_number',
                 username: '#search_username',
-                realName: '#search_real_name'
+                assigner: '#search_assigner'
             };
         }
 
@@ -170,14 +170,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             param.studentNumber = $(getParamId().studentNumber).val();
             param.staffNumber = $(getParamId().staffNumber).val();
             param.username = $(getParamId().username).val();
-            param.realName = $(getParamId().realName).val();
+            param.assigner = $(getParamId().assigner).val();
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.STUDENT_USERNAME, param.studentUsername);
                 sessionStorage.setItem(webStorageKey.STAFF_USERNAME, param.staffUsername);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.STAFF_NUMBER, param.staffNumber);
                 sessionStorage.setItem(webStorageKey.USERNAME, param.username);
-                sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
+                sessionStorage.setItem(webStorageKey.ASSIGNER, param.assigner);
             }
         }
 
@@ -190,14 +190,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             var studentNumber = null;
             var staffNumber = null;
             var username = null;
-            var realName = null;
+            var assigner = null;
             if (typeof(Storage) !== "undefined") {
                 studentUsername = sessionStorage.getItem(webStorageKey.STUDENT_USERNAME);
                 staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
-                realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+                assigner = sessionStorage.getItem(webStorageKey.ASSIGNER);
             }
             if (studentUsername !== null) {
                 param.studentUsername = studentUsername;
@@ -219,8 +219,8 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 param.username = username;
             }
 
-            if (realName !== null) {
-                param.realName = realName;
+            if (assigner !== null) {
+                param.assigner = assigner;
             }
         }
 
@@ -233,14 +233,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             var studentNumber = null;
             var staffNumber = null;
             var username = null;
-            var realName = null;
+            var assigner = null;
             if (typeof(Storage) !== "undefined") {
                 studentUsername = sessionStorage.getItem(webStorageKey.STUDENT_USERNAME);
                 staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
-                realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+                assigner = sessionStorage.getItem(webStorageKey.ASSIGNER);
             }
             if (studentUsername !== null) {
                 $(getParamId().studentUsername).val(studentUsername);
@@ -262,8 +262,8 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 $(getParamId().username).val(username);
             }
 
-            if (realName !== null) {
-                $(getParamId().realName).val(realName);
+            if (assigner !== null) {
+                $(getParamId().assigner).val(assigner);
             }
         }
 
@@ -276,7 +276,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             $(getParamId().studentNumber).val('');
             $(getParamId().staffNumber).val('');
             $(getParamId().username).val('');
-            $(getParamId().realName).val('');
+            $(getParamId().assigner).val('');
         }
 
         $(getParamId().studentUsername).keyup(function (event) {
@@ -314,7 +314,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             }
         });
 
-        $(getParamId().realName).keyup(function (event) {
+        $(getParamId().assigner).keyup(function (event) {
             if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();

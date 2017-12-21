@@ -226,6 +226,8 @@ CREATE TABLE internship_teacher_distribution (
   student_id            INT          NOT NULL,
   internship_release_id VARCHAR(64)  NOT NULL,
   username              VARCHAR(200) NOT NULL,
+  student_real_name     VARCHAR(30)  NOT NULL,
+  assigner              VARCHAR(30)  NOT NULL,
   FOREIGN KEY (staff_id) REFERENCES staff (staff_id),
   FOREIGN KEY (student_id) REFERENCES student (student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
