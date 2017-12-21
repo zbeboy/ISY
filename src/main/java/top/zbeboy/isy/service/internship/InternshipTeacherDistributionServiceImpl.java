@@ -109,7 +109,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
     }
 
     @Override
-    public Result<Record> findStudentForBatchDistributionEnabled(List<Integer> organizeIds, List<String> internshipReleaseId, Byte b) {
+    public Result<Record> findStudentForBatchDistributionEnabledAndVerifyMailbox(List<Integer> organizeIds, List<String> internshipReleaseId, Byte enabled, Byte verifyMailbox) {
         Select<InternshipTeacherDistributionRecord> internshipTeacherDistributionRecords =
                 create.selectFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                         .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.in(internshipReleaseId)
@@ -118,7 +118,7 @@ public class InternshipTeacherDistributionServiceImpl extends DataTablesPlugin<I
                 .from(STUDENT)
                 .join(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                .where(STUDENT.ORGANIZE_ID.in(organizeIds).andNotExists(internshipTeacherDistributionRecords).and(USERS.ENABLED.eq(b)))
+                .where(STUDENT.ORGANIZE_ID.in(organizeIds).andNotExists(internshipTeacherDistributionRecords).and(USERS.ENABLED.eq(enabled)).and(USERS.VERIFY_MAILBOX.eq(verifyMailbox)))
                 .fetch();
     }
 

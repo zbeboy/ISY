@@ -69,6 +69,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[3, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().datas,
                 "dataSrc": "data",
@@ -375,6 +376,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         function sendDeleteNotApplyAjax(id) {
             $.post(web_path + getAjaxUrl().delete_not_apply, {id: id}, function (data) {
                 if (data.state) {
+                    myTable.ajax.reload();
                     Messenger().post({
                         message: data.msg,
                         type: 'info',

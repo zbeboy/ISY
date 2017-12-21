@@ -38,41 +38,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address",
             staffId: $(paramId.staffId).val()
         };
 
-        /*
-         检验id
-         */
-        var validId = {
-            student: '#valid_student',
-        };
-
-        /*
-         错误消息id
-         */
-        var errorMsgId = {
-            student: '#student_error_msg'
-        };
-
-        /**
-         * 检验成功
-         * @param validId
-         * @param errorMsgId
-         */
-        function validSuccessDom(validId, errorMsgId) {
-            $(validId).addClass('has-success').removeClass('has-error');
-            $(errorMsgId).addClass('hidden').text('');
-        }
-
-        /**
-         * 检验失败
-         * @param validId
-         * @param errorMsgId
-         * @param msg
-         */
-        function validErrorDom(validId, errorMsgId, msg) {
-            $(validId).addClass('has-error').removeClass('has-success');
-            $(errorMsgId).removeClass('hidden').text(msg);
-        }
-
         function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();

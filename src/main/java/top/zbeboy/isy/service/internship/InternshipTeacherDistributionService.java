@@ -79,10 +79,11 @@ public interface InternshipTeacherDistributionService {
      *
      * @param organizeIds         专业id
      * @param internshipReleaseId 实习发布id 集合
-     * @param b                   用户状态
+     * @param enabled             用户状态
+     * @param verifyMailbox       是否已验证邮箱
      * @return 数据
      */
-    Result<Record> findStudentForBatchDistributionEnabled(List<Integer> organizeIds, List<String> internshipReleaseId, Byte b);
+    Result<Record> findStudentForBatchDistributionEnabledAndVerifyMailbox(List<Integer> organizeIds, List<String> internshipReleaseId, Byte enabled, Byte verifyMailbox);
 
     /**
      * 保存

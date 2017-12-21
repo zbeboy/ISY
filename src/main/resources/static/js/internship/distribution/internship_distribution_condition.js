@@ -80,6 +80,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[3, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().datas,
                 "dataSrc": "data",
