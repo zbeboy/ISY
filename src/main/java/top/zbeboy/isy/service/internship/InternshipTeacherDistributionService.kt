@@ -1,26 +1,23 @@
-package top.zbeboy.isy.service.internship;
+package top.zbeboy.isy.service.internship
 
-import org.jooq.*;
-import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord;
-import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.List;
-import java.util.Optional;
+import org.jooq.*
+import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution
+import top.zbeboy.isy.domain.tables.records.InternshipTeacherDistributionRecord
+import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by zbeboy on 2016/11/21.
- */
-public interface InternshipTeacherDistributionService {
-
+ * Created by zbeboy 2017-12-21 .
+ **/
+interface InternshipTeacherDistributionService {
     /**
      * 通过实习发布id distinct查询班级id
      *
      * @param internshipReleaseId 实习发布id
      * @return 数据
      */
-    Result<Record1<Integer>> findByInternshipReleaseIdDistinctOrganizeId(String internshipReleaseId);
+    fun findByInternshipReleaseIdDistinctOrganizeId(internshipReleaseId: String): Result<Record1<Int>>
 
     /**
      * 通过实习发布id 和学生id查询
@@ -29,7 +26,7 @@ public interface InternshipTeacherDistributionService {
      * @param studentId           学生id
      * @return 数据
      */
-    Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+    fun findByInternshipReleaseIdAndStudentId(internshipReleaseId: String, studentId: Int): Optional<Record>
 
     /**
      * 通过实习ids distinct学生id查询
@@ -37,7 +34,7 @@ public interface InternshipTeacherDistributionService {
      * @param internshipReleaseIds 实习发布ids
      * @return 数据
      */
-    Result<Record2<Integer, Integer>> findInInternshipReleaseIdsDistinctStudentId(List<String> internshipReleaseIds);
+    fun findInInternshipReleaseIdsDistinctStudentId(internshipReleaseIds: List<String>): Result<Record2<Int, Int>>
 
     /**
      * 根据发布id查询所有指导教师
@@ -45,7 +42,7 @@ public interface InternshipTeacherDistributionService {
      * @param internshipReleaseId 发布id
      * @return 教师们
      */
-    Result<Record3<Integer, String, String>> findByInternshipReleaseIdDistinctStaffId(String internshipReleaseId);
+    fun findByInternshipReleaseIdDistinctStaffId(internshipReleaseId: String): Result<Record3<Int, String, String>>
 
     /**
      * 通过实习发布id 和指导教师id查询 学生信息
@@ -54,7 +51,7 @@ public interface InternshipTeacherDistributionService {
      * @param staffId             指导教师id
      * @return 数据
      */
-    Result<Record> findByInternshipReleaseIdAndStaffIdForStudent(String internshipReleaseId, int staffId);
+    fun findByInternshipReleaseIdAndStaffIdForStudent(internshipReleaseId: String, staffId: Int): Result<Record>
 
     /**
      * 通过实习发布id 和学生id查询 指导教师
@@ -63,7 +60,7 @@ public interface InternshipTeacherDistributionService {
      * @param studentId           学生id
      * @return 数据
      */
-    Optional<Record> findByInternshipReleaseIdAndStudentIdForStaff(String internshipReleaseId, int studentId);
+    fun findByInternshipReleaseIdAndStudentIdForStaff(internshipReleaseId: String, studentId: Int): Optional<Record>
 
     /**
      * 通过实习发布id 和教职工id查询
@@ -72,7 +69,7 @@ public interface InternshipTeacherDistributionService {
      * @param staffId             教职工id
      * @return 数据
      */
-    Result<InternshipTeacherDistributionRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId);
+    fun findByInternshipReleaseIdAndStaffId(internshipReleaseId: String, staffId: Int): Result<InternshipTeacherDistributionRecord>
 
     /**
      * 为批量分配查询学生数据
@@ -83,21 +80,21 @@ public interface InternshipTeacherDistributionService {
      * @param verifyMailbox       是否已验证邮箱
      * @return 数据
      */
-    Result<Record> findStudentForBatchDistributionEnabledAndVerifyMailbox(List<Integer> organizeIds, List<String> internshipReleaseId, Byte enabled, Byte verifyMailbox);
+    fun findStudentForBatchDistributionEnabledAndVerifyMailbox(organizeIds: List<Int>, internshipReleaseId: List<String>, enabled: Byte?, verifyMailbox: Byte?): Result<Record>
 
     /**
      * 保存
      *
      * @param internshipTeacherDistribution 教师分配
      */
-    void save(InternshipTeacherDistribution internshipTeacherDistribution);
+    fun save(internshipTeacherDistribution: InternshipTeacherDistribution)
 
     /**
      * 更新
      *
      * @param internshipTeacherDistribution 教师分配
      */
-    void updateStaffId(InternshipTeacherDistribution internshipTeacherDistribution);
+    fun updateStaffId(internshipTeacherDistribution: InternshipTeacherDistribution)
 
     /**
      * 通过实习发布id 和 学生id删除
@@ -105,14 +102,14 @@ public interface InternshipTeacherDistributionService {
      * @param internshipReleaseId 实习发布id
      * @param studentId           学生id
      */
-    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+    fun deleteByInternshipReleaseIdAndStudentId(internshipReleaseId: String, studentId: Int)
 
     /**
      * 通过实习发布id删除
      *
      * @param internshipReleaseId 实习发布id
      */
-    void deleteByInternshipReleaseId(String internshipReleaseId);
+    fun deleteByInternshipReleaseId(internshipReleaseId: String)
 
     /**
      * 通过比对其它实习学生id删除
@@ -120,14 +117,14 @@ public interface InternshipTeacherDistributionService {
      * @param internshipReleaseId 实习发布id
      * @param excludeInternships  其它实习id
      */
-    void comparisonDel(String internshipReleaseId, List<String> excludeInternships);
+    fun comparisonDel(internshipReleaseId: String, excludeInternships: List<String>)
 
     /**
      * 删除未申请学生的分配
      *
      * @param internshipReleaseId 实习发布Id
      */
-    void deleteNotApply(String internshipReleaseId);
+    fun deleteNotApply(internshipReleaseId: String)
 
     /**
      * 分页查询
@@ -135,19 +132,19 @@ public interface InternshipTeacherDistributionService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    List<InternshipTeacherDistributionBean> findAllByPage(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, String internshipReleaseId);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): List<InternshipTeacherDistributionBean>
 
     /**
      * 总数
      *
      * @return 总数
      */
-    int countAll(String internshipReleaseId);
+    fun countAll(internshipReleaseId: String): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<InternshipTeacherDistributionBean> dataTablesUtils, String internshipReleaseId);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): Int
 }

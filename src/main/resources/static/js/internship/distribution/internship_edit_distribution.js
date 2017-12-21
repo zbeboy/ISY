@@ -113,7 +113,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address",
             var realStaffId = init_page_param.staffId;
             var staffChildrens = $(paramId.staffId).children();
             for (var i = 0; i < staffChildrens.length; i++) {
-                if (Number($(staffChildrens[i]).val()) == realStaffId) {
+                if (Number($(staffChildrens[i]).val()) === realStaffId) {
                     $(staffChildrens[i]).prop('selected', true);
                     break;
                 }
