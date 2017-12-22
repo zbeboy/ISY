@@ -1,9 +1,10 @@
 package top.zbeboy.isy.web.bean.error
 
+import java.io.Serializable
 /**
  * Created by zbeboy 2017-12-19 .
  **/
-open class ErrorBean<T> {
+open class ErrorBean<T> : Serializable {
     var hasError: Boolean = false
     var errorMsg: String? = null
     var data: T? = null
