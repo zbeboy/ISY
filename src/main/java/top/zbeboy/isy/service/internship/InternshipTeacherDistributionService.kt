@@ -150,4 +150,12 @@ interface InternshipTeacherDistributionService {
      * @return 条件查询总数
      */
     fun countByCondition(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): Int
+
+    /**
+     * 导出分页数据
+     *
+     * @param dataTablesUtils datatables工具类
+     * @return 分页数据
+     */
+    fun exportData(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): List<InternshipTeacherDistributionBean>
 }

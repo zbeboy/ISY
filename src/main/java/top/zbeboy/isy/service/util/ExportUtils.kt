@@ -13,9 +13,7 @@ import java.io.IOException
 /**
  * Created by zbeboy 2017-11-30 .
  **/
-open class ExportUtils<T>(data: List<T>) {
-
-    var data: List<T>? = data
+open class ExportUtils<T>(var data: List<T>) {
 
     @Throws(IOException::class)
     open fun exportExcel(outputPath: String, fileName: String, ext: String): Boolean {
@@ -29,23 +27,21 @@ open class ExportUtils<T>(data: List<T>) {
 
         if (!ObjectUtils.isEmpty(wb)) {
             val sheet = wb!!.createSheet("new sheet")
-            if (!ObjectUtils.isEmpty(data)) {
-                var row = sheet.createRow(0)
-                createHeader(row)
-                for (i in data!!.indices) {
-                    row = sheet.createRow(i + 1)
-                    createCell(row, data!![i])
-                }
-                val saveFile = File(outputPath, fileName + "." + ext)
-                if (!saveFile.parentFile.exists()) {//create file
-                    saveFile.parentFile.mkdirs()
-                }
-                // Write the output to a file
-                val fileOut = FileOutputStream(outputPath + fileName + "." + ext)
-                wb.write(fileOut)
-                fileOut.close()
-                isCreate = true
+            var row = sheet.createRow(0)
+            createHeader(row)
+            for (i in data.indices) {
+                row = sheet.createRow(i + 1)
+                createCell(row, data[i])
             }
+            val saveFile = File(outputPath, fileName + "." + ext)
+            if (!saveFile.parentFile.exists()) {//create file
+                saveFile.parentFile.mkdirs()
+            }
+            // Write the output to a file
+            val fileOut = FileOutputStream(outputPath + fileName + "." + ext)
+            wb.write(fileOut)
+            fileOut.close()
+            isCreate = true
         }
         return isCreate
     }

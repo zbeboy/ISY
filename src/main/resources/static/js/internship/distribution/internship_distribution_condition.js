@@ -42,6 +42,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 edit: '/web/internship/teacher_distribution/distribution/condition/edit',
                 batch_distribution_url: '/web/internship/teacher_distribution/batch/distribution',
                 exclude_internship_release_data_url: '/web/internship/teacher_distribution/batch/distribution/releases',
+                export_data_url: '/web/internship/teacher_distribution/list/data/export',
                 back: '/web/menu/internship/teacher_distribution'
             };
         }
@@ -391,6 +392,28 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
          */
         $('#page_back').click(function () {
             $.address.value(getAjaxUrl().back);
+        });
+
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
         });
 
         /*

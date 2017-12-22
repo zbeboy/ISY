@@ -1,25 +1,36 @@
 package top.zbeboy.isy.web.internship.distribution
 
+import com.alibaba.fastjson.JSON
 import org.jooq.Record
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
+import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution
 import top.zbeboy.isy.domain.tables.pojos.Organize
 import top.zbeboy.isy.domain.tables.pojos.Student
+import top.zbeboy.isy.service.common.UploadService
+import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.data.OrganizeService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
+import top.zbeboy.isy.service.export.InternshipTeacherDistributionExport
 import top.zbeboy.isy.service.internship.InternshipReleaseScienceService
+import top.zbeboy.isy.service.internship.InternshipReleaseService
 import top.zbeboy.isy.service.internship.InternshipTeacherDistributionService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.util.RequestUtils
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.bean.data.student.StudentBean
+import top.zbeboy.isy.web.bean.export.ExportBean
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean
 import top.zbeboy.isy.web.common.MethodControllerCommon
@@ -29,15 +40,19 @@ import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.PaginationUtils
 import top.zbeboy.isy.web.util.SmallPropsUtils
+import java.io.IOException
 import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by zbeboy 2017-12-21 .
  **/
 @Controller
 open class InternshipTeacherDistributionController {
+
+    private val log = LoggerFactory.getLogger(InternshipTeacherDistributionController::class.java)
 
     @Resource
     open lateinit var internshipTeacherDistributionService: InternshipTeacherDistributionService
@@ -56,6 +71,15 @@ open class InternshipTeacherDistributionController {
 
     @Resource
     open lateinit var usersService: UsersService
+
+    @Resource
+    open lateinit var internshipReleaseService: InternshipReleaseService
+
+    @Resource
+    open lateinit var departmentService: DepartmentService
+
+    @Resource
+    open lateinit var uploadService: UploadService
 
     @Resource
     open lateinit var methodControllerCommon: MethodControllerCommon
@@ -212,6 +236,51 @@ open class InternshipTeacherDistributionController {
         dataTablesUtils.setiTotalRecords(internshipTeacherDistributionService.countAll(internshipReleaseId).toLong())
         dataTablesUtils.setiTotalDisplayRecords(internshipTeacherDistributionService.countByCondition(dataTablesUtils, internshipReleaseId).toLong())
         return dataTablesUtils
+    }
+
+    /**
+     * 导出 分配列表 数据
+     *
+     * @param request 请求
+     */
+    @RequestMapping(value = ["/web/internship/teacher_distribution/list/data/export"], method = [(RequestMethod.GET)])
+    fun dataExport(request: HttpServletRequest, response: HttpServletResponse) {
+        try {
+            var fileName: String? = "实习指导教师分配数据表"
+            var ext: String? = Workbook.XLSX_FILE
+            val exportBean = JSON.parseObject(request.getParameter("exportFile"), ExportBean::class.java)
+
+            val extraSearchParam = request.getParameter("extra_search")
+            val dataTablesUtils = DataTablesUtils.of<InternshipTeacherDistributionBean>()
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(extraSearchParam)) {
+                dataTablesUtils.search = JSON.parseObject(extraSearchParam)
+            }
+            val internshipReleaseId = request.getParameter("internshipReleaseId")
+            if (!ObjectUtils.isEmpty(internshipReleaseId)) {
+                val internshipTeacherDistributionBeans = internshipTeacherDistributionService.exportData(dataTablesUtils, internshipReleaseId)
+                if (org.apache.commons.lang3.StringUtils.isNotBlank(exportBean.fileName)) {
+                    fileName = exportBean.fileName
+                }
+                if (org.apache.commons.lang3.StringUtils.isNotBlank(exportBean.ext)) {
+                    ext = exportBean.ext
+                }
+                val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
+                if (!ObjectUtils.isEmpty(internshipRelease)) {
+                    val record = departmentService.findByIdRelation(internshipRelease.getDepartmentId()!!)
+                    if (record.isPresent()) {
+                        val departmentBean = record.get().into(DepartmentBean::class.java)
+                        val export = InternshipTeacherDistributionExport(internshipTeacherDistributionBeans)
+                        val schoolInfoPath = departmentBean.schoolName + "/" + departmentBean.collegeName + "/" + departmentBean.getDepartmentName() + "/"
+                        val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
+                        uploadService.download(fileName, "/" + path, response, request)
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            log.error("Export file error, error is {}", e)
+        }
+
     }
 
     /**

@@ -153,10 +153,9 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
     }
 
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): List<InternshipTeacherDistributionBean> {
-        val internshipTeacherDistributionBeens = ArrayList<InternshipTeacherDistributionBean>()
         val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        records = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(INTERNSHIP_TEACHER_DISTRIBUTION)
                     .join(STAFF)
@@ -168,7 +167,7 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
             sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(INTERNSHIP_TEACHER_DISTRIBUTION)
@@ -181,24 +180,10 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)).and(a)
             sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
 
-        for (r in records) {
-            val internshipTeacherDistributionBeen = InternshipTeacherDistributionBean()
-            internshipTeacherDistributionBeen.studentRealName = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME)
-            internshipTeacherDistributionBeen.studentUsername = r.getValue(STUDENT.USERNAME)
-            internshipTeacherDistributionBeen.studentNumber = r.getValue(STUDENT.STUDENT_NUMBER)
-            internshipTeacherDistributionBeen.studentId = r.getValue(STUDENT.STUDENT_ID)
-            internshipTeacherDistributionBeen.staffRealName = r.getValue(USERS.REAL_NAME)
-            internshipTeacherDistributionBeen.staffUsername = r.getValue(STAFF.USERNAME)
-            internshipTeacherDistributionBeen.staffNumber = r.getValue(STAFF.STAFF_NUMBER)
-            internshipTeacherDistributionBeen.assigner = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER)
-            internshipTeacherDistributionBeen.username = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME)
-            internshipTeacherDistributionBeens.add(internshipTeacherDistributionBeen)
-        }
-
-        return internshipTeacherDistributionBeens
+        return buildInternshipTeacherDistributionBeenList(records)
     }
 
     override fun countAll(internshipReleaseId: String): Int {
@@ -212,11 +197,11 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
     override fun countByCondition(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): Int {
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.selectCount()
                     .from(INTERNSHIP_TEACHER_DISTRIBUTION)
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(INTERNSHIP_TEACHER_DISTRIBUTION)
@@ -227,9 +212,60 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
                     .join(STUDENT)
                     .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                     .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)).and(a)
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
+    }
+
+    override fun exportData(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): List<InternshipTeacherDistributionBean> {
+        val records: Result<Record>
+        val a = searchCondition(dataTablesUtils)
+        records = if (ObjectUtils.isEmpty(a)) {
+            val selectConditionStep = create.select()
+                    .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                    .join(STAFF)
+                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .join(STUDENT)
+                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+            selectConditionStep.fetch()
+        } else {
+            val selectConditionStep = create.select()
+                    .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                    .join(STAFF)
+                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                    .join(STUDENT)
+                    .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)).and(a)
+            selectConditionStep.fetch()
+        }
+
+        return buildInternshipTeacherDistributionBeenList(records)
+    }
+
+    /**
+     * 构建分配数据
+     */
+    private fun buildInternshipTeacherDistributionBeenList(records: Result<Record>): ArrayList<InternshipTeacherDistributionBean> {
+        val internshipTeacherDistributionBeens = ArrayList<InternshipTeacherDistributionBean>()
+        for (r in records) {
+            val internshipTeacherDistributionBeen = InternshipTeacherDistributionBean()
+            internshipTeacherDistributionBeen.studentRealName = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME)
+            internshipTeacherDistributionBeen.studentUsername = r.getValue(STUDENT.USERNAME)
+            internshipTeacherDistributionBeen.studentNumber = r.getValue(STUDENT.STUDENT_NUMBER)
+            internshipTeacherDistributionBeen.studentId = r.getValue(STUDENT.STUDENT_ID)
+            internshipTeacherDistributionBeen.staffRealName = r.getValue(USERS.REAL_NAME)
+            internshipTeacherDistributionBeen.staffUsername = r.getValue(STAFF.USERNAME)
+            internshipTeacherDistributionBeen.staffNumber = r.getValue(STAFF.STAFF_NUMBER)
+            internshipTeacherDistributionBeen.assigner = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER)
+            internshipTeacherDistributionBeen.username = r.getValue(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME)
+            internshipTeacherDistributionBeens.add(internshipTeacherDistributionBeen)
+        }
+        return internshipTeacherDistributionBeens
     }
 
     /**

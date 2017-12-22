@@ -36,6 +36,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
             return {
                 datas: '/web/internship/teacher_distribution/distribution/look/data',
                 delete_not_apply: '/web/internship/teacher_distribution/distribution/delete_not_apply',
+                export_data_url: '/web/internship/teacher_distribution/list/data/export',
                 back: '/web/menu/internship/teacher_distribution'
             };
         }
@@ -341,6 +342,28 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
          */
         $('#page_back').click(function () {
             $.address.value(getAjaxUrl().back);
+        });
+
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            var internshipReleaseId = init_page_param.internshipReleaseId;
+            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
         });
 
         /*
