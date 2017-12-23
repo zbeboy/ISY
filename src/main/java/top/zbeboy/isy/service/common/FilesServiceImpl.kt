@@ -8,7 +8,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -24,7 +23,7 @@ import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean
 import java.io.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.HashMap
+import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 
@@ -54,7 +53,6 @@ open class FilesServiceImpl : FilesService {
         return filesDao.findById(id)
     }
 
-    @Async
     override fun saveInternshipJournal(internshipJournal: InternshipJournal, users: Users, request: HttpServletRequest): String {
         var outputPath = ""
         try {
