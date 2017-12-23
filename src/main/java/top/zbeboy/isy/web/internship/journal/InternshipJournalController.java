@@ -19,7 +19,6 @@ import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -35,7 +34,6 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.data.student.StudentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
-import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
@@ -111,9 +109,6 @@ public class InternshipJournalController {
 
     @Resource
     private MethodControllerCommon methodControllerCommon;
-
-    @Resource
-    private CommonControllerMethodService commonControllerMethodService;
 
     @Resource
     private InternshipMethodControllerCommon internshipMethodControllerCommon;
@@ -794,7 +789,7 @@ public class InternshipJournalController {
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
-            if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
+            if (!internshipMethodControllerCommon.onlySelfStudentOperate(studentId)) {
                 errorBean.setHasError(true);
                 errorBean.setErrorMsg("您的个人信息有误");
                 return errorBean;

@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
 import top.zbeboy.isy.service.cache.CacheManageService;
-import top.zbeboy.isy.service.common.CommonControllerMethodService;
 import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StaffService;
@@ -37,6 +36,7 @@ import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.internship.apply.*;
@@ -110,9 +110,6 @@ public class InternshipApplyController {
     private InternshipChangeHistoryService internshipChangeHistoryService;
 
     @Resource
-    private CommonControllerMethodService commonControllerMethodService;
-
-    @Resource
     private MethodControllerCommon methodControllerCommon;
 
     @Resource
@@ -123,6 +120,9 @@ public class InternshipApplyController {
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
+
+    @Resource
+    private InternshipMethodControllerCommon internshipMethodControllerCommon;
 
     @Resource
     private CacheManageService cacheManageService;
@@ -1414,7 +1414,7 @@ public class InternshipApplyController {
     private ErrorBean<InternshipRelease> accessCondition(String internshipReleaseId, int studentId) {
         ErrorBean<InternshipRelease> errorBean = internshipConditionCommon.basicCondition(internshipReleaseId);
         if (!errorBean.isHasError()) {
-            if (!commonControllerMethodService.limitCurrentStudent(studentId)) {
+            if (!internshipMethodControllerCommon.onlySelfStudentOperate(studentId)) {
                 errorBean.setHasError(true);
                 errorBean.setErrorMsg("您的个人信息有误");
                 return errorBean;
