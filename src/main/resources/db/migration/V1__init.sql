@@ -189,7 +189,7 @@ CREATE TABLE internship_type (
 CREATE TABLE internship_release (
   internship_release_id           VARCHAR(64) PRIMARY KEY,
   internship_title                VARCHAR(100) NOT NULL,
-  release_time                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  release_time                    TIMESTAMP    NOT NULL,
   username                        VARCHAR(64)  NOT NULL,
   allow_grade                     VARCHAR(5)   NOT NULL,
   teacher_distribution_start_time DATETIME     NOT NULL,
