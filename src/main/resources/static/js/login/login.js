@@ -187,7 +187,10 @@ require(["jquery", "requirejs-domready", "emails", "base64", "bootstrap", "csrf"
                     // 采用 html5 Storage存储
                     // Check browser support
                     if (typeof(Storage) !== "undefined") {
-                        storageEmail = base64.decode(localStorage.getItem(webStorageKey.LOGIN_USERNAME));
+                        storageEmail = localStorage.getItem(webStorageKey.LOGIN_USERNAME);
+                        if (storageEmail) {
+                            storageEmail = base64.decode(storageEmail);
+                        }
                     }
 
                     if (storageEmail !== null && storageEmail.indexOf(query) === 0) {
