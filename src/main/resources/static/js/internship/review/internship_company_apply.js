@@ -37,7 +37,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             searchParams: '',
             pageNum: 0,
             pageSize: 2,
-            displayedPages: 3
+            displayedPages: 3,
+            internshipReleaseId: init_page_param.internshipReleaseId
         };
 
         /*
@@ -495,8 +496,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 studentName: '',
                 studentNumber: '',
                 scienceName: '',
-                organizeName: '',
-                internshipReleaseId: init_page_param.internshipReleaseId
+                organizeName: ''
             };
             if (typeof(Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);

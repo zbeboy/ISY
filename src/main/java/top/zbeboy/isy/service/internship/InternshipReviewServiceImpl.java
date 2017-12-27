@@ -150,21 +150,12 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
         Condition a = null;
         JSONObject search = JSON.parseObject(paginationUtils.getSearchParams());
         if (!ObjectUtils.isEmpty(search)) {
-            String internshipReleaseId = StringUtils.trimWhitespace(search.getString("internshipReleaseId"));
             String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
             String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
             String scienceName = StringUtils.trimWhitespace(search.getString("scienceName"));
             String organizeName = StringUtils.trimWhitespace(search.getString("organizeName"));
-            if (StringUtils.hasLength(internshipReleaseId)) {
-                a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId);
-            }
-
             if (StringUtils.hasLength(studentName)) {
-                if (!ObjectUtils.isEmpty(a)) {
-                    a = a.and(USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName)));
-                } else {
-                    a = USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
-                }
+                a = USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
             }
 
             if (StringUtils.hasLength(studentNumber)) {
@@ -209,6 +200,14 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
      */
     private Condition otherCondition(Condition a, InternshipApplyBean internshipApplyBean) {
         if (!ObjectUtils.isEmpty(internshipApplyBean)) {
+            if (StringUtils.hasLength(internshipApplyBean.getInternshipReleaseId())) {
+                if (!ObjectUtils.isEmpty(a)) {
+                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipApplyBean.getInternshipReleaseId()));
+                } else {
+                    a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(internshipApplyBean.getInternshipReleaseId());
+                }
+
+            }
             if (!ObjectUtils.isEmpty(internshipApplyBean.getInternshipApplyState())) {
                 if (!ObjectUtils.isEmpty(a)) {
                     a = a.and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(internshipApplyBean.getInternshipApplyState()));

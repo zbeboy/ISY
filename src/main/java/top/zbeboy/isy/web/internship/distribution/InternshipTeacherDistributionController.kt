@@ -146,7 +146,7 @@ open class InternshipTeacherDistributionController {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
             page = "web/internship/distribution/internship_distribution_condition::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, "您不符合进入条件")
+            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
         return page
     }

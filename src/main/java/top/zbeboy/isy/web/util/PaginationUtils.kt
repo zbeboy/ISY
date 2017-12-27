@@ -3,7 +3,7 @@ package top.zbeboy.isy.web.util
 /**
  * Created by zbeboy 2017-11-26 .
  **/
-class PaginationUtils {
+open class PaginationUtils {
     private var totalPages: Int = 0// 总页数
     private var totalDatas: Int = 0// 数据总数
     private var pageNum: Int = 0// 当前页
