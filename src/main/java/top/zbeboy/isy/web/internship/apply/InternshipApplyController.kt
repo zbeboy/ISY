@@ -309,60 +309,65 @@ open class InternshipApplyController {
             return page
         }
         val studentId = student.studentId!!
-        val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
-        val internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease.internshipTypeId!!)
-        when (internshipType.internshipTypeName) {
-            Workbook.INTERNSHIP_COLLEGE_TYPE -> {
-                val internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
-                if (internshipCollegeRecord.isPresent) {
-                    val internshipCollege = internshipCollegeRecord.get().into(InternshipCollege::class.java)
-                    modelMap.addAttribute("internshipData", internshipCollege)
-                    page = "web/internship/apply/internship_college_detail::#page-wrapper"
-                } else {
-                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+        val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
+        if (!errorBean.isHasError()) {
+            val internshipRelease = errorBean.data
+            val internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease!!.internshipTypeId!!)
+            when (internshipType.internshipTypeName) {
+                Workbook.INTERNSHIP_COLLEGE_TYPE -> {
+                    val internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
+                    if (internshipCollegeRecord.isPresent) {
+                        val internshipCollege = internshipCollegeRecord.get().into(InternshipCollege::class.java)
+                        modelMap.addAttribute("internshipData", internshipCollege)
+                        page = "web/internship/apply/internship_college_detail::#page-wrapper"
+                    } else {
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                    }
                 }
-            }
-            Workbook.INTERNSHIP_COMPANY_TYPE -> {
-                val internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
-                if (internshipCompanyRecord.isPresent) {
-                    val internshipCompany = internshipCompanyRecord.get().into(InternshipCompany::class.java)
-                    modelMap.addAttribute("internshipData", internshipCompany)
-                    page = "web/internship/apply/internship_company_detail::#page-wrapper"
-                } else {
-                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                Workbook.INTERNSHIP_COMPANY_TYPE -> {
+                    val internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
+                    if (internshipCompanyRecord.isPresent) {
+                        val internshipCompany = internshipCompanyRecord.get().into(InternshipCompany::class.java)
+                        modelMap.addAttribute("internshipData", internshipCompany)
+                        page = "web/internship/apply/internship_company_detail::#page-wrapper"
+                    } else {
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                    }
                 }
-            }
-            Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE -> {
-                val graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
-                if (graduationPracticeCollegeRecord.isPresent) {
-                    val graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege::class.java)
-                    modelMap.addAttribute("internshipData", graduationPracticeCollege)
-                    page = "web/internship/apply/graduation_practice_college_detail::#page-wrapper"
-                } else {
-                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE -> {
+                    val graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
+                    if (graduationPracticeCollegeRecord.isPresent) {
+                        val graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege::class.java)
+                        modelMap.addAttribute("internshipData", graduationPracticeCollege)
+                        page = "web/internship/apply/graduation_practice_college_detail::#page-wrapper"
+                    } else {
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                    }
                 }
-            }
-            Workbook.GRADUATION_PRACTICE_UNIFY_TYPE -> {
-                val graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
-                if (graduationPracticeUnifyRecord.isPresent) {
-                    val graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify::class.java)
-                    modelMap.addAttribute("internshipData", graduationPracticeUnify)
-                    page = "web/internship/apply/graduation_practice_unify_detail::#page-wrapper"
-                } else {
-                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                Workbook.GRADUATION_PRACTICE_UNIFY_TYPE -> {
+                    val graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
+                    if (graduationPracticeUnifyRecord.isPresent) {
+                        val graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify::class.java)
+                        modelMap.addAttribute("internshipData", graduationPracticeUnify)
+                        page = "web/internship/apply/graduation_practice_unify_detail::#page-wrapper"
+                    } else {
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                    }
                 }
-            }
-            Workbook.GRADUATION_PRACTICE_COMPANY_TYPE -> {
-                val graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
-                if (graduationPracticeCompanyRecord.isPresent) {
-                    val graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany::class.java)
-                    modelMap.addAttribute("internshipData", graduationPracticeCompany)
-                    page = "web/internship/apply/graduation_practice_company_detail::#page-wrapper"
-                } else {
-                    page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                Workbook.GRADUATION_PRACTICE_COMPANY_TYPE -> {
+                    val graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
+                    if (graduationPracticeCompanyRecord.isPresent) {
+                        val graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany::class.java)
+                        modelMap.addAttribute("internshipData", graduationPracticeCompany)
+                        page = "web/internship/apply/graduation_practice_company_detail::#page-wrapper"
+                    } else {
+                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                    }
                 }
+                else -> page = methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面")
             }
-            else -> page = methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面")
+        } else {
+            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
         return page
     }
