@@ -1,25 +1,23 @@
-package top.zbeboy.isy.service.internship;
+package top.zbeboy.isy.service.internship
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.InternshipCollege;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-import top.zbeboy.isy.web.vo.internship.apply.InternshipCollegeVo;
-
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.InternshipCollege
+import top.zbeboy.isy.web.util.DataTablesUtils
+import top.zbeboy.isy.web.vo.internship.apply.InternshipCollegeVo
+import java.util.*
 
 /**
- * Created by lenovo on 2016-11-27.
- */
-public interface InternshipCollegeService {
-
+ * Created by zbeboy 2017-12-27 .
+ **/
+interface InternshipCollegeService {
     /**
      * 通过id查询
      *
      * @param id 主键
      * @return 校外自主实习(去单位)
      */
-    InternshipCollege findById(String id);
+    fun findById(id: String): InternshipCollege
 
     /**
      * 通过实习发布id与学生id查询
@@ -28,28 +26,28 @@ public interface InternshipCollegeService {
      * @param studentId           学生id
      * @return 数据
      */
-    Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+    fun findByInternshipReleaseIdAndStudentId(internshipReleaseId: String, studentId: Int): Optional<Record>
 
     /**
      * 保存
      *
      * @param internshipCollege 校外自主实习(去单位)
      */
-    void save(InternshipCollege internshipCollege);
+    fun save(internshipCollege: InternshipCollege)
 
     /**
      * 开启事务保存
      *
      * @param internshipCollegeVo 校外自主实习(去单位)
      */
-    void saveWithTransaction(InternshipCollegeVo internshipCollegeVo);
+    fun saveWithTransaction(internshipCollegeVo: InternshipCollegeVo)
 
     /**
      * 更新
      *
      * @param internshipCollege 校外自主实习(去单位)
      */
-    void update(InternshipCollege internshipCollege);
+    fun update(internshipCollege: InternshipCollege)
 
     /**
      * 通过实习发布id与学生id删除
@@ -57,7 +55,7 @@ public interface InternshipCollegeService {
      * @param internshipReleaseId 实习发布id
      * @param studentId           学生id
      */
-    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+    fun deleteByInternshipReleaseIdAndStudentId(internshipReleaseId: String, studentId: Int)
 
     /**
      * 分页查询
@@ -65,21 +63,21 @@ public interface InternshipCollegeService {
      * @param dataTablesUtils datatables工具类
      * @return 分页数据
      */
-    Result<Record> findAllByPage(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
+    fun findAllByPage(dataTablesUtils: DataTablesUtils<InternshipCollege>, internshipCollege: InternshipCollege): Result<Record>
 
     /**
      * 系总数
      *
      * @return 总数
      */
-    int countAll(InternshipCollege internshipCollege);
+    fun countAll(internshipCollege: InternshipCollege): Int
 
     /**
      * 根据条件查询总数
      *
      * @return 条件查询总数
      */
-    int countByCondition(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
+    fun countByCondition(dataTablesUtils: DataTablesUtils<InternshipCollege>, internshipCollege: InternshipCollege): Int
 
     /**
      * 导出
@@ -88,5 +86,5 @@ public interface InternshipCollegeService {
      * @param internshipCollege 校外自主实习(去单位)
      * @return 导出数据
      */
-    Result<Record> exportData(DataTablesUtils<InternshipCollege> dataTablesUtils, InternshipCollege internshipCollege);
+    fun exportData(dataTablesUtils: DataTablesUtils<InternshipCollege>, internshipCollege: InternshipCollege): Result<Record>
 }

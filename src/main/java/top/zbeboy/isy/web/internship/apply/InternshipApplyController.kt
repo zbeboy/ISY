@@ -417,7 +417,7 @@ open class InternshipApplyController {
                         internshipCollegeVo.schoolGuidanceTeacher = schoolGuidanceTeacherArr[0]
                         internshipCollegeVo.schoolGuidanceTeacherTel = schoolGuidanceTeacherArr[1]
                     }
-                    val internshipCollege = internshipCollegeService.findById(internshipCollegeVo.internshipCollegeId)
+                    val internshipCollege = internshipCollegeService.findById(internshipCollegeVo.internshipCollegeId!!)
                     val internshipApply = errorBean.mapData!!["internshipApply"] as InternshipApply
                     if (internshipApply.internshipApplyState == 5) {// 5：基本信息变更填写中
                         internshipCollege.studentName = internshipCollegeVo.studentName
@@ -437,7 +437,7 @@ open class InternshipApplyController {
                         ajaxUtils.success().msg("更新成功")
                     } else if (internshipApply.internshipApplyState == 7) {// 7：单位信息变更填写中
 
-                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipCollegeVo.internshipReleaseId, internshipCollegeVo.studentId!!)
+                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipCollegeVo.internshipReleaseId!!, internshipCollegeVo.studentId!!)
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             val internshipChangeCompanyHistory = InternshipChangeCompanyHistory()
                             internshipChangeCompanyHistory.internshipChangeCompanyHistoryId = UUIDUtils.getUUID()
@@ -557,7 +557,7 @@ open class InternshipApplyController {
                         internshipCompanyVo.schoolGuidanceTeacher = schoolGuidanceTeacherArr[0]
                         internshipCompanyVo.schoolGuidanceTeacherTel = schoolGuidanceTeacherArr[1]
                     }
-                    val internshipCompany = internshipCompanyService.findById(internshipCompanyVo.internshipCompanyId)
+                    val internshipCompany = internshipCompanyService.findById(internshipCompanyVo.internshipCompanyId!!)
                     val internshipApply = errorBean.mapData!!["internshipApply"] as InternshipApply
                     if (internshipApply.internshipApplyState == 5) {
                         internshipCompany.studentName = internshipCompanyVo.studentName
@@ -576,7 +576,7 @@ open class InternshipApplyController {
                         internshipCompanyService.update(internshipCompany)
                         ajaxUtils.success().msg("更新成功")
                     } else if (internshipApply.internshipApplyState == 7) {
-                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipCompanyVo.internshipReleaseId, internshipCompanyVo.studentId!!)
+                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipCompanyVo.internshipReleaseId!!, internshipCompanyVo.studentId!!)
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             val internshipChangeCompanyHistory = InternshipChangeCompanyHistory()
                             internshipChangeCompanyHistory.internshipChangeCompanyHistoryId = UUIDUtils.getUUID()
@@ -696,7 +696,7 @@ open class InternshipApplyController {
                         graduationPracticeCollegeVo.schoolGuidanceTeacher = schoolGuidanceTeacherArr[0]
                         graduationPracticeCollegeVo.schoolGuidanceTeacherTel = schoolGuidanceTeacherArr[1]
                     }
-                    val graduationPracticeCollege = graduationPracticeCollegeService.findById(graduationPracticeCollegeVo.graduationPracticeCollegeId)
+                    val graduationPracticeCollege = graduationPracticeCollegeService.findById(graduationPracticeCollegeVo.graduationPracticeCollegeId!!)
                     val internshipApply = errorBean.mapData!!["internshipApply"] as InternshipApply
                     if (internshipApply.internshipApplyState == 5) {
                         graduationPracticeCollege.studentName = graduationPracticeCollegeVo.studentName
@@ -715,7 +715,7 @@ open class InternshipApplyController {
                         graduationPracticeCollegeService.update(graduationPracticeCollege)
                         ajaxUtils.success().msg("更新成功")
                     } else if (internshipApply.internshipApplyState == 7) {
-                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(graduationPracticeCollegeVo.internshipReleaseId, graduationPracticeCollegeVo.studentId!!)
+                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(graduationPracticeCollegeVo.internshipReleaseId!!, graduationPracticeCollegeVo.studentId!!)
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             val internshipChangeCompanyHistory = InternshipChangeCompanyHistory()
                             internshipChangeCompanyHistory.internshipChangeCompanyHistoryId = UUIDUtils.getUUID()
@@ -835,7 +835,7 @@ open class InternshipApplyController {
                         graduationPracticeUnifyVo.schoolGuidanceTeacher = schoolGuidanceTeacherArr[0]
                         graduationPracticeUnifyVo.schoolGuidanceTeacherTel = schoolGuidanceTeacherArr[1]
                     }
-                    val graduationPracticeUnify = graduationPracticeUnifyService.findById(graduationPracticeUnifyVo.graduationPracticeUnifyId)
+                    val graduationPracticeUnify = graduationPracticeUnifyService.findById(graduationPracticeUnifyVo.graduationPracticeUnifyId!!)
                     val internshipApply = errorBean.mapData!!["internshipApply"] as InternshipApply
                     if (internshipApply.internshipApplyState == 5) {
                         graduationPracticeUnify.studentName = graduationPracticeUnifyVo.studentName
@@ -854,7 +854,7 @@ open class InternshipApplyController {
                         graduationPracticeUnifyService.update(graduationPracticeUnify)
                         ajaxUtils.success().msg("更新成功")
                     } else if (internshipApply.internshipApplyState == 7) {
-                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(graduationPracticeUnifyVo.internshipReleaseId, graduationPracticeUnifyVo.studentId!!)
+                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(graduationPracticeUnifyVo.internshipReleaseId!!, graduationPracticeUnifyVo.studentId!!)
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             val internshipChangeCompanyHistory = InternshipChangeCompanyHistory()
                             internshipChangeCompanyHistory.internshipChangeCompanyHistoryId = UUIDUtils.getUUID()
@@ -974,7 +974,7 @@ open class InternshipApplyController {
                         graduationPracticeCompanyVo.schoolGuidanceTeacher = schoolGuidanceTeacherArr[0]
                         graduationPracticeCompanyVo.schoolGuidanceTeacherTel = schoolGuidanceTeacherArr[1]
                     }
-                    val graduationPracticeCompany = graduationPracticeCompanyService.findById(graduationPracticeCompanyVo.graduationPracticeCompanyId)
+                    val graduationPracticeCompany = graduationPracticeCompanyService.findById(graduationPracticeCompanyVo.graduationPracticeCompanyId!!)
                     val internshipApply = errorBean.mapData!!["internshipApply"] as InternshipApply
                     if (internshipApply.internshipApplyState == 5) {
                         graduationPracticeCompany.studentName = graduationPracticeCompanyVo.studentName
@@ -993,7 +993,7 @@ open class InternshipApplyController {
                         graduationPracticeCompanyService.update(graduationPracticeCompany)
                         ajaxUtils.success().msg("更新成功")
                     } else if (internshipApply.internshipApplyState == 7) {
-                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(graduationPracticeCompanyVo.internshipReleaseId, graduationPracticeCompanyVo.studentId!!)
+                        val internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(graduationPracticeCompanyVo.internshipReleaseId!!, graduationPracticeCompanyVo.studentId!!)
                         if (internshipChangeCompanyHistoryRecord.isEmpty()) {
                             val internshipChangeCompanyHistory = InternshipChangeCompanyHistory()
                             internshipChangeCompanyHistory.internshipChangeCompanyHistoryId = UUIDUtils.getUUID()
