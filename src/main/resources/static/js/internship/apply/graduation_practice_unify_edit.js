@@ -106,14 +106,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         /**
          * 初始化参数
          */
@@ -178,7 +170,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
         function initMaxLength() {
             var internshipApplyState = init_page_param.internshipApplyState;
             if (internshipApplyState !== '') {
-                if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息
+                if (internshipApplyState === 5) { // 基本信息修改状态，不允许修改单位信息
                     $(paramId.studentName).maxlength({
                         alwaysShow: true,
                         threshold: 10,
@@ -192,7 +184,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
                         warningClass: "label label-success",
                         limitReachedClass: "label label-danger"
                     });
-                } else if (internshipApplyState == 7) {// 单位信息修改状态，不允许修改基本信息
+                } else if (internshipApplyState === 7) {// 单位信息修改状态，不允许修改基本信息
                     $(paramId.graduationPracticeUnifyName).maxlength({
                         alwaysShow: true,
                         threshold: 10,
@@ -258,13 +250,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
         function initInputState() {
             var internshipApplyState = init_page_param.internshipApplyState;
             if (internshipApplyState !== '') {
-                if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息
+                if (internshipApplyState === 5) { // 基本信息修改状态，不允许修改单位信息
                     $(paramId.graduationPracticeUnifyName).attr("readonly", true);
                     $(paramId.graduationPracticeUnifyAddress).attr("readonly", true);
                     $(paramId.graduationPracticeUnifyContacts).attr("readonly", true);
                     $(paramId.graduationPracticeUnifyTel).attr("readonly", true);
                     initInternshipTime();// 初始化时间选择
-                } else if (internshipApplyState == 7) {// 单位信息修改状态，不允许修改基本信息
+                } else if (internshipApplyState === 7) {// 单位信息修改状态，不允许修改基本信息
                     $(paramId.studentName).attr("readonly", true);
                     $(paramId.qqMailbox).attr("readonly", true);
                     $(paramId.parentalContact).attr("readonly", true);

@@ -206,14 +206,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         $(paramId.internshipTitle).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
         $(myParamId.internshipTitle).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshMySearch();
                 initMyData();
             }

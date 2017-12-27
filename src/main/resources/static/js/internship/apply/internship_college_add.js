@@ -106,14 +106,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();
