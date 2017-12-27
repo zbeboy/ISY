@@ -646,7 +646,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     nextPage(pageNumber);
                 }
             });

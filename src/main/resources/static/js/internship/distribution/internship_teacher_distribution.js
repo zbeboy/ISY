@@ -237,7 +237,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     nextPage(pageNumber);
                 }
             });
