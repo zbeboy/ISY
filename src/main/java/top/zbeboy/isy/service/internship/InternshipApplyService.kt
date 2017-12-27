@@ -1,27 +1,24 @@
-package top.zbeboy.isy.service.internship;
+package top.zbeboy.isy.service.internship
 
-import org.jooq.Record;
-import org.jooq.Result;
-import top.zbeboy.isy.domain.tables.pojos.InternshipApply;
-import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean;
-import top.zbeboy.isy.web.util.PaginationUtils;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
+import org.jooq.Record
+import org.jooq.Result
+import top.zbeboy.isy.domain.tables.pojos.InternshipApply
+import top.zbeboy.isy.web.bean.internship.apply.InternshipApplyBean
+import top.zbeboy.isy.web.util.PaginationUtils
+import java.sql.Timestamp
+import java.util.*
 
 /**
- * Created by lenovo on 2016-11-29.
- */
-public interface InternshipApplyService {
-
+ * Created by zbeboy 2017-12-27 .
+ **/
+interface InternshipApplyService {
     /**
      * 通过id查询
      *
      * @param id 主键
      * @return 实习申请
      */
-    InternshipApply findById(String id);
+    fun findById(id: String): InternshipApply
 
     /**
      * 通过实习id与学生id查询
@@ -30,21 +27,21 @@ public interface InternshipApplyService {
      * @param studentId           学生id
      * @return 数据
      */
-    Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+    fun findByInternshipReleaseIdAndStudentId(internshipReleaseId: String, studentId: Int): Optional<Record>
 
     /**
      * 保存
      *
      * @param internshipApply 实习申请
      */
-    void save(InternshipApply internshipApply);
+    fun save(internshipApply: InternshipApply)
 
     /**
      * 更新
      *
      * @param internshipApply 实习申请
      */
-    void update(InternshipApply internshipApply);
+    fun update(internshipApply: InternshipApply)
 
     /**
      * 通过实习发布id与申请状态更新状态 定时任务
@@ -53,7 +50,7 @@ public interface InternshipApplyService {
      * @param changeState         当前状态
      * @param updateState         新状态
      */
-    void updateStateWithInternshipReleaseIdAndState(String internshipReleaseId, int changeState, int updateState);
+    fun updateStateWithInternshipReleaseIdAndState(internshipReleaseId: String, changeState: Int, updateState: Int)
 
     /**
      * 更改超过信息填写时间的申请状态为申请中
@@ -62,7 +59,7 @@ public interface InternshipApplyService {
      * @param changeState       当前状态
      * @param updateState       新状态
      */
-    void updateStateByChangeFillEndTime(Timestamp changeFillEndTime, int changeState, int updateState);
+    fun updateStateByChangeFillEndTime(changeFillEndTime: Timestamp, changeState: Int, updateState: Int)
 
     /**
      * 通过实习id与学生id查询
@@ -70,7 +67,7 @@ public interface InternshipApplyService {
      * @param internshipReleaseId 实习发布id
      * @param studentId           学生id
      */
-    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+    fun deleteByInternshipReleaseIdAndStudentId(internshipReleaseId: String, studentId: Int)
 
     /**
      * 删除实习相关记录
@@ -79,7 +76,7 @@ public interface InternshipApplyService {
      * @param internshipReleaseId 实习发布id
      * @param studentId           学生id
      */
-    void deleteInternshipApplyRecord(int internshipTypeId, String internshipReleaseId, int studentId);
+    fun deleteInternshipApplyRecord(internshipTypeId: Int, internshipReleaseId: String, studentId: Int)
 
     /**
      * 分页查询全部
@@ -88,7 +85,7 @@ public interface InternshipApplyService {
      * @param internshipApplyBean 额外参数
      * @return 分页数据
      */
-    Result<Record> findAllByPage(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean);
+    fun findAllByPage(paginationUtils: PaginationUtils, internshipApplyBean: InternshipApplyBean): Result<Record>
 
     /**
      * 处理实习返回数据
@@ -98,7 +95,7 @@ public interface InternshipApplyService {
      * @param internshipApplyBean 额外参数
      * @return 处理后的数据
      */
-    List<InternshipApplyBean> dealData(PaginationUtils paginationUtils, Result<Record> records, InternshipApplyBean internshipApplyBean);
+    fun dealData(paginationUtils: PaginationUtils, records: Result<Record>, internshipApplyBean: InternshipApplyBean): List<InternshipApplyBean>
 
     /**
      * 根据条件统计
@@ -107,5 +104,5 @@ public interface InternshipApplyService {
      * @param internshipApplyBean 额外参数
      * @return 统计
      */
-    int countByCondition(PaginationUtils paginationUtils, InternshipApplyBean internshipApplyBean);
+    fun countByCondition(paginationUtils: PaginationUtils, internshipApplyBean: InternshipApplyBean): Int
 }
