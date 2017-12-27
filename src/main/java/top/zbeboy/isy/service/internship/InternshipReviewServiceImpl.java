@@ -48,16 +48,16 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
                 .from(INTERNSHIP_APPLY)
                 .join(INTERNSHIP_RELEASE)
                 .on(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
-                .join(STUDENT.join(USERS.as("T")).on(STUDENT.USERNAME.eq(USERS.as("T").USERNAME)))
+                .join(STUDENT)
                 .on(INTERNSHIP_APPLY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .join(ORGANIZE)
                 .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                 .join(SCIENCE)
                 .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                 .join(INTERNSHIP_TYPE)
                 .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
-                .join(USERS)
-                .on(INTERNSHIP_RELEASE.USERNAME.eq(USERS.USERNAME))
                 .leftJoin(FILES)
                 .on(INTERNSHIP_APPLY.INTERNSHIP_FILE_ID.eq(FILES.FILE_ID))
                 .where(a)
@@ -69,8 +69,8 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
             internshipReviewBean.setStudentId(r.getValue(INTERNSHIP_APPLY.STUDENT_ID));
             internshipReviewBean.setInternshipReleaseId(r.getValue(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID));
             internshipReviewBean.setInternshipTypeId(r.getValue(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID));
-            internshipReviewBean.setRealName(r.getValue(USERS.REAL_NAME));
-            internshipReviewBean.setStudentName(r.getValue(USERS.as("T").REAL_NAME));
+            internshipReviewBean.setRealName(r.getValue(INTERNSHIP_RELEASE.PUBLISHER));
+            internshipReviewBean.setStudentName(r.getValue(USERS.REAL_NAME));
             internshipReviewBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
             internshipReviewBean.setScienceName(r.getValue(SCIENCE.SCIENCE_NAME));
             internshipReviewBean.setOrganizeName(r.getValue(ORGANIZE.ORGANIZE_NAME));
@@ -109,16 +109,16 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
                     .from(INTERNSHIP_APPLY)
                     .join(INTERNSHIP_RELEASE)
                     .on(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID))
-                    .join(STUDENT.join(USERS.as("T")).on(STUDENT.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STUDENT)
                     .on(INTERNSHIP_APPLY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                     .join(SCIENCE)
                     .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                     .join(INTERNSHIP_TYPE)
                     .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
-                    .join(USERS)
-                    .on(INTERNSHIP_RELEASE.USERNAME.eq(USERS.USERNAME))
                     .join(DEPARTMENT)
                     .on(INTERNSHIP_RELEASE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(COLLEGE)
@@ -155,7 +155,7 @@ public class InternshipReviewServiceImpl implements InternshipReviewService {
             String scienceName = StringUtils.trimWhitespace(search.getString("scienceName"));
             String organizeName = StringUtils.trimWhitespace(search.getString("organizeName"));
             if (StringUtils.hasLength(studentName)) {
-                a = USERS.as("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
+                a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
             }
 
             if (StringUtils.hasLength(studentNumber)) {

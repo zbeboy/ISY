@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import top.zbeboy.isy.config.AsyncConfiguration
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.service.data.StudentService
@@ -38,7 +37,7 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 open class InternshipReviewController {
 
-    private val log = LoggerFactory.getLogger(AsyncConfiguration::class.java)
+    private val log = LoggerFactory.getLogger(InternshipReviewController::class.java)
 
     @Resource
     open lateinit var internshipReleaseService: InternshipReleaseService
