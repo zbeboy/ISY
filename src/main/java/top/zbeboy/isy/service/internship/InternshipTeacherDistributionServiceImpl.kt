@@ -187,11 +187,10 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
     }
 
     override fun countAll(internshipReleaseId: String): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(INTERNSHIP_TEACHER_DISTRIBUTION)
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countByCondition(dataTablesUtils: DataTablesUtils<InternshipTeacherDistributionBean>, internshipReleaseId: String): Int {

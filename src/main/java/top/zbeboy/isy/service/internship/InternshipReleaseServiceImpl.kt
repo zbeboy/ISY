@@ -126,10 +126,10 @@ open class InternshipReleaseServiceImpl @Autowired constructor(dslContext: DSLCo
         val count: Record1<Int>
         var a = searchCondition(paginationUtils)
         a = otherCondition(a, internshipReleaseBean)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectJoinStep = create.selectCount()
                     .from(INTERNSHIP_RELEASE)
-            count = selectJoinStep.fetchOne()
+            selectJoinStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(INTERNSHIP_RELEASE)
@@ -142,7 +142,7 @@ open class InternshipReleaseServiceImpl @Autowired constructor(dslContext: DSLCo
                     .join(SCHOOL)
                     .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID))
                     .where(a)
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
     }
