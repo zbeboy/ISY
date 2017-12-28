@@ -476,10 +476,7 @@ open class InternshipReviewController {
         if (!errorBean.isHasError()) {
             val internshipReviewBeens = internshipReviewService.findAllByPage(paginationUtils, internshipApplyBean)
             if (!ObjectUtils.isEmpty(internshipReviewBeens)) {
-                for (i in internshipReviewBeens.indices) {
-                    val internshipReviewBean = internshipReviewBeens[i]
-                    internshipReviewBeens[i] = fillInternshipReviewBean(internshipReviewBean)
-                }
+                internshipReviewBeens.forEach { i -> fillInternshipReviewBean(i) }
             }
             ajaxUtils.success().msg("获取数据成功").listData(internshipReviewBeens).paginationUtils(paginationUtils)
         } else {
@@ -932,7 +929,7 @@ open class InternshipReviewController {
      * @param internshipReviewBean 学生申请数据
      * @return 学生申请数据
      */
-    private fun fillInternshipReviewBean(internshipReviewBean: InternshipReviewBean): InternshipReviewBean {
+    private fun fillInternshipReviewBean(internshipReviewBean: InternshipReviewBean) {
         val internshipTypeId = internshipReviewBean.internshipTypeId
         val studentId = internshipReviewBean.studentId
         val internshipReleaseId = internshipReviewBean.internshipReleaseId
@@ -1009,7 +1006,6 @@ open class InternshipReviewController {
                 }
             }
         }
-        return internshipReviewBean
     }
 
     /**
