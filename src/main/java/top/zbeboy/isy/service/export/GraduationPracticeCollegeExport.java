@@ -83,7 +83,7 @@ public class GraduationPracticeCollegeExport extends ExportUtils<GraduationPract
         row.createCell(24).setCellValue(dealByte(graduationPracticeCollege.getParentalConsent()));
     }
 
-    public String dealByte(Byte b) {
+    private String dealByte(Byte b) {
         if (b != null && b == 1) {
             return "已交";
         }

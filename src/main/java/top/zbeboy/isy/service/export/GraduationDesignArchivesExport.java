@@ -69,7 +69,7 @@ public class GraduationDesignArchivesExport extends ExportUtils<GraduationDesign
         row.createCell(20).setCellValue(graduationDesignArchivesBean.getNote());
     }
 
-    public String dealByte(Byte b) {
+    private String dealByte(Byte b) {
         if (b != null && b == 1) {
             return "是";
         }
