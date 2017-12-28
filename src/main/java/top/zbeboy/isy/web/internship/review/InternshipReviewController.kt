@@ -108,7 +108,7 @@ open class InternshipReviewController {
     fun internshipListDatas(paginationUtils: PaginationUtils): AjaxUtils<InternshipReleaseBean> {
         val ajaxUtils = AjaxUtils.of<InternshipReleaseBean>()
         val internshipReleaseBean = InternshipReleaseBean()
-        internshipReleaseBean.setInternshipReleaseIsDel(0)
+        internshipReleaseBean.internshipReleaseIsDel = 0
         val commonData = methodControllerCommon.adminOrNormalData()
         internshipReleaseBean.departmentId = if (StringUtils.isEmpty(commonData["departmentId"])) -1 else commonData["departmentId"]
         internshipReleaseBean.collegeId = if (StringUtils.isEmpty(commonData["collegeId"])) -1 else commonData["collegeId"]
@@ -153,15 +153,13 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/audit"], method = [(RequestMethod.GET)])
     fun reviewAudit(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
-            page = "web/internship/review/internship_audit::#page-wrapper"
+            "web/internship/review/internship_audit::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -173,15 +171,13 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/pass"], method = [(RequestMethod.GET)])
     fun reviewPass(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
-            page = "web/internship/review/internship_pass::#page-wrapper"
+            "web/internship/review/internship_pass::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -193,15 +189,13 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/fail"], method = [(RequestMethod.GET)])
     fun reviewFail(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
-            page = "web/internship/review/internship_fail::#page-wrapper"
+            "web/internship/review/internship_fail::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -213,15 +207,13 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/base_info_apply"], method = [(RequestMethod.GET)])
     fun reviewBaseInfoApply(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
-            page = "web/internship/review/internship_base_info_apply::#page-wrapper"
+            "web/internship/review/internship_base_info_apply::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -233,15 +225,13 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/base_info_fill"], method = [(RequestMethod.GET)])
     fun reviewBaseInfoFill(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
-            page = "web/internship/review/internship_base_info_fill::#page-wrapper"
+            "web/internship/review/internship_base_info_fill::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -253,15 +243,13 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/company_apply"], method = [(RequestMethod.GET)])
     fun reviewCompanyApply(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
-            page = "web/internship/review/internship_company_apply::#page-wrapper"
+            "web/internship/review/internship_company_apply::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -273,15 +261,13 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/company_fill"], method = [(RequestMethod.GET)])
     fun reviewCompanyFill(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
-            page = "web/internship/review/internship_company_fill::#page-wrapper"
+            "web/internship/review/internship_company_fill::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -294,9 +280,8 @@ open class InternshipReviewController {
      */
     @RequestMapping(value = ["/web/internship/review/audit/detail"], method = [(RequestMethod.GET)])
     fun auditDetail(@RequestParam("internshipReleaseId") internshipReleaseId: String, @RequestParam("studentId") studentId: Int, modelMap: ModelMap): String {
-        val page: String
         val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             val internshipRelease = errorBean.data
             val internshipType = internshipTypeService.findByInternshipTypeId(internshipRelease!!.internshipTypeId!!)
             when (internshipType.internshipTypeName) {
@@ -305,9 +290,9 @@ open class InternshipReviewController {
                     if (internshipCollegeRecord.isPresent) {
                         val internshipCollege = internshipCollegeRecord.get().into(InternshipCollege::class.java)
                         modelMap.addAttribute("internshipData", internshipCollege)
-                        page = "web/internship/review/internship_college_detail::#page-wrapper"
+                        "web/internship/review/internship_college_detail::#page-wrapper"
                     } else {
-                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                        methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
                     }
                 }
                 Workbook.INTERNSHIP_COMPANY_TYPE -> {
@@ -315,9 +300,9 @@ open class InternshipReviewController {
                     if (internshipCompanyRecord.isPresent) {
                         val internshipCompany = internshipCompanyRecord.get().into(InternshipCompany::class.java)
                         modelMap.addAttribute("internshipData", internshipCompany)
-                        page = "web/internship/review/internship_company_detail::#page-wrapper"
+                        "web/internship/review/internship_company_detail::#page-wrapper"
                     } else {
-                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                        methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
                     }
                 }
                 Workbook.GRADUATION_PRACTICE_COLLEGE_TYPE -> {
@@ -325,9 +310,9 @@ open class InternshipReviewController {
                     if (graduationPracticeCollegeRecord.isPresent) {
                         val graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege::class.java)
                         modelMap.addAttribute("internshipData", graduationPracticeCollege)
-                        page = "web/internship/review/graduation_practice_college_detail::#page-wrapper"
+                        "web/internship/review/graduation_practice_college_detail::#page-wrapper"
                     } else {
-                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                        methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
                     }
                 }
                 Workbook.GRADUATION_PRACTICE_UNIFY_TYPE -> {
@@ -335,9 +320,9 @@ open class InternshipReviewController {
                     if (graduationPracticeUnifyRecord.isPresent) {
                         val graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify::class.java)
                         modelMap.addAttribute("internshipData", graduationPracticeUnify)
-                        page = "web/internship/review/graduation_practice_unify_detail::#page-wrapper"
+                        "web/internship/review/graduation_practice_unify_detail::#page-wrapper"
                     } else {
-                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                        methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
                     }
                 }
                 Workbook.GRADUATION_PRACTICE_COMPANY_TYPE -> {
@@ -345,17 +330,16 @@ open class InternshipReviewController {
                     if (graduationPracticeCompanyRecord.isPresent) {
                         val graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany::class.java)
                         modelMap.addAttribute("internshipData", graduationPracticeCompany)
-                        page = "web/internship/review/graduation_practice_company_detail::#page-wrapper"
+                        "web/internship/review/graduation_practice_company_detail::#page-wrapper"
                     } else {
-                        page = methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
+                        methodControllerCommon.showTip(modelMap, "未查询到相关实习信息")
                     }
                 }
-                else -> page = methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面")
+                else -> methodControllerCommon.showTip(modelMap, "未找到相关实习类型页面")
             }
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
