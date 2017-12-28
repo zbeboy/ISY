@@ -115,7 +115,7 @@ public class InternshipStatisticsServiceImpl extends DataTablesPlugin<Internship
      * @param internshipStatisticsBean 实习统计
      * @return select
      */
-    public Select<InternshipApplyRecord> existsInternshipApplySelect(InternshipStatisticsBean internshipStatisticsBean) {
+    private Select<InternshipApplyRecord> existsInternshipApplySelect(InternshipStatisticsBean internshipStatisticsBean) {
         return create.selectFrom(INTERNSHIP_APPLY)
                 .where(INTERNSHIP_APPLY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                 .and(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipStatisticsBean.getInternshipReleaseId()));
