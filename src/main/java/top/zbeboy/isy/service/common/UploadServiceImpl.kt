@@ -7,6 +7,7 @@ import org.springframework.util.FileCopyUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
+import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.service.util.IPTimeStamp
 import top.zbeboy.isy.web.bean.file.FileBean
 import java.io.File
@@ -69,7 +70,6 @@ open class UploadServiceImpl : UploadService {
     private fun buildPath(path: String, filename: String, multipartFile: MultipartFile): String? {
         var lastPath: String
         val saveFile = File(path, filename)
-        log.info(path)
         if (multipartFile.size < File(path.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + ":").freeSpace) {// has space with disk
             if (!saveFile.parentFile.exists()) {//create file
                 saveFile.parentFile.mkdirs()
@@ -77,7 +77,7 @@ open class UploadServiceImpl : UploadService {
             log.info(path)
             FileCopyUtils.copy(multipartFile.bytes, FileOutputStream(path + File.separator + filename))
             lastPath = path + File.separator + filename
-            lastPath = lastPath.replace("\\\\".toRegex(), "/")
+            lastPath = lastPath.replace("\\\\".toRegex(), Workbook.DIRECTORY_SPLIT)
         } else {
             log.info("not valiablespace!")
             return null
@@ -99,10 +99,11 @@ open class UploadServiceImpl : UploadService {
 
     override fun download(fileName: String, filePath: String, response: HttpServletResponse, request: HttpServletRequest) {
         try {
+            val path = Workbook.DIRECTORY_SPLIT + filePath
             response.contentType = "application/x-msdownload"
-            response.setHeader("Content-disposition", "attachment; filename=\"" + String((fileName + filePath.substring(filePath.lastIndexOf('.'))).toByteArray(charset("gb2312")), charset("ISO8859-1")) + "\"")
-            val realPath = request.session.servletContext.getRealPath("/")
-            val inputStream = FileInputStream(realPath + filePath)
+            response.setHeader("Content-disposition", "attachment; filename=\"" + String((fileName + path.substring(path.lastIndexOf('.'))).toByteArray(charset("gb2312")), charset("ISO8859-1")) + "\"")
+            val realPath = request.session.servletContext.getRealPath(Workbook.DIRECTORY_SPLIT)
+            val inputStream = FileInputStream(realPath + path)
             FileCopyUtils.copy(inputStream, response.outputStream)
         } catch (e: Exception) {
             log.error(" file is not found exception is {} ", e)
@@ -112,11 +113,12 @@ open class UploadServiceImpl : UploadService {
 
     override fun reviewPic(filePath: String, request: HttpServletRequest, response: HttpServletResponse) {
         try {
-            val realPath = request.session.servletContext.getRealPath("/")
-            val file = File(realPath + filePath)
+            val path = Workbook.DIRECTORY_SPLIT + filePath
+            val realPath = request.session.servletContext.getRealPath(Workbook.DIRECTORY_SPLIT)
+            val file = File(realPath + path)
             if (file.exists()) {
                 val mediaType: MediaType
-                val ext = filePath.substring(filePath.lastIndexOf('.') + 1)
+                val ext = path.substring(path.lastIndexOf('.') + 1)
                 mediaType = if (ext.equals("png", ignoreCase = true)) {
                     MediaType.IMAGE_PNG
                 } else if (ext.equals("gif", ignoreCase = true)) {

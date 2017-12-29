@@ -21,7 +21,6 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignDeclareRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
 import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.data.StudentService;
 import top.zbeboy.isy.service.export.GraduationDesignDeclareExport;
@@ -32,7 +31,6 @@ import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
@@ -108,9 +106,6 @@ public class GraduationDesignSubjectController {
 
     @Resource
     private StaffService staffService;
-
-    @Resource
-    private DepartmentService departmentService;
 
     @Resource
     private UploadService uploadService;
@@ -298,15 +293,11 @@ public class GraduationDesignSubjectController {
                             }
                             if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
                                 int peoples = graduationDesignTutorService.countByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staffId);
-                                Optional<Record> record = departmentService.findByIdRelation(graduationDesignRelease.getDepartmentId());
-                                if (record.isPresent()) {
-                                    DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
-                                    GraduationDesignDeclareExport export = new GraduationDesignDeclareExport(graduationDesignDeclareBeens, graduationDesignDeclareData, peoples, year);
-                                    String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
-                                    String path = Workbook.graduateDesignPath(schoolInfoPath) + fileName + "." + ext;
-                                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.graduateDesignPath(schoolInfoPath), fileName, ext);
-                                    uploadService.download(fileName, "/" + path, response, request);
-                                }
+                                GraduationDesignDeclareExport export = new GraduationDesignDeclareExport(graduationDesignDeclareBeens, graduationDesignDeclareData, peoples, year);
+                                String schoolInfoPath = cacheManageService.schoolInfoPath(graduationDesignRelease.getDepartmentId());
+                                String path = Workbook.graduateDesignPath(schoolInfoPath) + fileName + "." + ext;
+                                export.exportExcel(RequestUtils.getRealPath(request) + Workbook.graduateDesignPath(schoolInfoPath), fileName, ext);
+                                uploadService.download(fileName, path, response, request);
                             }
                         }
                     }

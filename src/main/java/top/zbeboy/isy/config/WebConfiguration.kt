@@ -84,7 +84,7 @@ open class WebConfiguration : WebMvcConfigurerAdapter() {
                 }
         )
         if (this.env.acceptsProfiles(Workbook.SPRING_PROFILE_PRODUCTION, Workbook.SPRING_PROFILE_TEST)) {
-            val documentRoot = File(System.getProperty("user.dir") + "/" + this.isyProperties.getConstants().tempDir)
+            val documentRoot = File(System.getProperty("user.dir") + Workbook.DIRECTORY_SPLIT + this.isyProperties.getConstants().tempDir)
             if (!documentRoot.exists()) {
                 documentRoot.mkdirs()
             }

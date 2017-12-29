@@ -349,7 +349,7 @@ public class GraduationDesignProjectController {
             if (staffRecord.isPresent()) {
                 Users users = staffRecord.get().into(Users.class);
                 String path = filesService.saveGraduationDesignPlan(users, request, graduationDesignTutorBeanList, graduationDesignPlanBeanList);
-                uploadService.download("毕业设计指导计划（" + users.getRealName() + "）", "/" + path, response, request);
+                uploadService.download("毕业设计指导计划（" + users.getRealName() + "）", path, response, request);
             }
         }
     }

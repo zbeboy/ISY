@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.*
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.UploadService
-import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.export.*
 import top.zbeboy.isy.service.internship.*
 import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.RequestUtils
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.bean.export.ExportBean
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipChangeCompanyHistoryBean
@@ -76,7 +75,7 @@ open class InternshipStatisticsController {
     open lateinit var internshipChangeCompanyHistoryService: InternshipChangeCompanyHistoryService
 
     @Resource
-    open lateinit var departmentService: DepartmentService
+    open lateinit var cacheManageService: CacheManageService
 
     @Resource
     open lateinit var uploadService: UploadService
@@ -388,15 +387,11 @@ open class InternshipStatisticsController {
                 }
                 val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    val record = departmentService.findByIdRelation(internshipRelease.departmentId!!)
-                    if (record.isPresent) {
-                        val departmentBean = record.get().into(DepartmentBean::class.java)
-                        val export = InternshipCollegeExport(internshipColleges)
-                        val schoolInfoPath = departmentBean.schoolName + "/" + departmentBean.collegeName + "/" + departmentBean.departmentName + "/"
-                        val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
-                        uploadService.download(fileName, "/" + path, response, request)
-                    }
+                    val export = InternshipCollegeExport(internshipColleges)
+                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.departmentId!!)
+                    val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
+                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
+                    uploadService.download(fileName, path, response, request)
                 }
             }
         } catch (e: IOException) {
@@ -491,15 +486,11 @@ open class InternshipStatisticsController {
                 }
                 val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    val record = departmentService.findByIdRelation(internshipRelease.departmentId!!)
-                    if (record.isPresent) {
-                        val departmentBean = record.get().into(DepartmentBean::class.java)
-                        val export = InternshipCompanyExport(internshipCompanies)
-                        val schoolInfoPath = departmentBean.schoolName + "/" + departmentBean.collegeName + "/" + departmentBean.departmentName + "/"
-                        val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
-                        uploadService.download(fileName, "/" + path, response, request)
-                    }
+                    val export = InternshipCompanyExport(internshipCompanies)
+                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.departmentId!!)
+                    val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
+                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
+                    uploadService.download(fileName, path, response, request)
                 }
             }
         } catch (e: IOException) {
@@ -594,15 +585,11 @@ open class InternshipStatisticsController {
                 }
                 val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    val record = departmentService.findByIdRelation(internshipRelease.departmentId!!)
-                    if (record.isPresent) {
-                        val departmentBean = record.get().into(DepartmentBean::class.java)
-                        val export = GraduationPracticeCompanyExport(graduationPracticeCompanies)
-                        val schoolInfoPath = departmentBean.schoolName + "/" + departmentBean.collegeName + "/" + departmentBean.departmentName + "/"
-                        val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
-                        uploadService.download(fileName, "/" + path, response, request)
-                    }
+                    val export = GraduationPracticeCompanyExport(graduationPracticeCompanies)
+                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.departmentId!!)
+                    val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
+                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
+                    uploadService.download(fileName, path, response, request)
                 }
             }
         } catch (e: IOException) {
@@ -697,15 +684,11 @@ open class InternshipStatisticsController {
                 }
                 val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    val record = departmentService.findByIdRelation(internshipRelease.departmentId!!)
-                    if (record.isPresent) {
-                        val departmentBean = record.get().into(DepartmentBean::class.java)
-                        val export = GraduationPracticeCollegeExport(graduationPracticeColleges)
-                        val schoolInfoPath = departmentBean.schoolName + "/" + departmentBean.collegeName + "/" + departmentBean.departmentName + "/"
-                        val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
-                        uploadService.download(fileName, "/" + path, response, request)
-                    }
+                    val export = GraduationPracticeCollegeExport(graduationPracticeColleges)
+                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.departmentId!!)
+                    val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
+                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
+                    uploadService.download(fileName, path, response, request)
                 }
             }
         } catch (e: IOException) {
@@ -800,15 +783,11 @@ open class InternshipStatisticsController {
                 }
                 val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    val record = departmentService.findByIdRelation(internshipRelease.departmentId!!)
-                    if (record.isPresent) {
-                        val departmentBean = record.get().into(DepartmentBean::class.java)
-                        val export = GraduationPracticeUnifyExport(graduationPracticeUnifies)
-                        val schoolInfoPath = departmentBean.schoolName + "/" + departmentBean.collegeName + "/" + departmentBean.departmentName + "/"
-                        val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
-                        uploadService.download(fileName, "/" + path, response, request)
-                    }
+                    val export = GraduationPracticeUnifyExport(graduationPracticeUnifies)
+                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.departmentId!!)
+                    val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
+                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
+                    uploadService.download(fileName, path, response, request)
                 }
             }
         } catch (e: IOException) {

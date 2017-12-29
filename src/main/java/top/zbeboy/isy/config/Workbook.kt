@@ -139,10 +139,16 @@ open class Workbook {
         val ADMIN_AUTHORITIES = "ROLE_ADMIN"
 
         /*
+        目录分隔符
+         */
+        @JvmField
+        val DIRECTORY_SPLIT = "/"
+
+        /*
         系统setting目录
         */
         @JvmField
-        val SETTINGS_PATH = "./settings/"
+        val SETTINGS_PATH = "." + DIRECTORY_SPLIT + "settings" + DIRECTORY_SPLIT
 
         /*
         实习日志模板
@@ -154,25 +160,25 @@ open class Workbook {
         用户默认头像
         */
         @JvmField
-        val USERS_AVATAR = "images/avatar.jpg"
+        val USERS_AVATAR = "images" + DIRECTORY_SPLIT + "avatar.jpg"
 
         /*
         用户档案袋路径
         */
         @JvmField
-        val USERS_PORTFOLIOS = "portfolios/"
+        val USERS_PORTFOLIOS = "portfolios" + DIRECTORY_SPLIT
 
         /*
         文件档案路径
         */
         @JvmField
-        val FILES_PORTFOLIOS = "files/"
+        val FILES_PORTFOLIOS = "files" + DIRECTORY_SPLIT
 
         /*
         临时文件档案路径
         */
         @JvmField
-        val TEMP_FILES_PORTFOLIOS = "files/temp"
+        val TEMP_FILES_PORTFOLIOS = "files" + DIRECTORY_SPLIT + "temp"
 
         /*
         提示页面
@@ -194,7 +200,7 @@ open class Workbook {
          */
         @JvmStatic
         fun avatarPath(users: Users): String {
-            return Workbook.USERS_PORTFOLIOS + users.username + "/" + "avatar/"
+            return USERS_PORTFOLIOS + users.username + DIRECTORY_SPLIT + "avatar" + DIRECTORY_SPLIT
         }
 
         /**
@@ -205,7 +211,7 @@ open class Workbook {
          */
         @JvmStatic
         fun internshipApplyPath(users: Users): String {
-            return Workbook.USERS_PORTFOLIOS + users.username + "/" + "internship/apply/"
+            return USERS_PORTFOLIOS + users.username + DIRECTORY_SPLIT + "internship" + DIRECTORY_SPLIT + "apply" + DIRECTORY_SPLIT
         }
 
         /**
@@ -216,7 +222,7 @@ open class Workbook {
          */
         @JvmStatic
         fun internshipJournalPath(users: Users): String {
-            return Workbook.USERS_PORTFOLIOS + users.username + "/" + "internship/journal/"
+            return USERS_PORTFOLIOS + users.username + DIRECTORY_SPLIT + "internship" + DIRECTORY_SPLIT + "journal" + DIRECTORY_SPLIT
         }
 
         /**
@@ -227,7 +233,7 @@ open class Workbook {
          */
         @JvmStatic
         fun internshipPath(schoolInfoPath: String): String {
-            return Workbook.FILES_PORTFOLIOS + schoolInfoPath + "internship/"
+            return FILES_PORTFOLIOS + schoolInfoPath + "internship" + DIRECTORY_SPLIT
         }
 
         /**
@@ -238,7 +244,7 @@ open class Workbook {
          */
         @JvmStatic
         fun graduateDesignPath(schoolInfoPath: String): String {
-            return Workbook.FILES_PORTFOLIOS + schoolInfoPath + "graduate/design/"
+            return FILES_PORTFOLIOS + schoolInfoPath + "graduate" + DIRECTORY_SPLIT + "design" + DIRECTORY_SPLIT
         }
 
         /**
@@ -249,7 +255,7 @@ open class Workbook {
          */
         @JvmStatic
         fun graduationDesignPlanPath(users: Users): String {
-            return Workbook.USERS_PORTFOLIOS + users.username + "/" + "graduate/design/project/"
+            return USERS_PORTFOLIOS + users.username + DIRECTORY_SPLIT + "graduate" + DIRECTORY_SPLIT + "design" + DIRECTORY_SPLIT + "project" + DIRECTORY_SPLIT
         }
 
         /**
@@ -260,7 +266,7 @@ open class Workbook {
          */
         @JvmStatic
         fun graduationDesignProposalPath(users: Users): String {
-            return Workbook.USERS_PORTFOLIOS + users.username + "/" + "graduate/design/proposal/"
+            return USERS_PORTFOLIOS + users.username + DIRECTORY_SPLIT + "graduate" + DIRECTORY_SPLIT + "design" + DIRECTORY_SPLIT + "proposal" + DIRECTORY_SPLIT
         }
 
         /**
@@ -271,7 +277,7 @@ open class Workbook {
          */
         @JvmStatic
         fun graduationDesignManifestPath(users: Users): String {
-            return Workbook.USERS_PORTFOLIOS + users.username + "/" + "graduate/design/manifest/"
+            return USERS_PORTFOLIOS + users.username + DIRECTORY_SPLIT + "graduate" + DIRECTORY_SPLIT + "design" + DIRECTORY_SPLIT + "manifest" + DIRECTORY_SPLIT
         }
 
         /**

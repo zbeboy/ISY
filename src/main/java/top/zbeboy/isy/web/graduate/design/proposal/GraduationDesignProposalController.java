@@ -658,7 +658,7 @@ public class GraduationDesignProposalController {
                 if (canUse) {
                     Files files = filesService.findById(graduationDesignDatum.getFileId());
                     if (!ObjectUtils.isEmpty(files)) {
-                        uploadService.download(files.getOriginalFileName() + "V" + graduationDesignDatum.getVersion(), "/" + files.getRelativePath(), response, request);
+                        uploadService.download(files.getOriginalFileName() + "V" + graduationDesignDatum.getVersion(), files.getRelativePath(), response, request);
                     }
                 }
 
@@ -975,7 +975,7 @@ public class GraduationDesignProposalController {
             if (graduationDesignTeacher.getGraduationDesignTeacherId().equals(graduationDesignDatumGroup.getGraduationDesignTeacherId())) {
                 Files files = filesService.findById(graduationDesignDatumGroup.getFileId());
                 if (!ObjectUtils.isEmpty(files)) {
-                    uploadService.download(files.getOriginalFileName(), "/" + files.getRelativePath(), response, request);
+                    uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
                 }
             }
         }

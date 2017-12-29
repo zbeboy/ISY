@@ -831,9 +831,9 @@ open class UsersController {
      */
     private fun getAvatar(avatar: String, request: HttpServletRequest): String {
         return if (avatar == Workbook.USERS_AVATAR) {
-            requestUtils.getBaseUrl(request) + "/" + avatar
+            requestUtils.getBaseUrl(request) + Workbook.DIRECTORY_SPLIT + avatar
         } else {
-            requestUtils.getBaseUrl(request) + "/anyone/users/review/avatar?path=" + avatar
+            requestUtils.getBaseUrl(request) + Workbook.DIRECTORY_SPLIT + "anyone" + Workbook.DIRECTORY_SPLIT + "users" + Workbook.DIRECTORY_SPLIT + "review" + Workbook.DIRECTORY_SPLIT + "avatar?path=" + avatar
         }
     }
 
@@ -954,7 +954,7 @@ open class UsersController {
      */
     @RequestMapping(value = ["/anyone/users/review/avatar"], method = [(RequestMethod.GET)])
     fun reviewAvatar(@RequestParam("path") path: String, request: HttpServletRequest, response: HttpServletResponse) {
-        uploadService.reviewPic("/" + path, request, response)
+        uploadService.reviewPic(path, request, response)
     }
 
     /**

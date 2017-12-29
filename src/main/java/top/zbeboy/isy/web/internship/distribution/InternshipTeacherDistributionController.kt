@@ -16,8 +16,8 @@ import top.zbeboy.isy.domain.tables.pojos.InternshipRelease
 import top.zbeboy.isy.domain.tables.pojos.InternshipTeacherDistribution
 import top.zbeboy.isy.domain.tables.pojos.Organize
 import top.zbeboy.isy.domain.tables.pojos.Student
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.UploadService
-import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.data.OrganizeService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
@@ -28,7 +28,6 @@ import top.zbeboy.isy.service.internship.InternshipTeacherDistributionService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.RequestUtils
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.bean.error.ErrorBean
@@ -78,10 +77,9 @@ open class InternshipTeacherDistributionController {
     open lateinit var internshipReleaseService: InternshipReleaseService
 
     @Resource
-    open lateinit var departmentService: DepartmentService
-
-    @Resource
     open lateinit var uploadService: UploadService
+
+    open lateinit var cacheManageService: CacheManageService
 
     @Resource
     open lateinit var methodControllerCommon: MethodControllerCommon
@@ -268,15 +266,11 @@ open class InternshipTeacherDistributionController {
                 }
                 val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
-                    val record = departmentService.findByIdRelation(internshipRelease.getDepartmentId()!!)
-                    if (record.isPresent()) {
-                        val departmentBean = record.get().into(DepartmentBean::class.java)
-                        val export = InternshipTeacherDistributionExport(internshipTeacherDistributionBeans)
-                        val schoolInfoPath = departmentBean.schoolName + "/" + departmentBean.collegeName + "/" + departmentBean.getDepartmentName() + "/"
-                        val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
-                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
-                        uploadService.download(fileName, "/" + path, response, request)
-                    }
+                    val export = InternshipTeacherDistributionExport(internshipTeacherDistributionBeans)
+                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.getDepartmentId()!!)
+                    val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
+                    export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
+                    uploadService.download(fileName, path, response, request)
                 }
             }
         } catch (e: IOException) {

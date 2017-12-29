@@ -63,7 +63,7 @@ open class RequestUtils {
          */
         @JvmStatic
         fun getRealPath(request: HttpServletRequest): String {
-            return request.session.servletContext.getRealPath("/") + "/"
+            return request.session.servletContext.getRealPath(Workbook.DIRECTORY_SPLIT) + Workbook.DIRECTORY_SPLIT
         }
     }
 }

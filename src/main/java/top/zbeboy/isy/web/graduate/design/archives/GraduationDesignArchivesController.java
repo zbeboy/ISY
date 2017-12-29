@@ -3,7 +3,6 @@ package top.zbeboy.isy.web.graduate.design.archives;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,8 +18,8 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignDeclareData;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignArchivesRecord;
 import top.zbeboy.isy.domain.tables.records.GraduationDesignPresubjectRecord;
+import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.UploadService;
-import top.zbeboy.isy.service.data.DepartmentService;
 import top.zbeboy.isy.service.export.GraduationDesignArchivesExport;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignArchivesService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareDataService;
@@ -28,7 +27,6 @@ import top.zbeboy.isy.service.graduate.design.GraduationDesignPresubjectService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.archives.GraduationDesignArchivesBean;
@@ -42,7 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by lenovo on 2017-08-05.
@@ -64,10 +61,10 @@ public class GraduationDesignArchivesController {
     private GraduationDesignPresubjectService graduationDesignPresubjectService;
 
     @Resource
-    private DepartmentService departmentService;
+    private UploadService uploadService;
 
     @Resource
-    private UploadService uploadService;
+    private CacheManageService cacheManageService;
 
     @Resource
     private MethodControllerCommon methodControllerCommon;
@@ -184,15 +181,11 @@ public class GraduationDesignArchivesController {
                     }
                     GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
                     if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-                        Optional<Record> record = departmentService.findByIdRelation(graduationDesignRelease.getDepartmentId());
-                        if (record.isPresent()) {
-                            DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
-                            GraduationDesignArchivesExport export = new GraduationDesignArchivesExport(graduationDesignArchivesBeans);
-                            String schoolInfoPath = departmentBean.getSchoolName() + "/" + departmentBean.getCollegeName() + "/" + departmentBean.getDepartmentName() + "/";
-                            String path = Workbook.graduateDesignPath(schoolInfoPath) + fileName + "." + ext;
-                            export.exportExcel(RequestUtils.getRealPath(request) + Workbook.graduateDesignPath(schoolInfoPath), fileName, ext);
-                            uploadService.download(fileName, "/" + path, response, request);
-                        }
+                        GraduationDesignArchivesExport export = new GraduationDesignArchivesExport(graduationDesignArchivesBeans);
+                        String schoolInfoPath = cacheManageService.schoolInfoPath(graduationDesignRelease.getDepartmentId());
+                        String path = Workbook.graduateDesignPath(schoolInfoPath) + fileName + "." + ext;
+                        export.exportExcel(RequestUtils.getRealPath(request) + Workbook.graduateDesignPath(schoolInfoPath), fileName, ext);
+                        uploadService.download(fileName, path, response, request);
                     }
                 }
             }

@@ -41,7 +41,7 @@ open class CacheBook {
 
         const val MENU_HTML = "MENU_HTML_"
 
-        const val SCHOOL_INFO = "SCHOOL_INFO_"
+        const val SCHOOL_INFO_PATH = "SCHOOL_INFO_PATH_"
 
         const val USER_APPLICATION_ID = "USER_APPLICATION_ID_"
 

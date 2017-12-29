@@ -437,7 +437,7 @@ open class InternshipJournalController {
         val internshipJournal = internshipJournalService.findById(id)
         if (!ObjectUtils.isEmpty(internshipJournal)) {
             if (canSeeNndDownload(internshipJournal)) {
-                uploadService.download(internshipJournal.studentName + " " + internshipJournal.studentNumber, "/" + internshipJournal.internshipJournalWord, response, request)
+                uploadService.download(internshipJournal.studentName + " " + internshipJournal.studentNumber, internshipJournal.internshipJournalWord, response, request)
             }
         }
     }
@@ -476,7 +476,7 @@ open class InternshipJournalController {
                     val filePath = ArrayList<String>()
                     records.forEach { r ->
                         filePath.add(RequestUtils.getRealPath(request) + r.internshipJournalWord)
-                        fileName.add(r.internshipJournalWord.substring(r.internshipJournalWord.lastIndexOf('/') + 1))
+                        fileName.add(r.internshipJournalWord.substring(r.internshipJournalWord.lastIndexOf(Workbook.DIRECTORY_SPLIT) + 1))
                     }
                     val studentRecord = studentService.findByIdRelationForUsers(studentId)
                     if (studentRecord.isPresent) {
@@ -486,7 +486,7 @@ open class InternshipJournalController {
                         val downloadFilePath = Workbook.internshipJournalPath(users) + zipName
                         val zipPath = RequestUtils.getRealPath(request) + downloadFilePath
                         FilesUtils.compressZipMulti(fileName, zipPath, filePath)
-                        uploadService.download(downloadFileName, "/" + downloadFilePath, response, request)
+                        uploadService.download(downloadFileName, downloadFilePath, response, request)
                     }
                 }
             }
@@ -517,7 +517,7 @@ open class InternshipJournalController {
                     var isSetStaffName = false
                     for (r in records) {
                         filePath.add(RequestUtils.getRealPath(request) + r.internshipJournalWord)
-                        fileName.add(r.internshipJournalWord.substring(r.internshipJournalWord.lastIndexOf('/') + 1))
+                        fileName.add(r.internshipJournalWord.substring(r.internshipJournalWord.lastIndexOf(Workbook.DIRECTORY_SPLIT) + 1))
                         if (BooleanUtils.isFalse(isSetStaffName)) {
                             staffName = r.schoolGuidanceTeacher
                             isSetStaffName = true
@@ -529,7 +529,7 @@ open class InternshipJournalController {
                     val downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName
                     val zipPath = RequestUtils.getRealPath(request) + downloadFilePath
                     FilesUtils.compressZipMulti(fileName, zipPath, filePath)
-                    uploadService.download(downloadFileName, "/" + downloadFilePath, response, request)
+                    uploadService.download(downloadFileName, downloadFilePath, response, request)
                 }
             }
         } catch (e: Exception) {

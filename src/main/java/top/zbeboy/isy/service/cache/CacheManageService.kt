@@ -50,6 +50,14 @@ interface CacheManageService {
     fun schoolInfoPath(schoolId: Int?, collegeId: Int?, departmentId: Int): String
 
     /**
+     * 根据系id生成学校路径
+     *
+     * @param departmentId 系id
+     * @return 路径
+     */
+    fun schoolInfoPath(departmentId: Int): String
+
+    /**
      * 通过类型名查询
      *
      * @param name 类型名

@@ -192,7 +192,7 @@ open class MethodControllerCommon {
     fun downloadFile(fileId: String, request: HttpServletRequest, response: HttpServletResponse) {
         val files = filesService.findById(fileId)
         if (!ObjectUtils.isEmpty(files)) {
-            uploadService.download(files.originalFileName, "/" + files.relativePath, response, request)
+            uploadService.download(files.originalFileName, files.relativePath, response, request)
         }
     }
 }

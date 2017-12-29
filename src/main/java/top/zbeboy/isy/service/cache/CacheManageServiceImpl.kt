@@ -26,6 +26,7 @@ import top.zbeboy.isy.service.data.SchoolService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.ApplicationService
+import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
@@ -129,12 +130,12 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     }
 
     override fun schoolInfoPath(schoolId: Int?, collegeId: Int?, departmentId: Int): String {
-        val cacheKey = CacheBook.SCHOOL_INFO + departmentId
+        val cacheKey = CacheBook.SCHOOL_INFO_PATH + departmentId
         val ops = this.stringRedisTemplate.opsForValue()
         if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
             return ops.get(cacheKey)
         }
-        var path = "temp/"
+        var path = "temp" + Workbook.DIRECTORY_SPLIT
         var school: School? = null
         var college: College? = null
         var department: Department? = null
@@ -151,7 +152,23 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
             }
         }
         if (!ObjectUtils.isEmpty(school) && !ObjectUtils.isEmpty(college) && !ObjectUtils.isEmpty(department)) {
-            path = school!!.schoolName + "/" + college!!.collegeName + "/" + department!!.departmentName + "/"
+            path = school!!.schoolName + Workbook.DIRECTORY_SPLIT + college!!.collegeName + Workbook.DIRECTORY_SPLIT + department!!.departmentName + Workbook.DIRECTORY_SPLIT
+            ops.set(cacheKey, path, CacheBook.EXPIRES_SCHOOL_INFO_DAYS, TimeUnit.DAYS)
+        }
+        return path
+    }
+
+    override fun schoolInfoPath(departmentId: Int): String {
+        val cacheKey = CacheBook.SCHOOL_INFO_PATH + departmentId
+        val ops = this.stringRedisTemplate.opsForValue()
+        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
+            return ops.get(cacheKey)
+        }
+        var path = "temp" + Workbook.DIRECTORY_SPLIT
+        val record = departmentService.findByIdRelation(departmentId)
+        if (record.isPresent) {
+            val departmentBean = record.get().into(DepartmentBean::class.java)
+            path = departmentBean.schoolName + Workbook.DIRECTORY_SPLIT + departmentBean.collegeName + Workbook.DIRECTORY_SPLIT + departmentBean.departmentName + Workbook.DIRECTORY_SPLIT
             ops.set(cacheKey, path, CacheBook.EXPIRES_SCHOOL_INFO_DAYS, TimeUnit.DAYS)
         }
         return path

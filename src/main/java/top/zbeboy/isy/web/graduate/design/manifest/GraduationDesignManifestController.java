@@ -200,7 +200,7 @@ public class GraduationDesignManifestController {
                         GraduationDesignManifestExport export = new GraduationDesignManifestExport(graduationDesignDeclareBeens);
                         String path = Workbook.graduationDesignManifestPath(users) + fileName + "." + ext;
                         export.exportExcel(RequestUtils.getRealPath(request) + Workbook.graduationDesignManifestPath(users), fileName, ext);
-                        uploadService.download(fileName, "/" + path, response, request);
+                        uploadService.download(fileName, path, response, request);
                     }
                 }
             }
