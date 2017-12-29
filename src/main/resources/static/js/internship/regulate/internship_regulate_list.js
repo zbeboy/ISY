@@ -188,7 +188,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                 ]
                             };
                         } else {
-                            if (c.staffId == init_page_param.staffId && init_page_param.staffId != 0) {
+                            if (c.staffId === init_page_param.staffId && init_page_param.staffId !== 0) {
                                 context =
                                 {
                                     func: [
@@ -423,21 +423,21 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         });
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().schoolGuidanceTeacher).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

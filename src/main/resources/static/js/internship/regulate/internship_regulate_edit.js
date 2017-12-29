@@ -85,14 +85,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "jquery.ad
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         /**
          * 初始化参数
          */

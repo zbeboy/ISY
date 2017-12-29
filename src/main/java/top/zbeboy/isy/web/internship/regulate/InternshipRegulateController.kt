@@ -341,23 +341,17 @@ open class InternshipRegulateController {
      * 批量删除监管记录
      *
      * @param regulateIds ids
-     * @param staffId     教职工id
      * @return true 删除成功
      */
     @RequestMapping(value = ["/web/internship/regulate/list/del"], method = [(RequestMethod.POST)])
     @ResponseBody
-    fun regulateListDel(regulateIds: String, @RequestParam("staffId") staffId: Int): AjaxUtils<*> {
+    fun regulateListDel(regulateIds: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        if (identityJudge(staffId)) {
-            if (StringUtils.hasLength(regulateIds)) {
-                val ids = SmallPropsUtils.StringIdsToStringList(regulateIds)
-                internshipRegulateService.batchDelete(ids)
-            }
-            ajaxUtils.success().msg("删除监管记录成功")
-        } else {
-            ajaxUtils.fail().msg("您的身份检验不通过")
+        if (StringUtils.hasLength(regulateIds)) {
+            val ids = SmallPropsUtils.StringIdsToStringList(regulateIds)
+            internshipRegulateService.batchDelete(ids)
         }
-        return ajaxUtils
+        return ajaxUtils.success().msg("删除监管记录成功")
     }
 
     /**
