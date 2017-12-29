@@ -26,23 +26,21 @@ open class DataTablesPlugin<T> {
      * @return 全部数据
      */
     open fun dataPagingQueryAll(dataTablesUtils: DataTablesUtils<T>, create: DSLContext, table: TableLike<*>): Result<Record> {
-        val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectJoinStep = create.select()
                     .from(table)
             sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE)
             pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE)
-            records = selectJoinStep.fetch()
+            selectJoinStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(table)
                     .where(a)
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     /**
@@ -55,28 +53,26 @@ open class DataTablesPlugin<T> {
      * @return 全部数据
      */
     open fun dataPagingQueryAllWithCondition(dataTablesUtils: DataTablesUtils<T>, create: DSLContext, table: TableLike<*>, extraCondition: Condition): Result<Record> {
-        val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(table)
                     .where(extraCondition)
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(table)
                     .where(extraCondition.and(a))
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     /**
-     * 查询全部数据 with 额外条件
+     * 查询全部数据 with 额外条件，无分页，做导出数据用
      *
      * @param dataTablesUtils datatables工具类
      * @param create          jooq create.
@@ -85,20 +81,18 @@ open class DataTablesPlugin<T> {
      * @return 全部数据
      */
     open fun dataPagingQueryAllWithConditionNoPage(dataTablesUtils: DataTablesUtils<T>, create: DSLContext, table: TableLike<*>, extraCondition: Condition): Result<Record> {
-        val records: Result<Record>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(table)
                     .where(extraCondition)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(table)
                     .where(extraCondition.and(a))
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     /**
@@ -109,10 +103,9 @@ open class DataTablesPlugin<T> {
      * @return 统计
      */
     open fun statisticsAll(create: DSLContext, table: TableLike<*>): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(table)
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     /**
@@ -124,11 +117,10 @@ open class DataTablesPlugin<T> {
      * @return 统计
      */
     open fun statisticsAllWithCondition(create: DSLContext, table: TableLike<*>, extraCondition: Condition): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(table)
                 .where(extraCondition)
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     /**
@@ -142,15 +134,15 @@ open class DataTablesPlugin<T> {
     open fun statisticsWithCondition(dataTablesUtils: DataTablesUtils<T>, create: DSLContext, table: TableLike<*>): Int {
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectJoinStep = create.selectCount()
                     .from(table)
-            count = selectJoinStep.fetchOne()
+            selectJoinStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(table)
                     .where(a)
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
     }
@@ -167,16 +159,16 @@ open class DataTablesPlugin<T> {
     open fun statisticsWithCondition(dataTablesUtils: DataTablesUtils<T>, create: DSLContext, table: TableLike<*>, extraCondition: Condition): Int {
         val count: Record1<Int>
         val a = searchCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.selectCount()
                     .from(table)
                     .where(extraCondition)
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(table)
                     .where(extraCondition.and(a))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
     }
