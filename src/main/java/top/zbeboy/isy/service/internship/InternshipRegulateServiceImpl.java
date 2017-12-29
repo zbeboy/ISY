@@ -80,7 +80,7 @@ public class InternshipRegulateServiceImpl extends DataTablesPlugin<InternshipRe
 
     @Override
     public Result<Record> exportData(DataTablesUtils<InternshipRegulateBean> dataTablesUtils, InternshipRegulateBean internshipRegulateBean) {
-        return dataPagingQueryAllWithConditionNoPage(dataTablesUtils, create, INTERNSHIP_REGULATE, INTERNSHIP_REGULATE.INTERNSHIP_RELEASE_ID.eq(internshipRegulateBean.getInternshipReleaseId()));
+        return dataPagingQueryAllWithConditionNoPage(dataTablesUtils, create, INTERNSHIP_REGULATE, extraCondition(internshipRegulateBean));
     }
 
     /**

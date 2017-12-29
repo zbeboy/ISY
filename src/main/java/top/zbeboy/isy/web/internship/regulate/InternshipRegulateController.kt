@@ -241,6 +241,12 @@ open class InternshipRegulateController {
             val internshipReleaseId = request.getParameter("internshipReleaseId")
             if (!ObjectUtils.isEmpty(internshipReleaseId)) {
                 otherCondition.internshipReleaseId = request.getParameter("internshipReleaseId")
+                val staffId = request.getParameter("staffId")
+                if (StringUtils.hasLength(staffId)) {
+                    if (NumberUtils.isDigits(staffId)) {
+                        otherCondition.staffId = NumberUtils.toInt(staffId)
+                    }
+                }
                 val records = internshipRegulateService.exportData(dataTablesUtils, otherCondition)
                 var internshipRegulateBeens: List<InternshipRegulateBean> = ArrayList()
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
