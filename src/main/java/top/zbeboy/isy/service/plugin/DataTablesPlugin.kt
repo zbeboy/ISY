@@ -175,7 +175,7 @@ open class DataTablesPlugin<T> {
         } else {
             val selectConditionStep = create.selectCount()
                     .from(table)
-                    .where(a)
+                    .where(extraCondition.and(a))
             count = selectConditionStep.fetchOne()
         }
         return count.value1()

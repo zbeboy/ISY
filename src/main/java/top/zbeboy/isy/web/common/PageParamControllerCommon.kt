@@ -87,4 +87,20 @@ open class PageParamControllerCommon {
             modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME)
         }
     }
+
+    /**
+     * 当前用户的角色名和类型
+     *
+     * @param modelMap 页面对象
+     */
+    fun currentUserRoleNameAndTypeNamePageParam(modelMap: ModelMap) {
+        val users = usersService.getUserFromSession()
+        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId!!)
+        modelMap.addAttribute("usersTypeName", usersType.usersTypeName)
+        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME)
+        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
+            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME)
+        }
+    }
 }

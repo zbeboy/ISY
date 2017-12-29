@@ -198,6 +198,16 @@ class DateTimeUtils {
         }
 
         /**
+         * 得到当前时间
+         *
+         * @return 当前时间
+         */
+        @JvmStatic
+        fun getLocalDateTime(format: String): String {
+            return LocalDateTime.now().format(DateTimeFormatter.ofPattern(format))
+        }
+
+        /**
          * 拆分时间
          *
          * @param splitSymbol 分隔符

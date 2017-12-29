@@ -167,7 +167,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                         var context = null;
                         var html = '<i class="fa fa-lock"></i>';
                         // 当前用户查看自己的实习日志
-                        if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
+                        if (c.studentId === init_page_param.studentId && init_page_param.studentId !== 0) {
                             context =
                                 {
                                     func: [
@@ -232,7 +232,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                     };
                             } else {// 非作者也非管理员
                                 // 若限制仅允许教职工查阅
-                                if (c.isSeeStaff == 1) {
+                                if (c.isSeeStaff === 1) {
                                     if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
                                         context =
                                             {
@@ -459,28 +459,28 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         }
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().organize).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().guidanceTeacher).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

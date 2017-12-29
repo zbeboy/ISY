@@ -16,6 +16,7 @@ import top.zbeboy.isy.domain.tables.daos.FilesDao
 import top.zbeboy.isy.domain.tables.pojos.Files
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal
 import top.zbeboy.isy.domain.tables.pojos.Users
+import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.OperatorWordUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean
@@ -67,7 +68,7 @@ open class FilesServiceImpl : FilesService {
 
             val paraMap = HashMap<String, String>()
             paraMap.put("\${internshipJournalContent}", internshipJournal.internshipJournalContent)
-            paraMap.put("\${date}", internshipJournal.internshipJournalDate.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日")))
+            paraMap.put("\${date}", DateTimeUtils.formatDate(internshipJournal.internshipJournalDate,"yyyy年MM月dd日"))
 
             val doc = XWPFDocument(`is`)
 
@@ -113,7 +114,7 @@ open class FilesServiceImpl : FilesService {
             }
 
             val path = RequestUtils.getRealPath(request) + Workbook.internshipJournalPath(users)
-            val filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx"
+            val filename = DateTimeUtils.getLocalDateTime("yyyyMMddHHmmssSSS") + ".docx"
             val saveFile = File(path)
             if (!saveFile.exists()) {
                 saveFile.mkdirs()
@@ -346,7 +347,7 @@ open class FilesServiceImpl : FilesService {
             }
 
             val path = RequestUtils.getRealPath(request) + Workbook.graduationDesignPlanPath(users)
-            val filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx"
+            val filename = DateTimeUtils.getLocalDateTime("yyyyMMddHHmmssSSS") + ".docx"
             val saveFile = File(path)
             if (!saveFile.exists()) {
                 saveFile.mkdirs()
