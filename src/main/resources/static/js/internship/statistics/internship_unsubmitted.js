@@ -76,7 +76,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
          */
         function changeOrganize(science) {
 
-            if (Number(science) == 0) {
+            if (Number(science) === 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
@@ -120,9 +120,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
                 });
             }
         }
-
-        // 预编译模板
-        var template = Handlebars.compile($("#operator_button").html());
 
         // datatables 初始化
         var responsiveHelper = undefined;
@@ -299,14 +296,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         }
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

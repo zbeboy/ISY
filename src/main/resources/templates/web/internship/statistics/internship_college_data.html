@@ -141,14 +141,6 @@
             <p class="text-muted">&copy; Company 2016</p>
         </footer>
         <!-- /.footer -->
-        <!--定义操作列按钮模板-->
-        <script id="operator_button" type="text/x-handlebars-template">
-            {{#each func}}
-            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-studentId="{{this.studentId}}"
-                    data-internshipReleaseId="{{this.internshipReleaseId}}">{{this.name}}
-            </button>
-            {{/each}}
-        </script>
         <script th:inline="javascript">
             /*页面参数*/
             var init_page_param = {
