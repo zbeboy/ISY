@@ -370,6 +370,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             "timePicker": true,
             "timePicker24Hour": true,
             "timePickerIncrement": 30,
+            "autoUpdateInput": false,
             "locale": {
                 format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: '确定',
@@ -384,6 +385,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             }
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
+        });
+
+        $(getParamId().createDate).on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss') + ' 至 ' + picker.endDate.format('YYYY-MM-DD HH:mm:ss'));
+            initParam();
+            myTable.ajax.reload();
+        });
+
+        $(getParamId().createDate).on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
         });
 
         /*
