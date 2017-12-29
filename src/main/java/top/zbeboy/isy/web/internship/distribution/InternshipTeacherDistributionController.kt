@@ -26,10 +26,12 @@ import top.zbeboy.isy.service.internship.InternshipReleaseScienceService
 import top.zbeboy.isy.service.internship.InternshipReleaseService
 import top.zbeboy.isy.service.internship.InternshipTeacherDistributionService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.bean.data.student.StudentBean
+import top.zbeboy.isy.web.bean.error.ErrorBean
 import top.zbeboy.isy.web.bean.export.ExportBean
 import top.zbeboy.isy.web.bean.internship.distribution.InternshipTeacherDistributionBean
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean
@@ -123,7 +125,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun canUse(@RequestParam("id") internshipReleaseId: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用")
         } else {
@@ -141,7 +143,7 @@ open class InternshipTeacherDistributionController {
     @RequestMapping(value = ["/web/internship/teacher_distribution/distribution/condition"], method = [(RequestMethod.GET)])
     fun distributionCondition(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
         val page: String
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
             page = "web/internship/distribution/internship_distribution_condition::#page-wrapper"
@@ -182,7 +184,7 @@ open class InternshipTeacherDistributionController {
         val internshipReleaseId = request.getParameter("internshipReleaseId")
         var dataTablesUtils = DataTablesUtils.of<InternshipTeacherDistributionBean>()
         if (StringUtils.hasLength(internshipReleaseId)) {
-            val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+            val errorBean = accessCondition(internshipReleaseId)
             if (!errorBean.isHasError()) {
                 dataTablesUtils = buildDataTablesData(request, internshipReleaseId)
             }
@@ -293,7 +295,7 @@ open class InternshipTeacherDistributionController {
     @RequestMapping(value = ["/web/internship/teacher_distribution/distribution/condition/add"], method = [(RequestMethod.GET)])
     fun addDistribution(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
         val page: String
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
             page = "web/internship/distribution/internship_add_distribution::#page-wrapper"
@@ -314,7 +316,7 @@ open class InternshipTeacherDistributionController {
     @RequestMapping(value = ["/web/internship/teacher_distribution/distribution/condition/edit"], method = [(RequestMethod.GET)])
     fun editDistribution(@RequestParam("id") internshipReleaseId: String, @RequestParam("studentId") studentId: Int, modelMap: ModelMap): String {
         val page: String
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             val internshipTeacherDistribution: InternshipTeacherDistribution
             var studentBean: StudentBean? = null
@@ -346,7 +348,7 @@ open class InternshipTeacherDistributionController {
     @RequestMapping(value = ["/web/internship/teacher_distribution/batch/distribution"], method = [(RequestMethod.GET)])
     fun batchDistribution(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
         val page: String
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("internshipReleaseId", internshipReleaseId)
             page = "web/internship/distribution/internship_batch_distribution::#page-wrapper"
@@ -368,7 +370,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun validStudent(@RequestParam("id") internshipReleaseId: String, @RequestParam("student") info: String, type: Int): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             val internshipRelease = errorBean.data
             val departmentId = internshipRelease!!.departmentId!!
@@ -405,7 +407,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun batchDistributionOrganizes(@RequestParam("id") internshipReleaseId: String): AjaxUtils<Organize> {
         val ajaxUtils = AjaxUtils.of<Organize>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             var organizes: List<Organize> = ArrayList()
             val hasOrganizes = ArrayList<Int>()
@@ -443,7 +445,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun batchDistributionTeachers(@RequestParam("id") internshipReleaseId: String): AjaxUtils<StaffBean> {
         val ajaxUtils = AjaxUtils.of<StaffBean>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             val internshipRelease = errorBean.data
             var staffs: List<StaffBean> = ArrayList()
@@ -469,7 +471,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun batchDistributionInternshipReleases(@RequestParam("id") internshipReleaseId: String): AjaxUtils<InternshipRelease> {
         val ajaxUtils = AjaxUtils.of<InternshipRelease>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             var internshipReleases: List<InternshipRelease> = ArrayList()
             val internshipRelease = errorBean.data
@@ -503,7 +505,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun batchDistributionSave(@RequestParam("id") internshipReleaseId: String, organizeId: String, staffId: String, excludeInternshipReleaseId: String?): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(organizeId) && StringUtils.hasLength(staffId)
                     && SmallPropsUtils.StringIdsIsNumber(organizeId) && SmallPropsUtils.StringIdsIsNumber(staffId)) {
@@ -564,7 +566,7 @@ open class InternshipTeacherDistributionController {
     fun save(@RequestParam("student") info: String, @RequestParam("staffId") staffId: Int,
              @RequestParam("id") internshipReleaseId: String, type: Int): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             val internshipRelease = errorBean.data
             val departmentId = internshipRelease!!.departmentId!!
@@ -602,7 +604,7 @@ open class InternshipTeacherDistributionController {
     fun update(@RequestParam("studentId") studentId: Int, @RequestParam("staffId") staffId: Int,
                @RequestParam("id") internshipReleaseId: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             val record = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
             if (record.isPresent) {
@@ -630,7 +632,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun del(studentIds: String, @RequestParam("id") internshipReleaseId: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(studentIds) && SmallPropsUtils.StringIdsIsNumber(studentIds)) {
                 val ids = SmallPropsUtils.StringIdsToList(studentIds)
@@ -654,7 +656,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun comparisonDel(@RequestParam("id") internshipReleaseId: String, excludeInternships: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(excludeInternships)) {
                 val ids = SmallPropsUtils.StringIdsToStringList(excludeInternships)
@@ -678,7 +680,7 @@ open class InternshipTeacherDistributionController {
     @ResponseBody
     fun copyData(@RequestParam("id") internshipReleaseId: String, copyInternships: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = internshipConditionCommon.teacherDistributionTimeCondition(internshipReleaseId)
+        val errorBean = accessCondition(internshipReleaseId)
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(copyInternships)) {
                 // 删除以前的分配记录 避免主键冲突
@@ -719,5 +721,25 @@ open class InternshipTeacherDistributionController {
             ajaxUtils.success().msg(errorBean.errorMsg!!)
         }
         return ajaxUtils
+    }
+
+    /**
+     * 教师分配时间范围条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return 错误消息
+     */
+    fun accessCondition(internshipReleaseId: String): ErrorBean<InternshipRelease> {
+        val errorBean = internshipConditionCommon.basicCondition(internshipReleaseId)
+        if (!errorBean.isHasError()) {
+            val internshipRelease = errorBean.data
+            if (DateTimeUtils.timestampRangeDecide(internshipRelease!!.teacherDistributionStartTime, internshipRelease.teacherDistributionEndTime)) {
+                errorBean.hasError = false
+            } else {
+                errorBean.hasError = true
+                errorBean.errorMsg = "不在时间范围，无法进入"
+            }
+        }
+        return errorBean
     }
 }

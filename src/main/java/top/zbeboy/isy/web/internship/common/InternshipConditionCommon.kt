@@ -6,7 +6,6 @@ import org.springframework.util.ObjectUtils
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease
 import top.zbeboy.isy.service.cache.CacheBook
 import top.zbeboy.isy.service.internship.InternshipReleaseService
-import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.web.bean.error.ErrorBean
 import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
@@ -49,26 +48,6 @@ open class InternshipConditionCommon {
             errorBean.errorMsg = "未查询到相关实习信息"
         }
         errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
-        return errorBean
-    }
-
-    /**
-     * 教师分配时间范围条件
-     *
-     * @param internshipReleaseId 实习发布id
-     * @return 错误消息
-     */
-    fun teacherDistributionTimeCondition(internshipReleaseId: String): ErrorBean<InternshipRelease> {
-        val errorBean = basicCondition(internshipReleaseId)
-        if (!errorBean.isHasError()) {
-            val internshipRelease = errorBean.data
-            if (DateTimeUtils.timestampRangeDecide(internshipRelease!!.teacherDistributionStartTime, internshipRelease.teacherDistributionEndTime)) {
-                errorBean.hasError = false
-            } else {
-                errorBean.hasError = true
-                errorBean.errorMsg = "不在时间范围，无法进入"
-            }
-        }
         return errorBean
     }
 }

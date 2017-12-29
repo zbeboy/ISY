@@ -174,8 +174,8 @@ open class InternshipJournalController {
     @RequestMapping(value = ["/web/internship/journal/my/list"], method = [(RequestMethod.GET)])
     fun myJournalList(@RequestParam("id") internshipReleaseId: String, modelMap: ModelMap): String {
         var canUse = false
-        val users = usersService.getUserFromSession()
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            val users = usersService.getUserFromSession()
             val student = studentService.findByUsername(users!!.username)
             if (!ObjectUtils.isEmpty(student)) {
                 val errorBean = accessCondition(internshipReleaseId, student.studentId!!)

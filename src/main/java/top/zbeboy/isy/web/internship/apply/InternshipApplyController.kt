@@ -1318,27 +1318,26 @@ open class InternshipApplyController {
                     val fileBeen = uploadService.upload(multipartHttpServletRequest,
                             RequestUtils.getRealPath(request) + path, request.remoteAddr)
                     fileBeen.forEach { fileBean ->
-                        val fileId = UUIDUtils.getUUID()
-                        val internshipApply = internshipApplyRecord.get().into(InternshipApply::class.java)
-                        if (StringUtils.hasLength(internshipApply.internshipFileId)) {
-                            val oldFile = filesService.findById(internshipApply.internshipFileId)
-                            try {
+                        try {
+                            val internshipApply = internshipApplyRecord.get().into(InternshipApply::class.java)
+                            if (StringUtils.hasLength(internshipApply.internshipFileId)) {
+                                val oldFile = filesService.findById(internshipApply.internshipFileId)
                                 FilesUtils.deleteFile(RequestUtils.getRealPath(request) + oldFile.relativePath)
-                                val files = Files()
-                                files.fileId = fileId
-                                files.ext = fileBean.ext
-                                files.newName = fileBean.newName
-                                files.originalFileName = fileBean.originalFileName
-                                files.size = fileBean.size.toString()
-                                files.relativePath = path + fileBean.newName!!
-                                filesService.save(files)
-                                internshipApply.internshipFileId = fileId
-                                internshipApplyService.update(internshipApply)
                                 filesService.deleteById(oldFile.fileId)
-                            } catch (e: IOException) {
-                                log.error("Delete file error, error is {}", e)
                             }
-
+                            val fileId = UUIDUtils.getUUID()
+                            val files = Files()
+                            files.fileId = fileId
+                            files.ext = fileBean.ext
+                            files.newName = fileBean.newName
+                            files.originalFileName = fileBean.originalFileName
+                            files.size = fileBean.size.toString()
+                            files.relativePath = path + fileBean.newName!!
+                            filesService.save(files)
+                            internshipApply.internshipFileId = fileId
+                            internshipApplyService.update(internshipApply)
+                        } catch (e: IOException) {
+                            log.error("Delete file error, error is {}", e)
                         }
                     }
                 }
@@ -1423,7 +1422,7 @@ open class InternshipApplyController {
             val inTimeRange: Boolean// 在实习申请时间范围
             if (DateTimeUtils.timestampRangeDecide(internshipRelease!!.startTime, internshipRelease.endTime)) {
                 errorBean.hasError = false
-                errorBean.errorMsg = "允许填写"
+                errorBean.errorMsg = "允许使用"
                 inTimeRange = true
             } else {
                 errorBean.hasError = true
@@ -1467,7 +1466,7 @@ open class InternshipApplyController {
                     // 判断更改时间条件
                     if (DateTimeUtils.timestampRangeDecide(internshipApply.changeFillStartTime, internshipApply.changeFillEndTime)) {
                         errorBean.hasError = false
-                        errorBean.errorMsg = "允许填写"
+                        errorBean.errorMsg = "允许使用"
                     } else {
                         errorBean.hasError = true
                         errorBean.errorMsg = "不在时间范围，无法进入"
@@ -1477,20 +1476,20 @@ open class InternshipApplyController {
                 if (internshipApply.internshipApplyState == 3) {
                     // 可直接填写
                     errorBean.hasError = false
-                    errorBean.errorMsg = "允许填写"
+                    errorBean.errorMsg = "允许使用"
                 }
                 // 状态为 1：申请中；2：已通过；4：基本信息变更申请中；6：单位信息变更申请中； 则不允许进行填写 无视时间条件
                 if (internshipApply.internshipApplyState == 1 || internshipApply.internshipApplyState == 2 ||
                         internshipApply.internshipApplyState == 4 || internshipApply.internshipApplyState == 6) {
                     // 不允许直接填写
                     errorBean.hasError = true
-                    errorBean.errorMsg = "您当前状态，不允许填写"
+                    errorBean.errorMsg = "您当前状态，不允许使用"
                 }
                 // 状态为 0：未提交申请
                 if (internshipApply.internshipApplyState == 0) {
                     if (inTimeRange) {
                         errorBean.hasError = false
-                        errorBean.errorMsg = "允许填写"
+                        errorBean.errorMsg = "允许使用"
                     } else {
                         errorBean.hasError = true
                         errorBean.errorMsg = "不在时间范围，无法进入"
