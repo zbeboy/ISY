@@ -87,35 +87,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             }
         }
 
-        /**
-         * 检验成功
-         * @param validId
-         * @param errorMsgId
-         */
-        function validSuccessDom(validId, errorMsgId) {
-            $(validId).addClass('has-success').removeClass('has-error');
-            $(errorMsgId).addClass('hidden').text('');
-        }
-
-        /**
-         * 检验失败
-         * @param validId
-         * @param errorMsgId
-         * @param msg
-         */
-        function validErrorDom(validId, errorMsgId, msg) {
-            $(validId).addClass('has-error').removeClass('has-success');
-            $(errorMsgId).removeClass('hidden').text(msg);
-        }
-
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         /*
          搜索
          */
@@ -145,27 +116,27 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         $(paramId.studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
         $(paramId.studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
-        $(paramId.scienceName).change(function (event) {
+        $(paramId.scienceName).change(function () {
             var science = $(paramId.scienceName).val();
             changeOrganize(science);
             refreshSearch();
             init();
         });
 
-        $(paramId.organizeName).change(function (event) {
+        $(paramId.organizeName).change(function () {
             refreshSearch();
             init();
         });
@@ -508,7 +479,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         function changeOrganize(science) {
 
-            if (Number(science) == 0) {
+            if (Number(science) === 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {

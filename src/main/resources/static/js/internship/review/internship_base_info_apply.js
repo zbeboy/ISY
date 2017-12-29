@@ -143,14 +143,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         });
 
         $(paramId.studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
         $(paramId.studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
@@ -583,7 +583,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          */
         function changeOrganize(science) {
 
-            if (Number(science) == 0) {
+            if (Number(science) === 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
