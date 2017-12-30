@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         function getAjaxUrl() {
             return {
                 data_url: '/web/internship/journal/list/data',
+                journal_count_data_url: '/web/internship/journal/team/count/data',
                 del: '/web/internship/journal/list/del',
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
@@ -387,15 +388,57 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
 
-        $(getParamId().createDate).on('apply.daterangepicker', function(ev, picker) {
+        $(getParamId().createDate).on('apply.daterangepicker', function (ev, picker) {
             $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss') + ' 至 ' + picker.endDate.format('YYYY-MM-DD HH:mm:ss'));
             initParam();
             myTable.ajax.reload();
         });
 
-        $(getParamId().createDate).on('cancel.daterangepicker', function(ev, picker) {
+        $(getParamId().createDate).on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
         });
+
+        var tableData = '#tableData';
+
+        initJournalCount();
+
+        /**
+         * 初始化小组内个人日志统计
+         */
+        function initJournalCount() {
+            $.get(web_path + getAjaxUrl().journal_count_data_url, {
+                id: init_page_param.internshipReleaseId,
+                staffId: init_page_param.staffId
+            }, function (data) {
+                if (data.state) {
+                    listData(data);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 列表数据
+         * @param data 数据
+         */
+        function listData(data) {
+            var template = Handlebars.compile($("#journal-count-template").html());
+            Handlebars.registerHelper('student_number', function () {
+                var studentNumber = this.studentNumber ? this.studentNumber : '无数据';
+                return new Handlebars.SafeString(Handlebars.escapeExpression(studentNumber));
+            });
+            Handlebars.registerHelper('journal_num', function () {
+                var journalNum = this.journalNum ? this.journalNum : 0;
+                return new Handlebars.SafeString(Handlebars.escapeExpression(journalNum));
+            });
+            $(tableData).html(template(data));
+            $('#journalCountTable').tablesaw().data("tablesaw").refresh();
+        }
 
         /*
         初始化搜索内容
@@ -510,6 +553,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
+        });
+
+        $('#refreshJournalCount').click(function () {
+            initJournalCount();
         });
 
         /*

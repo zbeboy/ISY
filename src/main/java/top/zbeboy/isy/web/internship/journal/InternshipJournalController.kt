@@ -288,6 +288,25 @@ open class InternshipJournalController {
     }
 
     /**
+     * 小组内个人日志数量统计
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId 教职工id
+     * @return 数据
+     */
+    @RequestMapping(value = ["/web/internship/journal/team/count/data"], method = [(RequestMethod.GET)])
+    @ResponseBody
+    fun teamJournalCountData(@RequestParam("id") internshipReleaseId: String, @RequestParam("staffId") staffId: Int): AjaxUtils<InternshipJournalBean> {
+        val ajaxUtils = AjaxUtils.of<InternshipJournalBean>()
+        val record3s = internshipJournalService.countTeamJournalNum(internshipReleaseId, staffId)
+        var internshipJournalBean: List<InternshipJournalBean> = ArrayList()
+        if (record3s.isNotEmpty) {
+            internshipJournalBean = record3s.into(InternshipJournalBean::class.java)
+        }
+        return ajaxUtils.success().msg("获取数据成功").listData(internshipJournalBean)
+    }
+
+    /**
      * 小组教师数据
      *
      * @param internshipReleaseId 发布id
