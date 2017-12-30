@@ -20,7 +20,7 @@ import top.zbeboy.isy.service.system.AuthoritiesService
 import java.util.*
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = arrayOf(Application::class))
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [(Application::class)])
 open class ElasticSyncData {
     @Qualifier("dsl")
     @Autowired

@@ -8,8 +8,9 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
-
 import top.zbeboy.isy.domain.Tables.INTERNSHIP_JOURNAL
+import org.jooq.impl.DSL.*
+import top.zbeboy.isy.domain.Tables.INTERNSHIP_TEACHER_DISTRIBUTION
 import top.zbeboy.isy.domain.tables.daos.InternshipJournalDao
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal
 import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord
@@ -74,6 +75,27 @@ open class InternshipJournalServiceImpl @Autowired constructor(dslContext: DSLCo
 
     override fun deleteById(id: String) {
         internshipJournalDao.deleteById(id)
+    }
+
+    override fun countTeamJournalNum(internshipReleaseId: String, staffId: Int): Result<out Record3<String, String, out Any>> {
+        val countAlias = InternshipJournalBean.JOURNAL_NUM
+        val journalTable =
+                create.select(INTERNSHIP_JOURNAL.STUDENT_NUMBER,
+                        INTERNSHIP_JOURNAL.STUDENT_ID,
+                        count(INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID).`as`(countAlias))
+                        .from(INTERNSHIP_JOURNAL)
+                        .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                                .and(INTERNSHIP_JOURNAL.STAFF_ID.eq(staffId)))
+                        .groupBy(INTERNSHIP_JOURNAL.STUDENT_ID)
+        return create.select(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME,
+                journalTable.field(INTERNSHIP_JOURNAL.STUDENT_NUMBER),
+                journalTable.field(countAlias))
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .leftJoin(journalTable)
+                .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(journalTable.field(INTERNSHIP_JOURNAL.STUDENT_ID)))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                        .and(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(staffId)))
+                .fetch()
     }
 
     /**

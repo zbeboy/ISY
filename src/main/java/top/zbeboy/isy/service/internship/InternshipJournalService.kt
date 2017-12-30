@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.internship
 
 import org.jooq.Record
+import org.jooq.Record3
 import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.InternshipJournal
 import top.zbeboy.isy.domain.tables.records.InternshipJournalRecord
@@ -79,4 +80,12 @@ interface InternshipJournalService {
      * @param id id
      */
     fun deleteById(id: String)
+
+    /**
+     * 统计组内个人日志数据
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId 教职工id
+     */
+    fun countTeamJournalNum(internshipReleaseId: String, staffId: Int): Result<out Record3<String, String, out Any>>
 }
