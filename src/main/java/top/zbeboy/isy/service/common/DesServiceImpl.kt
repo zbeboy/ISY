@@ -1,9 +1,9 @@
 package top.zbeboy.isy.service.common
 
+import org.apache.commons.codec.binary.Base64
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import sun.misc.BASE64Decoder
-import sun.misc.BASE64Encoder
+
 import top.zbeboy.isy.config.ISYProperties
 import java.security.SecureRandom
 import javax.crypto.Cipher
@@ -23,28 +23,26 @@ open class DesServiceImpl : DesService {
 
     override fun encrypt(data: String): String {
         val bt = encrypt(data.toByteArray(Charsets.UTF_8), isyProperties.getSecurity().desDefaultKey!!.toByteArray(Charsets.UTF_8))
-        return BASE64Encoder().encode(bt)
+        return Base64.encodeBase64String(bt)
     }
 
     override fun decrypt(data: String?): String? {
         if (data == null)
             return null
-        val decoder = BASE64Decoder()
-        val buf = decoder.decodeBuffer(data)
+        val buf = Base64.decodeBase64(data)
         val bt = decrypt(buf, isyProperties.getSecurity().desDefaultKey!!.toByteArray(Charsets.UTF_8))
         return String(bt, Charsets.UTF_8)
     }
 
     override fun encrypt(data: String, key: String): String {
         val bt = encrypt(data.toByteArray(Charsets.UTF_8), key.toByteArray(Charsets.UTF_8))
-        return BASE64Encoder().encode(bt)
+        return Base64.encodeBase64String(bt)
     }
 
     override fun decrypt(data: String?, key: String): String? {
         if (data == null)
             return null
-        val decoder = BASE64Decoder()
-        val buf = decoder.decodeBuffer(data)
+        val buf = Base64.decodeBase64(data)
         val bt = decrypt(buf, key.toByteArray(Charsets.UTF_8))
         return String(bt, Charsets.UTF_8)
     }

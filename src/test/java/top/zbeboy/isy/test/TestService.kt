@@ -32,13 +32,13 @@ open class TestService {
 
     @Test
     fun testDesService() {
-        val key = /*RandomUtils.generateDesKey()*/"MCCbuJfSNmBfCTHdLSqm"
-        println(key)
-        val before = desService.encrypt("530381199510020546", key)
-        println(before)
-        println(before.length)
-        println("Ue4Y24G91eRIrPSym1BiMvXS5h6W3XuW" == before)
+        val key = RandomUtils.generateDesKey()
+        println("key : $key")
+        val before = desService.encrypt("测试", key)
+        println("before : $before")
+        println("before length : ${before.length}")
+        println("sfsdf" == before)
         val after = desService.decrypt(before, key)
-        println(after)
+        println("after : $after")
     }
 }
