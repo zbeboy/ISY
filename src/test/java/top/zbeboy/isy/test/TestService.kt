@@ -5,7 +5,9 @@ import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import top.zbeboy.isy.Application
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.internship.InternshipJournalService
+import top.zbeboy.isy.service.util.RandomUtils
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean
 import javax.annotation.Resource
 
@@ -16,6 +18,9 @@ open class TestService {
     @Resource
     open lateinit var internshipJournalService: InternshipJournalService
 
+    @Resource
+    open lateinit var desService: DesService
+
     @Test
     fun testCountTeamJournalNumMethod() {
         val records = internshipJournalService.countTeamJournalNum("ee3ab1e0c5bc4124804293f1754ec9aa", 1)
@@ -23,5 +28,17 @@ open class TestService {
             val internshipJournalBeans = records.into(InternshipJournalBean::class.java)
             internshipJournalBeans.forEach { i -> print(i.studentRealName + " " + i.studentNumber + " " + i.journalNum) }
         }
+    }
+
+    @Test
+    fun testDesService() {
+        val key = /*RandomUtils.generateDesKey()*/"MCCbuJfSNmBfCTHdLSqm"
+        println(key)
+        val before = desService.encrypt("530381199510020546", key)
+        println(before)
+        println(before.length)
+        println("Ue4Y24G91eRIrPSym1BiMvXS5h6W3XuW" == before)
+        val after = desService.decrypt(before, key)
+        println(after)
     }
 }

@@ -13,6 +13,8 @@ class RandomUtils {
 
         private const val ROLE_EN_NAME_COUNT = 20
 
+        private const val DES_COUNT = 20
+
         /**
          * Generates a password.
          *
@@ -71,6 +73,16 @@ class RandomUtils {
         @JvmStatic
         fun generateRoleEnName(): String {
             return RandomStringUtils.randomAlphabetic(ROLE_EN_NAME_COUNT)
+        }
+
+        /**
+         * Generates a DES key
+         *
+         * @return the DES key
+         */
+        @JvmStatic
+        fun generateDesKey(): String {
+            return RandomStringUtils.randomAlphabetic(DES_COUNT)
         }
     }
 }

@@ -24,6 +24,8 @@ class ISYProperties {
 
     private val oAuth2 = OAuth2()
 
+    private val security = Security()
+
     fun getAsync(): Async {
         return async
     }
@@ -46,6 +48,10 @@ class ISYProperties {
 
     fun getoAuth2(): OAuth2 {
         return oAuth2
+    }
+
+    fun getSecurity(): Security {
+        return security
     }
 
     /**
@@ -129,9 +135,16 @@ class ISYProperties {
     }
 
     /**
-     * 微信初始化参数
+     * OAuth2初始化参数
      */
     class OAuth2 {
         var redirectUrisPrefix: String? = null
+    }
+
+    /**
+     * Security初始化参数
+     */
+    class Security {
+        var desDefaultKey: String? = null
     }
 }
