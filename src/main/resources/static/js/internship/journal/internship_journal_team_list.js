@@ -428,6 +428,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
          */
         function listData(data) {
             var template = Handlebars.compile($("#journal-count-template").html());
+            var sequence = 0;
+            Handlebars.registerHelper('sequence', function () {
+                return ++sequence;
+            });
             Handlebars.registerHelper('student_number', function () {
                 var studentNumber = this.studentNumber ? this.studentNumber : '无数据';
                 return new Handlebars.SafeString(Handlebars.escapeExpression(studentNumber));

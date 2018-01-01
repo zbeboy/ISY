@@ -95,6 +95,7 @@
                        id="journalCountTable">
                     <thead>
                     <tr>
+                        <th scope="col" data-tablesaw-priority="persist">序号</th>
                         <th scope="col" data-tablesaw-priority="persist">姓名</th>
                         <th scope="col" data-tablesaw-priority="persist">学号</th>
                         <th scope="col">数量(篇)</th>
@@ -159,6 +160,7 @@
         <script id="journal-count-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>
+                <td>{{sequence}}</td>
                 <td>{{studentRealName}}</td>
                 <td>{{student_number}}</td>
                 <td>
