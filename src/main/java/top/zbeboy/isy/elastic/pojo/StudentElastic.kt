@@ -13,7 +13,7 @@ open class StudentElastic {
     @Id
     private var studentId: String? = null
     var studentNumber: String? = null
-    var birthday: Date? = null
+    var birthday: String? = null
     var sex: String? = null
     var idCard: String? = null
     var familyResidence: String? = null
@@ -55,7 +55,7 @@ open class StudentElastic {
 
     constructor()
 
-    constructor(studentId: String?, studentNumber: String?, birthday: Date?, sex: String?, idCard: String?, familyResidence: String?, politicalLandscapeId: Int?, politicalLandscapeName: String?, nationId: Int?, nationName: String?, dormitoryNumber: String?, parentName: String?, parentContactPhone: String?, placeOrigin: String?, schoolId: Int?, schoolName: String?, collegeId: Int?, collegeName: String?, departmentId: Int?, departmentName: String?, scienceId: Int?, scienceName: String?, grade: String?, organizeId: Int?, organizeName: String?, username: String?, enabled: Byte?, realName: String?, mobile: String?, avatar: String?, verifyMailbox: Byte?, langKey: String?, joinDate: Date?, authorities: Int?, roleName: String?) {
+    constructor(studentId: String?, studentNumber: String?, birthday: String?, sex: String?, idCard: String?, familyResidence: String?, politicalLandscapeId: Int?, politicalLandscapeName: String?, nationId: Int?, nationName: String?, dormitoryNumber: String?, parentName: String?, parentContactPhone: String?, placeOrigin: String?, schoolId: Int?, schoolName: String?, collegeId: Int?, collegeName: String?, departmentId: Int?, departmentName: String?, scienceId: Int?, scienceName: String?, grade: String?, organizeId: Int?, organizeName: String?, username: String?, enabled: Byte?, realName: String?, mobile: String?, avatar: String?, verifyMailbox: Byte?, langKey: String?, joinDate: Date?, authorities: Int?, roleName: String?) {
         this.studentId = studentId
         this.studentNumber = studentNumber
         this.birthday = birthday

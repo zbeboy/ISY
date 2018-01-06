@@ -72,7 +72,9 @@ import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemMessage;
 import top.zbeboy.isy.domain.tables.Users;
+import top.zbeboy.isy.domain.tables.UsersKey;
 import top.zbeboy.isy.domain.tables.UsersType;
+import top.zbeboy.isy.domain.tables.UsersUniqueInfo;
 
 
 /**
@@ -419,7 +421,17 @@ public class Tables {
     public static final Users USERS = top.zbeboy.isy.domain.tables.Users.USERS;
 
     /**
+     * The table <code>isy.users_key</code>.
+     */
+    public static final UsersKey USERS_KEY = top.zbeboy.isy.domain.tables.UsersKey.USERS_KEY;
+
+    /**
      * The table <code>isy.users_type</code>.
      */
     public static final UsersType USERS_TYPE = top.zbeboy.isy.domain.tables.UsersType.USERS_TYPE;
+
+    /**
+     * The table <code>isy.users_unique_info</code>.
+     */
+    public static final UsersUniqueInfo USERS_UNIQUE_INFO = top.zbeboy.isy.domain.tables.UsersUniqueInfo.USERS_UNIQUE_INFO;
 }

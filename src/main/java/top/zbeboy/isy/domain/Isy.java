@@ -80,7 +80,9 @@ import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemMessage;
 import top.zbeboy.isy.domain.tables.Users;
+import top.zbeboy.isy.domain.tables.UsersKey;
 import top.zbeboy.isy.domain.tables.UsersType;
+import top.zbeboy.isy.domain.tables.UsersUniqueInfo;
 
 
 /**
@@ -96,7 +98,7 @@ import top.zbeboy.isy.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = -7397023;
+    private static final long serialVersionUID = 1605216991;
 
     /**
      * The reference instance of <code>isy</code>
@@ -434,9 +436,19 @@ public class Isy extends SchemaImpl {
     public final Users USERS = top.zbeboy.isy.domain.tables.Users.USERS;
 
     /**
+     * The table <code>isy.users_key</code>.
+     */
+    public final UsersKey USERS_KEY = top.zbeboy.isy.domain.tables.UsersKey.USERS_KEY;
+
+    /**
      * The table <code>isy.users_type</code>.
      */
     public final UsersType USERS_TYPE = top.zbeboy.isy.domain.tables.UsersType.USERS_TYPE;
+
+    /**
+     * The table <code>isy.users_unique_info</code>.
+     */
+    public final UsersUniqueInfo USERS_UNIQUE_INFO = top.zbeboy.isy.domain.tables.UsersUniqueInfo.USERS_UNIQUE_INFO;
 
     /**
      * No further instances allowed
@@ -529,6 +541,8 @@ public class Isy extends SchemaImpl {
             SystemAlertType.SYSTEM_ALERT_TYPE,
             SystemMessage.SYSTEM_MESSAGE,
             Users.USERS,
-            UsersType.USERS_TYPE);
+            UsersKey.USERS_KEY,
+            UsersType.USERS_TYPE,
+            UsersUniqueInfo.USERS_UNIQUE_INFO);
     }
 }

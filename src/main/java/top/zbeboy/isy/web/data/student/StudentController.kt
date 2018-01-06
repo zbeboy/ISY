@@ -406,7 +406,7 @@ open class StudentController {
                 student.nationId = studentVo.nationId
                 student.politicalLandscapeId = studentVo.politicalLandscapeId
                 if (StringUtils.hasLength(studentVo.birthday)) {
-                    student.birthday = DateTimeUtils.formatDate(studentVo.birthday!!)
+                    student.birthday = DateTimeUtils.formatDate(studentVo.birthday!!).toString()
                 } else {
                     student.birthday = null
                 }

@@ -13,7 +13,7 @@ open class StaffElastic {
     @Id
     private var staffId: String? = null
     var staffNumber: String? = null
-    var birthday: Date? = null
+    var birthday: String? = null
     var sex: String? = null
     var idCard: String? = null
     var familyResidence: String? = null
@@ -49,7 +49,7 @@ open class StaffElastic {
 
     constructor()
 
-    constructor(staffId: String?, staffNumber: String?, birthday: Date?, sex: String?, idCard: String?, familyResidence: String?, politicalLandscapeId: Int?, politicalLandscapeName: String?, nationId: Int?, nationName: String?, academicTitleId: Int?, academicTitleName: String?, post: String?, schoolId: Int?, schoolName: String?, collegeId: Int?, collegeName: String?, departmentId: Int?, departmentName: String?, username: String?, enabled: Byte?, realName: String?, mobile: String?, avatar: String?, verifyMailbox: Byte?, langKey: String?, joinDate: Date?, authorities: Int?, roleName: String?) {
+    constructor(staffId: String?, staffNumber: String?, birthday: String?, sex: String?, idCard: String?, familyResidence: String?, politicalLandscapeId: Int?, politicalLandscapeName: String?, nationId: Int?, nationName: String?, academicTitleId: Int?, academicTitleName: String?, post: String?, schoolId: Int?, schoolName: String?, collegeId: Int?, collegeName: String?, departmentId: Int?, departmentName: String?, username: String?, enabled: Byte?, realName: String?, mobile: String?, avatar: String?, verifyMailbox: Byte?, langKey: String?, joinDate: Date?, authorities: Int?, roleName: String?) {
         this.staffId = staffId
         this.staffNumber = staffNumber
         this.birthday = birthday

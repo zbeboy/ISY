@@ -75,7 +75,9 @@ import top.zbeboy.isy.domain.tables.SystemAlert;
 import top.zbeboy.isy.domain.tables.SystemAlertType;
 import top.zbeboy.isy.domain.tables.SystemMessage;
 import top.zbeboy.isy.domain.tables.Users;
+import top.zbeboy.isy.domain.tables.UsersKey;
 import top.zbeboy.isy.domain.tables.UsersType;
+import top.zbeboy.isy.domain.tables.UsersUniqueInfo;
 import top.zbeboy.isy.domain.tables.records.AcademicTitleRecord;
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord;
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord;
@@ -139,8 +141,10 @@ import top.zbeboy.isy.domain.tables.records.StudentRecord;
 import top.zbeboy.isy.domain.tables.records.SystemAlertRecord;
 import top.zbeboy.isy.domain.tables.records.SystemAlertTypeRecord;
 import top.zbeboy.isy.domain.tables.records.SystemMessageRecord;
+import top.zbeboy.isy.domain.tables.records.UsersKeyRecord;
 import top.zbeboy.isy.domain.tables.records.UsersRecord;
 import top.zbeboy.isy.domain.tables.records.UsersTypeRecord;
+import top.zbeboy.isy.domain.tables.records.UsersUniqueInfoRecord;
 
 
 /**
@@ -265,7 +269,11 @@ public class Keys {
     public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = UniqueKeys0.KEY_SYSTEM_MESSAGE_PRIMARY;
     public static final UniqueKey<UsersRecord> KEY_USERS_PRIMARY = UniqueKeys0.KEY_USERS_PRIMARY;
     public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = UniqueKeys0.KEY_USERS_MOBILE;
+    public static final UniqueKey<UsersKeyRecord> KEY_USERS_KEY_PRIMARY = UniqueKeys0.KEY_USERS_KEY_PRIMARY;
+    public static final UniqueKey<UsersKeyRecord> KEY_USERS_KEY_USER_KEY = UniqueKeys0.KEY_USERS_KEY_USER_KEY;
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = UniqueKeys0.KEY_USERS_TYPE_PRIMARY;
+    public static final UniqueKey<UsersUniqueInfoRecord> KEY_USERS_UNIQUE_INFO_PRIMARY = UniqueKeys0.KEY_USERS_UNIQUE_INFO_PRIMARY;
+    public static final UniqueKey<UsersUniqueInfoRecord> KEY_USERS_UNIQUE_INFO_ID_CARD = UniqueKeys0.KEY_USERS_UNIQUE_INFO_ID_CARD;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -465,7 +473,11 @@ public class Keys {
         public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = createUniqueKey(SystemMessage.SYSTEM_MESSAGE, "KEY_system_message_PRIMARY", SystemMessage.SYSTEM_MESSAGE.SYSTEM_MESSAGE_ID);
         public static final UniqueKey<UsersRecord> KEY_USERS_PRIMARY = createUniqueKey(Users.USERS, "KEY_users_PRIMARY", Users.USERS.USERNAME);
         public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = createUniqueKey(Users.USERS, "KEY_users_mobile", Users.USERS.MOBILE);
+        public static final UniqueKey<UsersKeyRecord> KEY_USERS_KEY_PRIMARY = createUniqueKey(UsersKey.USERS_KEY, "KEY_users_key_PRIMARY", UsersKey.USERS_KEY.USERNAME);
+        public static final UniqueKey<UsersKeyRecord> KEY_USERS_KEY_USER_KEY = createUniqueKey(UsersKey.USERS_KEY, "KEY_users_key_user_key", UsersKey.USERS_KEY.USER_KEY);
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_PRIMARY", UsersType.USERS_TYPE.USERS_TYPE_ID);
+        public static final UniqueKey<UsersUniqueInfoRecord> KEY_USERS_UNIQUE_INFO_PRIMARY = createUniqueKey(UsersUniqueInfo.USERS_UNIQUE_INFO, "KEY_users_unique_info_PRIMARY", UsersUniqueInfo.USERS_UNIQUE_INFO.USERNAME);
+        public static final UniqueKey<UsersUniqueInfoRecord> KEY_USERS_UNIQUE_INFO_ID_CARD = createUniqueKey(UsersUniqueInfo.USERS_UNIQUE_INFO, "KEY_users_unique_info_id_card", UsersUniqueInfo.USERS_UNIQUE_INFO.ID_CARD);
     }
 
     private static class ForeignKeys0 extends AbstractKeys {

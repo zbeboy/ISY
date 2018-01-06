@@ -4,7 +4,6 @@
 package top.zbeboy.isy.domain.tables;
 
 
-import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.StaffRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Staff extends TableImpl<StaffRecord> {
 
-    private static final long serialVersionUID = 1744545615;
+    private static final long serialVersionUID = 1642144868;
 
     /**
      * The reference instance of <code>isy.staff</code>
@@ -65,12 +64,12 @@ public class Staff extends TableImpl<StaffRecord> {
     /**
      * The column <code>isy.staff.birthday</code>.
      */
-    public final TableField<StaffRecord, Date> BIRTHDAY = createField("birthday", org.jooq.impl.SQLDataType.DATE, this, "");
+    public final TableField<StaffRecord, String> BIRTHDAY = createField("birthday", org.jooq.impl.SQLDataType.VARCHAR.length(48), this, "");
 
     /**
      * The column <code>isy.staff.sex</code>.
      */
-    public final TableField<StaffRecord, String> SEX = createField("sex", org.jooq.impl.SQLDataType.VARCHAR.length(2), this, "");
+    public final TableField<StaffRecord, String> SEX = createField("sex", org.jooq.impl.SQLDataType.VARCHAR.length(24), this, "");
 
     /**
      * The column <code>isy.staff.id_card</code>.
@@ -80,7 +79,7 @@ public class Staff extends TableImpl<StaffRecord> {
     /**
      * The column <code>isy.staff.family_residence</code>.
      */
-    public final TableField<StaffRecord, String> FAMILY_RESIDENCE = createField("family_residence", org.jooq.impl.SQLDataType.VARCHAR.length(600), this, "");
+    public final TableField<StaffRecord, String> FAMILY_RESIDENCE = createField("family_residence", org.jooq.impl.SQLDataType.VARCHAR.length(192), this, "");
 
     /**
      * The column <code>isy.staff.political_landscape_id</code>.

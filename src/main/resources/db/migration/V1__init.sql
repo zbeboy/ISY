@@ -139,16 +139,16 @@ CREATE TABLE academic_title (
 CREATE TABLE student (
   student_id             INT AUTO_INCREMENT PRIMARY KEY,
   student_number         VARCHAR(20) UNIQUE NOT NULL,
-  birthday               DATE,
-  sex                    VARCHAR(2),
+  birthday               VARCHAR(48),
+  sex                    VARCHAR(24),
   id_card                VARCHAR(20) UNIQUE,
-  family_residence       VARCHAR(600),
+  family_residence       VARCHAR(192),
   political_landscape_id INT,
   nation_id              INT,
-  dormitory_number       VARCHAR(15),
-  parent_name            VARCHAR(10),
-  parent_contact_phone   VARCHAR(15),
-  place_origin           VARCHAR(500),
+  dormitory_number       VARCHAR(24),
+  parent_name            VARCHAR(48),
+  parent_contact_phone   VARCHAR(48),
+  place_origin           VARCHAR(112),
   organize_id            INT                NOT NULL,
   username               VARCHAR(64)        NOT NULL,
   FOREIGN KEY (organize_id) REFERENCES organize (organize_id),
@@ -158,10 +158,10 @@ CREATE TABLE student (
 CREATE TABLE staff (
   staff_id               INT AUTO_INCREMENT PRIMARY KEY,
   staff_number           VARCHAR(20) UNIQUE NOT NULL,
-  birthday               DATE,
-  sex                    VARCHAR(2),
+  birthday               VARCHAR(48),
+  sex                    VARCHAR(24),
   id_card                VARCHAR(20) UNIQUE,
-  family_residence       VARCHAR(600),
+  family_residence       VARCHAR(192),
   political_landscape_id INT,
   nation_id              INT,
   post                   VARCHAR(500),
@@ -170,6 +170,16 @@ CREATE TABLE staff (
   username               VARCHAR(64)        NOT NULL,
   FOREIGN KEY (department_id) REFERENCES department (department_id),
   FOREIGN KEY (username) REFERENCES users (username)
+);
+
+CREATE TABLE users_key (
+  username VARCHAR(64) PRIMARY KEY,
+  user_key VARCHAR(64) UNIQUE NOT NULL
+);
+
+CREATE TABLE users_unique_info (
+  username VARCHAR(64) PRIMARY KEY,
+  id_card  VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE files (

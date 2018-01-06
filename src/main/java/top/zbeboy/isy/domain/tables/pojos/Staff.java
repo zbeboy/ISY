@@ -5,7 +5,6 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
-import java.sql.Date;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -25,11 +24,11 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Staff implements Serializable {
 
-    private static final long serialVersionUID = -438291316;
+    private static final long serialVersionUID = -1965810685;
 
     private Integer staffId;
     private String  staffNumber;
-    private Date    birthday;
+    private String  birthday;
     private String  sex;
     private String  idCard;
     private String  familyResidence;
@@ -60,7 +59,7 @@ public class Staff implements Serializable {
     public Staff(
         Integer staffId,
         String  staffNumber,
-        Date    birthday,
+        String  birthday,
         String  sex,
         String  idCard,
         String  familyResidence,
@@ -104,15 +103,16 @@ public class Staff implements Serializable {
         this.staffNumber = staffNumber;
     }
 
-    public Date getBirthday() {
+    @Size(max = 48)
+    public String getBirthday() {
         return this.birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
-    @Size(max = 2)
+    @Size(max = 24)
     public String getSex() {
         return this.sex;
     }
@@ -130,7 +130,7 @@ public class Staff implements Serializable {
         this.idCard = idCard;
     }
 
-    @Size(max = 600)
+    @Size(max = 192)
     public String getFamilyResidence() {
         return this.familyResidence;
     }

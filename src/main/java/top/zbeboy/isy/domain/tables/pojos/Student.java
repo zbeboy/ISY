@@ -5,7 +5,6 @@ package top.zbeboy.isy.domain.tables.pojos;
 
 
 import java.io.Serializable;
-import java.sql.Date;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -25,11 +24,11 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Student implements Serializable {
 
-    private static final long serialVersionUID = 438996955;
+    private static final long serialVersionUID = 2066880402;
 
     private Integer studentId;
     private String  studentNumber;
-    private Date    birthday;
+    private String  birthday;
     private String  sex;
     private String  idCard;
     private String  familyResidence;
@@ -64,7 +63,7 @@ public class Student implements Serializable {
     public Student(
         Integer studentId,
         String  studentNumber,
-        Date    birthday,
+        String  birthday,
         String  sex,
         String  idCard,
         String  familyResidence,
@@ -112,15 +111,16 @@ public class Student implements Serializable {
         this.studentNumber = studentNumber;
     }
 
-    public Date getBirthday() {
+    @Size(max = 48)
+    public String getBirthday() {
         return this.birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
-    @Size(max = 2)
+    @Size(max = 24)
     public String getSex() {
         return this.sex;
     }
@@ -138,7 +138,7 @@ public class Student implements Serializable {
         this.idCard = idCard;
     }
 
-    @Size(max = 600)
+    @Size(max = 192)
     public String getFamilyResidence() {
         return this.familyResidence;
     }
@@ -163,7 +163,7 @@ public class Student implements Serializable {
         this.nationId = nationId;
     }
 
-    @Size(max = 15)
+    @Size(max = 24)
     public String getDormitoryNumber() {
         return this.dormitoryNumber;
     }
@@ -172,7 +172,7 @@ public class Student implements Serializable {
         this.dormitoryNumber = dormitoryNumber;
     }
 
-    @Size(max = 10)
+    @Size(max = 48)
     public String getParentName() {
         return this.parentName;
     }
@@ -181,7 +181,7 @@ public class Student implements Serializable {
         this.parentName = parentName;
     }
 
-    @Size(max = 15)
+    @Size(max = 48)
     public String getParentContactPhone() {
         return this.parentContactPhone;
     }
@@ -190,7 +190,7 @@ public class Student implements Serializable {
         this.parentContactPhone = parentContactPhone;
     }
 
-    @Size(max = 500)
+    @Size(max = 112)
     public String getPlaceOrigin() {
         return this.placeOrigin;
     }

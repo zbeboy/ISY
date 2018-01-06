@@ -4,7 +4,6 @@
 package top.zbeboy.isy.domain.tables.daos;
 
 
-import java.sql.Date;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -86,7 +85,7 @@ public class StudentDao extends DAOImpl<StudentRecord, top.zbeboy.isy.domain.tab
     /**
      * Fetch records that have <code>birthday IN (values)</code>
      */
-    public List<top.zbeboy.isy.domain.tables.pojos.Student> fetchByBirthday(Date... values) {
+    public List<top.zbeboy.isy.domain.tables.pojos.Student> fetchByBirthday(String... values) {
         return fetch(Student.STUDENT.BIRTHDAY, values);
     }
 

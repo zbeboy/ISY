@@ -4,7 +4,6 @@
 package top.zbeboy.isy.domain.tables;
 
 
-import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.StudentRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Student extends TableImpl<StudentRecord> {
 
-    private static final long serialVersionUID = -1731208020;
+    private static final long serialVersionUID = -1233435567;
 
     /**
      * The reference instance of <code>isy.student</code>
@@ -65,12 +64,12 @@ public class Student extends TableImpl<StudentRecord> {
     /**
      * The column <code>isy.student.birthday</code>.
      */
-    public final TableField<StudentRecord, Date> BIRTHDAY = createField("birthday", org.jooq.impl.SQLDataType.DATE, this, "");
+    public final TableField<StudentRecord, String> BIRTHDAY = createField("birthday", org.jooq.impl.SQLDataType.VARCHAR.length(48), this, "");
 
     /**
      * The column <code>isy.student.sex</code>.
      */
-    public final TableField<StudentRecord, String> SEX = createField("sex", org.jooq.impl.SQLDataType.VARCHAR.length(2), this, "");
+    public final TableField<StudentRecord, String> SEX = createField("sex", org.jooq.impl.SQLDataType.VARCHAR.length(24), this, "");
 
     /**
      * The column <code>isy.student.id_card</code>.
@@ -80,7 +79,7 @@ public class Student extends TableImpl<StudentRecord> {
     /**
      * The column <code>isy.student.family_residence</code>.
      */
-    public final TableField<StudentRecord, String> FAMILY_RESIDENCE = createField("family_residence", org.jooq.impl.SQLDataType.VARCHAR.length(600), this, "");
+    public final TableField<StudentRecord, String> FAMILY_RESIDENCE = createField("family_residence", org.jooq.impl.SQLDataType.VARCHAR.length(192), this, "");
 
     /**
      * The column <code>isy.student.political_landscape_id</code>.
@@ -95,22 +94,22 @@ public class Student extends TableImpl<StudentRecord> {
     /**
      * The column <code>isy.student.dormitory_number</code>.
      */
-    public final TableField<StudentRecord, String> DORMITORY_NUMBER = createField("dormitory_number", org.jooq.impl.SQLDataType.VARCHAR.length(15), this, "");
+    public final TableField<StudentRecord, String> DORMITORY_NUMBER = createField("dormitory_number", org.jooq.impl.SQLDataType.VARCHAR.length(24), this, "");
 
     /**
      * The column <code>isy.student.parent_name</code>.
      */
-    public final TableField<StudentRecord, String> PARENT_NAME = createField("parent_name", org.jooq.impl.SQLDataType.VARCHAR.length(10), this, "");
+    public final TableField<StudentRecord, String> PARENT_NAME = createField("parent_name", org.jooq.impl.SQLDataType.VARCHAR.length(48), this, "");
 
     /**
      * The column <code>isy.student.parent_contact_phone</code>.
      */
-    public final TableField<StudentRecord, String> PARENT_CONTACT_PHONE = createField("parent_contact_phone", org.jooq.impl.SQLDataType.VARCHAR.length(15), this, "");
+    public final TableField<StudentRecord, String> PARENT_CONTACT_PHONE = createField("parent_contact_phone", org.jooq.impl.SQLDataType.VARCHAR.length(48), this, "");
 
     /**
      * The column <code>isy.student.place_origin</code>.
      */
-    public final TableField<StudentRecord, String> PLACE_ORIGIN = createField("place_origin", org.jooq.impl.SQLDataType.VARCHAR.length(500), this, "");
+    public final TableField<StudentRecord, String> PLACE_ORIGIN = createField("place_origin", org.jooq.impl.SQLDataType.VARCHAR.length(112), this, "");
 
     /**
      * The column <code>isy.student.organize_id</code>.

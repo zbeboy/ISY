@@ -398,7 +398,7 @@ open class StaffController {
                 staff.politicalLandscapeId = staffVo.politicalLandscapeId
                 staff.academicTitleId = staffVo.academicTitleId
                 if (StringUtils.hasLength(staffVo.birthday)) {
-                    staff.birthday = DateTimeUtils.formatDate(staffVo.birthday!!)
+                    staff.birthday = DateTimeUtils.formatDate(staffVo.birthday!!).toString()
                 } else {
                     staff.birthday = null
                 }
