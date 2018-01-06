@@ -15,16 +15,18 @@ import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.Users
+import top.zbeboy.isy.domain.tables.pojos.UsersKey
+import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.elastic.pojo.StudentElastic
 import top.zbeboy.isy.glue.data.StudentGlue
 import top.zbeboy.isy.service.cache.CacheManageService
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.StudentService
+import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.system.MailService
-import top.zbeboy.isy.service.util.BCryptUtils
-import top.zbeboy.isy.service.util.DateTimeUtils
-import top.zbeboy.isy.service.util.RandomUtils
-import top.zbeboy.isy.service.util.RequestUtils
+import top.zbeboy.isy.service.util.*
 import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.platform.common.RoleMethodControllerCommon
 import top.zbeboy.isy.web.platform.common.UsersMethodControllerCommon
@@ -68,6 +70,15 @@ open class StudentController {
 
     @Resource
     open lateinit var studentGlue: StudentGlue
+
+    @Resource
+    open lateinit var desService: DesService
+
+    @Resource
+    open lateinit var usersKeyService: UsersKeyService
+
+    @Resource
+    open lateinit var usersUniqueInfoService: UsersUniqueInfoService
 
     @Resource
     open lateinit var roleMethodControllerCommon: RoleMethodControllerCommon
@@ -186,7 +197,13 @@ open class StudentController {
                                         saveStudent.username = email
                                         studentService.save(saveStudent)
 
-                                        //清空session
+                                        // 为该用户产生一个密钥KEY
+                                        val usersKey = UsersKey()
+                                        usersKey.username = desService.encrypt(email, isyProperties.getSecurity().desDefaultKey!!)
+                                        usersKey.userKey = UUIDUtils.getUUID()
+                                        usersKeyService.save(usersKey)
+
+                                        // 清空session
                                         session.removeAttribute("mobileExpiry")
                                         session.removeAttribute("mobile")
                                         session.removeAttribute("mobileCode")
@@ -400,26 +417,63 @@ open class StudentController {
                 }
                 usersService.update(users)
 
+                val usersKey = usersKeyService.findByUsername(studentVo.username!!)
                 val student = studentService.findByUsername(studentVo.username!!)
                 student.studentNumber = studentVo.studentNumber
-                student.sex = studentVo.sex
                 student.nationId = studentVo.nationId
                 student.politicalLandscapeId = studentVo.politicalLandscapeId
                 if (StringUtils.hasLength(studentVo.birthday)) {
-                    student.birthday = DateTimeUtils.formatDate(studentVo.birthday!!).toString()
+                    student.birthday = desService.encrypt(DateTimeUtils.formatDate(studentVo.birthday!!).toString(), usersKey.userKey)
                 } else {
                     student.birthday = null
                 }
-                student.dormitoryNumber = studentVo.dormitoryNumber
-                if (StringUtils.hasLength(studentVo.idCard)) {
-                    student.idCard = studentVo.idCard
+
+                if (StringUtils.hasLength(studentVo.sex)) {
+                    student.sex = desService.encrypt(studentVo.sex!!, usersKey.userKey)
                 } else {
-                    student.idCard = null
+                    student.sex = null
                 }
-                student.familyResidence = studentVo.familyResidence
-                student.parentName = studentVo.parentName
-                student.parentContactPhone = studentVo.parentContactPhone
-                student.placeOrigin = studentVo.placeOrigin
+
+                if (StringUtils.hasLength(studentVo.familyResidence)) {
+                    student.familyResidence = desService.encrypt(studentVo.familyResidence!!, usersKey.userKey)
+                } else {
+                    student.familyResidence = null
+                }
+
+                if (StringUtils.hasLength(studentVo.dormitoryNumber)) {
+                    student.dormitoryNumber = desService.encrypt(studentVo.dormitoryNumber!!, usersKey.userKey)
+                } else {
+                    student.dormitoryNumber = null
+                }
+
+                if (StringUtils.hasLength(studentVo.parentName)) {
+                    student.parentName = desService.encrypt(studentVo.parentName!!, usersKey.userKey)
+                } else {
+                    student.parentName = null
+                }
+
+                if (StringUtils.hasLength(studentVo.parentContactPhone)) {
+                    student.parentContactPhone = desService.encrypt(studentVo.parentContactPhone!!, usersKey.userKey)
+                } else {
+                    student.parentContactPhone = null
+                }
+
+                if (StringUtils.hasLength(studentVo.placeOrigin)) {
+                    student.placeOrigin = desService.encrypt(studentVo.placeOrigin!!, usersKey.userKey)
+                } else {
+                    student.placeOrigin = null
+                }
+
+                val key = isyProperties.getSecurity().desDefaultKey
+                val usersUniqueInfo = UsersUniqueInfo()
+                usersUniqueInfo.username = desService.encrypt(studentVo.username!!, key!!)
+                if (StringUtils.hasLength(studentVo.idCard)) {
+                    usersUniqueInfo.idCard = desService.encrypt(studentVo.idCard!!, key)
+                } else {
+                    usersUniqueInfo.idCard = null
+                }
+                usersUniqueInfoService.saveOrUpdate(usersUniqueInfo)
+
                 studentService.update(student)
                 return AjaxUtils.of<Any>().success()
             } catch (e: ParseException) {

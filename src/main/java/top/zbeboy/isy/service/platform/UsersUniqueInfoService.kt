@@ -29,6 +29,13 @@ interface UsersUniqueInfoService {
     fun update(usersUniqueInfo: UsersUniqueInfo)
 
     /**
+     * 保存或更新
+     *
+     * @param usersUniqueInfo 数据
+     */
+    fun saveOrUpdate(usersUniqueInfo: UsersUniqueInfo)
+
+    /**
      * 通过用户账号删除
      *
      * @param username 账号

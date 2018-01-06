@@ -120,11 +120,9 @@ open class TestService {
 
     @Test
     fun encryptUserInfo() {
-        val defaultKey = iSYProperties.getSecurity().desDefaultKey
         val students = studentDao.findAll()
         students.forEach { student ->
-            val username = desService.encrypt(student.username, defaultKey!!)
-            val usersKey = usersKeyService.findByUsername(username)
+            val usersKey = usersKeyService.findByUsername(student.username)
             if (!ObjectUtils.isEmpty(student.birthday)) {
                 student.birthday = desService.encrypt(student.birthday, usersKey.userKey)
             }
@@ -158,8 +156,7 @@ open class TestService {
 
         val staffs = staffDao.findAll()
         staffs.forEach { staff ->
-            val username = desService.encrypt(staff.username, defaultKey!!)
-            val usersKey = usersKeyService.findByUsername(username)
+            val usersKey = usersKeyService.findByUsername(staff.username)
             if (!ObjectUtils.isEmpty(staff.birthday)) {
                 staff.birthday = desService.encrypt(staff.birthday, usersKey.userKey)
             }
