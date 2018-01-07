@@ -7,7 +7,9 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
+import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.system.AuthoritiesService
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.SmallPropsUtils
@@ -33,6 +35,12 @@ open class UsersMethodControllerCommon {
 
     @Resource
     open lateinit var staffService: StaffService
+
+    @Resource
+    open lateinit var usersKeyService: UsersKeyService
+
+    @Resource
+    open lateinit var usersUniqueInfoService: UsersUniqueInfoService
 
     /**
      * 更新用户状态
@@ -73,12 +81,16 @@ open class UsersMethodControllerCommon {
                             -> {
                                 studentService.deleteByUsername(id)
                                 usersService.deleteById(id)
+                                usersKeyService.deleteByUsername(id)
+                                usersUniqueInfoService.deleteByUsername(id)
                                 ajaxUtils.success().msg("删除用户成功")
                             }
                             Workbook.STAFF_USERS_TYPE  // 教职工
                             -> {
                                 staffService.deleteByUsername(id)
                                 usersService.deleteById(id)
+                                usersKeyService.deleteByUsername(id)
+                                usersUniqueInfoService.deleteByUsername(id)
                                 ajaxUtils.success().msg("删除用户成功")
                             }
                             else -> {

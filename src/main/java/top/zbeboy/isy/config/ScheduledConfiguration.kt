@@ -14,7 +14,9 @@ import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
 import top.zbeboy.isy.service.internship.InternshipApplyService
 import top.zbeboy.isy.service.internship.InternshipReleaseService
+import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.system.AuthoritiesService
 import top.zbeboy.isy.service.system.SystemAlertService
 import top.zbeboy.isy.service.system.SystemMessageService
@@ -88,6 +90,12 @@ open class ScheduledConfiguration {
     @Autowired
     lateinit open var staffElasticRepository: StaffElasticRepository
 
+    @Resource
+    open lateinit var usersKeyService: UsersKeyService
+
+    @Resource
+    open lateinit var usersUniqueInfoService: UsersUniqueInfoService
+
     /**
      * 清理未验证用户信息
      */
@@ -110,6 +118,8 @@ open class ScheduledConfiguration {
             }
             this.usersService.deleteById(r.username)
             this.usersElasticRepository.delete(r.username)
+            this.usersKeyService.deleteByUsername(r.username)
+            this.usersUniqueInfoService.deleteByUsername(r.username)
         }
         log.info(">>>>>>>>>>>>> scheduled ... clean users ")
     }
