@@ -1075,6 +1075,9 @@ open class InternshipApplyController {
      */
     private fun buildCommonModelMap(modelMap: ModelMap, errorBean: ErrorBean<InternshipRelease>) {
         val studentBean = errorBean.mapData!!["student"] as StudentBean
+        val usersKey = cacheManageService.getUsersKey(studentBean.username!!)
+        studentBean.sex = methodControllerCommon.decryptPersonalData(studentBean.sex, usersKey)
+        studentBean.parentContactPhone = methodControllerCommon.decryptPersonalData(studentBean.parentContactPhone, usersKey)
         var qqMail = ""
         if (studentBean.username.toLowerCase().contains("@qq.com")) {
             qqMail = studentBean.username
