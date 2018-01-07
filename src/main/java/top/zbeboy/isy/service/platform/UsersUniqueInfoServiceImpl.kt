@@ -39,8 +39,9 @@ open class UsersUniqueInfoServiceImpl @Autowired constructor(dslContext: DSLCont
 
     override fun findByIdCardNeUsername(username: String, idCard: String): Result<UsersUniqueInfoRecord> {
         val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
+        val card = desService.encrypt(idCard, isyProperties.getSecurity().desDefaultKey!!)
         return create.selectFrom(USERS_UNIQUE_INFO)
-                .where(USERS_UNIQUE_INFO.ID_CARD.eq(idCard).and(USERS_UNIQUE_INFO.USERNAME.ne(id))).fetch()
+                .where(USERS_UNIQUE_INFO.ID_CARD.eq(card).and(USERS_UNIQUE_INFO.USERNAME.ne(id))).fetch()
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
