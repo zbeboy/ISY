@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.ui.ModelMap
 import org.springframework.util.ObjectUtils
+import org.springframework.util.StringUtils
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.service.cache.CacheManageService
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.common.FilesService
 import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.data.BuildingService
@@ -72,6 +74,9 @@ open class MethodControllerCommon {
 
     @Resource
     lateinit open var filesService: FilesService
+
+    @Resource
+    open lateinit var desService: DesService
 
     /**
      * 通过毕业设计发布 生成楼数据
@@ -194,5 +199,33 @@ open class MethodControllerCommon {
         if (!ObjectUtils.isEmpty(files)) {
             uploadService.download(files.originalFileName, files.relativePath, response, request)
         }
+    }
+
+    /**
+     * 加密个人数据
+     *
+     * @param param 待加密数据
+     * @param usersKey 用户KEY
+     */
+    fun encryptPersonalData(param: String?, usersKey: String): String? {
+        var data = param
+        if (StringUtils.hasLength(data)) {
+            data = desService.encrypt(data!!, usersKey)
+        }
+        return data
+    }
+
+    /**
+     * 解密个人数据
+     *
+     * @param param 待加密数据
+     * @param usersKey 用户KEY
+     */
+    fun decryptPersonalData(param: String?, usersKey: String): String? {
+        var data = param
+        if (StringUtils.hasLength(data)) {
+            data = desService.decrypt(data, usersKey)
+        }
+        return data
     }
 }
