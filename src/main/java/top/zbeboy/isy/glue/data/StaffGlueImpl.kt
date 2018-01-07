@@ -6,21 +6,27 @@ import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.sort.SortBuilders
 import org.elasticsearch.search.sort.SortOrder
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Repository
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
+import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
+import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.elastic.repository.StaffElasticRepository
 import top.zbeboy.isy.glue.common.MethodGlueCommon
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.cache.CacheManageService
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.platform.RoleService
+import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.util.DataTablesUtils
@@ -36,6 +42,9 @@ open class StaffGlueImpl : StaffGlue {
     @Resource
     open lateinit var staffElasticRepository: StaffElasticRepository
 
+    @Autowired
+    open lateinit var isyProperties: ISYProperties
+
     @Resource
     open lateinit var roleService: RoleService
 
@@ -47,6 +56,15 @@ open class StaffGlueImpl : StaffGlue {
 
     @Resource
     open lateinit var cacheManageService: CacheManageService
+
+    @Resource
+    open lateinit var desService: DesService
+
+    @Resource
+    open lateinit var usersKeyService: UsersKeyService
+
+    @Resource
+    open lateinit var usersUniqueInfoService: UsersUniqueInfoService
 
     override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): ResultUtils<List<StaffBean>> {
         val search = dataTablesUtils.search
@@ -117,10 +135,6 @@ open class StaffGlueImpl : StaffGlue {
             val staffBean = StaffBean()
             staffBean.staffId = staffElastic.getStaffId()
             staffBean.staffNumber = staffElastic.staffNumber
-            staffBean.birthday = staffElastic.birthday
-            staffBean.sex = staffElastic.sex
-            staffBean.idCard = staffElastic.idCard
-            staffBean.familyResidence = staffElastic.familyResidence
             staffBean.politicalLandscapeId = staffElastic.politicalLandscapeId
             staffBean.politicalLandscapeName = staffElastic.politicalLandscapeName
             staffBean.nationId = staffElastic.nationId
@@ -143,6 +157,7 @@ open class StaffGlueImpl : StaffGlue {
             staffBean.langKey = staffElastic.langKey
             staffBean.joinDate = staffElastic.joinDate
             staffBean.roleName = staffElastic.roleName
+            decryptData(staffBean, staffElastic)
             staffs.add(staffBean)
         }
         return staffs
@@ -428,5 +443,35 @@ open class StaffGlueImpl : StaffGlue {
      */
     private fun buildStaffNoExistsAuthoritiesCondition(): BoolQueryBuilder {
         return methodGlueCommon.buildNoExistsAuthoritiesCondition()
+    }
+
+    /**
+     * 对数据进行解密
+     * 注意:目前仅对Glue服务中的findAll数据解密，未对Service中的数据解密
+     *
+     * @param staffBean 解密后数据
+     * @param staffElastic 解密前数据
+     */
+    private fun decryptData(staffBean: StaffBean, staffElastic: StaffElastic) {
+        val usersKey = usersKeyService.findByUsername(staffElastic.username!!)
+        if (StringUtils.hasLength(staffElastic.birthday)) {
+            staffBean.birthday = desService.decrypt(staffElastic.birthday, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(staffElastic.sex)) {
+            staffBean.sex = desService.decrypt(staffElastic.sex, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(staffElastic.familyResidence)) {
+            staffBean.familyResidence = desService.decrypt(staffElastic.familyResidence, usersKey.userKey)
+        }
+
+        val usersUniqueInfo = usersUniqueInfoService.findByUsername(staffElastic.username!!)
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            val key = isyProperties.getSecurity().desDefaultKey
+            if (StringUtils.hasLength(usersUniqueInfo!!.idCard)) {
+                staffBean.idCard = desService.decrypt(usersUniqueInfo.idCard, key!!)
+            }
+        }
     }
 }

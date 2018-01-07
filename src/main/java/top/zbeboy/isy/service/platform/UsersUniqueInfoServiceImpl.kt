@@ -32,7 +32,7 @@ open class UsersUniqueInfoServiceImpl @Autowired constructor(dslContext: DSLCont
     @Resource
     open lateinit var desService: DesService
 
-    override fun findByUsername(username: String): UsersUniqueInfo {
+    override fun findByUsername(username: String): UsersUniqueInfo? {
         val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
         return usersUniqueInfoDao.findById(id)
     }

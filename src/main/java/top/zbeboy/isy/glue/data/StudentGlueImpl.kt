@@ -7,12 +7,14 @@ import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.sort.SortBuilders
 import org.elasticsearch.search.sort.SortOrder
 import org.jooq.SQL
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Repository
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
+import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.pojo.StudentElastic
@@ -20,8 +22,11 @@ import top.zbeboy.isy.elastic.repository.StudentElasticRepository
 import top.zbeboy.isy.glue.common.MethodGlueCommon
 import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.cache.CacheManageService
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.platform.RoleService
+import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.util.DataTablesUtils
@@ -37,6 +42,9 @@ open class StudentGlueImpl : StudentGlue {
     @Resource
     open lateinit var studentElasticRepository: StudentElasticRepository
 
+    @Autowired
+    open lateinit var isyProperties: ISYProperties
+
     @Resource
     open lateinit var roleService: RoleService
 
@@ -48,6 +56,15 @@ open class StudentGlueImpl : StudentGlue {
 
     @Resource
     open lateinit var cacheManageService: CacheManageService
+
+    @Resource
+    open lateinit var desService: DesService
+
+    @Resource
+    open lateinit var usersKeyService: UsersKeyService
+
+    @Resource
+    open lateinit var usersUniqueInfoService: UsersUniqueInfoService
 
     override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): ResultUtils<List<StudentBean>> {
         val search = dataTablesUtils.search
@@ -118,18 +135,10 @@ open class StudentGlueImpl : StudentGlue {
             val studentBean = StudentBean()
             studentBean.studentId = studentElastic.getStudentId()
             studentBean.studentNumber = studentElastic.studentNumber
-            studentBean.birthday = studentElastic.birthday
-            studentBean.sex = studentElastic.sex
-            studentBean.idCard = studentElastic.idCard
-            studentBean.familyResidence = studentElastic.familyResidence
             studentBean.politicalLandscapeId = studentElastic.politicalLandscapeId
             studentBean.politicalLandscapeName = studentElastic.politicalLandscapeName
             studentBean.nationId = studentElastic.nationId
             studentBean.nationName = studentElastic.nationName
-            studentBean.dormitoryNumber = studentElastic.dormitoryNumber
-            studentBean.parentName = studentElastic.parentName
-            studentBean.parentContactPhone = studentElastic.parentContactPhone
-            studentBean.placeOrigin = studentElastic.placeOrigin
             studentBean.schoolId = studentElastic.schoolId
             studentBean.schoolName = studentElastic.schoolName
             studentBean.collegeId = studentElastic.collegeId
@@ -150,6 +159,7 @@ open class StudentGlueImpl : StudentGlue {
             studentBean.langKey = studentElastic.langKey
             studentBean.joinDate = studentElastic.joinDate
             studentBean.roleName = studentElastic.roleName
+            decryptData(studentBean, studentElastic)
             students.add(studentBean)
         }
         return students
@@ -497,5 +507,51 @@ open class StudentGlueImpl : StudentGlue {
      */
     private fun buildStudentNoExistsAuthoritiesCondition(): BoolQueryBuilder {
         return methodGlueCommon.buildNoExistsAuthoritiesCondition()
+    }
+
+    /**
+     * 对数据进行解密
+     * 注意:目前仅对Glue服务中的findAll数据解密，未对Service中的数据解密
+     *
+     * @param studentBean 解密后数据
+     * @param studentElastic 解密前数据
+     */
+    private fun decryptData(studentBean: StudentBean, studentElastic: StudentElastic) {
+        val usersKey = usersKeyService.findByUsername(studentElastic.username!!)
+        if (StringUtils.hasLength(studentElastic.birthday)) {
+            studentBean.birthday = desService.decrypt(studentElastic.birthday, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentElastic.sex)) {
+            studentBean.sex = desService.decrypt(studentElastic.sex, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentElastic.familyResidence)) {
+            studentBean.familyResidence = desService.decrypt(studentElastic.familyResidence, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentElastic.dormitoryNumber)) {
+            studentBean.dormitoryNumber = desService.decrypt(studentElastic.dormitoryNumber, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentElastic.parentName)) {
+            studentBean.parentName = desService.decrypt(studentElastic.parentName, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentElastic.parentContactPhone)) {
+            studentBean.parentContactPhone = desService.decrypt(studentElastic.parentContactPhone, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentElastic.placeOrigin)) {
+            studentBean.placeOrigin = desService.decrypt(studentElastic.placeOrigin, usersKey.userKey)
+        }
+
+        val usersUniqueInfo = usersUniqueInfoService.findByUsername(studentElastic.username!!)
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            val key = isyProperties.getSecurity().desDefaultKey
+            if (StringUtils.hasLength(usersUniqueInfo!!.idCard)) {
+                studentBean.idCard = desService.decrypt(usersUniqueInfo.idCard, key!!)
+            }
+        }
     }
 }

@@ -22,9 +22,11 @@ import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.domain.tables.pojos.UsersType
 import top.zbeboy.isy.glue.platform.UsersGlue
 import top.zbeboy.isy.service.cache.CacheManageService
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
+import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersTypeService
 import top.zbeboy.isy.service.platform.UsersUniqueInfoService
@@ -134,6 +136,12 @@ open class UsersController {
 
     @Resource
     open lateinit var usersUniqueInfoService: UsersUniqueInfoService
+
+    @Resource
+    open lateinit var desService: DesService
+
+    @Resource
+    open lateinit var usersKeyService: UsersKeyService
 
     @Resource
     open lateinit var roleMethodControllerCommon: RoleMethodControllerCommon
@@ -781,6 +789,7 @@ open class UsersController {
         val student = studentService.findByUsernameRelation(users.username)
         if (student.isPresent) {
             val studentBean = student.get().into(StudentBean::class.java)
+            decryptStudentData(studentBean)
             modelMap.addAttribute("avatarForSaveOrUpdate", studentBean.avatar)
             val showAvatar = getAvatar(studentBean.avatar!!, request)
             studentBean.avatar = showAvatar
@@ -804,6 +813,7 @@ open class UsersController {
         val staff = staffService.findByUsernameRelation(users.username)
         if (staff.isPresent) {
             val staffBean = staff.get().into(StaffBean::class.java)
+            decryptStaffData(staffBean)
             modelMap.addAttribute("avatarForSaveOrUpdate", staffBean.avatar)
             val showAvatar = getAvatar(staffBean.avatar!!, request)
             staffBean.avatar = showAvatar
@@ -824,6 +834,78 @@ open class UsersController {
         val showAvatar = getAvatar(newUsers.avatar, request)
         newUsers.avatar = showAvatar
         modelMap.addAttribute("user", newUsers)
+    }
+
+    /**
+     * 解密学生数据
+     *
+     * @param studentBean 学生
+     */
+    private fun decryptStudentData(studentBean: StudentBean) {
+        val usersKey = usersKeyService.findByUsername(studentBean.username!!)
+        if (StringUtils.hasLength(studentBean.birthday)) {
+            studentBean.birthday = desService.decrypt(studentBean.birthday, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.sex)) {
+            studentBean.sex = desService.decrypt(studentBean.sex, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.familyResidence)) {
+            studentBean.familyResidence = desService.decrypt(studentBean.familyResidence, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.dormitoryNumber)) {
+            studentBean.dormitoryNumber = desService.decrypt(studentBean.dormitoryNumber, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.parentName)) {
+            studentBean.parentName = desService.decrypt(studentBean.parentName, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.parentContactPhone)) {
+            studentBean.parentContactPhone = desService.decrypt(studentBean.parentContactPhone, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.placeOrigin)) {
+            studentBean.placeOrigin = desService.decrypt(studentBean.placeOrigin, usersKey.userKey)
+        }
+
+        val usersUniqueInfo = usersUniqueInfoService.findByUsername(studentBean.username!!)
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            val key = isyProperties.getSecurity().desDefaultKey
+            if (StringUtils.hasLength(usersUniqueInfo!!.idCard)) {
+                studentBean.idCard = desService.decrypt(usersUniqueInfo.idCard, key!!)
+            }
+        }
+    }
+
+    /**
+     * 解密教职工数据
+     *
+     * @param staffBean 教职工
+     */
+    private fun decryptStaffData(staffBean: StaffBean) {
+        val usersKey = usersKeyService.findByUsername(staffBean.username!!)
+        if (StringUtils.hasLength(staffBean.birthday)) {
+            staffBean.birthday = desService.decrypt(staffBean.birthday, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(staffBean.sex)) {
+            staffBean.sex = desService.decrypt(staffBean.sex, usersKey.userKey)
+        }
+
+        if (StringUtils.hasLength(staffBean.familyResidence)) {
+            staffBean.familyResidence = desService.decrypt(staffBean.familyResidence, usersKey.userKey)
+        }
+
+        val usersUniqueInfo = usersUniqueInfoService.findByUsername(staffBean.username!!)
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            val key = isyProperties.getSecurity().desDefaultKey
+            if (StringUtils.hasLength(usersUniqueInfo!!.idCard)) {
+                staffBean.idCard = desService.decrypt(usersUniqueInfo.idCard, key!!)
+            }
+        }
     }
 
     /**

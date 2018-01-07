@@ -14,7 +14,7 @@ interface UsersUniqueInfoService {
      * @param username 账号
      * @return 数据
      */
-    fun findByUsername(username: String): UsersUniqueInfo
+    fun findByUsername(username: String): UsersUniqueInfo?
 
     /**
      * 根据身份证号号查询 注：不等于用户账号
