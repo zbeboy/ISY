@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.*
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.data.StudentService
 import top.zbeboy.isy.service.internship.*
 import top.zbeboy.isy.service.platform.UsersService
@@ -86,6 +87,9 @@ open class InternshipReviewController {
 
     @Resource
     open lateinit var internshipConditionCommon: InternshipConditionCommon
+
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
 
 
     /**
@@ -289,6 +293,10 @@ open class InternshipReviewController {
                     val internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCollegeRecord.isPresent) {
                         val internshipCollege = internshipCollegeRecord.get().into(InternshipCollege::class.java)
+                        val student = cacheManageService.getStudentByStudentId(internshipCollege.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        internshipCollege.studentSex = methodControllerCommon.decryptPersonalData(internshipCollege.studentSex, usersKey)
+                        internshipCollege.parentalContact = methodControllerCommon.decryptPersonalData(internshipCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCollege)
                         "web/internship/review/internship_college_detail::#page-wrapper"
                     } else {
@@ -299,6 +307,10 @@ open class InternshipReviewController {
                     val internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCompanyRecord.isPresent) {
                         val internshipCompany = internshipCompanyRecord.get().into(InternshipCompany::class.java)
+                        val student = cacheManageService.getStudentByStudentId(internshipCompany.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        internshipCompany.studentSex = methodControllerCommon.decryptPersonalData(internshipCompany.studentSex, usersKey)
+                        internshipCompany.parentalContact = methodControllerCommon.decryptPersonalData(internshipCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCompany)
                         "web/internship/review/internship_company_detail::#page-wrapper"
                     } else {
@@ -309,6 +321,10 @@ open class InternshipReviewController {
                     val graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCollegeRecord.isPresent) {
                         val graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege::class.java)
+                        val student = cacheManageService.getStudentByStudentId(graduationPracticeCollege.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeCollege.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.studentSex, usersKey)
+                        graduationPracticeCollege.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCollege)
                         "web/internship/review/graduation_practice_college_detail::#page-wrapper"
                     } else {
@@ -319,6 +335,10 @@ open class InternshipReviewController {
                     val graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeUnifyRecord.isPresent) {
                         val graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify::class.java)
+                        val student = cacheManageService.getStudentByStudentId(graduationPracticeUnify.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeUnify.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.studentSex, usersKey)
+                        graduationPracticeUnify.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeUnify)
                         "web/internship/review/graduation_practice_unify_detail::#page-wrapper"
                     } else {
@@ -329,6 +349,10 @@ open class InternshipReviewController {
                     val graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCompanyRecord.isPresent) {
                         val graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany::class.java)
+                        val student = cacheManageService.getStudentByStudentId(graduationPracticeCompany.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeCompany.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.studentSex, usersKey)
+                        graduationPracticeCompany.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCompany)
                         "web/internship/review/graduation_practice_company_detail::#page-wrapper"
                     } else {

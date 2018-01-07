@@ -32,6 +32,14 @@ interface CacheManageService {
     fun getUsersKey(username: String): String
 
     /**
+     * 通过学生id获取学生账号
+     *
+     * @param studentId 学生id
+     * @return 学生
+     */
+    fun getStudentByStudentId(studentId: Int): Student
+
+    /**
      * 获取角色院id
      *
      * @param users 用户信息

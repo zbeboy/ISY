@@ -345,6 +345,12 @@ open class InternshipStatisticsController {
             var internshipColleges: List<InternshipCollege> = ArrayList()
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 internshipColleges = records.into(InternshipCollege::class.java)
+                internshipColleges.forEach { data ->
+                    val student = cacheManageService.getStudentByStudentId(data.studentId)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                    data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                }
             }
             dataTablesUtils.data = internshipColleges
             dataTablesUtils.setiTotalRecords(internshipCollegeService.countAll(internshipCollege).toLong())
@@ -378,6 +384,12 @@ open class InternshipStatisticsController {
                 var internshipColleges: List<InternshipCollege> = ArrayList()
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     internshipColleges = records.into(InternshipCollege::class.java)
+                    internshipColleges.forEach { data ->
+                        val student = cacheManageService.getStudentByStudentId(data.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                        data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                    }
                 }
                 if (StringUtils.isNotBlank(exportBean.fileName)) {
                     fileName = exportBean.fileName
@@ -444,6 +456,12 @@ open class InternshipStatisticsController {
             var internshipCompanies: List<InternshipCompany> = ArrayList()
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 internshipCompanies = records.into(InternshipCompany::class.java)
+                internshipCompanies.forEach { data ->
+                    val student = cacheManageService.getStudentByStudentId(data.studentId)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                    data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                }
             }
             dataTablesUtils.data = internshipCompanies
             dataTablesUtils.setiTotalRecords(internshipCompanyService.countAll(internshipCompany).toLong())
@@ -477,6 +495,12 @@ open class InternshipStatisticsController {
                 var internshipCompanies: List<InternshipCompany> = ArrayList()
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     internshipCompanies = records.into(InternshipCompany::class.java)
+                    internshipCompanies.forEach { data ->
+                        val student = cacheManageService.getStudentByStudentId(data.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                        data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                    }
                 }
                 if (StringUtils.isNotBlank(exportBean.fileName)) {
                     fileName = exportBean.fileName
@@ -543,6 +567,12 @@ open class InternshipStatisticsController {
             var graduationPracticeCompanies: List<GraduationPracticeCompany> = ArrayList()
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 graduationPracticeCompanies = records.into(GraduationPracticeCompany::class.java)
+                graduationPracticeCompanies.forEach { data ->
+                    val student = cacheManageService.getStudentByStudentId(data.studentId)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                    data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                }
             }
             dataTablesUtils.data = graduationPracticeCompanies
             dataTablesUtils.setiTotalRecords(graduationPracticeCompanyService.countAll(graduationPracticeCompany).toLong())
@@ -576,6 +606,12 @@ open class InternshipStatisticsController {
                 var graduationPracticeCompanies: List<GraduationPracticeCompany> = ArrayList()
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     graduationPracticeCompanies = records.into(GraduationPracticeCompany::class.java)
+                    graduationPracticeCompanies.forEach { data ->
+                        val student = cacheManageService.getStudentByStudentId(data.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                        data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                    }
                 }
                 if (StringUtils.isNotBlank(exportBean.fileName)) {
                     fileName = exportBean.fileName
@@ -642,6 +678,12 @@ open class InternshipStatisticsController {
             var graduationPracticeColleges: List<GraduationPracticeCollege> = ArrayList()
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 graduationPracticeColleges = records.into(GraduationPracticeCollege::class.java)
+                graduationPracticeColleges.forEach { data ->
+                    val student = cacheManageService.getStudentByStudentId(data.studentId)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                    data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                }
             }
             dataTablesUtils.data = graduationPracticeColleges
             dataTablesUtils.setiTotalRecords(graduationPracticeCollegeService.countAll(graduationPracticeCollege).toLong())
@@ -675,6 +717,12 @@ open class InternshipStatisticsController {
                 var graduationPracticeColleges: List<GraduationPracticeCollege> = ArrayList()
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     graduationPracticeColleges = records.into(GraduationPracticeCollege::class.java)
+                    graduationPracticeColleges.forEach { data ->
+                        val student = cacheManageService.getStudentByStudentId(data.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                        data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                    }
                 }
                 if (StringUtils.isNotBlank(exportBean.fileName)) {
                     fileName = exportBean.fileName
@@ -741,6 +789,12 @@ open class InternshipStatisticsController {
             var graduationPracticeUnifies: List<GraduationPracticeUnify> = ArrayList()
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 graduationPracticeUnifies = records.into(GraduationPracticeUnify::class.java)
+                graduationPracticeUnifies.forEach { data ->
+                    val student = cacheManageService.getStudentByStudentId(data.studentId)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                    data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                }
             }
             dataTablesUtils.data = graduationPracticeUnifies
             dataTablesUtils.setiTotalRecords(graduationPracticeUnifyService.countAll(graduationPracticeUnify).toLong())
@@ -774,6 +828,12 @@ open class InternshipStatisticsController {
                 var graduationPracticeUnifies: List<GraduationPracticeUnify> = ArrayList()
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     graduationPracticeUnifies = records.into(GraduationPracticeUnify::class.java)
+                    graduationPracticeUnifies.forEach { data ->
+                        val student = cacheManageService.getStudentByStudentId(data.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
+                        data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
+                    }
                 }
                 if (StringUtils.isNotBlank(exportBean.fileName)) {
                     fileName = exportBean.fileName

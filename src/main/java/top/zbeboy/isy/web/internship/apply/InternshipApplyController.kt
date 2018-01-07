@@ -223,6 +223,10 @@ open class InternshipApplyController {
                     val internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCollegeRecord.isPresent) {
                         val internshipCollege = internshipCollegeRecord.get().into(InternshipCollege::class.java)
+                        val student = cacheManageService.getStudentByStudentId(internshipCollege.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        internshipCollege.studentSex = methodControllerCommon.decryptPersonalData(internshipCollege.studentSex, usersKey)
+                        internshipCollege.parentalContact = methodControllerCommon.decryptPersonalData(internshipCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCollege)
                         modelMap.addAttribute("internshipApply", errorBean.mapData!!["internshipApply"])
                         page = "web/internship/apply/internship_college_edit::#page-wrapper"
@@ -236,6 +240,10 @@ open class InternshipApplyController {
                     val internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCompanyRecord.isPresent) {
                         val internshipCompany = internshipCompanyRecord.get().into(InternshipCompany::class.java)
+                        val student = cacheManageService.getStudentByStudentId(internshipCompany.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        internshipCompany.studentSex = methodControllerCommon.decryptPersonalData(internshipCompany.studentSex, usersKey)
+                        internshipCompany.parentalContact = methodControllerCommon.decryptPersonalData(internshipCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCompany)
                         modelMap.addAttribute("internshipApply", errorBean.mapData!!["internshipApply"])
                         page = "web/internship/apply/internship_company_edit::#page-wrapper"
@@ -249,6 +257,10 @@ open class InternshipApplyController {
                     val graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCollegeRecord.isPresent) {
                         val graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege::class.java)
+                        val student = cacheManageService.getStudentByStudentId(graduationPracticeCollege.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeCollege.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.studentSex, usersKey)
+                        graduationPracticeCollege.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCollege)
                         modelMap.addAttribute("internshipApply", errorBean.mapData!!["internshipApply"])
                         page = "web/internship/apply/graduation_practice_college_edit::#page-wrapper"
@@ -262,6 +274,10 @@ open class InternshipApplyController {
                     val graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeUnifyRecord.isPresent) {
                         val graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify::class.java)
+                        val student = cacheManageService.getStudentByStudentId(graduationPracticeUnify.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeUnify.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.studentSex, usersKey)
+                        graduationPracticeUnify.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeUnify)
                         modelMap.addAttribute("internshipApply", errorBean.mapData!!["internshipApply"])
                         page = "web/internship/apply/graduation_practice_unify_edit::#page-wrapper"
@@ -275,6 +291,10 @@ open class InternshipApplyController {
                     val graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCompanyRecord.isPresent) {
                         val graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany::class.java)
+                        val student = cacheManageService.getStudentByStudentId(graduationPracticeCompany.studentId)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeCompany.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.studentSex, usersKey)
+                        graduationPracticeCompany.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCompany)
                         modelMap.addAttribute("internshipApply", errorBean.mapData!!["internshipApply"])
                         page = "web/internship/apply/graduation_practice_company_edit::#page-wrapper"
@@ -318,6 +338,9 @@ open class InternshipApplyController {
                     val internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCollegeRecord.isPresent) {
                         val internshipCollege = internshipCollegeRecord.get().into(InternshipCollege::class.java)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        internshipCollege.studentSex = methodControllerCommon.decryptPersonalData(internshipCollege.studentSex, usersKey)
+                        internshipCollege.parentalContact = methodControllerCommon.decryptPersonalData(internshipCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCollege)
                         page = "web/internship/apply/internship_college_detail::#page-wrapper"
                     } else {
@@ -328,6 +351,9 @@ open class InternshipApplyController {
                     val internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCompanyRecord.isPresent) {
                         val internshipCompany = internshipCompanyRecord.get().into(InternshipCompany::class.java)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        internshipCompany.studentSex = methodControllerCommon.decryptPersonalData(internshipCompany.studentSex, usersKey)
+                        internshipCompany.parentalContact = methodControllerCommon.decryptPersonalData(internshipCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCompany)
                         page = "web/internship/apply/internship_company_detail::#page-wrapper"
                     } else {
@@ -338,6 +364,9 @@ open class InternshipApplyController {
                     val graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCollegeRecord.isPresent) {
                         val graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege::class.java)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeCollege.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.studentSex, usersKey)
+                        graduationPracticeCollege.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCollege)
                         page = "web/internship/apply/graduation_practice_college_detail::#page-wrapper"
                     } else {
@@ -348,6 +377,9 @@ open class InternshipApplyController {
                     val graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeUnifyRecord.isPresent) {
                         val graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify::class.java)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeUnify.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.studentSex, usersKey)
+                        graduationPracticeUnify.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeUnify)
                         page = "web/internship/apply/graduation_practice_unify_detail::#page-wrapper"
                     } else {
@@ -358,6 +390,9 @@ open class InternshipApplyController {
                     val graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCompanyRecord.isPresent) {
                         val graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany::class.java)
+                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        graduationPracticeCompany.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.studentSex, usersKey)
+                        graduationPracticeCompany.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCompany)
                         page = "web/internship/apply/graduation_practice_company_detail::#page-wrapper"
                     } else {
@@ -386,6 +421,10 @@ open class InternshipApplyController {
         if (!bindingResult.hasErrors()) {
             val errorBean = accessCondition(internshipCollegeVo.internshipReleaseId!!, internshipCollegeVo.studentId!!)
             if (!errorBean.isHasError()) {
+                val student = cacheManageService.getStudentByStudentId(internshipCollegeVo.studentId!!)
+                val usersKey = cacheManageService.getUsersKey(student.username!!)
+                internshipCollegeVo.studentSex = methodControllerCommon.encryptPersonalData(internshipCollegeVo.studentSex, usersKey)
+                internshipCollegeVo.parentalContact = methodControllerCommon.encryptPersonalData(internshipCollegeVo.parentalContact, usersKey)
                 internshipCollegeService.saveWithTransaction(internshipCollegeVo)
                 ajaxUtils.success().msg("保存成功")
             } else {
@@ -412,6 +451,10 @@ open class InternshipApplyController {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipCollegeVo.internshipCollegeId)) {
                 val errorBean = accessCondition(internshipCollegeVo.internshipReleaseId!!, internshipCollegeVo.studentId!!)
                 if (!errorBean.isHasError()) {
+                    val student = cacheManageService.getStudentByStudentId(internshipCollegeVo.studentId!!)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    internshipCollegeVo.studentSex = methodControllerCommon.encryptPersonalData(internshipCollegeVo.studentSex, usersKey)
+                    internshipCollegeVo.parentalContact = methodControllerCommon.encryptPersonalData(internshipCollegeVo.parentalContact, usersKey)
                     val headmasterArr = internshipCollegeVo.headmaster!!.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (headmasterArr.size >= 2) {
                         internshipCollegeVo.headmaster = headmasterArr[0]
@@ -526,6 +569,10 @@ open class InternshipApplyController {
         if (!bindingResult.hasErrors()) {
             val errorBean = accessCondition(internshipCompanyVo.internshipReleaseId!!, internshipCompanyVo.studentId!!)
             if (!errorBean.isHasError()) {
+                val student = cacheManageService.getStudentByStudentId(internshipCompanyVo.studentId!!)
+                val usersKey = cacheManageService.getUsersKey(student.username!!)
+                internshipCompanyVo.studentSex = methodControllerCommon.encryptPersonalData(internshipCompanyVo.studentSex, usersKey)
+                internshipCompanyVo.parentalContact = methodControllerCommon.encryptPersonalData(internshipCompanyVo.parentalContact, usersKey)
                 internshipCompanyService.saveWithTransaction(internshipCompanyVo)
                 ajaxUtils.success().msg("保存成功")
             } else {
@@ -552,6 +599,10 @@ open class InternshipApplyController {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(internshipCompanyVo.internshipCompanyId)) {
                 val errorBean = accessCondition(internshipCompanyVo.internshipReleaseId!!, internshipCompanyVo.studentId!!)
                 if (!errorBean.isHasError()) {
+                    val student = cacheManageService.getStudentByStudentId(internshipCompanyVo.studentId!!)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    internshipCompanyVo.studentSex = methodControllerCommon.encryptPersonalData(internshipCompanyVo.studentSex, usersKey)
+                    internshipCompanyVo.parentalContact = methodControllerCommon.encryptPersonalData(internshipCompanyVo.parentalContact, usersKey)
                     val headmasterArr = internshipCompanyVo.headmaster!!.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (headmasterArr.size >= 2) {
                         internshipCompanyVo.headmaster = headmasterArr[0]
@@ -665,6 +716,10 @@ open class InternshipApplyController {
         if (!bindingResult.hasErrors()) {
             val errorBean = accessCondition(graduationPracticeCollegeVo.internshipReleaseId!!, graduationPracticeCollegeVo.studentId!!)
             if (!errorBean.isHasError()) {
+                val student = cacheManageService.getStudentByStudentId(graduationPracticeCollegeVo.studentId!!)
+                val usersKey = cacheManageService.getUsersKey(student.username!!)
+                graduationPracticeCollegeVo.studentSex = methodControllerCommon.encryptPersonalData(graduationPracticeCollegeVo.studentSex, usersKey)
+                graduationPracticeCollegeVo.parentalContact = methodControllerCommon.encryptPersonalData(graduationPracticeCollegeVo.parentalContact, usersKey)
                 graduationPracticeCollegeService.saveWithTransaction(graduationPracticeCollegeVo)
                 ajaxUtils.success().msg("保存成功")
             } else {
@@ -691,6 +746,10 @@ open class InternshipApplyController {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(graduationPracticeCollegeVo.graduationPracticeCollegeId)) {
                 val errorBean = accessCondition(graduationPracticeCollegeVo.internshipReleaseId!!, graduationPracticeCollegeVo.studentId!!)
                 if (!errorBean.isHasError()) {
+                    val student = cacheManageService.getStudentByStudentId(graduationPracticeCollegeVo.studentId!!)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    graduationPracticeCollegeVo.studentSex = methodControllerCommon.encryptPersonalData(graduationPracticeCollegeVo.studentSex, usersKey)
+                    graduationPracticeCollegeVo.parentalContact = methodControllerCommon.encryptPersonalData(graduationPracticeCollegeVo.parentalContact, usersKey)
                     val headmasterArr = graduationPracticeCollegeVo.headmaster!!.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (headmasterArr.size >= 2) {
                         graduationPracticeCollegeVo.headmaster = headmasterArr[0]
@@ -804,6 +863,10 @@ open class InternshipApplyController {
         if (!bindingResult.hasErrors()) {
             val errorBean = accessCondition(graduationPracticeUnifyVo.internshipReleaseId!!, graduationPracticeUnifyVo.studentId!!)
             if (!errorBean.isHasError()) {
+                val student = cacheManageService.getStudentByStudentId(graduationPracticeUnifyVo.studentId!!)
+                val usersKey = cacheManageService.getUsersKey(student.username!!)
+                graduationPracticeUnifyVo.studentSex = methodControllerCommon.encryptPersonalData(graduationPracticeUnifyVo.studentSex, usersKey)
+                graduationPracticeUnifyVo.parentalContact = methodControllerCommon.encryptPersonalData(graduationPracticeUnifyVo.parentalContact, usersKey)
                 graduationPracticeUnifyService.saveWithTransaction(graduationPracticeUnifyVo)
                 ajaxUtils.success().msg("保存成功")
             } else {
@@ -830,6 +893,10 @@ open class InternshipApplyController {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(graduationPracticeUnifyVo.graduationPracticeUnifyId)) {
                 val errorBean = accessCondition(graduationPracticeUnifyVo.internshipReleaseId!!, graduationPracticeUnifyVo.studentId!!)
                 if (!errorBean.isHasError()) {
+                    val student = cacheManageService.getStudentByStudentId(graduationPracticeUnifyVo.studentId!!)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    graduationPracticeUnifyVo.studentSex = methodControllerCommon.encryptPersonalData(graduationPracticeUnifyVo.studentSex, usersKey)
+                    graduationPracticeUnifyVo.parentalContact = methodControllerCommon.encryptPersonalData(graduationPracticeUnifyVo.parentalContact, usersKey)
                     val headmasterArr = graduationPracticeUnifyVo.headmaster!!.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (headmasterArr.size >= 2) {
                         graduationPracticeUnifyVo.headmaster = headmasterArr[0]
@@ -943,6 +1010,10 @@ open class InternshipApplyController {
         if (!bindingResult.hasErrors()) {
             val errorBean = accessCondition(graduationPracticeCompanyVo.internshipReleaseId!!, graduationPracticeCompanyVo.studentId!!)
             if (!errorBean.isHasError()) {
+                val student = cacheManageService.getStudentByStudentId(graduationPracticeCompanyVo.studentId!!)
+                val usersKey = cacheManageService.getUsersKey(student.username!!)
+                graduationPracticeCompanyVo.studentSex = methodControllerCommon.encryptPersonalData(graduationPracticeCompanyVo.studentSex, usersKey)
+                graduationPracticeCompanyVo.parentalContact = methodControllerCommon.encryptPersonalData(graduationPracticeCompanyVo.parentalContact, usersKey)
                 graduationPracticeCompanyService.saveWithTransaction(graduationPracticeCompanyVo)
                 ajaxUtils.success().msg("保存成功")
             } else {
@@ -969,6 +1040,10 @@ open class InternshipApplyController {
             if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(graduationPracticeCompanyVo.graduationPracticeCompanyId)) {
                 val errorBean = accessCondition(graduationPracticeCompanyVo.internshipReleaseId!!, graduationPracticeCompanyVo.studentId!!)
                 if (!errorBean.isHasError()) {
+                    val student = cacheManageService.getStudentByStudentId(graduationPracticeCompanyVo.studentId!!)
+                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    graduationPracticeCompanyVo.studentSex = methodControllerCommon.encryptPersonalData(graduationPracticeCompanyVo.studentSex, usersKey)
+                    graduationPracticeCompanyVo.parentalContact = methodControllerCommon.encryptPersonalData(graduationPracticeCompanyVo.parentalContact, usersKey)
                     val headmasterArr = graduationPracticeCompanyVo.headmaster!!.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (headmasterArr.size >= 2) {
                         graduationPracticeCompanyVo.headmaster = headmasterArr[0]
