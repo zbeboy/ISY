@@ -82,6 +82,7 @@ open class GraduationPracticeCompanyServiceImpl @Autowired constructor(dslContex
                     .insertInto<GraduationPracticeCompanyRecord>(GRADUATION_PRACTICE_COMPANY)
                     .set(GRADUATION_PRACTICE_COMPANY.GRADUATION_PRACTICE_COMPANY_ID, UUIDUtils.getUUID())
                     .set(GRADUATION_PRACTICE_COMPANY.STUDENT_ID, graduationPracticeCompanyVo.studentId)
+                    .set(GRADUATION_PRACTICE_COMPANY.STUDENT_USERNAME, graduationPracticeCompanyVo.studentUsername)
                     .set(GRADUATION_PRACTICE_COMPANY.INTERNSHIP_RELEASE_ID, graduationPracticeCompanyVo.internshipReleaseId)
                     .set(GRADUATION_PRACTICE_COMPANY.STUDENT_NAME, graduationPracticeCompanyVo.studentName)
                     .set(GRADUATION_PRACTICE_COMPANY.COLLEGE_CLASS, graduationPracticeCompanyVo.collegeClass)

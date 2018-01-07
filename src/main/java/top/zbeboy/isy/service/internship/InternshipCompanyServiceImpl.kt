@@ -82,6 +82,7 @@ open class InternshipCompanyServiceImpl @Autowired constructor(dslContext: DSLCo
                     .insertInto<InternshipCompanyRecord>(INTERNSHIP_COMPANY)
                     .set(INTERNSHIP_COMPANY.INTERNSHIP_COMPANY_ID, UUIDUtils.getUUID())
                     .set(INTERNSHIP_COMPANY.STUDENT_ID, internshipCompanyVo.studentId)
+                    .set(INTERNSHIP_COMPANY.STUDENT_USERNAME, internshipCompanyVo.studentUsername)
                     .set(INTERNSHIP_COMPANY.INTERNSHIP_RELEASE_ID, internshipCompanyVo.internshipReleaseId)
                     .set(INTERNSHIP_COMPANY.STUDENT_NAME, internshipCompanyVo.studentName)
                     .set(INTERNSHIP_COMPANY.COLLEGE_CLASS, internshipCompanyVo.collegeClass)

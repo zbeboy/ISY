@@ -77,6 +77,13 @@ public class InternshipCollegeDao extends DAOImpl<InternshipCollegeRecord, top.z
     }
 
     /**
+     * Fetch records that have <code>student_username IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.InternshipCollege> fetchByStudentUsername(String... values) {
+        return fetch(InternshipCollege.INTERNSHIP_COLLEGE.STUDENT_USERNAME, values);
+    }
+
+    /**
      * Fetch records that have <code>internship_release_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.InternshipCollege> fetchByInternshipReleaseId(String... values) {

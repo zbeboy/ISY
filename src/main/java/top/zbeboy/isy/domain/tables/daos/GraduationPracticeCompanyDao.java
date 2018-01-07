@@ -245,6 +245,13 @@ public class GraduationPracticeCompanyDao extends DAOImpl<GraduationPracticeComp
     }
 
     /**
+     * Fetch records that have <code>student_username IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany> fetchByStudentUsername(String... values) {
+        return fetch(GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY.STUDENT_USERNAME, values);
+    }
+
+    /**
      * Fetch records that have <code>internship_release_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationPracticeCompany> fetchByInternshipReleaseId(String... values) {

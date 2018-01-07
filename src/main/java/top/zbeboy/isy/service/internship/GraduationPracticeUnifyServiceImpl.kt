@@ -82,6 +82,7 @@ open class GraduationPracticeUnifyServiceImpl @Autowired constructor(dslContext:
                     .insertInto<GraduationPracticeUnifyRecord>(GRADUATION_PRACTICE_UNIFY)
                     .set(GRADUATION_PRACTICE_UNIFY.GRADUATION_PRACTICE_UNIFY_ID, UUIDUtils.getUUID())
                     .set(GRADUATION_PRACTICE_UNIFY.STUDENT_ID, graduationPracticeUnifyVo.studentId)
+                    .set(GRADUATION_PRACTICE_UNIFY.STUDENT_USERNAME, graduationPracticeUnifyVo.studentUsername)
                     .set(GRADUATION_PRACTICE_UNIFY.INTERNSHIP_RELEASE_ID, graduationPracticeUnifyVo.internshipReleaseId)
                     .set(GRADUATION_PRACTICE_UNIFY.STUDENT_NAME, graduationPracticeUnifyVo.studentName)
                     .set(GRADUATION_PRACTICE_UNIFY.COLLEGE_CLASS, graduationPracticeUnifyVo.collegeClass)

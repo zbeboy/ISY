@@ -11,6 +11,8 @@ open class GraduationPracticeUnifyVo {
     @NotNull
     var studentId: Int? = null
     @NotNull
+    var studentUsername: String? = null
+    @NotNull
     @Size(max = 100)
     var internshipReleaseId: String? = null
     @NotNull

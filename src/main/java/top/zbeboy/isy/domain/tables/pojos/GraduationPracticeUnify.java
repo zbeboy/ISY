@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeUnify implements Serializable {
 
-    private static final long serialVersionUID = 1960481132;
+    private static final long serialVersionUID = -2014042686;
 
     private String  graduationPracticeUnifyId;
     private String  studentName;
@@ -53,6 +53,7 @@ public class GraduationPracticeUnify implements Serializable {
     private Byte    securityEducationAgreement;
     private Byte    parentalConsent;
     private Integer studentId;
+    private String  studentUsername;
     private String  internshipReleaseId;
 
     public GraduationPracticeUnify() {}
@@ -84,6 +85,7 @@ public class GraduationPracticeUnify implements Serializable {
         this.securityEducationAgreement = value.securityEducationAgreement;
         this.parentalConsent = value.parentalConsent;
         this.studentId = value.studentId;
+        this.studentUsername = value.studentUsername;
         this.internshipReleaseId = value.internshipReleaseId;
     }
 
@@ -114,6 +116,7 @@ public class GraduationPracticeUnify implements Serializable {
         Byte    securityEducationAgreement,
         Byte    parentalConsent,
         Integer studentId,
+        String  studentUsername,
         String  internshipReleaseId
     ) {
         this.graduationPracticeUnifyId = graduationPracticeUnifyId;
@@ -142,6 +145,7 @@ public class GraduationPracticeUnify implements Serializable {
         this.securityEducationAgreement = securityEducationAgreement;
         this.parentalConsent = parentalConsent;
         this.studentId = studentId;
+        this.studentUsername = studentUsername;
         this.internshipReleaseId = internshipReleaseId;
     }
 
@@ -390,6 +394,16 @@ public class GraduationPracticeUnify implements Serializable {
 
     @NotNull
     @Size(max = 64)
+    public String getStudentUsername() {
+        return this.studentUsername;
+    }
+
+    public void setStudentUsername(String studentUsername) {
+        this.studentUsername = studentUsername;
+    }
+
+    @NotNull
+    @Size(max = 64)
     public String getInternshipReleaseId() {
         return this.internshipReleaseId;
     }
@@ -428,6 +442,7 @@ public class GraduationPracticeUnify implements Serializable {
         sb.append(", ").append(securityEducationAgreement);
         sb.append(", ").append(parentalConsent);
         sb.append(", ").append(studentId);
+        sb.append(", ").append(studentUsername);
         sb.append(", ").append(internshipReleaseId);
 
         sb.append(")");

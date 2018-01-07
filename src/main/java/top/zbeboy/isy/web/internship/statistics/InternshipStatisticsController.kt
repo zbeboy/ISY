@@ -346,8 +346,7 @@ open class InternshipStatisticsController {
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 internshipColleges = records.into(InternshipCollege::class.java)
                 internshipColleges.forEach { data ->
-                    val student = cacheManageService.getStudentByStudentId(data.studentId)
-                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                     data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                     data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                 }
@@ -385,8 +384,7 @@ open class InternshipStatisticsController {
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     internshipColleges = records.into(InternshipCollege::class.java)
                     internshipColleges.forEach { data ->
-                        val student = cacheManageService.getStudentByStudentId(data.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                         data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                         data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                     }
@@ -457,8 +455,7 @@ open class InternshipStatisticsController {
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 internshipCompanies = records.into(InternshipCompany::class.java)
                 internshipCompanies.forEach { data ->
-                    val student = cacheManageService.getStudentByStudentId(data.studentId)
-                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                     data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                     data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                 }
@@ -496,8 +493,7 @@ open class InternshipStatisticsController {
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     internshipCompanies = records.into(InternshipCompany::class.java)
                     internshipCompanies.forEach { data ->
-                        val student = cacheManageService.getStudentByStudentId(data.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                         data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                         data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                     }
@@ -568,8 +564,7 @@ open class InternshipStatisticsController {
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 graduationPracticeCompanies = records.into(GraduationPracticeCompany::class.java)
                 graduationPracticeCompanies.forEach { data ->
-                    val student = cacheManageService.getStudentByStudentId(data.studentId)
-                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                     data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                     data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                 }
@@ -607,8 +602,7 @@ open class InternshipStatisticsController {
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     graduationPracticeCompanies = records.into(GraduationPracticeCompany::class.java)
                     graduationPracticeCompanies.forEach { data ->
-                        val student = cacheManageService.getStudentByStudentId(data.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                         data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                         data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                     }
@@ -679,8 +673,7 @@ open class InternshipStatisticsController {
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 graduationPracticeColleges = records.into(GraduationPracticeCollege::class.java)
                 graduationPracticeColleges.forEach { data ->
-                    val student = cacheManageService.getStudentByStudentId(data.studentId)
-                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                     data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                     data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                 }
@@ -718,8 +711,7 @@ open class InternshipStatisticsController {
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     graduationPracticeColleges = records.into(GraduationPracticeCollege::class.java)
                     graduationPracticeColleges.forEach { data ->
-                        val student = cacheManageService.getStudentByStudentId(data.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                         data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                         data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                     }
@@ -790,8 +782,7 @@ open class InternshipStatisticsController {
             if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                 graduationPracticeUnifies = records.into(GraduationPracticeUnify::class.java)
                 graduationPracticeUnifies.forEach { data ->
-                    val student = cacheManageService.getStudentByStudentId(data.studentId)
-                    val usersKey = cacheManageService.getUsersKey(student.username!!)
+                    val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                     data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                     data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                 }
@@ -829,8 +820,7 @@ open class InternshipStatisticsController {
                 if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
                     graduationPracticeUnifies = records.into(GraduationPracticeUnify::class.java)
                     graduationPracticeUnifies.forEach { data ->
-                        val student = cacheManageService.getStudentByStudentId(data.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(data.studentUsername!!)
                         data.studentSex = methodControllerCommon.decryptPersonalData(data.studentSex, usersKey)
                         data.parentalContact = methodControllerCommon.decryptPersonalData(data.parentalContact, usersKey)
                     }

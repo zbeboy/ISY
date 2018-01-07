@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.InternshipCompany;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompanyRecord> {
 
-    private static final long serialVersionUID = 306300160;
+    private static final long serialVersionUID = 661034267;
 
     /**
      * Setter for <code>isy.internship_company.internship_company_id</code>.
@@ -431,10 +431,26 @@ public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompa
     }
 
     /**
+     * Setter for <code>isy.internship_company.student_username</code>.
+     */
+    public void setStudentUsername(String value) {
+        set(26, value);
+    }
+
+    /**
+     * Getter for <code>isy.internship_company.student_username</code>.
+     */
+    @NotNull
+    @Size(max = 64)
+    public String getStudentUsername() {
+        return (String) get(26);
+    }
+
+    /**
      * Setter for <code>isy.internship_company.internship_release_id</code>.
      */
     public void setInternshipReleaseId(String value) {
-        set(26, value);
+        set(27, value);
     }
 
     /**
@@ -443,7 +459,7 @@ public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompa
     @NotNull
     @Size(max = 64)
     public String getInternshipReleaseId() {
-        return (String) get(26);
+        return (String) get(27);
     }
 
     // -------------------------------------------------------------------------
@@ -472,7 +488,7 @@ public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompa
     /**
      * Create a detached, initialised InternshipCompanyRecord
      */
-    public InternshipCompanyRecord(String internshipCompanyId, String studentName, String collegeClass, String studentSex, String studentNumber, String phoneNumber, String qqMailbox, String parentalContact, String headmaster, String headmasterContact, String internshipCompanyName, String internshipCompanyAddress, String internshipCompanyContacts, String internshipCompanyTel, String schoolGuidanceTeacher, String schoolGuidanceTeacherTel, Date startTime, Date endTime, Byte commitmentBook, Byte safetyResponsibilityBook, Byte practiceAgreement, Byte internshipApplication, Byte practiceReceiving, Byte securityEducationAgreement, Byte parentalConsent, Integer studentId, String internshipReleaseId) {
+    public InternshipCompanyRecord(String internshipCompanyId, String studentName, String collegeClass, String studentSex, String studentNumber, String phoneNumber, String qqMailbox, String parentalContact, String headmaster, String headmasterContact, String internshipCompanyName, String internshipCompanyAddress, String internshipCompanyContacts, String internshipCompanyTel, String schoolGuidanceTeacher, String schoolGuidanceTeacherTel, Date startTime, Date endTime, Byte commitmentBook, Byte safetyResponsibilityBook, Byte practiceAgreement, Byte internshipApplication, Byte practiceReceiving, Byte securityEducationAgreement, Byte parentalConsent, Integer studentId, String studentUsername, String internshipReleaseId) {
         super(InternshipCompany.INTERNSHIP_COMPANY);
 
         set(0, internshipCompanyId);
@@ -501,6 +517,7 @@ public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompa
         set(23, securityEducationAgreement);
         set(24, parentalConsent);
         set(25, studentId);
-        set(26, internshipReleaseId);
+        set(26, studentUsername);
+        set(27, internshipReleaseId);
     }
 }

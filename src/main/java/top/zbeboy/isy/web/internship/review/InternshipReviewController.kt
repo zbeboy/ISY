@@ -293,8 +293,7 @@ open class InternshipReviewController {
                     val internshipCollegeRecord = internshipCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCollegeRecord.isPresent) {
                         val internshipCollege = internshipCollegeRecord.get().into(InternshipCollege::class.java)
-                        val student = cacheManageService.getStudentByStudentId(internshipCollege.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(internshipCollege.studentUsername!!)
                         internshipCollege.studentSex = methodControllerCommon.decryptPersonalData(internshipCollege.studentSex, usersKey)
                         internshipCollege.parentalContact = methodControllerCommon.decryptPersonalData(internshipCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCollege)
@@ -307,8 +306,7 @@ open class InternshipReviewController {
                     val internshipCompanyRecord = internshipCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (internshipCompanyRecord.isPresent) {
                         val internshipCompany = internshipCompanyRecord.get().into(InternshipCompany::class.java)
-                        val student = cacheManageService.getStudentByStudentId(internshipCompany.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(internshipCompany.studentUsername!!)
                         internshipCompany.studentSex = methodControllerCommon.decryptPersonalData(internshipCompany.studentSex, usersKey)
                         internshipCompany.parentalContact = methodControllerCommon.decryptPersonalData(internshipCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", internshipCompany)
@@ -321,8 +319,7 @@ open class InternshipReviewController {
                     val graduationPracticeCollegeRecord = graduationPracticeCollegeService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCollegeRecord.isPresent) {
                         val graduationPracticeCollege = graduationPracticeCollegeRecord.get().into(GraduationPracticeCollege::class.java)
-                        val student = cacheManageService.getStudentByStudentId(graduationPracticeCollege.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(graduationPracticeCollege.studentUsername!!)
                         graduationPracticeCollege.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.studentSex, usersKey)
                         graduationPracticeCollege.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCollege.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCollege)
@@ -335,8 +332,7 @@ open class InternshipReviewController {
                     val graduationPracticeUnifyRecord = graduationPracticeUnifyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeUnifyRecord.isPresent) {
                         val graduationPracticeUnify = graduationPracticeUnifyRecord.get().into(GraduationPracticeUnify::class.java)
-                        val student = cacheManageService.getStudentByStudentId(graduationPracticeUnify.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(graduationPracticeUnify.studentUsername!!)
                         graduationPracticeUnify.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.studentSex, usersKey)
                         graduationPracticeUnify.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeUnify.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeUnify)
@@ -349,8 +345,7 @@ open class InternshipReviewController {
                     val graduationPracticeCompanyRecord = graduationPracticeCompanyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId)
                     if (graduationPracticeCompanyRecord.isPresent) {
                         val graduationPracticeCompany = graduationPracticeCompanyRecord.get().into(GraduationPracticeCompany::class.java)
-                        val student = cacheManageService.getStudentByStudentId(graduationPracticeCompany.studentId)
-                        val usersKey = cacheManageService.getUsersKey(student.username!!)
+                        val usersKey = cacheManageService.getUsersKey(graduationPracticeCompany.studentUsername!!)
                         graduationPracticeCompany.studentSex = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.studentSex, usersKey)
                         graduationPracticeCompany.parentalContact = methodControllerCommon.decryptPersonalData(graduationPracticeCompany.parentalContact, usersKey)
                         modelMap.addAttribute("internshipData", graduationPracticeCompany)

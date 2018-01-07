@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationPracticeCompanyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeCompany extends TableImpl<GraduationPracticeCompanyRecord> {
 
-    private static final long serialVersionUID = 445300280;
+    private static final long serialVersionUID = -1651910346;
 
     /**
      * The reference instance of <code>isy.graduation_practice_company</code>
@@ -182,6 +182,11 @@ public class GraduationPracticeCompany extends TableImpl<GraduationPracticeCompa
     public final TableField<GraduationPracticeCompanyRecord, Integer> STUDENT_ID = createField("student_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
+     * The column <code>isy.graduation_practice_company.student_username</code>.
+     */
+    public final TableField<GraduationPracticeCompanyRecord, String> STUDENT_USERNAME = createField("student_username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+
+    /**
      * The column <code>isy.graduation_practice_company.internship_release_id</code>.
      */
     public final TableField<GraduationPracticeCompanyRecord, String> INTERNSHIP_RELEASE_ID = createField("internship_release_id", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
@@ -237,7 +242,7 @@ public class GraduationPracticeCompany extends TableImpl<GraduationPracticeCompa
      */
     @Override
     public List<ForeignKey<GraduationPracticeCompanyRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GraduationPracticeCompanyRecord, ?>>asList(Keys.GRADUATION_PRACTICE_COMPANY_IBFK_1, Keys.GRADUATION_PRACTICE_COMPANY_IBFK_2);
+        return Arrays.<ForeignKey<GraduationPracticeCompanyRecord, ?>>asList(Keys.GRADUATION_PRACTICE_COMPANY_IBFK_1, Keys.GRADUATION_PRACTICE_COMPANY_IBFK_2, Keys.GRADUATION_PRACTICE_COMPANY_IBFK_3);
     }
 
     /**

@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.GraduationPracticeCollege;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<GraduationPracticeCollegeRecord> {
 
-    private static final long serialVersionUID = 1085903693;
+    private static final long serialVersionUID = 593313162;
 
     /**
      * Setter for <code>isy.graduation_practice_college.graduation_practice_college_id</code>.
@@ -431,10 +431,26 @@ public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<Graduat
     }
 
     /**
+     * Setter for <code>isy.graduation_practice_college.student_username</code>.
+     */
+    public void setStudentUsername(String value) {
+        set(26, value);
+    }
+
+    /**
+     * Getter for <code>isy.graduation_practice_college.student_username</code>.
+     */
+    @NotNull
+    @Size(max = 64)
+    public String getStudentUsername() {
+        return (String) get(26);
+    }
+
+    /**
      * Setter for <code>isy.graduation_practice_college.internship_release_id</code>.
      */
     public void setInternshipReleaseId(String value) {
-        set(26, value);
+        set(27, value);
     }
 
     /**
@@ -443,7 +459,7 @@ public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<Graduat
     @NotNull
     @Size(max = 64)
     public String getInternshipReleaseId() {
-        return (String) get(26);
+        return (String) get(27);
     }
 
     // -------------------------------------------------------------------------
@@ -472,7 +488,7 @@ public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<Graduat
     /**
      * Create a detached, initialised GraduationPracticeCollegeRecord
      */
-    public GraduationPracticeCollegeRecord(String graduationPracticeCollegeId, String studentName, String collegeClass, String studentSex, String studentNumber, String phoneNumber, String qqMailbox, String parentalContact, String headmaster, String headmasterContact, String graduationPracticeCollegeName, String graduationPracticeCollegeAddress, String graduationPracticeCollegeContacts, String graduationPracticeCollegeTel, String schoolGuidanceTeacher, String schoolGuidanceTeacherTel, Date startTime, Date endTime, Byte commitmentBook, Byte safetyResponsibilityBook, Byte practiceAgreement, Byte internshipApplication, Byte practiceReceiving, Byte securityEducationAgreement, Byte parentalConsent, Integer studentId, String internshipReleaseId) {
+    public GraduationPracticeCollegeRecord(String graduationPracticeCollegeId, String studentName, String collegeClass, String studentSex, String studentNumber, String phoneNumber, String qqMailbox, String parentalContact, String headmaster, String headmasterContact, String graduationPracticeCollegeName, String graduationPracticeCollegeAddress, String graduationPracticeCollegeContacts, String graduationPracticeCollegeTel, String schoolGuidanceTeacher, String schoolGuidanceTeacherTel, Date startTime, Date endTime, Byte commitmentBook, Byte safetyResponsibilityBook, Byte practiceAgreement, Byte internshipApplication, Byte practiceReceiving, Byte securityEducationAgreement, Byte parentalConsent, Integer studentId, String studentUsername, String internshipReleaseId) {
         super(GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE);
 
         set(0, graduationPracticeCollegeId);
@@ -501,6 +517,7 @@ public class GraduationPracticeCollegeRecord extends UpdatableRecordImpl<Graduat
         set(23, securityEducationAgreement);
         set(24, parentalConsent);
         set(25, studentId);
-        set(26, internshipReleaseId);
+        set(26, studentUsername);
+        set(27, internshipReleaseId);
     }
 }

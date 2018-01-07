@@ -24,6 +24,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
          */
         var paramId = {
             studentId: '#studentId',
+            studentUsername: '#studentUsername',
             studentName: '#studentName',
             qqMailbox: '#qqMailbox',
             parentalContact: '#parentalContact',
@@ -41,6 +42,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
          */
         var param = {
             studentId: $(paramId.studentId).val(),
+            studentUsername: $(paramId.studentUsername).val(),
             studentName: $(paramId.studentName).val(),
             qqMailbox: $(paramId.qqMailbox).val(),
             parentalContact: $(paramId.parentalContact).val(),
@@ -121,6 +123,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
          */
         function initParam() {
             param.studentId = $(paramId.studentId).val();
+            param.studentUsername = $(paramId.studentUsername).val();
             param.studentName = $(paramId.studentName).val();
             param.qqMailbox = $(paramId.qqMailbox).val();
             param.parentalContact = $(paramId.parentalContact).val();

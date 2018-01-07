@@ -25,10 +25,11 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCollege implements Serializable {
 
-    private static final long serialVersionUID = 405067965;
+    private static final long serialVersionUID = 1592740467;
 
     private String  internshipCollegeId;
     private Integer studentId;
+    private String  studentUsername;
     private String  internshipReleaseId;
     private String  studentName;
     private String  collegeClass;
@@ -60,6 +61,7 @@ public class InternshipCollege implements Serializable {
     public InternshipCollege(InternshipCollege value) {
         this.internshipCollegeId = value.internshipCollegeId;
         this.studentId = value.studentId;
+        this.studentUsername = value.studentUsername;
         this.internshipReleaseId = value.internshipReleaseId;
         this.studentName = value.studentName;
         this.collegeClass = value.collegeClass;
@@ -90,6 +92,7 @@ public class InternshipCollege implements Serializable {
     public InternshipCollege(
         String  internshipCollegeId,
         Integer studentId,
+        String  studentUsername,
         String  internshipReleaseId,
         String  studentName,
         String  collegeClass,
@@ -118,6 +121,7 @@ public class InternshipCollege implements Serializable {
     ) {
         this.internshipCollegeId = internshipCollegeId;
         this.studentId = studentId;
+        this.studentUsername = studentUsername;
         this.internshipReleaseId = internshipReleaseId;
         this.studentName = studentName;
         this.collegeClass = collegeClass;
@@ -162,6 +166,16 @@ public class InternshipCollege implements Serializable {
 
     public void setStudentId(Integer studentId) {
         this.studentId = studentId;
+    }
+
+    @NotNull
+    @Size(max = 64)
+    public String getStudentUsername() {
+        return this.studentUsername;
+    }
+
+    public void setStudentUsername(String studentUsername) {
+        this.studentUsername = studentUsername;
     }
 
     @NotNull
@@ -404,6 +418,7 @@ public class InternshipCollege implements Serializable {
 
         sb.append(internshipCollegeId);
         sb.append(", ").append(studentId);
+        sb.append(", ").append(studentUsername);
         sb.append(", ").append(internshipReleaseId);
         sb.append(", ").append(studentName);
         sb.append(", ").append(collegeClass);

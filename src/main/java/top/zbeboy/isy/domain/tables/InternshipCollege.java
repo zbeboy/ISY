@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipCollegeRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCollege extends TableImpl<InternshipCollegeRecord> {
 
-    private static final long serialVersionUID = -1455012711;
+    private static final long serialVersionUID = -845220854;
 
     /**
      * The reference instance of <code>isy.internship_college</code>
@@ -60,6 +60,11 @@ public class InternshipCollege extends TableImpl<InternshipCollegeRecord> {
      * The column <code>isy.internship_college.student_id</code>.
      */
     public final TableField<InternshipCollegeRecord, Integer> STUDENT_ID = createField("student_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.internship_college.student_username</code>.
+     */
+    public final TableField<InternshipCollegeRecord, String> STUDENT_USERNAME = createField("student_username", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
 
     /**
      * The column <code>isy.internship_college.internship_release_id</code>.
@@ -237,7 +242,7 @@ public class InternshipCollege extends TableImpl<InternshipCollegeRecord> {
      */
     @Override
     public List<ForeignKey<InternshipCollegeRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<InternshipCollegeRecord, ?>>asList(Keys.INTERNSHIP_COLLEGE_IBFK_1, Keys.INTERNSHIP_COLLEGE_IBFK_2);
+        return Arrays.<ForeignKey<InternshipCollegeRecord, ?>>asList(Keys.INTERNSHIP_COLLEGE_IBFK_1, Keys.INTERNSHIP_COLLEGE_IBFK_2, Keys.INTERNSHIP_COLLEGE_IBFK_3);
     }
 
     /**

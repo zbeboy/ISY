@@ -245,6 +245,13 @@ public class GraduationPracticeUnifyDao extends DAOImpl<GraduationPracticeUnifyR
     }
 
     /**
+     * Fetch records that have <code>student_username IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify> fetchByStudentUsername(String... values) {
+        return fetch(GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY.STUDENT_USERNAME, values);
+    }
+
+    /**
      * Fetch records that have <code>internship_release_id IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationPracticeUnify> fetchByInternshipReleaseId(String... values) {

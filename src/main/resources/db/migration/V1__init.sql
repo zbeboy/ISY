@@ -289,6 +289,7 @@ CREATE TABLE internship_change_company_history (
 CREATE TABLE internship_college (
   internship_college_id        VARCHAR(64) PRIMARY KEY,
   student_id                   INT          NOT NULL,
+  student_username             VARCHAR(64)  NOT NULL,
   internship_release_id        VARCHAR(64)  NOT NULL,
   student_name                 VARCHAR(15)  NOT NULL,
   college_class                VARCHAR(50)  NOT NULL,
@@ -315,6 +316,7 @@ CREATE TABLE internship_college (
   security_education_agreement BOOLEAN,
   parental_consent             BOOLEAN,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -346,8 +348,10 @@ CREATE TABLE internship_company (
   security_education_agreement BOOLEAN,
   parental_consent             BOOLEAN,
   student_id                   INT          NOT NULL,
+  student_username             VARCHAR(64)  NOT NULL,
   internship_release_id        VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -379,8 +383,10 @@ CREATE TABLE graduation_practice_college (
   security_education_agreement         BOOLEAN,
   parental_consent                     BOOLEAN,
   student_id                           INT          NOT NULL,
+  student_username                     VARCHAR(64)  NOT NULL,
   internship_release_id                VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -412,8 +418,10 @@ CREATE TABLE graduation_practice_unify (
   security_education_agreement       BOOLEAN,
   parental_consent                   BOOLEAN,
   student_id                         INT          NOT NULL,
+  student_username                   VARCHAR(64)  NOT NULL,
   internship_release_id              VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -445,8 +453,10 @@ CREATE TABLE graduation_practice_company (
   security_education_agreement         BOOLEAN,
   parental_consent                     BOOLEAN,
   student_id                           INT          NOT NULL,
+  student_username                     VARCHAR(64)  NOT NULL,
   internship_release_id                VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );

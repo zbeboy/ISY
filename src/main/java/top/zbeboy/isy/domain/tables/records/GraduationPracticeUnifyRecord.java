@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.GraduationPracticeUnify;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<GraduationPracticeUnifyRecord> {
 
-    private static final long serialVersionUID = -2045233519;
+    private static final long serialVersionUID = 154782222;
 
     /**
      * Setter for <code>isy.graduation_practice_unify.graduation_practice_unify_id</code>.
@@ -431,10 +431,26 @@ public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<Graduatio
     }
 
     /**
+     * Setter for <code>isy.graduation_practice_unify.student_username</code>.
+     */
+    public void setStudentUsername(String value) {
+        set(26, value);
+    }
+
+    /**
+     * Getter for <code>isy.graduation_practice_unify.student_username</code>.
+     */
+    @NotNull
+    @Size(max = 64)
+    public String getStudentUsername() {
+        return (String) get(26);
+    }
+
+    /**
      * Setter for <code>isy.graduation_practice_unify.internship_release_id</code>.
      */
     public void setInternshipReleaseId(String value) {
-        set(26, value);
+        set(27, value);
     }
 
     /**
@@ -443,7 +459,7 @@ public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<Graduatio
     @NotNull
     @Size(max = 64)
     public String getInternshipReleaseId() {
-        return (String) get(26);
+        return (String) get(27);
     }
 
     // -------------------------------------------------------------------------
@@ -472,7 +488,7 @@ public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<Graduatio
     /**
      * Create a detached, initialised GraduationPracticeUnifyRecord
      */
-    public GraduationPracticeUnifyRecord(String graduationPracticeUnifyId, String studentName, String collegeClass, String studentSex, String studentNumber, String phoneNumber, String qqMailbox, String parentalContact, String headmaster, String headmasterContact, String graduationPracticeUnifyName, String graduationPracticeUnifyAddress, String graduationPracticeUnifyContacts, String graduationPracticeUnifyTel, String schoolGuidanceTeacher, String schoolGuidanceTeacherTel, Date startTime, Date endTime, Byte commitmentBook, Byte safetyResponsibilityBook, Byte practiceAgreement, Byte internshipApplication, Byte practiceReceiving, Byte securityEducationAgreement, Byte parentalConsent, Integer studentId, String internshipReleaseId) {
+    public GraduationPracticeUnifyRecord(String graduationPracticeUnifyId, String studentName, String collegeClass, String studentSex, String studentNumber, String phoneNumber, String qqMailbox, String parentalContact, String headmaster, String headmasterContact, String graduationPracticeUnifyName, String graduationPracticeUnifyAddress, String graduationPracticeUnifyContacts, String graduationPracticeUnifyTel, String schoolGuidanceTeacher, String schoolGuidanceTeacherTel, Date startTime, Date endTime, Byte commitmentBook, Byte safetyResponsibilityBook, Byte practiceAgreement, Byte internshipApplication, Byte practiceReceiving, Byte securityEducationAgreement, Byte parentalConsent, Integer studentId, String studentUsername, String internshipReleaseId) {
         super(GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY);
 
         set(0, graduationPracticeUnifyId);
@@ -501,6 +517,7 @@ public class GraduationPracticeUnifyRecord extends UpdatableRecordImpl<Graduatio
         set(23, securityEducationAgreement);
         set(24, parentalConsent);
         set(25, studentId);
-        set(26, internshipReleaseId);
+        set(26, studentUsername);
+        set(27, internshipReleaseId);
     }
 }

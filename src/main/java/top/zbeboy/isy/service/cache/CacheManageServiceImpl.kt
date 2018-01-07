@@ -1,7 +1,6 @@
 package top.zbeboy.isy.service.cache
 
 import org.jooq.DSLContext
-import org.jooq.Record
 import org.jooq.Result
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
-import top.zbeboy.isy.domain.tables.daos.StudentDao
 import top.zbeboy.isy.domain.tables.daos.SystemAlertTypeDao
 import top.zbeboy.isy.domain.tables.daos.UsersKeyDao
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao
@@ -55,9 +53,6 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
 
     @Resource
     open lateinit var usersKeyDao: UsersKeyDao
-
-    @Resource
-    open lateinit var studentDao: StudentDao
 
     @Resource
     open lateinit var systemAlertTypeDao: SystemAlertTypeDao
@@ -101,9 +96,6 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     @Resource(name = "redisTemplate")
     open lateinit var integerValueOperations: ValueOperations<String, Int>
 
-    @Resource(name = "redisTemplate")
-    open lateinit var studentValueOperations: ValueOperations<String, Student>
-
     @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_USER_TYPE_BY_NAME), key = "#usersTypeName")
     override fun findByUsersTypeName(usersTypeName: String): UsersType {
         return usersTypeDao.fetchOne(USERS_TYPE.USERS_TYPE_NAME, usersTypeName)
@@ -124,16 +116,6 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
         val usersKey = usersKeyDao.findById(id)
         ops.set(cacheKey, usersKey.userKey, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
         return usersKey.userKey
-    }
-
-    override fun getStudentByStudentId(studentId: Int): Student {
-        val cacheKey = CacheBook.STUDENT_INFO + studentId
-        if (studentValueOperations.operations.hasKey(cacheKey)!!) {
-            return studentValueOperations.get(cacheKey)
-        }
-        val student = studentDao.findById(studentId)
-        studentValueOperations.set(cacheKey, student, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
-        return student
     }
 
     override fun getRoleCollegeId(users: Users): Int {
