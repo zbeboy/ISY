@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
-import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.StaffDao
 import top.zbeboy.isy.domain.tables.pojos.Staff
@@ -21,7 +20,6 @@ import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
-import top.zbeboy.isy.web.bean.system.alert.SystemAlertBean
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
 import javax.annotation.Resource
@@ -106,15 +104,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
         return create.selectFrom(STAFF)
                 .where(STAFF.STAFF_NUMBER.eq(staffNumber).and(STAFF.USERNAME.ne(username)))
                 .fetch()
-    }
-
-    override fun findByIdCardNeUsername(username: String, idCard: String): Result<StaffRecord> {
-        return create.selectFrom(STAFF)
-                .where(STAFF.ID_CARD.eq(idCard).and(STAFF.USERNAME.ne(username))).fetch()
-    }
-
-    override fun findByIdCard(idCard: String): List<Staff> {
-        return staffDao.fetchByIdCard(idCard)
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

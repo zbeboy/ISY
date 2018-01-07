@@ -1,6 +1,8 @@
 package top.zbeboy.isy.service.platform
 
+import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
+import top.zbeboy.isy.domain.tables.records.UsersUniqueInfoRecord
 
 /**
  * Created by zbeboy 2018-01-06 .
@@ -13,6 +15,15 @@ interface UsersUniqueInfoService {
      * @return 数据
      */
     fun findByUsername(username: String): UsersUniqueInfo
+
+    /**
+     * 根据身份证号号查询 注：不等于用户账号
+     *
+     * @param username 用户账号
+     * @param idCard   身份证号
+     * @return 数据
+     */
+    fun findByIdCardNeUsername(username: String, idCard: String): Result<UsersUniqueInfoRecord>
 
     /**
      * 保存

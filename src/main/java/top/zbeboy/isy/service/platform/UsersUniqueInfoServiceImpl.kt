@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.platform
 
 import org.jooq.DSLContext
+import org.jooq.Result
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -9,6 +10,7 @@ import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.domain.Tables.USERS_UNIQUE_INFO
 import top.zbeboy.isy.domain.tables.daos.UsersUniqueInfoDao
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
+import top.zbeboy.isy.domain.tables.records.UsersUniqueInfoRecord
 import top.zbeboy.isy.service.common.DesService
 import javax.annotation.Resource
 
@@ -33,6 +35,12 @@ open class UsersUniqueInfoServiceImpl @Autowired constructor(dslContext: DSLCont
     override fun findByUsername(username: String): UsersUniqueInfo {
         val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
         return usersUniqueInfoDao.findById(id)
+    }
+
+    override fun findByIdCardNeUsername(username: String, idCard: String): Result<UsersUniqueInfoRecord> {
+        val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
+        return create.selectFrom(USERS_UNIQUE_INFO)
+                .where(USERS_UNIQUE_INFO.ID_CARD.eq(idCard).and(USERS_UNIQUE_INFO.USERNAME.ne(id))).fetch()
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

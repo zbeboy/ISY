@@ -83,23 +83,6 @@ interface StudentService {
     fun findByStudentNumberNeUsername(username: String, studentNumber: String): Result<StudentRecord>
 
     /**
-     * 根据身份证号号查询 注：不等于用户账号
-     *
-     * @param username 用户账号
-     * @param idCard   身份证号
-     * @return 学生
-     */
-    fun findByIdCardNeUsername(username: String, idCard: String): Result<StudentRecord>
-
-    /**
-     * 根据身份证号号查询
-     *
-     * @param idCard 身份证号
-     * @return 学生
-     */
-    fun findByIdCard(idCard: String): List<Student>
-
-    /**
      * 保存学生信息
      *
      * @param studentElastic 学生

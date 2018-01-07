@@ -140,15 +140,6 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                 .where(STUDENT.STUDENT_NUMBER.eq(studentNumber).and(STUDENT.USERNAME.ne(username))).fetch()
     }
 
-    override fun findByIdCardNeUsername(username: String, idCard: String): Result<StudentRecord> {
-        return create.selectFrom(STUDENT)
-                .where(STUDENT.ID_CARD.eq(idCard).and(STUDENT.USERNAME.ne(username))).fetch()
-    }
-
-    override fun findByIdCard(idCard: String): List<Student> {
-        return studentDao.fetchByIdCard(idCard)
-    }
-
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     override fun save(studentElastic: StudentElastic) {
         val studentRecord = create.insertInto(STUDENT)

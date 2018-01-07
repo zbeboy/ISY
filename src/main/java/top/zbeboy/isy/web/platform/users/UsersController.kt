@@ -27,6 +27,7 @@ import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersTypeService
+import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.system.AuthoritiesService
 import top.zbeboy.isy.service.system.MailService
 import top.zbeboy.isy.service.system.MobileService
@@ -130,6 +131,9 @@ open class UsersController {
 
     @Resource
     open lateinit var usersGlue: UsersGlue
+
+    @Resource
+    open lateinit var usersUniqueInfoService: UsersUniqueInfoService
 
     @Resource
     open lateinit var roleMethodControllerCommon: RoleMethodControllerCommon
@@ -861,30 +865,11 @@ open class UsersController {
     @ResponseBody
     fun validIdCard(@RequestParam("username") username: String, @RequestParam("idCard") idCard: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val users = usersService.getUserFromSession()
-        val usersType = cacheManageService.findByUsersTypeId(users!!.usersTypeId)
-        when (usersType.usersTypeName) {
-            Workbook.STUDENT_USERS_TYPE  // 学生
-            -> {
-                val studentRecords = studentService.findByIdCardNeUsername(username, idCard)
-                val staffs = staffService.findByIdCard(idCard)
-                if (ObjectUtils.isEmpty(staffs) && staffs.isEmpty() && studentRecords.isEmpty()) {
-                    ajaxUtils.success()
-                } else {
-                    ajaxUtils.fail()
-                }
-            }
-            Workbook.STAFF_USERS_TYPE  // 教职工
-            -> {
-                val staffRecords = staffService.findByIdCardNeUsername(username, idCard)
-                val students = studentService.findByIdCard(idCard)
-                if (ObjectUtils.isEmpty(students) && students.isEmpty() && staffRecords.isEmpty()) {
-                    ajaxUtils.success()
-                } else {
-                    ajaxUtils.fail()
-                }
-            }
-            else -> ajaxUtils.fail()
+        val usersUniqueInfoRecord = usersUniqueInfoService.findByIdCardNeUsername(username, idCard)
+        if (ObjectUtils.isEmpty(usersUniqueInfoRecord)) {
+            ajaxUtils.success()
+        } else {
+            ajaxUtils.fail()
         }
         return ajaxUtils
     }

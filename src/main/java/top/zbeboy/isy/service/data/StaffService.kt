@@ -65,23 +65,6 @@ interface StaffService {
     fun findByStaffNumberNeUsername(username: String, staffNumber: String): Result<StaffRecord>
 
     /**
-     * 通过身份证号查询 注：不等于用户账号
-     *
-     * @param username 用户账号
-     * @param idCard   身份证号
-     * @return 教职工
-     */
-    fun findByIdCardNeUsername(username: String, idCard: String): Result<StaffRecord>
-
-    /**
-     * 通过身份证号查询
-     *
-     * @param idCard 身份证号
-     * @return 教职工
-     */
-    fun findByIdCard(idCard: String): List<Staff>
-
-    /**
      * 保存教职工信息
      *
      * @param staffElastic 教职工
