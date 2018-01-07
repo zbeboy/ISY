@@ -15,16 +15,18 @@ import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.Users
+import top.zbeboy.isy.domain.tables.pojos.UsersKey
+import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.glue.data.StaffGlue
 import top.zbeboy.isy.service.cache.CacheManageService
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.StaffService
+import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.system.MailService
-import top.zbeboy.isy.service.util.BCryptUtils
-import top.zbeboy.isy.service.util.DateTimeUtils
-import top.zbeboy.isy.service.util.RandomUtils
-import top.zbeboy.isy.service.util.RequestUtils
+import top.zbeboy.isy.service.util.*
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.platform.common.RoleMethodControllerCommon
 import top.zbeboy.isy.web.platform.common.UsersMethodControllerCommon
@@ -68,6 +70,15 @@ open class StaffController {
 
     @Resource
     open lateinit var staffGlue: StaffGlue
+
+    @Resource
+    open lateinit var desService: DesService
+
+    @Resource
+    open lateinit var usersKeyService: UsersKeyService
+
+    @Resource
+    open lateinit var usersUniqueInfoService: UsersUniqueInfoService
 
     @Resource
     open lateinit var roleMethodControllerCommon: RoleMethodControllerCommon
@@ -182,6 +193,12 @@ open class StaffController {
                                         saveStaff.staffNumber = staffVo.staffNumber
                                         saveStaff.username = email
                                         staffService.save(saveStaff)
+
+                                        // 为该用户产生一个密钥KEY
+                                        val usersKey = UsersKey()
+                                        usersKey.username = desService.encrypt(email, isyProperties.getSecurity().desDefaultKey!!)
+                                        usersKey.userKey = UUIDUtils.getUUID()
+                                        usersKeyService.save(usersKey)
 
                                         //清空session
                                         session.removeAttribute("mobile")
@@ -391,24 +408,42 @@ open class StaffController {
                 }
                 usersService.update(users)
 
+                val usersKey = usersKeyService.findByUsername(staffVo.username!!)
                 val staff = staffService.findByUsername(staffVo.username!!)
                 staff.staffNumber = staffVo.staffNumber
-                staff.sex = staffVo.sex
                 staff.nationId = staffVo.nationId
                 staff.politicalLandscapeId = staffVo.politicalLandscapeId
                 staff.academicTitleId = staffVo.academicTitleId
+                staff.post = staffVo.post
+
                 if (StringUtils.hasLength(staffVo.birthday)) {
-                    staff.birthday = DateTimeUtils.formatDate(staffVo.birthday!!).toString()
+                    staff.birthday = desService.encrypt(DateTimeUtils.formatDate(staffVo.birthday!!).toString(), usersKey.userKey)
                 } else {
                     staff.birthday = null
                 }
-                if (StringUtils.hasLength(staffVo.idCard)) {
-                    staff.idCard = staffVo.idCard
+
+                if (StringUtils.hasLength(staffVo.sex)) {
+                    staff.sex = desService.encrypt(staffVo.sex!!, usersKey.userKey)
                 } else {
-                    staff.idCard = null
+                    staff.sex = null
                 }
-                staff.familyResidence = staffVo.familyResidence
-                staff.post = staffVo.post
+
+                if (StringUtils.hasLength(staffVo.familyResidence)) {
+                    staff.familyResidence = desService.encrypt(staffVo.familyResidence!!, usersKey.userKey)
+                } else {
+                    staff.familyResidence = null
+                }
+
+                val key = isyProperties.getSecurity().desDefaultKey
+                val usersUniqueInfo = UsersUniqueInfo()
+                usersUniqueInfo.username = desService.encrypt(staffVo.username!!, key!!)
+                if (StringUtils.hasLength(staffVo.idCard)) {
+                    usersUniqueInfo.idCard = desService.encrypt(staffVo.idCard!!, key)
+                } else {
+                    usersUniqueInfo.idCard = null
+                }
+                usersUniqueInfoService.saveOrUpdate(usersUniqueInfo)
+
                 staffService.update(staff)
                 return AjaxUtils.of<Any>().success()
             } catch (e: ParseException) {
