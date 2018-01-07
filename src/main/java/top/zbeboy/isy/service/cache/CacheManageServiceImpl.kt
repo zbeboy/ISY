@@ -13,13 +13,16 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
+import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.SystemAlertTypeDao
+import top.zbeboy.isy.domain.tables.daos.UsersKeyDao
 import top.zbeboy.isy.domain.tables.daos.UsersTypeDao
 import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.domain.tables.records.ApplicationRecord
 import top.zbeboy.isy.domain.tables.records.RoleApplicationRecord
+import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.CollegeService
 import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.data.SchoolService
@@ -50,6 +53,9 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     open lateinit var usersTypeDao: UsersTypeDao
 
     @Resource
+    open lateinit var usersKeyDao: UsersKeyDao
+
+    @Resource
     open lateinit var systemAlertTypeDao: SystemAlertTypeDao
 
     @Resource
@@ -66,6 +72,12 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
 
     @Resource
     open lateinit var departmentService: DepartmentService
+
+    @Autowired
+    lateinit open var isyProperties: ISYProperties
+
+    @Resource
+    open lateinit var desService: DesService
 
     @Resource
     open lateinit var stringRedisTemplate: StringRedisTemplate
@@ -93,6 +105,18 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_USER_TYPE_BY_ID), key = "#usersTypeId")
     override fun findByUsersTypeId(usersTypeId: Int): UsersType {
         return usersTypeDao.findById(usersTypeId)
+    }
+
+    override fun getUsersKey(username: String): String {
+        val cacheKey = CacheBook.USER_KEY + username
+        val ops = this.stringRedisTemplate.opsForValue()
+        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
+            return ops.get(cacheKey)
+        }
+        val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
+        val usersKey = usersKeyDao.findById(id)
+        ops.set(cacheKey, usersKey.userKey, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
+        return usersKey.userKey
     }
 
     override fun getRoleCollegeId(users: Users): Int {

@@ -7,14 +7,6 @@ import top.zbeboy.isy.domain.tables.pojos.UsersKey
  **/
 interface UsersKeyService {
     /**
-     * 通过用户账号查询
-     *
-     * @param username 账号
-     * @return 数据
-     */
-    fun findByUsername(username: String): UsersKey
-
-    /**
      * 保存
      *
      * @param usersKey 数据

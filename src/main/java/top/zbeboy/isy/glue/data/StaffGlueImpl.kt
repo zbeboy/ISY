@@ -15,7 +15,6 @@ import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.elastic.repository.StaffElasticRepository
@@ -24,7 +23,6 @@ import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.platform.RoleService
-import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -59,9 +57,6 @@ open class StaffGlueImpl : StaffGlue {
 
     @Resource
     open lateinit var desService: DesService
-
-    @Resource
-    open lateinit var usersKeyService: UsersKeyService
 
     @Resource
     open lateinit var usersUniqueInfoService: UsersUniqueInfoService
@@ -453,17 +448,17 @@ open class StaffGlueImpl : StaffGlue {
      * @param staffElastic 解密前数据
      */
     private fun decryptData(staffBean: StaffBean, staffElastic: StaffElastic) {
-        val usersKey = usersKeyService.findByUsername(staffElastic.username!!)
+        val usersKey = cacheManageService.getUsersKey(staffElastic.username!!)
         if (StringUtils.hasLength(staffElastic.birthday)) {
-            staffBean.birthday = desService.decrypt(staffElastic.birthday, usersKey.userKey)
+            staffBean.birthday = desService.decrypt(staffElastic.birthday, usersKey)
         }
 
         if (StringUtils.hasLength(staffElastic.sex)) {
-            staffBean.sex = desService.decrypt(staffElastic.sex, usersKey.userKey)
+            staffBean.sex = desService.decrypt(staffElastic.sex, usersKey)
         }
 
         if (StringUtils.hasLength(staffElastic.familyResidence)) {
-            staffBean.familyResidence = desService.decrypt(staffElastic.familyResidence, usersKey.userKey)
+            staffBean.familyResidence = desService.decrypt(staffElastic.familyResidence, usersKey)
         }
 
         val usersUniqueInfo = usersUniqueInfoService.findByUsername(staffElastic.username!!)

@@ -1,6 +1,5 @@
 package top.zbeboy.isy.service.platform
 
-import org.jooq.DSLContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -26,11 +25,6 @@ open class UsersKeyServiceImpl : UsersKeyService {
 
     @Resource
     open lateinit var desService: DesService
-
-    override fun findByUsername(username: String): UsersKey {
-        val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
-        return usersKeyDao.findById(id)
-    }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     override fun save(usersKey: UsersKey) {

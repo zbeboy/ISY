@@ -408,7 +408,7 @@ open class StaffController {
                 }
                 usersService.update(users)
 
-                val usersKey = usersKeyService.findByUsername(staffVo.username!!)
+                val usersKey = cacheManageService.getUsersKey(staffVo.username!!)
                 val staff = staffService.findByUsername(staffVo.username!!)
                 staff.staffNumber = staffVo.staffNumber
                 staff.nationId = staffVo.nationId
@@ -417,19 +417,19 @@ open class StaffController {
                 staff.post = staffVo.post
 
                 if (StringUtils.hasLength(staffVo.birthday)) {
-                    staff.birthday = desService.encrypt(DateTimeUtils.formatDate(staffVo.birthday!!).toString(), usersKey.userKey)
+                    staff.birthday = desService.encrypt(DateTimeUtils.formatDate(staffVo.birthday!!).toString(), usersKey)
                 } else {
                     staff.birthday = null
                 }
 
                 if (StringUtils.hasLength(staffVo.sex)) {
-                    staff.sex = desService.encrypt(staffVo.sex!!, usersKey.userKey)
+                    staff.sex = desService.encrypt(staffVo.sex!!, usersKey)
                 } else {
                     staff.sex = null
                 }
 
                 if (StringUtils.hasLength(staffVo.familyResidence)) {
-                    staff.familyResidence = desService.encrypt(staffVo.familyResidence!!, usersKey.userKey)
+                    staff.familyResidence = desService.encrypt(staffVo.familyResidence!!, usersKey)
                 } else {
                     staff.familyResidence = null
                 }

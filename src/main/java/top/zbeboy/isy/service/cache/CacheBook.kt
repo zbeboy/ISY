@@ -51,6 +51,8 @@ open class CacheBook {
 
         const val USER_ROLE = "USER_ROLE_"
 
+        const val USER_KEY = "USER_KEY_"
+
         const val USER_COLLEGE_ID = "USER_COLLEGE_ID_"
 
         const val USER_DEPARTMENT_ID = "USER_DEPARTMENT_ID_"

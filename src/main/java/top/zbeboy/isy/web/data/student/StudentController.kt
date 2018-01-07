@@ -417,49 +417,49 @@ open class StudentController {
                 }
                 usersService.update(users)
 
-                val usersKey = usersKeyService.findByUsername(studentVo.username!!)
+                val usersKey = cacheManageService.getUsersKey(studentVo.username!!)
                 val student = studentService.findByUsername(studentVo.username!!)
                 student.studentNumber = studentVo.studentNumber
                 student.nationId = studentVo.nationId
                 student.politicalLandscapeId = studentVo.politicalLandscapeId
                 if (StringUtils.hasLength(studentVo.birthday)) {
-                    student.birthday = desService.encrypt(DateTimeUtils.formatDate(studentVo.birthday!!).toString(), usersKey.userKey)
+                    student.birthday = desService.encrypt(DateTimeUtils.formatDate(studentVo.birthday!!).toString(), usersKey)
                 } else {
                     student.birthday = null
                 }
 
                 if (StringUtils.hasLength(studentVo.sex)) {
-                    student.sex = desService.encrypt(studentVo.sex!!, usersKey.userKey)
+                    student.sex = desService.encrypt(studentVo.sex!!, usersKey)
                 } else {
                     student.sex = null
                 }
 
                 if (StringUtils.hasLength(studentVo.familyResidence)) {
-                    student.familyResidence = desService.encrypt(studentVo.familyResidence!!, usersKey.userKey)
+                    student.familyResidence = desService.encrypt(studentVo.familyResidence!!, usersKey)
                 } else {
                     student.familyResidence = null
                 }
 
                 if (StringUtils.hasLength(studentVo.dormitoryNumber)) {
-                    student.dormitoryNumber = desService.encrypt(studentVo.dormitoryNumber!!, usersKey.userKey)
+                    student.dormitoryNumber = desService.encrypt(studentVo.dormitoryNumber!!, usersKey)
                 } else {
                     student.dormitoryNumber = null
                 }
 
                 if (StringUtils.hasLength(studentVo.parentName)) {
-                    student.parentName = desService.encrypt(studentVo.parentName!!, usersKey.userKey)
+                    student.parentName = desService.encrypt(studentVo.parentName!!, usersKey)
                 } else {
                     student.parentName = null
                 }
 
                 if (StringUtils.hasLength(studentVo.parentContactPhone)) {
-                    student.parentContactPhone = desService.encrypt(studentVo.parentContactPhone!!, usersKey.userKey)
+                    student.parentContactPhone = desService.encrypt(studentVo.parentContactPhone!!, usersKey)
                 } else {
                     student.parentContactPhone = null
                 }
 
                 if (StringUtils.hasLength(studentVo.placeOrigin)) {
-                    student.placeOrigin = desService.encrypt(studentVo.placeOrigin!!, usersKey.userKey)
+                    student.placeOrigin = desService.encrypt(studentVo.placeOrigin!!, usersKey)
                 } else {
                     student.placeOrigin = null
                 }

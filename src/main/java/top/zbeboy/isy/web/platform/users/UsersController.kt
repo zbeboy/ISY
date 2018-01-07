@@ -26,7 +26,6 @@ import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
-import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersTypeService
 import top.zbeboy.isy.service.platform.UsersUniqueInfoService
@@ -139,9 +138,6 @@ open class UsersController {
 
     @Resource
     open lateinit var desService: DesService
-
-    @Resource
-    open lateinit var usersKeyService: UsersKeyService
 
     @Resource
     open lateinit var roleMethodControllerCommon: RoleMethodControllerCommon
@@ -842,33 +838,33 @@ open class UsersController {
      * @param studentBean 学生
      */
     private fun decryptStudentData(studentBean: StudentBean) {
-        val usersKey = usersKeyService.findByUsername(studentBean.username!!)
+        val usersKey = cacheManageService.getUsersKey(studentBean.username!!)
         if (StringUtils.hasLength(studentBean.birthday)) {
-            studentBean.birthday = desService.decrypt(studentBean.birthday, usersKey.userKey)
+            studentBean.birthday = desService.decrypt(studentBean.birthday, usersKey)
         }
 
         if (StringUtils.hasLength(studentBean.sex)) {
-            studentBean.sex = desService.decrypt(studentBean.sex, usersKey.userKey)
+            studentBean.sex = desService.decrypt(studentBean.sex, usersKey)
         }
 
         if (StringUtils.hasLength(studentBean.familyResidence)) {
-            studentBean.familyResidence = desService.decrypt(studentBean.familyResidence, usersKey.userKey)
+            studentBean.familyResidence = desService.decrypt(studentBean.familyResidence, usersKey)
         }
 
         if (StringUtils.hasLength(studentBean.dormitoryNumber)) {
-            studentBean.dormitoryNumber = desService.decrypt(studentBean.dormitoryNumber, usersKey.userKey)
+            studentBean.dormitoryNumber = desService.decrypt(studentBean.dormitoryNumber, usersKey)
         }
 
         if (StringUtils.hasLength(studentBean.parentName)) {
-            studentBean.parentName = desService.decrypt(studentBean.parentName, usersKey.userKey)
+            studentBean.parentName = desService.decrypt(studentBean.parentName, usersKey)
         }
 
         if (StringUtils.hasLength(studentBean.parentContactPhone)) {
-            studentBean.parentContactPhone = desService.decrypt(studentBean.parentContactPhone, usersKey.userKey)
+            studentBean.parentContactPhone = desService.decrypt(studentBean.parentContactPhone, usersKey)
         }
 
         if (StringUtils.hasLength(studentBean.placeOrigin)) {
-            studentBean.placeOrigin = desService.decrypt(studentBean.placeOrigin, usersKey.userKey)
+            studentBean.placeOrigin = desService.decrypt(studentBean.placeOrigin, usersKey)
         }
 
         val usersUniqueInfo = usersUniqueInfoService.findByUsername(studentBean.username!!)
@@ -886,17 +882,17 @@ open class UsersController {
      * @param staffBean 教职工
      */
     private fun decryptStaffData(staffBean: StaffBean) {
-        val usersKey = usersKeyService.findByUsername(staffBean.username!!)
+        val usersKey = cacheManageService.getUsersKey(staffBean.username!!)
         if (StringUtils.hasLength(staffBean.birthday)) {
-            staffBean.birthday = desService.decrypt(staffBean.birthday, usersKey.userKey)
+            staffBean.birthday = desService.decrypt(staffBean.birthday, usersKey)
         }
 
         if (StringUtils.hasLength(staffBean.sex)) {
-            staffBean.sex = desService.decrypt(staffBean.sex, usersKey.userKey)
+            staffBean.sex = desService.decrypt(staffBean.sex, usersKey)
         }
 
         if (StringUtils.hasLength(staffBean.familyResidence)) {
-            staffBean.familyResidence = desService.decrypt(staffBean.familyResidence, usersKey.userKey)
+            staffBean.familyResidence = desService.decrypt(staffBean.familyResidence, usersKey)
         }
 
         val usersUniqueInfo = usersUniqueInfoService.findByUsername(staffBean.username!!)

@@ -12,11 +12,11 @@ import top.zbeboy.isy.domain.tables.daos.StudentDao
 import top.zbeboy.isy.domain.tables.daos.UsersDao
 import top.zbeboy.isy.domain.tables.pojos.UsersKey
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
+import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.internship.InternshipJournalService
 import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersUniqueInfoService
-import top.zbeboy.isy.service.util.RandomUtils
 import top.zbeboy.isy.service.util.UUIDUtils
 import top.zbeboy.isy.web.bean.internship.journal.InternshipJournalBean
 import javax.annotation.Resource
@@ -48,6 +48,9 @@ open class TestService {
 
     @Resource
     open lateinit var iSYProperties: ISYProperties
+
+    @Resource
+    open lateinit var cacheManageService: CacheManageService
 
     @Test
     fun testCountTeamJournalNumMethod() {
@@ -122,33 +125,33 @@ open class TestService {
     fun encryptUserInfo() {
         val students = studentDao.findAll()
         students.forEach { student ->
-            val usersKey = usersKeyService.findByUsername(student.username)
+            val usersKey = cacheManageService.getUsersKey(student.username)
             if (!ObjectUtils.isEmpty(student.birthday)) {
-                student.birthday = desService.encrypt(student.birthday, usersKey.userKey)
+                student.birthday = desService.encrypt(student.birthday, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(student.sex)) {
-                student.sex = desService.encrypt(student.sex, usersKey.userKey)
+                student.sex = desService.encrypt(student.sex, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(student.familyResidence)) {
-                student.familyResidence = desService.encrypt(student.familyResidence, usersKey.userKey)
+                student.familyResidence = desService.encrypt(student.familyResidence, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(student.dormitoryNumber)) {
-                student.dormitoryNumber = desService.encrypt(student.dormitoryNumber, usersKey.userKey)
+                student.dormitoryNumber = desService.encrypt(student.dormitoryNumber, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(student.parentName)) {
-                student.parentName = desService.encrypt(student.parentName, usersKey.userKey)
+                student.parentName = desService.encrypt(student.parentName, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(student.parentContactPhone)) {
-                student.parentContactPhone = desService.encrypt(student.parentContactPhone, usersKey.userKey)
+                student.parentContactPhone = desService.encrypt(student.parentContactPhone, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(student.placeOrigin)) {
-                student.placeOrigin = desService.encrypt(student.placeOrigin, usersKey.userKey)
+                student.placeOrigin = desService.encrypt(student.placeOrigin, usersKey)
             }
 
             studentDao.update(student)
@@ -156,17 +159,17 @@ open class TestService {
 
         val staffs = staffDao.findAll()
         staffs.forEach { staff ->
-            val usersKey = usersKeyService.findByUsername(staff.username)
+            val usersKey = cacheManageService.getUsersKey(staff.username)
             if (!ObjectUtils.isEmpty(staff.birthday)) {
-                staff.birthday = desService.encrypt(staff.birthday, usersKey.userKey)
+                staff.birthday = desService.encrypt(staff.birthday, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(staff.sex)) {
-                staff.sex = desService.encrypt(staff.sex, usersKey.userKey)
+                staff.sex = desService.encrypt(staff.sex, usersKey)
             }
 
             if (!ObjectUtils.isEmpty(staff.familyResidence)) {
-                staff.familyResidence = desService.encrypt(staff.familyResidence, usersKey.userKey)
+                staff.familyResidence = desService.encrypt(staff.familyResidence, usersKey)
             }
 
             staffDao.update(staff)

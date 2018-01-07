@@ -6,7 +6,6 @@ import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.sort.SortBuilders
 import org.elasticsearch.search.sort.SortOrder
-import org.jooq.SQL
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -24,13 +23,12 @@ import top.zbeboy.isy.glue.util.ResultUtils
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.platform.RoleService
-import top.zbeboy.isy.service.platform.UsersKeyService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersUniqueInfoService
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.util.DataTablesUtils
-import java.util.ArrayList
+import java.util.*
 import javax.annotation.Resource
 
 /**
@@ -59,9 +57,6 @@ open class StudentGlueImpl : StudentGlue {
 
     @Resource
     open lateinit var desService: DesService
-
-    @Resource
-    open lateinit var usersKeyService: UsersKeyService
 
     @Resource
     open lateinit var usersUniqueInfoService: UsersUniqueInfoService
@@ -517,33 +512,33 @@ open class StudentGlueImpl : StudentGlue {
      * @param studentElastic 解密前数据
      */
     private fun decryptData(studentBean: StudentBean, studentElastic: StudentElastic) {
-        val usersKey = usersKeyService.findByUsername(studentElastic.username!!)
+        val usersKey = cacheManageService.getUsersKey(studentElastic.username!!)
         if (StringUtils.hasLength(studentElastic.birthday)) {
-            studentBean.birthday = desService.decrypt(studentElastic.birthday, usersKey.userKey)
+            studentBean.birthday = desService.decrypt(studentElastic.birthday, usersKey)
         }
 
         if (StringUtils.hasLength(studentElastic.sex)) {
-            studentBean.sex = desService.decrypt(studentElastic.sex, usersKey.userKey)
+            studentBean.sex = desService.decrypt(studentElastic.sex, usersKey)
         }
 
         if (StringUtils.hasLength(studentElastic.familyResidence)) {
-            studentBean.familyResidence = desService.decrypt(studentElastic.familyResidence, usersKey.userKey)
+            studentBean.familyResidence = desService.decrypt(studentElastic.familyResidence, usersKey)
         }
 
         if (StringUtils.hasLength(studentElastic.dormitoryNumber)) {
-            studentBean.dormitoryNumber = desService.decrypt(studentElastic.dormitoryNumber, usersKey.userKey)
+            studentBean.dormitoryNumber = desService.decrypt(studentElastic.dormitoryNumber, usersKey)
         }
 
         if (StringUtils.hasLength(studentElastic.parentName)) {
-            studentBean.parentName = desService.decrypt(studentElastic.parentName, usersKey.userKey)
+            studentBean.parentName = desService.decrypt(studentElastic.parentName, usersKey)
         }
 
         if (StringUtils.hasLength(studentElastic.parentContactPhone)) {
-            studentBean.parentContactPhone = desService.decrypt(studentElastic.parentContactPhone, usersKey.userKey)
+            studentBean.parentContactPhone = desService.decrypt(studentElastic.parentContactPhone, usersKey)
         }
 
         if (StringUtils.hasLength(studentElastic.placeOrigin)) {
-            studentBean.placeOrigin = desService.decrypt(studentElastic.placeOrigin, usersKey.userKey)
+            studentBean.placeOrigin = desService.decrypt(studentElastic.placeOrigin, usersKey)
         }
 
         val usersUniqueInfo = usersUniqueInfoService.findByUsername(studentElastic.username!!)
