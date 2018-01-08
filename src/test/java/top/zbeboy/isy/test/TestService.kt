@@ -7,9 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.util.ObjectUtils
 import top.zbeboy.isy.Application
 import top.zbeboy.isy.config.ISYProperties
-import top.zbeboy.isy.domain.tables.daos.StaffDao
-import top.zbeboy.isy.domain.tables.daos.StudentDao
-import top.zbeboy.isy.domain.tables.daos.UsersDao
+import top.zbeboy.isy.domain.tables.daos.*
 import top.zbeboy.isy.domain.tables.pojos.UsersKey
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.service.cache.CacheManageService
@@ -51,6 +49,21 @@ open class TestService {
 
     @Resource
     open lateinit var cacheManageService: CacheManageService
+
+    @Resource
+    open lateinit var graduationPracticeCollegeDao: GraduationPracticeCollegeDao
+
+    @Resource
+    open lateinit var graduationPracticeCompanyDao: GraduationPracticeCompanyDao
+
+    @Resource
+    open lateinit var graduationPracticeUnifyDao: GraduationPracticeUnifyDao
+
+    @Resource
+    open lateinit var internshipCollegeDao: InternshipCollegeDao
+
+    @Resource
+    open lateinit var internshipCompanyDao: InternshipCompanyDao
 
     @Test
     fun testCountTeamJournalNumMethod() {
@@ -153,9 +166,8 @@ open class TestService {
             if (!ObjectUtils.isEmpty(student.placeOrigin)) {
                 student.placeOrigin = desService.encrypt(student.placeOrigin, usersKey)
             }
-
-            studentDao.update(student)
         }
+        studentDao.update(students)
 
         val staffs = staffDao.findAll()
         staffs.forEach { staff ->
@@ -171,9 +183,76 @@ open class TestService {
             if (!ObjectUtils.isEmpty(staff.familyResidence)) {
                 staff.familyResidence = desService.encrypt(staff.familyResidence, usersKey)
             }
-
-            staffDao.update(staff)
         }
+        staffDao.update(staffs)
+    }
+
+    @Test
+    fun encryptInternshipApplyInfo() {
+        val internshipColleges = internshipCollegeDao.findAll()
+        internshipColleges.forEach { i ->
+            val usersKey = cacheManageService.getUsersKey(i.studentUsername)
+            if (!ObjectUtils.isEmpty(i.studentSex)) {
+                i.studentSex = desService.encrypt(i.studentSex, usersKey)
+            }
+
+            if (!ObjectUtils.isEmpty(i.parentalContact)) {
+                i.parentalContact = desService.encrypt(i.parentalContact, usersKey)
+            }
+        }
+        internshipCollegeDao.update(internshipColleges)
+
+        val internshipCompanys = internshipCompanyDao.findAll()
+        internshipCompanys.forEach { i ->
+            val usersKey = cacheManageService.getUsersKey(i.studentUsername)
+            if (!ObjectUtils.isEmpty(i.studentSex)) {
+                i.studentSex = desService.encrypt(i.studentSex, usersKey)
+            }
+
+            if (!ObjectUtils.isEmpty(i.parentalContact)) {
+                i.parentalContact = desService.encrypt(i.parentalContact, usersKey)
+            }
+        }
+        internshipCompanyDao.update(internshipCompanys)
+
+        val graduationPracticeColleges = graduationPracticeCollegeDao.findAll()
+        graduationPracticeColleges.forEach { i ->
+            val usersKey = cacheManageService.getUsersKey(i.studentUsername)
+            if (!ObjectUtils.isEmpty(i.studentSex)) {
+                i.studentSex = desService.encrypt(i.studentSex, usersKey)
+            }
+
+            if (!ObjectUtils.isEmpty(i.parentalContact)) {
+                i.parentalContact = desService.encrypt(i.parentalContact, usersKey)
+            }
+        }
+        graduationPracticeCollegeDao.update(graduationPracticeColleges)
+
+        val graduationPracticeCompanys = graduationPracticeCompanyDao.findAll()
+        graduationPracticeCompanys.forEach { i ->
+            val usersKey = cacheManageService.getUsersKey(i.studentUsername)
+            if (!ObjectUtils.isEmpty(i.studentSex)) {
+                i.studentSex = desService.encrypt(i.studentSex, usersKey)
+            }
+
+            if (!ObjectUtils.isEmpty(i.parentalContact)) {
+                i.parentalContact = desService.encrypt(i.parentalContact, usersKey)
+            }
+        }
+        graduationPracticeCompanyDao.update(graduationPracticeCompanys)
+
+        val graduationPracticeUnifys = graduationPracticeUnifyDao.findAll()
+        graduationPracticeUnifys.forEach { i ->
+            val usersKey = cacheManageService.getUsersKey(i.studentUsername)
+            if (!ObjectUtils.isEmpty(i.studentSex)) {
+                i.studentSex = desService.encrypt(i.studentSex, usersKey)
+            }
+
+            if (!ObjectUtils.isEmpty(i.parentalContact)) {
+                i.parentalContact = desService.encrypt(i.parentalContact, usersKey)
+            }
+        }
+        graduationPracticeUnifyDao.update(graduationPracticeUnifys)
     }
 
 }

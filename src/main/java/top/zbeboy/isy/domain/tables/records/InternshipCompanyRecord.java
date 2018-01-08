@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.InternshipCompany;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompanyRecord> {
 
-    private static final long serialVersionUID = 661034267;
+    private static final long serialVersionUID = -2060896375;
 
     /**
      * Setter for <code>isy.internship_company.internship_company_id</code>.
@@ -90,7 +90,7 @@ public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompa
      * Getter for <code>isy.internship_company.student_sex</code>.
      */
     @NotNull
-    @Size(max = 2)
+    @Size(max = 20)
     public String getStudentSex() {
         return (String) get(3);
     }
@@ -154,7 +154,7 @@ public class InternshipCompanyRecord extends UpdatableRecordImpl<InternshipCompa
      * Getter for <code>isy.internship_company.parental_contact</code>.
      */
     @NotNull
-    @Size(max = 20)
+    @Size(max = 48)
     public String getParentalContact() {
         return (String) get(7);
     }

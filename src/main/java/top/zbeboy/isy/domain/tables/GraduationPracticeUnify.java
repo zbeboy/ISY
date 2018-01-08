@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationPracticeUnifyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRecord> {
 
-    private static final long serialVersionUID = -818879988;
+    private static final long serialVersionUID = -185266494;
 
     /**
      * The reference instance of <code>isy.graduation_practice_unify</code>
@@ -69,7 +69,7 @@ public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRe
     /**
      * The column <code>isy.graduation_practice_unify.student_sex</code>.
      */
-    public final TableField<GraduationPracticeUnifyRecord, String> STUDENT_SEX = createField("student_sex", org.jooq.impl.SQLDataType.VARCHAR.length(2).nullable(false), this, "");
+    public final TableField<GraduationPracticeUnifyRecord, String> STUDENT_SEX = createField("student_sex", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_practice_unify.student_number</code>.
@@ -89,7 +89,7 @@ public class GraduationPracticeUnify extends TableImpl<GraduationPracticeUnifyRe
     /**
      * The column <code>isy.graduation_practice_unify.parental_contact</code>.
      */
-    public final TableField<GraduationPracticeUnifyRecord, String> PARENTAL_CONTACT = createField("parental_contact", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+    public final TableField<GraduationPracticeUnifyRecord, String> PARENTAL_CONTACT = createField("parental_contact", org.jooq.impl.SQLDataType.VARCHAR.length(48).nullable(false), this, "");
 
     /**
      * The column <code>isy.graduation_practice_unify.headmaster</code>.

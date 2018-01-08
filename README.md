@@ -5,13 +5,13 @@
 [![Build Status](https://travis-ci.org/zbeboy/ISY.svg?branch=dev)](https://travis-ci.org/zbeboy/ISY)
 # 开发环境
 1.JDK 1.8.*;  
-2.Intellij IDEA 2017.2.5;  
+2.Intellij IDEA 2017.3;  
 3.MySQL 5.7 +;  
 4.Maven 3.5.0 +;  
 5.Node 6 +;  
-6.Elasticsearch 2.4.5;  
+6.Elasticsearch 2.4.6;  
 7.Redis 3.0.504;  
-8.Kotlin 1.1.51.
+8.Kotlin 1.2.10.
 # 安装
 1.`git clone https://github.com/zbeboy/ISY.git`;  
 2.配置`application.properties`,其它环境配置仅供开发者使用;  

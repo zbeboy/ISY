@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationPracticeUnify implements Serializable {
 
-    private static final long serialVersionUID = -2014042686;
+    private static final long serialVersionUID = -1968911364;
 
     private String  graduationPracticeUnifyId;
     private String  studentName;
@@ -180,7 +180,7 @@ public class GraduationPracticeUnify implements Serializable {
     }
 
     @NotNull
-    @Size(max = 2)
+    @Size(max = 20)
     public String getStudentSex() {
         return this.studentSex;
     }
@@ -220,7 +220,7 @@ public class GraduationPracticeUnify implements Serializable {
     }
 
     @NotNull
-    @Size(max = 20)
+    @Size(max = 48)
     public String getParentalContact() {
         return this.parentalContact;
     }

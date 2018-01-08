@@ -29,7 +29,7 @@ import top.zbeboy.isy.domain.tables.InternshipCollege;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCollegeRecord extends UpdatableRecordImpl<InternshipCollegeRecord> {
 
-    private static final long serialVersionUID = 923937653;
+    private static final long serialVersionUID = 715666823;
 
     /**
      * Setter for <code>isy.internship_college.internship_college_id</code>.
@@ -137,7 +137,7 @@ public class InternshipCollegeRecord extends UpdatableRecordImpl<InternshipColle
      * Getter for <code>isy.internship_college.student_sex</code>.
      */
     @NotNull
-    @Size(max = 2)
+    @Size(max = 24)
     public String getStudentSex() {
         return (String) get(6);
     }
@@ -201,7 +201,7 @@ public class InternshipCollegeRecord extends UpdatableRecordImpl<InternshipColle
      * Getter for <code>isy.internship_college.parental_contact</code>.
      */
     @NotNull
-    @Size(max = 20)
+    @Size(max = 48)
     public String getParentalContact() {
         return (String) get(10);
     }

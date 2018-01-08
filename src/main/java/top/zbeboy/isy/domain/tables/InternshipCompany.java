@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.InternshipCompanyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipCompany extends TableImpl<InternshipCompanyRecord> {
 
-    private static final long serialVersionUID = -407089908;
+    private static final long serialVersionUID = 464689384;
 
     /**
      * The reference instance of <code>isy.internship_company</code>
@@ -69,7 +69,7 @@ public class InternshipCompany extends TableImpl<InternshipCompanyRecord> {
     /**
      * The column <code>isy.internship_company.student_sex</code>.
      */
-    public final TableField<InternshipCompanyRecord, String> STUDENT_SEX = createField("student_sex", org.jooq.impl.SQLDataType.VARCHAR.length(2).nullable(false), this, "");
+    public final TableField<InternshipCompanyRecord, String> STUDENT_SEX = createField("student_sex", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
      * The column <code>isy.internship_company.student_number</code>.
@@ -89,7 +89,7 @@ public class InternshipCompany extends TableImpl<InternshipCompanyRecord> {
     /**
      * The column <code>isy.internship_company.parental_contact</code>.
      */
-    public final TableField<InternshipCompanyRecord, String> PARENTAL_CONTACT = createField("parental_contact", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+    public final TableField<InternshipCompanyRecord, String> PARENTAL_CONTACT = createField("parental_contact", org.jooq.impl.SQLDataType.VARCHAR.length(48).nullable(false), this, "");
 
     /**
      * The column <code>isy.internship_company.headmaster</code>.
