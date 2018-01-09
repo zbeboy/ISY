@@ -376,7 +376,7 @@ open class StaffController {
         return if (!ObjectUtils.isEmpty(users)) {
             val staff = staffService.findByUsername(users!!.username)
             staff.departmentId = department
-            staffService.update(staff)
+            staffService.update(staff, null)
             ajaxUtils.success().msg("更新学校信息成功")
         } else ajaxUtils.fail().msg("未查询到您的信息，请重新登录")
     }
@@ -444,7 +444,7 @@ open class StaffController {
                 }
                 usersUniqueInfoService.saveOrUpdate(usersUniqueInfo)
 
-                staffService.update(staff)
+                staffService.update(staff, usersUniqueInfo)
                 return AjaxUtils.of<Any>().success()
             } catch (e: ParseException) {
                 log.error("Birthday to sql date is exception : {}", e.message)

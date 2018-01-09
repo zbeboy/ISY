@@ -111,7 +111,7 @@ open class TestService {
 
     @Test
     fun syncIdCard() {
-        val students = studentDao.findAll()
+      /*  val students = studentDao.findAll()
         students.forEach { student ->
             if (!ObjectUtils.isEmpty(student.idCard)) {
                 val key = iSYProperties.getSecurity().desDefaultKey
@@ -131,7 +131,7 @@ open class TestService {
                 usersUniqueInfo.idCard = desService.encrypt(staff.idCard, key)
                 usersUniqueInfoService.save(usersUniqueInfo)
             }
-        }
+        }*/
     }
 
     @Test

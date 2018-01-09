@@ -49,6 +49,8 @@ class StudentBean : Student() {
 
     var roleName: String? = null
 
+    var idCard: String? = null
+
     // 楼号
     var ridgepole: String? = null
     // 宿舍号

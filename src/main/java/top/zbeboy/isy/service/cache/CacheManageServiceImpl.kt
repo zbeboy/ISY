@@ -118,6 +118,14 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
         return usersKey.userKey
     }
 
+    override fun deleteUsersKey(username: String) {
+        val cacheKey = CacheBook.USER_KEY + username
+        val ops = this.stringRedisTemplate.opsForValue()
+        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
+            ops.operations.delete(cacheKey)
+        }
+    }
+
     override fun getRoleCollegeId(users: Users): Int {
         val cacheKey = CacheBook.USER_COLLEGE_ID + users.username
         if (integerValueOperations.operations.hasKey(cacheKey)!!) {
@@ -168,7 +176,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
             department = departmentService.findById(departmentId)
         } else {
             val record = departmentService.findByIdRelation(departmentId)
-            if (record.isPresent()) {
+            if (record.isPresent) {
                 school = record.get().into(School::class.java)
                 college = record.get().into(College::class.java)
                 department = record.get().into(Department::class.java)

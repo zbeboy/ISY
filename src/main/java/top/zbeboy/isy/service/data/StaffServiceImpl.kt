@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.StaffDao
 import top.zbeboy.isy.domain.tables.pojos.Staff
+import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.domain.tables.records.StaffRecord
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.pojo.StaffElastic
@@ -112,7 +113,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                 .set(STAFF.STAFF_NUMBER, staffElastic.staffNumber)
                 .set(STAFF.BIRTHDAY, staffElastic.birthday)
                 .set(STAFF.SEX, staffElastic.sex)
-                .set(STAFF.ID_CARD, staffElastic.idCard)
                 .set(STAFF.FAMILY_RESIDENCE, staffElastic.familyResidence)
                 .set(STAFF.POLITICAL_LANDSCAPE_ID, staffElastic.politicalLandscapeId)
                 .set(STAFF.NATION_ID, staffElastic.nationId)
@@ -123,19 +123,22 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                 .returning(STAFF.STAFF_ID)
                 .fetchOne()
         staffElastic.authorities = ElasticBook.NO_AUTHORITIES
+        // 注：此时用户刚注册不可能带有身份证号信息，不必同步
         staffElastic.setStaffId(staffRecord.staffId)
         staffElasticRepository.save(staffElastic)
     }
 
-    override fun update(staff: Staff) {
+    override fun update(staff: Staff, usersUniqueInfo: UsersUniqueInfo?) {
         staffDao.update(staff)
         val staffElastic = staffElasticRepository.findOne(staff.staffId!!.toString() + "")
         staffElastic.staffNumber = staff.staffNumber
         staffElastic.birthday = staff.birthday
         staffElastic.sex = staff.sex
-        staffElastic.idCard = staff.idCard
         staffElastic.familyResidence = staff.familyResidence
         staffElastic.post = staff.post
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            staffElastic.idCard = usersUniqueInfo!!.idCard
+        }
         if (staff.politicalLandscapeId != staffElastic.politicalLandscapeId) {
             if (!Objects.isNull(staff.politicalLandscapeId) && staff.politicalLandscapeId > 0) {
                 val politicalLandscape = politicalLandscapeService.findById(staff.politicalLandscapeId!!)
@@ -608,9 +611,7 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
             val staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"))
             val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
-            val idCard = StringUtils.trimWhitespace(search.getString("idCard"))
             val realName = StringUtils.trimWhitespace(search.getString("realName"))
-            val sex = StringUtils.trimWhitespace(search.getString("sex"))
             if (StringUtils.hasLength(school)) {
                 a = SCHOOL.SCHOOL_NAME.like(SQLQueryUtils.likeAllParam(school))
             }
@@ -663,27 +664,11 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                 }
             }
 
-            if (StringUtils.hasLength(idCard)) {
-                a = if (ObjectUtils.isEmpty(a)) {
-                    STAFF.ID_CARD.like(SQLQueryUtils.likeAllParam(idCard))
-                } else {
-                    a!!.and(STAFF.ID_CARD.like(SQLQueryUtils.likeAllParam(idCard)))
-                }
-            }
-
             if (StringUtils.hasLength(realName)) {
                 a = if (ObjectUtils.isEmpty(a)) {
                     USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
                 } else {
                     a!!.and(USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName)))
-                }
-            }
-
-            if (StringUtils.hasLength(sex)) {
-                a = if (ObjectUtils.isEmpty(a)) {
-                    STAFF.SEX.like(SQLQueryUtils.likeAllParam(sex))
-                } else {
-                    a!!.and(STAFF.SEX.like(SQLQueryUtils.likeAllParam(sex)))
                 }
             }
         }
@@ -740,15 +725,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                 }
             }
 
-            if ("id_card".equals(orderColumnName, ignoreCase = true)) {
-                sortField = arrayOfNulls(1)
-                if (isAsc) {
-                    sortField[0] = STAFF.ID_CARD.asc()
-                } else {
-                    sortField[0] = STAFF.ID_CARD.desc()
-                }
-            }
-
             if ("school_name".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
@@ -800,17 +776,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                     sortField[1] = USERS.USERNAME.asc()
                 } else {
                     sortField[0] = STAFF.POST.desc()
-                    sortField[1] = USERS.USERNAME.desc()
-                }
-            }
-
-            if ("sex".equals(orderColumnName, ignoreCase = true)) {
-                sortField = arrayOfNulls(2)
-                if (isAsc) {
-                    sortField[0] = STAFF.SEX.asc()
-                    sortField[1] = USERS.USERNAME.asc()
-                } else {
-                    sortField[0] = STAFF.SEX.desc()
                     sortField[1] = USERS.USERNAME.desc()
                 }
             }

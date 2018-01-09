@@ -174,9 +174,7 @@ open class StaffGlueImpl : StaffGlue {
             val staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"))
             val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
-            val idCard = StringUtils.trimWhitespace(search.getString("idCard"))
             val realName = StringUtils.trimWhitespace(search.getString("realName"))
-            val sex = StringUtils.trimWhitespace(search.getString("sex"))
 
             if (StringUtils.hasLength(school)) {
                 val matchQueryBuilder = QueryBuilders.matchPhraseQuery("schoolName", school)
@@ -213,18 +211,8 @@ open class StaffGlueImpl : StaffGlue {
                 boolqueryBuilder.must(wildcardQueryBuilder)
             }
 
-            if (StringUtils.hasLength(idCard)) {
-                val wildcardQueryBuilder = QueryBuilders.wildcardQuery("idCard", SQLQueryUtils.elasticLikeAllParam(idCard))
-                boolqueryBuilder.must(wildcardQueryBuilder)
-            }
-
             if (StringUtils.hasLength(realName)) {
                 val matchQueryBuilder = QueryBuilders.matchPhraseQuery("realName", realName)
-                boolqueryBuilder.must(matchQueryBuilder)
-            }
-
-            if (StringUtils.hasLength(sex)) {
-                val matchQueryBuilder = QueryBuilders.matchPhraseQuery("sex", sex)
                 boolqueryBuilder.must(matchQueryBuilder)
             }
         }
@@ -276,14 +264,6 @@ open class StaffGlueImpl : StaffGlue {
                 }
             }
 
-            if ("id_card".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("idCard").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("idCard").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
-
             if ("school_name".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("schoolName").order(SortOrder.ASC).unmappedType("string"))
@@ -330,16 +310,6 @@ open class StaffGlueImpl : StaffGlue {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
                 } else {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("post").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
-
-            if ("sex".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sex").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sex").order(SortOrder.DESC).unmappedType("string"))
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
                 }
             }

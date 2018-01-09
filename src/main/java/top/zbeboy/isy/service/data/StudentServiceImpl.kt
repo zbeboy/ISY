@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.StudentDao
 import top.zbeboy.isy.domain.tables.pojos.Student
+import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.domain.tables.records.StudentRecord
 import top.zbeboy.isy.elastic.config.ElasticBook
 import top.zbeboy.isy.elastic.pojo.StudentElastic
@@ -146,7 +147,6 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                 .set(STUDENT.STUDENT_NUMBER, studentElastic.studentNumber)
                 .set(STUDENT.BIRTHDAY, studentElastic.birthday)
                 .set(STUDENT.SEX, studentElastic.sex)
-                .set(STUDENT.ID_CARD, studentElastic.idCard)
                 .set(STUDENT.FAMILY_RESIDENCE, studentElastic.familyResidence)
                 .set(STUDENT.POLITICAL_LANDSCAPE_ID, studentElastic.politicalLandscapeId)
                 .set(STUDENT.NATION_ID, studentElastic.nationId)
@@ -159,22 +159,25 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                 .returning(STUDENT.STUDENT_ID)
                 .fetchOne()
         studentElastic.authorities = ElasticBook.NO_AUTHORITIES
+        // 注：此时用户刚注册不可能带有身份证号信息，不必同步
         studentElastic.setStudentId(studentRecord.getStudentId())
         studentElasticRepository.save(studentElastic)
     }
 
-    override fun update(student: Student) {
+    override fun update(student: Student, usersUniqueInfo: UsersUniqueInfo?) {
         studentDao.update(student)
         val studentElastic = studentElasticRepository.findOne(student.studentId!!.toString() + "")
         studentElastic.studentNumber = student.studentNumber
         studentElastic.birthday = student.birthday
         studentElastic.sex = student.sex
-        studentElastic.idCard = student.idCard
         studentElastic.familyResidence = student.familyResidence
         studentElastic.dormitoryNumber = student.dormitoryNumber
         studentElastic.parentName = student.parentName
         studentElastic.parentContactPhone = student.parentContactPhone
         studentElastic.placeOrigin = student.placeOrigin
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            studentElastic.idCard = usersUniqueInfo!!.idCard
+        }
         if (student.politicalLandscapeId != studentElastic.politicalLandscapeId) {
             if (!Objects.isNull(student.politicalLandscapeId) && student.politicalLandscapeId > 0) {
                 val politicalLandscape = politicalLandscapeService.findById(student.politicalLandscapeId!!)
@@ -714,9 +717,7 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
             val studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"))
             val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
-            val idCard = StringUtils.trimWhitespace(search.getString("idCard"))
             val realName = StringUtils.trimWhitespace(search.getString("realName"))
-            val sex = StringUtils.trimWhitespace(search.getString("sex"))
             if (StringUtils.hasLength(school)) {
                 a = SCHOOL.SCHOOL_NAME.like(SQLQueryUtils.likeAllParam(school))
             }
@@ -785,27 +786,11 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                 }
             }
 
-            if (StringUtils.hasLength(idCard)) {
-                a = if (ObjectUtils.isEmpty(a)) {
-                    STUDENT.ID_CARD.like(SQLQueryUtils.likeAllParam(idCard))
-                } else {
-                    a!!.and(STUDENT.ID_CARD.like(SQLQueryUtils.likeAllParam(idCard)))
-                }
-            }
-
             if (StringUtils.hasLength(realName)) {
                 a = if (ObjectUtils.isEmpty(a)) {
                     USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
                 } else {
                     a!!.and(USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName)))
-                }
-            }
-
-            if (StringUtils.hasLength(sex)) {
-                a = if (ObjectUtils.isEmpty(a)) {
-                    STUDENT.SEX.like(SQLQueryUtils.likeAllParam(sex))
-                } else {
-                    a!!.and(STUDENT.SEX.like(SQLQueryUtils.likeAllParam(sex)))
                 }
             }
         }
@@ -859,15 +844,6 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                     sortField[0] = USERS.MOBILE.asc()
                 } else {
                     sortField[0] = USERS.MOBILE.desc()
-                }
-            }
-
-            if ("id_card".equals(orderColumnName, ignoreCase = true)) {
-                sortField = arrayOfNulls(1)
-                if (isAsc) {
-                    sortField[0] = STUDENT.ID_CARD.asc()
-                } else {
-                    sortField[0] = STUDENT.ID_CARD.desc()
                 }
             }
 
@@ -933,17 +909,6 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                     sortField[1] = USERS.USERNAME.asc()
                 } else {
                     sortField[0] = ORGANIZE.ORGANIZE_NAME.desc()
-                    sortField[1] = USERS.USERNAME.desc()
-                }
-            }
-
-            if ("sex".equals(orderColumnName, ignoreCase = true)) {
-                sortField = arrayOfNulls(2)
-                if (isAsc) {
-                    sortField[0] = STUDENT.SEX.asc()
-                    sortField[1] = USERS.USERNAME.asc()
-                } else {
-                    sortField[0] = STUDENT.SEX.desc()
                     sortField[1] = USERS.USERNAME.desc()
                 }
             }

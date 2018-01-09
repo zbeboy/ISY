@@ -178,9 +178,7 @@ open class StudentGlueImpl : StudentGlue {
             val studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"))
             val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
-            val idCard = StringUtils.trimWhitespace(search.getString("idCard"))
             val realName = StringUtils.trimWhitespace(search.getString("realName"))
-            val sex = StringUtils.trimWhitespace(search.getString("sex"))
 
             if (StringUtils.hasLength(school)) {
                 val matchQueryBuilder = QueryBuilders.matchPhraseQuery("schoolName", school)
@@ -227,18 +225,8 @@ open class StudentGlueImpl : StudentGlue {
                 boolqueryBuilder.must(wildcardQueryBuilder)
             }
 
-            if (StringUtils.hasLength(idCard)) {
-                val wildcardQueryBuilder = QueryBuilders.wildcardQuery("idCard", SQLQueryUtils.elasticLikeAllParam(idCard))
-                boolqueryBuilder.must(wildcardQueryBuilder)
-            }
-
             if (StringUtils.hasLength(realName)) {
                 val matchQueryBuilder = QueryBuilders.matchPhraseQuery("realName", realName)
-                boolqueryBuilder.must(matchQueryBuilder)
-            }
-
-            if (StringUtils.hasLength(sex)) {
-                val matchQueryBuilder = QueryBuilders.matchPhraseQuery("sex", sex)
                 boolqueryBuilder.must(matchQueryBuilder)
             }
         }
@@ -287,14 +275,6 @@ open class StudentGlueImpl : StudentGlue {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("mobile").order(SortOrder.ASC).unmappedType("string"))
                 } else {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("mobile").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
-
-            if ("id_card".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("idCard").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("idCard").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
@@ -354,16 +334,6 @@ open class StudentGlueImpl : StudentGlue {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
                 } else {
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("organizeName").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
-                }
-            }
-
-            if ("sex".equals(orderColumnName, ignoreCase = true)) {
-                if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sex").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.ASC).unmappedType("string"))
-                } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sex").order(SortOrder.DESC).unmappedType("string"))
                     nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("username").order(SortOrder.DESC).unmappedType("string"))
                 }
             }

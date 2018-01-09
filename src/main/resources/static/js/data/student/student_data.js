@@ -53,9 +53,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 studentNumber: '#pass_search_student_number',
                 username: '#pass_search_username',
                 mobile: '#pass_mobile',
-                idCard: '#pass_id_card',
-                realName: '#pass_real_name',
-                sex: '#pass_sex'
+                realName: '#pass_real_name'
             };
         }
 
@@ -72,9 +70,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             studentNumber: '',
             username: '',
             mobile: '',
-            idCard: '',
-            realName: '',
-            sex: ''
+            realName: ''
         };
 
         /*
@@ -90,9 +86,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             PASS_STUDENT_NUMBER: 'DATA_STUDENT_PASS_STUDENT_NUMBER_SEARCH',
             PASS_USERNAME: 'DATA_STUDENT_PASS_USERNAME_SEARCH',
             PASS_MOBILE: 'DATA_STUDENT_PASS_MOBILE_SEARCH',
-            PASS_ID_CARD: 'DATA_STUDENT_PASS_ID_CARD_SEARCH',
             PASS_REAL_NAME: 'DATA_STUDENT_PASS_REAL_NAME_SEARCH',
-            PASS_SEX: 'DATA_STUDENT_PASS_SEX_SEARCH',
             WAIT_SCHOOL: 'DATA_STUDENT_WAIT_SCHOOL_SEARCH',
             WAIT_COLLEGE: 'DATA_STUDENT_WAIT_COLLEGE_SEARCH',
             WAIT_DEPARTMENT: 'DATA_STUDENT_WAIT_DEPARTMENT_SEARCH',
@@ -124,9 +118,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             passParam.studentNumber = $(getPassParamId().studentNumber).val();
             passParam.username = $(getPassParamId().username).val();
             passParam.mobile = $(getPassParamId().mobile).val();
-            passParam.idCard = $(getPassParamId().idCard).val();
             passParam.realName = $(getPassParamId().realName).val();
-            passParam.sex = $(getPassParamId().sex).val();
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.PASS_SCHOOL, DP.defaultUndefinedValue(passParam.school, ''));
                 sessionStorage.setItem(webStorageKey.PASS_COLLEGE, DP.defaultUndefinedValue(passParam.college, ''));
@@ -137,9 +129,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 sessionStorage.setItem(webStorageKey.PASS_STUDENT_NUMBER, passParam.studentNumber);
                 sessionStorage.setItem(webStorageKey.PASS_USERNAME, passParam.username);
                 sessionStorage.setItem(webStorageKey.PASS_MOBILE, passParam.mobile);
-                sessionStorage.setItem(webStorageKey.PASS_ID_CARD, passParam.idCard);
                 sessionStorage.setItem(webStorageKey.PASS_REAL_NAME, passParam.realName);
-                sessionStorage.setItem(webStorageKey.PASS_SEX, passParam.sex);
             }
         }
 
@@ -156,9 +146,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             var studentNumber = null;
             var username = null;
             var mobile = null;
-            var idCard = null;
             var realName = null;
-            var sex = null;
             if (typeof(Storage) !== "undefined") {
                 school = sessionStorage.getItem(webStorageKey.PASS_SCHOOL);
                 college = sessionStorage.getItem(webStorageKey.PASS_COLLEGE);
@@ -169,9 +157,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 studentNumber = sessionStorage.getItem(webStorageKey.PASS_STUDENT_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
                 mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
-                idCard = sessionStorage.getItem(webStorageKey.PASS_ID_CARD);
                 realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
-                sex = sessionStorage.getItem(webStorageKey.PASS_SEX);
             }
             if (school !== null) {
                 passParam.school = school;
@@ -209,16 +195,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 passParam.mobile = mobile;
             }
 
-            if (idCard !== null) {
-                passParam.idCard = idCard;
-            }
-
             if (realName !== null) {
                 passParam.realName = realName;
-            }
-
-            if (sex !== null) {
-                passParam.sex = sex;
             }
         }
 
@@ -235,9 +213,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             var studentNumber = null;
             var username = null;
             var mobile = null;
-            var idCard = null;
             var realName = null;
-            var sex = null;
             if (typeof(Storage) !== "undefined") {
                 school = sessionStorage.getItem(webStorageKey.PASS_SCHOOL);
                 college = sessionStorage.getItem(webStorageKey.PASS_COLLEGE);
@@ -248,9 +224,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 studentNumber = sessionStorage.getItem(webStorageKey.PASS_STUDENT_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
                 mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
-                idCard = sessionStorage.getItem(webStorageKey.PASS_ID_CARD);
                 realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
-                sex = sessionStorage.getItem(webStorageKey.PASS_SEX);
             }
             if (school !== null) {
                 $(getPassParamId().school).val(school);
@@ -288,16 +262,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 $(getPassParamId().mobile).val(mobile);
             }
 
-            if (idCard !== null) {
-                $(getPassParamId().idCard).val(idCard);
-            }
-
             if (realName !== null) {
                 $(getPassParamId().realName).val(realName);
-            }
-
-            if (sex !== null) {
-                $(getPassParamId().sex).val(sex);
             }
         }
 
@@ -314,15 +280,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             $(getPassParamId().studentNumber).val('');
             $(getPassParamId().username).val('');
             $(getPassParamId().mobile).val('');
-            $(getPassParamId().idCard).val('');
             $(getPassParamId().realName).val('');
-            var childrens = $(getPassParamId().sex).children();
-            for (var i = 0; i < childrens.length; i++) {
-                if ($(childrens[i]).val() === '') {
-                    $(childrens[i]).prop('selected', true);
-                    break;
-                }
-            }
         }
 
         // pass tab table.
@@ -391,23 +349,11 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             }
         });
 
-        $(getPassParamId().idCard).keyup(function (event) {
-            if (event.keyCode === 13) {
-                initPassParam();
-                passTable.ajax.reload();
-            }
-        });
-
         $(getPassParamId().realName).keyup(function (event) {
             if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
-        });
-
-        $(getPassParamId().sex).change(function () {
-            initPassParam();
-            passTable.ajax.reload();
         });
 
         passId.delegate('#pass_search', "click", function () {
@@ -521,7 +467,15 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                         }
                     },
                     {
+                        targets: 5,
+                        orderable: false
+                    },
+                    {
                         targets: 6,
+                        orderable: false
+                    },
+                    {
+                        targets: 13,
                         orderable: false
                     },
                     {

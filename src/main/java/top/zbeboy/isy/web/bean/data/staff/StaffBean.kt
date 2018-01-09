@@ -41,6 +41,8 @@ class StaffBean : Staff() {
 
     var academicTitleName: String? = null
 
+    var idCard: String? = null
+
     // 用于checkbox 选中使用
     var checked: Boolean = false
 }

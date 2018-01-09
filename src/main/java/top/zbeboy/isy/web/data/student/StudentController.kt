@@ -159,7 +159,7 @@ open class StudentController {
                                         val saveStudent = StudentElastic()
                                         val enabled: Byte = 1
                                         saveUsers.username = email
-                                        saveUsers.setEnabled(enabled)
+                                        saveUsers.enabled = enabled
                                         saveStudent.enabled = enabled
                                         saveUsers.mobile = mobile
                                         saveStudent.mobile = mobile
@@ -177,7 +177,7 @@ open class StudentController {
                                         saveStudent.langKey = saveUsers.langKey
                                         saveUsers.avatar = Workbook.USERS_AVATAR
                                         saveStudent.avatar = saveUsers.avatar
-                                        saveUsers.setVerifyMailbox(0)
+                                        saveUsers.verifyMailbox = 0
                                         saveUsers.realName = studentVo.realName
                                         saveStudent.realName = saveUsers.realName
                                         usersService.save(saveUsers)
@@ -386,7 +386,7 @@ open class StudentController {
         val users = usersService.getUserFromSession()
         val student = studentService.findByUsername(users!!.username)
         student.organizeId = organize
-        studentService.update(student)
+        studentService.update(student, null)
         return AjaxUtils.of<Any>().success().msg("更新学校信息成功")
     }
 
@@ -474,7 +474,7 @@ open class StudentController {
                 }
                 usersUniqueInfoService.saveOrUpdate(usersUniqueInfo)
 
-                studentService.update(student)
+                studentService.update(student, usersUniqueInfo)
                 return AjaxUtils.of<Any>().success()
             } catch (e: ParseException) {
                 log.error("Birthday to sql date is exception : {}", e.message)

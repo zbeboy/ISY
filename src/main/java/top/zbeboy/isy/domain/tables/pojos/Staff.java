@@ -24,13 +24,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Staff implements Serializable {
 
-    private static final long serialVersionUID = -1965810685;
+    private static final long serialVersionUID = 1918375129;
 
     private Integer staffId;
     private String  staffNumber;
     private String  birthday;
     private String  sex;
-    private String  idCard;
     private String  familyResidence;
     private Integer politicalLandscapeId;
     private Integer nationId;
@@ -46,7 +45,6 @@ public class Staff implements Serializable {
         this.staffNumber = value.staffNumber;
         this.birthday = value.birthday;
         this.sex = value.sex;
-        this.idCard = value.idCard;
         this.familyResidence = value.familyResidence;
         this.politicalLandscapeId = value.politicalLandscapeId;
         this.nationId = value.nationId;
@@ -61,7 +59,6 @@ public class Staff implements Serializable {
         String  staffNumber,
         String  birthday,
         String  sex,
-        String  idCard,
         String  familyResidence,
         Integer politicalLandscapeId,
         Integer nationId,
@@ -74,7 +71,6 @@ public class Staff implements Serializable {
         this.staffNumber = staffNumber;
         this.birthday = birthday;
         this.sex = sex;
-        this.idCard = idCard;
         this.familyResidence = familyResidence;
         this.politicalLandscapeId = politicalLandscapeId;
         this.nationId = nationId;
@@ -119,15 +115,6 @@ public class Staff implements Serializable {
 
     public void setSex(String sex) {
         this.sex = sex;
-    }
-
-    @Size(max = 20)
-    public String getIdCard() {
-        return this.idCard;
-    }
-
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
     }
 
     @Size(max = 192)
@@ -199,7 +186,6 @@ public class Staff implements Serializable {
         sb.append(", ").append(staffNumber);
         sb.append(", ").append(birthday);
         sb.append(", ").append(sex);
-        sb.append(", ").append(idCard);
         sb.append(", ").append(familyResidence);
         sb.append(", ").append(politicalLandscapeId);
         sb.append(", ").append(nationId);

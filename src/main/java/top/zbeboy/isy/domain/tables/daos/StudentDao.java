@@ -97,20 +97,6 @@ public class StudentDao extends DAOImpl<StudentRecord, top.zbeboy.isy.domain.tab
     }
 
     /**
-     * Fetch records that have <code>id_card IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.Student> fetchByIdCard(String... values) {
-        return fetch(Student.STUDENT.ID_CARD, values);
-    }
-
-    /**
-     * Fetch a unique record that has <code>id_card = value</code>
-     */
-    public top.zbeboy.isy.domain.tables.pojos.Student fetchOneByIdCard(String value) {
-        return fetchOne(Student.STUDENT.ID_CARD, value);
-    }
-
-    /**
      * Fetch records that have <code>family_residence IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.Student> fetchByFamilyResidence(String... values) {

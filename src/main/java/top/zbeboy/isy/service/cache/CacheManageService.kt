@@ -32,6 +32,14 @@ interface CacheManageService {
     fun getUsersKey(username: String): String
 
     /**
+     * 通过用户账号删除
+     *
+     * @param username 账号
+     * @return 数据
+     */
+    fun deleteUsersKey(username: String)
+
+    /**
      * 获取角色院id
      *
      * @param users 用户信息

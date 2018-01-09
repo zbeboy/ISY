@@ -97,20 +97,6 @@ public class StaffDao extends DAOImpl<StaffRecord, top.zbeboy.isy.domain.tables.
     }
 
     /**
-     * Fetch records that have <code>id_card IN (values)</code>
-     */
-    public List<top.zbeboy.isy.domain.tables.pojos.Staff> fetchByIdCard(String... values) {
-        return fetch(Staff.STAFF.ID_CARD, values);
-    }
-
-    /**
-     * Fetch a unique record that has <code>id_card = value</code>
-     */
-    public top.zbeboy.isy.domain.tables.pojos.Staff fetchOneByIdCard(String value) {
-        return fetchOne(Staff.STAFF.ID_CARD, value);
-    }
-
-    /**
      * Fetch records that have <code>family_residence IN (values)</code>
      */
     public List<top.zbeboy.isy.domain.tables.pojos.Staff> fetchByFamilyResidence(String... values) {

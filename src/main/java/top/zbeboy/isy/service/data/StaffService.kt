@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.data
 import org.jooq.Record
 import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.Staff
+import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.domain.tables.records.StaffRecord
 import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
@@ -75,8 +76,9 @@ interface StaffService {
      * 更新教职式信息
      *
      * @param staff 教职工
+     * @param usersUniqueInfo 需要单独同步
      */
-    fun update(staff: Staff)
+    fun update(staff: Staff, usersUniqueInfo: UsersUniqueInfo?)
 
     /**
      * 通过用户账号关联查询 注：信息包括学校等 建议用于验证，效率不高

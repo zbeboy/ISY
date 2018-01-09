@@ -82,6 +82,7 @@ open class UsersMethodControllerCommon {
                                 studentService.deleteByUsername(id)
                                 usersService.deleteById(id)
                                 usersKeyService.deleteByUsername(id)
+                                cacheManageService.deleteUsersKey(id)
                                 usersUniqueInfoService.deleteByUsername(id)
                                 ajaxUtils.success().msg("删除用户成功")
                             }
@@ -90,6 +91,7 @@ open class UsersMethodControllerCommon {
                                 staffService.deleteByUsername(id)
                                 usersService.deleteById(id)
                                 usersKeyService.deleteByUsername(id)
+                                cacheManageService.deleteUsersKey(id)
                                 usersUniqueInfoService.deleteByUsername(id)
                                 ajaxUtils.success().msg("删除用户成功")
                             }

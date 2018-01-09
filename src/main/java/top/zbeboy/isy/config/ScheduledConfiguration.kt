@@ -119,6 +119,7 @@ open class ScheduledConfiguration {
             this.usersService.deleteById(r.username)
             this.usersElasticRepository.delete(r.username)
             this.usersKeyService.deleteByUsername(r.username)
+            this.cacheManageService.deleteUsersKey(r.username)
             this.usersUniqueInfoService.deleteByUsername(r.username)
         }
         log.info(">>>>>>>>>>>>> scheduled ... clean users ")

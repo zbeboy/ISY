@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.StudentRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Student extends TableImpl<StudentRecord> {
 
-    private static final long serialVersionUID = -1233435567;
+    private static final long serialVersionUID = 1552645523;
 
     /**
      * The reference instance of <code>isy.student</code>
@@ -70,11 +70,6 @@ public class Student extends TableImpl<StudentRecord> {
      * The column <code>isy.student.sex</code>.
      */
     public final TableField<StudentRecord, String> SEX = createField("sex", org.jooq.impl.SQLDataType.VARCHAR.length(24), this, "");
-
-    /**
-     * The column <code>isy.student.id_card</code>.
-     */
-    public final TableField<StudentRecord, String> ID_CARD = createField("id_card", org.jooq.impl.SQLDataType.VARCHAR.length(20), this, "");
 
     /**
      * The column <code>isy.student.family_residence</code>.
@@ -172,7 +167,7 @@ public class Student extends TableImpl<StudentRecord> {
      */
     @Override
     public List<UniqueKey<StudentRecord>> getKeys() {
-        return Arrays.<UniqueKey<StudentRecord>>asList(Keys.KEY_STUDENT_PRIMARY, Keys.KEY_STUDENT_STUDENT_NUMBER, Keys.KEY_STUDENT_ID_CARD);
+        return Arrays.<UniqueKey<StudentRecord>>asList(Keys.KEY_STUDENT_PRIMARY, Keys.KEY_STUDENT_STUDENT_NUMBER);
     }
 
     /**

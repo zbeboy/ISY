@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.data
 import org.jooq.Record
 import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.Student
+import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.domain.tables.records.StudentRecord
 import top.zbeboy.isy.elastic.pojo.StudentElastic
 import top.zbeboy.isy.web.bean.data.student.StudentBean
@@ -93,8 +94,9 @@ interface StudentService {
      * 更新学生信息
      *
      * @param student 学生
+     * @param usersUniqueInfo 需要单独同步
      */
-    fun update(student: Student)
+    fun update(student: Student, usersUniqueInfo: UsersUniqueInfo?)
 
     /**
      * 通过用户账号关联查询 注：信息包括学校等 建议用于验证，效率不高

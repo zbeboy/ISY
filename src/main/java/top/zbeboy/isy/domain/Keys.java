@@ -260,10 +260,8 @@ public class Keys {
     public static final UniqueKey<ScoreTypeRecord> KEY_SCORE_TYPE_PRIMARY = UniqueKeys0.KEY_SCORE_TYPE_PRIMARY;
     public static final UniqueKey<StaffRecord> KEY_STAFF_PRIMARY = UniqueKeys0.KEY_STAFF_PRIMARY;
     public static final UniqueKey<StaffRecord> KEY_STAFF_STAFF_NUMBER = UniqueKeys0.KEY_STAFF_STAFF_NUMBER;
-    public static final UniqueKey<StaffRecord> KEY_STAFF_ID_CARD = UniqueKeys0.KEY_STAFF_ID_CARD;
     public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = UniqueKeys0.KEY_STUDENT_PRIMARY;
     public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = UniqueKeys0.KEY_STUDENT_STUDENT_NUMBER;
-    public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = UniqueKeys0.KEY_STUDENT_ID_CARD;
     public static final UniqueKey<SystemAlertRecord> KEY_SYSTEM_ALERT_PRIMARY = UniqueKeys0.KEY_SYSTEM_ALERT_PRIMARY;
     public static final UniqueKey<SystemAlertTypeRecord> KEY_SYSTEM_ALERT_TYPE_PRIMARY = UniqueKeys0.KEY_SYSTEM_ALERT_TYPE_PRIMARY;
     public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = UniqueKeys0.KEY_SYSTEM_MESSAGE_PRIMARY;
@@ -469,10 +467,8 @@ public class Keys {
         public static final UniqueKey<ScoreTypeRecord> KEY_SCORE_TYPE_PRIMARY = createUniqueKey(ScoreType.SCORE_TYPE, "KEY_score_type_PRIMARY", ScoreType.SCORE_TYPE.SCORE_TYPE_ID);
         public static final UniqueKey<StaffRecord> KEY_STAFF_PRIMARY = createUniqueKey(Staff.STAFF, "KEY_staff_PRIMARY", Staff.STAFF.STAFF_ID);
         public static final UniqueKey<StaffRecord> KEY_STAFF_STAFF_NUMBER = createUniqueKey(Staff.STAFF, "KEY_staff_staff_number", Staff.STAFF.STAFF_NUMBER);
-        public static final UniqueKey<StaffRecord> KEY_STAFF_ID_CARD = createUniqueKey(Staff.STAFF, "KEY_staff_id_card", Staff.STAFF.ID_CARD);
         public static final UniqueKey<StudentRecord> KEY_STUDENT_PRIMARY = createUniqueKey(Student.STUDENT, "KEY_student_PRIMARY", Student.STUDENT.STUDENT_ID);
         public static final UniqueKey<StudentRecord> KEY_STUDENT_STUDENT_NUMBER = createUniqueKey(Student.STUDENT, "KEY_student_student_number", Student.STUDENT.STUDENT_NUMBER);
-        public static final UniqueKey<StudentRecord> KEY_STUDENT_ID_CARD = createUniqueKey(Student.STUDENT, "KEY_student_id_card", Student.STUDENT.ID_CARD);
         public static final UniqueKey<SystemAlertRecord> KEY_SYSTEM_ALERT_PRIMARY = createUniqueKey(SystemAlert.SYSTEM_ALERT, "KEY_system_alert_PRIMARY", SystemAlert.SYSTEM_ALERT.SYSTEM_ALERT_ID);
         public static final UniqueKey<SystemAlertTypeRecord> KEY_SYSTEM_ALERT_TYPE_PRIMARY = createUniqueKey(SystemAlertType.SYSTEM_ALERT_TYPE, "KEY_system_alert_type_PRIMARY", SystemAlertType.SYSTEM_ALERT_TYPE.SYSTEM_ALERT_TYPE_ID);
         public static final UniqueKey<SystemMessageRecord> KEY_SYSTEM_MESSAGE_PRIMARY = createUniqueKey(SystemMessage.SYSTEM_MESSAGE, "KEY_system_message_PRIMARY", SystemMessage.SYSTEM_MESSAGE.SYSTEM_MESSAGE_ID);
