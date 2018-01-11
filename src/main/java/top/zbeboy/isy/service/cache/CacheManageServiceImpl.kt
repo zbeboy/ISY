@@ -114,7 +114,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
         }
         val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
         val usersKey = usersKeyDao.findById(id)
-        ops.set(cacheKey, usersKey.userKey, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
+        ops.set(cacheKey, usersKey.userKey, CacheBook.EXPIRES_YEAR, TimeUnit.DAYS)
         return usersKey.userKey
     }
 

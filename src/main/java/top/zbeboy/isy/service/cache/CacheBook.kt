@@ -20,6 +20,8 @@ open class CacheBook {
         val EXPIRES_HOURS: Long = 4
         @JvmField
         val EXPIRES_DAYS: Long = 1
+        @JvmField
+        val EXPIRES_YEAR: Long = 365
 
         /*
         特殊到期时间
