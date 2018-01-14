@@ -221,7 +221,7 @@ open class GraduationDesignReleaseController {
             val graduationDesignReleaseId = graduationDesignReleaseUpdateVo.graduationDesignReleaseId
             val fillTeacherTime = graduationDesignReleaseUpdateVo.fillTeacherTime
             val files = graduationDesignReleaseUpdateVo.files
-            val graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId)
+            val graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId!!)
             graduationDesignRelease.graduationDesignTitle = graduationDesignReleaseUpdateVo.graduationDesignTitle
             saveOrUpdateTime(graduationDesignRelease, graduationDesignReleaseUpdateVo.startTime!!, graduationDesignReleaseUpdateVo.endTime!!, fillTeacherTime!!)
             graduationDesignRelease.graduationDesignIsDel = graduationDesignReleaseUpdateVo.graduationDesignIsDel
@@ -232,7 +232,7 @@ open class GraduationDesignReleaseController {
                 val graduationDesignReleaseFiles = records.into(GraduationDesignReleaseFile::class.java)
                 graduationDesignReleaseFiles.forEach { f -> filesService.deleteById(f.fileId) }
             }
-            saveOrUpdateFiles(files, graduationDesignReleaseId!!)
+            saveOrUpdateFiles(files, graduationDesignReleaseId)
             return AjaxUtils.of<Any>().success().msg("保存成功")
         }
         return AjaxUtils.of<Any>().fail().msg("保存失败")

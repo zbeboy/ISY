@@ -100,14 +100,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();
@@ -132,7 +124,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             param.grade = $(paramId.grade).val().trim();
             param.scienceId = $(paramId.scienceId).val();
             param.graduationDesignIsDel = $('input[name="graduationDesignIsDel"]:checked').val();
-            if (typeof(param.graduationDesignIsDel) == "undefined") {
+            if (typeof(param.graduationDesignIsDel) === "undefined") {
                 param.graduationDesignIsDel = 0;
             }
             var f = $('.fileobj');
@@ -169,7 +161,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          */
         function initFillTeacherTime() {
             // 确认教师填报后，不允许再编辑该时间
-            if ($(paramId.isOkTeacher).val() != null && Number($(paramId.isOkTeacher).val()) == 1) {
+            if ($(paramId.isOkTeacher).val() != null && Number($(paramId.isOkTeacher).val()) === 1) {
                 $(paramId.fillTeacherTime).prop('readonly', true);
                 $(paramId.fillTeacherTime).val($(paramId.fillTeacherStartTimeStr).val() + ' 至 ' + $(paramId.fillTeacherEndTimeStr).val());
             } else {

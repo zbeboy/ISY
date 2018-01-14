@@ -34,6 +34,7 @@ import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBe
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -87,6 +88,9 @@ public class GraduationDesignPharmtechController {
 
     @Resource
     private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
+    @Resource
+    private GraduationDesignConditionCommon graduationDesignConditionCommon;
 
     /**
      * 填报指导教师
@@ -531,7 +535,7 @@ public class GraduationDesignPharmtechController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Map<String, Object> mapData = new HashMap<>();
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();

@@ -27,6 +27,7 @@ import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseOrderBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -75,6 +76,9 @@ public class GraduationDesignReplanController {
     @Resource
     private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
 
+    @Resource
+    private GraduationDesignConditionCommon graduationDesignConditionCommon;
+
     /**
      * 毕业设计答辩安排
      *
@@ -105,7 +109,7 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/graduate/design/replan/arrange", method = RequestMethod.GET)
     public String arrange(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
             if (record.isPresent()) {
@@ -133,7 +137,7 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/graduate/design/replan/group", method = RequestMethod.GET)
     public String group(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
             if (record.isPresent()) {
@@ -157,7 +161,7 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/graduate/design/replan/divide", method = RequestMethod.GET)
     public String divide(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认毕业设计指导教师
@@ -181,7 +185,7 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/graduate/design/replan/order", method = RequestMethod.GET)
     public String order(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
             if (record.isPresent()) {
@@ -205,7 +209,7 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/graduate/design/replan/order/look", method = RequestMethod.GET)
     public String orderLook(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseGroupId") String defenseGroupId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
             modelMap.addAttribute("defenseGroupId", defenseGroupId);
@@ -227,7 +231,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils<GraduationDesignTeacherBean> divideData(GraduationDesignTeacherBean condition) {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
         List<GraduationDesignTeacherBean> graduationDesignTeacherBeens = new ArrayList<>();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(condition.getGraduationDesignReleaseId());
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(condition.getGraduationDesignReleaseId());
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认毕业设计指导教师
@@ -248,7 +252,7 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/graduate/design/replan/group/add", method = RequestMethod.GET)
     public String groupAdd(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
             if (record.isPresent()) {
@@ -275,7 +279,7 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/graduate/design/replan/group/edit", method = RequestMethod.GET)
     public String groupEdit(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseGroupId") String defenseGroupId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseGroupService.findByIdRelation(defenseGroupId);
             if (record.isPresent()) {
@@ -450,7 +454,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils<DefenseGroupBean> groupData(@RequestParam("id") String graduationDesignReleaseId,
                                                  @RequestParam("defenseArrangementId") String defenseArrangementId) {
         AjaxUtils<DefenseGroupBean> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("获取数据成功").listData(defenseGroupService.findByDefenseArrangementId(defenseArrangementId));
         } else {
@@ -469,7 +473,7 @@ public class GraduationDesignReplanController {
     @ResponseBody
     public AjaxUtils<DefenseGroupBean> groups(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId) {
         AjaxUtils<DefenseGroupBean> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             List<DefenseGroupBean> defenseGroupBeens = new ArrayList<>();
             DefenseGroupBean defenseGroupBean = new DefenseGroupBean();
@@ -768,7 +772,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils<DefenseOrderBean> orderLookData(DefenseOrderBean condition) {
         AjaxUtils<DefenseOrderBean> ajaxUtils = AjaxUtils.of();
         List<DefenseOrderBean> defenseOrderBeens = new ArrayList<>();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(condition.getGraduationDesignReleaseId());
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(condition.getGraduationDesignReleaseId());
         if (!errorBean.isHasError()) {
             Result<Record> records = defenseOrderService.findAll(condition);
             if (records.isNotEmpty()) {
@@ -887,7 +891,7 @@ public class GraduationDesignReplanController {
     @ResponseBody
     public AjaxUtils groupCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
             if (record.isPresent()) {
@@ -911,7 +915,7 @@ public class GraduationDesignReplanController {
     @ResponseBody
     public AjaxUtils divideCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认毕业设计指导教师
@@ -952,7 +956,7 @@ public class GraduationDesignReplanController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围

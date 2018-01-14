@@ -31,6 +31,7 @@ import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -83,6 +84,9 @@ public class GraduationDesignProjectController {
 
     @Resource
     private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
+    @Resource
+    private GraduationDesignConditionCommon graduationDesignConditionCommon;
 
     /**
      * 毕业设计规划
@@ -652,7 +656,7 @@ public class GraduationDesignProjectController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> simpleCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Map<String, Object> mapData = new HashMap<>();
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
@@ -676,7 +680,7 @@ public class GraduationDesignProjectController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> myCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Map<String, Object> mapData = new HashMap<>();
             okCurrentTeacher(errorBean, mapData);
@@ -692,7 +696,7 @@ public class GraduationDesignProjectController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Map<String, Object> mapData = new HashMap<>();
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();

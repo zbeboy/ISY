@@ -34,6 +34,7 @@ import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBe
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -82,6 +83,9 @@ public class GraduationDesignAdjustechController {
 
     @Resource(name = "redisTemplate")
     private ListOperations<String, String> listOperations;
+
+    @Resource
+    private GraduationDesignConditionCommon graduationDesignConditionCommon;
 
     /**
      * 调整填报教师
@@ -607,7 +611,7 @@ public class GraduationDesignAdjustechController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围

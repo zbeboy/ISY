@@ -27,6 +27,7 @@ import top.zbeboy.isy.web.bean.graduate.design.reorder.DefenseRateBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -88,6 +89,9 @@ public class GraduationDesignReorderController {
     @Resource
     private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
 
+    @Resource
+    private GraduationDesignConditionCommon graduationDesignConditionCommon;
+
     /**
      * 毕业答辩顺序
      *
@@ -118,7 +122,7 @@ public class GraduationDesignReorderController {
     @RequestMapping(value = "/web/graduate/design/reorder/arrange", method = RequestMethod.GET)
     public String arrange(@RequestParam("id") String graduationDesignReleaseId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
             if (record.isPresent()) {
@@ -145,7 +149,7 @@ public class GraduationDesignReorderController {
     @RequestMapping(value = "/web/graduate/design/reorder/order", method = RequestMethod.GET)
     public String orderLook(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseGroupId") String defenseGroupId, ModelMap modelMap) {
         String page;
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             // 是管理员或系统
             boolean reorderIsSuper = false;
@@ -498,7 +502,7 @@ public class GraduationDesignReorderController {
     @ResponseBody
     public AjaxUtils<DefenseGroupBean> groups(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils<DefenseGroupBean> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             List<DefenseGroupBean> defenseGroupBeens = defenseGroupService.findByGraduationDesignReleaseIdRelation(graduationDesignReleaseId);
             defenseGroupBeens.forEach(defenseGroupBean -> {
@@ -528,7 +532,7 @@ public class GraduationDesignReorderController {
     public AjaxUtils<DefenseRateBean> markInfo(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
         AjaxUtils<DefenseRateBean> ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                 if (!ObjectUtils.isEmpty(defenseOrder)) {
@@ -558,7 +562,7 @@ public class GraduationDesignReorderController {
     public AjaxUtils mark(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                 if (!ObjectUtils.isEmpty(defenseOrder)) {
@@ -588,7 +592,7 @@ public class GraduationDesignReorderController {
     public String questionInfo(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult, ModelMap modelMap) {
         String page;
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                 if (!ObjectUtils.isEmpty(defenseOrder)) {
@@ -623,7 +627,7 @@ public class GraduationDesignReorderController {
     public AjaxUtils question(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 // 判断资格
                 if (groupCondition(defenseOrderVo)) {
@@ -657,7 +661,7 @@ public class GraduationDesignReorderController {
     @ResponseBody
     public AjaxUtils arrangeCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
             if (record.isPresent()) {
@@ -723,7 +727,7 @@ public class GraduationDesignReorderController {
      * @return true or false
      */
     private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignReleaseService.basicCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 毕业时间范围
