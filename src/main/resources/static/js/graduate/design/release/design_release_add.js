@@ -16,7 +16,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             grade_data_url: '/user/department/grades',
             science_data_url: '/user/grade/sciences',
             valid: '/web/graduate/design/release/save/valid',
-            file_upload_url: '/anyone/users/upload/graduate/design',
+            file_upload_url: '/web/graduate/design/release/upload/file/design',
             delete_file_url: '/web/graduate/design/release/delete/file',
             save: '/web/graduate/design/release/save',
             back: '/web/menu/graduate/design/release'

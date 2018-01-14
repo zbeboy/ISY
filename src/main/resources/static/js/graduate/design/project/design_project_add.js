@@ -7,7 +7,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "b
      ajax url.
      */
     var ajax_url = {
-        building_data_url: '/web/graduate/design/project/buildings',
+        building_data_url: '/anyone/graduate/design/buildings',
         schoolroom_data_url: '/user/schoolrooms',
         save: '/web/graduate/design/project/save',
         back: '/web/graduate/design/project/my/list',

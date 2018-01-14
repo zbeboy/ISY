@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            release_data_url: '/anyone/graduate/design/release/data',
+            release_data_url: '/web/graduate/design/project/design/data',
             project_list: '/web/graduate/design/project/list',
             list_condition: '/web/graduate/design/project/list/condition',
             my_project: '/web/graduate/design/project/my/list',

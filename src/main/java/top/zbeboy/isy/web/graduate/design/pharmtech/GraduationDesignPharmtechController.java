@@ -31,9 +31,12 @@ import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -82,6 +85,9 @@ public class GraduationDesignPharmtechController {
     @Resource(name = "redisTemplate")
     private ListOperations<String, String> listOperations;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 填报指导教师
      *
@@ -90,6 +96,18 @@ public class GraduationDesignPharmtechController {
     @RequestMapping(value = "/web/menu/graduate/design/pharmtech", method = RequestMethod.GET)
     public String pharmtech() {
         return "web/graduate/design/pharmtech/design_pharmtech::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/pharmtech/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**

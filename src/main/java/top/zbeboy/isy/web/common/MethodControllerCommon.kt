@@ -6,15 +6,17 @@ import org.springframework.stereotype.Component
 import org.springframework.ui.ModelMap
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartHttpServletRequest
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.*
+import top.zbeboy.isy.domain.tables.pojos.SystemAlert
+import top.zbeboy.isy.domain.tables.pojos.SystemMessage
+import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.common.FilesService
 import top.zbeboy.isy.service.common.UploadService
-import top.zbeboy.isy.service.data.BuildingService
-import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.MailService
@@ -23,6 +25,8 @@ import top.zbeboy.isy.service.system.SystemMessageService
 import top.zbeboy.isy.service.util.FilesUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.service.util.UUIDUtils
+import top.zbeboy.isy.web.bean.file.FileBean
+import top.zbeboy.isy.web.util.AjaxUtils
 import java.io.IOException
 import java.sql.Timestamp
 import java.time.Clock
@@ -44,12 +48,6 @@ open class MethodControllerCommon {
 
     @Resource
     open lateinit var roleService: RoleService
-
-    @Resource
-    open lateinit var departmentService: DepartmentService
-
-    @Resource
-    open lateinit var buildingService: BuildingService
 
     @Autowired
     open lateinit var isyProperties: ISYProperties
@@ -77,26 +75,6 @@ open class MethodControllerCommon {
 
     @Resource
     open lateinit var desService: DesService
-
-    /**
-     * 通过毕业设计发布 生成楼数据
-     *
-     * @param graduationDesignRelease 毕业设计发布
-     * @return 楼
-     */
-    fun generateBuildFromGraduationDesignRelease(graduationDesignRelease: GraduationDesignRelease): List<Building> {
-        val buildings = ArrayList<Building>()
-        val isDel: Byte = 0
-        val building = Building(0, "请选择楼", isDel, 0)
-        buildings.add(building)
-        val record = departmentService.findByIdRelation(graduationDesignRelease.departmentId!!)
-        if (record.isPresent) {
-            val college = record.get().into(College::class.java)
-            val buildingRecords = buildingService.findByCollegeIdAndIsDel(college.collegeId!!, isDel)
-            buildingRecords.mapTo(buildings) { Building(it.buildingId, it.buildingName, it.buildingIsDel, it.collegeId) }
-        }
-        return buildings
-    }
 
     /**
      * 组装提示信息
@@ -169,6 +147,30 @@ open class MethodControllerCommon {
         systemAlert.username = users.username
         systemAlert.alertDate = now
         systemAlertService.save(systemAlert)
+    }
+
+    /**
+     * 上传附件
+     *
+     * @param schoolId                    学校id
+     * @param collegeId                   院id
+     * @param departmentId                系id
+     * @param multipartHttpServletRequest 文件请求
+     * @return 文件信息
+     */
+    fun uploadFile(schoolId: Int?, collegeId: Int?, @RequestParam("departmentId") departmentId: Int,
+                   multipartHttpServletRequest: MultipartHttpServletRequest): AjaxUtils<FileBean> {
+        val data = AjaxUtils.of<FileBean>()
+        try {
+            val path = Workbook.graduateDesignPath(cacheManageService.schoolInfoPath(schoolId, collegeId, departmentId))
+            val fileBeen = uploadService.upload(multipartHttpServletRequest,
+                    RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.remoteAddr)
+            data.success().listData(fileBeen).obj(path)
+        } catch (e: Exception) {
+            log.error("Upload file exception,is {}", e)
+        }
+
+        return data
     }
 
     /**

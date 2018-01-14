@@ -4,11 +4,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
-import org.springframework.web.multipart.MultipartHttpServletRequest
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.FilesService
-import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.data.StudentService
 import top.zbeboy.isy.service.internship.InternshipFileService
 import top.zbeboy.isy.service.internship.InternshipReleaseService
@@ -17,7 +14,6 @@ import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersTypeService
 import top.zbeboy.isy.service.util.FilesUtils
 import top.zbeboy.isy.service.util.RequestUtils
-import top.zbeboy.isy.web.bean.file.FileBean
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean
 import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
@@ -40,13 +36,7 @@ open class InternshipMethodControllerCommon {
     open lateinit var internshipReleaseService: InternshipReleaseService
 
     @Resource
-    open lateinit var uploadService: UploadService
-
-    @Resource
     open lateinit var filesService: FilesService
-
-    @Resource
-    open lateinit var cacheManageService: CacheManageService
 
     @Resource
     open lateinit var internshipFileService: InternshipFileService
@@ -79,30 +69,6 @@ open class InternshipMethodControllerCommon {
         val records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean)
         val internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean)
         return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils)
-    }
-
-    /**
-     * 上传实习附件
-     *
-     * @param schoolId                    学校id
-     * @param collegeId                   院id
-     * @param departmentId                系id
-     * @param multipartHttpServletRequest 文件请求
-     * @return 文件信息
-     */
-    fun uploadFileInternship(schoolId: Int?, collegeId: Int?, departmentId: Int,
-                             multipartHttpServletRequest: MultipartHttpServletRequest): AjaxUtils<FileBean> {
-        val data = AjaxUtils.of<FileBean>()
-        try {
-            val path = Workbook.internshipPath(cacheManageService.schoolInfoPath(schoolId, collegeId, departmentId))
-            val fileBeen = uploadService.upload(multipartHttpServletRequest,
-                    RequestUtils.getRealPath(multipartHttpServletRequest) + path, multipartHttpServletRequest.remoteAddr)
-            data.success().listData(fileBeen).obj(path)
-        } catch (e: Exception) {
-            log.error("Upload file exception,is {}", e)
-        }
-
-        return data
     }
 
     /**

@@ -30,9 +30,12 @@ import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.archives.GraduationDesignArchivesBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -69,6 +72,9 @@ public class GraduationDesignArchivesController {
     @Resource
     private MethodControllerCommon methodControllerCommon;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 毕业设计归档
      *
@@ -77,6 +83,18 @@ public class GraduationDesignArchivesController {
     @RequestMapping(value = "/web/menu/graduate/design/archives", method = RequestMethod.GET)
     public String manifest() {
         return "web/graduate/design/archives/design_archives::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/archives/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**

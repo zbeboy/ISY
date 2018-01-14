@@ -322,7 +322,7 @@ open class InternshipReleaseController {
     @ResponseBody
     fun uploadFileInternship(schoolId: Int?, collegeId: Int?, @RequestParam("departmentId") departmentId: Int,
                              multipartHttpServletRequest: MultipartHttpServletRequest): AjaxUtils<FileBean> {
-        return internshipMethodControllerCommon.uploadFileInternship(schoolId, collegeId, departmentId, multipartHttpServletRequest)
+        return methodControllerCommon.uploadFile(schoolId, collegeId, departmentId, multipartHttpServletRequest)
     }
 
     /**

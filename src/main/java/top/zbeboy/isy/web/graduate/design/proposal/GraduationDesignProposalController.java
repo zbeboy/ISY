@@ -33,9 +33,12 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.file.FileBean;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBean;
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumGroupBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.graduate.design.proposal.GraduationDesignProposalAddVo;
 
 import javax.annotation.Resource;
@@ -99,6 +102,9 @@ public class GraduationDesignProposalController {
     @Resource
     private StaffService staffService;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 毕业设计资料
      *
@@ -107,6 +113,18 @@ public class GraduationDesignProposalController {
     @RequestMapping(value = "/web/menu/graduate/design/proposal", method = RequestMethod.GET)
     public String proposal() {
         return "web/graduate/design/proposal/design_proposal::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/proposal/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**

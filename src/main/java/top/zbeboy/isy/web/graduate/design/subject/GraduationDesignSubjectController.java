@@ -35,11 +35,14 @@ import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.subject.GraduationDesignPresubjectBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.subject.GraduationDesignDeclareUpdateVo;
 import top.zbeboy.isy.web.vo.graduate.design.subject.GraduationDesignPresubjectAddVo;
@@ -110,6 +113,9 @@ public class GraduationDesignSubjectController {
     @Resource
     private UploadService uploadService;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 毕业设计题目
      *
@@ -118,6 +124,18 @@ public class GraduationDesignSubjectController {
     @RequestMapping(value = "/web/menu/graduate/design/subject", method = RequestMethod.GET)
     public String subject() {
         return "web/graduate/design/subject/design_subject::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/subject/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**

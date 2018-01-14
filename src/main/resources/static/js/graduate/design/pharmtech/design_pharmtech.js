@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            release_data_url: '/anyone/graduate/design/release/data',
+            release_data_url: '/web/graduate/design/pharmtech/design/data',
             wish_condition: '/web/graduate/design/pharmtech/wish/condition',
             apply_condition: '/web/graduate/design/pharmtech/apply/condition',
             my_teacher: '/web/graduate/design/pharmtech/my/teacher',

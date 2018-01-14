@@ -11,9 +11,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          */
         var ajax_url = {
             valid: '/web/graduate/design/release/update/valid',
-            file_upload_url: '/anyone/users/upload/graduate/design',
-            delete_file_url: '/anyone/users/delete/file/graduate/design',
-            graduate_design_release_files_url: '/user/graduate/design/files',
+            file_upload_url: '/web/graduate/design/release/upload/file/design',
+            delete_file_url: '/web/graduate/design/release/delete/file/design',
+            graduate_design_release_files_url: '/anyone/graduate/design/files',
             update: '/web/graduate/design/release/update',
             back: '/web/menu/graduate/design/release'
         };

@@ -28,9 +28,12 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.project.GraduationDesignPlanBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectAddVo;
 import top.zbeboy.isy.web.vo.graduate.design.project.GraduationDesignProjectUpdateVo;
@@ -78,6 +81,9 @@ public class GraduationDesignProjectController {
     @Resource
     private MethodControllerCommon methodControllerCommon;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 毕业设计规划
      *
@@ -86,6 +92,18 @@ public class GraduationDesignProjectController {
     @RequestMapping(value = "/web/menu/graduate/design/project", method = RequestMethod.GET)
     public String project() {
         return "web/graduate/design/project/design_project::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/project/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**
@@ -402,25 +420,6 @@ public class GraduationDesignProjectController {
             } else {
                 ajaxUtils.fail().msg("请等待指导教师调整确定后查看");
             }
-        } else {
-            ajaxUtils.fail().msg(errorBean.getErrorMsg());
-        }
-        return ajaxUtils;
-    }
-
-    /**
-     * 获取全部楼
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return 全部楼
-     */
-    @RequestMapping(value = "/web/graduate/design/project/buildings", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils<Building> buildings(@RequestParam("id") String graduationDesignReleaseId) {
-        AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            ajaxUtils.success().msg("获取楼数据成功！").listData(methodControllerCommon.generateBuildFromGraduationDesignRelease(errorBean.getData()));
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }

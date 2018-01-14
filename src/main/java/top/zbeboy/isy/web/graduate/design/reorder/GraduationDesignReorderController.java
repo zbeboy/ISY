@@ -22,11 +22,14 @@ import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.reorder.DefenseRateBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.vo.graduate.design.reorder.DefenseOrderVo;
 
 import javax.annotation.Resource;
@@ -82,6 +85,9 @@ public class GraduationDesignReorderController {
     @Resource
     private DefenseRateService defenseRateService;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 毕业答辩顺序
      *
@@ -90,6 +96,18 @@ public class GraduationDesignReorderController {
     @RequestMapping(value = "/web/menu/graduate/design/reorder", method = RequestMethod.GET)
     public String reorder() {
         return "web/graduate/design/reorder/design_reorder::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/reorder/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**

@@ -21,12 +21,15 @@ import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseGroupMemberBean;
 import top.zbeboy.isy.web.bean.graduate.design.replan.DefenseOrderBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 import top.zbeboy.isy.web.vo.graduate.design.replan.*;
 
@@ -69,6 +72,9 @@ public class GraduationDesignReplanController {
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 毕业设计答辩安排
      *
@@ -77,6 +83,18 @@ public class GraduationDesignReplanController {
     @RequestMapping(value = "/web/menu/graduate/design/replan", method = RequestMethod.GET)
     public String replan() {
         return "web/graduate/design/replan/design_replan::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/replan/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**
@@ -857,25 +875,6 @@ public class GraduationDesignReplanController {
             defenseTime.setSortTime(i);
             defenseTimeService.save(defenseTime);
         }
-    }
-
-    /**
-     * 获取全部楼
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return 全部楼
-     */
-    @RequestMapping(value = "/web/graduate/design/replan/buildings", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxUtils<Building> buildings(@RequestParam("id") String graduationDesignReleaseId) {
-        AjaxUtils<Building> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            ajaxUtils.success().msg("获取楼数据成功！").listData(methodControllerCommon.generateBuildFromGraduationDesignRelease(errorBean.getData()));
-        } else {
-            ajaxUtils.fail().msg(errorBean.getErrorMsg());
-        }
-        return ajaxUtils;
     }
 
     /**

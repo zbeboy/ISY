@@ -33,10 +33,13 @@ import top.zbeboy.isy.service.util.UUIDUtils;
 import top.zbeboy.isy.web.bean.data.science.ScienceBean;
 import top.zbeboy.isy.web.bean.data.staff.StaffBean;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
+import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
+import top.zbeboy.isy.web.util.PaginationUtils;
 import top.zbeboy.isy.web.util.SmallPropsUtils;
 
 import javax.annotation.Resource;
@@ -87,6 +90,9 @@ public class GraduationDesignTeacherController {
     @Resource(name = "redisTemplate")
     private ValueOperations<String, List<GraduationDesignTeacherBean>> stringListValueOperations;
 
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
+
     /**
      * 毕业指导教师
      *
@@ -95,6 +101,18 @@ public class GraduationDesignTeacherController {
     @RequestMapping(value = "/web/menu/graduate/design/tutor", method = RequestMethod.GET)
     public String teacherData() {
         return "web/graduate/design/teacher/design_teacher::#page-wrapper";
+    }
+
+    /**
+     * 获取毕业设计发布数据
+     *
+     * @param paginationUtils 分页工具
+     * @return 数据
+     */
+    @RequestMapping(value = "/web/graduate/design/tutor/design/data")
+    @ResponseBody
+    public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
+        return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
     }
 
     /**
