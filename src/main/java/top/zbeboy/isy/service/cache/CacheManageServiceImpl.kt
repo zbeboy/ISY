@@ -29,6 +29,7 @@ import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.system.ApplicationService
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean
+import top.zbeboy.isy.web.bean.data.organize.OrganizeBean
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
@@ -96,6 +97,9 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     @Resource(name = "redisTemplate")
     open lateinit var integerValueOperations: ValueOperations<String, Int>
 
+    @Resource(name = "redisTemplate")
+    open lateinit var organizeValueOperations: ValueOperations<String, OrganizeBean>
+
     @Cacheable(cacheNames = arrayOf(CacheBook.QUERY_USER_TYPE_BY_NAME), key = "#usersTypeName")
     override fun findByUsersTypeName(usersTypeName: String): UsersType {
         return usersTypeDao.fetchOne(USERS_TYPE.USERS_TYPE_NAME, usersTypeName)
@@ -158,6 +162,22 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
             }
         }
         return departmentId
+    }
+
+    override fun getRoleOrganizeInfo(users: Users): OrganizeBean? {
+        val cacheKey = CacheBook.USER_ORGANIZE_INFO + users.username
+        if (organizeValueOperations.operations.hasKey(cacheKey)!!) {
+            return organizeValueOperations.get(cacheKey)
+        }
+        var organizeBean: OrganizeBean? = null
+        val record = usersService.findUserSchoolInfo(users)
+        if (record.isPresent) {
+            organizeBean = record.get().into(OrganizeBean::class.java)
+            if (!ObjectUtils.isEmpty(organizeBean)) {
+                organizeValueOperations.set(cacheKey, organizeBean, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
+            }
+        }
+        return organizeBean
     }
 
     override fun schoolInfoPath(schoolId: Int?, collegeId: Int?, departmentId: Int): String {

@@ -18,7 +18,6 @@ import top.zbeboy.isy.service.common.FilesService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignPlanService;
-import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService;
 import top.zbeboy.isy.service.platform.UsersService;
@@ -51,9 +50,6 @@ import java.util.*;
 @Slf4j
 @Controller
 public class GraduationDesignProjectController {
-
-    @Resource
-    private GraduationDesignReleaseService graduationDesignReleaseService;
 
     @Resource
     private UsersService usersService;

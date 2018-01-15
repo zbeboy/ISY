@@ -54,6 +54,8 @@ open class GraduationDesignMethodControllerCommon {
         val commonData = methodControllerCommon.adminOrNormalData()
         graduationDesignReleaseBean.departmentId = if (StringUtils.isEmpty(commonData["departmentId"])) -1 else commonData["departmentId"]
         graduationDesignReleaseBean.collegeId = if (StringUtils.isEmpty(commonData["collegeId"])) -1 else commonData["collegeId"]
+        graduationDesignReleaseBean.scienceId = if (StringUtils.isEmpty(commonData["scienceId"])) -1 else commonData["scienceId"]
+        graduationDesignReleaseBean.allowGrade = if (StringUtils.isEmpty(commonData["grade"])) null else commonData["grade"].toString()
         val records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean)
         val graduationDesignReleaseBeens = graduationDesignReleaseService.dealData(paginationUtils, records, graduationDesignReleaseBean)
         return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignReleaseBeens).paginationUtils(paginationUtils)

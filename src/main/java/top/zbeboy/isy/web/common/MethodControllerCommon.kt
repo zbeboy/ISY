@@ -91,7 +91,7 @@ open class MethodControllerCommon {
     }
 
     /**
-     * 如果是管理员则获取院id，如果是普通学生或教职工角色则获取系id
+     * 如果是管理员则获取院id，如果是教职工角色则获取系id,如果是普通学生就获取系id,专业id,年级
      *
      * @return 根据角色返回相应数据
      */
@@ -103,8 +103,17 @@ open class MethodControllerCommon {
             map.put("collegeId", collegeId)
         } else if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
             val users = usersService.getUserFromSession()
-            val departmentId = cacheManageService.getRoleDepartmentId(users!!)
-            map.put("departmentId", departmentId)
+            val userTypeId = users!!.usersTypeId!!
+            val usersType = cacheManageService.findByUsersTypeId(userTypeId)
+            if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {// 学生
+                val organizeBean = cacheManageService.getRoleOrganizeInfo(users)
+                map.put("departmentId", organizeBean!!.departmentId)
+                map.put("scienceId", organizeBean.scienceId)
+                map.put("grade", organizeBean.grade.toInt())
+            } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {// 教职工
+                val departmentId = cacheManageService.getRoleDepartmentId(users)
+                map.put("departmentId", departmentId)
+            }
         }
         return map
     }

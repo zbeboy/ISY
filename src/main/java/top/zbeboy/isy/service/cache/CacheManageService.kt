@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.cache
 
 import top.zbeboy.isy.domain.tables.pojos.*
+import top.zbeboy.isy.web.bean.data.organize.OrganizeBean
 
 /**
  * Created by zbeboy 2017-11-07 .
@@ -54,6 +55,14 @@ interface CacheManageService {
      * @return id
      */
     fun getRoleDepartmentId(users: Users): Int
+
+    /**
+     * 获取角色班级信息
+     *
+     * @param users 用户信息
+     * @return 班级信息
+     */
+    fun getRoleOrganizeInfo(users: Users): OrganizeBean?
 
     /**
      * 获取当前用户学校路径

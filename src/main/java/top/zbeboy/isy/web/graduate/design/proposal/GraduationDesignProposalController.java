@@ -62,9 +62,6 @@ public class GraduationDesignProposalController {
     private MethodControllerCommon methodControllerCommon;
 
     @Resource
-    private GraduationDesignReleaseService graduationDesignReleaseService;
-
-    @Resource
     private GraduationDesignDatumService graduationDesignDatumService;
 
     @Resource

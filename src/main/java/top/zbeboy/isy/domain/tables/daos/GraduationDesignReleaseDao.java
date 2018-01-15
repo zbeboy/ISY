@@ -159,4 +159,11 @@ public class GraduationDesignReleaseDao extends DAOImpl<GraduationDesignReleaseR
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease> fetchByScienceId(Integer... values) {
         return fetch(GraduationDesignRelease.GRADUATION_DESIGN_RELEASE.SCIENCE_ID, values);
     }
+
+    /**
+     * Fetch records that have <code>publisher IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease> fetchByPublisher(String... values) {
+        return fetch(GraduationDesignRelease.GRADUATION_DESIGN_RELEASE.PUBLISHER, values);
+    }
 }

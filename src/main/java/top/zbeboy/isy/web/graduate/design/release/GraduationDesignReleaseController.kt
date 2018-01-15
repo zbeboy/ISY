@@ -195,6 +195,7 @@ open class GraduationDesignReleaseController {
             graduationDesignRelease.releaseTime = Timestamp(Clock.systemDefaultZone().millis())
             val users = usersService.getUserFromSession()
             graduationDesignRelease.username = users!!.username
+            graduationDesignRelease.publisher = users.realName
             saveOrUpdateTime(graduationDesignRelease, graduationDesignReleaseAddVo.startTime!!, graduationDesignReleaseAddVo.endTime!!, fillTeacherTime!!)
             graduationDesignRelease.allowGrade = graduationDesignReleaseAddVo.grade
             graduationDesignRelease.departmentId = graduationDesignReleaseAddVo.departmentId

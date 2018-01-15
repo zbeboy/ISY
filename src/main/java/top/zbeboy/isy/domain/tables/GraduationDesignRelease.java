@@ -36,7 +36,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignRelease extends TableImpl<GraduationDesignReleaseRecord> {
 
-    private static final long serialVersionUID = -557898643;
+    private static final long serialVersionUID = -634499015;
 
     /**
      * The reference instance of <code>isy.graduation_design_release</code>
@@ -120,6 +120,11 @@ public class GraduationDesignRelease extends TableImpl<GraduationDesignReleaseRe
      * The column <code>isy.graduation_design_release.science_id</code>.
      */
     public final TableField<GraduationDesignReleaseRecord, Integer> SCIENCE_ID = createField("science_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_release.publisher</code>.
+     */
+    public final TableField<GraduationDesignReleaseRecord, String> PUBLISHER = createField("publisher", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_release</code> table reference

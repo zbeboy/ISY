@@ -181,6 +181,14 @@ open class GraduationDesignReleaseServiceImpl @Autowired constructor(dslContext:
                 }
             }
 
+            if (!ObjectUtils.isEmpty(graduationDesignReleaseBean.scienceId) && graduationDesignReleaseBean.scienceId!! > 0) {
+                tempCondition = if (!ObjectUtils.isEmpty(tempCondition)) {
+                    tempCondition!!.and(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(graduationDesignReleaseBean.scienceId))
+                } else {
+                    GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(graduationDesignReleaseBean.scienceId)
+                }
+            }
+
             if (!ObjectUtils.isEmpty(graduationDesignReleaseBean.graduationDesignIsDel)) {
                 tempCondition = if (!ObjectUtils.isEmpty(tempCondition)) {
                     tempCondition!!.and(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_IS_DEL.eq(graduationDesignReleaseBean.graduationDesignIsDel))

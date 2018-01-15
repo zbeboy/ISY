@@ -47,9 +47,6 @@ import java.util.*;
 public class GraduationDesignReplanController {
 
     @Resource
-    private GraduationDesignReleaseService graduationDesignReleaseService;
-
-    @Resource
     private DefenseArrangementService defenseArrangementService;
 
     @Resource

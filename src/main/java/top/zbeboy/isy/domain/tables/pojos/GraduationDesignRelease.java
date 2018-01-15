@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignRelease implements Serializable {
 
-    private static final long serialVersionUID = 136043809;
+    private static final long serialVersionUID = 2034101921;
 
     private String    graduationDesignReleaseId;
     private String    graduationDesignTitle;
@@ -41,6 +41,7 @@ public class GraduationDesignRelease implements Serializable {
     private Byte      isOkTeacherAdjust;
     private Integer   departmentId;
     private Integer   scienceId;
+    private String    publisher;
 
     public GraduationDesignRelease() {}
 
@@ -59,6 +60,7 @@ public class GraduationDesignRelease implements Serializable {
         this.isOkTeacherAdjust = value.isOkTeacherAdjust;
         this.departmentId = value.departmentId;
         this.scienceId = value.scienceId;
+        this.publisher = value.publisher;
     }
 
     public GraduationDesignRelease(
@@ -75,7 +77,8 @@ public class GraduationDesignRelease implements Serializable {
         Byte      isOkTeacher,
         Byte      isOkTeacherAdjust,
         Integer   departmentId,
-        Integer   scienceId
+        Integer   scienceId,
+        String    publisher
     ) {
         this.graduationDesignReleaseId = graduationDesignReleaseId;
         this.graduationDesignTitle = graduationDesignTitle;
@@ -91,6 +94,7 @@ public class GraduationDesignRelease implements Serializable {
         this.isOkTeacherAdjust = isOkTeacherAdjust;
         this.departmentId = departmentId;
         this.scienceId = scienceId;
+        this.publisher = publisher;
     }
 
     @NotNull
@@ -220,6 +224,16 @@ public class GraduationDesignRelease implements Serializable {
         this.scienceId = scienceId;
     }
 
+    @NotNull
+    @Size(max = 30)
+    public String getPublisher() {
+        return this.publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignRelease (");
@@ -238,6 +252,7 @@ public class GraduationDesignRelease implements Serializable {
         sb.append(", ").append(isOkTeacherAdjust);
         sb.append(", ").append(departmentId);
         sb.append(", ").append(scienceId);
+        sb.append(", ").append(publisher);
 
         sb.append(")");
         return sb.toString();

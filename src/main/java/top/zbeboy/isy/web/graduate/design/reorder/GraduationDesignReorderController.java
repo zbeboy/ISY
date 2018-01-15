@@ -48,9 +48,6 @@ import java.util.Optional;
 public class GraduationDesignReorderController {
 
     @Resource
-    private GraduationDesignReleaseService graduationDesignReleaseService;
-
-    @Resource
     private DefenseArrangementService defenseArrangementService;
 
     @Resource

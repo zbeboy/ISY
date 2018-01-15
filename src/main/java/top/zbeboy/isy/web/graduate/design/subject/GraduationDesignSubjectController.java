@@ -67,9 +67,6 @@ import java.util.Optional;
 public class GraduationDesignSubjectController {
 
     @Resource
-    private GraduationDesignReleaseService graduationDesignReleaseService;
-
-    @Resource
     private MethodControllerCommon methodControllerCommon;
 
     @Resource

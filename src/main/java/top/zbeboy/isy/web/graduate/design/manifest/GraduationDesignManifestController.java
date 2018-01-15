@@ -17,7 +17,10 @@ import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.export.GraduationDesignManifestExport;
-import top.zbeboy.isy.service.graduate.design.*;
+import top.zbeboy.isy.service.graduate.design.DefenseOrderService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignDeclareDataService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignManifestService;
+import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
@@ -47,9 +50,6 @@ import java.util.Optional;
 @Slf4j
 @Controller
 public class GraduationDesignManifestController {
-
-    @Resource
-    private GraduationDesignReleaseService graduationDesignReleaseService;
 
     @Resource
     private GraduationDesignTeacherService graduationDesignTeacherService;
