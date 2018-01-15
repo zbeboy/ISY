@@ -177,7 +177,7 @@ public class GraduationDesignAdjustechController {
     }
 
     /**
-     * 填报教师数据
+     * 列表数据
      *
      * @param paginationUtils 分页工具
      * @return 数据
@@ -192,6 +192,8 @@ public class GraduationDesignAdjustechController {
         Map<String, Integer> commonData = methodControllerCommon.adminOrNormalData();
         graduationDesignReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
         graduationDesignReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
+        graduationDesignReleaseBean.setScienceId(StringUtils.isEmpty(commonData.get("scienceId")) ? -1 : commonData.get("scienceId"));
+        graduationDesignReleaseBean.setAllowGrade(StringUtils.isEmpty(commonData.get("grade")) ? null : commonData.get("grade").toString());
         Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
         List<GraduationDesignReleaseBean> graduationDesignReleaseBeens = graduationDesignReleaseService.dealData(paginationUtils, records, graduationDesignReleaseBean);
         graduationDesignReleaseBeens.forEach(graduationDesignRelease -> {

@@ -6,7 +6,6 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease
  * Created by zbeboy 2018-01-14 .
  **/
 class GraduationDesignReleaseBean: GraduationDesignRelease() {
-    var realName: String? = null
     var departmentName: String? = null
     var schoolName: String? = null
     var collegeName: String? = null

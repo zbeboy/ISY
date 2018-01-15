@@ -68,8 +68,6 @@ open class GraduationDesignReleaseServiceImpl @Autowired constructor(dslContext:
         a = otherCondition(a, graduationDesignReleaseBean)
         return create.select()
                 .from(GRADUATION_DESIGN_RELEASE)
-                .join(USERS)
-                .on(GRADUATION_DESIGN_RELEASE.USERNAME.eq(USERS.USERNAME))
                 .join(SCIENCE)
                 .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                 .join(DEPARTMENT)
@@ -121,8 +119,6 @@ open class GraduationDesignReleaseServiceImpl @Autowired constructor(dslContext:
         } else {
             val selectConditionStep = create.selectCount()
                     .from(GRADUATION_DESIGN_RELEASE)
-                    .join(USERS)
-                    .on(GRADUATION_DESIGN_RELEASE.USERNAME.eq(USERS.USERNAME))
                     .join(SCIENCE)
                     .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                     .join(DEPARTMENT)

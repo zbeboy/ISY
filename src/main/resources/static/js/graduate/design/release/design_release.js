@@ -129,8 +129,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
             });
 
-            Handlebars.registerHelper('real_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
+            Handlebars.registerHelper('publisher', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.publisher));
             });
 
             $(tableData).html(template(data));
