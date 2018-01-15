@@ -100,7 +100,7 @@ public class GraduationDesignProjectController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/graduate/design/project/design/data")
+    @RequestMapping(value = "/web/graduate/design/project/design/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
         return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);

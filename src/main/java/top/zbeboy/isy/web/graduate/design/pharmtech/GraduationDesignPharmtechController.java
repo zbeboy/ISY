@@ -108,7 +108,7 @@ public class GraduationDesignPharmtechController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/graduate/design/pharmtech/design/data")
+    @RequestMapping(value = "/web/graduate/design/pharmtech/design/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignReleaseBean> designDatas(PaginationUtils paginationUtils) {
         return graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
