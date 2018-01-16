@@ -35,6 +35,7 @@ import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBe
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
+import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
 import top.zbeboy.isy.web.util.DataTablesUtils;
 import top.zbeboy.isy.web.util.PaginationUtils;
@@ -86,6 +87,9 @@ public class GraduationDesignAdjustechController {
 
     @Resource
     private GraduationDesignConditionCommon graduationDesignConditionCommon;
+
+    @Resource
+    private GraduationDesignMethodControllerCommon graduationDesignMethodControllerCommon;
 
     /**
      * 调整填报教师
@@ -182,20 +186,11 @@ public class GraduationDesignAdjustechController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = "/web/graduate/design/adjustech/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/graduate/design/adjustech/design/data", method = RequestMethod.GET)
     @ResponseBody
     public AjaxUtils<GraduationDesignReleaseBean> adjustechDatas(PaginationUtils paginationUtils) {
-        AjaxUtils<GraduationDesignReleaseBean> ajaxUtils = AjaxUtils.of();
-        Byte isDel = 0;
-        GraduationDesignReleaseBean graduationDesignReleaseBean = new GraduationDesignReleaseBean();
-        graduationDesignReleaseBean.setGraduationDesignIsDel(isDel);
-        Map<String, Integer> commonData = methodControllerCommon.adminOrNormalData();
-        graduationDesignReleaseBean.setDepartmentId(StringUtils.isEmpty(commonData.get("departmentId")) ? -1 : commonData.get("departmentId"));
-        graduationDesignReleaseBean.setCollegeId(StringUtils.isEmpty(commonData.get("collegeId")) ? -1 : commonData.get("collegeId"));
-        graduationDesignReleaseBean.setScienceId(StringUtils.isEmpty(commonData.get("scienceId")) ? -1 : commonData.get("scienceId"));
-        graduationDesignReleaseBean.setAllowGrade(StringUtils.isEmpty(commonData.get("grade")) ? null : commonData.get("grade").toString());
-        Result<Record> records = graduationDesignReleaseService.findAllByPage(paginationUtils, graduationDesignReleaseBean);
-        List<GraduationDesignReleaseBean> graduationDesignReleaseBeens = graduationDesignReleaseService.dealData(paginationUtils, records, graduationDesignReleaseBean);
+        AjaxUtils<GraduationDesignReleaseBean> ajaxUtils = graduationDesignMethodControllerCommon.graduationDesignListDatas(paginationUtils);
+        List<GraduationDesignReleaseBean> graduationDesignReleaseBeens = ajaxUtils.getListResult();
         graduationDesignReleaseBeens.forEach(graduationDesignRelease -> {
                     graduationDesignRelease.setStudentNotFillCount(graduationDesignTutorService.countNotFillStudent(graduationDesignRelease));
                     graduationDesignRelease.setStudentFillCount(graduationDesignTutorService.countFillStudent(graduationDesignRelease));
