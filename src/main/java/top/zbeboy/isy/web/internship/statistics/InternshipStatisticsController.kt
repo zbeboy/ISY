@@ -24,6 +24,7 @@ import top.zbeboy.isy.web.bean.internship.statistics.InternshipChangeCompanyHist
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipChangeHistoryBean
 import top.zbeboy.isy.web.bean.internship.statistics.InternshipStatisticsBean
 import top.zbeboy.isy.web.common.MethodControllerCommon
+import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
 import top.zbeboy.isy.web.util.PaginationUtils
@@ -73,6 +74,9 @@ open class InternshipStatisticsController {
 
     @Resource
     open lateinit var internshipChangeCompanyHistoryService: InternshipChangeCompanyHistoryService
+
+    @Resource
+    open lateinit var internshipMethodControllerCommon: InternshipMethodControllerCommon
 
     @Resource
     open lateinit var cacheManageService: CacheManageService
@@ -166,24 +170,18 @@ open class InternshipStatisticsController {
      *
      * @return 数据
      */
-    @RequestMapping(value = ["/web/internship/statistical/data"], method = [(RequestMethod.GET)])
+    @RequestMapping(value = ["/web/internship/statistical/internship/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun internshipListDatas(paginationUtils: PaginationUtils): AjaxUtils<InternshipReleaseBean> {
-        val ajaxUtils = AjaxUtils.of<InternshipReleaseBean>()
-        val internshipReleaseBean = InternshipReleaseBean()
-        internshipReleaseBean.internshipReleaseIsDel = 0
-        val commonData = methodControllerCommon.adminOrNormalData()
-        internshipReleaseBean.departmentId = if (org.springframework.util.StringUtils.isEmpty(commonData["departmentId"])) -1 else commonData["departmentId"]
-        internshipReleaseBean.collegeId = if (org.springframework.util.StringUtils.isEmpty(commonData["collegeId"])) -1 else commonData["collegeId"]
-        val records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean)
-        val internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean)
-        internshipReleaseBeens.forEach { r ->
+        val ajaxUtils = internshipMethodControllerCommon.internshipListDatas(paginationUtils)
+        val internshipReleaseBeens = ajaxUtils.listResult
+        internshipReleaseBeens!!.forEach { r ->
             val internshipStatisticsBean = InternshipStatisticsBean()
             internshipStatisticsBean.internshipReleaseId = r.internshipReleaseId
             r.submittedTotalData = internshipStatisticsService.submittedCountAll(internshipStatisticsBean)
             r.unsubmittedTotalData = internshipStatisticsService.unsubmittedCountAll(internshipStatisticsBean)
         }
-        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils)
+        return ajaxUtils.listData(internshipReleaseBeens)
     }
 
     /**

@@ -203,7 +203,7 @@ public class GraduationDesignAdjustechController {
                     }
                 }
         );
-        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignReleaseBeens).paginationUtils(paginationUtils);
+        return ajaxUtils.listData(graduationDesignReleaseBeens);
     }
 
     /**

@@ -66,6 +66,7 @@ open class InternshipMethodControllerCommon {
         val commonData = methodControllerCommon.adminOrNormalData()
         internshipReleaseBean.departmentId = if (StringUtils.isEmpty(commonData["departmentId"])) -1 else commonData["departmentId"]
         internshipReleaseBean.collegeId = if (StringUtils.isEmpty(commonData["collegeId"])) -1 else commonData["collegeId"]
+        internshipReleaseBean.allowGrade = if (StringUtils.isEmpty(commonData["grade"])) null else commonData["grade"].toString()
         val records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean)
         val internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean)
         return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils)

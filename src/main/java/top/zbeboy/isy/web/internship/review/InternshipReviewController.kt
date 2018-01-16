@@ -22,6 +22,7 @@ import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean
 import top.zbeboy.isy.web.bean.internship.review.InternshipReviewBean
 import top.zbeboy.isy.web.common.MethodControllerCommon
 import top.zbeboy.isy.web.internship.common.InternshipConditionCommon
+import top.zbeboy.isy.web.internship.common.InternshipMethodControllerCommon
 import top.zbeboy.isy.web.util.AjaxUtils
 import top.zbeboy.isy.web.util.PaginationUtils
 import top.zbeboy.isy.web.vo.internship.review.InternshipReviewVo
@@ -89,6 +90,9 @@ open class InternshipReviewController {
     open lateinit var internshipConditionCommon: InternshipConditionCommon
 
     @Resource
+    open lateinit var internshipMethodControllerCommon: InternshipMethodControllerCommon
+
+    @Resource
     open lateinit var cacheManageService: CacheManageService
 
 
@@ -107,18 +111,12 @@ open class InternshipReviewController {
      *
      * @return 数据
      */
-    @RequestMapping(value = ["/web/internship/review/data"], method = [(RequestMethod.GET)])
+    @RequestMapping(value = ["/web/internship/review/internship/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun internshipListDatas(paginationUtils: PaginationUtils): AjaxUtils<InternshipReleaseBean> {
-        val ajaxUtils = AjaxUtils.of<InternshipReleaseBean>()
-        val internshipReleaseBean = InternshipReleaseBean()
-        internshipReleaseBean.internshipReleaseIsDel = 0
-        val commonData = methodControllerCommon.adminOrNormalData()
-        internshipReleaseBean.departmentId = if (StringUtils.isEmpty(commonData["departmentId"])) -1 else commonData["departmentId"]
-        internshipReleaseBean.collegeId = if (StringUtils.isEmpty(commonData["collegeId"])) -1 else commonData["collegeId"]
-        val records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean)
-        val internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean)
-        internshipReleaseBeens.forEach { r ->
+        val ajaxUtils = internshipMethodControllerCommon.internshipListDatas(paginationUtils)
+        val internshipReleaseBeens = ajaxUtils.listResult
+        internshipReleaseBeens!!.forEach { r ->
             r.waitTotalData = internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.internshipReleaseId, 1)
             r.passTotalData = internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.internshipReleaseId, 2)
             r.failTotalData = internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.internshipReleaseId, 3)
@@ -127,7 +125,7 @@ open class InternshipReviewController {
             r.basicFillTotalData = internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.internshipReleaseId, 5)
             r.companyFillTotalData = internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(r.internshipReleaseId, 7)
         }
-        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils)
+        return ajaxUtils.listData(internshipReleaseBeens)
     }
 
     /**

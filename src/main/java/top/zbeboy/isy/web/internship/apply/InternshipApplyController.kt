@@ -142,35 +142,10 @@ open class InternshipApplyController {
      * @param paginationUtils 分页工具
      * @return 数据
      */
-    @RequestMapping(value = ["/web/internship/apply/data"], method = [(RequestMethod.GET)])
+    @RequestMapping(value = ["/web/internship/apply/internship/data"], method = [(RequestMethod.GET)])
     @ResponseBody
     fun applyDatas(paginationUtils: PaginationUtils): AjaxUtils<InternshipReleaseBean> {
-        val ajaxUtils = AjaxUtils.of<InternshipReleaseBean>()
-        val internshipReleaseBean = InternshipReleaseBean()
-        internshipReleaseBean.internshipReleaseIsDel = 0
-        if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val departmentId = cacheManageService.getRoleDepartmentId(users)
-            internshipReleaseBean.departmentId = departmentId
-            if (record.isPresent && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                val organize = record.get().into(Organize::class.java)
-                internshipReleaseBean.allowGrade = organize.grade
-            }
-        }
-        if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            val users = usersService.getUserFromSession()
-            val record = usersService.findUserSchoolInfo(users!!)
-            val collegeId = cacheManageService.getRoleCollegeId(users)
-            internshipReleaseBean.collegeId = collegeId
-            if (record.isPresent && usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                val organize = record.get().into(Organize::class.java)
-                internshipReleaseBean.allowGrade = organize.grade
-            }
-        }
-        val records = internshipReleaseService.findAllByPage(paginationUtils, internshipReleaseBean)
-        val internshipReleaseBeens = internshipReleaseService.dealData(paginationUtils, records, internshipReleaseBean)
-        return ajaxUtils.success().msg("获取数据成功").listData(internshipReleaseBeens).paginationUtils(paginationUtils)
+        return internshipMethodControllerCommon.internshipListDatas(paginationUtils)
     }
 
     /**
