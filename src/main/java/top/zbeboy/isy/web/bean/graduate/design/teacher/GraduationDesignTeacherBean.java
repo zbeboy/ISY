@@ -14,7 +14,6 @@ public class GraduationDesignTeacherBean extends GraduationDesignTeacher {
     private String staffNumber;
     private String staffUsername;
     private String staffMobile;
-    private String assignerName;
     private int residueCount;
     // 用于选中
     private boolean selected;

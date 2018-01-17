@@ -261,6 +261,7 @@ open class GraduationDesignTeacherController {
                         graduationDesignTeacher.graduationDesignReleaseId = graduationDesignReleaseId
                         graduationDesignTeacher.staffId = id
                         graduationDesignTeacher.username = users!!.username
+                        graduationDesignTeacher.assignerName = users.realName
                         if (remainder > 0) {
                             graduationDesignTeacher.studentCount = average + 1
                             remainder--

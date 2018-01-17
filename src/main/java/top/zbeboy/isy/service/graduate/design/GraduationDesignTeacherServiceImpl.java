@@ -49,10 +49,10 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
         if (ObjectUtils.isEmpty(a)) {
             SelectConditionStep<Record> selectConditionStep = create.select()
                     .from(GRADUATION_DESIGN_TEACHER)
-                    .join(STAFF.join(USERS.as("S")).on(STAFF.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS.as("U"))
-                    .on(GRADUATION_DESIGN_TEACHER.USERNAME.eq(USERS.as("U").USERNAME))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignTeacherBean.getGraduationDesignReleaseId()));
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
@@ -60,10 +60,10 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
         } else {
             SelectConditionStep<Record> selectConditionStep = create.select()
                     .from(GRADUATION_DESIGN_TEACHER)
-                    .join(STAFF.join(USERS.as("S")).on(STAFF.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS.as("U"))
-                    .on(GRADUATION_DESIGN_TEACHER.USERNAME.eq(USERS.as("U").USERNAME))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignTeacherBean.getGraduationDesignReleaseId()).and(a));
             sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
             pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
@@ -77,10 +77,10 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
             temp.setStaffId(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_ID));
             temp.setStudentCount(r.getValue(GRADUATION_DESIGN_TEACHER.STUDENT_COUNT));
             temp.setUsername(r.getValue(GRADUATION_DESIGN_TEACHER.USERNAME));
-            temp.setRealName(r.getValue(USERS.as("S").REAL_NAME));
+            temp.setRealName(r.getValue(USERS.REAL_NAME));
             temp.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
             temp.setStaffUsername(r.getValue(STAFF.USERNAME));
-            temp.setAssignerName(r.getValue(USERS.as("U").REAL_NAME));
+            temp.setAssignerName(r.getValue(GRADUATION_DESIGN_TEACHER.ASSIGNER_NAME));
             graduationDesignTeacherBeens.add(temp);
         }
 
@@ -177,10 +177,10 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
         } else {
             SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
                     .from(GRADUATION_DESIGN_TEACHER)
-                    .join(STAFF.join(USERS.as("S")).on(STAFF.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS.as("U"))
-                    .on(GRADUATION_DESIGN_TEACHER.USERNAME.eq(USERS.as("U").USERNAME))
+                    .join(USERS)
+                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignTeacherBean.getGraduationDesignReleaseId()).and(a));
             count = selectConditionStep.fetchOne();
         }
@@ -202,7 +202,7 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
             String staffUsername = StringUtils.trimWhitespace(search.getString("staffUsername"));
             String staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"));
             if (StringUtils.hasLength(realName)) {
-                a = USERS.as("S").REAL_NAME.like(SQLQueryUtils.likeAllParam(realName));
+                a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName));
             }
 
             if (StringUtils.hasLength(staffUsername)) {
@@ -240,10 +240,10 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
             if ("real_name".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {
-                    sortField[0] = USERS.as("S").REAL_NAME.asc();
+                    sortField[0] = USERS.REAL_NAME.asc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc();
                 } else {
-                    sortField[0] = USERS.as("S").REAL_NAME.desc();
+                    sortField[0] = USERS.REAL_NAME.desc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc();
                 }
             }
@@ -280,10 +280,10 @@ public class GraduationDesignTeacherServiceImpl extends DataTablesPlugin<Graduat
             if ("assigner_name".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {
-                    sortField[0] = USERS.as("U").REAL_NAME.asc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.ASSIGNER_NAME.asc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc();
                 } else {
-                    sortField[0] = USERS.as("U").REAL_NAME.desc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.ASSIGNER_NAME.desc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc();
                 }
             }
