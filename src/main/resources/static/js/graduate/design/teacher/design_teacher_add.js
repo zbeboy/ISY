@@ -31,6 +31,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
             staffId: []
         };
 
+        var dataArea = '#datas';
+
         function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();
@@ -79,8 +81,8 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
                     "className": "text-warning"
                 };
                 // Mark the keyword inside the context
-                $('#datas').removeMark();
-                $('#datas').mark(keyword, options);
+                $(dataArea).removeMark();
+                $(dataArea).mark(keyword, options);
             };
 
             $('#staffName').on("keyup", mark);
@@ -90,7 +92,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
          * 初始化check插件
          */
         function initIcheck() {
-            $('#datas').find('input').each(function () {
+            $(dataArea).find('input').each(function () {
                 var self = $(this),
                     label = self.next(),
                     label_text = label.text();
@@ -126,7 +128,7 @@ require(["jquery", "nav_active", "handlebars", "messenger", "jquery.address", "j
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.staffNumber));
             });
 
-            $('#datas').html(template(data));
+            $(dataArea).html(template(data));
             initIcheck();
         }
 
