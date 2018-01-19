@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zbeboy.isy.service.cache.CacheBook;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher;
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTutor;
+import top.zbeboy.isy.service.cache.CacheBook;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignHopeTutorService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService;
 import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
@@ -33,7 +33,6 @@ import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignHopeTut
 import top.zbeboy.isy.web.bean.graduate.design.pharmtech.GraduationDesignTutorBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean;
-import top.zbeboy.isy.web.common.MethodControllerCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -56,9 +55,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Controller
 public class GraduationDesignAdjustechController {
-
-    @Resource
-    private MethodControllerCommon methodControllerCommon;
 
     @Resource
     private GraduationDesignReleaseService graduationDesignReleaseService;
