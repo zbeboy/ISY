@@ -96,7 +96,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseBean.graduationDesignReleaseId).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID)))
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(STUDENT)
                 .join(ORGANIZE)
                 .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -104,18 +104,16 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                 .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                 .where(SCIENCE.SCIENCE_ID.eq(graduationDesignReleaseBean.scienceId).and(ORGANIZE.GRADE.eq(graduationDesignReleaseBean.allowGrade))
                         .andNotExists(select))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countFillStudent(graduationDesignReleaseBean: GraduationDesignReleaseBean): Int {
-        val count = create.selectCount()
+        return  create.selectCount()
                 .from(GRADUATION_DESIGN_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseBean.graduationDesignReleaseId))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun deleteByGraduationDesignTeacherId(graduationDesignTeacherId: String) {
@@ -199,13 +197,13 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
     override fun countFillByCondition(dataTablesUtils: DataTablesUtils<GraduationDesignTutorBean>, condition: GraduationDesignTutorBean): Int {
         val count: Record1<Int>
         val a = searchFillCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.selectCount()
                     .from(GRADUATION_DESIGN_TUTOR)
                     .join(GRADUATION_DESIGN_TEACHER)
                     .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(condition.graduationDesignReleaseId))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(GRADUATION_DESIGN_TUTOR)
@@ -218,15 +216,14 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(condition.graduationDesignReleaseId).and(a))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
     }
 
     override fun findAllNotFillByPage(dataTablesUtils: DataTablesUtils<StudentBean>, condition: GraduationDesignRelease): Result<Record> {
-        val records: Result<Record>
         val a = searchNotFillCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        return if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(STUDENT)
                     .join(ORGANIZE)
@@ -239,7 +236,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                             .andNotExists(selectTutor(condition)))
             sortNotFillCondition(dataTablesUtils, selectConditionStep)
             notFillPagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(STUDENT)
@@ -253,13 +250,12 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                             .andNotExists(selectTutor(condition)).and(a))
             sortNotFillCondition(dataTablesUtils, selectConditionStep)
             notFillPagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
-        return records
     }
 
     override fun countAllNotFill(condition: GraduationDesignRelease): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(STUDENT)
                 .join(ORGANIZE)
                 .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -267,14 +263,13 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                 .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                 .where(SCIENCE.SCIENCE_ID.eq(condition.scienceId).and(ORGANIZE.GRADE.eq(condition.allowGrade))
                         .andNotExists(selectTutor(condition)))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countNotFillByCondition(dataTablesUtils: DataTablesUtils<StudentBean>, condition: GraduationDesignRelease): Int {
         val count: Record1<Int>
         val a = searchNotFillCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        count = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.selectCount()
                     .from(STUDENT)
                     .join(ORGANIZE)
@@ -283,7 +278,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .on(ORGANIZE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
                     .where(SCIENCE.SCIENCE_ID.eq(condition.scienceId).and(ORGANIZE.GRADE.eq(condition.allowGrade))
                             .andNotExists(selectTutor(condition)))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         } else {
             val selectConditionStep = create.selectCount()
                     .from(STUDENT)
@@ -295,19 +290,18 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .where(SCIENCE.SCIENCE_ID.eq(condition.scienceId).and(ORGANIZE.GRADE.eq(condition.allowGrade))
                             .andNotExists(selectTutor(condition)).and(a))
-            count = selectConditionStep.fetchOne()
+            selectConditionStep.fetchOne()
         }
         return count.value1()
     }
 
     override fun countByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId: String, staffId: Int): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(GRADUATION_DESIGN_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                 .where(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(staffId).and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     private fun selectTutor(condition: GraduationDesignRelease): Select<Record> {
@@ -326,7 +320,6 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
      */
     private fun searchFillCondition(dataTablesUtils: DataTablesUtils<GraduationDesignTutorBean>): Condition? {
         var a: Condition? = null
-
         val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
             val studentName = StringUtils.trimWhitespace(search!!.getString("studentName"))
@@ -366,7 +359,6 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
      */
     private fun searchNotFillCondition(dataTablesUtils: DataTablesUtils<StudentBean>): Condition? {
         var a: Condition? = null
-
         val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
             val studentName = StringUtils.trimWhitespace(search!!.getString("studentName"))
