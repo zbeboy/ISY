@@ -61,11 +61,37 @@ open class GraduationDesignConditionCommon {
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
             // 毕业时间范围
-            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease!!.getStartTime(), graduationDesignRelease.getEndTime())) {
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease!!.startTime, graduationDesignRelease.endTime)) {
                 errorBean.hasError = false
             } else {
                 errorBean.hasError = true
                 errorBean.errorMsg = "不在毕业设计时间范围，无法操作"
+            }
+        }
+        errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
+        return errorBean
+    }
+
+    /**
+     * 在指导教师填报时间范围
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return error
+     */
+    fun isRangeFillTeacherDate(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
+        val cacheKey = CacheBook.GRADUATION_RANGE_GRADUATION_FILL_TEACHER_DATE_CONDITION + graduationDesignReleaseId
+        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
+            return errorBeanValueOperations.get(cacheKey)
+        }
+        val errorBean = isRangeGraduationDateCondition(graduationDesignReleaseId)
+        val graduationDesignRelease = errorBean.data
+        if (!errorBean.hasError) {
+            // 填报时间范围
+            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease!!.fillTeacherStartTime, graduationDesignRelease.fillTeacherEndTime)) {
+                errorBean.hasError = false
+            } else {
+                errorBean.hasError = true
+                errorBean.errorMsg = "不在填报时间范围，无法操作"
             }
         }
         errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
@@ -79,7 +105,7 @@ open class GraduationDesignConditionCommon {
      * @return error
      */
     fun isOkTeacherCondition(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
-        val cacheKey = CacheBook.GRADUATION_IS_OK_TEARCHER_CONDITION + graduationDesignReleaseId
+        val cacheKey = CacheBook.GRADUATION_IS_OK_TEACHER_CONDITION + graduationDesignReleaseId
         if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
             return errorBeanValueOperations.get(cacheKey)
         }
@@ -87,9 +113,35 @@ open class GraduationDesignConditionCommon {
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
             // 是否已确认
-            if (!ObjectUtils.isEmpty(graduationDesignRelease!!.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1.toByte()) {
+            if (!ObjectUtils.isEmpty(graduationDesignRelease!!.isOkTeacher) && graduationDesignRelease.isOkTeacher == 1.toByte()) {
                 errorBean.hasError = true
                 errorBean.errorMsg = "已确认毕业设计指导教师，无法进行操作"
+            } else {
+                errorBean.hasError = false
+            }
+        }
+        errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
+        return errorBean
+    }
+
+    /**
+     * 是否已确认毕业设计指导教师调整
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return error
+     */
+    fun isOkTeacherAdjust(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
+        val cacheKey = CacheBook.GRADUATION_IS_OK_TEACHER_ADJUST_CONDITION + graduationDesignReleaseId
+        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
+            return errorBeanValueOperations.get(cacheKey)
+        }
+        val errorBean = isOkTeacherCondition(graduationDesignReleaseId)
+        val graduationDesignRelease = errorBean.data
+        if (!errorBean.hasError) {
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease!!.isOkTeacherAdjust) && graduationDesignRelease.isOkTeacherAdjust == 1.toByte()) {
+                errorBean.hasError = true
+                errorBean.errorMsg = "已确认毕业设计指导教师调整，无法进行操作"
             } else {
                 errorBean.hasError = false
             }
