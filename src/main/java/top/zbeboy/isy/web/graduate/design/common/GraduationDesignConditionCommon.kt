@@ -53,10 +53,6 @@ open class GraduationDesignConditionCommon {
      * @return error
      */
     fun isRangeGraduationDateCondition(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
-        val cacheKey = CacheBook.GRADUATION_RANGE_GRADUATION_DATE_CONDITION + graduationDesignReleaseId
-        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
-            return errorBeanValueOperations.get(cacheKey)
-        }
         val errorBean = basicCondition(graduationDesignReleaseId)
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
@@ -68,7 +64,6 @@ open class GraduationDesignConditionCommon {
                 errorBean.errorMsg = "不在毕业设计时间范围，无法操作"
             }
         }
-        errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
         return errorBean
     }
 
@@ -79,10 +74,6 @@ open class GraduationDesignConditionCommon {
      * @return error
      */
     fun isRangeFillTeacherDate(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
-        val cacheKey = CacheBook.GRADUATION_RANGE_GRADUATION_FILL_TEACHER_DATE_CONDITION + graduationDesignReleaseId
-        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
-            return errorBeanValueOperations.get(cacheKey)
-        }
         val errorBean = isRangeGraduationDateCondition(graduationDesignReleaseId)
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
@@ -94,7 +85,6 @@ open class GraduationDesignConditionCommon {
                 errorBean.errorMsg = "不在填报时间范围，无法操作"
             }
         }
-        errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
         return errorBean
     }
 
@@ -105,10 +95,6 @@ open class GraduationDesignConditionCommon {
      * @return error
      */
     fun isOkTeacherCondition(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
-        val cacheKey = CacheBook.GRADUATION_IS_OK_TEACHER_CONDITION + graduationDesignReleaseId
-        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
-            return errorBeanValueOperations.get(cacheKey)
-        }
         val errorBean = isRangeGraduationDateCondition(graduationDesignReleaseId)
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
@@ -120,7 +106,6 @@ open class GraduationDesignConditionCommon {
                 errorBean.hasError = false
             }
         }
-        errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
         return errorBean
     }
 
@@ -131,10 +116,6 @@ open class GraduationDesignConditionCommon {
      * @return error
      */
     fun isOkTeacherAdjust(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
-        val cacheKey = CacheBook.GRADUATION_IS_OK_TEACHER_ADJUST_CONDITION + graduationDesignReleaseId
-        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
-            return errorBeanValueOperations.get(cacheKey)
-        }
         val errorBean = isOkTeacherCondition(graduationDesignReleaseId)
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
@@ -146,7 +127,6 @@ open class GraduationDesignConditionCommon {
                 errorBean.hasError = false
             }
         }
-        errorBeanValueOperations.set(cacheKey, errorBean, CacheBook.EXPIRES_MINUTES, TimeUnit.MINUTES)
         return errorBean
     }
 }
