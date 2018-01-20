@@ -211,7 +211,7 @@ public class GraduationDesignAdjustechController {
     @ResponseBody
     public AjaxUtils syncData(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isOkTeacherAdjust(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 仅允许在填报时间内同步，若超出填报时间，缓存 KEY 有可能失效，同时在非填报时间内做的调整，因同步将会被清空
@@ -315,7 +315,7 @@ public class GraduationDesignAdjustechController {
     public AjaxUtils<GraduationDesignTeacherBean> adjustTeachers(@RequestParam("id") String graduationDesignReleaseId,
                                                                  @RequestParam("graduationDesignTeacherId") String graduationDesignTeacherId) {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isOkTeacherAdjust(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 仅允许在填报时间之后调整
@@ -438,7 +438,7 @@ public class GraduationDesignAdjustechController {
     public AjaxUtils update(@Valid GraduationDesignTutorUpdateVo graduationDesignTutorUpdateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignTutorUpdateVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isOkTeacherAdjust(graduationDesignTutorUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 仅允许在填报时间之后调整
@@ -474,7 +474,7 @@ public class GraduationDesignAdjustechController {
     public AjaxUtils save(@Valid GraduationDesignTutorAddVo graduationDesignTutorAddVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignTutorAddVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isOkTeacherAdjust(graduationDesignTutorAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 GraduationDesignRelease graduationDesignRelease = errorBean.getData();
                 // 仅允许在填报时间之后调整
@@ -515,7 +515,7 @@ public class GraduationDesignAdjustechController {
     @ResponseBody
     public AjaxUtils delete(@RequestParam("id") String graduationDesignReleaseId, String graduationDesignTutorIds) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isOkTeacherAdjust(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 仅允许在填报时间之后调整
@@ -541,38 +541,18 @@ public class GraduationDesignAdjustechController {
     @ResponseBody
     public AjaxUtils adjustechOk(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        GraduationDesignRelease graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId);
-        if (!ObjectUtils.isEmpty(graduationDesignRelease)) {
-            if (ObjectUtils.isEmpty(graduationDesignRelease.getGraduationDesignIsDel()) || graduationDesignRelease.getGraduationDesignIsDel() != 1) {
-                // 毕业时间范围
-                if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                    // 仅允许在填报时间之后调整
-                    if (DateTimeUtils.timestampAfterDecide(graduationDesignRelease.getFillTeacherEndTime())) {
-                        // 是否已确认
-                        if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                            // 是否已确认调整
-                            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                                ajaxUtils.fail().msg("已确认调整");
-                            } else {
-                                Byte b = 1;
-                                graduationDesignRelease.setIsOkTeacherAdjust(b);
-                                graduationDesignReleaseService.update(graduationDesignRelease);
-                                ajaxUtils.success().msg("确认调整成功");
-                            }
-                        } else {
-                            ajaxUtils.fail().msg("未确认毕业设计指导教师，无法进行操作");
-                        }
-                    } else {
-                        ajaxUtils.fail().msg("请在填报时间结束后操作");
-                    }
-                } else {
-                    ajaxUtils.fail().msg("不在毕业设计时间范围，无法操作");
-                }
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isOkTeacherAdjust(graduationDesignReleaseId);
+        if (!errorBean.isHasError()) {
+            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
+            // 仅允许在填报时间之后调整
+            if (DateTimeUtils.timestampAfterDecide(graduationDesignRelease.getFillTeacherEndTime())) {
+                Byte b = 1;
+                graduationDesignRelease.setIsOkTeacherAdjust(b);
+                graduationDesignReleaseService.update(graduationDesignRelease);
+                ajaxUtils.success().msg("确认调整成功");
             } else {
-                ajaxUtils.fail().msg("该毕业设计已被注销");
+                ajaxUtils.fail().msg("请在填报时间结束后操作");
             }
-        } else {
-            ajaxUtils.fail().msg("未查询到相关毕业设计信息");
         }
         return ajaxUtils;
     }
@@ -587,45 +567,12 @@ public class GraduationDesignAdjustechController {
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isOkTeacherAdjust(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
-    }
-
-    /**
-     * 进入调整填报教师入口条件
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return true or false
-     */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 毕业时间范围
-            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                // 是否已确认
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                    // 是否已确认调整
-                    if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                        errorBean.setHasError(true);
-                        errorBean.setErrorMsg("已确认毕业设计指导教师调整，无法进行操作");
-                    } else {
-                        errorBean.setHasError(false);
-                    }
-                } else {
-                    errorBean.setHasError(true);
-                    errorBean.setErrorMsg("未确认毕业设计指导教师，无法进行操作");
-                }
-            } else {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("不在毕业设计时间范围，无法操作");
-            }
-        }
-        return errorBean;
     }
 }

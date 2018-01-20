@@ -89,7 +89,7 @@ open class GraduationDesignConditionCommon {
     }
 
     /**
-     * 是否已确认毕业设计指导教师
+     * 已确认毕业设计指导教师
      *
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return error
@@ -110,13 +110,34 @@ open class GraduationDesignConditionCommon {
     }
 
     /**
-     * 是否已确认毕业设计指导教师调整
+     * 未确认毕业设计指导教师
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return error
+     */
+    fun isNotOkTeacherCondition(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
+        val errorBean = isRangeGraduationDateCondition(graduationDesignReleaseId)
+        val graduationDesignRelease = errorBean.data
+        if (!errorBean.hasError) {
+            // 是否已确认
+            if (!ObjectUtils.isEmpty(graduationDesignRelease!!.isOkTeacher) && graduationDesignRelease.isOkTeacher == 1.toByte()) {
+                errorBean.hasError = false
+            } else {
+                errorBean.hasError = true
+                errorBean.errorMsg = "未确认毕业设计指导教师，无法进行操作"
+            }
+        }
+        return errorBean
+    }
+
+    /**
+     * 已确认毕业设计指导教师调整
      *
      * @param graduationDesignReleaseId 毕业设计发布id
      * @return error
      */
     fun isOkTeacherAdjust(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
-        val errorBean = isOkTeacherCondition(graduationDesignReleaseId)
+        val errorBean = isNotOkTeacherCondition(graduationDesignReleaseId)
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
             // 是否已确认调整
@@ -125,6 +146,27 @@ open class GraduationDesignConditionCommon {
                 errorBean.errorMsg = "已确认毕业设计指导教师调整，无法进行操作"
             } else {
                 errorBean.hasError = false
+            }
+        }
+        return errorBean
+    }
+
+    /**
+     * 未确认毕业设计指导教师调整
+     *
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @return error
+     */
+    fun isNotOkTeacherAdjust(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
+        val errorBean = basicCondition(graduationDesignReleaseId)
+        val graduationDesignRelease = errorBean.data
+        if (!errorBean.hasError) {
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease!!.isOkTeacherAdjust) && graduationDesignRelease.isOkTeacherAdjust == 1.toByte()) {
+                errorBean.hasError = false
+            } else {
+                errorBean.hasError = true
+                errorBean.errorMsg = "未确认毕业设计指导教师调整，无法进行操作"
             }
         }
         return errorBean
