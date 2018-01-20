@@ -196,7 +196,7 @@ open class GraduationDesignTeacherController {
             }
             ajaxUtils.success().msg("获取教师数据成功").listData(staffs)
         } else {
-            ajaxUtils.fail().msg("因您不满足进入条件，无法进行数据获取，请返回首页")
+            ajaxUtils.fail().msg(errorBean.errorMsg!!)
         }
         return ajaxUtils
     }
