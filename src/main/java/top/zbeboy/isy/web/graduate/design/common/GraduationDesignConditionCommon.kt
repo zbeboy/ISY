@@ -131,6 +131,25 @@ open class GraduationDesignConditionCommon {
     }
 
     /**
+     * 未确认毕业设计指导教师
+     *
+     * @param errorBean error信息
+     * @return error
+     */
+    fun isNotOkTeacherCondition(errorBean: ErrorBean<GraduationDesignRelease>) {
+        val graduationDesignRelease = errorBean.data
+        if (!errorBean.hasError) {
+            // 是否已确认
+            if (!ObjectUtils.isEmpty(graduationDesignRelease!!.isOkTeacher) && graduationDesignRelease.isOkTeacher == 1.toByte()) {
+                errorBean.hasError = false
+            } else {
+                errorBean.hasError = true
+                errorBean.errorMsg = "未确认毕业设计指导教师，无法进行操作"
+            }
+        }
+    }
+
+    /**
      * 已确认毕业设计指导教师调整
      *
      * @param graduationDesignReleaseId 毕业设计发布id
@@ -170,5 +189,24 @@ open class GraduationDesignConditionCommon {
             }
         }
         return errorBean
+    }
+
+    /**
+     * 未确认毕业设计指导教师调整
+     *
+     * @param errorBean error 信息
+     * @return error
+     */
+    fun isNotOkTeacherAdjust(errorBean:  ErrorBean<GraduationDesignRelease>){
+        val graduationDesignRelease = errorBean.data
+        if (!errorBean.hasError) {
+            // 是否已确认调整
+            if (!ObjectUtils.isEmpty(graduationDesignRelease!!.isOkTeacherAdjust) && graduationDesignRelease.isOkTeacherAdjust == 1.toByte()) {
+                errorBean.hasError = false
+            } else {
+                errorBean.hasError = true
+                errorBean.errorMsg = "未确认毕业设计指导教师调整，无法进行操作"
+            }
+        }
     }
 }
