@@ -160,7 +160,7 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                 .fetchOne()
         studentElastic.authorities = ElasticBook.NO_AUTHORITIES
         // 注：此时用户刚注册不可能带有身份证号信息，不必同步
-        studentElastic.setStudentId(studentRecord.getStudentId())
+        studentElastic.setStudentId(studentRecord.studentId)
         studentElasticRepository.save(studentElastic)
     }
 

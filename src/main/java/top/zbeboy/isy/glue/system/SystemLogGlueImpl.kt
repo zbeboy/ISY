@@ -34,7 +34,7 @@ open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
         val search = dataTablesUtils.search
         val resultUtils = ResultUtils<List<SystemLogBean>>()
         val systemLogElasticPage = systemLogElasticRepository.search(buildSearchQuery(search, dataTablesUtils, false))
-        return resultUtils.data(dataBuilder(systemLogElasticPage)).totalElements(systemLogElasticPage.getTotalElements())
+        return resultUtils.data(dataBuilder(systemLogElasticPage)).totalElements(systemLogElasticPage.totalElements)
     }
 
     override fun countAll(): Long {

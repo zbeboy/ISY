@@ -29,7 +29,7 @@ class TestData {
     fun testUsers() {
         val result = create?.selectFrom<UsersRecord>(USERS)?.where(USERS.USERNAME.equal("863052317@qq.com"))?.fetch()
         for (u in result!!) {
-            println(u.getUsername())
+            println(u.username)
         }
     }
 }

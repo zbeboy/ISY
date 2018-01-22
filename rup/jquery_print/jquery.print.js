@@ -51,7 +51,7 @@
                 frameWindow.close();
                 printed = true;
                 def.resolve();
-            }
+            };
             // Print once the frame window loads - seems to work for the new-window option but unreliable for the iframe
             $(frameWindow).on("load", callPrint);
             // Fallback to printing directly if the frame doesn't fire the load event for whatever reason

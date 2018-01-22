@@ -109,8 +109,8 @@ open class InternshipMethodControllerCommon {
         if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) && !roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
                 val users = usersService.getUserFromSession()
-                val student = studentService.findByUsername(users!!.getUsername())
-                return ObjectUtils.isEmpty(student) || student.getStudentId() == studentId
+                val student = studentService.findByUsername(users!!.username)
+                return ObjectUtils.isEmpty(student) || student.studentId == studentId
             }
         }
         return true

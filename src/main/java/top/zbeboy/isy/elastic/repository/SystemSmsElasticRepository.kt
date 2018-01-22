@@ -6,5 +6,4 @@ import top.zbeboy.isy.elastic.pojo.SystemSmsElastic
 /**
  * Created by zbeboy 2017-11-11 .
  **/
-interface SystemSmsElasticRepository : ElasticsearchRepository<SystemSmsElastic, String> {
-}
+interface SystemSmsElasticRepository : ElasticsearchRepository<SystemSmsElastic, String>

@@ -104,7 +104,7 @@ open class OrganizeServiceImpl @Autowired constructor(dslContext: DSLContext) : 
                 .set<String>(ORGANIZE.GRADE, organizeElastic.grade)
                 .returning(ORGANIZE.ORGANIZE_ID)
                 .fetchOne()
-        organizeElastic.setOrganizeId(record.getOrganizeId())
+        organizeElastic.setOrganizeId(record.organizeId)
         organizeElasticRepository.save(organizeElastic)
     }
 

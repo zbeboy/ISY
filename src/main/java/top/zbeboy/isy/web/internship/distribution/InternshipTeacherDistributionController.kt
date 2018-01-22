@@ -267,7 +267,7 @@ open class InternshipTeacherDistributionController {
                 val internshipRelease = internshipReleaseService.findById(internshipReleaseId)
                 if (!ObjectUtils.isEmpty(internshipRelease)) {
                     val export = InternshipTeacherDistributionExport(internshipTeacherDistributionBeans)
-                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.getDepartmentId()!!)
+                    val schoolInfoPath = cacheManageService.schoolInfoPath(internshipRelease.departmentId!!)
                     val path = Workbook.internshipPath(schoolInfoPath) + fileName + "." + ext
                     export.exportExcel(RequestUtils.getRealPath(request) + Workbook.internshipPath(schoolInfoPath), fileName!!, ext!!)
                     uploadService.download(fileName, path, response, request)
