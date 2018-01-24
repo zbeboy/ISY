@@ -31,7 +31,6 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
     @Resource
     open lateinit var graduationDesignTeacherDao: GraduationDesignTeacherDao
 
-
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<GraduationDesignTeacherBean>, graduationDesignTeacherBean: GraduationDesignTeacherBean): List<GraduationDesignTeacherBean> {
         val graduationDesignTeacherBeens = ArrayList<GraduationDesignTeacherBean>()
         val records: Result<Record>
