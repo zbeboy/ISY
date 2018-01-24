@@ -35,6 +35,7 @@ import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumBea
 import top.zbeboy.isy.web.bean.graduate.design.proposal.GraduationDesignDatumGroupBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
 import top.zbeboy.isy.web.common.MethodControllerCommon;
+import top.zbeboy.isy.web.common.PageParamControllerCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -105,6 +106,9 @@ public class GraduationDesignProposalController {
 
     @Resource
     private GraduationDesignConditionCommon graduationDesignConditionCommon;
+
+    @Resource
+    private PageParamControllerCommon pageParamControllerCommon;
 
     /**
      * 毕业设计资料
@@ -217,46 +221,8 @@ public class GraduationDesignProposalController {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
             // 是否已确认调整
             if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                Users users = usersService.getUserFromSession();
-                boolean hasValue = false;
-                if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-                    Optional<Record> studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users.getUsername(), graduationDesignRelease.getScienceId(), graduationDesignRelease.getAllowGrade());
-                    if (studentRecord.isPresent()) {
-                        Student student = studentRecord.get().into(Student.class);
-                        if (!ObjectUtils.isEmpty(student)) {
-                            Optional<Record> staffRecord = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId(), graduationDesignReleaseId);
-                            if (staffRecord.isPresent()) {
-                                GraduationDesignTeacher graduationDesignTeacher = staffRecord.get().into(GraduationDesignTeacher.class);
-                                modelMap.addAttribute("studentId", student.getStudentId());
-                                modelMap.addAttribute("staffId", graduationDesignTeacher.getStaffId());
-                                hasValue = true;
-                            }
-                        }
-                    }
-                } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                    Staff staff = staffService.findByUsername(users.getUsername());
-                    if (!ObjectUtils.isEmpty(staff)) {
-                        Optional<Record> staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                        if (staffRecord.isPresent()) {
-                            modelMap.addAttribute("studentId", 0);
-                            modelMap.addAttribute("staffId", staff.getStaffId());
-                            hasValue = true;
-                        }
-                    }
-                }
-
-                if (!hasValue) {
-                    modelMap.addAttribute("studentId", 0);
-                    modelMap.addAttribute("staffId", 0);
-                }
-
-                UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-                modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
-                if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-                    modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-                } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-                    modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
-                }
+                graduationDesignMethodControllerCommon.setStaffIdAndStudentId(modelMap, graduationDesignRelease);
+                pageParamControllerCommon.currentUserRoleNameAndTypeNamePageParam(modelMap);
                 modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
                 page = "web/graduate/design/proposal/design_proposal_team::#page-wrapper";
 

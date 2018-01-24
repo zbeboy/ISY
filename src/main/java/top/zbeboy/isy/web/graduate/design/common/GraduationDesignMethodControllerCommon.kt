@@ -2,15 +2,26 @@ package top.zbeboy.isy.web.graduate.design.common
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import org.springframework.ui.ModelMap
+import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import top.zbeboy.isy.config.Workbook
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher
+import top.zbeboy.isy.domain.tables.pojos.Student
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.FilesService
 import top.zbeboy.isy.service.common.UploadService
+import top.zbeboy.isy.service.data.StaffService
+import top.zbeboy.isy.service.data.StudentService
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseFileService
 import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService
+import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService
+import top.zbeboy.isy.service.graduate.design.GraduationDesignTutorService
+import top.zbeboy.isy.service.platform.UsersService
+import top.zbeboy.isy.service.platform.UsersTypeService
 import top.zbeboy.isy.service.util.FilesUtils
 import top.zbeboy.isy.service.util.RequestUtils
 import top.zbeboy.isy.web.bean.file.FileBean
@@ -41,6 +52,24 @@ open class GraduationDesignMethodControllerCommon {
     @Resource
     open lateinit var filesService: FilesService
 
+    @Resource
+    open lateinit var usersService: UsersService
+
+    @Resource
+    open lateinit var usersTypeService: UsersTypeService
+
+    @Resource
+    open lateinit var studentService: StudentService
+
+    @Resource
+    open lateinit var staffService: StaffService
+
+    @Resource
+    open lateinit var graduationDesignTutorService: GraduationDesignTutorService
+
+    @Resource
+    open lateinit var graduationDesignTeacherService: GraduationDesignTeacherService
+
     /**
      * 获取毕业设计发布数据 用于通用列表数据
      *
@@ -70,8 +99,7 @@ open class GraduationDesignMethodControllerCommon {
      * @param request                   请求
      * @return true or false
      */
-    fun deleteFileGraduateDesign(@RequestParam("filePath") filePath: String, @RequestParam("fileId") fileId: String,
-                                 @RequestParam("graduationDesignReleaseId") graduationDesignReleaseId: String, request: HttpServletRequest): AjaxUtils<*> {
+    fun deleteFileGraduateDesign(filePath: String, fileId: String, graduationDesignReleaseId: String, request: HttpServletRequest): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
         try {
             if (FilesUtils.deleteFile(RequestUtils.getRealPath(request) + filePath)) {
@@ -86,5 +114,45 @@ open class GraduationDesignMethodControllerCommon {
         }
 
         return ajaxUtils
+    }
+
+    /**
+     * 设置教职工id和学生id
+     *
+     * @param modelMap 页面对象
+     */
+    fun setStaffIdAndStudentId(modelMap: ModelMap, graduationDesignRelease: GraduationDesignRelease) {
+        val users = usersService.getUserFromSession()
+        var hasValue = false
+        if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
+            val studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users!!.getUsername(), graduationDesignRelease.scienceId!!, graduationDesignRelease.allowGrade)
+            if (studentRecord.isPresent()) {
+                val student = studentRecord.get().into(Student::class.java)
+                if (!ObjectUtils.isEmpty(student)) {
+                    val staffRecord = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId()!!, graduationDesignRelease.graduationDesignReleaseId)
+                    if (staffRecord.isPresent()) {
+                        val graduationDesignTeacher = staffRecord.get().into(GraduationDesignTeacher::class.java)
+                        modelMap.addAttribute("studentId", student.getStudentId())
+                        modelMap.addAttribute("staffId", graduationDesignTeacher.getStaffId())
+                        hasValue = true
+                    }
+                }
+            }
+        } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+            val staff = staffService.findByUsername(users!!.getUsername())
+            if (!ObjectUtils.isEmpty(staff)) {
+                val staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignRelease.graduationDesignReleaseId, staff.getStaffId()!!)
+                if (staffRecord.isPresent()) {
+                    modelMap.addAttribute("studentId", 0)
+                    modelMap.addAttribute("staffId", staff.getStaffId())
+                    hasValue = true
+                }
+            }
+        }
+
+        if (!hasValue) {
+            modelMap.addAttribute("studentId", 0)
+            modelMap.addAttribute("staffId", 0)
+        }
     }
 }

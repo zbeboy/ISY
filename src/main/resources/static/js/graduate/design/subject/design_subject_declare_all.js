@@ -9,8 +9,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address"],
          */
         var ajax_url = {
             update: '/web/graduate/design/subject/declare/all/update',
-            subject_type: '/user/graduate/design/subject/types',
-            subject_origin_type: '/user/graduate/design/subject/origin_types',
+            subject_type: '/anyone/graduate/design/subject/types',
+            subject_origin_type: '/anyone/graduate/design/subject/origin_types',
             nav: '/web/menu/graduate/design/subject',
             back: '/web/graduate/design/subject/declare'
         };

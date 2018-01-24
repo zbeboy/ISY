@@ -10,7 +10,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         function getAjaxUrl() {
             return {
                 data_url: '/web/graduate/design/manifest/list/data',
-                teachers: '/anyone/graduate/design/subject/teachers',
+                teachers: '/anyone/graduate/design/teachers',
                 export_data_url: '/web/graduate/design/manifest/list/data/export',
                 mark_info_url: '/web/graduate/design/manifest/mark/info',
                 mark_url: '/web/graduate/design/manifest/mark',

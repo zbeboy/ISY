@@ -5,15 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import top.zbeboy.isy.domain.tables.pojos.Building
-import top.zbeboy.isy.domain.tables.pojos.College
-import top.zbeboy.isy.domain.tables.pojos.Files
-import top.zbeboy.isy.domain.tables.pojos.Organize
+import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.service.data.BuildingService
 import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.data.OrganizeService
-import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseFileService
-import top.zbeboy.isy.service.graduate.design.GraduationDesignReleaseService
+import top.zbeboy.isy.service.graduate.design.*
+import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean
 import top.zbeboy.isy.web.util.AjaxUtils
 import java.util.ArrayList
 import javax.annotation.Resource
@@ -29,6 +26,15 @@ open class GraduationDesignControllerCommon {
 
     @Resource
     open lateinit var graduationDesignReleaseFileService: GraduationDesignReleaseFileService
+
+    @Resource
+    open lateinit var graduationDesignTeacherService: GraduationDesignTeacherService
+
+    @Resource
+    open lateinit var graduationDesignSubjectTypeService: GraduationDesignSubjectTypeService
+
+    @Resource
+    open lateinit var graduationDesignSubjectOriginTypeService: GraduationDesignSubjectOriginTypeService
 
     @Resource
     open lateinit var organizeService: OrganizeService
@@ -97,5 +103,58 @@ open class GraduationDesignControllerCommon {
             buildingRecords.mapTo(buildings) { Building(it.buildingId, it.buildingName, it.buildingIsDel, it.collegeId) }
         }
         return AjaxUtils.of<Building>().success().msg("获取楼数据成功！").listData(buildings)
+    }
+
+    /**
+     * 毕业设计指导教师数据
+     *
+     * @param graduationDesignReleaseId 毕业发布id
+     * @return 数据
+     */
+    @RequestMapping(value = ["/anyone/graduate/design/teachers"], method = [(RequestMethod.GET)])
+    @ResponseBody
+    fun teachers(@RequestParam("id") graduationDesignReleaseId: String): AjaxUtils<GraduationDesignTeacherBean> {
+        val ajaxUtils = AjaxUtils.of<GraduationDesignTeacherBean>()
+        val graduationDesignTeacherBeens = ArrayList<GraduationDesignTeacherBean>()
+        val graduationDesignTeacherBean = GraduationDesignTeacherBean()
+        graduationDesignTeacherBean.staffId = 0
+        graduationDesignTeacherBean.realName = "全部"
+        graduationDesignTeacherBean.staffMobile = ""
+        graduationDesignTeacherBeens.add(graduationDesignTeacherBean)
+        graduationDesignTeacherBeens.addAll(graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId))
+        ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens)
+        return ajaxUtils
+    }
+
+    /**
+     * 获取题目类型
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = ["/anyone/graduate/design/subject/types"], method = [(RequestMethod.GET)])
+    @ResponseBody
+    fun subjectTypes(): AjaxUtils<GraduationDesignSubjectType> {
+        val ajaxUtils = AjaxUtils.of<GraduationDesignSubjectType>()
+        val graduationDesignSubjectTypes = ArrayList<GraduationDesignSubjectType>()
+        val graduationDesignSubjectType = GraduationDesignSubjectType(0, "题目类型")
+        graduationDesignSubjectTypes.add(graduationDesignSubjectType)
+        graduationDesignSubjectTypes.addAll(graduationDesignSubjectTypeService.findAll())
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignSubjectTypes)
+    }
+
+    /**
+     * 获取课题来源
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = ["/anyone/graduate/design/subject/origin_types"], method = [(RequestMethod.GET)])
+    @ResponseBody
+    fun subjectOriginTypes(): AjaxUtils<GraduationDesignSubjectOriginType> {
+        val ajaxUtils = AjaxUtils.of<GraduationDesignSubjectOriginType>()
+        val graduationDesignSubjectOriginTypes = ArrayList<GraduationDesignSubjectOriginType>()
+        val graduationDesignSubjectOriginType = GraduationDesignSubjectOriginType(0, "课题来源")
+        graduationDesignSubjectOriginTypes.add(graduationDesignSubjectOriginType)
+        graduationDesignSubjectOriginTypes.addAll(graduationDesignSubjectOriginTypeService.findAll())
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignSubjectOriginTypes)
     }
 }

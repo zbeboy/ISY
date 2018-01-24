@@ -197,7 +197,7 @@ open class GraduationDesignConditionCommon {
      * @param errorBean error 信息
      * @return error
      */
-    fun isNotOkTeacherAdjust(errorBean:  ErrorBean<GraduationDesignRelease>){
+    fun isNotOkTeacherAdjust(errorBean: ErrorBean<GraduationDesignRelease>) {
         val graduationDesignRelease = errorBean.data
         if (!errorBean.hasError) {
             // 是否已确认调整
