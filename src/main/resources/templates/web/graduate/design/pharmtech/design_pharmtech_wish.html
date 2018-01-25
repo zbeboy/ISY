@@ -47,17 +47,17 @@
         <script id="teacher-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>
-                <td>{{realName}}</td>
+                <td>{{staffRealName}}</td>
                 <td>{{staffMobile}}</td>
                 <td>{{studentCount}}</td>
                 <td>
                     {{#if selected}}
                     <button type="button" class="btn btn-default btn-sm cancelTeacher"
-                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">取消
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{staffRealName}}">取消
                     </button>
                     {{else}}
                     <button type="button" class="btn btn-primary btn-sm selectTeacher"
-                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}">选择
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{staffRealName}}">选择
                     </button>
                     {{/if}}
                 </td>

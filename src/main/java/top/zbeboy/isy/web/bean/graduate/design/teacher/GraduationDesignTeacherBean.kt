@@ -6,7 +6,6 @@ import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher
  * Created by zbeboy 2018-01-17 .
  **/
 class GraduationDesignTeacherBean : GraduationDesignTeacher() {
-    var realName: String? = null
     var staffNumber: String? = null
     var staffUsername: String? = null
     var staffMobile: String? = null

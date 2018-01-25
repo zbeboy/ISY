@@ -464,7 +464,7 @@ open class GraduationDesignPharmtechController {
     @ResponseBody
     fun myTeacher(@RequestParam("id") graduationDesignReleaseId: String): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
-        val errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId)
+        val errorBean = graduationDesignConditionCommon.isNotOkTeacherAdjust(graduationDesignReleaseId)
         if (!errorBean.isHasError()) {
             val graduationDesignRelease = errorBean.data
             if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
@@ -473,17 +473,12 @@ open class GraduationDesignPharmtechController {
                 val studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users!!.username, graduationDesignRelease!!.scienceId!!, graduationDesignRelease.allowGrade)
                 if (studentRecord.isPresent) {
                     val student = studentRecord.get().into(Student::class.java)
-                    // 是否已确认调整
-                    if (!ObjectUtils.isEmpty(graduationDesignRelease.isOkTeacherAdjust) && graduationDesignRelease.isOkTeacherAdjust == 1.toByte()) {
-                        val record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(student.studentId!!, graduationDesignReleaseId)
-                        if (record.isPresent) {
-                            val graduationDesignTutorBean = record.get().into(GraduationDesignTutorBean::class.java)
-                            ajaxUtils.success().msg("获取数据成功").obj(graduationDesignTutorBean)
-                        } else {
-                            ajaxUtils.fail().msg("未获取到任何信息")
-                        }
+                    val record = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelationForStaff(student.studentId!!, graduationDesignReleaseId)
+                    if (record.isPresent) {
+                        val graduationDesignTutorBean = record.get().into(GraduationDesignTutorBean::class.java)
+                        ajaxUtils.success().msg("获取数据成功").obj(graduationDesignTutorBean)
                     } else {
-                        ajaxUtils.fail().msg("请等待调整完成后，进行查看")
+                        ajaxUtils.fail().msg("未获取到任何信息")
                     }
                 } else {
                     ajaxUtils.fail().msg("您的账号不符合此次毕业设计条件")

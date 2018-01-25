@@ -49,8 +49,6 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(DEFENSE_GROUP_MEMBER)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID))
                     .leftJoin(DEFENSE_GROUP)
@@ -62,8 +60,6 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(DEFENSE_GROUP_MEMBER)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID))
                     .leftJoin(DEFENSE_GROUP)
@@ -76,7 +72,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
         for (Record r : records) {
             GraduationDesignTeacherBean graduationDesignTeacherBean = new GraduationDesignTeacherBean();
             graduationDesignTeacherBean.setGraduationDesignTeacherId(r.getValue(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID));
-            graduationDesignTeacherBean.setRealName(r.getValue(USERS.REAL_NAME));
+            graduationDesignTeacherBean.setStaffRealName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
             graduationDesignTeacherBean.setStaffUsername(r.getValue(USERS.USERNAME));
             graduationDesignTeacherBean.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
             graduationDesignTeacherBean.setStaffMobile(r.getValue(USERS.MOBILE));
@@ -104,11 +100,13 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
                 .from(DEFENSE_GROUP_MEMBER)
                 .join(GRADUATION_DESIGN_TUTOR)
                 .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
-                .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                .join(STUDENT)
                 .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                .join(STAFF)
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                 .leftJoin(GRADUATION_DESIGN_PRESUBJECT)
                 .on(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID.eq(STUDENT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId)))
@@ -120,10 +118,10 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
             defenseGroupMemberBean.setGraduationDesignTeacherId(r.getValue(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID));
             defenseGroupMemberBean.setNote(r.getValue(DEFENSE_GROUP_MEMBER.NOTE));
             defenseGroupMemberBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
-            defenseGroupMemberBean.setStudentName(r.getValue(USERS.as("S").REAL_NAME));
-            defenseGroupMemberBean.setStudentMobile(r.getValue(USERS.as("S").MOBILE));
+            defenseGroupMemberBean.setStudentName(r.getValue(USERS.REAL_NAME));
+            defenseGroupMemberBean.setStudentMobile(r.getValue(USERS.MOBILE));
             defenseGroupMemberBean.setSubject(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
-            defenseGroupMemberBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
+            defenseGroupMemberBean.setStaffName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
             defenseGroupMemberBean.setStudentId(r.getValue(STUDENT.STUDENT_ID));
 
             defenseGroupMemberBeans.add(defenseGroupMemberBean);
@@ -140,8 +138,6 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
                 .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                 .join(STAFF)
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                .join(USERS)
-                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(defenseGroupId))
                 .fetch();
         for (Record r : records) {
@@ -149,7 +145,7 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
             defenseGroupMemberBean.setDefenseGroupId(r.getValue(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID));
             defenseGroupMemberBean.setGraduationDesignTeacherId(r.getValue(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID));
             defenseGroupMemberBean.setNote(r.getValue(DEFENSE_GROUP_MEMBER.NOTE));
-            defenseGroupMemberBean.setStaffName(r.getValue(USERS.REAL_NAME));
+            defenseGroupMemberBean.setStaffName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
 
             defenseGroupMemberBeans.add(defenseGroupMemberBean);
         }
@@ -195,10 +191,10 @@ public class DefenseGroupMemberServiceImpl implements DefenseGroupMemberService 
      */
     public Condition searchCondition(GraduationDesignTeacherBean condition) {
         Condition a = null;
-        String realName = StringUtils.trimWhitespace(condition.getRealName());
+        String realName = StringUtils.trimWhitespace(condition.getStaffRealName());
         String defenseGroupId = StringUtils.trimWhitespace(condition.getDefenseGroupId());
         if (StringUtils.hasLength(realName)) {
-            a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName));
+            a = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(realName));
         }
 
         if (StringUtils.hasLength(defenseGroupId)) {

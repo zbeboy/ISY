@@ -55,7 +55,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -83,7 +83,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -121,7 +121,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -147,7 +147,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -183,7 +183,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -209,7 +209,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -246,7 +246,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -272,7 +272,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
                     .leftJoin(SCORE_TYPE)
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -300,7 +300,7 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
             tempGraduationDesignDeclareBean.setGuidePeoples(r.getValue(GRADUATION_DESIGN_DECLARE.GUIDE_PEOPLES));
             tempGraduationDesignDeclareBean.setGraduationDesignPresubjectId(r.getValue(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID));
             tempGraduationDesignDeclareBean.setStaffId(r.getValue(STAFF.STAFF_ID));
-            tempGraduationDesignDeclareBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
+            tempGraduationDesignDeclareBean.setStaffName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
             tempGraduationDesignDeclareBean.setAcademicTitleName(r.getValue(ACADEMIC_TITLE.ACADEMIC_TITLE_NAME));
             tempGraduationDesignDeclareBean.setStudentName(r.getValue(DEFENSE_ORDER.STUDENT_NAME));
             tempGraduationDesignDeclareBean.setStudentNumber(r.getValue(DEFENSE_ORDER.STUDENT_NUMBER));
@@ -418,10 +418,10 @@ public class GraduationDesignManifestServiceImpl extends DataTablesPlugin<Gradua
             if ("guide_teacher".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {
-                    sortField[0] = USERS.as("T").REAL_NAME.asc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.asc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc();
                 } else {
-                    sortField[0] = USERS.as("T").REAL_NAME.desc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.desc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc();
                 }
             }

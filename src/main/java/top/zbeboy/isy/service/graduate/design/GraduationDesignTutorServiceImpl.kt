@@ -108,7 +108,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
     }
 
     override fun countFillStudent(graduationDesignReleaseBean: GraduationDesignReleaseBean): Int {
-        return  create.selectCount()
+        return create.selectCount()
                 .from(GRADUATION_DESIGN_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
@@ -144,9 +144,11 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .from(GRADUATION_DESIGN_TUTOR)
                     .join(GRADUATION_DESIGN_TEACHER)
                     .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(STUDENT.join(USERS.`as`("T")).on(STUDENT.USERNAME.eq(USERS.`as`("T").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(STAFF.join(USERS.`as`("S")).on(STAFF.USERNAME.eq(USERS.`as`("S").USERNAME)))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -159,9 +161,11 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .from(GRADUATION_DESIGN_TUTOR)
                     .join(GRADUATION_DESIGN_TEACHER)
                     .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(STUDENT.join(USERS.`as`("T")).on(STUDENT.USERNAME.eq(USERS.`as`("T").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(STAFF.join(USERS.`as`("S")).on(STAFF.USERNAME.eq(USERS.`as`("S").USERNAME)))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -175,9 +179,9 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
             graduationDesignTutorBean.graduationDesignTeacherId = r.getValue(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID)
             graduationDesignTutorBean.studentId = r.getValue(GRADUATION_DESIGN_TUTOR.STUDENT_ID)
             graduationDesignTutorBean.graduationDesignTutorId = r.getValue(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID)
-            graduationDesignTutorBean.studentName = r.getValue(USERS.`as`("T").REAL_NAME)
+            graduationDesignTutorBean.studentName = r.getValue(USERS.REAL_NAME)
             graduationDesignTutorBean.studentNumber = r.getValue(STUDENT.STUDENT_NUMBER)
-            graduationDesignTutorBean.staffName = r.getValue(USERS.`as`("S").REAL_NAME)
+            graduationDesignTutorBean.staffName = r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME)
             graduationDesignTutorBean.organizeName = r.getValue(ORGANIZE.ORGANIZE_NAME)
             graduationDesignTutorBeens.add(graduationDesignTutorBean)
         }
@@ -209,9 +213,11 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .from(GRADUATION_DESIGN_TUTOR)
                     .join(GRADUATION_DESIGN_TEACHER)
                     .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(STUDENT.join(USERS.`as`("T")).on(STUDENT.USERNAME.eq(USERS.`as`("T").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                    .join(STAFF.join(USERS.`as`("S")).on(STAFF.USERNAME.eq(USERS.`as`("S").USERNAME)))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -326,7 +332,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
             val studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"))
             val organizeName = StringUtils.trimWhitespace(search.getString("organizeName"))
             if (StringUtils.hasLength(studentName)) {
-                a = USERS.`as`("T").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName))
+                a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName))
             }
 
             if (StringUtils.hasLength(studentNumber)) {
@@ -405,10 +411,10 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
             if ("student_name".equals(orderColumnName!!, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("T").REAL_NAME.asc()
+                    sortField[0] = USERS.REAL_NAME.asc()
                     sortField[1] = GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID.asc()
                 } else {
-                    sortField[0] = USERS.`as`("T").REAL_NAME.desc()
+                    sortField[0] = USERS.REAL_NAME.desc()
                     sortField[1] = GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID.desc()
                 }
             }
@@ -436,10 +442,10 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
             if ("staff_name".equals(orderColumnName, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.`as`("S").REAL_NAME.asc()
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.asc()
                     sortField[1] = GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID.asc()
                 } else {
-                    sortField[0] = USERS.`as`("S").REAL_NAME.desc()
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.desc()
                     sortField[1] = GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TUTOR_ID.desc()
                 }
             }

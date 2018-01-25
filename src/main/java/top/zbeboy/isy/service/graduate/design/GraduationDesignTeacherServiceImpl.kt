@@ -7,14 +7,13 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
-import top.zbeboy.isy.service.plugin.DataTablesPlugin
-import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean
-
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.GraduationDesignTeacherDao
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher
 import top.zbeboy.isy.domain.tables.records.GraduationDesignTeacherRecord
+import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
+import top.zbeboy.isy.web.bean.graduate.design.teacher.GraduationDesignTeacherBean
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
 import javax.annotation.Resource
@@ -40,8 +39,6 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignTeacherBean.graduationDesignReleaseId))
             sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
@@ -51,8 +48,6 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignTeacherBean.graduationDesignReleaseId).and(a))
             sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
             pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
@@ -66,7 +61,7 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
             temp.staffId = r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_ID)
             temp.studentCount = r.getValue(GRADUATION_DESIGN_TEACHER.STUDENT_COUNT)
             temp.username = r.getValue(GRADUATION_DESIGN_TEACHER.USERNAME)
-            temp.realName = r.getValue(USERS.REAL_NAME)
+            temp.staffRealName = r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME)
             temp.staffNumber = r.getValue(STAFF.STAFF_NUMBER)
             temp.staffUsername = r.getValue(STAFF.USERNAME)
             temp.assignerName = r.getValue(GRADUATION_DESIGN_TEACHER.ASSIGNER_NAME)
@@ -97,8 +92,6 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
                 .from(GRADUATION_DESIGN_TEACHER)
                 .join(STAFF)
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                .join(USERS)
-                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
                 .fetch()
 
@@ -109,7 +102,7 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
             temp.staffId = r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_ID)
             temp.studentCount = r.getValue(GRADUATION_DESIGN_TEACHER.STUDENT_COUNT)
             temp.username = r.getValue(GRADUATION_DESIGN_TEACHER.USERNAME)
-            temp.realName = r.getValue(USERS.REAL_NAME)
+            temp.staffRealName = r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME)
             temp.staffNumber = r.getValue(STAFF.STAFF_NUMBER)
             temp.staffMobile = r.getValue(USERS.MOBILE)
             temp.residue = r.getValue(GRADUATION_DESIGN_TEACHER.RESIDUE)
@@ -158,8 +151,6 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignTeacherBean.graduationDesignReleaseId).and(a))
             selectConditionStep.fetchOne()
         }
@@ -180,7 +171,7 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
             val staffUsername = StringUtils.trimWhitespace(search.getString("staffUsername"))
             val staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"))
             if (StringUtils.hasLength(realName)) {
-                a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
+                a = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
             }
 
             if (StringUtils.hasLength(staffUsername)) {
@@ -217,10 +208,10 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
             if ("real_name".equals(orderColumnName!!, ignoreCase = true)) {
                 sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = USERS.REAL_NAME.asc()
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.asc()
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc()
                 } else {
-                    sortField[0] = USERS.REAL_NAME.desc()
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.desc()
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc()
                 }
             }

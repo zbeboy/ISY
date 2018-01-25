@@ -61,15 +61,13 @@ public class DefenseRateServiceImpl implements DefenseRateService {
                 .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID))
                 .join(STAFF)
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                .join(USERS)
-                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .leftJoin(DEFENSE_RATE)
                 .on(DEFENSE_GROUP_MEMBER.GRADUATION_DESIGN_TEACHER_ID.eq(DEFENSE_RATE.GRADUATION_DESIGN_TEACHER_ID).and(DEFENSE_RATE.DEFENSE_ORDER_ID.eq(defenseOrderId)))
                 .where(DEFENSE_GROUP_MEMBER.DEFENSE_GROUP_ID.eq(defenseGroupId))
                 .fetch();
         for (Record r : records) {
             DefenseRateBean defenseRateBean = new DefenseRateBean();
-            defenseRateBean.setRealName(r.getValue(USERS.REAL_NAME));
+            defenseRateBean.setRealName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
             defenseRateBean.setGrade(r.getValue(DEFENSE_RATE.GRADE));
             defenseRateBeans.add(defenseRateBean);
         }

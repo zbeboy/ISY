@@ -73,8 +73,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -115,8 +113,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -167,8 +163,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -207,8 +201,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -257,8 +249,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -297,8 +287,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -348,8 +336,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -388,8 +374,6 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
                     .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .join(USERS)
-                    .on(STAFF.USERNAME.eq(USERS.USERNAME))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                     .join(GRADUATION_DESIGN_DECLARE)
@@ -484,7 +468,7 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
             graduateArchivesBean.setScienceName(r.getValue(SCIENCE.SCIENCE_NAME));
             graduateArchivesBean.setScienceCode(r.getValue(SCIENCE.SCIENCE_CODE));
             graduateArchivesBean.setGraduationDate(r.getValue(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DATE));
-            graduateArchivesBean.setStaffName(r.getValue(USERS.REAL_NAME));
+            graduateArchivesBean.setStaffName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
             graduateArchivesBean.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
             graduateArchivesBean.setAcademicTitleName(r.getValue(ACADEMIC_TITLE.ACADEMIC_TITLE_NAME));
             graduateArchivesBean.setAssistantTeacher(r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER));
@@ -534,9 +518,9 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
 
             if (StringUtils.hasLength(staffName)) {
                 if (ObjectUtils.isEmpty(a)) {
-                    a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName));
+                    a = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName));
                 } else {
-                    a = a.and(USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName)));
+                    a = a.and(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName)));
                 }
             }
 
@@ -623,10 +607,10 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
             if ("staff_name".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {
-                    sortField[0] = USERS.REAL_NAME.asc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.asc();
                     sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
                 } else {
-                    sortField[0] = USERS.REAL_NAME.desc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.desc();
                     sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
                 }
             }

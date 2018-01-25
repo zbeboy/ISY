@@ -370,7 +370,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffId));
             });
             Handlebars.registerHelper('staff_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.staffMobile));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffRealName + ' ' + this.staffMobile));
             });
             $(getParamId().staffId).html(template(data));
 

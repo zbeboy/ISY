@@ -64,10 +64,10 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
                 .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                 .leftJoin(GRADUATION_DESIGN_TEACHER)
                 .on(DEFENSE_GROUP.LEADER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                .leftJoin(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                .leftJoin(STAFF)
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                .leftJoin(USERS.as("S"))
-                .on(USERS.as("S").USERNAME.eq(DEFENSE_GROUP.SECRETARY_ID))
+                .leftJoin(USERS)
+                .on(USERS.USERNAME.eq(DEFENSE_GROUP.SECRETARY_ID))
                 .where(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(defenseArrangementId))
                 .orderBy(DEFENSE_GROUP.CREATE_TIME.desc())
                 .fetch();
@@ -97,10 +97,10 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
                 .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                 .leftJoin(GRADUATION_DESIGN_TEACHER)
                 .on(DEFENSE_GROUP.LEADER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
-                .leftJoin(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                .leftJoin(STAFF)
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                .leftJoin(USERS.as("S"))
-                .on(USERS.as("S").USERNAME.eq(DEFENSE_GROUP.SECRETARY_ID))
+                .leftJoin(USERS)
+                .on(USERS.USERNAME.eq(DEFENSE_GROUP.SECRETARY_ID))
                 .where(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
                 .orderBy(DEFENSE_GROUP.CREATE_TIME.asc())
                 .fetch();
@@ -143,8 +143,8 @@ public class DefenseGroupServiceImpl implements DefenseGroupService {
             defenseGroupBean.setDefenseArrangementId(r.getValue(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID));
             defenseGroupBean.setBuildingName(r.getValue(BUILDING.BUILDING_NAME));
             defenseGroupBean.setBuildingCode(r.getValue(SCHOOLROOM.BUILDING_CODE));
-            defenseGroupBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
-            defenseGroupBean.setStudentName(r.getValue(USERS.as("S").REAL_NAME));
+            defenseGroupBean.setStaffName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
+            defenseGroupBean.setStudentName(r.getValue(USERS.REAL_NAME));
 
             defenseGroupBeens.add(defenseGroupBean);
         }

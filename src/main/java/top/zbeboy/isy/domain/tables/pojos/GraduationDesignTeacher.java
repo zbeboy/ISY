@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignTeacher implements Serializable {
 
-    private static final long serialVersionUID = 527863808;
+    private static final long serialVersionUID = 704043523;
 
     private String  graduationDesignTeacherId;
     private String  graduationDesignReleaseId;
@@ -33,6 +33,7 @@ public class GraduationDesignTeacher implements Serializable {
     private Integer residue;
     private String  username;
     private String  assignerName;
+    private String  staffRealName;
 
     public GraduationDesignTeacher() {}
 
@@ -44,6 +45,7 @@ public class GraduationDesignTeacher implements Serializable {
         this.residue = value.residue;
         this.username = value.username;
         this.assignerName = value.assignerName;
+        this.staffRealName = value.staffRealName;
     }
 
     public GraduationDesignTeacher(
@@ -53,7 +55,8 @@ public class GraduationDesignTeacher implements Serializable {
         Integer studentCount,
         Integer residue,
         String  username,
-        String  assignerName
+        String  assignerName,
+        String  staffRealName
     ) {
         this.graduationDesignTeacherId = graduationDesignTeacherId;
         this.graduationDesignReleaseId = graduationDesignReleaseId;
@@ -62,6 +65,7 @@ public class GraduationDesignTeacher implements Serializable {
         this.residue = residue;
         this.username = username;
         this.assignerName = assignerName;
+        this.staffRealName = staffRealName;
     }
 
     @NotNull
@@ -130,6 +134,16 @@ public class GraduationDesignTeacher implements Serializable {
         this.assignerName = assignerName;
     }
 
+    @NotNull
+    @Size(max = 30)
+    public String getStaffRealName() {
+        return this.staffRealName;
+    }
+
+    public void setStaffRealName(String staffRealName) {
+        this.staffRealName = staffRealName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GraduationDesignTeacher (");
@@ -141,6 +155,7 @@ public class GraduationDesignTeacher implements Serializable {
         sb.append(", ").append(residue);
         sb.append(", ").append(username);
         sb.append(", ").append(assignerName);
+        sb.append(", ").append(staffRealName);
 
         sb.append(")");
         return sb.toString();

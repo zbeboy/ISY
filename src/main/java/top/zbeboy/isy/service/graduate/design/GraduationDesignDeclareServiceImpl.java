@@ -57,11 +57,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -81,11 +83,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignDeclareBean.getGraduationDesignReleaseId())))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -115,11 +119,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -137,11 +143,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignDeclareBean.getGraduationDesignReleaseId())))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -169,11 +177,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -191,11 +201,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignDeclareBean.getGraduationDesignReleaseId())))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -224,11 +236,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -246,11 +260,13 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignDeclareBean.getGraduationDesignReleaseId())))
-                    .join(STUDENT.join(USERS.as("S")).on(STUDENT.USERNAME.eq(USERS.as("S").USERNAME)))
+                    .join(STUDENT)
                     .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                    .join(USERS)
+                    .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                     .join(ORGANIZE)
                     .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                    .join(STAFF.join(USERS.as("T")).on(STAFF.USERNAME.eq(USERS.as("T").USERNAME)))
+                    .join(STAFF)
                     .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
                     .leftJoin(ACADEMIC_TITLE)
                     .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
@@ -287,10 +303,10 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
             tempGraduationDesignDeclareBean.setIsOkApply(r.getValue(GRADUATION_DESIGN_DECLARE.IS_OK_APPLY));
             tempGraduationDesignDeclareBean.setGraduationDesignPresubjectId(r.getValue(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID));
             tempGraduationDesignDeclareBean.setStaffId(r.getValue(STAFF.STAFF_ID));
-            tempGraduationDesignDeclareBean.setStaffName(r.getValue(USERS.as("T").REAL_NAME));
+            tempGraduationDesignDeclareBean.setStaffName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
             tempGraduationDesignDeclareBean.setAcademicTitleName(r.getValue(ACADEMIC_TITLE.ACADEMIC_TITLE_NAME));
             tempGraduationDesignDeclareBean.setStudentId(r.getValue(STUDENT.STUDENT_ID));
-            tempGraduationDesignDeclareBean.setStudentName(r.getValue(USERS.as("S").REAL_NAME));
+            tempGraduationDesignDeclareBean.setStudentName(r.getValue(USERS.REAL_NAME));
             tempGraduationDesignDeclareBean.setStudentNumber(r.getValue(STUDENT.STUDENT_NUMBER));
             tempGraduationDesignDeclareBean.setOrganizeName(r.getValue(ORGANIZE.ORGANIZE_NAME));
             tempGraduationDesignDeclareBean.setPresubjectTitle(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
@@ -435,9 +451,9 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
 
             if (StringUtils.hasLength(studentName)) {
                 if (ObjectUtils.isEmpty(a)) {
-                    a = USERS.as("S").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
+                    a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName));
                 } else {
-                    a = a.and(USERS.as("S").REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName)));
+                    a = a.and(USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(studentName)));
                 }
             }
 
@@ -672,10 +688,10 @@ public class GraduationDesignDeclareServiceImpl extends DataTablesPlugin<Graduat
             if ("student_name".equalsIgnoreCase(orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {
-                    sortField[0] = USERS.as("S").REAL_NAME.asc();
+                    sortField[0] = USERS.REAL_NAME.asc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.asc();
                 } else {
-                    sortField[0] = USERS.as("S").REAL_NAME.desc();
+                    sortField[0] = USERS.REAL_NAME.desc();
                     sortField[1] = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.desc();
                 }
             }

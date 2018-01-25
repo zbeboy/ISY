@@ -55,6 +55,7 @@ CREATE TABLE graduation_design_teacher (
   residue                      INT,
   username                     VARCHAR(64) NOT NULL,
   assigner_name                VARCHAR(30) NOT NULL,
+  staff_real_name              VARCHAR(30) NOT NULL,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release (graduation_design_release_id),
   FOREIGN KEY (username) REFERENCES users (username),
   FOREIGN KEY (staff_id) REFERENCES staff (staff_id)

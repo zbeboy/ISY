@@ -35,7 +35,7 @@ import top.zbeboy.isy.domain.tables.records.GraduationDesignTeacherRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GraduationDesignTeacher extends TableImpl<GraduationDesignTeacherRecord> {
 
-    private static final long serialVersionUID = 1548121183;
+    private static final long serialVersionUID = -211644622;
 
     /**
      * The reference instance of <code>isy.graduation_design_teacher</code>
@@ -84,6 +84,11 @@ public class GraduationDesignTeacher extends TableImpl<GraduationDesignTeacherRe
      * The column <code>isy.graduation_design_teacher.assigner_name</code>.
      */
     public final TableField<GraduationDesignTeacherRecord, String> ASSIGNER_NAME = createField("assigner_name", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
+
+    /**
+     * The column <code>isy.graduation_design_teacher.staff_real_name</code>.
+     */
+    public final TableField<GraduationDesignTeacherRecord, String> STAFF_REAL_NAME = createField("staff_real_name", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
 
     /**
      * Create a <code>isy.graduation_design_teacher</code> table reference

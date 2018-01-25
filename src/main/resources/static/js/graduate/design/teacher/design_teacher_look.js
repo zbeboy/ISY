@@ -105,7 +105,7 @@ require(["jquery", "nav_active", "datatables.responsive", "check.all", "jquery.a
                 }
             },
             "columns": [
-                {"data": "realName"},
+                {"data": "staffRealName"},
                 {"data": "staffNumber"},
                 {"data": "staffUsername"},
                 {"data": "studentCount"},

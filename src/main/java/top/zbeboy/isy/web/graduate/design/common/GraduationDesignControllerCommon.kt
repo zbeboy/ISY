@@ -118,7 +118,7 @@ open class GraduationDesignControllerCommon {
         val graduationDesignTeacherBeens = ArrayList<GraduationDesignTeacherBean>()
         val graduationDesignTeacherBean = GraduationDesignTeacherBean()
         graduationDesignTeacherBean.staffId = 0
-        graduationDesignTeacherBean.realName = "全部"
+        graduationDesignTeacherBean.staffRealName = "全部"
         graduationDesignTeacherBean.staffMobile = ""
         graduationDesignTeacherBeens.add(graduationDesignTeacherBean)
         graduationDesignTeacherBeens.addAll(graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId))

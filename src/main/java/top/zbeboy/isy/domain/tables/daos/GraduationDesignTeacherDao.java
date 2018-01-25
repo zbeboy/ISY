@@ -109,4 +109,11 @@ public class GraduationDesignTeacherDao extends DAOImpl<GraduationDesignTeacherR
     public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher> fetchByAssignerName(String... values) {
         return fetch(GraduationDesignTeacher.GRADUATION_DESIGN_TEACHER.ASSIGNER_NAME, values);
     }
+
+    /**
+     * Fetch records that have <code>staff_real_name IN (values)</code>
+     */
+    public List<top.zbeboy.isy.domain.tables.pojos.GraduationDesignTeacher> fetchByStaffRealName(String... values) {
+        return fetch(GraduationDesignTeacher.GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME, values);
+    }
 }
