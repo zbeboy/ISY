@@ -82,6 +82,15 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                 .fetchOptional()
     }
 
+    override fun findInIdsRelation(id: List<Int>): Result<Record> {
+        return create.select()
+                .from(STAFF)
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(STAFF.STAFF_ID.`in`(id))
+                .fetch()
+    }
+
     override fun findByStaffNumber(staffNumber: String): Staff? {
         return staffDao.fetchOneByStaffNumber(staffNumber)
     }

@@ -31,6 +31,14 @@ interface StaffService {
     fun findByIdRelationForUsers(id: Int): Optional<Record>
 
     /**
+     * 通过主键批量查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    fun findInIdsRelation(id: List<Int>): Result<Record>
+
+    /**
      * 根据工号查询
      *
      * @param staffNumber 工号

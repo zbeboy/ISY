@@ -127,15 +127,13 @@ open class GraduationDesignTeacherController {
      */
     @RequestMapping(value = ["/web/graduate/design/tutor/add"], method = [(RequestMethod.GET)])
     fun teacherAdd(@RequestParam("rId") graduationDesignReleaseId: String, modelMap: ModelMap): String {
-        val page: String
         val errorBean = graduationDesignConditionCommon.isOkTeacherCondition(graduationDesignReleaseId)
-        if (!errorBean.isHasError()) {
+        return if (!errorBean.isHasError()) {
             modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId)
-            page = "web/graduate/design/teacher/design_teacher_add::#page-wrapper"
+            "web/graduate/design/teacher/design_teacher_add::#page-wrapper"
         } else {
-            page = methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
+            methodControllerCommon.showTip(modelMap, errorBean.errorMsg!!)
         }
-        return page
     }
 
     /**
@@ -250,6 +248,13 @@ open class GraduationDesignTeacherController {
                     graduationDesignTeacherService.deleteByGraduationDesignReleaseId(graduationDesignReleaseId)
                     val staffIds = SmallPropsUtils.StringIdsToList(staffId)
 
+                    // 通过ids 查询出所有教师信息
+                    val staffRecord = staffService.findInIdsRelation(staffIds)
+                    var staffs: List<StaffBean>? = null
+                    if (staffRecord.isNotEmpty) {
+                        staffs = staffRecord.into(StaffBean::class.java)
+                    }
+
                     //  计算出平均带人数
                     val average = totalPeoples / staffIds.size
                     // 余数
@@ -260,6 +265,7 @@ open class GraduationDesignTeacherController {
                         graduationDesignTeacher.graduationDesignTeacherId = UUIDUtils.getUUID()
                         graduationDesignTeacher.graduationDesignReleaseId = graduationDesignReleaseId
                         graduationDesignTeacher.staffId = id
+                        filterTeacherInfo(staffs, id, graduationDesignTeacher)
                         graduationDesignTeacher.username = users!!.username
                         graduationDesignTeacher.assignerName = users.realName
                         if (remainder > 0) {
@@ -281,6 +287,24 @@ open class GraduationDesignTeacherController {
             ajaxUtils.fail().msg(errorBean.errorMsg!!)
         }
         return ajaxUtils
+    }
+
+    /**
+     * 补充教师信息
+     *
+     * @param staffs 教师信息
+     * @param staffId 教师id
+     * @param graduationDesignTeacher 不完整数据
+     */
+    private fun filterTeacherInfo(staffs: List<StaffBean>?, staffId: Int, graduationDesignTeacher: GraduationDesignTeacher) {
+        if (!ObjectUtils.isEmpty(staffs)) {
+            for (staff in staffs!!) {
+                if (staff.staffId == staffId) {
+                    graduationDesignTeacher.staffRealName = staff.realName
+                    break
+                }
+            }
+        }
     }
 
     /**
