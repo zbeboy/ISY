@@ -34,7 +34,7 @@
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
 
         <!-- support kotlin -->
-        <kotlin.version>1.2.20</kotlin.version>
+        <kotlin.version>1.2.21</kotlin.version>
         <!--
         To make your builds faster, you can enable incremental compilation for Maven (supported since Kotlin 1.1.2).
         In order to do that, define the kotlin.compiler.incremental property:
