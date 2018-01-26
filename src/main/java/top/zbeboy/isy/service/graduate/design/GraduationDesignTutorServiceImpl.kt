@@ -139,7 +139,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
         val graduationDesignTutorBeens = ArrayList<GraduationDesignTutorBean>()
         val records: Result<Record>
         val a = searchFillCondition(dataTablesUtils)
-        if (ObjectUtils.isEmpty(a)) {
+        records = if (ObjectUtils.isEmpty(a)) {
             val selectConditionStep = create.select()
                     .from(GRADUATION_DESIGN_TUTOR)
                     .join(GRADUATION_DESIGN_TEACHER)
@@ -155,7 +155,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(condition.graduationDesignReleaseId))
             sortFillCondition(dataTablesUtils, selectConditionStep)
             fillPagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         } else {
             val selectConditionStep = create.select()
                     .from(GRADUATION_DESIGN_TUTOR)
@@ -172,7 +172,7 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
                     .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(condition.graduationDesignReleaseId).and(a))
             sortFillCondition(dataTablesUtils, selectConditionStep)
             fillPagination(dataTablesUtils, selectConditionStep)
-            records = selectConditionStep.fetch()
+            selectConditionStep.fetch()
         }
         for (r in records) {
             val graduationDesignTutorBean = GraduationDesignTutorBean()
@@ -189,13 +189,12 @@ open class GraduationDesignTutorServiceImpl @Autowired constructor(dslContext: D
     }
 
     override fun countAllFill(condition: GraduationDesignTutorBean): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(GRADUATION_DESIGN_TUTOR)
                 .join(GRADUATION_DESIGN_TEACHER)
                 .on(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID))
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(condition.graduationDesignReleaseId))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countFillByCondition(dataTablesUtils: DataTablesUtils<GraduationDesignTutorBean>, condition: GraduationDesignTutorBean): Int {

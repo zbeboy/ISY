@@ -131,11 +131,10 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
     }
 
     override fun countAll(graduationDesignTeacherBean: GraduationDesignTeacherBean): Int {
-        val count = create.selectCount()
+        return create.selectCount()
                 .from(GRADUATION_DESIGN_TEACHER)
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignTeacherBean.graduationDesignReleaseId))
-                .fetchOne()
-        return count.value1()
+                .fetchOne().value1()
     }
 
     override fun countByCondition(dataTablesUtils: DataTablesUtils<GraduationDesignTeacherBean>, graduationDesignTeacherBean: GraduationDesignTeacherBean): Int {
