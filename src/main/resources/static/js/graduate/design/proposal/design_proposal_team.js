@@ -12,7 +12,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
             return {
                 data_url: '/web/graduate/design/proposal/team/data',
                 teachers: '/anyone/graduate/design/teachers',
-                datum_type: '/use/graduate/design/proposal/datums',
+                datum_type: '/anyone/graduate/design/proposal/datums',
                 datum_info: '/web/graduate/design/proposal/team/datum',
                 del: '/web/graduate/design/proposal/del',
                 download: '/web/graduate/design/proposal/download',

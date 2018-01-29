@@ -45,6 +45,9 @@ open class GraduationDesignControllerCommon {
     @Resource
     open lateinit var buildingService: BuildingService
 
+    @Resource
+    open lateinit var graduationDesignDatumTypeService: GraduationDesignDatumTypeService
+
     /**
      * 获取毕业设计发布附件数据
      *
@@ -156,5 +159,21 @@ open class GraduationDesignControllerCommon {
         graduationDesignSubjectOriginTypes.add(graduationDesignSubjectOriginType)
         graduationDesignSubjectOriginTypes.addAll(graduationDesignSubjectOriginTypeService.findAll())
         return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignSubjectOriginTypes)
+    }
+
+    /**
+     * 获取文件类型
+     *
+     * @return 数据
+     */
+    @RequestMapping(value = ["/anyone/graduate/design/proposal/datums"], method = [(RequestMethod.GET)])
+    @ResponseBody
+    fun datumTypes(): AjaxUtils<GraduationDesignDatumType> {
+        val ajaxUtils = AjaxUtils.of<GraduationDesignDatumType>()
+        val graduationDesignDatumTypes = ArrayList<GraduationDesignDatumType>()
+        val graduationDesignDatumType = GraduationDesignDatumType(0, "文件类型")
+        graduationDesignDatumTypes.add(graduationDesignDatumType)
+        graduationDesignDatumTypes.addAll(graduationDesignDatumTypeService.findAll())
+        return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignDatumTypes)
     }
 }
