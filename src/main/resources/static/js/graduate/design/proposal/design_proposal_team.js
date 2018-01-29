@@ -162,7 +162,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                         } else {
                             // 学生
                             if (init_page_param.usersTypeName === constants.global_users_type.student_type) {
-                                if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
+                                if (c.studentId === init_page_param.studentId && init_page_param.studentId !== 0) {
                                     context =
                                         {
                                             func: [
@@ -188,7 +188,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                         };
                                 }
                             } else if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {// 教师
-                                if (c.staffId == init_page_param.staffId && init_page_param.staffId != 0) {
+                                if (c.staffId === init_page_param.staffId && init_page_param.staffId !== 0) {
                                     context =
                                         {
                                             func: [
@@ -373,21 +373,21 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         });
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().originalFileName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
