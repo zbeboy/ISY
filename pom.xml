@@ -27,7 +27,7 @@
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
         <fastJson.version>1.2.45</fastJson.version>
-        <jsoup.version>1.10.3</jsoup.version>
+        <jsoup.version>1.11.2</jsoup.version>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
         <org.dom4j.version>2.1.0</org.dom4j.version>
         <xmlbeans.version>2.6.0</xmlbeans.version>
@@ -53,7 +53,7 @@
         <commons-io.verson>2.6</commons-io.verson>
 
         <!-- thymeleaf -->
-        <thymeleaf.version>3.0.8.RELEASE</thymeleaf.version>
+        <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
         <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 
@@ -79,7 +79,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
+        <version>1.5.10.RELEASE</version>
     </parent>
 
     <!-- Add typical dependencies for a web application -->
