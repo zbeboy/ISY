@@ -229,12 +229,10 @@ public class GraduationDesignReplanController {
         AjaxUtils<GraduationDesignTeacherBean> ajaxUtils = AjaxUtils.of();
         List<GraduationDesignTeacherBean> graduationDesignTeacherBeens = new ArrayList<>();
         ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(condition.getGraduationDesignReleaseId());
+        graduationDesignConditionCommon.isNotOkTeacherCondition(errorBean);
         if (!errorBean.isHasError()) {
             GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 是否已确认毕业设计指导教师
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                graduationDesignTeacherBeens = defenseGroupMemberService.findByGraduationDesignReleaseIdRelationForStaff(condition);
-            }
+            graduationDesignTeacherBeens = defenseGroupMemberService.findByGraduationDesignReleaseIdRelationForStaff(condition);
         }
         return ajaxUtils.success().msg("获取数据成功").listData(graduationDesignTeacherBeens);
     }
@@ -305,7 +303,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils arrangeSave(@Valid GraduationDesignReplanAddVo graduationDesignReplanAddVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReplanAddVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReplanAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 String[] dayDefenseStartTime = graduationDesignReplanAddVo.getDayDefenseStartTime();
                 String[] dayDefenseEndTime = graduationDesignReplanAddVo.getDayDefenseEndTime();
@@ -344,7 +342,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils arrangeUpdate(@Valid GraduationDesignReplanUpdateVo graduationDesignReplanUpdateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReplanUpdateVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReplanUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 String[] dayDefenseStartTime = graduationDesignReplanUpdateVo.getDayDefenseStartTime();
                 String[] dayDefenseEndTime = graduationDesignReplanUpdateVo.getDayDefenseEndTime();
@@ -385,7 +383,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils groupSave(@Valid DefenseGroupAddVo defenseGroupAddVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseGroupAddVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(defenseGroupAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 Optional<Record> record = defenseArrangementService.findByGraduationDesignReleaseId(defenseGroupAddVo.getGraduationDesignReleaseId());
                 if (record.isPresent()) {
@@ -422,7 +420,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils groupUpdate(@Valid DefenseGroupUpdateVo defenseGroupUpdateVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseGroupUpdateVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(defenseGroupUpdateVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupUpdateVo.getDefenseGroupId());
                 defenseGroup.setDefenseGroupName(defenseGroupUpdateVo.getDefenseGroupName());
@@ -498,7 +496,7 @@ public class GraduationDesignReplanController {
     @ResponseBody
     public AjaxUtils groupDel(@RequestParam("id") String graduationDesignReleaseId, String defenseGroupIds) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             if (StringUtils.hasLength(defenseGroupIds)) {
                 List<String> ids = SmallPropsUtils.StringIdsToStringList(defenseGroupIds);
@@ -548,7 +546,7 @@ public class GraduationDesignReplanController {
     public AjaxUtils divideSave(@Valid DefenseGroupMemberAddVo defenseGroupMemberAddVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseGroupMemberAddVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(defenseGroupMemberAddVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 DefenseGroupMember defenseGroupMember = new DefenseGroupMember();
                 defenseGroupMember.setGraduationDesignTeacherId(defenseGroupMemberAddVo.getGraduationDesignTeacherId());
@@ -579,7 +577,7 @@ public class GraduationDesignReplanController {
                                   @RequestParam("defenseGroupId") String defenseGroupId,
                                   @RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupId);
             if (!ObjectUtils.isEmpty(defenseGroup)) {
@@ -609,7 +607,7 @@ public class GraduationDesignReplanController {
                                     @RequestParam("defenseGroupId") String defenseGroupId,
                                     @RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             DefenseGroup defenseGroup = defenseGroupService.findById(defenseGroupId);
             if (!ObjectUtils.isEmpty(defenseGroup)) {
@@ -645,83 +643,51 @@ public class GraduationDesignReplanController {
                                @RequestParam("defenseArrangementId") String defenseArrangementId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         try {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
+            graduationDesignConditionCommon.isNotOkTeacherAdjust(errorBean);
             if (!errorBean.isHasError()) {
-                GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-                // 是否已确认毕业设计指导教师调整
-                if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacherAdjust()) && graduationDesignRelease.getIsOkTeacherAdjust() == 1) {
-                    // 安排情况
-                    DefenseArrangement defenseArrangement = defenseArrangementService.findById(defenseArrangementId);
-                    if (!ObjectUtils.isEmpty(defenseArrangement)) {
-                        // 删除之前顺序配置
-                        defenseOrderService.deleteByDefenseGroupId(defenseGroupId);
+                // 安排情况
+                DefenseArrangement defenseArrangement = defenseArrangementService.findById(defenseArrangementId);
+                if (!ObjectUtils.isEmpty(defenseArrangement)) {
+                    // 删除之前顺序配置
+                    defenseOrderService.deleteByDefenseGroupId(defenseGroupId);
 
-                        List<DefenseTime> defenseTimes = new ArrayList<>();
-                        // 每日答辩时间
-                        Result<Record> defenseTimeRecord = defenseTimeService.findByDefenseArrangementId(defenseArrangementId);
-                        if (defenseTimeRecord.isNotEmpty()) {
-                            defenseTimes = defenseTimeRecord.into(DefenseTime.class);
-                        }
+                    List<DefenseTime> defenseTimes = new ArrayList<>();
+                    // 每日答辩时间
+                    Result<Record> defenseTimeRecord = defenseTimeService.findByDefenseArrangementId(defenseArrangementId);
+                    if (defenseTimeRecord.isNotEmpty()) {
+                        defenseTimes = defenseTimeRecord.into(DefenseTime.class);
+                    }
 
-                        // 查询小组学生
-                        List<DefenseGroupMemberBean> defenseGroupMemberBeens = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignReleaseIdForStudent(defenseGroupId, graduationDesignReleaseId);
+                    // 查询小组学生
+                    List<DefenseGroupMemberBean> defenseGroupMemberBeens = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignReleaseIdForStudent(defenseGroupId, graduationDesignReleaseId);
 
-                        String format1 = "yyyy-MM-dd HH:mm:ss";
-                        String format2 = "yyyy-MM-dd";
-                        String format3 = "HH:mm";
-                        // 切分时间
-                        DateTime defenseStartTime = new DateTime(defenseArrangement.getDefenseStartTime().getTime());
-                        // 学生计数器
-                        int sortNum = 0;
-                        Date startTime;
-                        Date endTime;
-                        DateTime dateTime = null;
-                        List<DefenseOrder> defenseOrders = new ArrayList<>();
-                        // 先循环日期
-                        while (defenseStartTime.isBefore(defenseArrangement.getDefenseEndTime().getTime())) {
-                            String startDate = DateTimeUtils.formatDate(defenseStartTime.toDate(), format2);
-                            // 循环时段
-                            for (DefenseTime defenseTime : defenseTimes) {
-                                startTime = DateTimeUtils.formatDateTime(startDate + " " + defenseTime.getDayDefenseStartTime() + ":00", format1);
-                                endTime = DateTimeUtils.formatDateTime(startDate + " " + defenseTime.getDayDefenseEndTime() + ":00", format1);
-                                dateTime = new DateTime(startTime.getTime());
-                                // 循环学生
-                                while (sortNum < defenseGroupMemberBeens.size()) {
-                                    DefenseGroupMemberBean defenseGroupMemberBean = defenseGroupMemberBeens.get(sortNum);
-                                    DefenseOrder defenseOrder = new DefenseOrder();
-                                    defenseOrder.setDefenseOrderId(UUIDUtils.getUUID());
-                                    // 在该时段
-                                    if (dateTime.isBefore(endTime.getTime())) {
-                                        defenseOrder.setStudentNumber(defenseGroupMemberBean.getStudentNumber());
-                                        defenseOrder.setStudentName(defenseGroupMemberBean.getStudentName());
-                                        defenseOrder.setSubject(defenseGroupMemberBean.getSubject());
-                                        defenseOrder.setDefenseDate(new java.sql.Date(dateTime.toDate().getTime()));
-                                        defenseOrder.setDefenseTime(DateTimeUtils.formatDate(dateTime.toDate(), format3));
-                                        defenseOrder.setStaffName(defenseGroupMemberBean.getStaffName());
-                                        defenseOrder.setSortNum(sortNum);
-                                        defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
-                                        defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
-                                        defenseOrder.setDefenseStatus(0);
-                                        defenseOrder.setStudentMobile(defenseGroupMemberBean.getStudentMobile());
-                                    } else {
-                                        break;
-                                    }
-                                    defenseOrders.add(defenseOrder);
-                                    dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
-                                    sortNum++;
-                                }
-                            }
-                            defenseStartTime = defenseStartTime.plusDays(1);
-                        }
-
-                        // 若已超过时间，但学生还有，补齐
-                        if (sortNum < defenseGroupMemberBeens.size()) {
+                    String format1 = "yyyy-MM-dd HH:mm:ss";
+                    String format2 = "yyyy-MM-dd";
+                    String format3 = "HH:mm";
+                    // 切分时间
+                    DateTime defenseStartTime = new DateTime(defenseArrangement.getDefenseStartTime().getTime());
+                    // 学生计数器
+                    int sortNum = 0;
+                    Date startTime;
+                    Date endTime;
+                    DateTime dateTime = null;
+                    List<DefenseOrder> defenseOrders = new ArrayList<>();
+                    // 先循环日期
+                    while (defenseStartTime.isBefore(defenseArrangement.getDefenseEndTime().getTime())) {
+                        String startDate = DateTimeUtils.formatDate(defenseStartTime.toDate(), format2);
+                        // 循环时段
+                        for (DefenseTime defenseTime : defenseTimes) {
+                            startTime = DateTimeUtils.formatDateTime(startDate + " " + defenseTime.getDayDefenseStartTime() + ":00", format1);
+                            endTime = DateTimeUtils.formatDateTime(startDate + " " + defenseTime.getDayDefenseEndTime() + ":00", format1);
+                            dateTime = new DateTime(startTime.getTime());
+                            // 循环学生
                             while (sortNum < defenseGroupMemberBeens.size()) {
                                 DefenseGroupMemberBean defenseGroupMemberBean = defenseGroupMemberBeens.get(sortNum);
                                 DefenseOrder defenseOrder = new DefenseOrder();
                                 defenseOrder.setDefenseOrderId(UUIDUtils.getUUID());
                                 // 在该时段
-                                if (!ObjectUtils.isEmpty(dateTime)) {
+                                if (dateTime.isBefore(endTime.getTime())) {
                                     defenseOrder.setStudentNumber(defenseGroupMemberBean.getStudentNumber());
                                     defenseOrder.setStudentName(defenseGroupMemberBean.getStudentName());
                                     defenseOrder.setSubject(defenseGroupMemberBean.getSubject());
@@ -733,22 +699,49 @@ public class GraduationDesignReplanController {
                                     defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
                                     defenseOrder.setDefenseStatus(0);
                                     defenseOrder.setStudentMobile(defenseGroupMemberBean.getStudentMobile());
-                                    dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
+                                } else {
+                                    break;
                                 }
                                 defenseOrders.add(defenseOrder);
+                                dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
                                 sortNum++;
                             }
                         }
-
-                        defenseOrderService.save(defenseOrders);
-                        ajaxUtils.success().msg("生成成功");
-                    } else {
-                        ajaxUtils.fail().msg("未查询到相关毕业答辩安排");
+                        defenseStartTime = defenseStartTime.plusDays(1);
                     }
-                } else {
-                    ajaxUtils.fail().msg("未确认毕业设计指导教师调整");
-                }
 
+                    // 若已超过时间，但学生还有，补齐
+                    if (sortNum < defenseGroupMemberBeens.size()) {
+                        while (sortNum < defenseGroupMemberBeens.size()) {
+                            DefenseGroupMemberBean defenseGroupMemberBean = defenseGroupMemberBeens.get(sortNum);
+                            DefenseOrder defenseOrder = new DefenseOrder();
+                            defenseOrder.setDefenseOrderId(UUIDUtils.getUUID());
+                            // 在该时段
+                            if (!ObjectUtils.isEmpty(dateTime)) {
+                                defenseOrder.setStudentNumber(defenseGroupMemberBean.getStudentNumber());
+                                defenseOrder.setStudentName(defenseGroupMemberBean.getStudentName());
+                                defenseOrder.setSubject(defenseGroupMemberBean.getSubject());
+                                defenseOrder.setDefenseDate(new java.sql.Date(dateTime.toDate().getTime()));
+                                defenseOrder.setDefenseTime(DateTimeUtils.formatDate(dateTime.toDate(), format3));
+                                defenseOrder.setStaffName(defenseGroupMemberBean.getStaffName());
+                                defenseOrder.setSortNum(sortNum);
+                                defenseOrder.setStudentId(defenseGroupMemberBean.getStudentId());
+                                defenseOrder.setDefenseGroupId(defenseGroupMemberBean.getDefenseGroupId());
+                                defenseOrder.setDefenseStatus(0);
+                                defenseOrder.setStudentMobile(defenseGroupMemberBean.getStudentMobile());
+                                dateTime = dateTime.plusMinutes(defenseArrangement.getIntervalTime());
+                            }
+                            defenseOrders.add(defenseOrder);
+                            sortNum++;
+                        }
+                    }
+                    if (defenseOrders.size() > 0) {
+                        defenseOrderService.save(defenseOrders);
+                    }
+                    ajaxUtils.success().msg("生成成功");
+                } else {
+                    ajaxUtils.fail().msg("未查询到相关毕业答辩安排");
+                }
             } else {
                 ajaxUtils.fail().msg(errorBean.getErrorMsg());
             }
@@ -802,7 +795,7 @@ public class GraduationDesignReplanController {
     @ResponseBody
     public AjaxUtils orderAdjust(DefenseOrderBean defenseOrderBean) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderBean.getGraduationDesignReleaseId());
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(defenseOrderBean.getGraduationDesignReleaseId());
         if (!errorBean.isHasError()) {
             // 当前学生
             DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderBean.getDefenseOrderId());
@@ -913,14 +906,9 @@ public class GraduationDesignReplanController {
     public AjaxUtils divideCondition(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
+        graduationDesignConditionCommon.isNotOkTeacherCondition(errorBean);
         if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 是否已确认毕业设计指导教师
-            if (!ObjectUtils.isEmpty(graduationDesignRelease.getIsOkTeacher()) && graduationDesignRelease.getIsOkTeacher() == 1) {
-                ajaxUtils.success().msg("在条件范围，允许使用");
-            } else {
-                ajaxUtils.fail().msg("未确认毕业设计指导教师");
-            }
+            ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
@@ -937,33 +925,12 @@ public class GraduationDesignReplanController {
     @ResponseBody
     public AjaxUtils canUse(@RequestParam("id") String graduationDesignReleaseId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             ajaxUtils.success().msg("在条件范围，允许使用");
         } else {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
-    }
-
-    /**
-     * 进入入口条件
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return true or false
-     */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 毕业时间范围
-            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                errorBean.setHasError(false);
-            } else {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
-            }
-        }
-        return errorBean;
     }
 }
