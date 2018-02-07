@@ -168,42 +168,21 @@ public class GraduationDesignReorderController {
                     if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
                         Staff staff = staffService.findByUsername(users.getUsername());
                         // 是否为组长
-                        if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
-                            GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
-                            if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                if (!ObjectUtils.isEmpty(staff)) {
-                                    if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
-                                        reorderIsLeader = true;
-                                    }
-                                }
-                            }
-                        }
+                        Optional<GraduationDesignTeacher> data = isLeader(defenseGroup, staff);
+                        reorderIsLeader = data.isPresent();
 
                         // 是否为组员
                         if (!reorderIsLeader) {
-                            if (!ObjectUtils.isEmpty(staff)) {
-                                Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
-                                if (record.isPresent()) {
-                                    GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
-                                    Optional<Record> groupMemberRecord = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignTeacherId(defenseGroupId, graduationDesignTeacher.getGraduationDesignTeacherId());
-                                    if (groupMemberRecord.isPresent()) {
-                                        reorderIsMember = true;
-                                    }
-                                }
-                            }
+                            Optional<GraduationDesignTeacher> memberData = isMember(staff, graduationDesignReleaseId, defenseGroupId);
+                            reorderIsMember = memberData.isPresent();
                         }
 
                         // 是否秘书
-                        if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                            reorderIsSecretary = true;
-                        }
-
+                        reorderIsSecretary = users.getUsername().equals(defenseGroup.getSecretaryId());
 
                     } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
                         // 是否秘书
-                        if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                            reorderIsSecretary = true;
-                        }
+                        reorderIsSecretary = users.getUsername().equals(defenseGroup.getSecretaryId());
                     }
                 }
             }
@@ -254,7 +233,7 @@ public class GraduationDesignReorderController {
     @ResponseBody
     public AjaxUtils info(@RequestParam("id") String graduationDesignReleaseId, @RequestParam("defenseOrderId") String defenseOrderId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderId);
             if (!ObjectUtils.isEmpty(defenseOrder)) {
@@ -280,7 +259,7 @@ public class GraduationDesignReorderController {
     public AjaxUtils status(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 Optional<Record> defenseArrangementRecord = defenseArrangementService.findByGraduationDesignReleaseId(defenseOrderVo.getGraduationDesignReleaseId());
                 if (defenseArrangementRecord.isPresent()) {
@@ -327,53 +306,15 @@ public class GraduationDesignReorderController {
     public AjaxUtils gradeInfo(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                 if (!ObjectUtils.isEmpty(defenseOrder)) {
                     // 答辩状态为 已进行
                     if (!ObjectUtils.isEmpty(defenseOrder.getDefenseStatus()) && defenseOrder.getDefenseStatus() == 1) {
                         // 判断资格
-                        boolean canUse = false;
-                        Users users = usersService.getUserFromSession();
-                        DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
-                        String graduationDesignTeacherId = null;
-                        if (!ObjectUtils.isEmpty(defenseGroup)) {
-                            // 是组长
-                            boolean reorderIsLeader = false;
-                            // 教职工
-                            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                                Staff staff = staffService.findByUsername(users.getUsername());
-                                // 是否为组长
-                                if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
-                                    GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
-                                    if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                        if (!ObjectUtils.isEmpty(staff)) {
-                                            if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
-                                                canUse = true;
-                                                reorderIsLeader = true;
-                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
-                                            }
-                                        }
-                                    }
-                                }
-                                // 是否为组员
-                                if (!reorderIsLeader) {
-                                    if (!ObjectUtils.isEmpty(staff)) {
-                                        Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(defenseOrderVo.getGraduationDesignReleaseId(), staff.getStaffId());
-                                        if (record.isPresent()) {
-                                            GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
-                                            Optional<Record> groupMemberRecord = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseGroupId(), graduationDesignTeacher.getGraduationDesignTeacherId());
-                                            if (groupMemberRecord.isPresent()) {
-                                                canUse = true;
-                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (canUse) {
+                        String graduationDesignTeacherId = getGraduationDesignTeacherIdByCondition(defenseOrderVo);
+                        if (!ObjectUtils.isEmpty(graduationDesignTeacherId)) {
                             double grade = 0d;
                             DefenseRateRecord defenseRateRecord = defenseRateService.findByDefenseOrderIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseOrderId(), graduationDesignTeacherId);
                             if (!ObjectUtils.isEmpty(defenseRateRecord)) {
@@ -411,53 +352,15 @@ public class GraduationDesignReorderController {
     public AjaxUtils grade(@Valid DefenseOrderVo defenseOrderVo, BindingResult bindingResult) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
         if (!bindingResult.hasErrors()) {
-            ErrorBean<GraduationDesignRelease> errorBean = accessCondition(defenseOrderVo.getGraduationDesignReleaseId());
+            ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(defenseOrderVo.getGraduationDesignReleaseId());
             if (!errorBean.isHasError()) {
                 DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderVo.getDefenseOrderId());
                 if (!ObjectUtils.isEmpty(defenseOrder)) {
                     // 答辩状态为 已进行
                     if (!ObjectUtils.isEmpty(defenseOrder.getDefenseStatus()) && defenseOrder.getDefenseStatus() == 1) {
                         // 判断资格
-                        boolean canUse = false;
-                        Users users = usersService.getUserFromSession();
-                        DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
-                        String graduationDesignTeacherId = null;
-                        if (!ObjectUtils.isEmpty(defenseGroup)) {
-                            // 是组长
-                            boolean reorderIsLeader = false;
-                            // 教职工
-                            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-                                Staff staff = staffService.findByUsername(users.getUsername());
-                                // 是否为组长
-                                if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
-                                    GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
-                                    if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                                        if (!ObjectUtils.isEmpty(staff)) {
-                                            if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
-                                                canUse = true;
-                                                reorderIsLeader = true;
-                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
-                                            }
-                                        }
-                                    }
-                                }
-                                // 是否为组员
-                                if (!reorderIsLeader) {
-                                    if (!ObjectUtils.isEmpty(staff)) {
-                                        Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(defenseOrderVo.getGraduationDesignReleaseId(), staff.getStaffId());
-                                        if (record.isPresent()) {
-                                            GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
-                                            Optional<Record> groupMemberRecord = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseGroupId(), graduationDesignTeacher.getGraduationDesignTeacherId());
-                                            if (groupMemberRecord.isPresent()) {
-                                                canUse = true;
-                                                graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (canUse) {
+                        String graduationDesignTeacherId = getGraduationDesignTeacherIdByCondition(defenseOrderVo);
+                        if (!ObjectUtils.isEmpty(graduationDesignTeacherId)) {
                             DefenseRate defenseRate;
                             DefenseRateRecord defenseRateRecord = defenseRateService.findByDefenseOrderIdAndGraduationDesignTeacherId(defenseOrderVo.getDefenseOrderId(), graduationDesignTeacherId);
                             if (!ObjectUtils.isEmpty(defenseRateRecord)) {
@@ -692,25 +595,11 @@ public class GraduationDesignReorderController {
                 if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
                     Staff staff = staffService.findByUsername(users.getUsername());
                     // 是否为组长
-                    if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
-                        GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
-                        if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
-                            if (!ObjectUtils.isEmpty(staff)) {
-                                if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
-                                    canUse = true;
-                                }
-                            }
-                        }
-                    }
-                    // 是否秘书
-                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                        canUse = true;
-                    }
+                    Optional<GraduationDesignTeacher> data = isLeader(defenseGroup, staff);
+                    canUse = data.isPresent() || users.getUsername().equals(defenseGroup.getSecretaryId());// 是否秘书
                 } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) { // 学生
                     // 是否秘书
-                    if (users.getUsername().equals(defenseGroup.getSecretaryId())) {
-                        canUse = true;
-                    }
+                    canUse = users.getUsername().equals(defenseGroup.getSecretaryId());
                 }
             }
         }
@@ -718,23 +607,84 @@ public class GraduationDesignReorderController {
     }
 
     /**
-     * 进入入口条件
+     * 根据条件获取指导老师id
      *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return true or false
+     * @param defenseOrderVo 页面数据
+     * @return 指导老师id
      */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 毕业时间范围
-            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                errorBean.setHasError(false);
-            } else {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
+    private String getGraduationDesignTeacherIdByCondition(DefenseOrderVo defenseOrderVo) {
+        Users users = usersService.getUserFromSession();
+        DefenseGroup defenseGroup = defenseGroupService.findById(defenseOrderVo.getDefenseGroupId());
+        String graduationDesignTeacherId = null;
+        if (!ObjectUtils.isEmpty(defenseGroup)) {
+            // 是组长
+            boolean reorderIsLeader = false;
+            // 教职工
+            if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
+                Staff staff = staffService.findByUsername(users.getUsername());
+                // 是否为组长
+                Optional<GraduationDesignTeacher> data = isLeader(defenseGroup, staff);
+                if (data.isPresent()) {
+                    GraduationDesignTeacher graduationDesignTeacher = data.get();
+                    reorderIsLeader = true;
+                    graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
+                }
+                // 是否为组员
+                if (!reorderIsLeader) {
+                    Optional<GraduationDesignTeacher> memberData = isMember(staff, defenseOrderVo.getGraduationDesignReleaseId(), defenseOrderVo.getDefenseGroupId());
+                    if (memberData.isPresent()) {
+                        GraduationDesignTeacher graduationDesignTeacher = memberData.get();
+                        graduationDesignTeacherId = graduationDesignTeacher.getGraduationDesignTeacherId();
+                    }
+                }
             }
         }
-        return errorBean;
+        return graduationDesignTeacherId;
+    }
+
+    /**
+     * 判断是否为组长并得到指导教师信息
+     *
+     * @param defenseGroup 组数据
+     * @param staff        教师数据
+     * @return 指导教师信息
+     */
+    private Optional<GraduationDesignTeacher> isLeader(DefenseGroup defenseGroup, Staff staff) {
+        Optional<GraduationDesignTeacher> data = Optional.empty();
+        // 是否为组长
+        if (StringUtils.hasLength(defenseGroup.getLeaderId())) {
+            GraduationDesignTeacher graduationDesignTeacher = graduationDesignTeacherService.findById(defenseGroup.getLeaderId());
+            if (!ObjectUtils.isEmpty(graduationDesignTeacher)) {
+                if (!ObjectUtils.isEmpty(staff)) {
+                    if (Objects.equals(graduationDesignTeacher.getStaffId(), staff.getStaffId())) {
+                        data = Optional.of(graduationDesignTeacher);
+                    }
+                }
+            }
+        }
+        return data;
+    }
+
+    /**
+     * 判断是否为组员并获取指导教师信息
+     *
+     * @param staff                     教师数据
+     * @param graduationDesignReleaseId 毕业设计发布id
+     * @param defenseGroupId            组id
+     * @return 指导教师信息
+     */
+    private Optional<GraduationDesignTeacher> isMember(Staff staff, String graduationDesignReleaseId, String defenseGroupId) {
+        Optional<GraduationDesignTeacher> data = Optional.empty();
+        if (!ObjectUtils.isEmpty(staff)) {
+            Optional<Record> record = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignReleaseId, staff.getStaffId());
+            if (record.isPresent()) {
+                GraduationDesignTeacher graduationDesignTeacher = record.get().into(GraduationDesignTeacher.class);
+                Optional<Record> groupMemberRecord = defenseGroupMemberService.findByDefenseGroupIdAndGraduationDesignTeacherId(defenseGroupId, graduationDesignTeacher.getGraduationDesignTeacherId());
+                if (groupMemberRecord.isPresent()) {
+                    data = Optional.of(graduationDesignTeacher);
+                }
+            }
+        }
+        return data;
     }
 }
