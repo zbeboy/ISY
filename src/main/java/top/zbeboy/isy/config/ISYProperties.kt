@@ -26,6 +26,8 @@ class ISYProperties {
 
     private val security = Security()
 
+    private val certificate = Certificate()
+
     fun getAsync(): Async {
         return async
     }
@@ -52,6 +54,10 @@ class ISYProperties {
 
     fun getSecurity(): Security {
         return security
+    }
+
+    fun getCertificate(): Certificate {
+        return certificate
     }
 
     /**
@@ -146,5 +152,12 @@ class ISYProperties {
      */
     class Security {
         var desDefaultKey: String? = null
+    }
+
+    /**
+     * let's encrypt 证书参数
+     */
+    class Certificate {
+        var place: String? = null
     }
 }
