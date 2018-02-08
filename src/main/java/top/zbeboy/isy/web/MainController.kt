@@ -193,7 +193,7 @@ open class MainController {
      * @param request 请求
      * @param response 响应
      */
-    @RequestMapping(value = ["/letUsEncrypt/check/*"], method = [(RequestMethod.GET)])
+    @RequestMapping(value = ["/.well-known/acme-challenge/*"], method = [(RequestMethod.GET)])
     fun letUsEncryptCertificateCheck(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<String> {
         val responseHeaders = HttpHeaders()
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8")
