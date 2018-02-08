@@ -28,7 +28,7 @@ open class AsyncConfiguration : AsyncConfigurer {
     private val log = LoggerFactory.getLogger(AsyncConfiguration::class.java)
 
     @Autowired
-    lateinit open var isyProperties: ISYProperties
+    open lateinit var isyProperties: ISYProperties
 
     @Override
     @Bean(name = ["taskExecutor"])

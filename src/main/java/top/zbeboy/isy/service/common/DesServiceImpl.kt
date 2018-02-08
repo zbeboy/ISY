@@ -19,7 +19,7 @@ open class DesServiceImpl : DesService {
     val DES = "DES"
 
     @Autowired
-    lateinit open var isyProperties: ISYProperties
+    open lateinit var isyProperties: ISYProperties
 
     override fun encrypt(data: String): String {
         val bt = encrypt(data.toByteArray(Charsets.UTF_8), isyProperties.getSecurity().desDefaultKey!!.toByteArray(Charsets.UTF_8))

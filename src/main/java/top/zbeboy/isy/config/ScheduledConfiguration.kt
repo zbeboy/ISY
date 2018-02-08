@@ -55,40 +55,40 @@ open class ScheduledConfiguration {
     private val log = LoggerFactory.getLogger(ScheduledConfiguration::class.java)
 
     @Resource
-    lateinit open var internshipReleaseService: InternshipReleaseService
+    open lateinit var internshipReleaseService: InternshipReleaseService
 
     @Resource
-    lateinit open var internshipApplyService: InternshipApplyService
+    open lateinit var internshipApplyService: InternshipApplyService
 
     @Resource
-    lateinit open var systemAlertService: SystemAlertService
+    open lateinit var systemAlertService: SystemAlertService
 
     @Resource
-    lateinit open var systemMessageService: SystemMessageService
+    open lateinit var systemMessageService: SystemMessageService
 
     @Resource
-    lateinit open var usersService: UsersService
+    open lateinit var usersService: UsersService
 
     @Resource
-    lateinit open var cacheManageService: CacheManageService
+    open lateinit var cacheManageService: CacheManageService
 
     @Resource
-    lateinit open var staffService: StaffService
+    open lateinit var staffService: StaffService
 
     @Resource
-    lateinit open var studentService: StudentService
+    open lateinit var studentService: StudentService
 
     @Resource
-    lateinit open var authoritiesService: AuthoritiesService
+    open lateinit var authoritiesService: AuthoritiesService
 
     @Autowired
-    lateinit open var usersElasticRepository: UsersElasticRepository
+    open lateinit var usersElasticRepository: UsersElasticRepository
 
     @Autowired
-    lateinit open var studentElasticRepository: StudentElasticRepository
+    open lateinit var studentElasticRepository: StudentElasticRepository
 
     @Autowired
-    lateinit open var staffElasticRepository: StaffElasticRepository
+    open lateinit var staffElasticRepository: StaffElasticRepository
 
     @Resource
     open lateinit var usersKeyService: UsersKeyService

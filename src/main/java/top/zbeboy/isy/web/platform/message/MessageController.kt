@@ -20,10 +20,10 @@ import javax.annotation.Resource
 open class MessageController {
 
     @Resource
-    lateinit open var systemAlertService: SystemAlertService
+    open lateinit var systemAlertService: SystemAlertService
 
     @Resource
-    lateinit open var systemMessageService: SystemMessageService
+    open lateinit var systemMessageService: SystemMessageService
 
     /**
      * 推送到一个用户 的系统信息

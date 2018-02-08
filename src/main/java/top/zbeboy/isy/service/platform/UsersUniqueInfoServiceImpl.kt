@@ -27,7 +27,7 @@ open class UsersUniqueInfoServiceImpl @Autowired constructor(dslContext: DSLCont
     open lateinit var usersUniqueInfoDao: UsersUniqueInfoDao
 
     @Autowired
-    lateinit open var isyProperties: ISYProperties
+    open lateinit var isyProperties: ISYProperties
 
     @Resource
     open lateinit var desService: DesService

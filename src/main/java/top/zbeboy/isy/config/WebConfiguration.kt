@@ -34,10 +34,10 @@ import javax.inject.Inject
 open class WebConfiguration : WebMvcConfigurerAdapter() {
 
     @Autowired
-    lateinit open var isyProperties: ISYProperties
+    open lateinit var isyProperties: ISYProperties
 
     @Inject
-    lateinit open var env: Environment
+    open lateinit var env: Environment
 
     /**
      * 切换语言

@@ -28,7 +28,7 @@ import javax.annotation.Resource
 open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
 
     @Resource
-    lateinit open var systemLogElasticRepository: SystemLogElasticRepository
+    open lateinit var systemLogElasticRepository: SystemLogElasticRepository
 
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<SystemLogBean>): ResultUtils<List<SystemLogBean>> {
         val search = dataTablesUtils.search

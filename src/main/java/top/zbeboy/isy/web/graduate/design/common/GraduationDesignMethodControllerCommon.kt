@@ -125,26 +125,26 @@ open class GraduationDesignMethodControllerCommon {
         val users = usersService.getUserFromSession()
         var hasValue = false
         if (usersTypeService.isCurrentUsersTypeName(Workbook.STUDENT_USERS_TYPE)) {
-            val studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users!!.getUsername(), graduationDesignRelease.scienceId!!, graduationDesignRelease.allowGrade)
-            if (studentRecord.isPresent()) {
+            val studentRecord = studentService.findByUsernameAndScienceIdAndGradeRelation(users!!.username, graduationDesignRelease.scienceId!!, graduationDesignRelease.allowGrade)
+            if (studentRecord.isPresent) {
                 val student = studentRecord.get().into(Student::class.java)
                 if (!ObjectUtils.isEmpty(student)) {
-                    val staffRecord = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.getStudentId()!!, graduationDesignRelease.graduationDesignReleaseId)
-                    if (staffRecord.isPresent()) {
+                    val staffRecord = graduationDesignTutorService.findByStudentIdAndGraduationDesignReleaseIdRelation(student.studentId!!, graduationDesignRelease.graduationDesignReleaseId)
+                    if (staffRecord.isPresent) {
                         val graduationDesignTeacher = staffRecord.get().into(GraduationDesignTeacher::class.java)
-                        modelMap.addAttribute("studentId", student.getStudentId())
-                        modelMap.addAttribute("staffId", graduationDesignTeacher.getStaffId())
+                        modelMap.addAttribute("studentId", student.studentId)
+                        modelMap.addAttribute("staffId", graduationDesignTeacher.staffId)
                         hasValue = true
                     }
                 }
             }
         } else if (usersTypeService.isCurrentUsersTypeName(Workbook.STAFF_USERS_TYPE)) {
-            val staff = staffService.findByUsername(users!!.getUsername())
+            val staff = staffService.findByUsername(users!!.username)
             if (!ObjectUtils.isEmpty(staff)) {
-                val staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignRelease.graduationDesignReleaseId, staff.getStaffId()!!)
-                if (staffRecord.isPresent()) {
+                val staffRecord = graduationDesignTeacherService.findByGraduationDesignReleaseIdAndStaffId(graduationDesignRelease.graduationDesignReleaseId, staff.staffId!!)
+                if (staffRecord.isPresent) {
                     modelMap.addAttribute("studentId", 0)
-                    modelMap.addAttribute("staffId", staff.getStaffId())
+                    modelMap.addAttribute("staffId", staff.staffId)
                     hasValue = true
                 }
             }

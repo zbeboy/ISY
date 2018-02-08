@@ -74,7 +74,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     open lateinit var departmentService: DepartmentService
 
     @Autowired
-    lateinit open var isyProperties: ISYProperties
+    open lateinit var isyProperties: ISYProperties
 
     @Resource
     open lateinit var desService: DesService

@@ -21,7 +21,7 @@ open class UsersKeyServiceImpl : UsersKeyService {
     open lateinit var usersKeyDao: UsersKeyDao
 
     @Autowired
-    lateinit open var isyProperties: ISYProperties
+    open lateinit var isyProperties: ISYProperties
 
     @Resource
     open lateinit var desService: DesService

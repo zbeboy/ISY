@@ -21,7 +21,7 @@ import javax.sql.DataSource
 open class JooqSpringBootConfiguration {
 
     @Autowired
-    lateinit open var isyProperties: ISYProperties
+    open lateinit var isyProperties: ISYProperties
 
     /**
      * datasource transaction

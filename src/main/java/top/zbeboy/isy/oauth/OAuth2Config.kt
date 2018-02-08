@@ -44,7 +44,7 @@ open class OAuth2Config  : AuthorizationServerConfigurerAdapter(){
     }
 
     @Bean
-    open protected fun authorizationCodeServices(): AuthorizationCodeServices {
+    protected open fun authorizationCodeServices(): AuthorizationCodeServices {
         return JdbcAuthorizationCodeServices(this.dataSource!!)
     }
 

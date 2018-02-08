@@ -24,10 +24,10 @@ import javax.servlet.http.HttpServletResponse
 open class MainController {
 
     @Resource
-    lateinit open var localeResolver: LocaleResolver
+    open lateinit var localeResolver: LocaleResolver
 
     @Resource
-    lateinit open var authoritiesService: AuthoritiesService
+    open lateinit var authoritiesService: AuthoritiesService
 
     /**
      * main page

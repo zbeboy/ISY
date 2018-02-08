@@ -68,10 +68,10 @@ open class MethodControllerCommon {
     open lateinit var cacheManageService: CacheManageService
 
     @Resource
-    lateinit open var uploadService: UploadService
+    open lateinit var uploadService: UploadService
 
     @Resource
-    lateinit open var filesService: FilesService
+    open lateinit var filesService: FilesService
 
     @Resource
     open lateinit var desService: DesService
