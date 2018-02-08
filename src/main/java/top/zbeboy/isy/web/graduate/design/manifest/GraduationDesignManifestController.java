@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.isy.config.Workbook;
 import top.zbeboy.isy.domain.tables.pojos.*;
-import top.zbeboy.isy.service.cache.CacheManageService;
 import top.zbeboy.isy.service.common.UploadService;
 import top.zbeboy.isy.service.data.StaffService;
 import top.zbeboy.isy.service.export.GraduationDesignManifestExport;
@@ -24,12 +23,12 @@ import top.zbeboy.isy.service.graduate.design.GraduationDesignTeacherService;
 import top.zbeboy.isy.service.platform.RoleService;
 import top.zbeboy.isy.service.platform.UsersService;
 import top.zbeboy.isy.service.platform.UsersTypeService;
-import top.zbeboy.isy.service.util.DateTimeUtils;
 import top.zbeboy.isy.service.util.RequestUtils;
 import top.zbeboy.isy.web.bean.error.ErrorBean;
 import top.zbeboy.isy.web.bean.export.ExportBean;
 import top.zbeboy.isy.web.bean.graduate.design.declare.GraduationDesignDeclareBean;
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean;
+import top.zbeboy.isy.web.common.PageParamControllerCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignConditionCommon;
 import top.zbeboy.isy.web.graduate.design.common.GraduationDesignMethodControllerCommon;
 import top.zbeboy.isy.web.util.AjaxUtils;
@@ -67,9 +66,6 @@ public class GraduationDesignManifestController {
     private UsersTypeService usersTypeService;
 
     @Resource
-    private CacheManageService cacheManageService;
-
-    @Resource
     private RoleService roleService;
 
     @Resource
@@ -86,6 +82,9 @@ public class GraduationDesignManifestController {
 
     @Resource
     private GraduationDesignConditionCommon graduationDesignConditionCommon;
+
+    @Resource
+    private PageParamControllerCommon pageParamControllerCommon;
 
     /**
      * 毕业设计清单
@@ -134,13 +133,7 @@ public class GraduationDesignManifestController {
         if (!hasValue) {
             modelMap.addAttribute("staffId", 0);
         }
-        UsersType usersType = cacheManageService.findByUsersTypeId(users.getUsersTypeId());
-        modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
-        if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.SYSTEM_ROLE_NAME);
-        } else if (roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
-            modelMap.addAttribute("currentUserRoleName", Workbook.ADMIN_ROLE_NAME);
-        }
+        pageParamControllerCommon.currentUserRoleNameAndTypeNamePageParam(modelMap);
         modelMap.addAttribute("graduationDesignReleaseId", graduationDesignReleaseId);
         page = "web/graduate/design/manifest/design_manifest_list::#page-wrapper";
         return page;
@@ -243,7 +236,7 @@ public class GraduationDesignManifestController {
     public AjaxUtils markInfo(@RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId,
                               @RequestParam("defenseOrderId") String defenseOrderId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             DefenseOrder defenseOrder = defenseOrderService.findById(defenseOrderId);
             if (!ObjectUtils.isEmpty(defenseOrder)) {
@@ -271,7 +264,7 @@ public class GraduationDesignManifestController {
                           @RequestParam("defenseOrderId") String defenseOrderId,
                           @RequestParam("scoreTypeId") int scoreTypeId, @RequestParam("staffId") int staffId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             boolean canUse = false;
             if (roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES) || roleService.isCurrentUserInRole(Workbook.ADMIN_AUTHORITIES)) {
@@ -299,26 +292,5 @@ public class GraduationDesignManifestController {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
-    }
-
-    /**
-     * 进入入口条件
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return true or false
-     */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 毕业时间范围
-            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                errorBean.setHasError(false);
-            } else {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
-            }
-        }
-        return errorBean;
     }
 }
