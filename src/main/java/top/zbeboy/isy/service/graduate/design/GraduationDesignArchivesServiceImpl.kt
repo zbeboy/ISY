@@ -1,153 +1,49 @@
-package top.zbeboy.isy.service.graduate.design;
+package top.zbeboy.isy.service.graduate.design
 
-import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
-import org.jooq.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-import top.zbeboy.isy.domain.tables.pojos.GraduationDesignArchives;
-import top.zbeboy.isy.domain.tables.records.GraduationDesignArchivesRecord;
-import top.zbeboy.isy.service.plugin.DataTablesPlugin;
-import top.zbeboy.isy.service.util.SQLQueryUtils;
-import top.zbeboy.isy.web.bean.graduate.design.archives.GraduationDesignArchivesBean;
-import top.zbeboy.isy.web.util.DataTablesUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static top.zbeboy.isy.domain.Tables.*;
+import org.jooq.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.ObjectUtils
+import org.springframework.util.StringUtils
+import top.zbeboy.isy.domain.Tables.*
+import top.zbeboy.isy.domain.tables.pojos.GraduationDesignArchives
+import top.zbeboy.isy.domain.tables.records.GraduationDesignArchivesRecord
+import top.zbeboy.isy.service.plugin.DataTablesPlugin
+import top.zbeboy.isy.service.util.SQLQueryUtils
+import top.zbeboy.isy.web.bean.graduate.design.archives.GraduationDesignArchivesBean
+import top.zbeboy.isy.web.util.DataTablesUtils
+import java.util.*
 
 /**
- * Created by lenovo on 2017-08-06.
- */
-@Slf4j
+ * Created by zbeboy 2018-02-08 .
+ **/
 @Service("graduationDesignArchivesService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<GraduationDesignArchivesBean> implements GraduationDesignArchivesService {
+open class GraduationDesignArchivesServiceImpl @Autowired constructor(dslContext: DSLContext) : DataTablesPlugin<GraduationDesignArchivesBean>(), GraduationDesignArchivesService {
 
-    private final DSLContext create;
+    private val create: DSLContext = dslContext
 
-    @Autowired
-    public GraduationDesignArchivesServiceImpl(DSLContext dslContext) {
-        this.create = dslContext;
-    }
-
-    @Override
-    public GraduationDesignArchivesRecord findByGraduationDesignPresubjectId(String graduationDesignPresubjectId) {
+    override fun findByGraduationDesignPresubjectId(graduationDesignPresubjectId: String): GraduationDesignArchivesRecord {
         return create.selectFrom(GRADUATION_DESIGN_ARCHIVES)
                 .where(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID.eq(graduationDesignPresubjectId))
-                .fetchOne();
+                .fetchOne()
     }
 
-    @Override
-    public GraduationDesignArchivesRecord findByArchiveNumber(String archiveNumber) {
+    override fun findByArchiveNumber(archiveNumber: String): GraduationDesignArchivesRecord {
         return create.selectFrom(GRADUATION_DESIGN_ARCHIVES)
                 .where(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER.eq(archiveNumber))
-                .fetchOne();
+                .fetchOne()
     }
 
-    @Override
-    public List<GraduationDesignArchivesBean> findAllByPage(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils, GraduationDesignArchivesBean graduateArchivesBean) {
-        List<GraduationDesignArchivesBean> graduateArchivesBeans = new ArrayList<>();
-        Result<Record> records;
-        Condition a = searchCondition(dataTablesUtils);
-        a = otherCondition(a, graduateArchivesBean);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record> selectJoinStep = create.select()
-                    .from(GRADUATION_DESIGN_TEACHER)
-                    .join(GRADUATION_DESIGN_TUTOR)
-                    .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
-                    .join(DEFENSE_ARRANGEMENT)
-                    .on(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID))
-                    .join(DEFENSE_GROUP)
-                    .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
-                    .join(DEFENSE_ORDER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF)
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .leftJoin(ACADEMIC_TITLE)
-                    .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .leftJoin(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .leftJoin(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .leftJoin(GRADUATION_DESIGN_ARCHIVES)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_DECLARE_DATA)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID))
-                    .join(GRADUATION_DESIGN_RELEASE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID))
-                    .join(SCIENCE)
-                    .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
-                    .join(DEPARTMENT)
-                    .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                    .join(COLLEGE)
-                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID));
-            sortCondition(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
-            pagination(dataTablesUtils, null, selectJoinStep, JOIN_TYPE);
-            records = selectJoinStep.fetch();
-        } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
-                    .from(GRADUATION_DESIGN_TEACHER)
-                    .join(GRADUATION_DESIGN_TUTOR)
-                    .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
-                    .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.getGraduationDesignReleaseId())))
-                    .join(DEFENSE_ARRANGEMENT)
-                    .on(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID))
-                    .join(DEFENSE_GROUP)
-                    .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
-                    .join(DEFENSE_ORDER)
-                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
-                    .leftJoin(SCORE_TYPE)
-                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
-                    .join(STAFF)
-                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
-                    .leftJoin(ACADEMIC_TITLE)
-                    .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
-                    .join(GRADUATION_DESIGN_DECLARE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .leftJoin(GRADUATION_DESIGN_SUBJECT_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
-                    .leftJoin(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
-                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
-                    .leftJoin(GRADUATION_DESIGN_ARCHIVES)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID))
-                    .join(GRADUATION_DESIGN_DECLARE_DATA)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID))
-                    .join(GRADUATION_DESIGN_RELEASE)
-                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID))
-                    .join(SCIENCE)
-                    .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
-                    .join(DEPARTMENT)
-                    .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                    .join(COLLEGE)
-                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .where(a);
-            sortCondition(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            pagination(dataTablesUtils, selectConditionStep, null, CONDITION_TYPE);
-            records = selectConditionStep.fetch();
-        }
-        buildData(records, graduateArchivesBeans);
-        return graduateArchivesBeans;
-    }
-
-    @Override
-    public int countAll(GraduationDesignArchivesBean graduateArchivesBean) {
-        Record1<Integer> count;
-        Condition a = otherCondition(null, graduateArchivesBean);
-        if (ObjectUtils.isEmpty(a)) {
-            count = create.selectCount()
+    override fun findAllByPage(dataTablesUtils: DataTablesUtils<GraduationDesignArchivesBean>, graduateArchivesBean: GraduationDesignArchivesBean): List<GraduationDesignArchivesBean> {
+        val graduateArchivesBeans = ArrayList<GraduationDesignArchivesBean>()
+        val records: Result<Record>
+        var a = searchCondition(dataTablesUtils)
+        a = otherCondition(a, graduateArchivesBean)
+        records = if (ObjectUtils.isEmpty(a)) {
+            val selectJoinStep = create.select()
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(GRADUATION_DESIGN_TUTOR)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
@@ -183,14 +79,16 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(COLLEGE)
                     .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .fetchOne();
+            sortCondition(dataTablesUtils, null, selectJoinStep, DataTablesPlugin.JOIN_TYPE)
+            pagination(dataTablesUtils, null, selectJoinStep, DataTablesPlugin.JOIN_TYPE)
+            selectJoinStep.fetch()
         } else {
-            count = create.selectCount()
+            val selectConditionStep = create.select()
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(GRADUATION_DESIGN_TUTOR)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.getGraduationDesignReleaseId())))
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.graduationDesignReleaseId)))
                     .join(DEFENSE_ARRANGEMENT)
                     .on(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID))
                     .join(DEFENSE_GROUP)
@@ -222,18 +120,19 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .join(COLLEGE)
                     .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                     .where(a)
-                    .fetchOne();
+            sortCondition(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            pagination(dataTablesUtils, selectConditionStep, null, DataTablesPlugin.CONDITION_TYPE)
+            selectConditionStep.fetch()
         }
-        return count.value1();
+        buildData(records, graduateArchivesBeans)
+        return graduateArchivesBeans
     }
 
-    @Override
-    public int countByCondition(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils, GraduationDesignArchivesBean graduateArchivesBean) {
-        Record1<Integer> count;
-        Condition a = searchCondition(dataTablesUtils);
-        a = otherCondition(a, graduateArchivesBean);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
+    override fun countAll(graduateArchivesBean: GraduationDesignArchivesBean): Int {
+        val count: Record1<Int>
+        val a = otherCondition(null, graduateArchivesBean)
+        count = if (ObjectUtils.isEmpty(a)) {
+            create.selectCount()
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(GRADUATION_DESIGN_TUTOR)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
@@ -268,15 +167,15 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .join(DEPARTMENT)
                     .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(COLLEGE)
-                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID));
-            count = selectJoinStep.fetchOne();
+                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .fetchOne()
         } else {
-            SelectConditionStep<Record1<Integer>> selectConditionStep = create.selectCount()
+            create.selectCount()
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(GRADUATION_DESIGN_TUTOR)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.getGraduationDesignReleaseId())))
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.graduationDesignReleaseId)))
                     .join(DEFENSE_ARRANGEMENT)
                     .on(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID))
                     .join(DEFENSE_GROUP)
@@ -307,20 +206,18 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(COLLEGE)
                     .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .where(a);
-            count = selectConditionStep.fetchOne();
+                    .where(a)
+                    .fetchOne()
         }
-        return count.value1();
+        return count.value1()
     }
 
-    @Override
-    public List<GraduationDesignArchivesBean> exportData(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils, GraduationDesignArchivesBean graduationDesignArchivesBean) {
-        List<GraduationDesignArchivesBean> graduationDesignArchivesBeans = new ArrayList<>();
-        Result<Record> records;
-        Condition a = searchCondition(dataTablesUtils);
-        a = otherCondition(a, graduationDesignArchivesBean);
-        if (ObjectUtils.isEmpty(a)) {
-            SelectJoinStep<Record> selectJoinStep = create.select()
+    override fun countByCondition(dataTablesUtils: DataTablesUtils<GraduationDesignArchivesBean>, graduateArchivesBean: GraduationDesignArchivesBean): Int {
+        val count: Record1<Int>
+        var a = searchCondition(dataTablesUtils)
+        a = otherCondition(a, graduateArchivesBean)
+        count = if (ObjectUtils.isEmpty(a)) {
+            val selectJoinStep = create.selectCount()
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(GRADUATION_DESIGN_TUTOR)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
@@ -355,15 +252,15 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .join(DEPARTMENT)
                     .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(COLLEGE)
-                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID));
-            records = selectJoinStep.fetch();
+                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+            selectJoinStep.fetchOne()
         } else {
-            SelectConditionStep<Record> selectConditionStep = create.select()
+            val selectConditionStep = create.selectCount()
                     .from(GRADUATION_DESIGN_TEACHER)
                     .join(GRADUATION_DESIGN_TUTOR)
                     .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
                     .join(GRADUATION_DESIGN_PRESUBJECT)
-                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignArchivesBean.getGraduationDesignReleaseId())))
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.graduationDesignReleaseId)))
                     .join(DEFENSE_ARRANGEMENT)
                     .on(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID))
                     .join(DEFENSE_GROUP)
@@ -394,48 +291,131 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
                     .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
                     .join(COLLEGE)
                     .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                    .where(a);
-            records = selectConditionStep.fetch();
+                    .where(a)
+            selectConditionStep.fetchOne()
         }
-        buildData(records, graduationDesignArchivesBeans);
-        return graduationDesignArchivesBeans;
+        return count.value1()
+    }
+
+    override fun exportData(dataTablesUtils: DataTablesUtils<GraduationDesignArchivesBean>, graduationDesignArchivesBean: GraduationDesignArchivesBean): List<GraduationDesignArchivesBean> {
+        val graduationDesignArchivesBeans = ArrayList<GraduationDesignArchivesBean>()
+        val records: Result<Record>
+        var a = searchCondition(dataTablesUtils)
+        a = otherCondition(a, graduationDesignArchivesBean)
+        records = if (ObjectUtils.isEmpty(a)) {
+            val selectJoinStep = create.select()
+                    .from(GRADUATION_DESIGN_TEACHER)
+                    .join(GRADUATION_DESIGN_TUTOR)
+                    .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(GRADUATION_DESIGN_PRESUBJECT)
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID))
+                    .join(DEFENSE_ARRANGEMENT)
+                    .on(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(DEFENSE_GROUP)
+                    .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
+                    .join(DEFENSE_ORDER)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
+                    .leftJoin(SCORE_TYPE)
+                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
+                    .join(STAFF)
+                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                    .leftJoin(ACADEMIC_TITLE)
+                    .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
+                    .join(GRADUATION_DESIGN_DECLARE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .leftJoin(GRADUATION_DESIGN_SUBJECT_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
+                    .leftJoin(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
+                    .leftJoin(GRADUATION_DESIGN_ARCHIVES)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .join(GRADUATION_DESIGN_DECLARE_DATA)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(GRADUATION_DESIGN_RELEASE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(SCIENCE)
+                    .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(DEPARTMENT)
+                    .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                    .join(COLLEGE)
+                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+            selectJoinStep.fetch()
+        } else {
+            val selectConditionStep = create.select()
+                    .from(GRADUATION_DESIGN_TEACHER)
+                    .join(GRADUATION_DESIGN_TUTOR)
+                    .on(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_TEACHER_ID.eq(GRADUATION_DESIGN_TUTOR.GRADUATION_DESIGN_TEACHER_ID))
+                    .join(GRADUATION_DESIGN_PRESUBJECT)
+                    .on(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(GRADUATION_DESIGN_PRESUBJECT.STUDENT_ID).and(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignArchivesBean.graduationDesignReleaseId)))
+                    .join(DEFENSE_ARRANGEMENT)
+                    .on(DEFENSE_ARRANGEMENT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(DEFENSE_GROUP)
+                    .on(DEFENSE_GROUP.DEFENSE_ARRANGEMENT_ID.eq(DEFENSE_ARRANGEMENT.DEFENSE_ARRANGEMENT_ID))
+                    .join(DEFENSE_ORDER)
+                    .on(DEFENSE_ORDER.DEFENSE_GROUP_ID.eq(DEFENSE_GROUP.DEFENSE_GROUP_ID).and(GRADUATION_DESIGN_TUTOR.STUDENT_ID.eq(DEFENSE_ORDER.STUDENT_ID)))
+                    .leftJoin(SCORE_TYPE)
+                    .on(DEFENSE_ORDER.SCORE_TYPE_ID.eq(SCORE_TYPE.SCORE_TYPE_ID))
+                    .join(STAFF)
+                    .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                    .leftJoin(ACADEMIC_TITLE)
+                    .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
+                    .join(GRADUATION_DESIGN_DECLARE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_DECLARE.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .leftJoin(GRADUATION_DESIGN_SUBJECT_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.SUBJECT_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_ID))
+                    .leftJoin(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE)
+                    .on(GRADUATION_DESIGN_DECLARE.ORIGIN_TYPE_ID.eq(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_ID))
+                    .leftJoin(GRADUATION_DESIGN_ARCHIVES)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID.eq(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID))
+                    .join(GRADUATION_DESIGN_DECLARE_DATA)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(GRADUATION_DESIGN_RELEASE)
+                    .on(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_RELEASE_ID.eq(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID))
+                    .join(SCIENCE)
+                    .on(GRADUATION_DESIGN_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                    .join(DEPARTMENT)
+                    .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                    .join(COLLEGE)
+                    .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                    .where(a)
+            selectConditionStep.fetch()
+        }
+        buildData(records, graduationDesignArchivesBeans)
+        return graduationDesignArchivesBeans
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Override
-    public void saveAndIgnore(GraduationDesignArchives graduationDesignArchives) {
+    override fun saveAndIgnore(graduationDesignArchives: GraduationDesignArchives) {
         create.insertInto(GRADUATION_DESIGN_ARCHIVES,
                 GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID,
                 GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT,
                 GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER,
                 GRADUATION_DESIGN_ARCHIVES.NOTE)
-                .values(graduationDesignArchives.getGraduationDesignPresubjectId(),
-                        graduationDesignArchives.getIsExcellent(),
-                        graduationDesignArchives.getArchiveNumber(),
-                        graduationDesignArchives.getNote())
+                .values(graduationDesignArchives.graduationDesignPresubjectId,
+                        graduationDesignArchives.isExcellent,
+                        graduationDesignArchives.archiveNumber,
+                        graduationDesignArchives.note)
                 .onDuplicateKeyIgnore()
-                .execute();
+                .execute()
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Override
-    public void save(GraduationDesignArchives graduationDesignArchives) {
+    override fun save(graduationDesignArchives: GraduationDesignArchives) {
         create.insertInto(GRADUATION_DESIGN_ARCHIVES)
-                .set(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID, graduationDesignArchives.getGraduationDesignPresubjectId())
-                .set(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER, graduationDesignArchives.getArchiveNumber())
-                .set(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT, graduationDesignArchives.getIsExcellent())
-                .set(GRADUATION_DESIGN_ARCHIVES.NOTE, graduationDesignArchives.getNote())
-                .execute();
+                .set(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID, graduationDesignArchives.graduationDesignPresubjectId)
+                .set(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER, graduationDesignArchives.archiveNumber)
+                .set(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT, graduationDesignArchives.isExcellent)
+                .set(GRADUATION_DESIGN_ARCHIVES.NOTE, graduationDesignArchives.note)
+                .execute()
     }
 
-    @Override
-    public void update(GraduationDesignArchives graduationDesignArchives) {
+    override fun update(graduationDesignArchives: GraduationDesignArchives) {
         create.update(GRADUATION_DESIGN_ARCHIVES)
-                .set(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT, graduationDesignArchives.getIsExcellent())
-                .set(GRADUATION_DESIGN_ARCHIVES.NOTE, graduationDesignArchives.getNote())
-                .set(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER, graduationDesignArchives.getArchiveNumber())
-                .where(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID.eq(graduationDesignArchives.getGraduationDesignPresubjectId()))
-                .execute();
+                .set(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT, graduationDesignArchives.isExcellent)
+                .set(GRADUATION_DESIGN_ARCHIVES.NOTE, graduationDesignArchives.note)
+                .set(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER, graduationDesignArchives.archiveNumber)
+                .where(GRADUATION_DESIGN_ARCHIVES.GRADUATION_DESIGN_PRESUBJECT_ID.eq(graduationDesignArchives.graduationDesignPresubjectId))
+                .execute()
     }
 
 
@@ -445,46 +425,47 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
      * @param graduateArchivesBean 条件
      * @return 条件
      */
-    public Condition otherCondition(Condition a, GraduationDesignArchivesBean graduateArchivesBean) {
+    fun otherCondition(a: Condition?, graduateArchivesBean: GraduationDesignArchivesBean): Condition? {
+        var tempCondition = a
         if (!ObjectUtils.isEmpty(graduateArchivesBean)) {
-            if (StringUtils.hasLength(graduateArchivesBean.getGraduationDesignReleaseId())) {
-                if (!ObjectUtils.isEmpty(a)) {
-                    a = a.and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.getGraduationDesignReleaseId()));
+            if (StringUtils.hasLength(graduateArchivesBean.graduationDesignReleaseId)) {
+                tempCondition = if (!ObjectUtils.isEmpty(tempCondition)) {
+                    tempCondition!!.and(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.graduationDesignReleaseId))
                 } else {
-                    a = GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.getGraduationDesignReleaseId());
+                    GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduateArchivesBean.graduationDesignReleaseId)
                 }
             }
         }
 
-        return a;
+        return tempCondition
     }
 
-    private void buildData(Result<Record> records, List<GraduationDesignArchivesBean> graduateArchivesBeans) {
-        for (Record r : records) {
-            GraduationDesignArchivesBean graduateArchivesBean = new GraduationDesignArchivesBean();
-            graduateArchivesBean.setGraduationDesignReleaseId(r.getValue(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID));
-            graduateArchivesBean.setCollegeName(r.getValue(COLLEGE.COLLEGE_NAME));
-            graduateArchivesBean.setCollegeCode(r.getValue(COLLEGE.COLLEGE_CODE));
-            graduateArchivesBean.setScienceName(r.getValue(SCIENCE.SCIENCE_NAME));
-            graduateArchivesBean.setScienceCode(r.getValue(SCIENCE.SCIENCE_CODE));
-            graduateArchivesBean.setGraduationDate(r.getValue(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DATE));
-            graduateArchivesBean.setStaffName(r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME));
-            graduateArchivesBean.setStaffNumber(r.getValue(STAFF.STAFF_NUMBER));
-            graduateArchivesBean.setAcademicTitleName(r.getValue(ACADEMIC_TITLE.ACADEMIC_TITLE_NAME));
-            graduateArchivesBean.setAssistantTeacher(r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER));
-            graduateArchivesBean.setAssistantTeacherAcademic(r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC));
-            graduateArchivesBean.setAssistantTeacherNumber(r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER));
-            graduateArchivesBean.setPresubjectTitle(r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE));
-            graduateArchivesBean.setSubjectTypeName(r.getValue(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME));
-            graduateArchivesBean.setOriginTypeName(r.getValue(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_NAME));
-            graduateArchivesBean.setStudentName(r.getValue(DEFENSE_ORDER.STUDENT_NAME));
-            graduateArchivesBean.setStudentNumber(r.getValue(DEFENSE_ORDER.STUDENT_NUMBER));
-            graduateArchivesBean.setScoreTypeName(r.getValue(SCORE_TYPE.SCORE_TYPE_NAME));
-            graduateArchivesBean.setGraduationDesignPresubjectId(r.getValue(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID));
-            graduateArchivesBean.setIsExcellent(r.getValue(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT));
-            graduateArchivesBean.setArchiveNumber(r.getValue(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER));
-            graduateArchivesBean.setNote(r.getValue(GRADUATION_DESIGN_ARCHIVES.NOTE));
-            graduateArchivesBeans.add(graduateArchivesBean);
+    private fun buildData(records: Result<Record>, graduateArchivesBeans: MutableList<GraduationDesignArchivesBean>) {
+        for (r in records) {
+            val graduateArchivesBean = GraduationDesignArchivesBean()
+            graduateArchivesBean.graduationDesignReleaseId = r.getValue(GRADUATION_DESIGN_RELEASE.GRADUATION_DESIGN_RELEASE_ID)
+            graduateArchivesBean.collegeName = r.getValue(COLLEGE.COLLEGE_NAME)
+            graduateArchivesBean.collegeCode = r.getValue(COLLEGE.COLLEGE_CODE)
+            graduateArchivesBean.scienceName = r.getValue(SCIENCE.SCIENCE_NAME)
+            graduateArchivesBean.scienceCode = r.getValue(SCIENCE.SCIENCE_CODE)
+            graduateArchivesBean.graduationDate = r.getValue(GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DATE)
+            graduateArchivesBean.staffName = r.getValue(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME)
+            graduateArchivesBean.staffNumber = r.getValue(STAFF.STAFF_NUMBER)
+            graduateArchivesBean.academicTitleName = r.getValue(ACADEMIC_TITLE.ACADEMIC_TITLE_NAME)
+            graduateArchivesBean.assistantTeacher = r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER)
+            graduateArchivesBean.assistantTeacherAcademic = r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC)
+            graduateArchivesBean.assistantTeacherNumber = r.getValue(GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER)
+            graduateArchivesBean.presubjectTitle = r.getValue(GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE)
+            graduateArchivesBean.subjectTypeName = r.getValue(GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME)
+            graduateArchivesBean.originTypeName = r.getValue(GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_NAME)
+            graduateArchivesBean.studentName = r.getValue(DEFENSE_ORDER.STUDENT_NAME)
+            graduateArchivesBean.studentNumber = r.getValue(DEFENSE_ORDER.STUDENT_NUMBER)
+            graduateArchivesBean.scoreTypeName = r.getValue(SCORE_TYPE.SCORE_TYPE_NAME)
+            graduateArchivesBean.graduationDesignPresubjectId = r.getValue(GRADUATION_DESIGN_PRESUBJECT.GRADUATION_DESIGN_PRESUBJECT_ID)
+            graduateArchivesBean.isExcellent = r.getValue(GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT)
+            graduateArchivesBean.archiveNumber = r.getValue(GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER)
+            graduateArchivesBean.note = r.getValue(GRADUATION_DESIGN_ARCHIVES.NOTE)
+            graduateArchivesBeans.add(graduateArchivesBean)
         }
     }
 
@@ -494,46 +475,45 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
      * @param dataTablesUtils datatables工具类
      * @return 搜索条件
      */
-    @Override
-    public Condition searchCondition(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils) {
-        Condition a = null;
-        JSONObject search = dataTablesUtils.getSearch();
+    override fun searchCondition(dataTablesUtils: DataTablesUtils<GraduationDesignArchivesBean>): Condition? {
+        var a: Condition? = null
+        val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
-            String studentName = StringUtils.trimWhitespace(search.getString("studentName"));
-            String studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"));
-            String staffName = StringUtils.trimWhitespace(search.getString("staffName"));
-            String staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"));
+            val studentName = StringUtils.trimWhitespace(search!!.getString("studentName"))
+            val studentNumber = StringUtils.trimWhitespace(search.getString("studentNumber"))
+            val staffName = StringUtils.trimWhitespace(search.getString("staffName"))
+            val staffNumber = StringUtils.trimWhitespace(search.getString("staffNumber"))
 
             if (StringUtils.hasLength(studentName)) {
-                a = DEFENSE_ORDER.STUDENT_NAME.like(SQLQueryUtils.likeAllParam(studentName));
+                a = DEFENSE_ORDER.STUDENT_NAME.like(SQLQueryUtils.likeAllParam(studentName))
             }
 
             if (StringUtils.hasLength(studentNumber)) {
-                if (ObjectUtils.isEmpty(a)) {
-                    a = DEFENSE_ORDER.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber));
+                a = if (ObjectUtils.isEmpty(a)) {
+                    DEFENSE_ORDER.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber))
                 } else {
-                    a = a.and(DEFENSE_ORDER.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)));
+                    a!!.and(DEFENSE_ORDER.STUDENT_NUMBER.like(SQLQueryUtils.likeAllParam(studentNumber)))
                 }
             }
 
             if (StringUtils.hasLength(staffName)) {
-                if (ObjectUtils.isEmpty(a)) {
-                    a = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName));
+                a = if (ObjectUtils.isEmpty(a)) {
+                    GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName))
                 } else {
-                    a = a.and(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName)));
+                    a!!.and(GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(staffName)))
                 }
             }
 
             if (StringUtils.hasLength(staffNumber)) {
-                if (ObjectUtils.isEmpty(a)) {
-                    a = STAFF.STAFF_NUMBER.like(SQLQueryUtils.likeAllParam(staffNumber));
+                a = if (ObjectUtils.isEmpty(a)) {
+                    STAFF.STAFF_NUMBER.like(SQLQueryUtils.likeAllParam(staffNumber))
                 } else {
-                    a = a.and(STAFF.STAFF_NUMBER.like(SQLQueryUtils.likeAllParam(staffNumber)));
+                    a!!.and(STAFF.STAFF_NUMBER.like(SQLQueryUtils.likeAllParam(staffNumber)))
                 }
             }
 
         }
-        return a;
+        return a
     }
 
     /**
@@ -542,230 +522,229 @@ public class GraduationDesignArchivesServiceImpl extends DataTablesPlugin<Gradua
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
-    @Override
-    public void sortCondition(DataTablesUtils<GraduationDesignArchivesBean> dataTablesUtils, SelectConditionStep<Record> selectConditionStep, SelectJoinStep<Record> selectJoinStep, int type) {
-        String orderColumnName = dataTablesUtils.getOrderColumnName();
-        String orderDir = dataTablesUtils.getOrderDir();
-        boolean isAsc = "asc".equalsIgnoreCase(orderDir);
-        SortField[] sortField = null;
+    override fun sortCondition(dataTablesUtils: DataTablesUtils<GraduationDesignArchivesBean>, selectConditionStep: SelectConditionStep<Record>?, selectJoinStep: SelectJoinStep<Record>?, type: Int) {
+        val orderColumnName = dataTablesUtils.orderColumnName
+        val orderDir = dataTablesUtils.orderDir
+        val isAsc = "asc".equals(orderDir, ignoreCase = true)
+        var sortField: Array<SortField<*>?>? = null
         if (StringUtils.hasLength(orderColumnName)) {
-            if ("college_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("college_name".equals(orderColumnName!!, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = COLLEGE.COLLEGE_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = COLLEGE.COLLEGE_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = COLLEGE.COLLEGE_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("college_code".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("college_code".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = COLLEGE.COLLEGE_CODE.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = COLLEGE.COLLEGE_CODE.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = COLLEGE.COLLEGE_CODE.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = COLLEGE.COLLEGE_CODE.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("science_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("science_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = SCIENCE.SCIENCE_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = SCIENCE.SCIENCE_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = SCIENCE.SCIENCE_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("science_code".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("science_code".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = SCIENCE.SCIENCE_CODE.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = SCIENCE.SCIENCE_CODE.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = SCIENCE.SCIENCE_CODE.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = SCIENCE.SCIENCE_CODE.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("graduation_date".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("graduation_date".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DATE.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DATE.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DATE.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE_DATA.GRADUATION_DATE.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("staff_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("staff_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("staff_number".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("staff_number".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = STAFF.STAFF_NUMBER.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = STAFF.STAFF_NUMBER.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = STAFF.STAFF_NUMBER.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = STAFF.STAFF_NUMBER.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("academic_title_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("academic_title_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = ACADEMIC_TITLE.ACADEMIC_TITLE_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = ACADEMIC_TITLE.ACADEMIC_TITLE_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = ACADEMIC_TITLE.ACADEMIC_TITLE_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = ACADEMIC_TITLE.ACADEMIC_TITLE_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("assistant_teacher".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("assistant_teacher".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("assistant_teacher_number".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("assistant_teacher_number".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_NUMBER.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("assistant_teacher_academic".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("assistant_teacher_academic".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_DECLARE.ASSISTANT_TEACHER_ACADEMIC.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("presubject_title".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("presubject_title".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_PRESUBJECT.PRESUBJECT_TITLE.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("subject_type_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("subject_type_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_SUBJECT_TYPE.SUBJECT_TYPE_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("origin_type_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("origin_type_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_SUBJECT_ORIGIN_TYPE.ORIGIN_TYPE_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("student_number".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[1];
+            if ("student_number".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(1)
                 if (isAsc) {
-                    sortField[0] = DEFENSE_ORDER.STUDENT_NUMBER.asc();
+                    sortField[0] = DEFENSE_ORDER.STUDENT_NUMBER.asc()
                 } else {
-                    sortField[0] = DEFENSE_ORDER.STUDENT_NUMBER.desc();
+                    sortField[0] = DEFENSE_ORDER.STUDENT_NUMBER.desc()
                 }
             }
 
-            if ("student_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("student_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = DEFENSE_ORDER.STUDENT_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = DEFENSE_ORDER.STUDENT_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = DEFENSE_ORDER.STUDENT_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = DEFENSE_ORDER.STUDENT_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("score_type_name".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("score_type_name".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = SCORE_TYPE.SCORE_TYPE_NAME.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = SCORE_TYPE.SCORE_TYPE_NAME.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = SCORE_TYPE.SCORE_TYPE_NAME.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = SCORE_TYPE.SCORE_TYPE_NAME.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("is_excellent".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("is_excellent".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.IS_EXCELLENT.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
-            if ("archive_number".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[1];
+            if ("archive_number".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(1)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER.asc();
+                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER.desc();
+                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.ARCHIVE_NUMBER.desc()
                 }
             }
 
-            if ("note".equalsIgnoreCase(orderColumnName)) {
-                sortField = new SortField[2];
+            if ("note".equals(orderColumnName, ignoreCase = true)) {
+                sortField = arrayOfNulls(2)
                 if (isAsc) {
-                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.NOTE.asc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc();
+                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.NOTE.asc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.asc()
                 } else {
-                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.NOTE.desc();
-                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc();
+                    sortField[0] = GRADUATION_DESIGN_ARCHIVES.NOTE.desc()
+                    sortField[1] = DEFENSE_ORDER.DEFENSE_ORDER_ID.desc()
                 }
             }
 
         }
-        sortToFinish(selectConditionStep, selectJoinStep, type, sortField);
+        sortToFinish(selectConditionStep, selectJoinStep, type, *sortField!!)
     }
 }
