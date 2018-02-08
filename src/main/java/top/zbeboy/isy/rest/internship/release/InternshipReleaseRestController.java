@@ -8,7 +8,6 @@
 
 package top.zbeboy.isy.rest.internship.release;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @RestController
 public class InternshipReleaseRestController {
 

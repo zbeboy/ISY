@@ -8,7 +8,6 @@
 
 package top.zbeboy.isy.rest.platform.users;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,6 @@ import top.zbeboy.isy.web.util.AjaxUtils;
 import javax.annotation.Resource;
 import java.security.Principal;
 
-@Slf4j
 @RestController
 public class UsersRestController {
 

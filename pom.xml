@@ -255,13 +255,6 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- jcaptcha -->
         <dependency>
             <groupId>com.octo.captcha</groupId>

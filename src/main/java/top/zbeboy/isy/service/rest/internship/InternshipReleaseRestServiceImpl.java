@@ -8,7 +8,6 @@
 
 package top.zbeboy.isy.service.rest.internship;
 
-import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -28,7 +27,6 @@ import java.util.List;
 
 import static top.zbeboy.isy.domain.Tables.*;
 
-@Slf4j
 @Service("internshipReleaseRestService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipReleaseRestServiceImpl implements InternshipReleaseRestService {
@@ -71,7 +69,7 @@ public class InternshipReleaseRestServiceImpl implements InternshipReleaseRestSe
             internshipReleaseBeens = records.into(InternshipReleaseBean.class);
             String format = "yyyy-MM-dd HH:mm:ss";
             internshipReleaseBeens.forEach(i -> {
-                dealDateTime(i,format);
+                dealDateTime(i, format);
                 Result<Record> records1 = internshipReleaseScienceService.findByInternshipReleaseIdRelation(i.getInternshipReleaseId());
                 i.setSciences(records1.into(Science.class));
             });
