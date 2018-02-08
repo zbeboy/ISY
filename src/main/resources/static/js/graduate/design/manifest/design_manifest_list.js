@@ -162,7 +162,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                 };
                         } else {
                             if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {// 教师
-                                if (c.staffId == init_page_param.staffId && init_page_param.staffId != 0) {
+                                if (c.staffId === init_page_param.staffId && init_page_param.staffId !== 0) {
                                     context =
                                         {
                                             func: [
@@ -292,14 +292,14 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         });
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
@@ -406,8 +406,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
          */
         function markScoreData(data) {
             var template = Handlebars.compile($("#mark-score-template").html());
-            $('#scoreData').html(template(data));
-            $($('#scoreData').children()[0]).remove();
+            var scoreData = $('#scoreData');
+            scoreData.html(template(data));
+            $(scoreData.children()[0]).remove();
         }
 
         $('#export_xls').click(function () {
