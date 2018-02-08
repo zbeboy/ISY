@@ -230,7 +230,7 @@ public class GraduationDesignArchivesController {
                                       @RequestParam("archivesAffix") String archivesAffix,
                                       @RequestParam("archivesStart") int archivesStart) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             Byte b = 0;
             Result<GraduationDesignPresubjectRecord> records = graduationDesignPresubjectService.findByGraduationDesignReleaseId(graduationDesignReleaseId);
@@ -281,7 +281,7 @@ public class GraduationDesignArchivesController {
                                        @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId,
                                        @RequestParam("excellent") Byte excellent) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByGraduationDesignPresubjectId(graduationDesignPresubjectId);
             if (!ObjectUtils.isEmpty(record)) {
@@ -351,7 +351,7 @@ public class GraduationDesignArchivesController {
                                     @RequestParam("graduationDesignReleaseId") String graduationDesignReleaseId,
                                     @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             String tempArchiveNumber = StringUtils.trimWhitespace(archiveNumber);
             GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByArchiveNumber(tempArchiveNumber);
@@ -395,7 +395,7 @@ public class GraduationDesignArchivesController {
                                   @RequestParam("graduationDesignPresubjectId") String graduationDesignPresubjectId,
                                   @RequestParam("note") String note) {
         AjaxUtils ajaxUtils = AjaxUtils.of();
-        ErrorBean<GraduationDesignRelease> errorBean = accessCondition(graduationDesignReleaseId);
+        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.isRangeGraduationDateCondition(graduationDesignReleaseId);
         if (!errorBean.isHasError()) {
             GraduationDesignArchivesRecord record = graduationDesignArchivesService.findByGraduationDesignPresubjectId(graduationDesignPresubjectId);
             if (!ObjectUtils.isEmpty(record)) {
@@ -410,26 +410,5 @@ public class GraduationDesignArchivesController {
             ajaxUtils.fail().msg(errorBean.getErrorMsg());
         }
         return ajaxUtils;
-    }
-
-    /**
-     * 进入入口条件
-     *
-     * @param graduationDesignReleaseId 毕业设计发布id
-     * @return true or false
-     */
-    private ErrorBean<GraduationDesignRelease> accessCondition(String graduationDesignReleaseId) {
-        ErrorBean<GraduationDesignRelease> errorBean = graduationDesignConditionCommon.basicCondition(graduationDesignReleaseId);
-        if (!errorBean.isHasError()) {
-            GraduationDesignRelease graduationDesignRelease = errorBean.getData();
-            // 毕业时间范围
-            if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease.getStartTime(), graduationDesignRelease.getEndTime())) {
-                errorBean.setHasError(false);
-            } else {
-                errorBean.setHasError(true);
-                errorBean.setErrorMsg("不在毕业时间范围，无法操作");
-            }
-        }
-        return errorBean;
     }
 }
