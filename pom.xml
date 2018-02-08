@@ -35,12 +35,6 @@
 
         <!-- support kotlin -->
         <kotlin.version>1.2.21</kotlin.version>
-        <!--
-        To make your builds faster, you can enable incremental compilation for Maven (supported since Kotlin 1.1.2).
-        In order to do that, define the kotlin.compiler.incremental property:
-        Alternatively, run your build with the -Dkotlin.compiler.incremental=true option.
-        -->
-        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- poi relation-->
         <org.apache.poi.version>3.17</org.apache.poi.version>
