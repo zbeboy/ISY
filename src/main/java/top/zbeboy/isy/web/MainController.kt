@@ -190,14 +190,12 @@ open class MainController {
 
     /**
      * let's encrypt certificate check.
+     *
      * @param request 请求
      * @param response 响应
      */
     @RequestMapping(value = ["/.well-known/acme-challenge/*"], method = [(RequestMethod.GET)])
-    fun letUsEncryptCertificateCheck(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<String> {
-        val responseHeaders = HttpHeaders()
-        responseHeaders.set("Content-Type", "application/json;charset=UTF-8")
-        val result = ""
+    fun letUsEncryptCertificateCheck(request: HttpServletRequest, response: HttpServletResponse) {
         try {
             val uri = request.requestURI.replace("/", "\\")
             //文件路径自行替换一下就行,就是上图中生成验证文件的路径,因为URI中已经包含了/.well-known/acme-challenge/,所以这里不需要
@@ -231,6 +229,5 @@ open class MainController {
         } catch (e: Exception) {
             log.error("Let's encrypt certificate check error : {}", e)
         }
-        return ResponseEntity(result, responseHeaders, HttpStatus.OK)
     }
 }
