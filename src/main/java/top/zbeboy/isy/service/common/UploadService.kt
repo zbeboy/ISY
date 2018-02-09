@@ -2,6 +2,7 @@ package top.zbeboy.isy.service.common
 
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import top.zbeboy.isy.web.bean.file.FileBean
+import java.io.File
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -28,6 +29,16 @@ interface UploadService {
      * @param request  请求对象
      */
     fun download(fileName: String, filePath: String, response: HttpServletResponse, request: HttpServletRequest)
+
+    /**
+     * 文件下载
+     *
+     * @param fileName     文件名
+     * @param file          文件对象
+     * @param response      响应对象
+     * @param request       请求对象
+     */
+    fun download(fileName: String, file: File, response: HttpServletResponse, request: HttpServletRequest)
 
     /**
      * 图片显示

@@ -26,7 +26,6 @@ open class UploadServiceImpl : UploadService {
 
     private val log = LoggerFactory.getLogger(UploadServiceImpl::class.java)
 
-
     override fun upload(request: MultipartHttpServletRequest, path: String, address: String): List<FileBean> {
         val list = ArrayList<FileBean>()
         //1. build an iterator.
@@ -100,15 +99,27 @@ open class UploadServiceImpl : UploadService {
     override fun download(fileName: String, filePath: String, response: HttpServletResponse, request: HttpServletRequest) {
         try {
             val path = Workbook.DIRECTORY_SPLIT + filePath
+            val fileFullName = completionFileName(fileName, path)
             response.contentType = "application/x-msdownload"
-            response.setHeader("Content-disposition", "attachment; filename=\"" + String((fileName + path.substring(path.lastIndexOf('.'))).toByteArray(charset("gb2312")), charset("ISO8859-1")) + "\"")
+            response.setHeader("Content-disposition", "attachment; filename=\"" + String((fileFullName).toByteArray(charset("gb2312")), charset("ISO8859-1")) + "\"")
             val realPath = request.session.servletContext.getRealPath(Workbook.DIRECTORY_SPLIT)
             val inputStream = FileInputStream(realPath + path)
             FileCopyUtils.copy(inputStream, response.outputStream)
         } catch (e: Exception) {
             log.error(" file is not found exception is {} ", e)
         }
+    }
 
+    override fun download(fileName: String, file: File, response: HttpServletResponse, request: HttpServletRequest) {
+        try {
+            val fileFullName = completionFileName(fileName, file.name)
+            response.contentType = "application/x-msdownload"
+            response.setHeader("Content-disposition", "attachment; filename=\"" + String((fileFullName).toByteArray(charset("gb2312")), charset("ISO8859-1")) + "\"")
+            val inputStream = FileInputStream(file)
+            FileCopyUtils.copy(inputStream, response.outputStream)
+        } catch (e: Exception) {
+            log.error(" file is not found exception is {} ", e)
+        }
     }
 
     override fun reviewPic(filePath: String, request: HttpServletRequest, response: HttpServletResponse) {
@@ -137,5 +148,21 @@ open class UploadServiceImpl : UploadService {
             log.error(" file is not found exception is {} ", e)
         }
 
+    }
+
+    /**
+     * 文件名加后缀补全操作
+     *
+     * @param fileName 无后缀的文件名
+     * @param fileFullName 文件名全称(带后缀或不带后缀)
+     * @return 带后缀的文件名
+     */
+    private fun completionFileName(fileName: String, fileFullName: String): String {
+        var tempName = fileName
+        val extLocal = fileFullName.lastIndexOf('.')
+        if (extLocal > 0) {
+            tempName += fileFullName.substring(extLocal)
+        }
+        return tempName
     }
 }

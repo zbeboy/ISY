@@ -2,9 +2,6 @@ package top.zbeboy.isy.web
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,10 +13,10 @@ import org.springframework.web.servlet.ModelAndView
 import top.zbeboy.isy.annotation.logging.RecordSystemLogging
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
+import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.system.AuthoritiesService
 import top.zbeboy.isy.web.util.AjaxUtils
-import java.io.*
-import java.nio.charset.Charset
+import java.io.File
 import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
@@ -42,6 +39,9 @@ open class MainController {
 
     @Autowired
     open lateinit var isyProperties: ISYProperties
+
+    @Resource
+    open lateinit var uploadService: UploadService
 
     /**
      * main page
@@ -196,38 +196,9 @@ open class MainController {
      */
     @RequestMapping(value = ["/.well-known/acme-challenge/*"], method = [(RequestMethod.GET)])
     fun letUsEncryptCertificateCheck(request: HttpServletRequest, response: HttpServletResponse) {
-        try {
-            val uri = request.requestURI.replace("/", "\\")
-            //文件路径自行替换一下就行,就是上图中生成验证文件的路径,因为URI中已经包含了/.well-known/acme-challenge/,所以这里不需要
-            val file = File(isyProperties.getCertificate().place + uri)
-            val `is` = FileInputStream(file)
-            // 设置response参数，可以打开下载页面
-            response.reset()
-            response.contentType = "application/vnd.ms-excel;charset=utf-8"
-            response.setHeader("Content-Disposition", "attachment;filename=" + String("验证文件".toByteArray(), Charset.forName("iso-8859-1")))
-            val out = response.outputStream
-            var bis: BufferedInputStream? = null
-            var bos: BufferedOutputStream? = null
-            try {
-                bis = BufferedInputStream(`is`)
-                bos = BufferedOutputStream(out)
-                val buff = ByteArray(2048)
-                var bytesRead: Int = bis.read(buff, 0, buff.size)
-                // Simple read/write loop.
-                while (-1 != bytesRead) {
-                    bos.write(buff, 0, bytesRead)
-                    bytesRead = bis.read(buff, 0, buff.size)
-                }
-            } catch (e: IOException) {
-                throw e
-            } finally {
-                if (bis != null)
-                    bis.close()
-                if (bos != null)
-                    bos.close()
-            }
-        } catch (e: Exception) {
-            log.error("Let's encrypt certificate check error : {}", e)
-        }
+        val uri = request.requestURI.replace("/", "\\")
+        //文件路径自行替换一下就行,就是上图中生成验证文件的路径,因为URI中已经包含了/.well-known/acme-challenge/,所以这里不需要
+        val file = File(isyProperties.getCertificate().place + uri)
+        uploadService.download("验证文件", file, response, request)
     }
 }
