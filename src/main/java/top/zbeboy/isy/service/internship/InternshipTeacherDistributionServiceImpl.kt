@@ -108,6 +108,8 @@ open class InternshipTeacherDistributionServiceImpl @Autowired constructor(dslCo
                 .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID, internshipTeacherDistribution.staffId)
                 .set(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID, internshipTeacherDistribution.studentId)
                 .set(INTERNSHIP_TEACHER_DISTRIBUTION.USERNAME, internshipTeacherDistribution.username)
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME,internshipTeacherDistribution.studentRealName)
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.ASSIGNER,internshipTeacherDistribution.assigner)
                 .execute()
     }
 
