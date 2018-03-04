@@ -131,8 +131,8 @@ open class StudentController {
     fun registerStudent(@Valid studentVo: StudentVo, bindingResult: BindingResult, session: HttpSession, request: HttpServletRequest): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
         if (!bindingResult.hasErrors()) {
-            val email = StringUtils.trimWhitespace(studentVo.email)
-            val mobile = StringUtils.trimWhitespace(studentVo.mobile)
+            val email = StringUtils.trimWhitespace(studentVo.email!!)
+            val mobile = StringUtils.trimWhitespace(studentVo.mobile!!)
             if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
                 val tempMobile = session.getAttribute("mobile") as String
                 if (studentVo.mobile != tempMobile) {
@@ -149,8 +149,8 @@ open class StudentController {
                                 if (studentVo.phoneVerifyCode != mobileCode) {
                                     ajaxUtils.fail().msg("验证码错误")
                                 } else {
-                                    val password = StringUtils.trimWhitespace(studentVo.password)
-                                    val confirmPassword = StringUtils.trimWhitespace(studentVo.confirmPassword)
+                                    val password = StringUtils.trimWhitespace(studentVo.password!!)
+                                    val confirmPassword = StringUtils.trimWhitespace(studentVo.confirmPassword!!)
                                     if (password != confirmPassword) {
                                         ajaxUtils.fail().msg("密码不一致")
                                     } else {

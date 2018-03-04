@@ -191,7 +191,7 @@ open class BuildingController {
             } else {
                 0
             }
-            building.buildingName = StringUtils.trimWhitespace(buildingVo.buildingName)
+            building.buildingName = StringUtils.trimWhitespace(buildingVo.buildingName!!)
             building.collegeId = buildingVo.collegeId
             buildingService.save(building)
             return AjaxUtils.of<Any>().success().msg("保存成功")
@@ -217,7 +217,7 @@ open class BuildingController {
                 } else {
                     0
                 }
-                building.buildingName = StringUtils.trimWhitespace(buildingVo.buildingName)
+                building.buildingName = StringUtils.trimWhitespace(buildingVo.buildingName!!)
                 building.collegeId = buildingVo.collegeId
                 buildingService.update(building)
                 return AjaxUtils.of<Any>().success().msg("更改成功")

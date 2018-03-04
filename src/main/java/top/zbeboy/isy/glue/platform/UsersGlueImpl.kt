@@ -1,7 +1,7 @@
 package top.zbeboy.isy.glue.platform
 
 import com.alibaba.fastjson.JSONObject
-import org.apache.commons.lang3.math.NumberUtils
+import org.apache.commons.lang.math.NumberUtils
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.sort.SortBuilders
@@ -247,6 +247,6 @@ open class UsersGlueImpl : UsersGlue {
      * @param dataTablesUtils datatables工具类
      */
     fun pagination(dataTablesUtils: DataTablesUtils<UsersBean>): PageRequest {
-        return PageRequest(dataTablesUtils.extraPage, dataTablesUtils.length)
+        return PageRequest.of(dataTablesUtils.extraPage, dataTablesUtils.length)
     }
 }

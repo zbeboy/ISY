@@ -31,7 +31,7 @@ open class InternshipConditionCommon {
     fun basicCondition(internshipReleaseId: String): ErrorBean<InternshipRelease> {
         val cacheKey = CacheBook.INTERNSHIP_BASE_CONDITION + internshipReleaseId
         if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
-            return errorBeanValueOperations.get(cacheKey)
+            return errorBeanValueOperations.get(cacheKey)!!
         }
         val errorBean = ErrorBean.of<InternshipRelease>()
         val internshipRelease = internshipReleaseService.findById(internshipReleaseId)

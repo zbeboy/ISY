@@ -153,7 +153,7 @@ open class SchoolController {
                 isDel = 1
             }
             school.schoolIsDel = isDel
-            school.schoolName = StringUtils.trimWhitespace(schoolVo.schoolName)
+            school.schoolName = StringUtils.trimWhitespace(schoolVo.schoolName!!)
             schoolService.save(school)
             return AjaxUtils.of<Any>().success().msg("保存成功")
         }
@@ -196,7 +196,7 @@ open class SchoolController {
                     isDel = 1
                 }
                 school.schoolIsDel = isDel
-                school.schoolName = StringUtils.trimWhitespace(schoolVo.schoolName)
+                school.schoolName = StringUtils.trimWhitespace(schoolVo.schoolName!!)
                 schoolService.update(school)
                 return AjaxUtils.of<Any>().success().msg("更改成功")
             }

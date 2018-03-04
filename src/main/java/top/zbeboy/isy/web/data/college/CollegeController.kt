@@ -228,9 +228,9 @@ open class CollegeController {
                     isDel = 1
                 }
                 college.collegeIsDel = isDel
-                college.collegeName = StringUtils.trimWhitespace(collegeVo.collegeName)
-                college.collegeCode = StringUtils.trimWhitespace(collegeVo.collegeCode)
-                college.collegeAddress = StringUtils.trimWhitespace(collegeVo.collegeAddress)
+                college.collegeName = StringUtils.trimWhitespace(collegeVo.collegeName!!)
+                college.collegeCode = StringUtils.trimWhitespace(collegeVo.collegeCode!!)
+                college.collegeAddress = StringUtils.trimWhitespace(collegeVo.collegeAddress!!)
                 college.schoolId = collegeVo.schoolId
                 collegeService.update(college)
                 return AjaxUtils.of<Any>().success().msg("更改成功")
@@ -256,9 +256,9 @@ open class CollegeController {
                 isDel = 1
             }
             college.collegeIsDel = isDel
-            college.collegeName = StringUtils.trimWhitespace(collegeVo.collegeName)
-            college.collegeCode = StringUtils.trimWhitespace(collegeVo.collegeCode)
-            college.collegeAddress = StringUtils.trimWhitespace(collegeVo.collegeAddress)
+            college.collegeName = StringUtils.trimWhitespace(collegeVo.collegeName!!)
+            college.collegeCode = StringUtils.trimWhitespace(collegeVo.collegeCode!!)
+            college.collegeAddress = StringUtils.trimWhitespace(collegeVo.collegeAddress!!)
             college.schoolId = collegeVo.schoolId
             collegeService.save(college)
             return AjaxUtils.of<Any>().success().msg("保存成功")

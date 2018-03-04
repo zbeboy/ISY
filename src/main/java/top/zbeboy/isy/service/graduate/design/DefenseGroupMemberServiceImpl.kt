@@ -175,7 +175,7 @@ open class DefenseGroupMemberServiceImpl @Autowired constructor(dslContext: DSLC
     fun searchCondition(condition: GraduationDesignTeacherBean): Condition? {
         var a: Condition? = null
         val realName = StringUtils.trimWhitespace(condition.staffRealName)
-        val defenseGroupId = StringUtils.trimWhitespace(condition.defenseGroupId)
+        val defenseGroupId = StringUtils.trimWhitespace(condition.defenseGroupId!!)
         if (StringUtils.hasLength(realName)) {
             a = GRADUATION_DESIGN_TEACHER.STAFF_REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
         }

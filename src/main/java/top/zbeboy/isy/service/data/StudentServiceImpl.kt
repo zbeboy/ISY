@@ -166,62 +166,65 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
 
     override fun update(student: Student, usersUniqueInfo: UsersUniqueInfo?) {
         studentDao.update(student)
-        val studentElastic = studentElasticRepository.findOne(student.studentId!!.toString() + "")
-        studentElastic.studentNumber = student.studentNumber
-        studentElastic.birthday = student.birthday
-        studentElastic.sex = student.sex
-        studentElastic.familyResidence = student.familyResidence
-        studentElastic.dormitoryNumber = student.dormitoryNumber
-        studentElastic.parentName = student.parentName
-        studentElastic.parentContactPhone = student.parentContactPhone
-        studentElastic.placeOrigin = student.placeOrigin
-        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
-            studentElastic.idCard = usersUniqueInfo!!.idCard
-        }
-        if (student.politicalLandscapeId != studentElastic.politicalLandscapeId) {
-            if (!Objects.isNull(student.politicalLandscapeId) && student.politicalLandscapeId > 0) {
-                val politicalLandscape = politicalLandscapeService.findById(student.politicalLandscapeId!!)
-                if (!Objects.isNull(politicalLandscape)) {
-                    studentElastic.politicalLandscapeId = politicalLandscape.politicalLandscapeId
-                    studentElastic.politicalLandscapeName = politicalLandscape.politicalLandscapeName
-                }
-            } else {
-                studentElastic.politicalLandscapeId = student.politicalLandscapeId
-                studentElastic.politicalLandscapeName = ""
+        val studentData = studentElasticRepository.findById(student.studentId!!.toString() + "")
+        if(studentData.isPresent){
+            val studentElastic = studentData.get()
+            studentElastic.studentNumber = student.studentNumber
+            studentElastic.birthday = student.birthday
+            studentElastic.sex = student.sex
+            studentElastic.familyResidence = student.familyResidence
+            studentElastic.dormitoryNumber = student.dormitoryNumber
+            studentElastic.parentName = student.parentName
+            studentElastic.parentContactPhone = student.parentContactPhone
+            studentElastic.placeOrigin = student.placeOrigin
+            if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+                studentElastic.idCard = usersUniqueInfo!!.idCard
             }
-        }
-        if (student.nationId != studentElastic.nationId) {
-            if (!Objects.isNull(student.nationId) && student.nationId > 0) {
-                val nation = nationService.findById(student.nationId!!)
-                if (!Objects.isNull(nation)) {
-                    studentElastic.nationId = nation.nationId
-                    studentElastic.nationName = nation.nationName
+            if (student.politicalLandscapeId != studentElastic.politicalLandscapeId) {
+                if (!Objects.isNull(student.politicalLandscapeId) && student.politicalLandscapeId > 0) {
+                    val politicalLandscape = politicalLandscapeService.findById(student.politicalLandscapeId!!)
+                    if (!Objects.isNull(politicalLandscape)) {
+                        studentElastic.politicalLandscapeId = politicalLandscape.politicalLandscapeId
+                        studentElastic.politicalLandscapeName = politicalLandscape.politicalLandscapeName
+                    }
+                } else {
+                    studentElastic.politicalLandscapeId = student.politicalLandscapeId
+                    studentElastic.politicalLandscapeName = ""
                 }
-            } else {
-                studentElastic.nationId = student.nationId
-                studentElastic.nationName = ""
             }
+            if (student.nationId != studentElastic.nationId) {
+                if (!Objects.isNull(student.nationId) && student.nationId > 0) {
+                    val nation = nationService.findById(student.nationId!!)
+                    if (!Objects.isNull(nation)) {
+                        studentElastic.nationId = nation.nationId
+                        studentElastic.nationName = nation.nationName
+                    }
+                } else {
+                    studentElastic.nationId = student.nationId
+                    studentElastic.nationName = ""
+                }
 
-        }
-        if (!Objects.isNull(student.organizeId) && student.organizeId > 0 && student.organizeId != studentElastic.organizeId) {
-            val record = organizeService.findByIdRelation(student.organizeId!!)
-            if (record.isPresent) {
-                val organizeBean = record.get().into(OrganizeBean::class.java)
-                studentElastic.schoolId = organizeBean.schoolId
-                studentElastic.schoolName = organizeBean.schoolName
-                studentElastic.collegeId = organizeBean.collegeId
-                studentElastic.collegeName = organizeBean.collegeName
-                studentElastic.departmentId = organizeBean.departmentId
-                studentElastic.departmentName = organizeBean.departmentName
-                studentElastic.scienceId = organizeBean.scienceId
-                studentElastic.scienceName = organizeBean.scienceName
-                studentElastic.organizeId = organizeBean.organizeId
-                studentElastic.organizeName = organizeBean.organizeName
-                studentElastic.grade = organizeBean.grade
             }
+            if (!Objects.isNull(student.organizeId) && student.organizeId > 0 && student.organizeId != studentElastic.organizeId) {
+                val record = organizeService.findByIdRelation(student.organizeId!!)
+                if (record.isPresent) {
+                    val organizeBean = record.get().into(OrganizeBean::class.java)
+                    studentElastic.schoolId = organizeBean.schoolId
+                    studentElastic.schoolName = organizeBean.schoolName
+                    studentElastic.collegeId = organizeBean.collegeId
+                    studentElastic.collegeName = organizeBean.collegeName
+                    studentElastic.departmentId = organizeBean.departmentId
+                    studentElastic.departmentName = organizeBean.departmentName
+                    studentElastic.scienceId = organizeBean.scienceId
+                    studentElastic.scienceName = organizeBean.scienceName
+                    studentElastic.organizeId = organizeBean.organizeId
+                    studentElastic.organizeName = organizeBean.organizeName
+                    studentElastic.grade = organizeBean.grade
+                }
+            }
+            studentElasticRepository.delete(studentElastic)
+            studentElasticRepository.save(studentElastic)
         }
-        studentElasticRepository.delete(studentElastic)
-        studentElasticRepository.save(studentElastic)
     }
 
     override fun findByUsernameRelation(username: String): Optional<Record> {

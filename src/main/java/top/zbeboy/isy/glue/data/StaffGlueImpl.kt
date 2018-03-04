@@ -393,7 +393,7 @@ open class StaffGlueImpl : StaffGlue {
      * @param dataTablesUtils datatables工具类
      */
     fun pagination(dataTablesUtils: DataTablesUtils<StaffBean>): PageRequest {
-        return PageRequest(dataTablesUtils.extraPage, dataTablesUtils.length)
+        return PageRequest.of(dataTablesUtils.extraPage, dataTablesUtils.length)
     }
 
     /**

@@ -29,7 +29,7 @@ class AjaxAuthenticationFailureHandler : SimpleUrlAuthenticationFailureHandler()
         val ctx = WebApplicationContextUtils
                 .getWebApplicationContext(context)
         val systemLog = SystemLogElastic(UUIDUtils.getUUID(), "登录系统失败", Timestamp(Clock.systemDefaultZone().millis()), request.getParameter("username"), RequestUtils.getIpAddress(request)!!)
-        val systemLogGlue = ctx
+        val systemLogGlue = ctx!!
                 .getBean("systemLogGlue") as SystemLogGlue
         systemLogGlue.save(systemLog)
         response.writer.print(AjaxAuthenticationCode.AU_ERROR_CODE)

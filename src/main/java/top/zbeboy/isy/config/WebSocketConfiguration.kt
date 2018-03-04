@@ -2,9 +2,9 @@ package top.zbeboy.isy.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
 
 /**
  * Spring boot web socket.
@@ -15,10 +15,10 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry
  */
 @Configuration
 @EnableWebSocketMessageBroker
-open class WebSocketConfiguration : AbstractWebSocketMessageBrokerConfigurer() {
+open class WebSocketConfiguration : WebSocketMessageBrokerConfigurer {
 
-    override fun configureMessageBroker(config: MessageBrokerRegistry?) {
-        config!!.enableSimpleBroker("/topic")
+    override fun configureMessageBroker(config: MessageBrokerRegistry) {
+        config.enableSimpleBroker("/topic")
         config.setApplicationDestinationPrefixes("/app")
     }
 

@@ -31,7 +31,7 @@ class SecurityLoginFilter : Filter {
                             val context = request.session.servletContext
                             val ctx = WebApplicationContextUtils
                                     .getWebApplicationContext(context)
-                            val usersService = ctx
+                            val usersService = ctx!!
                                     .getBean("usersService") as UsersService
                             val users = usersService.findByUsername(email)
                             if (!ObjectUtils.isEmpty(users)) {// 用户是否存在

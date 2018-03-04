@@ -113,7 +113,7 @@ open class AcademicTitleController {
     fun academicSave(@Valid academicTitleVo: AcademicTitleVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors()) {
             val academicTitle = AcademicTitle()
-            academicTitle.academicTitleName = StringUtils.trimWhitespace(academicTitleVo.academicTitleName)
+            academicTitle.academicTitleName = StringUtils.trimWhitespace(academicTitleVo.academicTitleName!!)
             academicTitleService.save(academicTitle)
             return AjaxUtils.of<Any>().success().msg("保存成功")
         }
@@ -152,7 +152,7 @@ open class AcademicTitleController {
         if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(academicTitleVo.academicTitleId)) {
             val academicTitle = academicTitleService.findById(academicTitleVo.academicTitleId!!)
             if (!ObjectUtils.isEmpty(academicTitle)) {
-                academicTitle.academicTitleName = StringUtils.trimWhitespace(academicTitleVo.academicTitleName)
+                academicTitle.academicTitleName = StringUtils.trimWhitespace(academicTitleVo.academicTitleName!!)
                 academicTitleService.update(academicTitle)
                 return AjaxUtils.of<Any>().success().msg("更改成功")
             }

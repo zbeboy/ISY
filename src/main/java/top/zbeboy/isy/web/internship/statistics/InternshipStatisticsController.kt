@@ -1,7 +1,7 @@
 package top.zbeboy.isy.web.internship.statistics
 
 import com.alibaba.fastjson.JSON
-import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang.StringUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap

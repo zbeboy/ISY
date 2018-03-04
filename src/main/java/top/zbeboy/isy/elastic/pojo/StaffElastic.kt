@@ -1,6 +1,6 @@
 package top.zbeboy.isy.elastic.pojo
 
-import org.apache.commons.lang3.math.NumberUtils
+import org.apache.commons.lang.math.NumberUtils
 import org.springframework.data.annotation.Id
 import org.springframework.data.elasticsearch.annotations.Document
 import java.sql.Date

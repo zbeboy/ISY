@@ -1,7 +1,7 @@
 package top.zbeboy.isy.web.graduate.design.pharmtech
 
-import org.apache.commons.lang3.StringUtils
-import org.apache.commons.lang3.math.NumberUtils
+import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.math.NumberUtils
 import org.springframework.data.redis.core.ListOperations
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.core.ValueOperations
@@ -199,7 +199,7 @@ open class GraduationDesignPharmtechController {
             val studentKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT + student.studentId!!
             // 从缓存中得到列表
             if (stringListValueOperations.operations.hasKey(cacheKey)!!) {
-                graduationDesignTeacherBeens = stringListValueOperations.get(cacheKey)
+                graduationDesignTeacherBeens = stringListValueOperations.get(cacheKey)!!
             } else {
                 graduationDesignTeacherBeens = ArrayList()
             }
@@ -209,7 +209,7 @@ open class GraduationDesignPharmtechController {
                 for (designTeacherBean in graduationDesignTeacherBeens) {
                     // 装填剩余人数
                     val studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + designTeacherBean.graduationDesignTeacherId
-                    if (template.hasKey(studentCountKey)!!) {
+                    if (template.hasKey(studentCountKey)) {
                         val ops = this.template.opsForValue()
                         designTeacherBean.residueCount = NumberUtils.toInt(ops.get(studentCountKey))
                     }
@@ -218,7 +218,7 @@ open class GraduationDesignPharmtechController {
                         // 解除逗号分隔的字符   指导教师id , 学生id
                         val str = stringValueOperations.get(studentKey)
                         if (StringUtils.isNotBlank(str)) {
-                            val arr = str.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                            val arr = str!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                             if (arr.size >= 2) {
                                 if (designTeacherBean.graduationDesignTeacherId == arr[0]) {
                                     selectedTeacher = true
@@ -292,7 +292,7 @@ open class GraduationDesignPharmtechController {
                 // 已选择过，不能重复选
                 val str = stringValueOperations.get(studentKey)
                 if (StringUtils.isNotBlank(str)) {
-                    val arr = str.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    val arr = str!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     canSelect = arr.size >= 2 && arr[0] == "-1"
                 } else {
                     canSelect = false
@@ -304,7 +304,7 @@ open class GraduationDesignPharmtechController {
             if (canSelect) {
                 // 计数器
                 val countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId
-                if (template.hasKey(countKey)!!) {
+                if (template.hasKey(countKey)) {
                     val ops = this.template.opsForValue()
                     val count = NumberUtils.toInt(ops.get(countKey)) - 1
                     if (count >= 0) {
@@ -322,14 +322,8 @@ open class GraduationDesignPharmtechController {
                         // 是否已经存在当前学生key
                         val listKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT_LIST + graduationDesignReleaseId
                         val keys = listOperations.range(listKey, 0, listOperations.size(listKey)!!)
-                        var hasKey = false
-                        for (key in keys) {
-                            // 已经存在 无需添加
-                            if (key == studentKey) {
-                                hasKey = true
-                                break
-                            }
-                        }
+                        val hasKey = !ObjectUtils.isEmpty(keys) && keys!!.contains(studentKey)
+
                         // 不存在，需要添加
                         if (!hasKey) {
                             listOperations.rightPush(listKey, studentKey)
@@ -393,7 +387,7 @@ open class GraduationDesignPharmtechController {
             val student = errorBean.mapData!!["student"] as Student
             // 计数器
             val countKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacherId
-            if (template.hasKey(countKey)!!) {
+            if (template.hasKey(countKey)) {
                 val ops = this.template.opsForValue()
                 ops.increment(countKey, 1L)
                 // 存储 指导教师id , 学生id

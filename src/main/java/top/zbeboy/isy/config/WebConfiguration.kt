@@ -4,21 +4,20 @@ import io.undertow.servlet.api.SecurityConstraint
 import io.undertow.servlet.api.SecurityInfo
 import io.undertow.servlet.api.TransportGuaranteeType
 import io.undertow.servlet.api.WebResourceCollection
-import org.apache.commons.lang3.CharEncoding
+import org.apache.commons.lang.CharEncoding
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory
-import org.springframework.boot.context.embedded.undertow.UndertowBuilderCustomizer
-import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfoCustomizer
-import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory
+import org.springframework.boot.web.embedded.undertow.UndertowBuilderCustomizer
+import org.springframework.boot.web.embedded.undertow.UndertowDeploymentInfoCustomizer
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Scope
 import org.springframework.core.env.Environment
 import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
-import org.thymeleaf.spring4.view.ThymeleafView
+import org.thymeleaf.spring5.view.ThymeleafView
 import top.zbeboy.isy.interceptor.MenuInterceptor
 import java.io.File
 import javax.inject.Inject
@@ -31,7 +30,7 @@ import javax.inject.Inject
  * @since 1.0
  */
 @Configuration
-open class WebConfiguration : WebMvcConfigurerAdapter() {
+open class WebConfiguration : WebMvcConfigurer {
 
     @Autowired
     open lateinit var isyProperties: ISYProperties
@@ -68,8 +67,8 @@ open class WebConfiguration : WebMvcConfigurerAdapter() {
      * @return factory
      */
     @Bean
-    open fun undertow(): EmbeddedServletContainerFactory {
-        val undertow = UndertowEmbeddedServletContainerFactory()
+    open fun undertow(): UndertowServletWebServerFactory {
+        val undertow = UndertowServletWebServerFactory()
         undertow.addBuilderCustomizers(UndertowBuilderCustomizer { builder -> builder.addHttpListener(isyProperties.getConstants().serverHttpPort, isyProperties.getConstants().undertowListenerIp) })
         undertow.addDeploymentInfoCustomizers(
                 UndertowDeploymentInfoCustomizer { deploymentInfo ->

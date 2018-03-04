@@ -110,22 +110,29 @@ open class OrganizeServiceImpl @Autowired constructor(dslContext: DSLContext) : 
 
     override fun update(organize: Organize) {
         organizeDao.update(organize)
-        val organizeElastic = organizeElasticRepository.findOne(organize.organizeId!!.toString() + "")
-        organizeElastic.organizeIsDel = organize.organizeIsDel
-        organizeElastic.organizeName = organize.organizeName
-        organizeElastic.scienceId = organize.scienceId
-        organizeElastic.grade = organize.grade
-        organizeElasticRepository.delete(organizeElastic)
-        organizeElasticRepository.save(organizeElastic)
+        val organizeData = organizeElasticRepository.findById(organize.organizeId!!.toString() + "")
+        if(organizeData.isPresent){
+            val organizeElastic = organizeData.get()
+            organizeElastic.organizeIsDel = organize.organizeIsDel
+            organizeElastic.organizeName = organize.organizeName
+            organizeElastic.scienceId = organize.scienceId
+            organizeElastic.grade = organize.grade
+            organizeElasticRepository.delete(organizeElastic)
+            organizeElasticRepository.save(organizeElastic)
+        }
+
     }
 
     override fun updateIsDel(ids: List<Int>, isDel: Byte?) {
         ids.forEach { id ->
             create.update<OrganizeRecord>(ORGANIZE).set<Byte>(ORGANIZE.ORGANIZE_IS_DEL, isDel).where(ORGANIZE.ORGANIZE_ID.eq(id)).execute()
-            val organizeElastic = organizeElasticRepository.findOne(id.toString() + "")
-            organizeElastic.organizeIsDel = isDel
-            organizeElasticRepository.delete(organizeElastic)
-            organizeElasticRepository.save(organizeElastic)
+            val organizeData = organizeElasticRepository.findById(id.toString() + "")
+            if(organizeData.isPresent){
+                val organizeElastic = organizeData.get()
+                organizeElastic.organizeIsDel = isDel
+                organizeElasticRepository.delete(organizeElastic)
+                organizeElasticRepository.save(organizeElastic)
+            }
         }
     }
 

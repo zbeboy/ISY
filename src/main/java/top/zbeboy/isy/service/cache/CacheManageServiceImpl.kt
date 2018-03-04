@@ -113,8 +113,8 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun getUsersKey(username: String): String {
         val cacheKey = CacheBook.USER_KEY + username
         val ops = this.stringRedisTemplate.opsForValue()
-        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
-            return ops.get(cacheKey)
+        if (this.stringRedisTemplate.hasKey(cacheKey)) {
+            return ops.get(cacheKey)!!
         }
         val id = desService.encrypt(username, isyProperties.getSecurity().desDefaultKey!!)
         val usersKey = usersKeyDao.findById(id)
@@ -125,7 +125,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun deleteUsersKey(username: String) {
         val cacheKey = CacheBook.USER_KEY + username
         val ops = this.stringRedisTemplate.opsForValue()
-        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
+        if (this.stringRedisTemplate.hasKey(cacheKey)) {
             ops.operations.delete(cacheKey)
         }
     }
@@ -133,7 +133,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun getRoleCollegeId(users: Users): Int {
         val cacheKey = CacheBook.USER_COLLEGE_ID + users.username
         if (integerValueOperations.operations.hasKey(cacheKey)!!) {
-            return integerValueOperations.get(cacheKey)
+            return integerValueOperations.get(cacheKey)!!
         }
         var collegeId = 0
         val record = usersService.findUserSchoolInfo(users)
@@ -150,7 +150,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun getRoleDepartmentId(users: Users): Int {
         val cacheKey = CacheBook.USER_DEPARTMENT_ID + users.username
         if (integerValueOperations.operations.hasKey(cacheKey)!!) {
-            return integerValueOperations.get(cacheKey)
+            return integerValueOperations.get(cacheKey)!!
         }
         var departmentId = 0
         val record = usersService.findUserSchoolInfo(users)
@@ -174,7 +174,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
         if (record.isPresent) {
             organizeBean = record.get().into(OrganizeBean::class.java)
             if (!ObjectUtils.isEmpty(organizeBean)) {
-                organizeValueOperations.set(cacheKey, organizeBean, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
+                organizeValueOperations.set(cacheKey, organizeBean!!, CacheBook.EXPIRES_HOURS, TimeUnit.HOURS)
             }
         }
         return organizeBean
@@ -183,8 +183,8 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun schoolInfoPath(schoolId: Int?, collegeId: Int?, departmentId: Int): String {
         val cacheKey = CacheBook.SCHOOL_INFO_PATH + departmentId
         val ops = this.stringRedisTemplate.opsForValue()
-        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
-            return ops.get(cacheKey)
+        if (this.stringRedisTemplate.hasKey(cacheKey)) {
+            return ops.get(cacheKey)!!
         }
         var path = "temp" + Workbook.DIRECTORY_SPLIT
         var school: School? = null
@@ -212,8 +212,8 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun schoolInfoPath(departmentId: Int): String {
         val cacheKey = CacheBook.SCHOOL_INFO_PATH + departmentId
         val ops = this.stringRedisTemplate.opsForValue()
-        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
-            return ops.get(cacheKey)
+        if (this.stringRedisTemplate.hasKey(cacheKey)) {
+            return ops.get(cacheKey)!!
         }
         var path = "temp" + Workbook.DIRECTORY_SPLIT
         val record = departmentService.findByIdRelation(departmentId)
@@ -233,8 +233,8 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun menuHtml(roles: List<Role>, username: String): String {
         val cacheKey = CacheBook.MENU_HTML + username
         val ops = this.stringRedisTemplate.opsForValue()
-        if (this.stringRedisTemplate.hasKey(cacheKey)!!) {
-            return ops.get(cacheKey)
+        if (this.stringRedisTemplate.hasKey(cacheKey)) {
+            return ops.get(cacheKey)!!
         }
         val roleIds = ArrayList<String>()
         var html = ""
@@ -260,7 +260,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun findInIdsWithUsername(ids: List<String>, username: String): List<Application> {
         val cacheKey = CacheBook.USER_APPLICATION_ID + username
         if (applicationValueOperations.operations.hasKey(cacheKey)!!) {
-            return applicationValueOperations.get(cacheKey)
+            return applicationValueOperations.get(cacheKey)!!
         }
         var applications: List<Application> = ArrayList()
         val applicationRecords = create.selectFrom<ApplicationRecord>(APPLICATION)
@@ -276,7 +276,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun urlMapping(application: Application): List<String> {
         val cacheKey = CacheBook.URL_MAPPING + application.applicationId
         if (stringListValueOperations.operations.hasKey(cacheKey)!!) {
-            return stringListValueOperations.get(cacheKey)
+            return stringListValueOperations.get(cacheKey)!!
         }
         val urlMapping = ArrayList<String>()
         if (!ObjectUtils.isEmpty(application)) {
@@ -290,7 +290,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun findInRoleIdsWithUsername(roleIds: List<String>, username: String): List<RoleApplication> {
         val cacheKey = CacheBook.USER_ROLE_ID + username
         if (roleApplicationValueOperations.operations.hasKey(cacheKey)!!) {
-            return roleApplicationValueOperations.get(cacheKey)
+            return roleApplicationValueOperations.get(cacheKey)!!
         }
         var roleApplications: List<RoleApplication> = ArrayList()
         val roleApplicationRecords = create.selectFrom<RoleApplicationRecord>(ROLE_APPLICATION)
@@ -306,7 +306,7 @@ open class CacheManageServiceImpl @Autowired constructor(dslContext: DSLContext)
     override fun findByUsernameWithRole(username: String): List<Role> {
         val cacheKey = CacheBook.USER_ROLE + username
         if (roleValueOperations.operations.hasKey(cacheKey)!!) {
-            return roleValueOperations.get(cacheKey)
+            return roleValueOperations.get(cacheKey)!!
         }
         var roleList: List<Role> = ArrayList()
         val records = create.select()

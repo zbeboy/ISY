@@ -43,7 +43,7 @@ open class SmallPropsUtils {
         @JvmStatic
         fun StringIdsIsNumber(ids: String): Boolean {
             val idArr = ids.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            return idArr.any { NumberUtils.isNumber(it) }
+            return idArr.any { NumberUtils.isDigits(it) }
         }
     }
 }

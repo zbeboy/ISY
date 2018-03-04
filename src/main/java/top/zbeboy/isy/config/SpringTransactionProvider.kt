@@ -24,7 +24,7 @@ class SpringTransactionProvider : TransactionProvider {
         // This TransactionProvider behaves like jOOQ's DefaultTransactionProvider,
         // which supports nested transactions using Savepoints
         val tx = this.txMgr.getTransaction(DefaultTransactionDefinition(PROPAGATION_NESTED))
-        ctx.transaction(SpringTransaction(tx!!))
+        ctx.transaction(SpringTransaction(tx))
     }
 
     override fun commit(ctx: TransactionContext) {
