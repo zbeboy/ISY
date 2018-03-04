@@ -7,7 +7,9 @@ I see you(ISY)是为协同校园工作所建立的系统，以简单的方式过
 3.第三期工程 基础平台能力重构于2018年02月08日完成正式发布(维护中)。
 
 ### 所使用技术
-核心以Spring boot做为基础。
+1~5 工程将继续采用Spring boot 1.5.x；  
+分支(future)后台工程Spring boot 2.x.x；  
+分支(暂未)前端工程Bootstrap 4.x.x。 
 
 ### 作者
 zbeboy
