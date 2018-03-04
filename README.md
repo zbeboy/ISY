@@ -22,7 +22,7 @@
 2.Redis;  
 3.Intellij IDEA Run Application.class 或 Maven .  
 # 参与条件
-1.Known Spring boot;  
+1.Known Spring boot 2.0.0;  
 2.Known Git;  
 2.Known Maven;  
 3.Known RequireJs;  
