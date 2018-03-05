@@ -92,6 +92,8 @@ open class GraduationDesignTeacherServiceImpl @Autowired constructor(dslContext:
                 .from(GRADUATION_DESIGN_TEACHER)
                 .join(STAFF)
                 .on(GRADUATION_DESIGN_TEACHER.STAFF_ID.eq(STAFF.STAFF_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(GRADUATION_DESIGN_TEACHER.GRADUATION_DESIGN_RELEASE_ID.eq(graduationDesignReleaseId))
                 .fetch()
 

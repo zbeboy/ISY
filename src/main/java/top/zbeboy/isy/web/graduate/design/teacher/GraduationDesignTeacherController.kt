@@ -320,7 +320,7 @@ open class GraduationDesignTeacherController {
         val errorBean = graduationDesignConditionCommon.isOkTeacherCondition(graduationDesignReleaseId)
         if (!errorBean.isHasError()) {
             val graduationDesignRelease = errorBean.data
-            // 在填报时间之前
+            // 在填报结束时间之前
             if (DateTimeUtils.timestampBeforeDecide(graduationDesignRelease!!.fillTeacherEndTime)) {
                 val graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseIdRelationForStaff(graduationDesignReleaseId)
                 val ops = this.template.opsForValue()
