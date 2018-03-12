@@ -98,9 +98,9 @@ open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(), SystemSmsGlue {
 
             if ("system_sms_id".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId.keyword").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId.keyword").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
@@ -114,21 +114,21 @@ open class SystemSmsGlueImpl : ElasticPlugin<SystemSmsBean>(), SystemSmsGlue {
 
             if ("accept_phone".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone.keyword").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId.keyword").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptPhone.keyword").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId.keyword").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
             if ("send_condition".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition.keyword").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId.keyword").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition.keyword").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemSmsId.keyword").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
         }

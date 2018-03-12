@@ -98,9 +98,9 @@ open class SystemMailboxGlueImpl : ElasticPlugin<SystemMailboxBean>(), SystemMai
 
             if ("system_mailbox_id".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId.keyword").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId.keyword").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
@@ -114,21 +114,21 @@ open class SystemMailboxGlueImpl : ElasticPlugin<SystemMailboxBean>(), SystemMai
 
             if ("accept_mail".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail.keyword").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId.keyword").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("acceptMail.keyword").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId.keyword").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
             if ("send_condition".equals(orderColumnName, ignoreCase = true)) {
                 if (isAsc) {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.ASC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition.keyword").order(SortOrder.ASC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId.keyword").order(SortOrder.ASC).unmappedType("string"))
                 } else {
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition").order(SortOrder.DESC).unmappedType("string"))
-                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("sendCondition.keyword").order(SortOrder.DESC).unmappedType("string"))
+                    nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("systemMailboxId.keyword").order(SortOrder.DESC).unmappedType("string"))
                 }
             }
 
