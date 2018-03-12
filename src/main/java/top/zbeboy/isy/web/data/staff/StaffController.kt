@@ -132,8 +132,8 @@ open class StaffController {
     fun registerStaff(@Valid staffVo: StaffVo, bindingResult: BindingResult, session: HttpSession, request: HttpServletRequest): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
         if (!bindingResult.hasErrors()) {
-            val email = StringUtils.trimWhitespace(staffVo.email)
-            val mobile = StringUtils.trimWhitespace(staffVo.mobile)
+            val email = StringUtils.trimWhitespace(staffVo.email!!)
+            val mobile = StringUtils.trimWhitespace(staffVo.mobile!!)
             if (!ObjectUtils.isEmpty(session.getAttribute("mobile"))) {
                 val tempMobile = session.getAttribute("mobile") as String
                 if (staffVo.mobile != tempMobile) {
@@ -150,8 +150,8 @@ open class StaffController {
                                 if (staffVo.phoneVerifyCode != mobileCode) {
                                     ajaxUtils.fail().msg("验证码错误")
                                 } else {
-                                    val password = StringUtils.trimWhitespace(staffVo.password)
-                                    val confirmPassword = StringUtils.trimWhitespace(staffVo.confirmPassword)
+                                    val password = StringUtils.trimWhitespace(staffVo.password!!)
+                                    val confirmPassword = StringUtils.trimWhitespace(staffVo.confirmPassword!!)
                                     if (password != confirmPassword) {
                                         ajaxUtils.fail().msg("密码不一致")
                                     } else {

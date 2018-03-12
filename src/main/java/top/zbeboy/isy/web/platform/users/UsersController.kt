@@ -157,7 +157,7 @@ open class UsersController {
     @ResponseBody
     fun validUsers(username: String?, mobile: String?, validType: Int): AjaxUtils<*> {
         if (validType == VALID_EMAIL) {
-            val tempUsers = usersService.findByUsername(StringUtils.trimWhitespace(username))
+            val tempUsers = usersService.findByUsername(StringUtils.trimWhitespace(username!!))
             return if (!ObjectUtils.isEmpty(tempUsers)) {
                 AjaxUtils.of<Any>().fail().msg("该邮箱已被注册")
             } else {
@@ -166,7 +166,7 @@ open class UsersController {
         }
 
         if (validType == VALID_MOBILE) {
-            val tempUsers = usersService.findByMobile(StringUtils.trimWhitespace(mobile))
+            val tempUsers = usersService.findByMobile(StringUtils.trimWhitespace(mobile!!))
             return if (!ObjectUtils.isEmpty(tempUsers)) {
                 AjaxUtils.of<Any>().fail().msg("该手机号已被注册")
             } else {
@@ -552,9 +552,9 @@ open class UsersController {
     fun loginPasswordReset(@Valid resetVo: ResetVo, bindingResult: BindingResult): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
         if (!bindingResult.hasErrors()) {
-            val username = StringUtils.trimWhitespace(resetVo.email)
-            val password = StringUtils.trimWhitespace(resetVo.password)
-            val confirmPassword = StringUtils.trimWhitespace(resetVo.confirmPassword)
+            val username = StringUtils.trimWhitespace(resetVo.email!!)
+            val password = StringUtils.trimWhitespace(resetVo.password!!)
+            val confirmPassword = StringUtils.trimWhitespace(resetVo.confirmPassword!!)
             if (password == confirmPassword) {
                 val users = usersService.findByUsername(username)
                 if (!ObjectUtils.isEmpty(users)) {

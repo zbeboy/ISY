@@ -1,6 +1,6 @@
 package top.zbeboy.isy.service.platform
 
-import org.apache.commons.lang3.math.NumberUtils
+import org.apache.commons.lang.math.NumberUtils
 import org.jooq.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
@@ -134,73 +134,79 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
 
     override fun update(users: Users) {
         usersDao.update(users)
-        val usersElastic = usersElasticRepository.findOne(users.username)
-        usersElastic.password = users.password
-        usersElastic.enabled = users.enabled
-        usersElastic.usersTypeId = users.usersTypeId
-        usersElastic.realName = users.realName
-        usersElastic.mobile = users.mobile
-        usersElastic.avatar = users.avatar
-        usersElastic.verifyMailbox = users.verifyMailbox
-        usersElastic.mailboxVerifyCode = users.mailboxVerifyCode
-        usersElastic.passwordResetKey = users.passwordResetKey
-        usersElastic.mailboxVerifyValid = users.mailboxVerifyValid
-        usersElastic.passwordResetKeyValid = users.passwordResetKeyValid
-        usersElastic.langKey = users.langKey
-        usersElastic.joinDate = users.joinDate
-        usersElasticRepository.delete(usersElastic)
-        usersElasticRepository.save(usersElastic)
-        val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
-        if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-            val studentElastic = studentElasticRepository.findByUsername(users.username)
-            studentElastic.enabled = users.enabled
-            studentElastic.realName = users.realName
-            studentElastic.mobile = users.mobile
-            studentElastic.avatar = users.avatar
-            studentElastic.langKey = users.langKey
-            studentElastic.joinDate = users.joinDate
-            studentElastic.verifyMailbox = users.verifyMailbox
-            studentElasticRepository.delete(studentElastic)
-            studentElasticRepository.save(studentElastic)
-        } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-            val staffElastic = staffElasticRepository.findByUsername(users.username)
-            staffElastic.enabled = users.enabled
-            staffElastic.realName = users.realName
-            staffElastic.mobile = users.mobile
-            staffElastic.avatar = users.avatar
-            staffElastic.langKey = users.langKey
-            staffElastic.joinDate = users.joinDate
-            staffElastic.verifyMailbox = users.verifyMailbox
-            staffElasticRepository.delete(staffElastic)
-            staffElasticRepository.save(staffElastic)
-        }
-    }
-
-    override fun updateEnabled(ids: List<String>, enabled: Byte?) {
-        ids.forEach { id ->
-            create.update<UsersRecord>(USERS).set<Byte>(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute()
-            val usersElastic = usersElasticRepository.findOne(id)
-            usersElastic.enabled = enabled
+        val usersData = usersElasticRepository.findById(users.username)
+        if(usersData.isPresent){
+            val usersElastic = usersData.get()
+            usersElastic.password = users.password
+            usersElastic.enabled = users.enabled
+            usersElastic.usersTypeId = users.usersTypeId
+            usersElastic.realName = users.realName
+            usersElastic.mobile = users.mobile
+            usersElastic.avatar = users.avatar
+            usersElastic.verifyMailbox = users.verifyMailbox
+            usersElastic.mailboxVerifyCode = users.mailboxVerifyCode
+            usersElastic.passwordResetKey = users.passwordResetKey
+            usersElastic.mailboxVerifyValid = users.mailboxVerifyValid
+            usersElastic.passwordResetKeyValid = users.passwordResetKeyValid
+            usersElastic.langKey = users.langKey
+            usersElastic.joinDate = users.joinDate
             usersElasticRepository.delete(usersElastic)
             usersElasticRepository.save(usersElastic)
-            val usersType = cacheManageService.findByUsersTypeId(usersElastic.usersTypeId!!)
+            val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
             if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                val studentElastic = studentElasticRepository.findByUsername(usersElastic.username!!)
-                studentElastic.enabled = usersElastic.enabled
+                val studentElastic = studentElasticRepository.findByUsername(users.username)
+                studentElastic.enabled = users.enabled
+                studentElastic.realName = users.realName
+                studentElastic.mobile = users.mobile
+                studentElastic.avatar = users.avatar
+                studentElastic.langKey = users.langKey
+                studentElastic.joinDate = users.joinDate
+                studentElastic.verifyMailbox = users.verifyMailbox
                 studentElasticRepository.delete(studentElastic)
                 studentElasticRepository.save(studentElastic)
             } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                val staffElastic = staffElasticRepository.findByUsername(usersElastic.username!!)
-                staffElastic.enabled = usersElastic.enabled
+                val staffElastic = staffElasticRepository.findByUsername(users.username)
+                staffElastic.enabled = users.enabled
+                staffElastic.realName = users.realName
+                staffElastic.mobile = users.mobile
+                staffElastic.avatar = users.avatar
+                staffElastic.langKey = users.langKey
+                staffElastic.joinDate = users.joinDate
+                staffElastic.verifyMailbox = users.verifyMailbox
                 staffElasticRepository.delete(staffElastic)
                 staffElasticRepository.save(staffElastic)
             }
         }
     }
 
+    override fun updateEnabled(ids: List<String>, enabled: Byte?) {
+        ids.forEach { id ->
+            create.update<UsersRecord>(USERS).set<Byte>(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute()
+            val usersData = usersElasticRepository.findById(id)
+            if(usersData.isPresent){
+                val usersElastic = usersData.get()
+                usersElastic.enabled = enabled
+                usersElasticRepository.delete(usersElastic)
+                usersElasticRepository.save(usersElastic)
+                val usersType = cacheManageService.findByUsersTypeId(usersElastic.usersTypeId!!)
+                if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
+                    val studentElastic = studentElasticRepository.findByUsername(usersElastic.username!!)
+                    studentElastic.enabled = usersElastic.enabled
+                    studentElasticRepository.delete(studentElastic)
+                    studentElasticRepository.save(studentElastic)
+                } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
+                    val staffElastic = staffElasticRepository.findByUsername(usersElastic.username!!)
+                    staffElastic.enabled = usersElastic.enabled
+                    staffElasticRepository.delete(staffElastic)
+                    staffElasticRepository.save(staffElastic)
+                }
+            }
+        }
+    }
+
     override fun deleteById(username: String) {
         usersDao.deleteById(username)
-        usersElasticRepository.delete(username)
+        usersElasticRepository.deleteById(username)
     }
 
     override fun validSCDSOIsDel(users: Users): Boolean {

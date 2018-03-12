@@ -26,7 +26,7 @@ open class GraduationDesignConditionCommon {
     fun basicCondition(graduationDesignReleaseId: String): ErrorBean<GraduationDesignRelease> {
         val cacheKey = CacheBook.GRADUATION_DESIGN_BASE_CONDITION + graduationDesignReleaseId
         if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
-            return errorBeanValueOperations.get(cacheKey)
+            return errorBeanValueOperations.get(cacheKey)!!
         }
         val errorBean = ErrorBean.of<GraduationDesignRelease>()
         val graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId)

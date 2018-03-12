@@ -1,7 +1,7 @@
 package top.zbeboy.isy.service.internship
 
 import com.alibaba.fastjson.JSON
-import org.apache.commons.lang3.math.NumberUtils
+import org.apache.commons.lang.math.NumberUtils
 import org.jooq.Condition
 import org.jooq.DSLContext
 import org.jooq.Record1

@@ -22,7 +22,7 @@ class MenuInterceptor : HandlerInterceptor {
         val context = request!!.session.servletContext
         val ctx = WebApplicationContextUtils
                 .getWebApplicationContext(context)
-        val usersService = ctx
+        val usersService = ctx!!
                 .getBean("usersService") as UsersService
         val cacheManageService = ctx
                 .getBean("cacheManageService") as CacheManageService

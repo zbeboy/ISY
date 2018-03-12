@@ -241,8 +241,8 @@ open class ScienceController {
             } else {
                 0
             }
-            science.scienceName = StringUtils.trimWhitespace(scienceVo.scienceName)
-            science.scienceCode = StringUtils.trimWhitespace(scienceVo.scienceCode)
+            science.scienceName = StringUtils.trimWhitespace(scienceVo.scienceName!!)
+            science.scienceCode = StringUtils.trimWhitespace(scienceVo.scienceCode!!)
             science.departmentId = scienceVo.departmentId
             scienceService.save(science)
             return AjaxUtils.of<Any>().success().msg("保存成功")
@@ -268,8 +268,8 @@ open class ScienceController {
                 } else {
                     0
                 }
-                science.scienceName = StringUtils.trimWhitespace(scienceVo.scienceName)
-                science.scienceCode = StringUtils.trimWhitespace(scienceVo.scienceCode)
+                science.scienceName = StringUtils.trimWhitespace(scienceVo.scienceName!!)
+                science.scienceCode = StringUtils.trimWhitespace(scienceVo.scienceCode!!)
                 science.departmentId = scienceVo.departmentId
                 scienceService.update(science)
                 return AjaxUtils.of<Any>().success().msg("更改成功")

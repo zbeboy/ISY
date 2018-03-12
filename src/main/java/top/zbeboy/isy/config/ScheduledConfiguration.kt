@@ -117,7 +117,7 @@ open class ScheduledConfiguration {
                 this.studentElasticRepository.deleteByUsername(r.username)
             }
             this.usersService.deleteById(r.username)
-            this.usersElasticRepository.delete(r.username)
+            this.usersElasticRepository.deleteById(r.username)
             this.usersKeyService.deleteByUsername(r.username)
             this.cacheManageService.deleteUsersKey(r.username)
             this.usersUniqueInfoService.deleteByUsername(r.username)

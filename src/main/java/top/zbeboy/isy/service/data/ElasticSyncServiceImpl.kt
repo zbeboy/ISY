@@ -92,7 +92,7 @@ open class ElasticSyncServiceImpl @Autowired constructor(dslContext: DSLContext)
 
         if (record.isNotEmpty) {
             val organizeElastics = record.into(OrganizeElastic::class.java)
-            organizeElasticRepository.save(organizeElastics)
+            organizeElasticRepository.saveAll(organizeElastics)
         }
     }
 
@@ -114,7 +114,7 @@ open class ElasticSyncServiceImpl @Autowired constructor(dslContext: DSLContext)
             usersElastics.add(usersElastic)
         }
         if (!ObjectUtils.isEmpty(usersElastics) && usersElastics.size > 0) {
-            usersElasticRepository.save(usersElastics)
+            usersElasticRepository.saveAll(usersElastics)
         }
     }
 
@@ -150,7 +150,7 @@ open class ElasticSyncServiceImpl @Autowired constructor(dslContext: DSLContext)
             studentElastics.add(studentElastic)
         }
         if (!ObjectUtils.isEmpty(studentElastics) && studentElastics.size > 0) {
-            studentElasticRepository.save(studentElastics)
+            studentElasticRepository.saveAll(studentElastics)
         }
     }
 
@@ -184,7 +184,7 @@ open class ElasticSyncServiceImpl @Autowired constructor(dslContext: DSLContext)
             staffElastics.add(staffElastic)
         }
         if (!ObjectUtils.isEmpty(staffElastics) && staffElastics.size > 0) {
-            staffElasticRepository.save(staffElastics)
+            staffElasticRepository.saveAll(staffElastics)
         }
     }
 
@@ -196,14 +196,24 @@ open class ElasticSyncServiceImpl @Autowired constructor(dslContext: DSLContext)
 
         // step2 : 更新用户表
         val usersElastics = ArrayList<UsersElastic>()
-        studentElastics.forEach { studentElastic -> usersElastics.add(usersElasticRepository.findOne(studentElastic.username)) }
+        studentElastics.forEach { studentElastic ->
+            val user = usersElasticRepository.findById(studentElastic.username!!)
+            if (user.isPresent) {
+                usersElastics.add(user.get())
+            }
+        }
 
         // step3 : 更新改院下教职工
         val staffElastics = staffElasticRepository.findByCollegeIdAndRoleNameLike(collegeId, roleName)
         refreshStaff(staffElastics)
 
         // step4 : 更新用户表
-        staffElastics.forEach { staffElastic -> usersElastics.add(usersElasticRepository.findOne(staffElastic.username)) }
+        staffElastics.forEach { staffElastic ->
+            val user = usersElasticRepository.findById(staffElastic.username!!)
+            if (user.isPresent) {
+                usersElastics.add(user.get())
+            }
+        }
 
         refreshUsers(usersElastics)
     }
@@ -228,37 +238,37 @@ open class ElasticSyncServiceImpl @Autowired constructor(dslContext: DSLContext)
 
     private fun refreshStudent(studentElastics: List<StudentElastic>) {
         if (!ObjectUtils.isEmpty(studentElastics) && studentElastics.isNotEmpty()) {
-            studentElasticRepository.delete(studentElastics)
+            studentElasticRepository.deleteAll(studentElastics)
             for (r in studentElastics) {
                 val authoritiesRecords = authoritiesService.findByUsername(r.username!!)
                 val roleName = buildRoleNameData(authoritiesRecords)
                 r.roleName = roleName
             }
-            studentElasticRepository.save(studentElastics)
+            studentElasticRepository.saveAll(studentElastics)
         }
     }
 
     private fun refreshStaff(staffElastics: List<StaffElastic>) {
         if (!ObjectUtils.isEmpty(staffElastics) && staffElastics.isNotEmpty()) {
-            staffElasticRepository.delete(staffElastics)
+            staffElasticRepository.deleteAll(staffElastics)
             for (r in staffElastics) {
                 val authoritiesRecords = authoritiesService.findByUsername(r.username!!)
                 val roleName = buildRoleNameData(authoritiesRecords)
                 r.roleName = roleName
             }
-            staffElasticRepository.save(staffElastics)
+            staffElasticRepository.saveAll(staffElastics)
         }
     }
 
     private fun refreshUsers(usersElastics: List<UsersElastic>) {
         if (!ObjectUtils.isEmpty(usersElastics) && usersElastics.isNotEmpty()) {
-            usersElasticRepository.delete(usersElastics)
+            usersElasticRepository.deleteAll(usersElastics)
             for (r in usersElastics) {
                 val authoritiesRecords = authoritiesService.findByUsername(r.username!!)
                 val roleName = buildRoleNameData(authoritiesRecords)
                 r.roleName = roleName
             }
-            usersElasticRepository.save(usersElastics)
+            usersElasticRepository.saveAll(usersElastics)
         }
     }
 

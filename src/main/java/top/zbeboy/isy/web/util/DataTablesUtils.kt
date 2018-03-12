@@ -97,15 +97,15 @@ open class DataTablesUtils<T> {
         val extraPage = request.getParameter("extra_page")
         val dramParam = request.getParameter("draw")
 
-        if (NumberUtils.isNumber(startParam)) {
+        if (NumberUtils.isDigits(startParam)) {
             this.start = NumberUtils.toInt(startParam)
         }
 
-        if (NumberUtils.isNumber(lengthParam)) {
+        if (NumberUtils.isDigits(lengthParam)) {
             this.length = NumberUtils.toInt(lengthParam)
         }
 
-        if (NumberUtils.isNumber(orderColumnParam)) {
+        if (NumberUtils.isDigits(orderColumnParam)) {
             this.orderColumn = NumberUtils.toInt(orderColumnParam)
         }
 
@@ -127,11 +127,11 @@ open class DataTablesUtils<T> {
             this.search = JSON.parseObject(extraSearchParam)
         }
 
-        if (NumberUtils.isNumber(extraPage)) {
+        if (NumberUtils.isDigits(extraPage)) {
             this.extraPage = NumberUtils.toInt(extraPage)
         }
 
-        if (NumberUtils.isNumber(dramParam)) {
+        if (NumberUtils.isDigits(dramParam)) {
             this.draw = NumberUtils.toInt(dramParam)
         }
 

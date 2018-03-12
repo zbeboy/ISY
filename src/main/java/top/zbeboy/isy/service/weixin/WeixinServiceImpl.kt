@@ -1,6 +1,6 @@
 package top.zbeboy.isy.service.weixin
 
-import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang.StringUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.xml.sax.InputSource

@@ -1,6 +1,6 @@
 package top.zbeboy.isy.web.graduate.design.adjustech
 
-import org.apache.commons.lang3.math.NumberUtils
+import org.apache.commons.lang.math.NumberUtils
 import org.joda.time.DateTime
 import org.springframework.data.redis.core.ListOperations
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -148,7 +148,7 @@ open class GraduationDesignAdjustechController {
         val cacheKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT + graduationDesignReleaseId
         // 从缓存中得到列表
         graduationDesignTeacherBeens = if (stringListValueOperations.operations.hasKey(cacheKey)!!) {
-            stringListValueOperations.get(cacheKey)
+            stringListValueOperations.get(cacheKey)!!
         } else {
             ArrayList()
         }
@@ -157,7 +157,7 @@ open class GraduationDesignAdjustechController {
             for (designTeacherBean in graduationDesignTeacherBeens) {
                 // 装填剩余人数
                 val studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + designTeacherBean.graduationDesignTeacherId
-                if (template.hasKey(studentCountKey)!!) {
+                if (template.hasKey(studentCountKey)) {
                     val ops = this.template.opsForValue()
                     designTeacherBean.residueCount = NumberUtils.toInt(ops.get(studentCountKey))
                 }
@@ -209,13 +209,13 @@ open class GraduationDesignAdjustechController {
             if (DateTimeUtils.timestampRangeDecide(graduationDesignRelease!!.fillTeacherStartTime, graduationDesignRelease.fillTeacherEndTime)) {
                 // step 1. 检查同步时间
                 val syncTimeKey = CacheBook.GRADUATION_DESIGN_ADJUSTECH_SYNC_TIME + graduationDesignReleaseId
-                if (!stringValueOperations.operations.hasKey(syncTimeKey)) {
+                if (!stringValueOperations.operations.hasKey(syncTimeKey)!!) {
                     // 更新剩余人数到指导教师表 ， 并且删除学生指导教师表中的关联数据
                     val graduationDesignTeachers = graduationDesignTeacherService.findByGraduationDesignReleaseId(graduationDesignReleaseId)
                     val ops = this.template.opsForValue()
                     graduationDesignTeachers.forEach { graduationDesignTeacher ->
                         val studentCountKey = CacheBook.GRADUATION_DESIGN_TEACHER_STUDENT_COUNT + graduationDesignTeacher.graduationDesignTeacherId
-                        if (template.hasKey(studentCountKey)!!) {
+                        if (template.hasKey(studentCountKey)) {
                             graduationDesignTeacher.residue = NumberUtils.toInt(ops.get(studentCountKey))
                         }
                         graduationDesignTutorService.deleteByGraduationDesignTeacherId(graduationDesignTeacher.graduationDesignTeacherId)
@@ -227,18 +227,20 @@ open class GraduationDesignAdjustechController {
                     // step 2. 先取所有学生key
                     val listKey = CacheBook.GRADUATION_DESIGN_PHARMTECH_STUDENT_LIST + graduationDesignReleaseId
                     val keys = listOperations.range(listKey, 0, listOperations.size(listKey)!!)
-                    for (key in keys) {
-                        if (stringValueOperations.operations.hasKey(key)!!) {
-                            val str = stringValueOperations.get(key)
-                            if (StringUtils.hasLength(str)) {
-                                val arr = str.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                                if (arr.size >= 2 && arr[0] != "-1") {
-                                    // step 3. 存储关联信息
-                                    val graduationDesignTutor = GraduationDesignTutor()
-                                    graduationDesignTutor.graduationDesignTutorId = UUIDUtils.getUUID()
-                                    graduationDesignTutor.graduationDesignTeacherId = arr[0]
-                                    graduationDesignTutor.studentId = NumberUtils.toInt(arr[1])
-                                    graduationDesignTutorService.save(graduationDesignTutor)
+                    if(!ObjectUtils.isEmpty(keys)){
+                        for (key in keys!!) {
+                            if (stringValueOperations.operations.hasKey(key)!!) {
+                                val str = stringValueOperations.get(key)
+                                if (StringUtils.hasLength(str)) {
+                                    val arr = str!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                                    if (arr.size >= 2 && arr[0] != "-1") {
+                                        // step 3. 存储关联信息
+                                        val graduationDesignTutor = GraduationDesignTutor()
+                                        graduationDesignTutor.graduationDesignTutorId = UUIDUtils.getUUID()
+                                        graduationDesignTutor.graduationDesignTeacherId = arr[0]
+                                        graduationDesignTutor.studentId = NumberUtils.toInt(arr[1])
+                                        graduationDesignTutorService.save(graduationDesignTutor)
+                                    }
                                 }
                             }
                         }

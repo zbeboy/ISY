@@ -112,7 +112,7 @@ open class NationController {
     fun nationSave(@Valid nationVo: NationVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors()) {
             val nation = Nation()
-            nation.nationName = StringUtils.trimWhitespace(nationVo.nationName)
+            nation.nationName = StringUtils.trimWhitespace(nationVo.nationName!!)
             nationService.save(nation)
             return AjaxUtils.of<Any>().success().msg("保存成功")
         }
@@ -151,7 +151,7 @@ open class NationController {
         if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(nationVo.nationId)) {
             val nation = nationService.findById(nationVo.nationId!!)
             if (!ObjectUtils.isEmpty(nation)) {
-                nation.nationName = StringUtils.trimWhitespace(nationVo.nationName)
+                nation.nationName = StringUtils.trimWhitespace(nationVo.nationName!!)
                 nationService.update(nation)
                 return AjaxUtils.of<Any>().success().msg("更改成功")
             }

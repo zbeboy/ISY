@@ -139,65 +139,68 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
 
     override fun update(staff: Staff, usersUniqueInfo: UsersUniqueInfo?) {
         staffDao.update(staff)
-        val staffElastic = staffElasticRepository.findOne(staff.staffId!!.toString() + "")
-        staffElastic.staffNumber = staff.staffNumber
-        staffElastic.birthday = staff.birthday
-        staffElastic.sex = staff.sex
-        staffElastic.familyResidence = staff.familyResidence
-        staffElastic.post = staff.post
-        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
-            staffElastic.idCard = usersUniqueInfo!!.idCard
-        }
-        if (staff.politicalLandscapeId != staffElastic.politicalLandscapeId) {
-            if (!Objects.isNull(staff.politicalLandscapeId) && staff.politicalLandscapeId > 0) {
-                val politicalLandscape = politicalLandscapeService.findById(staff.politicalLandscapeId!!)
-                if (!Objects.isNull(politicalLandscape)) {
-                    staffElastic.politicalLandscapeId = politicalLandscape.politicalLandscapeId
-                    staffElastic.politicalLandscapeName = politicalLandscape.politicalLandscapeName
+        val staffData = staffElasticRepository.findById(staff.staffId!!.toString() + "")
+        if(staffData.isPresent){
+            val staffElastic = staffData.get()
+            staffElastic.staffNumber = staff.staffNumber
+            staffElastic.birthday = staff.birthday
+            staffElastic.sex = staff.sex
+            staffElastic.familyResidence = staff.familyResidence
+            staffElastic.post = staff.post
+            if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+                staffElastic.idCard = usersUniqueInfo!!.idCard
+            }
+            if (staff.politicalLandscapeId != staffElastic.politicalLandscapeId) {
+                if (!Objects.isNull(staff.politicalLandscapeId) && staff.politicalLandscapeId > 0) {
+                    val politicalLandscape = politicalLandscapeService.findById(staff.politicalLandscapeId!!)
+                    if (!Objects.isNull(politicalLandscape)) {
+                        staffElastic.politicalLandscapeId = politicalLandscape.politicalLandscapeId
+                        staffElastic.politicalLandscapeName = politicalLandscape.politicalLandscapeName
+                    }
+                } else {
+                    staffElastic.politicalLandscapeId = staff.politicalLandscapeId
+                    staffElastic.politicalLandscapeName = ""
                 }
-            } else {
-                staffElastic.politicalLandscapeId = staff.politicalLandscapeId
-                staffElastic.politicalLandscapeName = ""
             }
-        }
-        if (staff.nationId != staffElastic.nationId) {
-            if (!Objects.isNull(staff.nationId) && staff.nationId > 0) {
-                val nation = nationService.findById(staff.nationId!!)
-                if (!Objects.isNull(nation)) {
-                    staffElastic.nationId = nation.nationId
-                    staffElastic.nationName = nation.nationName
+            if (staff.nationId != staffElastic.nationId) {
+                if (!Objects.isNull(staff.nationId) && staff.nationId > 0) {
+                    val nation = nationService.findById(staff.nationId!!)
+                    if (!Objects.isNull(nation)) {
+                        staffElastic.nationId = nation.nationId
+                        staffElastic.nationName = nation.nationName
+                    }
+                } else {
+                    staffElastic.nationId = staff.nationId
+                    staffElastic.nationName = ""
                 }
-            } else {
-                staffElastic.nationId = staff.nationId
-                staffElastic.nationName = ""
             }
-        }
-        if (staff.academicTitleId != staffElastic.academicTitleId) {
-            if (!Objects.isNull(staff.academicTitleId) && staff.academicTitleId > 0) {
-                val academicTitle = academicTitleService.findById(staff.academicTitleId!!)
-                if (!Objects.isNull(academicTitle)) {
-                    staffElastic.academicTitleId = academicTitle.academicTitleId
-                    staffElastic.academicTitleName = academicTitle.academicTitleName
+            if (staff.academicTitleId != staffElastic.academicTitleId) {
+                if (!Objects.isNull(staff.academicTitleId) && staff.academicTitleId > 0) {
+                    val academicTitle = academicTitleService.findById(staff.academicTitleId!!)
+                    if (!Objects.isNull(academicTitle)) {
+                        staffElastic.academicTitleId = academicTitle.academicTitleId
+                        staffElastic.academicTitleName = academicTitle.academicTitleName
+                    }
+                } else {
+                    staffElastic.academicTitleId = staff.academicTitleId
+                    staffElastic.academicTitleName = ""
                 }
-            } else {
-                staffElastic.academicTitleId = staff.academicTitleId
-                staffElastic.academicTitleName = ""
             }
-        }
-        if (!Objects.isNull(staff.departmentId) && staff.departmentId > 0 && staff.departmentId != staffElastic.departmentId) {
-            val record = departmentService.findByIdRelation(staff.departmentId!!)
-            if (record.isPresent) {
-                val departmentBean = record.get().into(DepartmentBean::class.java)
-                staffElastic.schoolId = departmentBean.schoolId
-                staffElastic.schoolName = departmentBean.schoolName
-                staffElastic.collegeId = departmentBean.collegeId
-                staffElastic.collegeName = departmentBean.collegeName
-                staffElastic.departmentId = departmentBean.departmentId
-                staffElastic.departmentName = departmentBean.departmentName
+            if (!Objects.isNull(staff.departmentId) && staff.departmentId > 0 && staff.departmentId != staffElastic.departmentId) {
+                val record = departmentService.findByIdRelation(staff.departmentId!!)
+                if (record.isPresent) {
+                    val departmentBean = record.get().into(DepartmentBean::class.java)
+                    staffElastic.schoolId = departmentBean.schoolId
+                    staffElastic.schoolName = departmentBean.schoolName
+                    staffElastic.collegeId = departmentBean.collegeId
+                    staffElastic.collegeName = departmentBean.collegeName
+                    staffElastic.departmentId = departmentBean.departmentId
+                    staffElastic.departmentName = departmentBean.departmentName
+                }
             }
+            staffElasticRepository.delete(staffElastic)
+            staffElasticRepository.save(staffElastic)
         }
-        staffElasticRepository.delete(staffElastic)
-        staffElasticRepository.save(staffElastic)
     }
 
     override fun findByUsernameRelation(username: String): Optional<Record> {

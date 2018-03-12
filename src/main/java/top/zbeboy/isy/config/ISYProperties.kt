@@ -22,8 +22,6 @@ class ISYProperties {
 
     private val weixin = Weixin()
 
-    private val oAuth2 = OAuth2()
-
     private val security = Security()
 
     private val certificate = Certificate()
@@ -46,10 +44,6 @@ class ISYProperties {
 
     fun getWeixin(): Weixin {
         return weixin
-    }
-
-    fun getoAuth2(): OAuth2 {
-        return oAuth2
     }
 
     fun getSecurity(): Security {
@@ -138,13 +132,6 @@ class ISYProperties {
         var encodingAESKey: String? = null
         var smallToken: String? = null
         var smallEncodingAESKey: String? = null
-    }
-
-    /**
-     * OAuth2初始化参数
-     */
-    class OAuth2 {
-        var redirectUrisPrefix: String? = null
     }
 
     /**

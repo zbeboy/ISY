@@ -185,7 +185,7 @@ open class SchoolroomController {
             } else {
                 0
             }
-            schoolroom.buildingCode = StringUtils.trimWhitespace(schoolroomVo.buildingCode)
+            schoolroom.buildingCode = StringUtils.trimWhitespace(schoolroomVo.buildingCode!!)
             schoolroom.buildingId = schoolroomVo.buildingId
             schoolroomService.save(schoolroom)
             return AjaxUtils.of<Any>().success().msg("保存成功")
@@ -211,7 +211,7 @@ open class SchoolroomController {
                 } else {
                     0
                 }
-                schoolroom.buildingCode = StringUtils.trimWhitespace(schoolroomVo.buildingCode)
+                schoolroom.buildingCode = StringUtils.trimWhitespace(schoolroomVo.buildingCode!!)
                 schoolroom.buildingId = schoolroomVo.buildingId
                 schoolroomService.update(schoolroom)
                 return AjaxUtils.of<Any>().success().msg("更改成功")

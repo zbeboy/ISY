@@ -457,7 +457,7 @@ open class StudentGlueImpl : StudentGlue {
      * @param dataTablesUtils datatables工具类
      */
     fun pagination(dataTablesUtils: DataTablesUtils<StudentBean>): PageRequest {
-        return PageRequest(dataTablesUtils.extraPage, dataTablesUtils.length)
+        return PageRequest.of(dataTablesUtils.extraPage, dataTablesUtils.length)
     }
 
     /**

@@ -6,7 +6,7 @@
 
     <groupId>top.zbeboy.project</groupId>
     <artifactId>ISY</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
     <name>ISY Parent Project</name>
     <url>https://www.zbeboy.top</url>
     <licenses>
@@ -23,8 +23,6 @@
     </organization>
 
     <properties>
-        <!--  use a later Java version -->
-        <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
         <fastJson.version>1.2.45</fastJson.version>
         <jsoup.version>1.11.2</jsoup.version>
@@ -34,7 +32,7 @@
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
 
         <!-- support kotlin -->
-        <kotlin.version>1.2.21</kotlin.version>
+        <kotlin.version>1.2.30</kotlin.version>
 
         <!-- poi relation-->
         <org.apache.poi.version>3.17</org.apache.poi.version>
@@ -45,13 +43,10 @@
         <jcaptcha-api.verison>1.0</jcaptcha-api.verison>
 
         <commons-io.verson>2.6</commons-io.verson>
-
-        <!-- thymeleaf -->
-        <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
-        <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
-        <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
 
         <!-- webjars properties -->
+        <webjars.locator.version>0.32-1</webjars.locator.version>
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
         <webjars.font-awesome.version>4.6.3</webjars.font-awesome.version>
         <webjars.metisMenu.version>2.5.2</webjars.metisMenu.version>
@@ -73,7 +68,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.10.RELEASE</version>
+        <version>2.0.0.RELEASE</version>
     </parent>
 
     <!-- Add typical dependencies for a web application -->
@@ -131,6 +126,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -141,12 +142,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-        </dependency>
-
-        <!-- oauth2 -->
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
         </dependency>
 
         <dependency>
@@ -236,7 +231,7 @@
         <!-- spring session -->
         <dependency>
             <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session</artifactId>
+            <artifactId>spring-session-data-redis</artifactId>
         </dependency>
 
         <!-- joda time -->
@@ -289,6 +284,7 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
         </dependency>
 
         <!-- dom4j -->
@@ -367,6 +363,12 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
 
@@ -491,6 +493,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator</artifactId>
+            <version>${webjars.locator.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>

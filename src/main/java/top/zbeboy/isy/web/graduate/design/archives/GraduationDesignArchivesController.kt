@@ -180,16 +180,16 @@ open class GraduationDesignArchivesController {
 
                     val extraSearchParam = request.getParameter("extra_search")
                     val dataTablesUtils = DataTablesUtils.of<GraduationDesignArchivesBean>()
-                    if (org.apache.commons.lang3.StringUtils.isNotBlank(extraSearchParam)) {
+                    if (org.apache.commons.lang.StringUtils.isNotBlank(extraSearchParam)) {
                         dataTablesUtils.search = JSON.parseObject(extraSearchParam)
                     }
                     val otherCondition = GraduationDesignArchivesBean()
                     otherCondition.graduationDesignReleaseId = graduationDesignReleaseId
                     val graduationDesignArchivesBeans = graduationDesignArchivesService.exportData(dataTablesUtils, otherCondition)
-                    if (org.apache.commons.lang3.StringUtils.isNotBlank(exportBean.fileName)) {
+                    if (org.apache.commons.lang.StringUtils.isNotBlank(exportBean.fileName)) {
                         fileName = exportBean.fileName
                     }
-                    if (org.apache.commons.lang3.StringUtils.isNotBlank(exportBean.ext)) {
+                    if (org.apache.commons.lang.StringUtils.isNotBlank(exportBean.ext)) {
                         ext = exportBean.ext
                     }
                     val graduationDesignRelease = graduationDesignReleaseService.findById(graduationDesignReleaseId)

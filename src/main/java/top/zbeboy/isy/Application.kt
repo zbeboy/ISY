@@ -1,6 +1,6 @@
 package top.zbeboy.isy
 
-import org.springframework.boot.SpringApplication
+import org.springframework.boot.runApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching
@@ -21,7 +21,9 @@ open class Application {
          */
         @JvmStatic
         fun main(args: Array<String>) {
-            SpringApplication.run(Application::class.java, *args)
+            /* A fix netty with elasticsearch ,wait spring boot */
+            System.setProperty("es.set.netty.runtime.available.processors", "false")
+            runApplication<Application>(*args)
         }
     }
 }

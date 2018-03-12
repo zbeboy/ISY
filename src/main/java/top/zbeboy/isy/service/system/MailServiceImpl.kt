@@ -2,7 +2,7 @@ package top.zbeboy.isy.service.system
 
 import io.jstack.sendcloud4j.SendCloud
 import io.jstack.sendcloud4j.mail.Email
-import org.apache.commons.lang3.CharEncoding
+import org.apache.commons.lang.CharEncoding
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -11,7 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
-import org.thymeleaf.spring4.SpringTemplateEngine
+import org.thymeleaf.spring5.SpringTemplateEngine
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.elastic.pojo.SystemMailboxElastic

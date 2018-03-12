@@ -35,18 +35,18 @@ open class UploadServiceImpl : UploadService {
         while (iterator.hasNext()) {
             val fileBean = FileBean()
             //2.1 get next MultipartFile
-            multipartFile = request.getFile(iterator.next())
-            log.info(multipartFile.originalFilename + " uploaded!")
+            multipartFile = request.getFile(iterator.next())!!
+            log.info(multipartFile.originalFilename!! + " uploaded!")
             fileBean.contentType = multipartFile.contentType
             val ipTimeStamp = IPTimeStamp(address)
-            val words = multipartFile.originalFilename.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val words = multipartFile.originalFilename!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             if (words.size > 1) {
                 val ext = words[words.size - 1].toLowerCase()
                 var filename = ipTimeStamp.getIPTimeRand() + "." + ext
                 if (filename.contains(":")) {
                     filename = filename.substring(filename.lastIndexOf(':') + 1, filename.length)
                 }
-                fileBean.originalFileName = multipartFile.originalFilename.substring(0, multipartFile.originalFilename.lastIndexOf('.'))
+                fileBean.originalFileName = multipartFile.originalFilename!!.substring(0, multipartFile.originalFilename!!.lastIndexOf('.'))
                 fileBean.ext = ext
                 fileBean.newName = filename
                 fileBean.size = multipartFile.size
@@ -55,7 +55,7 @@ open class UploadServiceImpl : UploadService {
             } else {
                 // no filename
                 val filename = ipTimeStamp.getIPTimeRand()
-                fileBean.originalFileName = multipartFile.originalFilename.substring(0, multipartFile.originalFilename.lastIndexOf('.'))
+                fileBean.originalFileName = multipartFile.originalFilename!!.substring(0, multipartFile.originalFilename!!.lastIndexOf('.'))
                 fileBean.newName = filename
                 fileBean.size = multipartFile.size
                 // copy file to local disk (make sure the path "e.g. D:/temp/files" exists)

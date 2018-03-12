@@ -66,7 +66,7 @@ open class ElasticPlugin<T> {
      * @param dataTablesUtils datatables工具类
      */
     open fun pagination(dataTablesUtils: DataTablesUtils<T>): PageRequest {
-        return PageRequest(dataTablesUtils.extraPage, dataTablesUtils.length)
+        return PageRequest.of(dataTablesUtils.extraPage, dataTablesUtils.length)
     }
 
 }

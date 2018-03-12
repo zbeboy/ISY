@@ -9,9 +9,9 @@
 3.MySQL 5.7 +;  
 4.Maven 3.5.0 +;  
 5.Node 6 +;  
-6.Elasticsearch 2.4.6;  
+6.Elasticsearch 5.6.8;  
 7.Redis 3.0.504;  
-8.Kotlin 1.2.21.
+8.Kotlin 1.2.30.
 # 安装
 1.`git clone https://github.com/zbeboy/ISY.git`;  
 2.配置`application.properties`,其它环境配置仅供开发者使用;  
@@ -22,7 +22,7 @@
 2.Redis;  
 3.Intellij IDEA Run Application.class 或 Maven .  
 # 参与条件
-1.Known Spring boot;  
+1.Known Spring boot 2.0.0;  
 2.Known Git;  
 2.Known Maven;  
 3.Known RequireJs;  

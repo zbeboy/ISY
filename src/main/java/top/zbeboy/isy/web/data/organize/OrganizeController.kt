@@ -229,7 +229,7 @@ open class OrganizeController {
         val ajaxUtils = AjaxUtils.of<Any>()
         if (!bindingResult.hasErrors()) {
             val organizeElastic = OrganizeElastic()
-            organizeElastic.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName)
+            organizeElastic.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName!!)
             organizeElastic.organizeIsDel = if (!ObjectUtils.isEmpty(organizeVo.organizeIsDel) && organizeVo.organizeIsDel == 1.toByte()) {
                 1
             } else {
@@ -288,7 +288,7 @@ open class OrganizeController {
                 } else {
                     0
                 }
-                organize.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName)
+                organize.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName!!)
                 organize.scienceId = organizeVo.scienceId
                 organize.grade = organizeVo.grade
                 organizeService.update(organize)

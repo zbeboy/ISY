@@ -113,7 +113,7 @@ open class PoliticalLandscapeController {
     fun politicsSave(@Valid politicsVo: PoliticsVo, bindingResult: BindingResult): AjaxUtils<*> {
         if (!bindingResult.hasErrors()) {
             val politicalLandscape = PoliticalLandscape()
-            politicalLandscape.politicalLandscapeName = StringUtils.trimWhitespace(politicsVo.politicalLandscapeName)
+            politicalLandscape.politicalLandscapeName = StringUtils.trimWhitespace(politicsVo.politicalLandscapeName!!)
             politicalLandscapeService.save(politicalLandscape)
             return AjaxUtils.of<Any>().success().msg("保存成功")
         }
@@ -150,7 +150,7 @@ open class PoliticalLandscapeController {
         if (!bindingResult.hasErrors() && !ObjectUtils.isEmpty(politicsVo.politicalLandscapeId)) {
             val politicalLandscape = politicalLandscapeService.findById(politicsVo.politicalLandscapeId!!)
             if (!ObjectUtils.isEmpty(politicalLandscape)) {
-                politicalLandscape.politicalLandscapeName = StringUtils.trimWhitespace(politicsVo.politicalLandscapeName)
+                politicalLandscape.politicalLandscapeName = StringUtils.trimWhitespace(politicsVo.politicalLandscapeName!!)
                 politicalLandscapeService.update(politicalLandscape)
                 return AjaxUtils.of<Any>().success().msg("更改成功")
             }
