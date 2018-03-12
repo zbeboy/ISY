@@ -45,12 +45,8 @@ require(["jquery", "bootstrap", "wow", "vegas"], function ($) {
     // pic
     body.vegas({
         slides: [
-            {src: web_path + '/images/multi/1.jpg'},
-            {src: web_path + '/images/multi/2.jpg'},
-            {src: web_path + '/images/multi/3.jpg'},
-            {src: web_path + '/images/multi/4.jpg'},
-            {src: web_path + '/images/multi/5.jpg'},
-            {src: web_path + '/images/multi/6.jpg'}
+            {src: web_path + '/images/slide-3.jpg'},
+            {src: web_path + '/images/slide-4.jpg'}
         ],
         timer: false,
         transition: ['zoomOut']

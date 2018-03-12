@@ -1,8 +1,8 @@
 package top.zbeboy.isy
 
-import org.springframework.boot.runApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.runApplication
 import org.springframework.cache.annotation.EnableCaching
 import top.zbeboy.isy.config.ISYProperties
 
@@ -12,18 +12,16 @@ import top.zbeboy.isy.config.ISYProperties
 @SpringBootApplication
 @EnableCaching
 @EnableConfigurationProperties(ISYProperties::class)
-open class Application {
-    companion object {
-        /**
-         * web start .
-         *
-         * @param args others params.
-         */
-        @JvmStatic
-        fun main(args: Array<String>) {
-            /* A fix netty with elasticsearch ,wait spring boot */
-            System.setProperty("es.set.netty.runtime.available.processors", "false")
-            runApplication<Application>(*args)
-        }
-    }
+open class Application
+
+/**
+ * web start .
+ *
+ * @param args others params.
+ */
+fun main(args: Array<String>) {
+    /* A fix netty with elasticsearch ,wait spring boot */
+    System.setProperty("es.set.netty.runtime.available.processors", "false")
+    runApplication<Application>(*args)
 }
+

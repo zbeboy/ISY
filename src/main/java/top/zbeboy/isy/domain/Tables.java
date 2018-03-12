@@ -21,6 +21,7 @@ import top.zbeboy.isy.domain.tables.DefenseRate;
 import top.zbeboy.isy.domain.tables.DefenseTime;
 import top.zbeboy.isy.domain.tables.Department;
 import top.zbeboy.isy.domain.tables.Files;
+import top.zbeboy.isy.domain.tables.FlywaySchemaHistory;
 import top.zbeboy.isy.domain.tables.GraduationDesignArchives;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatum;
 import top.zbeboy.isy.domain.tables.GraduationDesignDatumGroup;
@@ -52,11 +53,6 @@ import top.zbeboy.isy.domain.tables.InternshipReleaseScience;
 import top.zbeboy.isy.domain.tables.InternshipTeacherDistribution;
 import top.zbeboy.isy.domain.tables.InternshipType;
 import top.zbeboy.isy.domain.tables.Nation;
-import top.zbeboy.isy.domain.tables.OauthAccessToken;
-import top.zbeboy.isy.domain.tables.OauthClientDetails;
-import top.zbeboy.isy.domain.tables.OauthClientToken;
-import top.zbeboy.isy.domain.tables.OauthCode;
-import top.zbeboy.isy.domain.tables.OauthRefreshToken;
 import top.zbeboy.isy.domain.tables.Organize;
 import top.zbeboy.isy.domain.tables.PersistentLogins;
 import top.zbeboy.isy.domain.tables.PoliticalLandscape;
@@ -164,6 +160,11 @@ public class Tables {
      * The table <code>isy.files</code>.
      */
     public static final Files FILES = top.zbeboy.isy.domain.tables.Files.FILES;
+
+    /**
+     * The table <code>isy.flyway_schema_history</code>.
+     */
+    public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = top.zbeboy.isy.domain.tables.FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
      * The table <code>isy.graduation_design_archives</code>.
@@ -319,31 +320,6 @@ public class Tables {
      * The table <code>isy.nation</code>.
      */
     public static final Nation NATION = top.zbeboy.isy.domain.tables.Nation.NATION;
-
-    /**
-     * The table <code>isy.oauth_access_token</code>.
-     */
-    public static final OauthAccessToken OAUTH_ACCESS_TOKEN = top.zbeboy.isy.domain.tables.OauthAccessToken.OAUTH_ACCESS_TOKEN;
-
-    /**
-     * The table <code>isy.oauth_client_details</code>.
-     */
-    public static final OauthClientDetails OAUTH_CLIENT_DETAILS = top.zbeboy.isy.domain.tables.OauthClientDetails.OAUTH_CLIENT_DETAILS;
-
-    /**
-     * The table <code>isy.oauth_client_token</code>.
-     */
-    public static final OauthClientToken OAUTH_CLIENT_TOKEN = top.zbeboy.isy.domain.tables.OauthClientToken.OAUTH_CLIENT_TOKEN;
-
-    /**
-     * The table <code>isy.oauth_code</code>.
-     */
-    public static final OauthCode OAUTH_CODE = top.zbeboy.isy.domain.tables.OauthCode.OAUTH_CODE;
-
-    /**
-     * The table <code>isy.oauth_refresh_token</code>.
-     */
-    public static final OauthRefreshToken OAUTH_REFRESH_TOKEN = top.zbeboy.isy.domain.tables.OauthRefreshToken.OAUTH_REFRESH_TOKEN;
 
     /**
      * The table <code>isy.organize</code>.
