@@ -2,6 +2,7 @@ package top.zbeboy.isy.test
 
 import org.jooq.DSLContext
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +28,7 @@ open class TestJooq {
     }
 
     @Test
+    @Ignore
     fun testUsers() {
         val result = create.selectFrom(USERS).where(USERS.USERNAME.eq("863052317@qq.com")).fetchResultSet()
         println(result)
