@@ -1,0 +1,10 @@
+curl -k --cert F:/cert/214041306740340.pem --key F:/cert/214041306740340.key https://localhost/oauth/token -d "grant_type=password&scope=read&username=863052317@qq.com&password=123456" -u isy-base-client:9afcd2264ace49a09053eae4790fc812
+
+{"access_token":"0ef33971-284f-4de9-ad04-cc9a0b8010d8","token_type":"bearer","refresh_token":"67e1044d-74ef-4a2b-b270-8559d30303a6","expires_in":15551993,"scope":"read"}
+
+curl -k --cert F:/cert/214041306740340.pem --key F:/cert/214041306740340.key  -H "Authorization: bearer 2447dfb8-2e5d-4c71-8edc-44f6cb7d6fa7" https://localhost/rest/test
+
+
+curl -k --cert F:/cert/214041306740340.pem --key F:/cert/214041306740340.key  -H "Authorization: bearer 0ef33971-284f-4de9-ad04-cc9a0b8010d8" https://localhost/rest/test
+
+curl -k --cert F:/cert/214041306740340.pem --key F:/cert/214041306740340.key https://localhost/oauth/token -d "grant_type=password&scope=read&username=863052317@qq.com&password=123456" -u isy-base-client:9afcd2264ace49a09053eae4790fc812

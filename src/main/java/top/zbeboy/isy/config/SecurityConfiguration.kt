@@ -20,6 +20,9 @@ import top.zbeboy.isy.security.MyUserDetailsServiceImpl
 import top.zbeboy.isy.security.WebSecurity
 import javax.inject.Inject
 import javax.sql.DataSource
+import org.springframework.security.authentication.AuthenticationManager
+
+
 
 /**
  * spring security 配置.
@@ -102,5 +105,11 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     public override fun configure(auth: AuthenticationManagerBuilder?) {
         auth!!.userDetailsService<MyUserDetailsServiceImpl>(this.myUserDetailsService).passwordEncoder(passwordEncoder()).and().eraseCredentials(false)
+    }
+
+    @Bean
+    @Throws(Exception::class)
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
     }
 }
