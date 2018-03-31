@@ -61,6 +61,11 @@ import top.zbeboy.isy.domain.tables.InternshipReleaseScience;
 import top.zbeboy.isy.domain.tables.InternshipTeacherDistribution;
 import top.zbeboy.isy.domain.tables.InternshipType;
 import top.zbeboy.isy.domain.tables.Nation;
+import top.zbeboy.isy.domain.tables.OauthAccessToken;
+import top.zbeboy.isy.domain.tables.OauthClientDetails;
+import top.zbeboy.isy.domain.tables.OauthClientToken;
+import top.zbeboy.isy.domain.tables.OauthCode;
+import top.zbeboy.isy.domain.tables.OauthRefreshToken;
 import top.zbeboy.isy.domain.tables.Organize;
 import top.zbeboy.isy.domain.tables.PersistentLogins;
 import top.zbeboy.isy.domain.tables.PoliticalLandscape;
@@ -94,7 +99,7 @@ import top.zbeboy.isy.domain.tables.UsersUniqueInfo;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Isy extends SchemaImpl {
 
-    private static final long serialVersionUID = 586050166;
+    private static final long serialVersionUID = 1123123984;
 
     /**
      * The reference instance of <code>isy</code>
@@ -337,6 +342,31 @@ public class Isy extends SchemaImpl {
     public final Nation NATION = top.zbeboy.isy.domain.tables.Nation.NATION;
 
     /**
+     * The table <code>isy.oauth_access_token</code>.
+     */
+    public final OauthAccessToken OAUTH_ACCESS_TOKEN = top.zbeboy.isy.domain.tables.OauthAccessToken.OAUTH_ACCESS_TOKEN;
+
+    /**
+     * The table <code>isy.oauth_client_details</code>.
+     */
+    public final OauthClientDetails OAUTH_CLIENT_DETAILS = top.zbeboy.isy.domain.tables.OauthClientDetails.OAUTH_CLIENT_DETAILS;
+
+    /**
+     * The table <code>isy.oauth_client_token</code>.
+     */
+    public final OauthClientToken OAUTH_CLIENT_TOKEN = top.zbeboy.isy.domain.tables.OauthClientToken.OAUTH_CLIENT_TOKEN;
+
+    /**
+     * The table <code>isy.oauth_code</code>.
+     */
+    public final OauthCode OAUTH_CODE = top.zbeboy.isy.domain.tables.OauthCode.OAUTH_CODE;
+
+    /**
+     * The table <code>isy.oauth_refresh_token</code>.
+     */
+    public final OauthRefreshToken OAUTH_REFRESH_TOKEN = top.zbeboy.isy.domain.tables.OauthRefreshToken.OAUTH_REFRESH_TOKEN;
+
+    /**
      * The table <code>isy.organize</code>.
      */
     public final Organize ORGANIZE = top.zbeboy.isy.domain.tables.Organize.ORGANIZE;
@@ -498,6 +528,11 @@ public class Isy extends SchemaImpl {
             InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION,
             InternshipType.INTERNSHIP_TYPE,
             Nation.NATION,
+            OauthAccessToken.OAUTH_ACCESS_TOKEN,
+            OauthClientDetails.OAUTH_CLIENT_DETAILS,
+            OauthClientToken.OAUTH_CLIENT_TOKEN,
+            OauthCode.OAUTH_CODE,
+            OauthRefreshToken.OAUTH_REFRESH_TOKEN,
             Organize.ORGANIZE,
             PersistentLogins.PERSISTENT_LOGINS,
             PoliticalLandscape.POLITICAL_LANDSCAPE,

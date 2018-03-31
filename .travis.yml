@@ -3,4 +3,4 @@ jdk:
   - oraclejdk8
   - openjdk8
 install: mvn install -Ptest -DskipTests=true -Dmaven.javadoc.skip=true
-script: mvn package -Ptest
+script: mvn package -Ptest -DskipTests=true
