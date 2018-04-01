@@ -318,6 +318,7 @@ open class GraduationDesignProposalController {
                 headers.add("organize_name")
                 headers.add("original_file_name")
                 headers.add("version")
+                headers.add("graduation_design_datum_type_name")
                 headers.add("update_time")
                 headers.add("operator")
                 dataTablesUtils = DataTablesUtils(request, headers)

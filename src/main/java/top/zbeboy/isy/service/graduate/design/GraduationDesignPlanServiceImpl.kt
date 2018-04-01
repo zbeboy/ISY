@@ -57,7 +57,7 @@ open class GraduationDesignPlanServiceImpl @Autowired constructor(dslContext: DS
                 .fetch()
     }
 
-    override fun findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacherId: String, addTime: Timestamp): Record {
+    override fun findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacherId: String, addTime: Timestamp): Record? {
         return create.select()
                 .from(GRADUATION_DESIGN_PLAN)
                 .join(SCHOOLROOM)

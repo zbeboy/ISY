@@ -285,7 +285,7 @@ open class GraduationDesignProjectController {
             val record = graduationDesignPlanService.findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacher.graduationDesignTeacherId, DateTimeUtils.getNow())
             val graduationDesignPlan: GraduationDesignPlanBean
             if (!ObjectUtils.isEmpty(record)) {
-                graduationDesignPlan = record.into(GraduationDesignPlanBean::class.java)
+                graduationDesignPlan = record!!.into(GraduationDesignPlanBean::class.java)
             } else {
                 graduationDesignPlan = GraduationDesignPlanBean()
             }
@@ -317,7 +317,7 @@ open class GraduationDesignProjectController {
                 val record = graduationDesignPlanService.findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacher.graduationDesignTeacherId, graduationDesignPlan.addTime)
                 val graduationDesignPlanRecently: GraduationDesignPlanBean
                 if (!ObjectUtils.isEmpty(record)) {
-                    graduationDesignPlanRecently = record.into(GraduationDesignPlanBean::class.java)
+                    graduationDesignPlanRecently = record!!.into(GraduationDesignPlanBean::class.java)
                 } else {
                     graduationDesignPlanRecently = GraduationDesignPlanBean()
                 }

@@ -42,7 +42,7 @@ interface GraduationDesignPlanService {
      * @param addTime                   添加时间
      * @return 数据
      */
-    fun findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacherId: String, addTime: Timestamp): Record
+    fun findByGraduationDesignTeacherIdAndLessThanAddTime(graduationDesignTeacherId: String, addTime: Timestamp): Record?
 
     /**
      * 保存
