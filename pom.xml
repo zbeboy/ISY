@@ -559,7 +559,7 @@
                                     <name>org.jooq.util.mysql.MySQLDatabase</name>
                                     <includes>.*</includes>
                                     <excludes>
-                                        schema_version
+                                        flyway_schema_history
                                     </excludes>
                                     <inputSchema>isy</inputSchema>
                                 </database>
