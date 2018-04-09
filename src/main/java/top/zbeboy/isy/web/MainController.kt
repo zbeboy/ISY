@@ -1,6 +1,5 @@
 package top.zbeboy.isy.web
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
@@ -28,8 +27,6 @@ import javax.servlet.http.HttpServletResponse
  **/
 @Controller
 open class MainController {
-
-    private val log = LoggerFactory.getLogger(MainController::class.java)
 
     @Resource
     open lateinit var localeResolver: LocaleResolver
