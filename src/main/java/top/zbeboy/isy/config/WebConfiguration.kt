@@ -12,11 +12,9 @@ import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFa
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Scope
-import org.springframework.core.Ordered
 import org.springframework.core.env.Environment
 import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import org.thymeleaf.spring5.view.ThymeleafView
@@ -39,21 +37,6 @@ open class WebConfiguration : WebMvcConfigurer {
 
     @Inject
     open lateinit var env: Environment
-
-    /**
-     * 设置默认首页
-     * 注: 这里会指定该url为最高级，不会被spring security 影响到，否则会跳转到login页面.
-     * spring 默认支持首页index.html，这里添加是因为可以对首页做一些数据显示操作.
-     */
-    override fun addViewControllers(registry: ViewControllerRegistry?) {
-
-        registry!!.addViewController("/").setViewName("forward:/index")
-
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE)
-
-        super.addViewControllers(registry)
-
-    }
 
     /**
      * 切换语言
