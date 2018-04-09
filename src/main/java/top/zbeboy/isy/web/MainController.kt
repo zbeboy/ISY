@@ -43,15 +43,6 @@ open class MainController {
     @Resource
     open lateinit var uploadService: UploadService
 
-    /**
-     * main page
-     *
-     * @return main page
-     */
-    @RequestMapping("/")
-    fun root(): String {
-        return "index"
-    }
 
     /**
      * Home page.
