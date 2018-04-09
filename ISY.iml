@@ -3,8 +3,8 @@
   <component name="AutoImportedSourceRoots">
     <option name="directories">
       <list>
-        <option value="$MODULE_DIR$/src/main/java" />
-        <option value="$MODULE_DIR$/src/test/java" />
+        <option value="D:\Documents\project\IntellijPro\ISY/src/main/java" />
+        <option value="D:\Documents\project\IntellijPro\ISY/src/test/java" />
       </list>
     </option>
   </component>
@@ -18,14 +18,13 @@
         <compilerArguments>
           <option name="jvmTarget" value="1.8" />
           <option name="languageVersion" value="1.2" />
-          <option name="apiVersion" value="1.1" />
+          <option name="apiVersion" value="1.2" />
           <option name="pluginOptions">
             <array />
           </option>
           <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="version" value="true" />
         </compilerArguments>
       </configuration>
     </facet>
@@ -43,9 +42,9 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
