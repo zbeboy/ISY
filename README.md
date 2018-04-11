@@ -11,7 +11,7 @@
 5.Node 6 +;  
 6.Elasticsearch 5.6.8;  
 7.Redis 3.0.504;  
-8.Kotlin 1.2.30.
+8.Kotlin 1.2.31.
 # 安装
 1.`git clone https://github.com/zbeboy/ISY.git`;  
 2.配置`application.properties`,其它环境配置仅供开发者使用;  

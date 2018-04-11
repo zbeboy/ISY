@@ -33,7 +33,7 @@
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
 
         <!-- support kotlin -->
-        <kotlin.version>1.2.30</kotlin.version>
+        <kotlin.version>1.2.31</kotlin.version>
 
         <!-- poi relation-->
         <org.apache.poi.version>3.17</org.apache.poi.version>
