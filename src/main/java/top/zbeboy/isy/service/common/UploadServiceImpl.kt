@@ -69,10 +69,11 @@ open class UploadServiceImpl : UploadService {
     private fun buildPath(path: String, filename: String, multipartFile: MultipartFile): String? {
         var lastPath: String
         val saveFile = File(path, filename)
-        if (multipartFile.size < File(path.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + ":").freeSpace) {// has space with disk
-            if (!saveFile.parentFile.exists()) {//create file
-                saveFile.parentFile.mkdirs()
-            }
+        if (!saveFile.parentFile.exists()) {//create file, linux need first create path
+            saveFile.parentFile.mkdirs()
+        }
+        if ((multipartFile.size < File(path.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + ":").freeSpace /*windows*/) ||
+                (multipartFile.size < File(path).freeSpace) /*linux*/) {// has space with disk
             log.info(path)
             FileCopyUtils.copy(multipartFile.bytes, FileOutputStream(path + File.separator + filename))
             lastPath = path + File.separator + filename
