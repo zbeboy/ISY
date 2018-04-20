@@ -18,7 +18,6 @@ import top.zbeboy.isy.domain.tables.pojos.InternshipFile
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease
 import top.zbeboy.isy.domain.tables.pojos.Science
 import top.zbeboy.isy.service.common.FilesService
-import top.zbeboy.isy.service.common.UploadService
 import top.zbeboy.isy.service.internship.InternshipFileService
 import top.zbeboy.isy.service.internship.InternshipReleaseScienceService
 import top.zbeboy.isy.service.internship.InternshipReleaseService
@@ -63,9 +62,6 @@ open class InternshipReleaseController {
 
     @Resource
     open lateinit var usersService: UsersService
-
-    @Resource
-    open lateinit var uploadService: UploadService
 
     @Resource
     open lateinit var filesService: FilesService
