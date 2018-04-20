@@ -76,7 +76,7 @@ open class UploadServiceImpl : UploadService {
                 (multipartFile.size < File(path).freeSpace) /*linux*/) {// has space with disk
             log.info(path)
             FileCopyUtils.copy(multipartFile.bytes, FileOutputStream(path + File.separator + filename))
-            lastPath = path + File.separator + filename
+            lastPath = path + filename
             lastPath = lastPath.replace("\\\\".toRegex(), Workbook.DIRECTORY_SPLIT)
         } else {
             log.info("not valiablespace!")
