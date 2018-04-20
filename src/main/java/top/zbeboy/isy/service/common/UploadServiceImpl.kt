@@ -55,7 +55,11 @@ open class UploadServiceImpl : UploadService {
             } else {
                 // no filename
                 val filename = ipTimeStamp.getIPTimeRand()
-                fileBean.originalFileName = multipartFile.originalFilename!!.substring(0, multipartFile.originalFilename!!.lastIndexOf('.'))
+                fileBean.originalFileName = if (multipartFile.originalFilename!!.lastIndexOf('.') >= 0) {
+                    multipartFile.originalFilename!!.substring(0, multipartFile.originalFilename!!.lastIndexOf('.'))
+                } else {
+                    multipartFile.originalFilename
+                }
                 fileBean.newName = filename
                 fileBean.size = multipartFile.size
                 // copy file to local disk (make sure the path "e.g. D:/temp/files" exists)
