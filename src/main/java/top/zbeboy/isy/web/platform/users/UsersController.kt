@@ -913,9 +913,9 @@ open class UsersController {
      */
     private fun getAvatar(avatar: String, request: HttpServletRequest): String {
         return if (avatar == Workbook.USERS_AVATAR) {
-            requestUtils.getBaseUrl(request) + Workbook.DIRECTORY_SPLIT + avatar
+            requestUtils.getBaseUrl(request) + "/" + avatar
         } else {
-            requestUtils.getBaseUrl(request) + Workbook.DIRECTORY_SPLIT + "anyone" + Workbook.DIRECTORY_SPLIT + "users" + Workbook.DIRECTORY_SPLIT + "review" + Workbook.DIRECTORY_SPLIT + "avatar?path=" + avatar
+            requestUtils.getBaseUrl(request) + "/anyone/users/review/avatar?path=" + avatar
         }
     }
 
