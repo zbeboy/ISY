@@ -2,7 +2,6 @@ package top.zbeboy.isy.web.util
 
 import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang3.ObjectUtils
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import java.awt.*
@@ -176,11 +175,11 @@ open class ImageUtils {
                     toHeight = (h as Number).toInt()
                 }
 
-                if (maxWidth > 0 && toWidth > maxWidth) {
+                if (maxWidth in 1..(toWidth - 1)) {
                     toWidth = maxWidth
                     toHeight = (toWidth / rate).toInt()
                 }
-                if (maxHeight > 0 && toHeight > maxHeight) {
+                if (maxHeight in 1..(toHeight - 1)) {
                     toHeight = maxHeight
                     toWidth = (toHeight * rate).toInt()
                 }
