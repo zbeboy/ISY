@@ -2,7 +2,8 @@ package top.zbeboy.isy.web.util
 
 import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.ObjectUtils
+import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import java.awt.*
 import java.awt.geom.RoundRectangle2D
@@ -192,6 +193,9 @@ open class ImageUtils {
             } catch (e: Exception) {
                 log.error("Resize error : {}", e)
                 throw Exception(e)
+            } finally {
+                input.close()
+                output.close()
             }
 
         }
@@ -347,6 +351,9 @@ open class ImageUtils {
             } catch (e: Exception) {
                 log.error("Crop error : {}", e)
                 throw Exception(e)
+            } finally {
+                input.close()
+                output.close()
             }
 
         }
@@ -395,6 +402,8 @@ open class ImageUtils {
             } finally {
                 if (ios != null) {
                     try {
+                        input.close()
+                        output.close()
                         ios.close()
                     } catch (e: IOException) {
                         log.error("ImageOutputStream closed error : {}", e)
@@ -534,6 +543,9 @@ open class ImageUtils {
             } catch (e: IOException) {
                 log.error("MakeRoundedCorner error : {}", e)
                 throw Exception(e)
+            } finally {
+                inputStream.close()
+                outputStream.close()
             }
 
         }
@@ -614,6 +626,9 @@ open class ImageUtils {
             } catch (e: IOException) {
                 log.error("makeRotate error : {}", e)
                 throw Exception(e)
+            } finally {
+                inputStream.close()
+                outputStream.close()
             }
 
         }
@@ -632,7 +647,7 @@ open class ImageUtils {
                     src.height = src.width
                     src.width = temp
                 }
-                tempAngel = tempAngel % 90
+                tempAngel %= 90
             }
 
             val r = Math.sqrt(src.height.toDouble() * src.height + src.width.toDouble() * src.width) / 2
