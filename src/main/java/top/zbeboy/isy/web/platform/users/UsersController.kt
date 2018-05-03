@@ -127,9 +127,6 @@ open class UsersController {
     @Autowired
     open lateinit var isyProperties: ISYProperties
 
-    @Autowired
-    open lateinit var requestUtils: RequestUtils
-
     @Resource
     open lateinit var usersGlue: UsersGlue
 
@@ -321,7 +318,7 @@ open class UsersController {
                 usersService.update(users)
                 //发送验证邮件
                 if (isyProperties.getMail().isOpen) {
-                    mailService.sendValidEmailMail(users, requestUtils.getBaseUrl(request))
+                    mailService.sendValidEmailMail(users, RequestUtils.getBaseUrl(request))
                     modelMap.put("msg", "验证邮件已发送至您邮箱，请登录邮箱进行验证！")
                 } else {
                     modelMap.put("msg", "邮件推送已被管理员关闭，暂时无法验证")
@@ -488,7 +485,7 @@ open class UsersController {
                 users.passwordResetKeyValid = Timestamp(dateTime.toDate().time)
                 usersService.update(users)
                 if (isyProperties.getMail().isOpen) {
-                    mailService.sendPasswordResetMail(users, requestUtils.getBaseUrl(request))
+                    mailService.sendPasswordResetMail(users, RequestUtils.getBaseUrl(request))
                     return AjaxUtils.of<Any>().success().msg("密码重置邮件已发送至您的邮箱")
                 } else {
                     msg = "邮件推送已被管理员关闭"
@@ -913,9 +910,9 @@ open class UsersController {
      */
     private fun getAvatar(avatar: String, request: HttpServletRequest): String {
         return if (avatar == Workbook.USERS_AVATAR) {
-            requestUtils.getBaseUrl(request) + "/" + avatar
+            RequestUtils.getBaseUrl(request) + "/" + avatar
         } else {
-            requestUtils.getBaseUrl(request) + "/anyone/users/review/avatar?path=" + avatar
+            RequestUtils.getBaseUrl(request) + "/anyone/users/review/avatar?path=" + avatar
         }
     }
 

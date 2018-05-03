@@ -107,8 +107,6 @@ class ISYProperties {
      */
     class Constants {
 
-        var serverName: String? = null
-
         var mailForm: String? = null
 
         var jooqSqlDialect: String? = null

@@ -65,9 +65,6 @@ open class StaffController {
     @Autowired
     open lateinit var isyProperties: ISYProperties
 
-    @Autowired
-    open lateinit var requestUtils: RequestUtils
-
     @Resource
     open lateinit var staffGlue: StaffGlue
 
@@ -207,7 +204,7 @@ open class StaffController {
 
                                         //发送验证邮件
                                         if (isyProperties.getMail().isOpen) {
-                                            mailService.sendValidEmailMail(saveUsers, requestUtils.getBaseUrl(request))
+                                            mailService.sendValidEmailMail(saveUsers, RequestUtils.getBaseUrl(request))
                                             ajaxUtils.success().msg("恭喜注册成功，请验证邮箱")
                                         } else {
                                             ajaxUtils.fail().msg("邮件推送已被管理员关闭")

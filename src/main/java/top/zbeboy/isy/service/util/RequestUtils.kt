@@ -12,28 +12,20 @@ import javax.servlet.http.HttpServletRequest
  **/
 @Component
 open class RequestUtils {
-    @Autowired
-    open lateinit var isyProperties: ISYProperties
-
-    @Autowired
-    open lateinit var env: Environment
-
-    /**
-     * 根据开发环境不同取不同路径
-     *
-     * @param request 请求
-     * @return 路径
-     */
-    fun getBaseUrl(request: HttpServletRequest): String {
-        return if (env.acceptsProfiles(Workbook.SPRING_PROFILE_DEVELOPMENT)) {
-            request.scheme + "://" + request.serverName + ":" + request.serverPort + request.contextPath
-        } else {
-            // 因nginx代理只能在此进行转换下
-            request.scheme + "://" + isyProperties.getConstants().serverName + request.contextPath
-        }
-    }
 
     companion object {
+
+        /**
+         * 根据开发环境不同取不同路径
+         *
+         * @param request 请求
+         * @return 路径
+         */
+        @JvmStatic
+        fun getBaseUrl(request: HttpServletRequest): String {
+            return request.scheme + "://" + request.serverName + ":" + request.serverPort + request.contextPath
+        }
+
         /**
          * 获取客服端ip地址
          *

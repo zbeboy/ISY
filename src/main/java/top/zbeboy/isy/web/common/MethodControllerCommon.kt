@@ -52,9 +52,6 @@ open class MethodControllerCommon {
     @Autowired
     open lateinit var isyProperties: ISYProperties
 
-    @Autowired
-    open lateinit var requestUtils: RequestUtils
-
     @Resource
     open lateinit var mailService: MailService
 
@@ -129,7 +126,7 @@ open class MethodControllerCommon {
     fun sendNotify(users: Users, curUsers: Users, messageTitle: String, notify: String, request: HttpServletRequest) {
         //发送验证邮件
         if (isyProperties.getMail().isOpen) {
-            mailService.sendNotifyMail(users, requestUtils.getBaseUrl(request), notify)
+            mailService.sendNotifyMail(users, RequestUtils.getBaseUrl(request), notify)
         }
 
         // 保存消息
