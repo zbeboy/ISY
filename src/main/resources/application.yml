@@ -11,6 +11,8 @@ spring:
         host: smtp.qq.com
       thymeleaf:
         mode: HTML
+      jooq:
+        sql-dialect: mysql_8_0
 
 # project info
 info:

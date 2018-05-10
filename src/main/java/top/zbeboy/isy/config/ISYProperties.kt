@@ -109,8 +109,6 @@ class ISYProperties {
 
         var mailForm: String? = null
 
-        var jooqSqlDialect: String? = null
-
         var serverHttpPort: Int = 0
 
         var serverHttpsPort: Int = 0
