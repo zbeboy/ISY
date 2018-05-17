@@ -2,6 +2,11 @@
  * Created by lenovo on 2016-08-17.
  */
 requirejs.config({
+    map: {
+        '*': {
+            'css': web_path + '/webjars/require-css/css.min.js' // or whatever the path to require-css is
+        }
+    },
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
         "wow": ["https://cdn.bootcss.com/wow/1.1.2/wow.min", web_path + "/plugin/wow/wow.min"],
@@ -10,10 +15,10 @@ requirejs.config({
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
         "wow": {
-            deps: ["jquery"]
+            deps: ["jquery", "css!" + web_path + "/plugin/animate/animate.min"]
         },
         "vegas": {
-            deps: ["jquery"]
+            deps: ["jquery", "css!" + web_path + "/plugin/vegas/vegas.min"]
         }
     }
 });
