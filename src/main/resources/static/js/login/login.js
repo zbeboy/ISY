@@ -7,8 +7,7 @@ requirejs.config({
         "csrf": web_path + "/js/util/csrf",
         "attribute_extensions": web_path + "/js/util/attribute_extensions",
         "emails": web_path + "/js/util/emails",
-        "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
-            web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"],
+        "bootstrap-typeahead": [web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"],
         "base64": web_path + "/js/util/base64"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。

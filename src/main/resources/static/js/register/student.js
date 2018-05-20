@@ -14,8 +14,7 @@ requirejs.config({
         "emails": web_path + "/js/util/emails",
         "jquery.entropizer": web_path + "/plugin/jquery_entropizer/js/jquery-entropizer.min",
         "entropizer": web_path + "/plugin/jquery_entropizer/js/entropizer.min",
-        "bootstrap-typeahead": ["https://cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min",
-            web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"],
+        "bootstrap-typeahead": [web_path + "/plugin/bootstrap-typeahead/bootstrap3-typeahead.min"],
         "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min"
     },
