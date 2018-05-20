@@ -30,6 +30,17 @@ requirejs.config({
     }
 });
 
+/*
+ 捕获全局错误
+ */
+requirejs.onError = function (err) {
+    console.log(err.requireType);
+    if (err.requireType === 'timeout') {
+        console.log('modules: ' + err.requireModules);
+    }
+    throw err;
+};
+
 // require(["module/name", ...], function(params){ ... });
 require(["jquery", "handlebars", "emails",
         "jquery.entropizer", "jquery.showLoading", "csrf", "bootstrap", "bootstrap-typeahead", "bootstrap-select-zh-CN"],

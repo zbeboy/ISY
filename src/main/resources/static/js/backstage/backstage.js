@@ -35,7 +35,8 @@ requirejs.config({
             web_path + "/plugin/bootstrap-maxlength/bootstrap-maxlength.min"],
         "moment": ["https://lib.baomitu.com/moment.js/2.13.0/moment.min",
             web_path + "/plugin/moment/moment.min"],
-        "moment-with-locales": web_path + "/plugin/moment/moment-with-locales.min",
+        "moment-with-locales": ["https://lib.baomitu.com/moment.js/2.13.0/moment-with-locales.min",
+            web_path + "/plugin/moment/moment-with-locales.min"],
         "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget.min",
         "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport.min",
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process.min",
@@ -144,6 +145,40 @@ requirejs.onError = function (err) {
         console.log('modules: ' + err.requireModules);
     }
     throw err;
+};
+
+/**
+ * Creates the node for the load command. Only used in browser envs.
+ */
+requirejs.createNode = function (config, moduleName, url) {
+    var node = config.xhtml ?
+        document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
+        document.createElement('script');
+    node.type = config.scriptType || 'text/javascript';
+    node.charset = 'utf-8';
+    node.async = true;
+
+    if(moduleName === 'jquery.address'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-zMTBSQGBLON8BzJvCLwjWuuA1q8Ew5clzw9A3FMXoo/AdY/oB2Q1QTOT/aHDGzfg';
+    }
+
+    if(moduleName === 'bootstrap-maxlength'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-56NvzBS6HSzWl0ISe8ae/V5zl19eYBSPNMl1EiBRpGgbQ4gv1XZaCD4Tem0ehZrb';
+    }
+
+    if(moduleName === 'moment'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-MV8AwEgYXLMw5ZPj4763CSPk+tYGoUZGdwr/+EfkAZ1Dl2rGHxOMpQ1IW7VtyUPn';
+    }
+
+    if(moduleName === 'moment-with-locales'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-s4lxKn9Ij3tCfeyvaF64bKSEP+3Att8/dPKzh+UPdg/6oyHmVPAeH7c/GtrjRO1v';
+    }
+
+    return node;
 };
 
 require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "sockjs-client", "moment-with-locales",

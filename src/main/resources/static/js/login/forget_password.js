@@ -16,6 +16,18 @@ requirejs.config({
         }
     }
 });
+
+/*
+ 捕获全局错误
+ */
+requirejs.onError = function (err) {
+    console.log(err.requireType);
+    if (err.requireType === 'timeout') {
+        console.log('modules: ' + err.requireModules);
+    }
+    throw err;
+};
+
 // require(["module/name", ...], function(params){ ... });
 require(["jquery", "requirejs-domready", "bootstrap", "jquery.showLoading", "csrf", "attribute_extensions"], function ($, domready) {
     domready(function () {

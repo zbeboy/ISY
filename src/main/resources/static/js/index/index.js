@@ -22,6 +22,42 @@ requirejs.config({
         }
     }
 });
+
+/*
+ 捕获全局错误
+ */
+requirejs.onError = function (err) {
+    console.log(err.requireType);
+    if (err.requireType === 'timeout') {
+        console.log('modules: ' + err.requireModules);
+    }
+    throw err;
+};
+
+/**
+ * Creates the node for the load command. Only used in browser envs.
+ */
+requirejs.createNode = function (config, moduleName, url) {
+    var node = config.xhtml ?
+        document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
+        document.createElement('script');
+    node.type = config.scriptType || 'text/javascript';
+    node.charset = 'utf-8';
+    node.async = true;
+
+    if(moduleName === 'wow'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-V27yAyb3yYhZbiwaK9Sgxh9Cywkf/H2al4wcrcp/hKF9ZYT7d5saGJFoO/0v1Cgs';
+    }
+
+    if(moduleName === 'vegas'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-uJJ21HstS6Pv/3Rdbb/DoeSiA/eZEciUBGOgDU5EPX4ZKQu80Y71qTrgSOlZAmXR';
+    }
+
+    return node;
+};
+
 // require(["module/name", ...], function(params){ ... });
 require(["jquery", "bootstrap", "wow", "vegas"], function ($) {
     // Preloader
