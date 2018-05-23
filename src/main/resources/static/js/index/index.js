@@ -10,7 +10,9 @@ requirejs.config({
     // pathsオプションの設定。"module/name": "path"を指定します。拡張子（.js）は指定しません。
     paths: {
         "wow": ["https://lib.baomitu.com/wow/1.1.2/wow.min", web_path + "/plugin/wow/wow.min"],
-        "vegas": ["https://lib.baomitu.com/vegas/2.4.0/vegas.min", web_path + "/plugin/vegas/vegas.min"]
+        "vegas": ["https://lib.baomitu.com/vegas/2.4.0/vegas.min", web_path + "/plugin/vegas/vegas.min"],
+        "moment": ["https://lib.baomitu.com/moment.js/2.13.0/moment.min",
+            web_path + "/plugin/moment/moment.min"]
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -59,7 +61,7 @@ requirejs.createNode = function (config, moduleName, url) {
 };
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "lodash", "handlebars", "bootstrap", "wow", "vegas"], function ($, D, Handlebars) {
+require(["jquery", "lodash", "handlebars", "moment", "bootstrap", "wow", "vegas"], function ($, D, Handlebars, moment) {
     // Preloader
     $('.preloader').fadeOut(1000);
 
@@ -217,13 +219,29 @@ require(["jquery", "lodash", "handlebars", "bootstrap", "wow", "vegas"], functio
     }
 
     function sendAjax() {
+        startLoading();
         $.get(web_path + ajax_url.save, param, function (data) {
+            endLoading();
             if (data.state) {
                 initGraduateData();
             } else {
                 validErrorDom(errorMsgId.error_meg, data.msg);
             }
         });
+    }
+
+    /**
+     * 开始加载
+     */
+    function startLoading() {
+        $('#submitGraduate').attr('disabled', true).text('保存中...');
+    }
+
+    /**
+     * 结束加载
+     */
+    function endLoading() {
+        $('#submitGraduate').attr('disabled', false).text('确定');
     }
 
 });

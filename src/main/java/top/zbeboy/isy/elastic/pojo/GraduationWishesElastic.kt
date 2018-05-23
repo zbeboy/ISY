@@ -2,6 +2,7 @@ package top.zbeboy.isy.elastic.pojo
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.elasticsearch.annotations.Document
+import java.sql.Timestamp
 
 /**
  * Created by zbeboy 2018-05-23 .
@@ -13,4 +14,5 @@ class GraduationWishesElastic {
     var schoolName: String? = null
     var username: String? = null
     var content: String? = null
+    var writeDate: Timestamp? = null
 }

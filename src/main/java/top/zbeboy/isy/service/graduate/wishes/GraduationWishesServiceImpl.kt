@@ -1,5 +1,6 @@
 package top.zbeboy.isy.service.graduate.wishes
 
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import top.zbeboy.isy.elastic.pojo.GraduationWishesElastic
 import top.zbeboy.isy.elastic.repository.GraduationWishesElasticRepository
@@ -15,7 +16,7 @@ open class GraduationWishesServiceImpl : GraduationWishesService {
     open lateinit var graduationWishesElasticRepository: GraduationWishesElasticRepository
 
     override fun findAll(): MutableIterable<GraduationWishesElastic>? {
-        return graduationWishesElasticRepository.findAll()
+        return graduationWishesElasticRepository.findAll(Sort(Sort.Direction.DESC,"writeDate"))
     }
 
     override fun save(graduationWishesElastic: GraduationWishesElastic) {

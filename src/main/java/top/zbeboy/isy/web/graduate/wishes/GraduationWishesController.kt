@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.elastic.pojo.GraduationWishesElastic
 import top.zbeboy.isy.service.graduate.wishes.GraduationWishesService
+import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.UUIDUtils
 import top.zbeboy.isy.web.util.AjaxUtils
 import javax.annotation.Resource
@@ -38,6 +39,7 @@ open class GraduationWishesController {
                 graduationWishesElastic.schoolName = i.schoolName
                 graduationWishesElastic.username = i.username
                 graduationWishesElastic.content = i.content
+                graduationWishesElastic.writeDate = i.writeDate
                 datas.add(graduationWishesElastic)
             }
         }
@@ -54,6 +56,7 @@ open class GraduationWishesController {
     @ResponseBody
     fun save(graduationWishesElastic: GraduationWishesElastic): AjaxUtils<*> {
         graduationWishesElastic.id = UUIDUtils.getUUID()
+        graduationWishesElastic.writeDate = DateTimeUtils.getNow()
         graduationWishesService.save(graduationWishesElastic)
         return AjaxUtils.of<Any>().success().msg("保存成功")
     }
