@@ -97,6 +97,12 @@ require(["jquery", "lodash", "handlebars", "moment", "bootstrap", "wow", "vegas"
 
     new WOW({mobile: false}).init();
 
+    console.log('%c █    ██████    █     █','color:blue');
+    console.log('%c █    █          █   █','color:blue');
+    console.log('%c █    ██████       █','color:red');
+    console.log('%c █         █       █','color:red');
+    console.log('%c █    ██████       █','color:green');
+    console.log('%c Welcome to ISY.','color:red');
     /*
     ajax url.
     */

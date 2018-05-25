@@ -1,9 +1,9 @@
 
-  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   ██████    █        █
-  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   █                █    █
-  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   ██████         █
-  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}             █         █
-  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   ██████         █
+  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   ██████      █        █
+  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   █                  █    █
+  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   ██████           █
+  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}             █           █
+  ${AnsiColor.GREEN}   █   ${AnsiColor.RED}   ██████           █
 
 ${AnsiColor.BRIGHT_BLUE}:: ISY 🤓  :: Running Spring Boot ${spring-boot.version} ::
 :: https://github.com/zbeboy/ISY ::${AnsiColor.DEFAULT}
