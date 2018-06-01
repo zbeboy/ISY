@@ -5,8 +5,8 @@
 [![Build Status](https://travis-ci.org/zbeboy/ISY.svg?branch=dev)](https://travis-ci.org/zbeboy/ISY)
 # 开发环境
 1.JDK 1.8.*;  
-2.Intellij IDEA 2017.3;  
-3.MySQL 5.7 +;  
+2.Intellij IDEA 2018.1;  
+3.MySQL 8;  
 4.Maven 3.5.0 +;  
 5.Node 6 +;  
 6.Elasticsearch 5.6.8;  
