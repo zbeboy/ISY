@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-24.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
-    function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
+    function ($, Handlebars, constants, nav_active, DP) {
         /*
          ajax url.
          */
@@ -38,7 +38,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             collegeId: $(paramId.collegeId).val(),
             departmentId: $(paramId.departmentId).val(),
             scienceName: $(paramId.scienceName).val(),
-            scienceCode: $(paramId.scienceCode).val()
+            scienceCode: $(paramId.scienceCode).val(),
+            scienceIsDel:DP.defaultUndefinedValue($('input[name="scienceIsDel"]:checked').val(), 0)
         };
 
         /*
@@ -108,9 +109,15 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
         function initParam() {
             param.schoolId = $(paramId.schoolId).val();
             param.collegeId = $(paramId.collegeId).val();
-            param.departmentId = $(paramId.departmentId).val();
+            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role
+                || init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+                param.departmentId = $(paramId.departmentId).val();
+            } else {
+                param.departmentId = init_page_param.departmentId;
+            }
             param.scienceName = $(paramId.scienceName).val();
             param.scienceCode = $(paramId.scienceCode).val();
+            param.scienceIsDel = DP.defaultUndefinedValue($('input[name="scienceIsDel"]:checked').val(), 0);
         }
 
         /*
@@ -223,7 +230,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          * @param school_id 学校id
          */
         function changeCollege(school_id) {
-            if (Number(school_id) == 0) {
+            if (Number(school_id) === 0) {
                 var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
@@ -267,7 +274,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function changeDepartment(college_id) {
 
-            if (Number(college_id) == 0) {
+            if (Number(college_id) === 0) {
                 var template = Handlebars.compile($("#department-template").html());
 
                 var context = {
@@ -404,6 +411,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
                                 validSchoolId();
                             } else if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
                                 validDepartmentId();
+                            } else {
+                                validScienceName();
                             }
                         }
                     },
@@ -559,7 +568,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             }, {
                 url: web_path + ajax_url.save,
                 type: 'post',
-                data: $('#add_form').serialize(),
+                data: param,
                 success: function (data) {
                     if (data.state) {
                         $.address.value(ajax_url.back);

@@ -193,7 +193,7 @@ require(["jquery", "handlebars", "datatables.responsive", "jquery.address", "mes
         }
 
         $(getParamId().roleName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

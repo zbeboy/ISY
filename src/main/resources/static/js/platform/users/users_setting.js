@@ -243,7 +243,7 @@ require(["jquery", "handlebars", "messenger", "bootstrap", "jquery.address", "jq
 
         //timer处理函数
         function SetRemainTime() {
-            if (curCount == 0) {
+            if (curCount === 0) {
                 window.clearInterval(InterValObj);//停止计时器
                 $(btnId).removeAttr("disabled");//启用按钮
                 $(btnId).val("重新发送验证码");

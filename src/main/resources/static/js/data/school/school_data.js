@@ -95,7 +95,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
 
                         var context = null;
 
-                        if (c.schoolIsDel == 0 || c.schoolIsDel == null) {
+                        if (c.schoolIsDel === 0 || c.schoolIsDel == null) {
                             context =
                                 {
                                     func: [
@@ -143,7 +143,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
                 {
                     targets: 3,
                     render: function (a, b, c, d) {
-                        if (c.schoolIsDel == 0 || c.schoolIsDel == null) {
+                        if (c.schoolIsDel === 0 || c.schoolIsDel == null) {
                             return "<span class='text-info'>正常</span>";
                         } else {
                             return "<span class='text-danger'>已注销</span>";
@@ -267,7 +267,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         $(getParamId().schoolName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

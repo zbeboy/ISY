@@ -205,7 +205,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "messenger", "bootstrap
                     if (Number(cs[0]) < Number(ds[0])) {
                         isValid = false;
                         break;
-                    } else if (Number(cs[0]) == Number(ds[0])) {
+                    } else if (Number(cs[0]) === Number(ds[0])) {
                         if (Number(cs[1]) <= Number(ds[1])) {
                             isValid = false;
                             break;

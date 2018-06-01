@@ -42,14 +42,6 @@ require(["jquery", "jquery.cropper.upload", "jquery.showLoading", "messenger", "
         }
 
         /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
-        /*
          消息
          */
         var msg = {

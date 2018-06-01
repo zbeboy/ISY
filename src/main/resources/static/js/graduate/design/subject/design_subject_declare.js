@@ -10,9 +10,9 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
         function getAjaxUrl() {
             return {
                 data_url: '/web/graduate/design/subject/declare/data',
-                teachers: '/anyone/graduate/design/subject/teachers',
-                subject_type: '/user/graduate/design/subject/types',
-                subject_origin_type: '/user/graduate/design/subject/origin_types',
+                teachers: '/anyone/graduate/design/teachers',
+                subject_type: '/anyone/graduate/design/subject/types',
+                subject_origin_type: '/anyone/graduate/design/subject/origin_types',
                 declare_basic: '/web/graduate/design/subject/declare/basic',
                 declare_basic_peoples: '/web/graduate/design/subject/declare/basic/peoples',
                 look_url: '/web/graduate/design/subject/list/look',
@@ -754,7 +754,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "bootstrap
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffId));
             });
             Handlebars.registerHelper('staff_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.staffMobile));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffRealName + ' ' + this.staffMobile));
             });
             $(getParamId().staffId).html(template(data));
 

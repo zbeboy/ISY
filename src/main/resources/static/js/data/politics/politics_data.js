@@ -202,7 +202,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         $(getParamId().politicalLandscapeName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

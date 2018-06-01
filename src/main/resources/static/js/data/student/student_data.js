@@ -28,10 +28,10 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             return {
                 passData: '/web/data/student/pass/data',
                 waitData: '/web/data/student/wait/data',
-                roleData: '/special/channel/users/role/data',
-                saveRole: '/special/channel/users/role/save',
-                updateEnabled: '/special/channel/users/update/enabled',
-                deleteUsers: '/special/channel/users/deletes'
+                roleData: '/web/data/student/role/data',
+                saveRole: '/web/data/student/role/save',
+                updateEnabled: '/web/data/student/users/update/enabled',
+                deleteUsers: '/web/data/student/users/deletes'
             };
         }
 
@@ -53,9 +53,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 studentNumber: '#pass_search_student_number',
                 username: '#pass_search_username',
                 mobile: '#pass_mobile',
-                idCard: '#pass_id_card',
-                realName: '#pass_real_name',
-                sex: '#pass_sex'
+                realName: '#pass_real_name'
             };
         }
 
@@ -72,9 +70,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             studentNumber: '',
             username: '',
             mobile: '',
-            idCard: '',
-            realName: '',
-            sex: ''
+            realName: ''
         };
 
         /*
@@ -90,9 +86,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             PASS_STUDENT_NUMBER: 'DATA_STUDENT_PASS_STUDENT_NUMBER_SEARCH',
             PASS_USERNAME: 'DATA_STUDENT_PASS_USERNAME_SEARCH',
             PASS_MOBILE: 'DATA_STUDENT_PASS_MOBILE_SEARCH',
-            PASS_ID_CARD: 'DATA_STUDENT_PASS_ID_CARD_SEARCH',
             PASS_REAL_NAME: 'DATA_STUDENT_PASS_REAL_NAME_SEARCH',
-            PASS_SEX: 'DATA_STUDENT_PASS_SEX_SEARCH',
             WAIT_SCHOOL: 'DATA_STUDENT_WAIT_SCHOOL_SEARCH',
             WAIT_COLLEGE: 'DATA_STUDENT_WAIT_COLLEGE_SEARCH',
             WAIT_DEPARTMENT: 'DATA_STUDENT_WAIT_DEPARTMENT_SEARCH',
@@ -124,12 +118,10 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             passParam.studentNumber = $(getPassParamId().studentNumber).val();
             passParam.username = $(getPassParamId().username).val();
             passParam.mobile = $(getPassParamId().mobile).val();
-            passParam.idCard = $(getPassParamId().idCard).val();
             passParam.realName = $(getPassParamId().realName).val();
-            passParam.sex = $(getPassParamId().sex).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.PASS_SCHOOL, DP.defaultUndefinedValue(passParam.school));
-                sessionStorage.setItem(webStorageKey.PASS_COLLEGE, DP.defaultUndefinedValue(passParam.college));
+                sessionStorage.setItem(webStorageKey.PASS_SCHOOL, DP.defaultUndefinedValue(passParam.school, ''));
+                sessionStorage.setItem(webStorageKey.PASS_COLLEGE, DP.defaultUndefinedValue(passParam.college, ''));
                 sessionStorage.setItem(webStorageKey.PASS_DEPARTMENT, passParam.department);
                 sessionStorage.setItem(webStorageKey.PASS_SCIENCE, passParam.science);
                 sessionStorage.setItem(webStorageKey.PASS_GRADE, passParam.grade);
@@ -137,9 +129,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 sessionStorage.setItem(webStorageKey.PASS_STUDENT_NUMBER, passParam.studentNumber);
                 sessionStorage.setItem(webStorageKey.PASS_USERNAME, passParam.username);
                 sessionStorage.setItem(webStorageKey.PASS_MOBILE, passParam.mobile);
-                sessionStorage.setItem(webStorageKey.PASS_ID_CARD, passParam.idCard);
                 sessionStorage.setItem(webStorageKey.PASS_REAL_NAME, passParam.realName);
-                sessionStorage.setItem(webStorageKey.PASS_SEX, passParam.sex);
             }
         }
 
@@ -156,9 +146,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             var studentNumber = null;
             var username = null;
             var mobile = null;
-            var idCard = null;
             var realName = null;
-            var sex = null;
             if (typeof(Storage) !== "undefined") {
                 school = sessionStorage.getItem(webStorageKey.PASS_SCHOOL);
                 college = sessionStorage.getItem(webStorageKey.PASS_COLLEGE);
@@ -169,9 +157,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 studentNumber = sessionStorage.getItem(webStorageKey.PASS_STUDENT_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
                 mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
-                idCard = sessionStorage.getItem(webStorageKey.PASS_ID_CARD);
                 realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
-                sex = sessionStorage.getItem(webStorageKey.PASS_SEX);
             }
             if (school !== null) {
                 passParam.school = school;
@@ -209,16 +195,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 passParam.mobile = mobile;
             }
 
-            if (idCard !== null) {
-                passParam.idCard = idCard;
-            }
-
             if (realName !== null) {
                 passParam.realName = realName;
-            }
-
-            if (sex !== null) {
-                passParam.sex = sex;
             }
         }
 
@@ -235,9 +213,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             var studentNumber = null;
             var username = null;
             var mobile = null;
-            var idCard = null;
             var realName = null;
-            var sex = null;
             if (typeof(Storage) !== "undefined") {
                 school = sessionStorage.getItem(webStorageKey.PASS_SCHOOL);
                 college = sessionStorage.getItem(webStorageKey.PASS_COLLEGE);
@@ -248,9 +224,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 studentNumber = sessionStorage.getItem(webStorageKey.PASS_STUDENT_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.PASS_USERNAME);
                 mobile = sessionStorage.getItem(webStorageKey.PASS_MOBILE);
-                idCard = sessionStorage.getItem(webStorageKey.PASS_ID_CARD);
                 realName = sessionStorage.getItem(webStorageKey.PASS_REAL_NAME);
-                sex = sessionStorage.getItem(webStorageKey.PASS_SEX);
             }
             if (school !== null) {
                 $(getPassParamId().school).val(school);
@@ -288,16 +262,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 $(getPassParamId().mobile).val(mobile);
             }
 
-            if (idCard !== null) {
-                $(getPassParamId().idCard).val(idCard);
-            }
-
             if (realName !== null) {
                 $(getPassParamId().realName).val(realName);
-            }
-
-            if (sex !== null) {
-                $(getPassParamId().sex).val(sex);
             }
         }
 
@@ -314,100 +280,80 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             $(getPassParamId().studentNumber).val('');
             $(getPassParamId().username).val('');
             $(getPassParamId().mobile).val('');
-            $(getPassParamId().idCard).val('');
             $(getPassParamId().realName).val('');
-            var childrens = $(getPassParamId().sex).children();
-            for (var i = 0; i < childrens.length; i++) {
-                if ($(childrens[i]).val() === '') {
-                    $(childrens[i]).prop('selected', true);
-                    break;
-                }
-            }
         }
 
         // pass tab table.
         var passTable = null;
 
         $(getPassParamId().school).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().college).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().department).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().science).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().grade).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().organize).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().username).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().mobile).keyup(function (event) {
-            if (event.keyCode == 13) {
-                initPassParam();
-                passTable.ajax.reload();
-            }
-        });
-
-        $(getPassParamId().idCard).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
         });
 
         $(getPassParamId().realName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initPassParam();
                 passTable.ajax.reload();
             }
-        });
-
-        $(getPassParamId().sex).change(function () {
-            initPassParam();
-            passTable.ajax.reload();
         });
 
         passId.delegate('#pass_search', "click", function () {
@@ -521,13 +467,21 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                         }
                     },
                     {
+                        targets: 5,
+                        orderable: false
+                    },
+                    {
                         targets: 6,
+                        orderable: false
+                    },
+                    {
+                        targets: 13,
                         orderable: false
                     },
                     {
                         targets: 22,
                         render: function (a, b, c, d) {
-                            if (c.enabled == 0 || c.enabled == null) {
+                            if (c.enabled === 0 || c.enabled == null) {
                                 return "<span class='text-danger'>已注销</span>";
                             }
                             return "<span class='text-info'>正常</span>";
@@ -540,7 +494,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
 
                             var context = null;
 
-                            if (c.enabled == 1) {
+                            if (c.enabled === 1) {
                                 context =
                                     {
                                         func: [
@@ -939,8 +893,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             waitParam.studentNumber = $(getWaitParamId().studentNumber).val();
             waitParam.username = $(getWaitParamId().username).val();
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, DP.defaultUndefinedValue(waitParam.school));
-                sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, DP.defaultUndefinedValue(waitParam.college));
+                sessionStorage.setItem(webStorageKey.WAIT_SCHOOL, DP.defaultUndefinedValue(waitParam.school, ''));
+                sessionStorage.setItem(webStorageKey.WAIT_COLLEGE, DP.defaultUndefinedValue(waitParam.college, ''));
                 sessionStorage.setItem(webStorageKey.WAIT_DEPARTMENT, waitParam.department);
                 sessionStorage.setItem(webStorageKey.WAIT_SCIENCE, waitParam.science);
                 sessionStorage.setItem(webStorageKey.WAIT_GRADE, waitParam.grade);
@@ -1074,56 +1028,56 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
         var waitTable = null;
 
         $(getWaitParamId().school).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().college).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().department).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().science).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().grade).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().organize).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }
         });
 
         $(getWaitParamId().username).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initWaitParam();
                 waitTable.ajax.reload();
             }

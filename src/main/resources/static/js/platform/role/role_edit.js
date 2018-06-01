@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-10-19.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength", "jquery.showLoading", "attribute_extensions"], function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "messenger", "bootstrap-treeview", "jquery.address",
+    "bootstrap-maxlength", "jquery.showLoading", "attribute_extensions"], function ($, Handlebars, constants, nav_active, DP) {
 
     /*
      ajax url.
@@ -37,6 +37,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         schoolId: $(paramId.schoolId).val(),
         collegeId: $(paramId.collegeId).val(),
         roleName: $(paramId.roleName).val(),
+        allowAgent: DP.defaultUndefinedValue($('input[name="allowAgent"]:checked').val(), 0),
         applicationIds: '',
         roleId: $(paramId.roleId).val()
     };
@@ -103,8 +104,18 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      */
     function initParam() {
         param.schoolId = $(paramId.schoolId).val();
-        param.collegeId = $(paramId.collegeId).val();
+
+        if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
+            param.collegeId = $(paramId.collegeId).val();
+        }
+
+        if (init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
+            param.collegeId = init_page_param.collegeId;
+        }
+
         param.roleName = $(paramId.roleName).val();
+        param.allowAgent = DP.defaultUndefinedValue($('input[name="allowAgent"]:checked').val(), 0);
+        console.log('allowAgent : ' + param.allowAgent);
         param.roleId = $(paramId.roleId).val();
         param.applicationIds = getAllCheckedData();
     }
@@ -243,7 +254,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      * @param school_id 学校id
      */
     function changeCollege(school_id) {
-        if (Number(school_id) == 0) {
+        if (Number(school_id) === 0) {
             var template = Handlebars.compile($("#college-template").html());
 
             var context = {
@@ -296,7 +307,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
             validErrorDom(validId.roleName, errorMsgId.roleName, '角色名50个字符以内');
         } else {
             // 检验字符之前是否含有空格
-            if (roleName.indexOf(" ") == -1) {
+            if (roleName.indexOf(" ") === -1) {
                 // 角色名是否重复
                 Messenger().run({
                     errorMessage: '请求失败'
@@ -409,7 +420,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
             });
         } else {
             // 检验字符之前是否含有空格
-            if (roleName.indexOf(" ") == -1) {
+            if (roleName.indexOf(" ") === -1) {
                 Messenger().run({
                     errorMessage: '请求失败'
                 }, {
@@ -490,7 +501,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     }
 
     function treeViewData(data) {
-        var $checkableTree = treeviewId.treeview({
+        treeviewId.treeview({
             data: data,
             showIcon: false,
             showCheckbox: true,
@@ -519,7 +530,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
                 var unCheckeds = treeviewId.treeview('getUnchecked');
                 for (var i = 0; i < list.length; i++) {
                     for (var j = 0; j < unCheckeds.length; j++) {
-                        if (list[i].applicationId == unCheckeds[j].dataId) {
+                        if (list[i].applicationId === unCheckeds[j].dataId) {
                             treeviewId.treeview('checkNode', [unCheckeds[j], {silent: true}]);
                             break;
                         }
@@ -534,7 +545,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      * @param node
      */
     function checkAllParentNode(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId != undefined) {
+        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
             var parentNode = treeviewId.treeview('getParent', node);
             checkAllParentNode(parentNode);
         }
@@ -582,13 +593,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     }
 
     function getAllParent(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId != undefined) {
+        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
             var parentNode = treeviewId.treeview('getParent', node);
             childrenArr = [];
             getAllChildren(parentNode);
             var parentNodeIsChecked = false;
             for (var i = 0; i < childrenArr.length; i++) {
-                if (childrenArr[i].nodeId != parentNode.nodeId && childrenArr[i].state.checked) {
+                if (childrenArr[i].nodeId !== parentNode.nodeId && childrenArr[i].state.checked) {
                     parentNodeIsChecked = true;
                 }
             }

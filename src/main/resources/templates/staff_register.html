@@ -27,22 +27,25 @@
                     <form role="form" id="staff_register_form">
                         <fieldset>
                             <div class="form-group" id="valid_school">
-                                <select class="form-control" name="school" id="select_school">
-                                    <option>请选择学校</option>
+                                <select name="school" id="select_school" data-live-search="true"
+                                        class="form-control selectpicker show-tick"
+                                        title="请选择学校">
                                 </select>
                                 <input type="hidden" name="schoolName" id="schoolName" />
                                 <p class="text-danger hidden" id="school_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_college">
-                                <select class="form-control" name="college" id="select_college">
-                                    <option>请选择院</option>
+                                <select name="college" id="select_college" data-live-search="true"
+                                        class="form-control selectpicker show-tick"
+                                        title="请选择院">
                                 </select>
                                 <input type="hidden" name="collegeName" id="collegeName" />
                                 <p class="text-danger hidden" id="college_error_msg"></p>
                             </div>
                             <div class="form-group" id="valid_department">
-                                <select class="form-control" name="department" id="select_department">
-                                    <option>请选择系</option>
+                                <select name="department" id="select_department" data-live-search="true"
+                                        class="form-control selectpicker show-tick"
+                                        title="请选择系">
                                 </select>
                                 <input type="hidden" name="departmentName" id="departmentName" />
                                 <p class="text-danger hidden" id="department_error_msg"></p>

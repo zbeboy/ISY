@@ -108,13 +108,13 @@
         <script id="teacher-template" type="text/x-handlebars-template">
             {{#each listResult}}
             <tr>
-                <td>{{realName}}</td>
+                <td>{{staffRealName}}</td>
                 <td>{{staffMobile}}</td>
                 <td>{{studentCount}}</td>
                 <td>{{residue}}</td>
                 <td>
                     <button type="button" class="btn btn-primary btn-sm teacher_detail"
-                            data-id="{{graduationDesignTeacherId}}" data-name="{{realName}}"
+                            data-id="{{graduationDesignTeacherId}}" data-name="{{staffRealName}}"
                             data-mobile="{{staffMobile}}">详情
                     </button>
                 </td>
@@ -154,7 +154,7 @@
                     {{else}}
                     <input type="radio" name="graduationDesignTeacherId" value="{{graduationDesignTeacherId}}"/>
                     {{/if}}
-                    {{realName}} {{staffMobile}}
+                    {{staffRealName}} {{staffMobile}}
                 </label>
             </div>
             {{/each}}

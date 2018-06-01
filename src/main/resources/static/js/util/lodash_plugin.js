@@ -6,10 +6,11 @@ define(["lodash"], function (D) {
         /**
          * undefine 默认值
          * @param param
+         * @param defaultValue
          * @returns {string}
          */
-        defaultUndefinedValue: function (param) {
-            return D.isUndefined(param) ? '' : param;
+        defaultUndefinedValue: function (param, defaultValue) {
+            return D.isUndefined(param) ? defaultValue : param;
         }
     };
 });

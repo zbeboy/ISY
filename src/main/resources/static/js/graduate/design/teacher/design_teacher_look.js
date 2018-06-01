@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2017/5/8.
  */
-require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, nav_active) {
+require(["jquery", "nav_active", "datatables.responsive", "check.all", "jquery.address", "messenger"],
+    function ($, nav_active) {
 
         /*
         参数
@@ -64,9 +64,6 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             }
         }
 
-        // 预编译模板
-        var template = Handlebars.compile($("#operator_button").html());
-
         // datatables 初始化
         var responsiveHelper = undefined;
         var breakpointDefinition = {
@@ -95,6 +92,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[1, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().datas,
                 "dataSrc": "data",
@@ -107,7 +105,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
                 }
             },
             "columns": [
-                {"data": "realName"},
+                {"data": "staffRealName"},
                 {"data": "staffNumber"},
                 {"data": "staffUsername"},
                 {"data": "studentCount"},
@@ -242,21 +240,21 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "check.a
         }
 
         $(getParamId().realName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().staffUsername).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().staffNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

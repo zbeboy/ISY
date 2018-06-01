@@ -188,7 +188,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                 ]
                             };
                         } else {
-                            if (c.staffId == init_page_param.staffId && init_page_param.staffId != 0) {
+                            if (c.staffId === init_page_param.staffId && init_page_param.staffId !== 0) {
                                 context =
                                 {
                                     func: [
@@ -278,10 +278,11 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         var global_button = '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         if (init_page_param.currentUserRoleName === constants.global_role_name.system_role ||
             init_page_param.currentUserRoleName === constants.global_role_name.admin_role) {
-            var temp = '<button type="button" id="regulate_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-                '  <button type="button" id="regulate_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+            var temp = '  <button type="button" id="regulate_dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp + global_button;
         }
+        global_button = '<button type="button" id="regulate_add" class="btn btn-outline btn-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+            global_button;
         $('#global_button').append(global_button);
 
         /*
@@ -307,6 +308,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             "timePicker": true,
             "timePicker24Hour": true,
             "timePickerIncrement": 30,
+            "autoUpdateInput": false,
             "locale": {
                 format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: '确定',
@@ -321,6 +323,16 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             }
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
+        });
+
+        $(getParamId().createDate).on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss') + ' 至 ' + picker.endDate.format('YYYY-MM-DD HH:mm:ss'));
+            initParam();
+            myTable.ajax.reload();
+        });
+
+        $(getParamId().createDate).on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
         });
 
         /*
@@ -411,21 +423,21 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         });
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().schoolGuidanceTeacher).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

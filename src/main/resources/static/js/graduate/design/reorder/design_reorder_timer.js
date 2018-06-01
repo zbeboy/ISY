@@ -20,7 +20,7 @@ require(["jquery", "bootstrap"], function ($) {
 
     function startWorker() {
         if (typeof(Worker) !== "undefined") {
-            if (typeof(w) == "undefined") {
+            if (typeof(w) === "undefined") {
                 w = new Worker(web_path + "/js/graduate/design/reorder/design_reorder_timer_script.js");
             }
             w.onmessage = function (event) {

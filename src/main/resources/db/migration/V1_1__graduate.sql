@@ -34,6 +34,7 @@ CREATE TABLE graduation_design_release (
   is_ok_teacher_adjust         BOOLEAN DEFAULT 0,
   department_id                INT          NOT NULL,
   science_id                   INT          NOT NULL,
+  publisher                    VARCHAR(30)  NOT NULL,
   FOREIGN KEY (username) REFERENCES users (username),
   FOREIGN KEY (department_id) REFERENCES department (department_id),
   FOREIGN KEY (science_id) REFERENCES science (science_id)
@@ -53,6 +54,8 @@ CREATE TABLE graduation_design_teacher (
   student_count                INT         NOT NULL,
   residue                      INT,
   username                     VARCHAR(64) NOT NULL,
+  assigner_name                VARCHAR(30) NOT NULL,
+  staff_real_name              VARCHAR(30) NOT NULL,
   FOREIGN KEY (graduation_design_release_id) REFERENCES graduation_design_release (graduation_design_release_id),
   FOREIGN KEY (username) REFERENCES users (username),
   FOREIGN KEY (staff_id) REFERENCES staff (staff_id)
@@ -162,7 +165,7 @@ CREATE TABLE graduation_design_datum_group (
   graduation_design_datum_group_id VARCHAR(64) PRIMARY KEY,
   file_id                          VARCHAR(64) NOT NULL,
   graduation_design_teacher_id     VARCHAR(64) NOT NULL,
-  upload_time                     DATETIME    NOT NULL,
+  upload_time                      DATETIME    NOT NULL,
   FOREIGN KEY (file_id) REFERENCES files (file_id),
   FOREIGN KEY (graduation_design_teacher_id) REFERENCES graduation_design_teacher (graduation_design_teacher_id)
 );

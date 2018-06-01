@@ -101,7 +101,7 @@
                         <div class="col-md-6"><span>毕业设计结束时间：</span><span>{{endTimeStr}}</span></div>
                     </div>
                     <div class="text-right">
-                        <small><em><span>发布人：</span><span>{{real_name}}</span> <span>{{releaseTimeStr}}</span></em>
+                        <small><em><span>发布人：</span><span>{{publisher}}</span> <span>{{releaseTimeStr}}</span></em>
                         </small>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
         </script>
         <script id="group-template" type="text/x-handlebars-template">
             {{#each listResult}}
-            <a href="javascript:;" class="list-group-item selectGroup" data-id="{{defenseGroupId}}">
+            <a href="javascript:" class="list-group-item selectGroup" data-id="{{defenseGroupId}}">
                 <h4 class="list-group-item-heading row">
                     <div class="col-md-2">{{defenseGroupName}}</div>
                     <div class="col-md-3">组长:{{staffName}}</div>

@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            release_data_url: '/anyone/graduate/design/release/data',
+            release_data_url: '/web/graduate/design/proposal/design/data',
             affix_url: '/web/graduate/design/proposal/affix',
             my_url: '/web/graduate/design/proposal/my',
             my_condition: '/web/graduate/design/proposal/my/condition',
@@ -126,8 +126,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.scienceName));
             });
 
-            Handlebars.registerHelper('real_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
+            Handlebars.registerHelper('publisher', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.publisher));
             });
 
             $(tableData).html(template(data));
@@ -259,7 +259,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     nextPage(pageNumber);
                 }
             });

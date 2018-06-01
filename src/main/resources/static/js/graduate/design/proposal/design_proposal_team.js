@@ -11,8 +11,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         function getAjaxUrl() {
             return {
                 data_url: '/web/graduate/design/proposal/team/data',
-                teachers: '/anyone/graduate/design/subject/teachers',
-                datum_type: '/use/graduate/design/proposal/datums',
+                teachers: '/anyone/graduate/design/teachers',
+                datum_type: '/anyone/graduate/design/proposal/datums',
                 datum_info: '/web/graduate/design/proposal/team/datum',
                 del: '/web/graduate/design/proposal/del',
                 download: '/web/graduate/design/proposal/download',
@@ -162,7 +162,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                         } else {
                             // 学生
                             if (init_page_param.usersTypeName === constants.global_users_type.student_type) {
-                                if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
+                                if (c.studentId === init_page_param.studentId && init_page_param.studentId !== 0) {
                                     context =
                                         {
                                             func: [
@@ -188,7 +188,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                                         };
                                 }
                             } else if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {// 教师
-                                if (c.staffId == init_page_param.staffId && init_page_param.staffId != 0) {
+                                if (c.staffId === init_page_param.staffId && init_page_param.staffId !== 0) {
                                     context =
                                         {
                                             func: [
@@ -373,21 +373,21 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
         });
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().originalFileName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
@@ -469,7 +469,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffId));
             });
             Handlebars.registerHelper('staff_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName + ' ' + this.staffMobile));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.staffRealName + ' ' + this.staffMobile));
             });
             $(getParamId().staffId).html(template(data));
 

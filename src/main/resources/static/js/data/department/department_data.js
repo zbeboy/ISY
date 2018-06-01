@@ -100,7 +100,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
 
                         var context = null;
 
-                        if (c.departmentIsDel == 0 || c.departmentIsDel == null) {
+                        if (c.departmentIsDel === 0 || c.departmentIsDel == null) {
                             context =
                                 {
                                     func: [
@@ -148,7 +148,7 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
                 {
                     targets: 5,
                     render: function (a, b, c, d) {
-                        if (c.departmentIsDel == 0 || c.departmentIsDel == null) {
+                        if (c.departmentIsDel === 0 || c.departmentIsDel == null) {
                             return "<span class='text-info'>正常</span>";
                         } else {
                             return "<span class='text-danger'>已注销</span>";
@@ -235,8 +235,8 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
             param.departmentName = $(getParamId().departmentName).val();
 
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName));
-                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName));
+                sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
+                sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
                 sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, param.departmentName);
             }
         }
@@ -301,21 +301,21 @@ require(["jquery", "handlebars", "lodash_plugin", "datatables.responsive", "chec
         }
 
         $(getParamId().schoolName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().collegeName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().departmentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

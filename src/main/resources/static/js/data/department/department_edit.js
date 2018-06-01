@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-09-23.
  */
-require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
-    function ($, Handlebars, constants, nav_active) {
+require(["jquery", "handlebars", "constants", "nav_active", "lodash_plugin", "messenger", "jquery.address", "bootstrap-maxlength", "jquery.showLoading"],
+    function ($, Handlebars, constants, nav_active, DP) {
 
         /*
          ajax url.
@@ -36,7 +36,8 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             schoolId: $(paramId.schoolId).val(),
             collegeId: $(paramId.collegeId).val(),
             departmentId: $(paramId.departmentId).val(),
-            departmentName: $(paramId.departmentName).val()
+            departmentName: $(paramId.departmentName).val(),
+            departmentIsDel: DP.defaultUndefinedValue($('input[name="departmentIsDel"]:checked').val(), 0)
         };
 
         /*
@@ -107,9 +108,14 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          */
         function initParam() {
             param.schoolId = $(paramId.schoolId).val();
-            param.collegeId = $(paramId.collegeId).val();
+            if (init_page_param.currentUserRoleName === constants.global_role_name.system_role) {
+                param.collegeId = $(paramId.collegeId).val();
+            } else {
+                param.collegeId = init_page_param.collegeId;
+            }
             param.departmentId = $(paramId.departmentId).val();
             param.departmentName = $(paramId.departmentName).val();
+            param.departmentIsDel = DP.defaultUndefinedValue($('input[name="departmentIsDel"]:checked').val(), 0);
         }
 
         /*
@@ -228,7 +234,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
          * @param school_id 学校id
          */
         function changeCollege(school_id) {
-            if (Number(school_id) == 0) {
+            if (Number(school_id) === 0) {
                 var template = Handlebars.compile($("#college-template").html());
 
                 var context = {
@@ -441,7 +447,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "jquery
             }, {
                 url: web_path + ajax_url.update,
                 type: 'post',
-                data: $('#edit_form').serialize(),
+                data: param,
                 success: function (data) {
                     if (data.state) {
                         $.address.value(ajax_url.back);

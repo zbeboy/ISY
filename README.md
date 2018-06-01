@@ -5,25 +5,27 @@
 [![Build Status](https://travis-ci.org/zbeboy/ISY.svg?branch=dev)](https://travis-ci.org/zbeboy/ISY)
 # 开发环境
 1.JDK 1.8.*;  
-2.Intellij IDEA 2017 +;  
+2.Intellij IDEA 2017.3;  
 3.MySQL 5.7 +;  
 4.Maven 3.5.0 +;  
 5.Node 6 +;  
-6.Elasticsearch 2.4.5;  
-7.Redis last version;  
+6.Elasticsearch 5.6.8;  
+7.Redis 3.0.504;  
+8.Kotlin 1.2.41.
 # 安装
-1.Clone 代码;  
-2.配置application.properties,其它环境配置仅供开发者使用;  
+1.`git clone https://github.com/zbeboy/ISY.git`;  
+2.配置`application.properties`,其它环境配置仅供开发者使用;  
 3.额外配置(settings目录),仅供开发者使用;  
-4.安装lombok插件.
+4.若不使用Intellij IDEA,请自行安装Kotlin plugin.
 # 启动
 1.Elasticsearch;  
 2.Redis;  
 3.Intellij IDEA Run Application.class 或 Maven .  
 # 参与条件
-1.Known Spring boot;  
+1.Known Spring boot 2.0.0;  
 2.Known Git;  
 2.Known Maven;  
 3.Known RequireJs;  
 4.Known Thymeleaf;  
-5.Known Nodejs -> gulp.  
+5.Known Nodejs -> gulp;  
+6.Known Kotlin.

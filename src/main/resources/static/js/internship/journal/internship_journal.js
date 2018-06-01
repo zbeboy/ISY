@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            internship_journal_data_url: '/anyone/internship/data',
+            internship_journal_data_url: '/web/internship/journal/internship/data',
             journal_url: '/web/internship/journal/list',
             team_journal: '/web/internship/journal/team',
             my_journal: '/web/internship/journal/my/list',
@@ -118,7 +118,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         $(paramId.internshipTitle).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
@@ -147,8 +147,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentName));
             });
 
-            Handlebars.registerHelper('real_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
+            Handlebars.registerHelper('publisher', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.publisher));
             });
 
             $(tableData).html(template(data));
@@ -344,7 +344,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     nextPage(pageNumber);
                 }
             });

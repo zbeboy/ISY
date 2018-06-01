@@ -11,8 +11,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
         var ajax_url = {
             update: '/web/internship/apply/college/update',
             teacher_data_url: '/web/internship/apply/teachers',
-            internship_files_url: '/user/internship/files',
-            download_file: '/anyone/users/download/file',
+            internship_files_url: '/anyone/internship/files',
+            download_file: '/web/internship/apply/download/file',
             back: '/web/menu/internship/apply'
         };
 
@@ -24,6 +24,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
          */
         var paramId = {
             studentId: '#studentId',
+            studentUsername: '#studentUsername',
             studentName: '#studentName',
             qqMailbox: '#qqMailbox',
             parentalContact: '#parentalContact',
@@ -41,6 +42,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
          */
         var param = {
             studentId: $(paramId.studentId).val(),
+            studentUsername: $(paramId.studentUsername).val(),
             studentName: $(paramId.studentName).val(),
             qqMailbox: $(paramId.qqMailbox).val(),
             parentalContact: $(paramId.parentalContact).val(),
@@ -106,14 +108,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();
@@ -129,6 +123,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
          */
         function initParam() {
             param.studentId = $(paramId.studentId).val();
+            param.studentUsername = $(paramId.studentUsername).val();
             param.studentName = $(paramId.studentName).val();
             param.qqMailbox = $(paramId.qqMailbox).val();
             param.parentalContact = $(paramId.parentalContact).val();
@@ -178,7 +173,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
         function initMaxLength() {
             var internshipApplyState = init_page_param.internshipApplyState;
             if (internshipApplyState !== '') {
-                if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息
+                if (internshipApplyState === 5) { // 基本信息修改状态，不允许修改单位信息
                     $(paramId.studentName).maxlength({
                         alwaysShow: true,
                         threshold: 10,
@@ -192,7 +187,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
                         warningClass: "label label-success",
                         limitReachedClass: "label label-danger"
                     });
-                } else if (internshipApplyState == 7) {// 单位信息修改状态，不允许修改基本信息
+                } else if (internshipApplyState === 7) {// 单位信息修改状态，不允许修改基本信息
                     $(paramId.internshipCollegeName).maxlength({
                         alwaysShow: true,
                         threshold: 10,
@@ -258,13 +253,13 @@ require(["jquery", "handlebars", "nav_active", "moment", "lodash", "files", "mes
         function initInputState() {
             var internshipApplyState = init_page_param.internshipApplyState;
             if (internshipApplyState !== '') {
-                if (internshipApplyState == 5) { // 基本信息修改状态，不允许修改单位信息
+                if (internshipApplyState === 5) { // 基本信息修改状态，不允许修改单位信息
                     $(paramId.internshipCollegeName).attr("readonly", true);
                     $(paramId.internshipCollegeAddress).attr("readonly", true);
                     $(paramId.internshipCollegeContacts).attr("readonly", true);
                     $(paramId.internshipCollegeTel).attr("readonly", true);
                     initInternshipTime();// 初始化时间选择
-                } else if (internshipApplyState == 7) {// 单位信息修改状态，不允许修改基本信息
+                } else if (internshipApplyState === 7) {// 单位信息修改状态，不允许修改基本信息
                     $(paramId.studentName).attr("readonly", true);
                     $(paramId.qqMailbox).attr("readonly", true);
                     $(paramId.parentalContact).attr("readonly", true);

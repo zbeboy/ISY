@@ -52,17 +52,17 @@ require(["jquery", "jquery.showLoading"],
          */
         function outputData(data) {
             dealStatus($(paramId.allStatus),data.status);
-            dealStatus($(paramId.mailStatus),data.mail.status);
-            $(paramId.mailLocation).text(data.mail.location);
-            dealStatus($(paramId.diskStatus),data.diskSpace.status);
-            $(paramId.diskTotal).text(data.diskSpace.total);
-            $(paramId.diskFree).text(data.diskSpace.free);
-            $(paramId.diskThreshold).text(data.diskSpace.threshold);
-            dealStatus($(paramId.redisStatus),data.redis.status);
-            $(paramId.redisVersion).text(data.redis.version);
-            dealStatus($(paramId.dbStatus),data.db.status);
-            $(paramId.dbDatabase).text(data.db.database);
-            dealStatus($(paramId.elasticsearchStatus),data.elasticsearch.status);
+            dealStatus($(paramId.mailStatus),data.details.mail.status);
+            $(paramId.mailLocation).text(data.details.mail.details.location);
+            dealStatus($(paramId.diskStatus),data.details.diskSpace.status);
+            $(paramId.diskTotal).text(data.details.diskSpace.details.total);
+            $(paramId.diskFree).text(data.details.diskSpace.details.free);
+            $(paramId.diskThreshold).text(data.details.diskSpace.details.threshold);
+            dealStatus($(paramId.redisStatus),data.details.redis.status);
+            $(paramId.redisVersion).text(data.details.redis.details.version);
+            dealStatus($(paramId.dbStatus),data.details.db.status);
+            $(paramId.dbDatabase).text(data.details.db.details.database);
+            dealStatus($(paramId.elasticsearchStatus),data.details.elasticsearch.status);
         }
 
         /**

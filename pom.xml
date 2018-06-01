@@ -6,7 +6,7 @@
 
     <groupId>top.zbeboy.project</groupId>
     <artifactId>ISY</artifactId>
-    <version>1.1-RELEASE</version>
+    <version>1.2-RELEASE</version>
     <name>ISY Parent Project</name>
     <url>https://www.zbeboy.top</url>
     <licenses>
@@ -22,34 +22,32 @@
         <url>https://www.zbeboy.top</url>
     </organization>
 
-    <!--  use a later Java version -->
     <properties>
-        <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
-        <fastJson.version>1.2.31</fastJson.version>
-        <jsoup.version>1.10.2</jsoup.version>
+        <fastJson.version>1.2.45</fastJson.version>
+        <jsoup.version>1.11.2</jsoup.version>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
-        <org.dom4j.version>2.0.0</org.dom4j.version>
-        <xmlbeans.version>2.3.0</xmlbeans.version>
+        <spring-security-oauth2.version>2.3.0.RELEASE</spring-security-oauth2.version>
+        <org.dom4j.version>2.1.0</org.dom4j.version>
+        <xmlbeans.version>2.6.0</xmlbeans.version>
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
 
+        <!-- support kotlin -->
+        <kotlin.version>1.2.41</kotlin.version>
+
         <!-- poi relation-->
-        <org.apache.poi.version>3.16</org.apache.poi.version>
+        <org.apache.poi.version>3.17</org.apache.poi.version>
         <ooxml-schemas.version>1.3</ooxml-schemas.version>
-        <org.apache.commons.compress.version>1.14</org.apache.commons.compress.version>
+        <org.apache.commons.compress.version>1.15</org.apache.commons.compress.version>
 
         <jcaptcha.version>2.0-alpha-1</jcaptcha.version>
         <jcaptcha-api.verison>1.0</jcaptcha-api.verison>
 
-        <commons-io.verson>2.4</commons-io.verson>
-        <vavr.version>0.9.0</vavr.version>
-
-        <!-- thymeleaf -->
-        <thymeleaf.version>3.0.6.RELEASE</thymeleaf.version>
-        <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
-        <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
+        <commons-io.verson>2.6</commons-io.verson>
+        <commons-collections.version>3.2.2</commons-collections.version>
 
         <!-- webjars properties -->
+        <webjars.locator.version>0.32-1</webjars.locator.version>
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
         <webjars.font-awesome.version>4.6.3</webjars.font-awesome.version>
         <webjars.metisMenu.version>2.5.2</webjars.metisMenu.version>
@@ -71,7 +69,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.7.RELEASE</version>
+        <version>2.0.2.RELEASE</version>
     </parent>
 
     <!-- Add typical dependencies for a web application -->
@@ -79,16 +77,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -117,6 +105,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring-security-oauth2.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity4</artifactId>
         </dependency>
@@ -129,6 +123,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -139,12 +139,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-        </dependency>
-
-        <!-- oauth2 -->
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
         </dependency>
 
         <dependency>
@@ -158,11 +152,7 @@
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter</artifactId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -238,20 +228,13 @@
         <!-- spring session -->
         <dependency>
             <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session</artifactId>
+            <artifactId>spring-session-data-redis</artifactId>
         </dependency>
 
         <!-- joda time -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!-- jcaptcha -->
@@ -298,13 +281,7 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-        </dependency>
-
-        <!-- vavr -->
-        <dependency>
-            <groupId>io.vavr</groupId>
-            <artifactId>vavr</artifactId>
-            <version>${vavr.version}</version>
+            <version>${commons-collections.version}</version>
         </dependency>
 
         <!-- dom4j -->
@@ -377,6 +354,26 @@
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- support kotlin -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- webjars bootstrap -->
@@ -493,6 +490,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator</artifactId>
+            <version>${webjars.locator.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
@@ -501,20 +499,6 @@
             </exclusions>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/libs-release</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/libs-release</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <profiles>
         <profile>
@@ -564,6 +548,9 @@
                                 <database>
                                     <name>org.jooq.util.mysql.MySQLDatabase</name>
                                     <includes>.*</includes>
+                                    <excludes>
+                                        flyway_schema_history
+                                    </excludes>
                                     <inputSchema>isy</inputSchema>
                                 </database>
                                 <target>
@@ -572,6 +559,66 @@
                                 </target>
                             </generator>
                         </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <version>${kotlin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>test-compile</id>
+                                <goals>
+                                    <goal>test-compile</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <!-- Replacing default-compile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-compile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- Replacing default-testCompile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-testCompile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>java-compile</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>java-test-compile</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>testCompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
 
                     <!-- support git info -->
@@ -623,6 +670,66 @@
                         </configuration>
                     </plugin>
 
+                    <plugin>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <version>${kotlin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>test-compile</id>
+                                <goals>
+                                    <goal>test-compile</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <!-- Replacing default-compile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-compile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- Replacing default-testCompile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-testCompile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>java-compile</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>java-test-compile</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>testCompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!-- support git info -->
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
@@ -646,6 +753,67 @@
                             </arguments>
                         </configuration>
                     </plugin>
+
+                    <plugin>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <version>${kotlin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>test-compile</id>
+                                <goals>
+                                    <goal>test-compile</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <!-- Replacing default-compile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-compile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- Replacing default-testCompile as it is treated specially by maven -->
+                            <execution>
+                                <id>default-testCompile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>java-compile</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>java-test-compile</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>testCompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!-- support git info -->
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
@@ -655,5 +823,19 @@
             </build>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>spring-milestone</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestone</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

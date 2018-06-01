@@ -11,9 +11,9 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
          */
         var ajax_url = {
             valid: '/web/internship/release/update/valid',
-            file_upload_url: '/anyone/users/upload/internship',
-            delete_file_url: '/anyone/users/delete/file/internship',
-            internship_files_url: '/user/internship/files',
+            file_upload_url: '/web/internship/release/upload/file/internship',
+            delete_file_url: '/web/internship/release/delete/file/internship',
+            internship_files_url: '/anyone/internship/files',
             update: '/web/internship/release/update',
             back: '/web/menu/internship/release'
         };
@@ -89,14 +89,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         function startLoading() {
             // 显示遮罩
             $('#page-wrapper').showLoading();
@@ -132,7 +124,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "files", "bootstrap-dat
             param.teacherDistributionTime = $(paramId.teacherDistributionTime).val();
             param.time = $(paramId.time).val();
             param.internshipReleaseIsDel = $('input[name="internshipReleaseIsDel"]:checked').val();
-            if (typeof(param.internshipReleaseIsDel) == "undefined") {
+            if (typeof(param.internshipReleaseIsDel) === "undefined") {
                 param.internshipReleaseIsDel = 0;
             }
             var f = $('.fileobj');

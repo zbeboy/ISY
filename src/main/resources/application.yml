@@ -1,8 +1,8 @@
 # spring setting
 spring:
       profiles:
-        active: secrecy,prod
-      http:
+        active: secrecy,dev
+      servlet:
         multipart:
           max-request-size: 100MB
           max-file-size: 100MB
@@ -11,19 +11,14 @@ spring:
         host: smtp.qq.com
       thymeleaf:
         mode: HTML
+      jooq:
+        sql-dialect: mysql_8_0
 
 # project info
 info:
   build:
     artifactId: @project.artifactId@
     version: @project.version@
-
-# security setting
-security:
-  require-ssl: true
-  oauth2:
-    resource:
-      filter-order: 3
 
 # isy setting
 isy:
@@ -44,3 +39,15 @@ server:
   compression:
     enabled: true
     min-response-size: 1
+
+# web manage
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: WHEN_AUTHORIZED
+

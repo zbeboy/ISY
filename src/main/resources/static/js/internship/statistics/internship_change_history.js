@@ -72,7 +72,7 @@ require(["jquery", "handlebars", "nav_active", "jquery.address", "css!" + web_pa
 
             Handlebars.registerHelper('inverted', function () {
                 var value = '';
-                if (count % 2 == 0) {
+                if (count % 2 === 0) {
                     value = Handlebars.escapeExpression('timeline-inverted');
                 } else {
                     value = Handlebars.escapeExpression('');

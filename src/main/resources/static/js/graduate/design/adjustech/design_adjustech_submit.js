@@ -28,7 +28,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         function getAjaxUrl() {
             return {
                 data_url: '/web/graduate/design/adjustech/student/submit/data',
-                organizes: '/anyone/graduate/design/release/organizes',
+                organizes: '/anyone/graduate/design/organizes',
                 adjust_teacher: '/web/graduate/design/adjustech/teachers',
                 update: '/web/graduate/design/adjustech/update',
                 del: '/web/graduate/design/adjustech/delete',

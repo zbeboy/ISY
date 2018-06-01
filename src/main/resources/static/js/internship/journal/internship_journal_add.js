@@ -72,14 +72,6 @@ require(["jquery", "handlebars", "nav_active", "quill", "moment", "messenger", "
             $(errorMsgId).removeClass('hidden').text(msg);
         }
 
-        /*
-         清除验证
-         */
-        function validCleanDom(inputId, errorId) {
-            $(inputId).removeClass('has-error').removeClass('has-success');
-            $(errorId).addClass('hidden').text('');
-        }
-
         // 初始化内容与感想富文本框
         var quill = new Quill(paramId.internshipJournalContent, {
             placeholder: '内容与感想',

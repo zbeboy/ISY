@@ -56,10 +56,10 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
             passData: '/web/platform/users/pass/data',
             waitData: '/web/platform/users/wait/data',
             usersTypeData: '/web/platform/users/type/data',
-            roleData: '/special/channel/users/role/data',
-            saveRole: '/special/channel/users/role/save',
-            updateEnabled: '/special/channel/users/update/enabled',
-            deleteUsers: '/special/channel/users/deletes'
+            roleData: '/web/platform/users/role/data',
+            saveRole: '/web/platform/users/role/save',
+            updateEnabled: '/web/platform/users/update/enabled',
+            deleteUsers: '/web/platform/users/deletes'
         };
     }
 
@@ -195,7 +195,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         $(getPassParamId().mobile).val('');
         var childrens = $(getPassParamId().usersType).children();
         for (var i = 0; i < childrens.length; i++) {
-            if (Number($(childrens[i]).val()) == 0) {
+            if (Number($(childrens[i]).val()) === 0) {
                 $(childrens[i]).prop('selected', true);
                 break;
             }
@@ -209,21 +209,21 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
     var passTable = null;
 
     $(getPassParamId().realName).keyup(function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().username).keyup(function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             initPassParam();
             passTable.ajax.reload();
         }
     });
 
     $(getPassParamId().mobile).keyup(function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             initPassParam();
             passTable.ajax.reload();
         }
@@ -335,7 +335,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
                 {
                     targets: 6,
                     render: function (a, b, c, d) {
-                        if (c.enabled == 0 || c.enabled == null) {
+                        if (c.enabled === 0 || c.enabled == null) {
                             return "<span class='text-danger'>已注销</span>";
                         }
                         return "<span class='text-info'>正常</span>";
@@ -348,7 +348,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
 
                         var context = null;
 
-                        if (c.enabled == 1) {
+                        if (c.enabled === 1) {
                             context =
                                 {
                                     func: [
@@ -813,7 +813,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
         $(getWaitParamId().mobile).val('');
         var childrens = $(getWaitParamId().usersType).children();
         for (var i = 0; i < childrens.length; i++) {
-            if (Number($(childrens[i]).val()) == 0) {
+            if (Number($(childrens[i]).val()) === 0) {
                 $(childrens[i]).prop('selected', true);
                 break;
             }
@@ -823,27 +823,27 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "messenge
     var waitTable = null;
 
     $(getWaitParamId().realName).keyup(function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().username).keyup(function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
     $(getWaitParamId().mobile).keyup(function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             initWaitParam();
             waitTable.ajax.reload();
         }
     });
 
-    $(getWaitParamId().usersType).change(function (event) {
+    $(getWaitParamId().usersType).change(function () {
         initWaitParam();
         waitTable.ajax.reload();
     });

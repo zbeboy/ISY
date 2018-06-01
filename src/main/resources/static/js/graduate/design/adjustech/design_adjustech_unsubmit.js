@@ -28,7 +28,7 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         function getAjaxUrl() {
             return {
                 data_url: '/web/graduate/design/adjustech/student/unsubmit/data',
-                organizes: '/anyone/graduate/design/release/organizes',
+                organizes: '/anyone/graduate/design/organizes',
                 adjust_teacher: '/web/graduate/design/adjustech/teachers',
                 save: '/web/graduate/design/adjustech/save',
                 back: '/web/menu/graduate/design/adjustech'
@@ -281,14 +281,14 @@ require(["jquery", "nav_active", "handlebars", "datatables.responsive", "check.a
         }
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

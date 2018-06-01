@@ -859,8 +859,8 @@ if( Tablesaw.mustard ) {
 	} );
 
 }());
-;(function() {
-	function getSortValue( cell ) {
+    (function () {
+        function getSortValue( cell ) {
 		var text = [];
 		$( cell.childNodes ).each(function() {
 			var $el = $( this );
@@ -1518,10 +1518,9 @@ if( Tablesaw.mustard ) {
 	} );
 
 }());
-
-;(function(){
-
-	var MiniMap = {
+    
+(function () {
+        var MiniMap = {
 		attr: {
 			init: 'data-tablesaw-minimap'
 		}
@@ -1594,10 +1593,9 @@ if( Tablesaw.mustard ) {
 	} );
 
 }());
-
-;(function() {
-
-	var S = {
+    
+(function () {
+        var S = {
 		selectors: {
 			init: 'table[data-tablesaw-mode-switch]'
 		},

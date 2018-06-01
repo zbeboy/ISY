@@ -241,7 +241,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         }
 
         $(getParamId().originalFileName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

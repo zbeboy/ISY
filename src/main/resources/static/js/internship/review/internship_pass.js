@@ -17,7 +17,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             science_data_url: '/anyone/internship/sciences',
             organize_data_url: '/anyone/internship/organizes',
             back: '/web/menu/internship/review',
-            download_file: '/anyone/users/download/file'
+            download_file: '/web/internship/review/download/file'
         };
 
         // 刷新时选中菜单
@@ -40,7 +40,8 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
             searchParams: '',
             pageNum: 0,
             pageSize: 2,
-            displayedPages: 3
+            displayedPages: 3,
+            internshipReleaseId: init_page_param.internshipReleaseId
         };
 
         /*
@@ -145,27 +146,27 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         });
 
         $(paramId.studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
         $(paramId.studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
-        $(paramId.scienceName).change(function (event) {
+        $(paramId.scienceName).change(function () {
             var science = $(paramId.scienceName).val();
             changeOrganize(science);
             refreshSearch();
             init();
         });
 
-        $(paramId.organizeName).change(function (event) {
+        $(paramId.organizeName).change(function () {
             refreshSearch();
             init();
         });
@@ -389,76 +390,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
         }
 
         /**
-         * 状态修改询问
-         * @param internshipReleaseId 实习发布id
-         * @param studentId 学生id
-         * @param reason 原因
-         * @param state 状态
-         * @param studentName 学生名
-         * @param obj 当前dom对象
-         * @param url 提交url
-         */
-        function ask(internshipReleaseId, studentId, reason, state, studentName, obj, url) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定通过学生 '" + studentName + "'  吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            sendAjax(internshipReleaseId, studentId, reason, state, obj, url);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
-                }
-            });
-        }
-
-        /**
-         * 发送数据到后台
-         */
-        function sendAjax(internshipReleaseId, studentId, reason, state, obj, url) {
-            Messenger().run({
-                successMessage: '保存数据成功',
-                errorMessage: '保存数据失败',
-                progressMessage: '正在保存数据....'
-            }, {
-                url: web_path + url,
-                type: 'post',
-                data: {
-                    internshipReleaseId: internshipReleaseId,
-                    studentId: studentId,
-                    reason: reason,
-                    internshipApplyState: state
-                },
-                success: function (data) {
-                    if (data.state) {
-                        init();
-                    } else {
-                        Messenger().post({
-                            message: data.msg,
-                            type: 'error',
-                            showCloseButton: true
-                        });
-                    }
-                },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
-                }
-            });
-        }
-
-        /**
          * 发送状态申请
          */
         function sendStateAjax() {
@@ -561,8 +492,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                 studentName: '',
                 studentNumber: '',
                 scienceName: '',
-                organizeName: '',
-                internshipReleaseId: init_page_param.internshipReleaseId
+                organizeName: ''
             };
             if (typeof(Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
@@ -622,7 +552,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
          */
         function changeOrganize(science) {
 
-            if (Number(science) == 0) {
+            if (Number(science) === 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
@@ -682,7 +612,6 @@ require(["jquery", "handlebars", "nav_active", "messenger", "jquery.address", "j
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     nextPage(pageNumber);
                 }
             });

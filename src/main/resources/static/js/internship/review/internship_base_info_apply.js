@@ -37,7 +37,8 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
             searchParams: '',
             pageNum: 0,
             pageSize: 2,
-            displayedPages: 3
+            displayedPages: 3,
+            internshipReleaseId: init_page_param.internshipReleaseId
         };
 
         /*
@@ -142,14 +143,14 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
         });
 
         $(paramId.studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
         $(paramId.studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
@@ -495,8 +496,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 studentName: '',
                 studentNumber: '',
                 scienceName: '',
-                organizeName: '',
-                internshipReleaseId: init_page_param.internshipReleaseId
+                organizeName: ''
             };
             if (typeof(Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
@@ -583,7 +583,7 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
          */
         function changeOrganize(science) {
 
-            if (Number(science) == 0) {
+            if (Number(science) === 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
@@ -646,7 +646,6 @@ require(["jquery", "handlebars", "nav_active", "moment", "bootstrap-daterangepic
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     nextPage(pageNumber);
                 }
             });

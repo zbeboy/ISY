@@ -8,7 +8,7 @@ require(["jquery", "handlebars", "nav_active", "messenger", "bootstrap-maxlength
          ajax url.
          */
         var ajax_url = {
-            building_data_url: '/web/graduate/design/replan/buildings',
+            building_data_url: '/anyone/graduate/design/buildings',
             schoolroom_data_url: '/user/schoolrooms',
             update: '/web/graduate/design/replan/group/update',
             nav: '/web/menu/graduate/design/replan',

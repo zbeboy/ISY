@@ -1,8 +1,8 @@
 /**
  * Created by lenovo on 2016-12-11.
  */
-require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.address", "messenger"],
-    function ($, Handlebars, nav_active) {
+require(["jquery", "nav_active", "datatables.responsive", "jquery.address", "messenger"],
+    function ($, nav_active) {
 
         /*
         参数
@@ -48,15 +48,12 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
          * @returns {*}
          */
         function byteToBoolean(b) {
-            if (b == 1) {
+            if (b === 1) {
                 return '已交';
             } else {
                 return '未交';
             }
         }
-
-        // 预编译模板
-        var template = Handlebars.compile($("#operator_button").html());
 
         // datatables 初始化
         var responsiveHelper = undefined;
@@ -340,14 +337,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         }
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
@@ -355,28 +352,28 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
 
 
         $(getParamId().collegeClass).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().phoneNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().headmaster).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().schoolGuidanceTeacher).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

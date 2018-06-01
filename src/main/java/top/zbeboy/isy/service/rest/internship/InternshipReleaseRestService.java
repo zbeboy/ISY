@@ -38,7 +38,6 @@ public interface InternshipReleaseRestService {
      *
      * @param i      数据
      * @param format 时间格式
-     * @return 格式化后的数据
      */
     void dealDateTime(InternshipReleaseBean i, String format);
 

@@ -65,6 +65,7 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[1, 'asc']],// 排序
             "ajax": {
                 "url": web_path + getAjaxUrl().applications,
                 "dataSrc": "data",
@@ -267,21 +268,21 @@ require(["jquery", "handlebars", "datatables.responsive", "check.all", "jquery.a
         }
 
         $(getParamId().applicationName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().applicationEnName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().applicationCode).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }

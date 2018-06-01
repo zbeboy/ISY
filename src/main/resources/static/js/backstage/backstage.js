@@ -22,7 +22,7 @@ requirejs.config({
         "files": web_path + "/js/util/files",
         "constants": web_path + "/js/util/constants",
         "ajax_loading_view": web_path + "/js/util/ajax_loading_view",
-        "jquery.address": ["https://cdn.bootcss.com/jquery.address/1.6/jquery.address.min",
+        "jquery.address": ["https://lib.baomitu.com/jquery.address/1.6/jquery.address.min",
             web_path + "/plugin/jquery_address/jquery.address-1.6.min"],
         "bootstrap-datetimepicker-zh-CN": web_path + "/plugin/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.min",
         "bootstrap-datetimepicker": web_path + "/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min",
@@ -31,11 +31,12 @@ requirejs.config({
         "bootstrap-select": web_path + "/plugin/bootstrap-select/js/bootstrap-select.min",
         "bootstrap-select-zh-CN": web_path + "/plugin/bootstrap-select/js/i18n/defaults-zh_CN.min",
         "bootstrap-duallistbox": web_path + "/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
-        "bootstrap-maxlength": ["https://cdn.bootcss.com/bootstrap-maxlength/1.7.0/bootstrap-maxlength.min",
+        "bootstrap-maxlength": ["https://lib.baomitu.com/bootstrap-maxlength/1.7.0/bootstrap-maxlength.min",
             web_path + "/plugin/bootstrap-maxlength/bootstrap-maxlength.min"],
-        "moment": ["https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/moment.min",
+        "moment": ["https://lib.baomitu.com/moment.js/2.13.0/moment.min",
             web_path + "/plugin/moment/moment.min"],
-        "moment-with-locales": web_path + "/plugin/moment/moment-with-locales.min",
+        "moment-with-locales": ["https://lib.baomitu.com/moment.js/2.13.0/moment-with-locales.min",
+            web_path + "/plugin/moment/moment-with-locales.min"],
         "jquery-ui/widget": web_path + "/plugin/jquery_file_upload/js/vendor/jquery.ui.widget.min",
         "jquery.iframe-transport": web_path + "/plugin/jquery_file_upload/js/jquery.iframe-transport.min",
         "jquery.fileupload-process": web_path + "/plugin/jquery_file_upload/js/jquery.fileupload-process.min",
@@ -144,6 +145,40 @@ requirejs.onError = function (err) {
         console.log('modules: ' + err.requireModules);
     }
     throw err;
+};
+
+/**
+ * Creates the node for the load command. Only used in browser envs.
+ */
+requirejs.createNode = function (config, moduleName, url) {
+    var node = config.xhtml ?
+        document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
+        document.createElement('script');
+    node.type = config.scriptType || 'text/javascript';
+    node.charset = 'utf-8';
+    node.async = true;
+
+    if(moduleName === 'jquery.address'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-zMTBSQGBLON8BzJvCLwjWuuA1q8Ew5clzw9A3FMXoo/AdY/oB2Q1QTOT/aHDGzfg';
+    }
+
+    if(moduleName === 'bootstrap-maxlength'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-56NvzBS6HSzWl0ISe8ae/V5zl19eYBSPNMl1EiBRpGgbQ4gv1XZaCD4Tem0ehZrb';
+    }
+
+    if(moduleName === 'moment'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-MV8AwEgYXLMw5ZPj4763CSPk+tYGoUZGdwr/+EfkAZ1Dl2rGHxOMpQ1IW7VtyUPn';
+    }
+
+    if(moduleName === 'moment-with-locales'){
+        node.crossOrigin = 'anonymous';
+        node.integrity = 'sha384-s4lxKn9Ij3tCfeyvaF64bKSEP+3Att8/dPKzh+UPdg/6oyHmVPAeH7c/GtrjRO1v';
+    }
+
+    return node;
 };
 
 require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "sockjs-client", "moment-with-locales",
@@ -364,7 +399,7 @@ require(["jquery", "ajax_loading_view", "requirejs-domready", "handlebars", "soc
          提醒详情
          */
         $('#wrapper').delegate('.alert_detail', "click", function () {
-            $.address.value(getAjaxUrl().alert_detail_url + '?id=' + $(this).attr('data-id') + '&type=' + $(this).attr('data-type'));
+            $.address.value(getAjaxUrl().alert_detail_url + '?id=' + $(this).attr('data-id'));
             getRemind();
         });
 

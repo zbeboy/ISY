@@ -3,9 +3,9 @@
 /root/*
 *.pfx
 /node_modules/
-/.idea/dataSources.xml
 /.idea/workspace.xml
 /src/main/resources/application-secrecy.yml
 /src/main/resources/application-dev.yml
 /src/main/resources/application-prod.yml
 /src/main/resources/application-test.yml
+/settings/internshipJournalTemplate.docx

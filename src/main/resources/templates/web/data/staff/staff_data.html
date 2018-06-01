@@ -58,25 +58,12 @@
                             </div>
                             <div class="row" style="margin-top:2px;">
                                 <div class="col-md-6">
-                                    <input type="text" id="pass_mobile" class="form-control input-sm"
-                                           placeholder="手机号"/>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" id="pass_id_card" class="form-control input-sm"
-                                           placeholder="身份证号"/>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top:2px;">
-                                <div class="col-md-6">
                                     <input type="text" id="pass_real_name" class="form-control input-sm"
                                            placeholder="姓名"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-control input-sm" id="pass_sex">
-                                        <option value="">性别</option>
-                                        <option value="男">男</option>
-                                        <option value="女">女</option>
-                                    </select>
+                                    <input type="text" id="pass_mobile" class="form-control input-sm"
+                                           placeholder="手机号"/>
                                 </div>
                             </div>
                             <div class="text-center" style="margin-top:4px;">
@@ -159,7 +146,7 @@
                                            placeholder="院"/>
                                 </div>
                             </div>
-                            <div class="row" style="margin-top:2px;">
+                            <div class="row" style="margin-top:2px;" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                                 <div class="col-md-6">
                                     <input type="text" id="wait_search_department" class="form-control input-sm"
                                            placeholder="系"/>
@@ -169,12 +156,26 @@
                                            placeholder="手机号"/>
                                 </div>
                             </div>
-                            <div class="row" style="margin-top:2px;">
+                            <div class="row" style="margin-top:2px;" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                                 <div class="col-md-6">
                                     <input type="text" id="wait_search_staff_number" class="form-control input-sm"
                                            placeholder="工号"/>
                                 </div>
                                 <div class="col-md-6">
+                                    <input type="text" id="wait_search_username" class="form-control input-sm"
+                                           placeholder="邮箱"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:2px;" sec:authorize="!hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
+                                <div class="col-md-4">
+                                    <input type="text" id="wait_search_mobile" class="form-control input-sm"
+                                           placeholder="手机号"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="wait_search_staff_number" class="form-control input-sm"
+                                           placeholder="工号"/>
+                                </div>
+                                <div class="col-md-4">
                                     <input type="text" id="wait_search_username" class="form-control input-sm"
                                            placeholder="邮箱"/>
                                 </div>

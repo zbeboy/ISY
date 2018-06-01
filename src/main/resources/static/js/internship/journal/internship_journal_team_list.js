@@ -11,6 +11,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         function getAjaxUrl() {
             return {
                 data_url: '/web/internship/journal/list/data',
+                journal_count_data_url: '/web/internship/journal/team/count/data',
                 del: '/web/internship/journal/list/del',
                 edit: '/web/internship/journal/list/edit',
                 look: '/web/internship/journal/list/look',
@@ -167,7 +168,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                         var context = null;
                         var html = '<i class="fa fa-lock"></i>';
                         // 当前用户查看自己的实习日志
-                        if (c.studentId == init_page_param.studentId && init_page_param.studentId != 0) {
+                        if (c.studentId === init_page_param.studentId && init_page_param.studentId !== 0) {
                             context =
                                 {
                                     func: [
@@ -232,7 +233,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                                     };
                             } else {// 非作者也非管理员
                                 // 若限制仅允许教职工查阅
-                                if (c.isSeeStaff == 1) {
+                                if (c.isSeeStaff === 1) {
                                     if (init_page_param.usersTypeName === constants.global_users_type.staff_type) {
                                         context =
                                             {
@@ -370,6 +371,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
             "timePicker": true,
             "timePicker24Hour": true,
             "timePickerIncrement": 30,
+            "autoUpdateInput": false,
             "locale": {
                 format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: '确定',
@@ -385,6 +387,62 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         }, function (start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
         });
+
+        $(getParamId().createDate).on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss') + ' 至 ' + picker.endDate.format('YYYY-MM-DD HH:mm:ss'));
+            initParam();
+            myTable.ajax.reload();
+        });
+
+        $(getParamId().createDate).on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+
+        var tableData = '#tableData';
+
+        initJournalCount();
+
+        /**
+         * 初始化小组内个人日志统计
+         */
+        function initJournalCount() {
+            $.get(web_path + getAjaxUrl().journal_count_data_url, {
+                id: init_page_param.internshipReleaseId,
+                staffId: init_page_param.staffId
+            }, function (data) {
+                if (data.state) {
+                    listData(data);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 列表数据
+         * @param data 数据
+         */
+        function listData(data) {
+            var template = Handlebars.compile($("#journal-count-template").html());
+            var sequence = 0;
+            Handlebars.registerHelper('sequence', function () {
+                return ++sequence;
+            });
+            Handlebars.registerHelper('student_number', function () {
+                var studentNumber = this.studentNumber ? this.studentNumber : '无数据';
+                return new Handlebars.SafeString(Handlebars.escapeExpression(studentNumber));
+            });
+            Handlebars.registerHelper('journal_num', function () {
+                var journalNum = this.journalNum ? this.journalNum : 0;
+                return new Handlebars.SafeString(Handlebars.escapeExpression(journalNum));
+            });
+            $(tableData).html(template(data));
+            $('#journalCountTable').tablesaw().data("tablesaw").refresh();
+        }
 
         /*
         初始化搜索内容
@@ -459,28 +517,28 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
         }
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().organize).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().guidanceTeacher).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
@@ -499,6 +557,10 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
 
         $('#refresh').click(function () {
             myTable.ajax.reload();
+        });
+
+        $('#refreshJournalCount').click(function () {
+            initJournalCount();
         });
 
         /*

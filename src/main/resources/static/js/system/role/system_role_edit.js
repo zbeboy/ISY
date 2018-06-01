@@ -70,14 +70,6 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
         $(errorMsgId).removeClass('hidden').text(msg);
     }
 
-    /*
-     清除验证
-     */
-    function validCleanDom(inputId, errorId) {
-        $(inputId).removeClass('has-error').removeClass('has-success');
-        $(errorId).addClass('hidden').text('');
-    }
-
     /**
      * 初始化参数
      */
@@ -261,7 +253,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     }
 
     function treeViewData(data) {
-        var $checkableTree = treeviewId.treeview({
+        treeviewId.treeview({
             data: data,
             showIcon: false,
             showCheckbox: true,
@@ -290,7 +282,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
                 var unCheckeds = treeviewId.treeview('getUnchecked');
                 for (var i = 0; i < list.length; i++) {
                     for (var j = 0; j < unCheckeds.length; j++) {
-                        if (list[i].applicationId == unCheckeds[j].dataId) {
+                        if (list[i].applicationId === unCheckeds[j].dataId) {
                             treeviewId.treeview('checkNode', [unCheckeds[j], {silent: true}]);
                             break;
                         }
@@ -305,7 +297,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
      * @param node
      */
     function checkAllParentNode(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId != undefined) {
+        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
             var parentNode = treeviewId.treeview('getParent', node);
             checkAllParentNode(parentNode);
         }
@@ -353,13 +345,13 @@ require(["jquery", "handlebars", "constants", "nav_active", "messenger", "bootst
     }
 
     function getAllParent(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId != undefined) {
+        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
             var parentNode = treeviewId.treeview('getParent', node);
             childrenArr = [];
             getAllChildren(parentNode);
             var parentNodeIsChecked = false;
             for (var i = 0; i < childrenArr.length; i++) {
-                if (childrenArr[i].nodeId != parentNode.nodeId && childrenArr[i].state.checked) {
+                if (childrenArr[i].nodeId !== parentNode.nodeId && childrenArr[i].state.checked) {
                     parentNodeIsChecked = true;
                 }
             }

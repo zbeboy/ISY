@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
          ajax url.
          */
         var ajax_url = {
-            internship_apply_data_url: '/web/internship/apply/data',
+            internship_apply_data_url: '/web/internship/apply/internship/data',
             my_internship_apply_data_url: '/web/internship/apply/my/data',
             my_internship_look_data_url: '/web/internship/apply/audit/detail',
             recall_apply_url: '/web/internship/apply/recall',
@@ -19,7 +19,7 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
             valid_student: '/web/internship/apply/valid/student',
             access_condition_url: '/web/internship/apply/condition',
             file_upload_url: '/web/internship/apply/upload',
-            download_file: '/anyone/users/download/file',
+            download_file: '/web/internship/apply/download/file',
             delete_file: '/web/internship/apply/delete/file'
         };
 
@@ -206,14 +206,14 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
         });
 
         $(paramId.internshipTitle).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshSearch();
                 init();
             }
         });
 
         $(myParamId.internshipTitle).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 refreshMySearch();
                 initMyData();
             }
@@ -242,8 +242,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentName));
             });
 
-            Handlebars.registerHelper('real_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
+            Handlebars.registerHelper('publisher', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.publisher));
             });
 
             $(tableData).html(template(data));
@@ -272,8 +272,8 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 return new Handlebars.SafeString(Handlebars.escapeExpression(this.departmentName));
             });
 
-            Handlebars.registerHelper('real_name', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(this.realName));
+            Handlebars.registerHelper('publisher', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(this.publisher));
             });
 
             Handlebars.registerHelper('internship_apply_state', function () {
@@ -817,7 +817,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     nextPage(pageNumber);
                 }
             });
@@ -839,7 +838,6 @@ require(["jquery", "handlebars", "messenger", "jquery.address", "jquery.simple-p
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
-                    console.log(pageNumber);
                     myNextPage(pageNumber);
                 }
             });

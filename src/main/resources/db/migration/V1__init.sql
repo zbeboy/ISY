@@ -87,8 +87,9 @@ CREATE TABLE college_application (
 );
 
 CREATE TABLE college_role (
-  role_id    VARCHAR(64) NOT NULL,
-  college_id INT         NOT NULL,
+  role_id     VARCHAR(64) NOT NULL,
+  college_id  INT         NOT NULL,
+  allow_agent BOOLEAN DEFAULT 0,
   FOREIGN KEY (role_id) REFERENCES role (role_id),
   FOREIGN KEY (college_id) REFERENCES college (college_id),
   PRIMARY KEY (role_id, college_id)
@@ -127,7 +128,7 @@ CREATE TABLE political_landscape (
 
 CREATE TABLE nation (
   nation_id   INT AUTO_INCREMENT PRIMARY KEY,
-  nation_name VARCHAR(30) UNIQUE NOT NULL
+  nation_name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE academic_title (
@@ -138,16 +139,15 @@ CREATE TABLE academic_title (
 CREATE TABLE student (
   student_id             INT AUTO_INCREMENT PRIMARY KEY,
   student_number         VARCHAR(20) UNIQUE NOT NULL,
-  birthday               DATE,
-  sex                    VARCHAR(2),
-  id_card                VARCHAR(20) UNIQUE,
-  family_residence       VARCHAR(600),
+  birthday               VARCHAR(48),
+  sex                    VARCHAR(24),
+  family_residence       VARCHAR(192),
   political_landscape_id INT,
   nation_id              INT,
-  dormitory_number       VARCHAR(15),
-  parent_name            VARCHAR(10),
-  parent_contact_phone   VARCHAR(15),
-  place_origin           VARCHAR(500),
+  dormitory_number       VARCHAR(24),
+  parent_name            VARCHAR(48),
+  parent_contact_phone   VARCHAR(48),
+  place_origin           VARCHAR(112),
   organize_id            INT                NOT NULL,
   username               VARCHAR(64)        NOT NULL,
   FOREIGN KEY (organize_id) REFERENCES organize (organize_id),
@@ -157,10 +157,9 @@ CREATE TABLE student (
 CREATE TABLE staff (
   staff_id               INT AUTO_INCREMENT PRIMARY KEY,
   staff_number           VARCHAR(20) UNIQUE NOT NULL,
-  birthday               DATE,
-  sex                    VARCHAR(2),
-  id_card                VARCHAR(20) UNIQUE,
-  family_residence       VARCHAR(600),
+  birthday               VARCHAR(48),
+  sex                    VARCHAR(24),
+  family_residence       VARCHAR(192),
   political_landscape_id INT,
   nation_id              INT,
   post                   VARCHAR(500),
@@ -169,6 +168,16 @@ CREATE TABLE staff (
   username               VARCHAR(64)        NOT NULL,
   FOREIGN KEY (department_id) REFERENCES department (department_id),
   FOREIGN KEY (username) REFERENCES users (username)
+);
+
+CREATE TABLE users_key (
+  username VARCHAR(64) PRIMARY KEY,
+  user_key VARCHAR(64) UNIQUE NOT NULL
+);
+
+CREATE TABLE users_unique_info (
+  username VARCHAR(64) PRIMARY KEY,
+  id_card  VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE files (
@@ -188,7 +197,7 @@ CREATE TABLE internship_type (
 CREATE TABLE internship_release (
   internship_release_id           VARCHAR(64) PRIMARY KEY,
   internship_title                VARCHAR(100) NOT NULL,
-  release_time                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  release_time                    TIMESTAMP    NOT NULL,
   username                        VARCHAR(64)  NOT NULL,
   allow_grade                     VARCHAR(5)   NOT NULL,
   teacher_distribution_start_time DATETIME     NOT NULL,
@@ -198,6 +207,7 @@ CREATE TABLE internship_release (
   internship_release_is_del       BOOLEAN      NOT NULL,
   department_id                   INT          NOT NULL,
   internship_type_id              INT          NOT NULL,
+  publisher                       VARCHAR(30)  NOT NULL,
   FOREIGN KEY (username) REFERENCES users (username),
   FOREIGN KEY (department_id) REFERENCES department (department_id),
   FOREIGN KEY (internship_type_id) REFERENCES internship_type (internship_type_id)
@@ -224,6 +234,8 @@ CREATE TABLE internship_teacher_distribution (
   student_id            INT          NOT NULL,
   internship_release_id VARCHAR(64)  NOT NULL,
   username              VARCHAR(200) NOT NULL,
+  student_real_name     VARCHAR(30)  NOT NULL,
+  assigner              VARCHAR(30)  NOT NULL,
   FOREIGN KEY (staff_id) REFERENCES staff (staff_id),
   FOREIGN KEY (student_id) REFERENCES student (student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
@@ -267,7 +279,7 @@ CREATE TABLE internship_change_company_history (
   company_address                      VARCHAR(500),
   company_contacts                     VARCHAR(10),
   company_tel                          VARCHAR(20),
-  change_time                          DATETIME(3)    NOT NULL,
+  change_time                          DATETIME(3) NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id)
 );
@@ -275,14 +287,15 @@ CREATE TABLE internship_change_company_history (
 CREATE TABLE internship_college (
   internship_college_id        VARCHAR(64) PRIMARY KEY,
   student_id                   INT          NOT NULL,
+  student_username             VARCHAR(64)  NOT NULL,
   internship_release_id        VARCHAR(64)  NOT NULL,
   student_name                 VARCHAR(15)  NOT NULL,
   college_class                VARCHAR(50)  NOT NULL,
-  student_sex                  VARCHAR(2)   NOT NULL,
+  student_sex                  VARCHAR(24)   NOT NULL,
   student_number               VARCHAR(20)  NOT NULL,
   phone_number                 VARCHAR(15)  NOT NULL,
   qq_mailbox                   VARCHAR(100) NOT NULL,
-  parental_contact             VARCHAR(20)  NOT NULL,
+  parental_contact             VARCHAR(48)  NOT NULL,
   headmaster                   VARCHAR(10)  NOT NULL,
   headmaster_contact           VARCHAR(20)  NOT NULL,
   internship_college_name      VARCHAR(200) NOT NULL,
@@ -301,6 +314,7 @@ CREATE TABLE internship_college (
   security_education_agreement BOOLEAN,
   parental_consent             BOOLEAN,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -309,11 +323,11 @@ CREATE TABLE internship_company (
   internship_company_id        VARCHAR(64) PRIMARY KEY,
   student_name                 VARCHAR(15)  NOT NULL,
   college_class                VARCHAR(50)  NOT NULL,
-  student_sex                  VARCHAR(2)   NOT NULL,
+  student_sex                  VARCHAR(20)   NOT NULL,
   student_number               VARCHAR(20)  NOT NULL,
   phone_number                 VARCHAR(15)  NOT NULL,
   qq_mailbox                   VARCHAR(100) NOT NULL,
-  parental_contact             VARCHAR(20)  NOT NULL,
+  parental_contact             VARCHAR(48)  NOT NULL,
   headmaster                   VARCHAR(10)  NOT NULL,
   headmaster_contact           VARCHAR(20)  NOT NULL,
   internship_company_name      VARCHAR(200) NOT NULL,
@@ -332,8 +346,10 @@ CREATE TABLE internship_company (
   security_education_agreement BOOLEAN,
   parental_consent             BOOLEAN,
   student_id                   INT          NOT NULL,
+  student_username             VARCHAR(64)  NOT NULL,
   internship_release_id        VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -342,11 +358,11 @@ CREATE TABLE graduation_practice_college (
   graduation_practice_college_id       VARCHAR(64) PRIMARY KEY,
   student_name                         VARCHAR(15)  NOT NULL,
   college_class                        VARCHAR(50)  NOT NULL,
-  student_sex                          VARCHAR(2)   NOT NULL,
+  student_sex                          VARCHAR(20)   NOT NULL,
   student_number                       VARCHAR(20)  NOT NULL,
   phone_number                         VARCHAR(15)  NOT NULL,
   qq_mailbox                           VARCHAR(100) NOT NULL,
-  parental_contact                     VARCHAR(20)  NOT NULL,
+  parental_contact                     VARCHAR(48)  NOT NULL,
   headmaster                           VARCHAR(10)  NOT NULL,
   headmaster_contact                   VARCHAR(20)  NOT NULL,
   graduation_practice_college_name     VARCHAR(200) NOT NULL,
@@ -365,8 +381,10 @@ CREATE TABLE graduation_practice_college (
   security_education_agreement         BOOLEAN,
   parental_consent                     BOOLEAN,
   student_id                           INT          NOT NULL,
+  student_username                     VARCHAR(64)  NOT NULL,
   internship_release_id                VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -375,11 +393,11 @@ CREATE TABLE graduation_practice_unify (
   graduation_practice_unify_id       VARCHAR(64) PRIMARY KEY,
   student_name                       VARCHAR(15)  NOT NULL,
   college_class                      VARCHAR(50)  NOT NULL,
-  student_sex                        VARCHAR(2)   NOT NULL,
+  student_sex                        VARCHAR(20)   NOT NULL,
   student_number                     VARCHAR(20)  NOT NULL,
   phone_number                       VARCHAR(15)  NOT NULL,
   qq_mailbox                         VARCHAR(100) NOT NULL,
-  parental_contact                   VARCHAR(20)  NOT NULL,
+  parental_contact                   VARCHAR(48)  NOT NULL,
   headmaster                         VARCHAR(10)  NOT NULL,
   headmaster_contact                 VARCHAR(20)  NOT NULL,
   graduation_practice_unify_name     VARCHAR(200) NOT NULL,
@@ -398,8 +416,10 @@ CREATE TABLE graduation_practice_unify (
   security_education_agreement       BOOLEAN,
   parental_consent                   BOOLEAN,
   student_id                         INT          NOT NULL,
+  student_username                   VARCHAR(64)  NOT NULL,
   internship_release_id              VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -408,11 +428,11 @@ CREATE TABLE graduation_practice_company (
   graduation_practice_company_id       VARCHAR(64) PRIMARY KEY,
   student_name                         VARCHAR(15)  NOT NULL,
   college_class                        VARCHAR(50)  NOT NULL,
-  student_sex                          VARCHAR(2)   NOT NULL,
+  student_sex                          VARCHAR(20)   NOT NULL,
   student_number                       VARCHAR(20)  NOT NULL,
   phone_number                         VARCHAR(15)  NOT NULL,
   qq_mailbox                           VARCHAR(100) NOT NULL,
-  parental_contact                     VARCHAR(20)  NOT NULL,
+  parental_contact                     VARCHAR(48)  NOT NULL,
   headmaster                           VARCHAR(10)  NOT NULL,
   headmaster_contact                   VARCHAR(20)  NOT NULL,
   graduation_practice_company_name     VARCHAR(200) NOT NULL,
@@ -431,8 +451,10 @@ CREATE TABLE graduation_practice_company (
   security_education_agreement         BOOLEAN,
   parental_consent                     BOOLEAN,
   student_id                           INT          NOT NULL,
+  student_username                     VARCHAR(64)  NOT NULL,
   internship_release_id                VARCHAR(64)  NOT NULL,
   FOREIGN KEY (student_id) REFERENCES student (student_id),
+  FOREIGN KEY (student_username) REFERENCES users (username),
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
   UNIQUE (student_id, internship_release_id)
 );
@@ -441,7 +463,7 @@ CREATE TABLE internship_journal (
   internship_journal_id            VARCHAR(64) PRIMARY KEY,
   student_name                     VARCHAR(30)  NOT NULL,
   student_number                   VARCHAR(20)  NOT NULL,
-  organize                         VARCHAR(200)  NOT NULL,
+  organize                         VARCHAR(200) NOT NULL,
   school_guidance_teacher          VARCHAR(30)  NOT NULL,
   graduation_practice_company_name VARCHAR(200) NOT NULL,
   internship_journal_content       TEXT         NOT NULL,

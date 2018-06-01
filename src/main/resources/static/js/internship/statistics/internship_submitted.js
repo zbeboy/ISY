@@ -80,7 +80,7 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
          */
         function changeOrganize(science) {
 
-            if (Number(science) == 0) {
+            if (Number(science) === 0) {
                 var template = Handlebars.compile($("#organize-template").html());
 
                 var context = {
@@ -400,14 +400,14 @@ require(["jquery", "handlebars", "nav_active", "datatables.responsive", "jquery.
         }
 
         $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
         });
 
         $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
             }
