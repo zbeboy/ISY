@@ -67,7 +67,7 @@ open class MainController {
      */
     @RequestMapping(value = ["/login"], method = [(RequestMethod.GET)])
     fun login(): String {
-        return if (authoritiesService.isRememberMeAuthenticated()) {
+        return if (!authoritiesService.isAnonymousAuthenticated()) {
             "redirect:/web/menu/backstage"
         } else {
             "login"
