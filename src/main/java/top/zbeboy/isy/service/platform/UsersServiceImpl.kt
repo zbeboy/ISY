@@ -32,6 +32,7 @@ import top.zbeboy.isy.web.bean.platform.users.UsersBean
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
 import javax.annotation.Resource
+import org.jooq.impl.DSL.listAgg
 
 /**
  * Created by zbeboy 2017-11-19 .
@@ -80,7 +81,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
         val principal = SecurityContextHolder.getContext().authentication.principal
         var users: Users? = null
         if (!ObjectUtils.isEmpty(principal) && principal is MyUserImpl) {
-            users = principal.getUsers()
+            users = principal.users
         }
         return users
     }
