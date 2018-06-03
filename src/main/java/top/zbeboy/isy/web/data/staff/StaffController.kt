@@ -13,11 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.Role
-import top.zbeboy.isy.domain.tables.pojos.Users
-import top.zbeboy.isy.domain.tables.pojos.UsersKey
-import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
-import top.zbeboy.isy.elastic.pojo.StaffElastic
+import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.StaffService
@@ -150,17 +146,13 @@ open class StaffController {
                                     } else {
                                         // 注册成功
                                         val saveUsers = Users()
-                                        val saveStaff = StaffElastic()
                                         val enabled: Byte = 1
                                         saveUsers.username = email
                                         saveUsers.enabled = enabled
-                                        saveStaff.enabled = enabled
                                         saveUsers.mobile = mobile
-                                        saveStaff.mobile = mobile
                                         saveUsers.password = BCryptUtils.bCryptPassword(password)
                                         saveUsers.usersTypeId = cacheManageService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).usersTypeId
                                         saveUsers.joinDate = java.sql.Date(Clock.systemDefaultZone().millis())
-                                        saveStaff.joinDate = saveUsers.joinDate
 
                                         var dateTime = DateTime.now()
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID)
@@ -168,20 +160,12 @@ open class StaffController {
                                         saveUsers.mailboxVerifyCode = mailboxVerifyCode
                                         saveUsers.mailboxVerifyValid = Timestamp(dateTime.toDate().time)
                                         saveUsers.langKey = request.locale.toLanguageTag()
-                                        saveStaff.langKey = saveUsers.langKey
                                         saveUsers.avatar = Workbook.USERS_AVATAR
-                                        saveStaff.avatar = saveUsers.avatar
                                         saveUsers.verifyMailbox = 0
                                         saveUsers.realName = staffVo.realName
-                                        saveStaff.realName = saveUsers.realName
                                         usersService.save(saveUsers)
 
-                                        saveStaff.schoolId = staffVo.school
-                                        saveStaff.schoolName = staffVo.schoolName
-                                        saveStaff.collegeId = staffVo.college
-                                        saveStaff.collegeName = staffVo.collegeName
-                                        saveStaff.departmentId = staffVo.department
-                                        saveStaff.departmentName = staffVo.departmentName
+                                        val saveStaff = Staff()
                                         saveStaff.departmentId = staffVo.department
                                         saveStaff.staffNumber = staffVo.staffNumber
                                         saveStaff.username = email
@@ -378,7 +362,7 @@ open class StaffController {
         return if (!ObjectUtils.isEmpty(users)) {
             val staff = staffService.findByUsername(users!!.username)
             staff.departmentId = department
-            staffService.update(staff, null)
+            staffService.update(staff)
             ajaxUtils.success().msg("更新学校信息成功")
         } else ajaxUtils.fail().msg("未查询到您的信息，请重新登录")
     }
@@ -446,7 +430,7 @@ open class StaffController {
                 }
                 usersUniqueInfoService.saveOrUpdate(usersUniqueInfo)
 
-                staffService.update(staff, usersUniqueInfo)
+                staffService.update(staff)
                 return AjaxUtils.of<Any>().success()
             } catch (e: ParseException) {
                 log.error("Birthday to sql date is exception : {}", e.message)

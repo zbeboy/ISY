@@ -11,16 +11,11 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.StaffDao
 import top.zbeboy.isy.domain.tables.pojos.Staff
-import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.domain.tables.records.StaffRecord
-import top.zbeboy.isy.elastic.config.ElasticBook
-import top.zbeboy.isy.elastic.pojo.StaffElastic
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository
 import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.SQLQueryUtils
-import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.sql.Date
@@ -44,9 +39,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
 
     @Resource
     open lateinit var roleService: RoleService
-
-    @Resource
-    open lateinit var staffElasticRepository: StaffElasticRepository
 
     @Resource
     open lateinit var departmentService: DepartmentService
@@ -119,90 +111,12 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    override fun save(staffElastic: StaffElastic) {
-        val staffRecord = create.insertInto(STAFF)
-                .set(STAFF.STAFF_NUMBER, staffElastic.staffNumber)
-                .set(STAFF.BIRTHDAY, staffElastic.birthday)
-                .set(STAFF.SEX, staffElastic.sex)
-                .set(STAFF.FAMILY_RESIDENCE, staffElastic.familyResidence)
-                .set(STAFF.POLITICAL_LANDSCAPE_ID, staffElastic.politicalLandscapeId)
-                .set(STAFF.NATION_ID, staffElastic.nationId)
-                .set(STAFF.POST, staffElastic.post)
-                .set(STAFF.ACADEMIC_TITLE_ID, staffElastic.academicTitleId)
-                .set(STAFF.DEPARTMENT_ID, staffElastic.departmentId)
-                .set(STAFF.USERNAME, staffElastic.username)
-                .returning(STAFF.STAFF_ID)
-                .fetchOne()
-        staffElastic.authorities = ElasticBook.NO_AUTHORITIES
-        // 注：此时用户刚注册不可能带有身份证号信息，不必同步
-        staffElastic.setStaffId(staffRecord.staffId)
-        staffElasticRepository.save(staffElastic)
+    override fun save(staff: Staff) {
+        staffDao.insert(staff)
     }
 
-    override fun update(staff: Staff, usersUniqueInfo: UsersUniqueInfo?) {
+    override fun update(staff: Staff) {
         staffDao.update(staff)
-        val staffData = staffElasticRepository.findById(staff.staffId!!.toString() + "")
-        if (staffData.isPresent) {
-            val staffElastic = staffData.get()
-            staffElastic.staffNumber = staff.staffNumber
-            staffElastic.birthday = staff.birthday
-            staffElastic.sex = staff.sex
-            staffElastic.familyResidence = staff.familyResidence
-            staffElastic.post = staff.post
-            if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
-                staffElastic.idCard = usersUniqueInfo!!.idCard
-            }
-            if (staff.politicalLandscapeId != staffElastic.politicalLandscapeId) {
-                if (!Objects.isNull(staff.politicalLandscapeId) && staff.politicalLandscapeId > 0) {
-                    val politicalLandscape = politicalLandscapeService.findById(staff.politicalLandscapeId!!)
-                    if (!Objects.isNull(politicalLandscape)) {
-                        staffElastic.politicalLandscapeId = politicalLandscape.politicalLandscapeId
-                        staffElastic.politicalLandscapeName = politicalLandscape.politicalLandscapeName
-                    }
-                } else {
-                    staffElastic.politicalLandscapeId = staff.politicalLandscapeId
-                    staffElastic.politicalLandscapeName = ""
-                }
-            }
-            if (staff.nationId != staffElastic.nationId) {
-                if (!Objects.isNull(staff.nationId) && staff.nationId > 0) {
-                    val nation = nationService.findById(staff.nationId!!)
-                    if (!Objects.isNull(nation)) {
-                        staffElastic.nationId = nation.nationId
-                        staffElastic.nationName = nation.nationName
-                    }
-                } else {
-                    staffElastic.nationId = staff.nationId
-                    staffElastic.nationName = ""
-                }
-            }
-            if (staff.academicTitleId != staffElastic.academicTitleId) {
-                if (!Objects.isNull(staff.academicTitleId) && staff.academicTitleId > 0) {
-                    val academicTitle = academicTitleService.findById(staff.academicTitleId!!)
-                    if (!Objects.isNull(academicTitle)) {
-                        staffElastic.academicTitleId = academicTitle.academicTitleId
-                        staffElastic.academicTitleName = academicTitle.academicTitleName
-                    }
-                } else {
-                    staffElastic.academicTitleId = staff.academicTitleId
-                    staffElastic.academicTitleName = ""
-                }
-            }
-            if (!Objects.isNull(staff.departmentId) && staff.departmentId > 0 && staff.departmentId != staffElastic.departmentId) {
-                val record = departmentService.findByIdRelation(staff.departmentId!!)
-                if (record.isPresent) {
-                    val departmentBean = record.get().into(DepartmentBean::class.java)
-                    staffElastic.schoolId = departmentBean.schoolId
-                    staffElastic.schoolName = departmentBean.schoolName
-                    staffElastic.collegeId = departmentBean.collegeId
-                    staffElastic.collegeName = departmentBean.collegeName
-                    staffElastic.departmentId = departmentBean.departmentId
-                    staffElastic.departmentName = departmentBean.departmentName
-                }
-            }
-            staffElasticRepository.delete(staffElastic)
-            staffElasticRepository.save(staffElastic)
-        }
     }
 
     override fun findByUsernameRelation(username: String): Optional<Record> {
@@ -228,7 +142,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
 
     override fun deleteByUsername(username: String) {
         create.deleteFrom(STAFF).where(STAFF.USERNAME.eq(username)).execute()
-        staffElasticRepository.deleteByUsername(username)
     }
 
     override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): Result<Record18<String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, Byte, String, Date>>? {
