@@ -107,9 +107,6 @@ open class UsersController {
     open lateinit var cacheManageService: CacheManageService
 
     @Resource
-    open lateinit var authoritiesService: AuthoritiesService
-
-    @Resource
     open lateinit var studentService: StudentService
 
     @Resource
@@ -126,9 +123,6 @@ open class UsersController {
 
     @Autowired
     open lateinit var isyProperties: ISYProperties
-
-    @Resource
-    open lateinit var usersGlue: UsersGlue
 
     @Resource
     open lateinit var usersUniqueInfoService: UsersUniqueInfoService
@@ -646,10 +640,14 @@ open class UsersController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<UsersBean>(request, headers)
-        val resultUtils = usersGlue.findAllByPageExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(usersGlue.countAllExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = usersService.findAllByPageExistsAuthorities(dataTablesUtils)
+        var users: List<UsersBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
+            users = records.into(UsersBean::class.java)
+        }
+        dataTablesUtils.data = users
+        dataTablesUtils.setiTotalRecords(usersService.countAllExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -673,10 +671,14 @@ open class UsersController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<UsersBean>(request, headers)
-        val resultUtils = usersGlue.findAllByPageNotExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(usersGlue.countAllNotExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = usersService.findAllByPageNotExistsAuthorities(dataTablesUtils)
+        var users: List<UsersBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
+            users = records.into(UsersBean::class.java)
+        }
+        dataTablesUtils.data = users
+        dataTablesUtils.setiTotalRecords(usersService.countAllNotExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(usersService.countByConditionNotExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 

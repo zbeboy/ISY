@@ -283,50 +283,79 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                 .fetch()
     }
 
-    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record> {
+    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>? {
         val users = getUserFromSession()
         val select = existsAuthoritiesSelect()
         val a = searchCondition(dataTablesUtils)
         return if (ObjectUtils.isEmpty(a)) {
-            val selectConditionStep = create.select()
+            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME,USERS.MOBILE,
+                    listAgg(ROLE.ROLE_NAME," ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                    USERS_TYPE.USERS_TYPE_NAME,USERS.ENABLED, USERS.LANG_KEY,USERS.JOIN_DATE)
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                    .join(AUTHORITIES)
+                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                    .join(ROLE)
+                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .whereExists(select).and(USERS.USERNAME.ne(users!!.username))
+                    .groupBy(USERS.USERNAME)
+
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
         } else {
-            val selectConditionStep = create.select()
+            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME,USERS.MOBILE,
+                    listAgg(ROLE.ROLE_NAME," ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                    USERS_TYPE.USERS_TYPE_NAME,USERS.ENABLED, USERS.LANG_KEY,USERS.JOIN_DATE)
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                    .join(AUTHORITIES)
+                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                    .join(ROLE)
+                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .where(a).andExists(select).and(USERS.USERNAME.ne(users!!.username))
+                    .groupBy(USERS.USERNAME)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
         }
     }
 
-    override fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record> {
+    override fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>? {
         val select = create.selectFrom<AuthoritiesRecord>(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME))
         val a = searchCondition(dataTablesUtils)
         return if (ObjectUtils.isEmpty(a)) {
-            val selectConditionStep = create.select()
+            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME,USERS.MOBILE,
+                    listAgg(ROLE.ROLE_NAME," ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                    USERS_TYPE.USERS_TYPE_NAME,USERS.ENABLED, USERS.LANG_KEY,USERS.JOIN_DATE)
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                    .join(AUTHORITIES)
+                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                    .join(ROLE)
+                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .whereNotExists(select)
+                    .groupBy(USERS.USERNAME)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
         } else {
-            val selectConditionStep = create.select()
+            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME,USERS.MOBILE,
+                    listAgg(ROLE.ROLE_NAME," ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                    USERS_TYPE.USERS_TYPE_NAME,USERS.ENABLED, USERS.LANG_KEY,USERS.JOIN_DATE)
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                    .join(AUTHORITIES)
+                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                    .join(ROLE)
+                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .where(a).andNotExists(select)
+                    .groupBy(USERS.USERNAME)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
@@ -420,11 +449,20 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
 
         val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
-            val username = StringUtils.trimWhitespace(search!!.getString("username"))
+            val realName = StringUtils.trimWhitespace(search!!.getString("realName"))
+            val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
             val usersType = StringUtils.trimWhitespace(search.getString("usersType"))
+            if (StringUtils.hasLength(realName)) {
+                a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
+            }
+
             if (StringUtils.hasLength(username)) {
-                a = USERS.USERNAME.like(SQLQueryUtils.likeAllParam(username))
+                if (ObjectUtils.isEmpty(a)) {
+                    a = USERS.USERNAME.like(SQLQueryUtils.likeAllParam(username))
+                } else {
+                    a = a!!.and(USERS.USERNAME.like(SQLQueryUtils.likeAllParam(username)))
+                }
             }
 
             if (StringUtils.hasLength(mobile)) {
@@ -455,7 +493,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
-    fun sortCondition(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectConditionStep<Record>) {
+    fun sortCondition(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>) {
         val orderColumnName = dataTablesUtils.orderColumnName
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
@@ -558,7 +596,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
      * @param dataTablesUtils
      * @param selectConditionStep
      */
-    fun pagination(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectConditionStep<Record>) {
+    fun pagination(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>) {
         val start = dataTablesUtils.start
         val length = dataTablesUtils.length
         selectConditionStep.limit(start, length)

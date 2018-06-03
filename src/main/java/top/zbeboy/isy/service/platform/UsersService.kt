@@ -1,9 +1,6 @@
 package top.zbeboy.isy.service.platform
 
-import org.jooq.Record
-import org.jooq.Record1
-import org.jooq.Result
-import org.jooq.Select
+import org.jooq.*
 import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord
 import top.zbeboy.isy.domain.tables.records.UsersRecord
@@ -121,7 +118,7 @@ interface UsersService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record>
+    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>?
 
     /**
      * 分页查询无权限的用户
@@ -129,7 +126,7 @@ interface UsersService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record>
+    fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>?
 
     /**
      * 统计有权限的用户
