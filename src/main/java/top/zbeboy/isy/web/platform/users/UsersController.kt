@@ -20,7 +20,6 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.domain.tables.pojos.UsersType
-import top.zbeboy.isy.glue.platform.UsersGlue
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.common.UploadService
@@ -29,7 +28,6 @@ import top.zbeboy.isy.service.data.StudentService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.platform.UsersTypeService
 import top.zbeboy.isy.service.platform.UsersUniqueInfoService
-import top.zbeboy.isy.service.system.AuthoritiesService
 import top.zbeboy.isy.service.system.MailService
 import top.zbeboy.isy.service.system.MobileService
 import top.zbeboy.isy.service.util.BCryptUtils
@@ -75,26 +73,22 @@ open class UsersController {
         /*
         检验邮箱使用
          */
-        @JvmField
-        val VALID_EMAIL = 1
+        const val VALID_EMAIL = 1
 
         /*
         检验手机号使用
          */
-        @JvmField
-        val VALID_MOBILE = 2
+        const val VALID_MOBILE = 2
 
         /*
         验证码错误码
          */
-        @JvmField
-        val CAPTCHA_ERROR = 0
+        const val CAPTCHA_ERROR = 0
 
         /*
         无效的验证码
          */
-        @JvmField
-        val CAPTCHA_INVALID = 1
+        const val CAPTCHA_INVALID = 1
     }
 
     @Resource

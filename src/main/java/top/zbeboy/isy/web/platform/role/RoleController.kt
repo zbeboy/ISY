@@ -11,7 +11,6 @@ import top.zbeboy.isy.domain.tables.pojos.CollegeRole
 import top.zbeboy.isy.domain.tables.pojos.Role
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication
 import top.zbeboy.isy.service.data.CollegeRoleService
-import top.zbeboy.isy.service.data.ElasticSyncService
 import top.zbeboy.isy.service.platform.RoleApplicationService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
@@ -54,9 +53,6 @@ open class RoleController {
 
     @Resource
     open lateinit var applicationService: ApplicationService
-
-    @Resource
-    open lateinit var elasticSyncService: ElasticSyncService
 
     /**
      * 平台角色页面
@@ -215,7 +211,6 @@ open class RoleController {
     fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam(value = "collegeId") collegeId: Int,
                    @RequestParam("roleName") roleName: String, allowAgent: Byte, applicationIds: String): AjaxUtils<*> {
         val role = roleService.findById(roleId)
-        val oldRoleName = role.roleName
         role.roleName = StringUtils.trimAllWhitespace(roleName)
         roleService.update(role)
         // 用户可能同时更改菜单
@@ -223,7 +218,6 @@ open class RoleController {
         // 当是系统角色时，可能改变这个角色到其它院下
         collegeRoleService.deleteByRoleId(roleId)
         saveOrUpdate(collegeId, applicationIds, roleId, allowAgent)
-        elasticSyncService.collegeRoleNameUpdate(collegeId, oldRoleName)
         return AjaxUtils.of<Any>().success().msg("更新成功")
     }
 
@@ -258,7 +252,6 @@ open class RoleController {
         roleApplicationService.deleteByRoleId(roleId)
         authoritiesService.deleteByAuthorities(roleBean.roleEnName!!)
         roleService.deleteById(roleId)
-        elasticSyncService.collegeRoleNameUpdate(roleBean.collegeId!!, roleBean.roleName!!)
         return AjaxUtils.of<Any>().success().msg("删除成功")
     }
 
