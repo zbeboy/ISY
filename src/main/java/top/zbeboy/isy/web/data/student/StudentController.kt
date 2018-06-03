@@ -18,7 +18,6 @@ import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.domain.tables.pojos.UsersKey
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.elastic.pojo.StudentElastic
-import top.zbeboy.isy.glue.data.StudentGlue
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.StudentService
@@ -64,9 +63,6 @@ open class StudentController {
 
     @Autowired
     open lateinit var isyProperties: ISYProperties
-
-    @Resource
-    open lateinit var studentGlue: StudentGlue
 
     @Resource
     open lateinit var desService: DesService
@@ -280,10 +276,15 @@ open class StudentController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<StudentBean>(request, headers)
-        val resultUtils = studentGlue.findAllByPageExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(studentGlue.countAllExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = studentService.findAllByPageExistsAuthorities(dataTablesUtils)
+        var students: List<StudentBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
+            students = records.into(StudentBean::class.java)
+            students.forEach { student -> decryptData(student) }
+        }
+        dataTablesUtils.data = students
+        dataTablesUtils.setiTotalRecords(studentService.countAllExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -313,10 +314,15 @@ open class StudentController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<StudentBean>(request, headers)
-        val resultUtils = studentGlue.findAllByPageNotExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(studentGlue.countAllNotExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = studentService.findAllByPageNotExistsAuthorities(dataTablesUtils)
+        var students: List<StudentBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
+            students = records.into(StudentBean::class.java)
+            students.forEach { student -> decryptData(student) }
+        }
+        dataTablesUtils.data = students
+        dataTablesUtils.setiTotalRecords(studentService.countAllNotExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(studentService.countByConditionNotExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -480,5 +486,49 @@ open class StudentController {
 
         }
         return AjaxUtils.of<Any>().fail().msg("参数检验错误")
+    }
+
+    /**
+     * 对数据进行解密
+     *
+     * @param studentBean 解密后数据
+     */
+    private fun decryptData(studentBean: StudentBean) {
+        val usersKey = cacheManageService.getUsersKey(studentBean.username!!)
+        if (StringUtils.hasLength(studentBean.birthday)) {
+            studentBean.birthday = desService.decrypt(studentBean.birthday, usersKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.sex)) {
+            studentBean.sex = desService.decrypt(studentBean.sex, usersKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.familyResidence)) {
+            studentBean.familyResidence = desService.decrypt(studentBean.familyResidence, usersKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.dormitoryNumber)) {
+            studentBean.dormitoryNumber = desService.decrypt(studentBean.dormitoryNumber, usersKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.parentName)) {
+            studentBean.parentName = desService.decrypt(studentBean.parentName, usersKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.parentContactPhone)) {
+            studentBean.parentContactPhone = desService.decrypt(studentBean.parentContactPhone, usersKey)
+        }
+
+        if (StringUtils.hasLength(studentBean.placeOrigin)) {
+            studentBean.placeOrigin = desService.decrypt(studentBean.placeOrigin, usersKey)
+        }
+
+        val usersUniqueInfo = usersUniqueInfoService.findByUsername(studentBean.username!!)
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            val key = isyProperties.getSecurity().desDefaultKey
+            if (StringUtils.hasLength(usersUniqueInfo!!.idCard)) {
+                studentBean.idCard = desService.decrypt(usersUniqueInfo.idCard, key!!)
+            }
+        }
     }
 }
