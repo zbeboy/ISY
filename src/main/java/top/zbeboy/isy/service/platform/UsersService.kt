@@ -126,7 +126,7 @@ interface UsersService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>?
+    fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record>
 
     /**
      * 统计有权限的用户

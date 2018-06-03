@@ -13,11 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.Role
-import top.zbeboy.isy.domain.tables.pojos.Users
-import top.zbeboy.isy.domain.tables.pojos.UsersKey
-import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
-import top.zbeboy.isy.elastic.pojo.StudentElastic
+import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.StudentService
@@ -149,17 +145,14 @@ open class StudentController {
                                     } else {
                                         // 注册成功
                                         val saveUsers = Users()
-                                        val saveStudent = StudentElastic()
+
                                         val enabled: Byte = 1
                                         saveUsers.username = email
                                         saveUsers.enabled = enabled
-                                        saveStudent.enabled = enabled
                                         saveUsers.mobile = mobile
-                                        saveStudent.mobile = mobile
                                         saveUsers.password = BCryptUtils.bCryptPassword(password)
                                         saveUsers.usersTypeId = cacheManageService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).usersTypeId
                                         saveUsers.joinDate = java.sql.Date(Clock.systemDefaultZone().millis())
-                                        saveStudent.joinDate = saveUsers.joinDate
 
                                         var dateTime = DateTime.now()
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID)
@@ -167,24 +160,12 @@ open class StudentController {
                                         saveUsers.mailboxVerifyCode = mailboxVerifyCode
                                         saveUsers.mailboxVerifyValid = Timestamp(dateTime.toDate().time)
                                         saveUsers.langKey = request.locale.toLanguageTag()
-                                        saveStudent.langKey = saveUsers.langKey
                                         saveUsers.avatar = Workbook.USERS_AVATAR
-                                        saveStudent.avatar = saveUsers.avatar
                                         saveUsers.verifyMailbox = 0
                                         saveUsers.realName = studentVo.realName
-                                        saveStudent.realName = saveUsers.realName
                                         usersService.save(saveUsers)
 
-                                        saveStudent.schoolId = studentVo.school
-                                        saveStudent.schoolName = studentVo.schoolName
-                                        saveStudent.collegeId = studentVo.college
-                                        saveStudent.collegeName = studentVo.collegeName
-                                        saveStudent.departmentId = studentVo.department
-                                        saveStudent.departmentName = studentVo.departmentName
-                                        saveStudent.scienceId = studentVo.science
-                                        saveStudent.scienceName = studentVo.scienceName
-                                        saveStudent.grade = studentVo.grade
-                                        saveStudent.organizeName = studentVo.organizeName
+                                        val saveStudent = Student()
                                         saveStudent.organizeId = studentVo.organize
                                         saveStudent.studentNumber = studentVo.studentNumber
                                         saveStudent.username = email
@@ -318,7 +299,6 @@ open class StudentController {
         var students: List<StudentBean> = ArrayList()
         if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
             students = records.into(StudentBean::class.java)
-            students.forEach { student -> decryptData(student) }
         }
         dataTablesUtils.data = students
         dataTablesUtils.setiTotalRecords(studentService.countAllNotExistsAuthorities().toLong())
@@ -389,7 +369,7 @@ open class StudentController {
         val users = usersService.getUserFromSession()
         val student = studentService.findByUsername(users!!.username)
         student.organizeId = organize
-        studentService.update(student, null)
+        studentService.update(student)
         return AjaxUtils.of<Any>().success().msg("更新学校信息成功")
     }
 
@@ -477,7 +457,7 @@ open class StudentController {
                 }
                 usersUniqueInfoService.saveOrUpdate(usersUniqueInfo)
 
-                studentService.update(student, usersUniqueInfo)
+                studentService.update(student)
                 return AjaxUtils.of<Any>().success()
             } catch (e: ParseException) {
                 log.error("Birthday to sql date is exception : {}", e.message)

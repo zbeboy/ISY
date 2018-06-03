@@ -11,16 +11,11 @@ import org.springframework.util.StringUtils
 import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.StudentDao
 import top.zbeboy.isy.domain.tables.pojos.Student
-import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.domain.tables.records.StudentRecord
-import top.zbeboy.isy.elastic.config.ElasticBook
-import top.zbeboy.isy.elastic.pojo.StudentElastic
-import top.zbeboy.isy.elastic.repository.StudentElasticRepository
 import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.platform.UsersService
 import top.zbeboy.isy.service.util.SQLQueryUtils
-import top.zbeboy.isy.web.bean.data.organize.OrganizeBean
 import top.zbeboy.isy.web.bean.data.student.StudentBean
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
@@ -43,9 +38,6 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
 
     @Resource
     open lateinit var roleService: RoleService
-
-    @Resource
-    open lateinit var studentElasticRepository: StudentElasticRepository
 
     @Resource
     open lateinit var organizeService: OrganizeService
@@ -143,89 +135,12 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    override fun save(studentElastic: StudentElastic) {
-        val studentRecord = create.insertInto(STUDENT)
-                .set(STUDENT.STUDENT_NUMBER, studentElastic.studentNumber)
-                .set(STUDENT.BIRTHDAY, studentElastic.birthday)
-                .set(STUDENT.SEX, studentElastic.sex)
-                .set(STUDENT.FAMILY_RESIDENCE, studentElastic.familyResidence)
-                .set(STUDENT.POLITICAL_LANDSCAPE_ID, studentElastic.politicalLandscapeId)
-                .set(STUDENT.NATION_ID, studentElastic.nationId)
-                .set(STUDENT.DORMITORY_NUMBER, studentElastic.dormitoryNumber)
-                .set(STUDENT.PARENT_NAME, studentElastic.parentName)
-                .set(STUDENT.PARENT_CONTACT_PHONE, studentElastic.parentContactPhone)
-                .set(STUDENT.PLACE_ORIGIN, studentElastic.placeOrigin)
-                .set(STUDENT.ORGANIZE_ID, studentElastic.organizeId)
-                .set(STUDENT.USERNAME, studentElastic.username)
-                .returning(STUDENT.STUDENT_ID)
-                .fetchOne()
-        studentElastic.authorities = ElasticBook.NO_AUTHORITIES
-        // 注：此时用户刚注册不可能带有身份证号信息，不必同步
-        studentElastic.setStudentId(studentRecord.studentId)
-        studentElasticRepository.save(studentElastic)
+    override fun save(student: Student) {
+        studentDao.insert(student)
     }
 
-    override fun update(student: Student, usersUniqueInfo: UsersUniqueInfo?) {
+    override fun update(student: Student) {
         studentDao.update(student)
-        val studentData = studentElasticRepository.findById(student.studentId!!.toString() + "")
-        if (studentData.isPresent) {
-            val studentElastic = studentData.get()
-            studentElastic.studentNumber = student.studentNumber
-            studentElastic.birthday = student.birthday
-            studentElastic.sex = student.sex
-            studentElastic.familyResidence = student.familyResidence
-            studentElastic.dormitoryNumber = student.dormitoryNumber
-            studentElastic.parentName = student.parentName
-            studentElastic.parentContactPhone = student.parentContactPhone
-            studentElastic.placeOrigin = student.placeOrigin
-            if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
-                studentElastic.idCard = usersUniqueInfo!!.idCard
-            }
-            if (student.politicalLandscapeId != studentElastic.politicalLandscapeId) {
-                if (!Objects.isNull(student.politicalLandscapeId) && student.politicalLandscapeId > 0) {
-                    val politicalLandscape = politicalLandscapeService.findById(student.politicalLandscapeId!!)
-                    if (!Objects.isNull(politicalLandscape)) {
-                        studentElastic.politicalLandscapeId = politicalLandscape.politicalLandscapeId
-                        studentElastic.politicalLandscapeName = politicalLandscape.politicalLandscapeName
-                    }
-                } else {
-                    studentElastic.politicalLandscapeId = student.politicalLandscapeId
-                    studentElastic.politicalLandscapeName = ""
-                }
-            }
-            if (student.nationId != studentElastic.nationId) {
-                if (!Objects.isNull(student.nationId) && student.nationId > 0) {
-                    val nation = nationService.findById(student.nationId!!)
-                    if (!Objects.isNull(nation)) {
-                        studentElastic.nationId = nation.nationId
-                        studentElastic.nationName = nation.nationName
-                    }
-                } else {
-                    studentElastic.nationId = student.nationId
-                    studentElastic.nationName = ""
-                }
-
-            }
-            if (!Objects.isNull(student.organizeId) && student.organizeId > 0 && student.organizeId != studentElastic.organizeId) {
-                val record = organizeService.findByIdRelation(student.organizeId!!)
-                if (record.isPresent) {
-                    val organizeBean = record.get().into(OrganizeBean::class.java)
-                    studentElastic.schoolId = organizeBean.schoolId
-                    studentElastic.schoolName = organizeBean.schoolName
-                    studentElastic.collegeId = organizeBean.collegeId
-                    studentElastic.collegeName = organizeBean.collegeName
-                    studentElastic.departmentId = organizeBean.departmentId
-                    studentElastic.departmentName = organizeBean.departmentName
-                    studentElastic.scienceId = organizeBean.scienceId
-                    studentElastic.scienceName = organizeBean.scienceName
-                    studentElastic.organizeId = organizeBean.organizeId
-                    studentElastic.organizeName = organizeBean.organizeName
-                    studentElastic.grade = organizeBean.grade
-                }
-            }
-            studentElasticRepository.delete(studentElastic)
-            studentElasticRepository.save(studentElastic)
-        }
     }
 
     override fun findByUsernameRelation(username: String): Optional<Record> {
@@ -268,7 +183,6 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
 
     override fun deleteByUsername(username: String) {
         create.deleteFrom(STUDENT).where(STUDENT.USERNAME.eq(username)).execute()
-        studentElasticRepository.deleteByUsername(username)
     }
 
     override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StudentBean>): Result<Record> {
@@ -421,12 +335,7 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
         val roleCondition = buildStudentCondition()
         return if (ObjectUtils.isEmpty(a)) {
             if (ObjectUtils.isEmpty(roleCondition)) {
-                val selectConditionStep = create.select(USERS.REAL_NAME, STUDENT.STUDENT_NUMBER, USERS.USERNAME, USERS.MOBILE,
-                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
-                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, SCIENCE.SCIENCE_NAME, ORGANIZE.GRADE,
-                        ORGANIZE.ORGANIZE_NAME, STUDENT.SEX, STUDENT.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
-                        STUDENT.DORMITORY_NUMBER, STUDENT.PLACE_ORIGIN, STUDENT.PARENT_NAME, STUDENT.PARENT_CONTACT_PHONE,
-                        STUDENT.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
+                val selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
                         .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -440,26 +349,12 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                        .join(AUTHORITIES)
-                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                        .join(ROLE)
-                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
-                        .leftJoin(NATION)
-                        .on(STUDENT.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .whereNotExists(select)
-                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()
             } else {
-                val selectConditionStep = create.select(USERS.REAL_NAME, STUDENT.STUDENT_NUMBER, USERS.USERNAME, USERS.MOBILE,
-                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
-                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, SCIENCE.SCIENCE_NAME, ORGANIZE.GRADE,
-                        ORGANIZE.ORGANIZE_NAME, STUDENT.SEX, STUDENT.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
-                        STUDENT.DORMITORY_NUMBER, STUDENT.PLACE_ORIGIN, STUDENT.PARENT_NAME, STUDENT.PARENT_CONTACT_PHONE,
-                        STUDENT.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
+                val selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
                         .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -473,28 +368,14 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                        .join(AUTHORITIES)
-                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                        .join(ROLE)
-                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
-                        .leftJoin(NATION)
-                        .on(STUDENT.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .where(roleCondition).andNotExists(select)
-                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()
             }
         } else {
             if (ObjectUtils.isEmpty(roleCondition)) {
-                val selectConditionStep = create.select(USERS.REAL_NAME, STUDENT.STUDENT_NUMBER, USERS.USERNAME, USERS.MOBILE,
-                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
-                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, SCIENCE.SCIENCE_NAME, ORGANIZE.GRADE,
-                        ORGANIZE.ORGANIZE_NAME, STUDENT.SEX, STUDENT.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
-                        STUDENT.DORMITORY_NUMBER, STUDENT.PLACE_ORIGIN, STUDENT.PARENT_NAME, STUDENT.PARENT_CONTACT_PHONE,
-                        STUDENT.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
+                val selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
                         .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -508,26 +389,12 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                        .join(AUTHORITIES)
-                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                        .join(ROLE)
-                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
-                        .leftJoin(NATION)
-                        .on(STUDENT.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .where(a).andNotExists(select)
-                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()
             } else {
-                val selectConditionStep = create.select(USERS.REAL_NAME, STUDENT.STUDENT_NUMBER, USERS.USERNAME, USERS.MOBILE,
-                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
-                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, SCIENCE.SCIENCE_NAME, ORGANIZE.GRADE,
-                        ORGANIZE.ORGANIZE_NAME, STUDENT.SEX, STUDENT.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
-                        STUDENT.DORMITORY_NUMBER, STUDENT.PLACE_ORIGIN, STUDENT.PARENT_NAME, STUDENT.PARENT_CONTACT_PHONE,
-                        STUDENT.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
+                val selectConditionStep = create.select()
                         .from(STUDENT)
                         .join(ORGANIZE)
                         .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
@@ -541,16 +408,7 @@ open class StudentServiceImpl @Autowired constructor(dslContext: DSLContext) : S
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                        .join(AUTHORITIES)
-                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                        .join(ROLE)
-                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
-                        .leftJoin(NATION)
-                        .on(STUDENT.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STUDENT.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
                         .where(roleCondition!!.and(a)).andNotExists(select)
-                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()

@@ -205,7 +205,6 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                     .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .whereExists(select).and(USERS.USERNAME.ne(users!!.username))
                     .groupBy(USERS.USERNAME)
-
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
@@ -228,39 +227,25 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
         }
     }
 
-    override fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>? {
+    override fun findAllByPageNotExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record> {
         val select = create.selectFrom<AuthoritiesRecord>(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME))
         val a = searchCondition(dataTablesUtils)
         return if (ObjectUtils.isEmpty(a)) {
-            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.MOBILE,
-                    listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
-                    USERS_TYPE.USERS_TYPE_NAME, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
+            val selectConditionStep = create.select()
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
-                    .join(AUTHORITIES)
-                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                    .join(ROLE)
-                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .whereNotExists(select)
-                    .groupBy(USERS.USERNAME)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
         } else {
-            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.MOBILE,
-                    listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
-                    USERS_TYPE.USERS_TYPE_NAME, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
+            val selectConditionStep = create.select()
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
-                    .join(AUTHORITIES)
-                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                    .join(ROLE)
-                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .where(a).andNotExists(select)
-                    .groupBy(USERS.USERNAME)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
@@ -398,7 +383,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
-    fun sortCondition(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>) {
+    fun sortCondition(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<*>) {
         val orderColumnName = dataTablesUtils.orderColumnName
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
@@ -501,7 +486,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
      * @param dataTablesUtils
      * @param selectConditionStep
      */
-    fun pagination(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>) {
+    fun pagination(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<*>) {
         val start = dataTablesUtils.start
         val length = dataTablesUtils.length
         selectConditionStep.limit(start, length)

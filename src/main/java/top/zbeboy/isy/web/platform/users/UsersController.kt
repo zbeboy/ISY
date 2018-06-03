@@ -667,7 +667,7 @@ open class UsersController {
         val dataTablesUtils = DataTablesUtils<UsersBean>(request, headers)
         val records = usersService.findAllByPageNotExistsAuthorities(dataTablesUtils)
         var users: List<UsersBean> = ArrayList()
-        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
+        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
             users = records.into(UsersBean::class.java)
         }
         dataTablesUtils.data = users
