@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.data
 
 import org.jooq.Record
+import org.jooq.Record18
 import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.Staff
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
@@ -8,6 +9,7 @@ import top.zbeboy.isy.domain.tables.records.StaffRecord
 import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.util.DataTablesUtils
+import java.sql.Date
 import java.util.*
 
 /**
@@ -109,7 +111,7 @@ interface StaffService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): Result<Record>
+    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): Result<Record18<String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, Byte, String, Date>>?
 
     /**
      * 分页查询无权限的用户

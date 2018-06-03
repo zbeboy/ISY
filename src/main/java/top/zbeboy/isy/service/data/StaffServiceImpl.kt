@@ -1,6 +1,7 @@
 package top.zbeboy.isy.service.data
 
 import org.jooq.*
+import org.jooq.impl.DSL
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -22,6 +23,7 @@ import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.department.DepartmentBean
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.util.DataTablesUtils
+import java.sql.Date
 import java.util.*
 import javax.annotation.Resource
 
@@ -140,7 +142,7 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
     override fun update(staff: Staff, usersUniqueInfo: UsersUniqueInfo?) {
         staffDao.update(staff)
         val staffData = staffElasticRepository.findById(staff.staffId!!.toString() + "")
-        if(staffData.isPresent){
+        if (staffData.isPresent) {
             val staffElastic = staffData.get()
             staffElastic.staffNumber = staff.staffNumber
             staffElastic.birthday = staff.birthday
@@ -229,13 +231,17 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
         staffElasticRepository.deleteByUsername(username)
     }
 
-    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): Result<Record> {
+    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): Result<Record18<String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, Byte, String, Date>>? {
         val select = usersService.existsAuthoritiesSelect()
         val a = searchCondition(dataTablesUtils)
         val roleCondition = buildStaffCondition()
         return if (ObjectUtils.isEmpty(a)) {
             if (ObjectUtils.isEmpty(roleCondition)) {
-                val selectConditionStep = create.select()
+                val selectConditionStep = create.select(USERS.REAL_NAME, STAFF.STAFF_NUMBER, USERS.USERNAME, USERS.MOBILE,
+                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, ACADEMIC_TITLE.ACADEMIC_TITLE_NAME,
+                        STAFF.POST, STAFF.SEX, STAFF.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
+                        STAFF.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
                         .from(STAFF)
                         .join(DEPARTMENT)
                         .on(STAFF.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
@@ -245,6 +251,10 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                        .join(AUTHORITIES)
+                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                        .join(ROLE)
+                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                         .leftJoin(NATION)
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
@@ -252,11 +262,16 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .leftJoin(ACADEMIC_TITLE)
                         .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .whereExists(select)
+                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()
             } else {
-                val selectConditionStep = create.select()
+                val selectConditionStep = create.select(USERS.REAL_NAME, STAFF.STAFF_NUMBER, USERS.USERNAME, USERS.MOBILE,
+                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, ACADEMIC_TITLE.ACADEMIC_TITLE_NAME,
+                        STAFF.POST, STAFF.SEX, STAFF.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
+                        STAFF.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
                         .from(STAFF)
                         .join(DEPARTMENT)
                         .on(STAFF.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
@@ -266,6 +281,10 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                        .join(AUTHORITIES)
+                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                        .join(ROLE)
+                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                         .leftJoin(NATION)
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
@@ -273,13 +292,18 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .leftJoin(ACADEMIC_TITLE)
                         .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(roleCondition).andExists(select)
+                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()
             }
         } else {
             if (ObjectUtils.isEmpty(roleCondition)) {
-                val selectConditionStep = create.select()
+                val selectConditionStep = create.select(USERS.REAL_NAME, STAFF.STAFF_NUMBER, USERS.USERNAME, USERS.MOBILE,
+                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, ACADEMIC_TITLE.ACADEMIC_TITLE_NAME,
+                        STAFF.POST, STAFF.SEX, STAFF.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
+                        STAFF.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
                         .from(STAFF)
                         .join(DEPARTMENT)
                         .on(STAFF.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
@@ -289,6 +313,10 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                        .join(AUTHORITIES)
+                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                        .join(ROLE)
+                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                         .leftJoin(NATION)
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
@@ -296,11 +324,16 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .leftJoin(ACADEMIC_TITLE)
                         .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(a).andExists(select)
+                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()
             } else {
-                val selectConditionStep = create.select()
+                val selectConditionStep = create.select(USERS.REAL_NAME, STAFF.STAFF_NUMBER, USERS.USERNAME, USERS.MOBILE,
+                        DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                        SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, ACADEMIC_TITLE.ACADEMIC_TITLE_NAME,
+                        STAFF.POST, STAFF.SEX, STAFF.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
+                        STAFF.FAMILY_RESIDENCE, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
                         .from(STAFF)
                         .join(DEPARTMENT)
                         .on(STAFF.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
@@ -310,6 +343,10 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                        .join(AUTHORITIES)
+                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                        .join(ROLE)
+                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                         .leftJoin(NATION)
                         .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
                         .leftJoin(POLITICAL_LANDSCAPE)
@@ -317,6 +354,7 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .leftJoin(ACADEMIC_TITLE)
                         .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(roleCondition!!.and(a)).andExists(select)
+                        .groupBy(USERS.USERNAME)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
                 selectConditionStep.fetch()
@@ -341,12 +379,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                        .leftJoin(NATION)
-                        .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
-                        .leftJoin(ACADEMIC_TITLE)
-                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .whereNotExists(select)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
@@ -362,12 +394,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                        .leftJoin(NATION)
-                        .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
-                        .leftJoin(ACADEMIC_TITLE)
-                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(roleCondition).andNotExists(select)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
@@ -385,12 +411,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                        .leftJoin(NATION)
-                        .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
-                        .leftJoin(ACADEMIC_TITLE)
-                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(a).andNotExists(select)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
@@ -406,12 +426,6 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                         .join(USERS)
                         .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                        .leftJoin(NATION)
-                        .on(STAFF.NATION_ID.eq(NATION.NATION_ID))
-                        .leftJoin(POLITICAL_LANDSCAPE)
-                        .on(STAFF.POLITICAL_LANDSCAPE_ID.eq(POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID))
-                        .leftJoin(ACADEMIC_TITLE)
-                        .on(STAFF.ACADEMIC_TITLE_ID.eq(ACADEMIC_TITLE.ACADEMIC_TITLE_ID))
                         .where(roleCondition!!.and(a)).andNotExists(select)
                 sortCondition(dataTablesUtils, selectConditionStep)
                 pagination(dataTablesUtils, selectConditionStep)
@@ -693,7 +707,7 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
-    fun sortCondition(dataTablesUtils: DataTablesUtils<StaffBean>, selectConditionStep: SelectConditionStep<Record>) {
+    fun sortCondition(dataTablesUtils: DataTablesUtils<StaffBean>, selectConditionStep: SelectHavingStep<*>) {
         val orderColumnName = dataTablesUtils.orderColumnName
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
@@ -882,7 +896,7 @@ open class StaffServiceImpl @Autowired constructor(dslContext: DSLContext) : Sta
      * @param dataTablesUtils 工具类
      * @param selectConditionStep 条件
      */
-    fun pagination(dataTablesUtils: DataTablesUtils<StaffBean>, selectConditionStep: SelectConditionStep<Record>) {
+    fun pagination(dataTablesUtils: DataTablesUtils<StaffBean>, selectConditionStep: SelectHavingStep<*>) {
         val start = dataTablesUtils.start
         val length = dataTablesUtils.length
         selectConditionStep.limit(start, length)

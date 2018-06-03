@@ -18,7 +18,6 @@ import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.domain.tables.pojos.UsersKey
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.elastic.pojo.StaffElastic
-import top.zbeboy.isy.glue.data.StaffGlue
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.StaffService
@@ -64,9 +63,6 @@ open class StaffController {
 
     @Autowired
     open lateinit var isyProperties: ISYProperties
-
-    @Resource
-    open lateinit var staffGlue: StaffGlue
 
     @Resource
     open lateinit var desService: DesService
@@ -271,10 +267,15 @@ open class StaffController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<StaffBean>(request, headers)
-        val resultUtils = staffGlue.findAllByPageExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(staffGlue.countAllExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = staffService.findAllByPageExistsAuthorities(dataTablesUtils)
+        var staffs: List<StaffBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
+            staffs = records.into(StaffBean::class.java)
+            staffs.forEach { student -> decryptData(student) }
+        }
+        dataTablesUtils.data = staffs
+        dataTablesUtils.setiTotalRecords(staffService.countAllExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -301,10 +302,14 @@ open class StaffController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<StaffBean>(request, headers)
-        val resultUtils = staffGlue.findAllByPageNotExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(staffGlue.countAllNotExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = staffService.findAllByPageNotExistsAuthorities(dataTablesUtils)
+        var staffs: List<StaffBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
+            staffs = records.into(StaffBean::class.java)
+        }
+        dataTablesUtils.data = staffs
+        dataTablesUtils.setiTotalRecords(staffService.countAllNotExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionNotExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -450,5 +455,33 @@ open class StaffController {
 
         }
         return AjaxUtils.of<Any>().fail().msg("参数检验错误")
+    }
+
+    /**
+     * 对数据进行解密
+     *
+     * @param staffBean 解密后数据
+     */
+    private fun decryptData(staffBean: StaffBean) {
+        val usersKey = cacheManageService.getUsersKey(staffBean.username!!)
+        if (StringUtils.hasLength(staffBean.birthday)) {
+            staffBean.birthday = desService.decrypt(staffBean.birthday, usersKey)
+        }
+
+        if (StringUtils.hasLength(staffBean.sex)) {
+            staffBean.sex = desService.decrypt(staffBean.sex, usersKey)
+        }
+
+        if (StringUtils.hasLength(staffBean.familyResidence)) {
+            staffBean.familyResidence = desService.decrypt(staffBean.familyResidence, usersKey)
+        }
+
+        val usersUniqueInfo = usersUniqueInfoService.findByUsername(staffBean.username!!)
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            val key = isyProperties.getSecurity().desDefaultKey
+            if (StringUtils.hasLength(usersUniqueInfo!!.idCard)) {
+                staffBean.idCard = desService.decrypt(usersUniqueInfo.idCard, key!!)
+            }
+        }
     }
 }
