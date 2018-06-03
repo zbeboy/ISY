@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.Organize
-import top.zbeboy.isy.elastic.pojo.OrganizeElastic
-import top.zbeboy.isy.glue.data.OrganizeGlue
 import top.zbeboy.isy.service.data.DepartmentService
 import top.zbeboy.isy.service.data.OrganizeService
 import top.zbeboy.isy.service.platform.RoleService
@@ -43,9 +41,6 @@ open class OrganizeController {
 
     @Resource
     open lateinit var methodControllerCommon: MethodControllerCommon
-
-    @Resource
-    open lateinit var organizeGlue: OrganizeGlue
 
     @Resource
     open lateinit var roleService: RoleService
@@ -140,10 +135,14 @@ open class OrganizeController {
         headers.add("organize_is_del")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<OrganizeBean>(request, headers)
-        val resultUtils = organizeGlue.findAllByPage(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(organizeGlue.countAll())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = organizeService.findAllByPage(dataTablesUtils)
+        var organizes: List<OrganizeBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
+            organizes = records.into(OrganizeBean::class.java)
+        }
+        dataTablesUtils.data = organizes
+        dataTablesUtils.setiTotalRecords(organizeService.countAll().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(organizeService.countByCondition(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -228,42 +227,17 @@ open class OrganizeController {
     fun organizeSave(@Valid organizeVo: OrganizeVo, bindingResult: BindingResult): AjaxUtils<*> {
         val ajaxUtils = AjaxUtils.of<Any>()
         if (!bindingResult.hasErrors()) {
-            val organizeElastic = OrganizeElastic()
-            organizeElastic.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName!!)
-            organizeElastic.organizeIsDel = if (!ObjectUtils.isEmpty(organizeVo.organizeIsDel) && organizeVo.organizeIsDel == 1.toByte()) {
+            val organize = Organize()
+            organize.organizeName = StringUtils.trimWhitespace(organizeVo.organizeName!!)
+            organize.organizeIsDel = if (!ObjectUtils.isEmpty(organizeVo.organizeIsDel) && organizeVo.organizeIsDel == 1.toByte()) {
                 1
             } else {
                 0
             }
-            organizeElastic.scienceId = organizeVo.scienceId
-            organizeElastic.grade = organizeVo.grade
-            organizeElastic.departmentId = organizeVo.departmentId
-            organizeElastic.scienceName = organizeVo.scienceName
-
-            // 非系统角色用户
-            if (!roleService.isCurrentUserInRole(Workbook.SYSTEM_AUTHORITIES)) {
-                val departmentRecord = departmentService.findByIdRelation(organizeVo.departmentId!!)
-                if (departmentRecord.isPresent) {
-                    val organizeBean = departmentRecord.get().into(OrganizeBean::class.java)
-                    organizeElastic.schoolId = organizeBean.schoolId
-                    organizeElastic.schoolName = organizeBean.schoolName
-                    organizeElastic.collegeId = organizeBean.collegeId
-                    organizeElastic.collegeName = organizeBean.collegeName
-                    organizeElastic.departmentName = organizeBean.departmentName
-                    organizeService.save(organizeElastic)
-                    ajaxUtils.success().msg("保存成功")
-                } else {
-                    ajaxUtils.fail().msg("未查询到相关系信息")
-                }
-            } else {
-                organizeElastic.schoolId = organizeVo.schoolId
-                organizeElastic.schoolName = organizeVo.schoolName
-                organizeElastic.collegeId = organizeVo.collegeId
-                organizeElastic.collegeName = organizeVo.collegeName
-                organizeElastic.departmentName = organizeVo.departmentName
-                organizeService.save(organizeElastic)
-                ajaxUtils.success().msg("保存成功")
-            }
+            organize.scienceId = organizeVo.scienceId
+            organize.grade = organizeVo.grade
+            organizeService.save(organize)
+            ajaxUtils.success().msg("保存成功")
         } else {
             ajaxUtils.fail().msg("填写信息错误，请检查")
         }

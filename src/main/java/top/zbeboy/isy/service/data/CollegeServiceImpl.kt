@@ -12,7 +12,6 @@ import top.zbeboy.isy.domain.Tables.SCHOOL
 import top.zbeboy.isy.domain.tables.daos.CollegeDao
 import top.zbeboy.isy.domain.tables.pojos.College
 import top.zbeboy.isy.domain.tables.records.CollegeRecord
-import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.bean.data.college.CollegeBean
@@ -31,9 +30,6 @@ open class CollegeServiceImpl @Autowired constructor(dslContext: DSLContext) : D
 
     @Resource
     open lateinit var collegeDao: CollegeDao
-
-    @Resource
-    open lateinit var organizeElasticRepository: OrganizeElasticRepository
 
     override fun findBySchoolIdAndIsDel(schoolId: Int, b: Byte?): Result<CollegeRecord> {
         return create.selectFrom<CollegeRecord>(COLLEGE)
@@ -102,13 +98,6 @@ open class CollegeServiceImpl @Autowired constructor(dslContext: DSLContext) : D
 
     override fun update(college: College) {
         collegeDao.update(college)
-        val records = organizeElasticRepository.findByCollegeId(college.schoolId!!)
-        records.forEach { organizeElastic ->
-            organizeElastic.collegeId = college.collegeId
-            organizeElastic.collegeName = college.collegeName
-            organizeElasticRepository.delete(organizeElastic)
-            organizeElasticRepository.save(organizeElastic)
-        }
     }
 
     override fun updateIsDel(ids: List<Int>, isDel: Byte?) {

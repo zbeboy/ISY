@@ -11,7 +11,6 @@ import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.ScienceDao
 import top.zbeboy.isy.domain.tables.pojos.Science
 import top.zbeboy.isy.domain.tables.records.ScienceRecord
-import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -35,10 +34,6 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
     @Resource
     open lateinit var methodServiceCommon: MethodServiceCommon
 
-    @Resource
-    open lateinit var organizeElasticRepository: OrganizeElasticRepository
-
-
     override fun findByDepartmentIdAndIsDel(departmentId: Int, b: Byte?): Result<ScienceRecord> {
         return create.selectFrom(SCIENCE)
                 .where(SCIENCE.SCIENCE_IS_DEL.eq(b).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
@@ -61,13 +56,6 @@ open class ScienceServiceImpl @Autowired constructor(dslContext: DSLContext) : D
 
     override fun update(science: Science) {
         scienceDao.update(science)
-        val records = organizeElasticRepository.findByScienceId(science.scienceId!!)
-        records.forEach { organizeElastic ->
-            organizeElastic.scienceId = science.scienceId
-            organizeElastic.scienceName = science.scienceName
-            organizeElasticRepository.delete(organizeElastic)
-            organizeElasticRepository.save(organizeElastic)
-        }
     }
 
     override fun updateIsDel(ids: List<Int>, isDel: Byte?) {

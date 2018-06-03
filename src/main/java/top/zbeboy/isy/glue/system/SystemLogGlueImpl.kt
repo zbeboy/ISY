@@ -7,6 +7,7 @@ import org.elasticsearch.search.sort.SortBuilders
 import org.elasticsearch.search.sort.SortOrder
 import org.springframework.data.domain.Page
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Repository
 import org.springframework.util.ObjectUtils
 import org.springframework.util.StringUtils
@@ -41,6 +42,7 @@ open class SystemLogGlueImpl : ElasticPlugin<SystemLogBean>(), SystemLogGlue {
         return systemLogElasticRepository.count()
     }
 
+    @Async
     override fun save(systemLogElastic: SystemLogElastic) {
         systemLogElasticRepository.save(systemLogElastic)
     }

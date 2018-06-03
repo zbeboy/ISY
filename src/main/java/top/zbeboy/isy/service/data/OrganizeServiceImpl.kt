@@ -11,8 +11,6 @@ import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.OrganizeDao
 import top.zbeboy.isy.domain.tables.pojos.Organize
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord
-import top.zbeboy.isy.elastic.pojo.OrganizeElastic
-import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -35,9 +33,6 @@ open class OrganizeServiceImpl @Autowired constructor(dslContext: DSLContext) : 
 
     @Resource
     open lateinit var methodServiceCommon: MethodServiceCommon
-
-    @Resource
-    open lateinit var organizeElasticRepository: OrganizeElasticRepository
 
     override fun findByScienceIdAndDistinctGradeAndIsDel(scienceId: Int, b: Byte?): Result<Record1<String>> {
         return create.selectDistinct<String>(ORGANIZE.GRADE)
@@ -96,43 +91,17 @@ open class OrganizeServiceImpl @Autowired constructor(dslContext: DSLContext) : 
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    override fun save(organizeElastic: OrganizeElastic) {
-        val record = create.insertInto<OrganizeRecord>(ORGANIZE)
-                .set<String>(ORGANIZE.ORGANIZE_NAME, organizeElastic.organizeName)
-                .set<Byte>(ORGANIZE.ORGANIZE_IS_DEL, organizeElastic.organizeIsDel)
-                .set<Int>(ORGANIZE.SCIENCE_ID, organizeElastic.scienceId)
-                .set<String>(ORGANIZE.GRADE, organizeElastic.grade)
-                .returning(ORGANIZE.ORGANIZE_ID)
-                .fetchOne()
-        organizeElastic.setOrganizeId(record.organizeId)
-        organizeElasticRepository.save(organizeElastic)
+    override fun save(organize: Organize) {
+        organizeDao.insert(organize)
     }
 
     override fun update(organize: Organize) {
         organizeDao.update(organize)
-        val organizeData = organizeElasticRepository.findById(organize.organizeId!!.toString() + "")
-        if(organizeData.isPresent){
-            val organizeElastic = organizeData.get()
-            organizeElastic.organizeIsDel = organize.organizeIsDel
-            organizeElastic.organizeName = organize.organizeName
-            organizeElastic.scienceId = organize.scienceId
-            organizeElastic.grade = organize.grade
-            organizeElasticRepository.delete(organizeElastic)
-            organizeElasticRepository.save(organizeElastic)
-        }
-
     }
 
     override fun updateIsDel(ids: List<Int>, isDel: Byte?) {
         ids.forEach { id ->
             create.update<OrganizeRecord>(ORGANIZE).set<Byte>(ORGANIZE.ORGANIZE_IS_DEL, isDel).where(ORGANIZE.ORGANIZE_ID.eq(id)).execute()
-            val organizeData = organizeElasticRepository.findById(id.toString() + "")
-            if(organizeData.isPresent){
-                val organizeElastic = organizeData.get()
-                organizeElastic.organizeIsDel = isDel
-                organizeElasticRepository.delete(organizeElastic)
-                organizeElasticRepository.save(organizeElastic)
-            }
         }
     }
 

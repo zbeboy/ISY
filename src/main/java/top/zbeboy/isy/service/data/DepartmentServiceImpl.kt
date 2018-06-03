@@ -11,7 +11,6 @@ import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.DepartmentDao
 import top.zbeboy.isy.domain.tables.pojos.Department
 import top.zbeboy.isy.domain.tables.records.DepartmentRecord
-import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.service.common.MethodServiceCommon
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
@@ -35,9 +34,6 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
     @Resource
     open lateinit var methodServiceCommon: MethodServiceCommon
 
-    @Resource
-    open lateinit var organizeElasticRepository: OrganizeElasticRepository
-
     override fun findByCollegeIdAndIsDel(collegeId: Int, b: Byte?): Result<DepartmentRecord> {
         return create.selectFrom<DepartmentRecord>(DEPARTMENT)
                 .where(DEPARTMENT.DEPARTMENT_IS_DEL.eq(b).and(DEPARTMENT.COLLEGE_ID.eq(collegeId)))
@@ -51,13 +47,6 @@ open class DepartmentServiceImpl @Autowired constructor(dslContext: DSLContext) 
 
     override fun update(department: Department) {
         departmentDao.update(department)
-        val records = organizeElasticRepository.findByDepartmentId(department.departmentId!!)
-        records.forEach { organizeElastic ->
-            organizeElastic.departmentId = department.departmentId
-            organizeElastic.departmentName = department.departmentName
-            organizeElasticRepository.delete(organizeElastic)
-            organizeElasticRepository.save(organizeElastic)
-        }
     }
 
     override fun updateIsDel(ids: List<Int>, isDel: Byte?) {

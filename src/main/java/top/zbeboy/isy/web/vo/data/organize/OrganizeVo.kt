@@ -19,12 +19,4 @@ open class OrganizeVo {
     @NotNull
     @Size(max = 5)
     var grade: String? = null
-
-    var schoolId: Int? = null
-    var schoolName: String? = null
-    var collegeId: Int? = null
-    var collegeName: String? = null
-    var departmentId: Int? = null
-    var departmentName: String? = null
-    var scienceName: String? = null
 }
