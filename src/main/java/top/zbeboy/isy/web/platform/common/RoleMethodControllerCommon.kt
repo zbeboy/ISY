@@ -7,10 +7,6 @@ import top.zbeboy.isy.config.Workbook
 import top.zbeboy.isy.domain.tables.pojos.Authorities
 import top.zbeboy.isy.domain.tables.pojos.College
 import top.zbeboy.isy.domain.tables.pojos.Role
-import top.zbeboy.isy.elastic.config.ElasticBook
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository
-import top.zbeboy.isy.elastic.repository.StudentElasticRepository
-import top.zbeboy.isy.elastic.repository.UsersElasticRepository
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.data.CollegeRoleService
 import top.zbeboy.isy.service.platform.RoleService
@@ -40,15 +36,6 @@ open class RoleMethodControllerCommon {
 
     @Resource
     open lateinit var authoritiesService: AuthoritiesService
-
-    @Resource
-    open lateinit var usersElasticRepository: UsersElasticRepository
-
-    @Resource
-    open lateinit var studentElasticRepository: StudentElasticRepository
-
-    @Resource
-    open lateinit var staffElasticRepository: StaffElasticRepository
 
     @Resource
     open lateinit var methodControllerCommon: MethodControllerCommon
@@ -107,47 +94,13 @@ open class RoleMethodControllerCommon {
                         return ajaxUtils.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限")
                     }
                     authoritiesService.deleteByUsername(username)
-                    val usersData = usersElasticRepository.findById(username)
-                    if(usersData.isPresent){
-                        val usersElastic = usersData.get()
-                        val roleEnNames = ArrayList<String>()
-                        val stringBuilder = StringBuilder()
-                        roleList.forEach { role ->
-                            val authorities = Authorities(username, role)
-                            authoritiesService.save(authorities)
-                            val tempRole = roleService.findByRoleEnName(role)
-                            roleEnNames.add(tempRole.roleEnName)
-                            stringBuilder.append(tempRole.roleName).append(" ")
-                        }
-                        when {
-                            roleEnNames.contains(Workbook.SYSTEM_AUTHORITIES) -> usersElastic.authorities = ElasticBook.SYSTEM_AUTHORITIES
-                            roleEnNames.contains(Workbook.ADMIN_AUTHORITIES) -> usersElastic.authorities = ElasticBook.ADMIN_AUTHORITIES
-                            else -> usersElastic.authorities = ElasticBook.HAS_AUTHORITIES
-                        }
-                        usersElastic.roleName = stringBuilder.toString().trim { it <= ' ' }
-                        usersElasticRepository.deleteById(username)
-                        usersElasticRepository.save(usersElastic)
-                        val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
-                        if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                            val studentElastic = studentElasticRepository.findByUsername(username)
-                            studentElastic.authorities = usersElastic.authorities
-                            studentElastic.roleName = usersElastic.roleName
-                            studentElasticRepository.deleteByUsername(username)
-                            studentElasticRepository.save(studentElastic)
-                        } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                            val staffElastic = staffElasticRepository.findByUsername(username)
-                            staffElastic.authorities = usersElastic.authorities
-                            staffElastic.roleName = usersElastic.roleName
-                            staffElasticRepository.deleteByUsername(username)
-                            staffElasticRepository.save(staffElastic)
-                        }
-                        val curUsers = usersService.getUserFromSession()
-                        val notify = "您的权限已变更为" + usersElastic.roleName + " ，请登录查看。"
-                        methodControllerCommon.sendNotify(users, curUsers!!, "权限变更", notify, request)
-                        ajaxUtils.success().msg("更改用户角色成功")
-                    } else {
-                        ajaxUtils.fail().msg("未检索引擎查询到该用户信息")
+                    roleList.forEach { role ->
+                        val authorities = Authorities(username, role)
+                        authoritiesService.save(authorities)
                     }
+                    val curUsers = usersService.getUserFromSession()
+                    methodControllerCommon.sendNotify(users, curUsers!!, "权限变更", "您的权限已发生变更，请登录查看。", request)
+                    ajaxUtils.success().msg("更改用户角色成功")
                 } else {
                     ajaxUtils.fail().msg("该用户未激活账号")
                 }

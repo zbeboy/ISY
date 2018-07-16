@@ -1,13 +1,14 @@
 package top.zbeboy.isy.service.data
 
 import org.jooq.Record
+import org.jooq.Record18
 import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.Staff
 import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
 import top.zbeboy.isy.domain.tables.records.StaffRecord
-import top.zbeboy.isy.elastic.pojo.StaffElastic
 import top.zbeboy.isy.web.bean.data.staff.StaffBean
 import top.zbeboy.isy.web.util.DataTablesUtils
+import java.sql.Date
 import java.util.*
 
 /**
@@ -76,17 +77,16 @@ interface StaffService {
     /**
      * 保存教职工信息
      *
-     * @param staffElastic 教职工
+     * @param staff 教职工
      */
-    fun save(staffElastic: StaffElastic)
+    fun save(staff: Staff)
 
     /**
      * 更新教职式信息
      *
      * @param staff 教职工
-     * @param usersUniqueInfo 需要单独同步
      */
-    fun update(staff: Staff, usersUniqueInfo: UsersUniqueInfo?)
+    fun update(staff: Staff)
 
     /**
      * 通过用户账号关联查询 注：信息包括学校等 建议用于验证，效率不高
@@ -109,7 +109,7 @@ interface StaffService {
      * @param dataTablesUtils datatables工具类
      * @return 用户
      */
-    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): Result<Record>
+    fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<StaffBean>): Result<Record18<String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, Byte, String, Date>>?
 
     /**
      * 分页查询无权限的用户

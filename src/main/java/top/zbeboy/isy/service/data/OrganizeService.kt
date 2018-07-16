@@ -5,7 +5,6 @@ import org.jooq.Record1
 import org.jooq.Result
 import top.zbeboy.isy.domain.tables.pojos.Organize
 import top.zbeboy.isy.domain.tables.records.OrganizeRecord
-import top.zbeboy.isy.elastic.pojo.OrganizeElastic
 import top.zbeboy.isy.web.bean.data.organize.OrganizeBean
 import top.zbeboy.isy.web.util.DataTablesUtils
 import java.util.*
@@ -90,9 +89,9 @@ interface OrganizeService {
     /**
      * 保存
      *
-     * @param organizeElastic 班级
+     * @param organize 班级
      */
-    fun save(organizeElastic: OrganizeElastic)
+    fun save(organize: Organize)
 
     /**
      * 更新

@@ -11,7 +11,6 @@ import top.zbeboy.isy.domain.Tables.SCHOOL
 import top.zbeboy.isy.domain.tables.daos.SchoolDao
 import top.zbeboy.isy.domain.tables.pojos.School
 import top.zbeboy.isy.domain.tables.records.SchoolRecord
-import top.zbeboy.isy.elastic.repository.OrganizeElasticRepository
 import top.zbeboy.isy.service.plugin.DataTablesPlugin
 import top.zbeboy.isy.service.util.SQLQueryUtils
 import top.zbeboy.isy.web.util.DataTablesUtils
@@ -29,10 +28,6 @@ open class SchoolServiceImpl @Autowired constructor(dslContext: DSLContext) : Da
     @Resource
     open lateinit var schoolDao: SchoolDao
 
-
-    @Resource
-    open lateinit var organizeElasticRepository: OrganizeElasticRepository
-
     override fun findByIsDel(b: Byte?): Result<SchoolRecord> {
         return create.selectFrom<SchoolRecord>(SCHOOL)
                 .where(SCHOOL.SCHOOL_IS_DEL.eq(b))
@@ -46,13 +41,6 @@ open class SchoolServiceImpl @Autowired constructor(dslContext: DSLContext) : Da
 
     override fun update(school: School) {
         schoolDao.update(school)
-        val records = organizeElasticRepository.findBySchoolId(school.schoolId!!)
-        records.forEach { organizeElastic ->
-            organizeElastic.schoolId = school.schoolId
-            organizeElastic.schoolName = school.schoolName
-            organizeElasticRepository.delete(organizeElastic)
-            organizeElasticRepository.save(organizeElastic)
-        }
     }
 
     override fun findAllByPage(dataTablesUtils: DataTablesUtils<School>): Result<Record> {

@@ -2,6 +2,7 @@ package top.zbeboy.isy.service.platform
 
 import org.apache.commons.lang.math.NumberUtils
 import org.jooq.*
+import org.jooq.impl.DSL.listAgg
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
@@ -15,11 +16,6 @@ import top.zbeboy.isy.domain.tables.daos.UsersDao
 import top.zbeboy.isy.domain.tables.pojos.Users
 import top.zbeboy.isy.domain.tables.records.AuthoritiesRecord
 import top.zbeboy.isy.domain.tables.records.UsersRecord
-import top.zbeboy.isy.elastic.config.ElasticBook
-import top.zbeboy.isy.elastic.pojo.UsersElastic
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository
-import top.zbeboy.isy.elastic.repository.StudentElasticRepository
-import top.zbeboy.isy.elastic.repository.UsersElasticRepository
 import top.zbeboy.isy.security.MyUserImpl
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.data.StaffService
@@ -57,15 +53,6 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
     @Resource
     open lateinit var roleService: RoleService
 
-    @Resource
-    open lateinit var usersElasticRepository: UsersElasticRepository
-
-    @Resource
-    open lateinit var studentElasticRepository: StudentElasticRepository
-
-    @Resource
-    open lateinit var staffElasticRepository: StaffElasticRepository
-
     override fun findByUsername(username: String): Users? {
         return usersDao.findById(username)
     }
@@ -80,7 +67,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
         val principal = SecurityContextHolder.getContext().authentication.principal
         var users: Users? = null
         if (!ObjectUtils.isEmpty(principal) && principal is MyUserImpl) {
-            users = principal.getUsers()
+            users = principal.users
         }
         return users
     }
@@ -112,101 +99,20 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     override fun save(users: Users) {
         usersDao.insert(users)
-        val usersElastic = UsersElastic()
-        usersElastic.username = users.username
-        usersElastic.password = users.password
-        usersElastic.enabled = users.enabled
-        usersElastic.usersTypeId = users.usersTypeId
-        usersElastic.usersTypeName = cacheManageService.findByUsersTypeId(users.usersTypeId!!).usersTypeName
-        usersElastic.realName = users.realName
-        usersElastic.mobile = users.mobile
-        usersElastic.avatar = users.avatar
-        usersElastic.verifyMailbox = users.verifyMailbox
-        usersElastic.mailboxVerifyCode = users.mailboxVerifyCode
-        usersElastic.passwordResetKey = users.passwordResetKey
-        usersElastic.mailboxVerifyValid = users.mailboxVerifyValid
-        usersElastic.passwordResetKeyValid = users.passwordResetKeyValid
-        usersElastic.langKey = users.langKey
-        usersElastic.joinDate = users.joinDate
-        usersElastic.authorities = ElasticBook.NO_AUTHORITIES
-        usersElasticRepository.save(usersElastic)
     }
 
     override fun update(users: Users) {
         usersDao.update(users)
-        val usersData = usersElasticRepository.findById(users.username)
-        if(usersData.isPresent){
-            val usersElastic = usersData.get()
-            usersElastic.password = users.password
-            usersElastic.enabled = users.enabled
-            usersElastic.usersTypeId = users.usersTypeId
-            usersElastic.realName = users.realName
-            usersElastic.mobile = users.mobile
-            usersElastic.avatar = users.avatar
-            usersElastic.verifyMailbox = users.verifyMailbox
-            usersElastic.mailboxVerifyCode = users.mailboxVerifyCode
-            usersElastic.passwordResetKey = users.passwordResetKey
-            usersElastic.mailboxVerifyValid = users.mailboxVerifyValid
-            usersElastic.passwordResetKeyValid = users.passwordResetKeyValid
-            usersElastic.langKey = users.langKey
-            usersElastic.joinDate = users.joinDate
-            usersElasticRepository.delete(usersElastic)
-            usersElasticRepository.save(usersElastic)
-            val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
-            if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                val studentElastic = studentElasticRepository.findByUsername(users.username)
-                studentElastic.enabled = users.enabled
-                studentElastic.realName = users.realName
-                studentElastic.mobile = users.mobile
-                studentElastic.avatar = users.avatar
-                studentElastic.langKey = users.langKey
-                studentElastic.joinDate = users.joinDate
-                studentElastic.verifyMailbox = users.verifyMailbox
-                studentElasticRepository.delete(studentElastic)
-                studentElasticRepository.save(studentElastic)
-            } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                val staffElastic = staffElasticRepository.findByUsername(users.username)
-                staffElastic.enabled = users.enabled
-                staffElastic.realName = users.realName
-                staffElastic.mobile = users.mobile
-                staffElastic.avatar = users.avatar
-                staffElastic.langKey = users.langKey
-                staffElastic.joinDate = users.joinDate
-                staffElastic.verifyMailbox = users.verifyMailbox
-                staffElasticRepository.delete(staffElastic)
-                staffElasticRepository.save(staffElastic)
-            }
-        }
     }
 
     override fun updateEnabled(ids: List<String>, enabled: Byte?) {
         ids.forEach { id ->
             create.update<UsersRecord>(USERS).set<Byte>(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute()
-            val usersData = usersElasticRepository.findById(id)
-            if(usersData.isPresent){
-                val usersElastic = usersData.get()
-                usersElastic.enabled = enabled
-                usersElasticRepository.delete(usersElastic)
-                usersElasticRepository.save(usersElastic)
-                val usersType = cacheManageService.findByUsersTypeId(usersElastic.usersTypeId!!)
-                if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
-                    val studentElastic = studentElasticRepository.findByUsername(usersElastic.username!!)
-                    studentElastic.enabled = usersElastic.enabled
-                    studentElasticRepository.delete(studentElastic)
-                    studentElasticRepository.save(studentElastic)
-                } else if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
-                    val staffElastic = staffElasticRepository.findByUsername(usersElastic.username!!)
-                    staffElastic.enabled = usersElastic.enabled
-                    staffElasticRepository.delete(staffElastic)
-                    staffElasticRepository.save(staffElastic)
-                }
-            }
         }
     }
 
     override fun deleteById(username: String) {
         usersDao.deleteById(username)
-        usersElasticRepository.deleteById(username)
     }
 
     override fun validSCDSOIsDel(users: Users): Boolean {
@@ -214,14 +120,14 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
         val usersType = cacheManageService.findByUsersTypeId(users.usersTypeId!!)
         var isDel = true
         if (!ObjectUtils.isEmpty(usersType)) {
-            when (usersType.usersTypeName) {
+            isDel = when (usersType.usersTypeName) {
                 Workbook.STUDENT_USERS_TYPE // 学生
-                -> isDel = validSCDSOForStudentIsDel(users)
+                -> validSCDSOForStudentIsDel(users)
                 Workbook.STAFF_USERS_TYPE // 教职工
-                -> isDel = validSCDSOForStaffIsDel(users)
+                -> validSCDSOForStaffIsDel(users)
                 Workbook.SYSTEM_USERS_TYPE // 系统
-                -> isDel = false
-                else -> isDel = false
+                -> false
+                else -> false
             }
         }
         return isDel
@@ -282,25 +188,39 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
                 .fetch()
     }
 
-    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record> {
+    override fun findAllByPageExistsAuthorities(dataTablesUtils: DataTablesUtils<UsersBean>): Result<Record8<String, String, String, String, String, Byte, String, java.sql.Date>>? {
         val users = getUserFromSession()
         val select = existsAuthoritiesSelect()
         val a = searchCondition(dataTablesUtils)
         return if (ObjectUtils.isEmpty(a)) {
-            val selectConditionStep = create.select()
+            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.MOBILE,
+                    listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                    USERS_TYPE.USERS_TYPE_NAME, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                    .join(AUTHORITIES)
+                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                    .join(ROLE)
+                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .whereExists(select).and(USERS.USERNAME.ne(users!!.username))
+                    .groupBy(USERS.USERNAME)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
         } else {
-            val selectConditionStep = create.select()
+            val selectConditionStep = create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.MOBILE,
+                    listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).`as`("roleName"),
+                    USERS_TYPE.USERS_TYPE_NAME, USERS.ENABLED, USERS.LANG_KEY, USERS.JOIN_DATE)
                     .from(USERS)
                     .join(USERS_TYPE)
                     .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                    .join(AUTHORITIES)
+                    .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                    .join(ROLE)
+                    .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY))
                     .where(a).andExists(select).and(USERS.USERNAME.ne(users!!.username))
+                    .groupBy(USERS.USERNAME)
             sortCondition(dataTablesUtils, selectConditionStep)
             pagination(dataTablesUtils, selectConditionStep)
             selectConditionStep.fetch()
@@ -419,28 +339,37 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
 
         val search = dataTablesUtils.search
         if (!ObjectUtils.isEmpty(search)) {
-            val username = StringUtils.trimWhitespace(search!!.getString("username"))
+            val realName = StringUtils.trimWhitespace(search!!.getString("realName"))
+            val username = StringUtils.trimWhitespace(search.getString("username"))
             val mobile = StringUtils.trimWhitespace(search.getString("mobile"))
             val usersType = StringUtils.trimWhitespace(search.getString("usersType"))
+            if (StringUtils.hasLength(realName)) {
+                a = USERS.REAL_NAME.like(SQLQueryUtils.likeAllParam(realName))
+            }
+
             if (StringUtils.hasLength(username)) {
-                a = USERS.USERNAME.like(SQLQueryUtils.likeAllParam(username))
+                a = if (ObjectUtils.isEmpty(a)) {
+                    USERS.USERNAME.like(SQLQueryUtils.likeAllParam(username))
+                } else {
+                    a!!.and(USERS.USERNAME.like(SQLQueryUtils.likeAllParam(username)))
+                }
             }
 
             if (StringUtils.hasLength(mobile)) {
-                if (ObjectUtils.isEmpty(a)) {
-                    a = USERS.MOBILE.like(SQLQueryUtils.likeAllParam(mobile))
+                a = if (ObjectUtils.isEmpty(a)) {
+                    USERS.MOBILE.like(SQLQueryUtils.likeAllParam(mobile))
                 } else {
-                    a = a!!.and(USERS.MOBILE.like(SQLQueryUtils.likeAllParam(mobile)))
+                    a!!.and(USERS.MOBILE.like(SQLQueryUtils.likeAllParam(mobile)))
                 }
             }
 
             if (StringUtils.hasLength(usersType)) {
                 val usersTypeId = NumberUtils.toInt(usersType)
                 if (usersTypeId > 0) {
-                    if (ObjectUtils.isEmpty(a)) {
-                        a = USERS_TYPE.USERS_TYPE_ID.eq(usersTypeId)
+                    a = if (ObjectUtils.isEmpty(a)) {
+                        USERS_TYPE.USERS_TYPE_ID.eq(usersTypeId)
                     } else {
-                        a = a!!.and(USERS_TYPE.USERS_TYPE_ID.eq(usersTypeId))
+                        a!!.and(USERS_TYPE.USERS_TYPE_ID.eq(usersTypeId))
                     }
                 }
             }
@@ -454,7 +383,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
      * @param dataTablesUtils     datatables工具类
      * @param selectConditionStep 条件
      */
-    fun sortCondition(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectConditionStep<Record>) {
+    fun sortCondition(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<*>) {
         val orderColumnName = dataTablesUtils.orderColumnName
         val orderDir = dataTablesUtils.orderDir
         val isAsc = "asc".equals(orderDir, ignoreCase = true)
@@ -557,7 +486,7 @@ open class UsersServiceImpl @Autowired constructor(dslContext: DSLContext) : Use
      * @param dataTablesUtils
      * @param selectConditionStep
      */
-    fun pagination(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectConditionStep<Record>) {
+    fun pagination(dataTablesUtils: DataTablesUtils<UsersBean>, selectConditionStep: SelectHavingStep<*>) {
         val start = dataTablesUtils.start
         val length = dataTablesUtils.length
         selectConditionStep.limit(start, length)

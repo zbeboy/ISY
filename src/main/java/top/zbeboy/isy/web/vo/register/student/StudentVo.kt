@@ -12,22 +12,18 @@ open class StudentVo {
     @NotNull
     @Min(1)
     var school: Int? = null
-    var schoolName: String? = null
 
     @NotNull
     @Min(1)
     var college: Int? = null
-    var collegeName: String? = null
 
     @NotNull
     @Min(1)
     var department: Int? = null
-    var departmentName: String? = null
 
     @NotNull
     @Min(1)
     var science: Int? = null
-    var scienceName: String? = null
 
     @NotNull
     var grade: String? = null
@@ -35,14 +31,13 @@ open class StudentVo {
     @NotNull
     @Min(1)
     var organize: Int? = null
-    var organizeName: String? = null
 
     @NotNull
     @Pattern(regexp = "^[\\d]{13,}$")
     var studentNumber: String? = null
 
     @NotNull
-    @Pattern(regexp = "^\\w+((-\\w+)|(\\.\\w+))*\\@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$")
+    @Pattern(regexp = "^\\w+((-\\w+)|(\\.\\w+))*@[A-Za-z0-9]+(([.\\-])[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$")
     var email: String? = null
 
     @NotNull

@@ -61,7 +61,7 @@ requirejs.createNode = function (config, moduleName, url) {
 };
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "lodash", "handlebars", "moment", "bootstrap", "wow", "vegas"], function ($, D, Handlebars, moment) {
+require(["jquery", "bootstrap", "wow", "vegas"], function ($) {
     // Preloader
     $('.preloader').fadeOut(1000);
 
@@ -97,157 +97,10 @@ require(["jquery", "lodash", "handlebars", "moment", "bootstrap", "wow", "vegas"
 
     new WOW({mobile: false}).init();
 
-    console.log('%c █    ██████    █     █','color:blue');
-    console.log('%c █    █          █   █','color:blue');
-    console.log('%c █    ██████       █','color:red');
-    console.log('%c █         █       █','color:red');
-    console.log('%c █    ██████       █','color:green');
-    console.log('%c Welcome to ISY.','color:red');
-    /*
-    ajax url.
-    */
-    var ajax_url = {
-        save: '/user/graduate/wishes/save',
-        data: '/user/graduate/wishes/data'
-    };
-
-    /*
-    参数id
-    */
-    var paramId = {
-        schoolName: '#schoolName',
-        username: '#username',
-        content: '#content'
-    };
-
-    /*
-     参数
-     */
-    var param = {
-        schoolName: '',
-        username: '',
-        content: ''
-    };
-
-    /*
-     错误消息id
-     */
-    var errorMsgId = {
-        error_meg: '#error_meg'
-    };
-
-    /**
-     * 检验成功
-     * @param errorMsgId
-     */
-    function validSuccessDom(errorMsgId) {
-        $(errorMsgId).text('');
-    }
-
-    /**
-     * 检验失败
-     * @param errorMsgId
-     * @param msg
-     */
-    function validErrorDom(errorMsgId, msg) {
-        $(errorMsgId).text(msg);
-    }
-
-    /**
-     * 初始化参数
-     */
-    function initParam() {
-        param.schoolName = $(paramId.schoolName).val();
-        param.username = $(paramId.username).val();
-        param.content = $(paramId.content).val();
-    }
-
-    $('#toGraduate').click(function () {
-        initGraduateData();
-        $('#graduate').modal('show');
-    });
-
-    function initGraduateData() {
-        $.get(web_path + ajax_url.data, function (data) {
-            listData(data);
-        });
-    }
-
-    /**
-     * 列表数据
-     * @param data 数据
-     */
-    function listData(data) {
-        var template = Handlebars.compile($("#graduate-template").html());
-        Handlebars.registerHelper('schoolName', function () {
-            return new Handlebars.SafeString(Handlebars.escapeExpression(this.schoolName));
-        });
-        Handlebars.registerHelper('username', function () {
-            return new Handlebars.SafeString(Handlebars.escapeExpression(this.username));
-        });
-        Handlebars.registerHelper('content', function () {
-            return new Handlebars.SafeString(Handlebars.escapeExpression(this.content));
-        });
-        $('#graduateData').html(template(data));
-    }
-
-    $('#submitGraduate').click(function () {
-        add();
-    });
-
-    function add() {
-        initParam();
-        var schoolName = D.trim(param.schoolName);
-        if (schoolName === '') {
-            validErrorDom(errorMsgId.error_meg, '请告诉我们，您的学校。');
-            return;
-        } else {
-            validSuccessDom(errorMsgId.error_meg);
-        }
-
-        var username = D.trim(param.username);
-        if (username === '') {
-            validErrorDom(errorMsgId.error_meg, '请告诉我们，您的姓名。');
-            return;
-        } else {
-            validSuccessDom(errorMsgId.error_meg);
-        }
-
-        var content = D.trim(param.content);
-        if (content === '') {
-            validErrorDom(errorMsgId.error_meg, '不想说点什么吗？');
-            return;
-        } else {
-            validSuccessDom(errorMsgId.error_meg);
-        }
-
-        sendAjax();
-    }
-
-    function sendAjax() {
-        startLoading();
-        $.get(web_path + ajax_url.save, param, function (data) {
-            endLoading();
-            if (data.state) {
-                initGraduateData();
-            } else {
-                validErrorDom(errorMsgId.error_meg, data.msg);
-            }
-        });
-    }
-
-    /**
-     * 开始加载
-     */
-    function startLoading() {
-        $('#submitGraduate').attr('disabled', true).text('保存中...');
-    }
-
-    /**
-     * 结束加载
-     */
-    function endLoading() {
-        $('#submitGraduate').attr('disabled', false).text('确定');
-    }
-
+    console.log('%c █    ██████    █     █', 'color:blue');
+    console.log('%c █    █          █   █', 'color:blue');
+    console.log('%c █    ██████       █', 'color:red');
+    console.log('%c █         █       █', 'color:red');
+    console.log('%c █    ██████       █', 'color:green');
+    console.log('%c Welcome to ISY.', 'color:red');
 });

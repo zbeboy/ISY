@@ -124,11 +124,8 @@ require(["jquery", "handlebars", "emails",
          */
         var paramId = {
             select_school: '#select_school',
-            schoolName: '#schoolName',
             select_college: '#select_college',
-            collegeName: '#collegeName',
             select_department: '#select_department',
-            departmentName: '#departmentName',
             realName: '#realName',
             staffNumber: '#staffNumber',
             email: '#email',
@@ -150,11 +147,8 @@ require(["jquery", "handlebars", "emails",
             password: $(paramId.password).val(),
             confirmPassword: $(paramId.confirmPassword).val(),
             school: $(paramId.select_school).val(),
-            schoolName: '',
             college: $(paramId.select_college).val(),
-            collegeName: '',
-            department: $(paramId.select_department).val(),
-            departmentName: ''
+            department: $(paramId.select_department).val()
         };
 
         /*
@@ -169,11 +163,8 @@ require(["jquery", "handlebars", "emails",
             param.password = $(paramId.password).val();
             param.confirmPassword = $(paramId.confirmPassword).val();
             param.school = $(paramId.select_school).val();
-            param.schoolName = $(paramId.select_school).find('option:selected').text();
             param.college = $(paramId.select_college).val();
-            param.collegeName = $(paramId.select_college).find('option:selected').text();
             param.department = $(paramId.select_department).val();
-            param.departmentName = $(paramId.select_department).find('option:selected').text();
         }
 
         /*
@@ -640,11 +631,6 @@ require(["jquery", "handlebars", "emails",
             } else {
                 validSuccessDom(validId.valid_department, errorMsgId.department_error_msg);
             }
-
-            // 填充数据
-            $(paramId.schoolName).val($(paramId.select_school).find('option:selected').text());
-            $(paramId.collegeName).val($(paramId.select_college).find('option:selected').text());
-            $(paramId.departmentName).val($(paramId.select_department).find('option:selected').text());
 
             validRealName();//开始顺序检验
         });

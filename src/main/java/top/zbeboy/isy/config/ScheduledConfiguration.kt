@@ -2,13 +2,9 @@ package top.zbeboy.isy.config
 
 import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
-import top.zbeboy.isy.elastic.repository.StaffElasticRepository
-import top.zbeboy.isy.elastic.repository.StudentElasticRepository
-import top.zbeboy.isy.elastic.repository.UsersElasticRepository
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.data.StaffService
 import top.zbeboy.isy.service.data.StudentService
@@ -81,15 +77,6 @@ open class ScheduledConfiguration {
     @Resource
     open lateinit var authoritiesService: AuthoritiesService
 
-    @Autowired
-    open lateinit var usersElasticRepository: UsersElasticRepository
-
-    @Autowired
-    open lateinit var studentElasticRepository: StudentElasticRepository
-
-    @Autowired
-    open lateinit var staffElasticRepository: StaffElasticRepository
-
     @Resource
     open lateinit var usersKeyService: UsersKeyService
 
@@ -111,13 +98,10 @@ open class ScheduledConfiguration {
             this.authoritiesService.deleteByUsername(r.username)
             if (usersType.usersTypeName == Workbook.STAFF_USERS_TYPE) {
                 this.staffService.deleteByUsername(r.username)
-                this.staffElasticRepository.deleteByUsername(r.username)
             } else if (usersType.usersTypeName == Workbook.STUDENT_USERS_TYPE) {
                 this.studentService.deleteByUsername(r.username)
-                this.studentElasticRepository.deleteByUsername(r.username)
             }
             this.usersService.deleteById(r.username)
-            this.usersElasticRepository.deleteById(r.username)
             this.usersKeyService.deleteByUsername(r.username)
             this.cacheManageService.deleteUsersKey(r.username)
             this.usersUniqueInfoService.deleteByUsername(r.username)

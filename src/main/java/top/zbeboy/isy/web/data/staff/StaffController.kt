@@ -13,12 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.config.ISYProperties
 import top.zbeboy.isy.config.Workbook
-import top.zbeboy.isy.domain.tables.pojos.Role
-import top.zbeboy.isy.domain.tables.pojos.Users
-import top.zbeboy.isy.domain.tables.pojos.UsersKey
-import top.zbeboy.isy.domain.tables.pojos.UsersUniqueInfo
-import top.zbeboy.isy.elastic.pojo.StaffElastic
-import top.zbeboy.isy.glue.data.StaffGlue
+import top.zbeboy.isy.domain.tables.pojos.*
 import top.zbeboy.isy.service.cache.CacheManageService
 import top.zbeboy.isy.service.common.DesService
 import top.zbeboy.isy.service.data.StaffService
@@ -64,9 +59,6 @@ open class StaffController {
 
     @Autowired
     open lateinit var isyProperties: ISYProperties
-
-    @Resource
-    open lateinit var staffGlue: StaffGlue
 
     @Resource
     open lateinit var desService: DesService
@@ -154,17 +146,13 @@ open class StaffController {
                                     } else {
                                         // 注册成功
                                         val saveUsers = Users()
-                                        val saveStaff = StaffElastic()
                                         val enabled: Byte = 1
                                         saveUsers.username = email
                                         saveUsers.enabled = enabled
-                                        saveStaff.enabled = enabled
                                         saveUsers.mobile = mobile
-                                        saveStaff.mobile = mobile
                                         saveUsers.password = BCryptUtils.bCryptPassword(password)
                                         saveUsers.usersTypeId = cacheManageService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).usersTypeId
                                         saveUsers.joinDate = java.sql.Date(Clock.systemDefaultZone().millis())
-                                        saveStaff.joinDate = saveUsers.joinDate
 
                                         var dateTime = DateTime.now()
                                         dateTime = dateTime.plusDays(Workbook.MAILBOX_VERIFY_VALID)
@@ -172,20 +160,12 @@ open class StaffController {
                                         saveUsers.mailboxVerifyCode = mailboxVerifyCode
                                         saveUsers.mailboxVerifyValid = Timestamp(dateTime.toDate().time)
                                         saveUsers.langKey = request.locale.toLanguageTag()
-                                        saveStaff.langKey = saveUsers.langKey
                                         saveUsers.avatar = Workbook.USERS_AVATAR
-                                        saveStaff.avatar = saveUsers.avatar
                                         saveUsers.verifyMailbox = 0
                                         saveUsers.realName = staffVo.realName
-                                        saveStaff.realName = saveUsers.realName
                                         usersService.save(saveUsers)
 
-                                        saveStaff.schoolId = staffVo.school
-                                        saveStaff.schoolName = staffVo.schoolName
-                                        saveStaff.collegeId = staffVo.college
-                                        saveStaff.collegeName = staffVo.collegeName
-                                        saveStaff.departmentId = staffVo.department
-                                        saveStaff.departmentName = staffVo.departmentName
+                                        val saveStaff = Staff()
                                         saveStaff.departmentId = staffVo.department
                                         saveStaff.staffNumber = staffVo.staffNumber
                                         saveStaff.username = email
@@ -271,10 +251,15 @@ open class StaffController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<StaffBean>(request, headers)
-        val resultUtils = staffGlue.findAllByPageExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(staffGlue.countAllExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = staffService.findAllByPageExistsAuthorities(dataTablesUtils)
+        var staffs: List<StaffBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records!!.isNotEmpty) {
+            staffs = records.into(StaffBean::class.java)
+            staffs.forEach { student -> decryptData(student) }
+        }
+        dataTablesUtils.data = staffs
+        dataTablesUtils.setiTotalRecords(staffService.countAllExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -301,10 +286,14 @@ open class StaffController {
         headers.add("join_date")
         headers.add("operator")
         val dataTablesUtils = DataTablesUtils<StaffBean>(request, headers)
-        val resultUtils = staffGlue.findAllByPageNotExistsAuthorities(dataTablesUtils)
-        dataTablesUtils.data = resultUtils.getData()
-        dataTablesUtils.setiTotalRecords(staffGlue.countAllNotExistsAuthorities())
-        dataTablesUtils.setiTotalDisplayRecords(resultUtils.getTotalElements())
+        val records = staffService.findAllByPageNotExistsAuthorities(dataTablesUtils)
+        var staffs: List<StaffBean> = ArrayList()
+        if (!ObjectUtils.isEmpty(records) && records.isNotEmpty) {
+            staffs = records.into(StaffBean::class.java)
+        }
+        dataTablesUtils.data = staffs
+        dataTablesUtils.setiTotalRecords(staffService.countAllNotExistsAuthorities().toLong())
+        dataTablesUtils.setiTotalDisplayRecords(staffService.countByConditionNotExistsAuthorities(dataTablesUtils).toLong())
         return dataTablesUtils
     }
 
@@ -373,7 +362,7 @@ open class StaffController {
         return if (!ObjectUtils.isEmpty(users)) {
             val staff = staffService.findByUsername(users!!.username)
             staff.departmentId = department
-            staffService.update(staff, null)
+            staffService.update(staff)
             ajaxUtils.success().msg("更新学校信息成功")
         } else ajaxUtils.fail().msg("未查询到您的信息，请重新登录")
     }
@@ -441,7 +430,7 @@ open class StaffController {
                 }
                 usersUniqueInfoService.saveOrUpdate(usersUniqueInfo)
 
-                staffService.update(staff, usersUniqueInfo)
+                staffService.update(staff)
                 return AjaxUtils.of<Any>().success()
             } catch (e: ParseException) {
                 log.error("Birthday to sql date is exception : {}", e.message)
@@ -450,5 +439,33 @@ open class StaffController {
 
         }
         return AjaxUtils.of<Any>().fail().msg("参数检验错误")
+    }
+
+    /**
+     * 对数据进行解密
+     *
+     * @param staffBean 解密后数据
+     */
+    private fun decryptData(staffBean: StaffBean) {
+        val usersKey = cacheManageService.getUsersKey(staffBean.username!!)
+        if (StringUtils.hasLength(staffBean.birthday)) {
+            staffBean.birthday = desService.decrypt(staffBean.birthday, usersKey)
+        }
+
+        if (StringUtils.hasLength(staffBean.sex)) {
+            staffBean.sex = desService.decrypt(staffBean.sex, usersKey)
+        }
+
+        if (StringUtils.hasLength(staffBean.familyResidence)) {
+            staffBean.familyResidence = desService.decrypt(staffBean.familyResidence, usersKey)
+        }
+
+        val usersUniqueInfo = usersUniqueInfoService.findByUsername(staffBean.username!!)
+        if (!ObjectUtils.isEmpty(usersUniqueInfo)) {
+            val key = isyProperties.getSecurity().desDefaultKey
+            if (StringUtils.hasLength(usersUniqueInfo!!.idCard)) {
+                staffBean.idCard = desService.decrypt(usersUniqueInfo.idCard, key!!)
+            }
+        }
     }
 }

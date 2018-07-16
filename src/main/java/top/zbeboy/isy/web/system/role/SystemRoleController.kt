@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import top.zbeboy.isy.domain.tables.pojos.RoleApplication
-import top.zbeboy.isy.service.data.ElasticSyncService
 import top.zbeboy.isy.service.platform.RoleApplicationService
 import top.zbeboy.isy.service.platform.RoleService
 import top.zbeboy.isy.service.system.ApplicationService
@@ -31,9 +30,6 @@ open class SystemRoleController {
 
     @Resource
     open lateinit var roleApplicationService: RoleApplicationService
-
-    @Resource
-    open lateinit var elasticSyncService: ElasticSyncService
 
     @Resource
     open lateinit var applicationService: ApplicationService
@@ -120,12 +116,10 @@ open class SystemRoleController {
     @ResponseBody
     fun roleUpdate(@RequestParam("roleId") roleId: String, @RequestParam("roleName") roleName: String, applicationIds: String): AjaxUtils<*> {
         val role = roleService.findById(roleId)
-        val oldRoleName = role.roleName
         role.roleName = roleName
         roleService.update(role)
         roleApplicationService.deleteByRoleId(roleId)
         roleApplicationService.batchSaveRoleApplication(applicationIds, roleId)
-        elasticSyncService.systemRoleNameUpdate(oldRoleName)
         return AjaxUtils.of<Any>().success().msg("更新成功")
     }
 

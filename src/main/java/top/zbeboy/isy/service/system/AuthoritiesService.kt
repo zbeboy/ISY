@@ -42,5 +42,5 @@ interface AuthoritiesService {
      * org.springframework.security.authentication.AuthenticationTrustResolverImpl
      * @return true or false
      */
-    fun isRememberMeAuthenticated(): Boolean
+    fun isAnonymousAuthenticated(): Boolean
 }

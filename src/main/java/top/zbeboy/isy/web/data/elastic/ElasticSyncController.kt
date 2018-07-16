@@ -29,54 +29,6 @@ open class ElasticSyncController {
     }
 
     /**
-     * 同步班级数据
-     *
-     * @return 消息
-     */
-    @RequestMapping(value = ["/web/data/elastic/sync/organize"], method = [(RequestMethod.GET)])
-    @ResponseBody
-    fun syncOrganize(): AjaxUtils<*> {
-        elasticSyncService.syncOrganizeData()
-        return AjaxUtils.of<Any>().success().msg("异步同步班级数据中...")
-    }
-
-    /**
-     * 同步用户数据
-     *
-     * @return 消息
-     */
-    @RequestMapping(value = ["/web/data/elastic/sync/users"], method = [(RequestMethod.GET)])
-    @ResponseBody
-    fun syncUsers(): AjaxUtils<*> {
-        elasticSyncService.syncUsersData()
-        return AjaxUtils.of<Any>().success().msg("异步同步用户数据中...")
-    }
-
-    /**
-     * 同步学生数据
-     *
-     * @return 消息
-     */
-    @RequestMapping(value = ["/web/data/elastic/sync/student"], method = [(RequestMethod.GET)])
-    @ResponseBody
-    fun syncStudent(): AjaxUtils<*> {
-        elasticSyncService.syncStudentData()
-        return AjaxUtils.of<Any>().success().msg("异步同步学生数据中...")
-    }
-
-    /**
-     * 同步教职工数据
-     *
-     * @return 消息
-     */
-    @RequestMapping(value = ["/web/data/elastic/sync/staff"], method = [(RequestMethod.GET)])
-    @ResponseBody
-    fun syncStaff(): AjaxUtils<*> {
-        elasticSyncService.syncStaffData()
-        return AjaxUtils.of<Any>().success().msg("异步同步教职工数据中...")
-    }
-
-    /**
      * 清空系统日志
      *
      * @return 消息
