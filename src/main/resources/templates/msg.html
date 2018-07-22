@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="header :: header(~{::meta},~{::title},~{::link})">
-    <!-- csrf -->
-    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
-    <!-- default header name is X-CSRF-TOKEN -->
-    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+<head th:replace="header :: no-metas-header(~{::title},~{::link})">
     <title th:text="#{web.title}">ISY</title>
     <!-- sticky-footer CSS -->
     <link href="css/sticky-footer.css" rel="stylesheet" th:href="@{/css/custom/sticky-footer.css}"/>
