@@ -71,9 +71,15 @@ class ISYProperties {
      */
     class Mobile {
 
-        var apiKey: String? = null
-
         var isOpen: Boolean = false
+
+        var url: String? = null
+
+        var userId: String? = null
+
+        var account: String? = null
+
+        var password: String? = null
 
         var sign: String? = null
     }
