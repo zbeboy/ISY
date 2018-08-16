@@ -9,8 +9,5 @@
         <module name="ISY" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="ISY" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
