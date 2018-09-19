@@ -79,6 +79,7 @@ open class InternshipTeacherDistributionController {
     @Resource
     open lateinit var uploadService: UploadService
 
+    @Resource
     open lateinit var cacheManageService: CacheManageService
 
     @Resource

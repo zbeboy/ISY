@@ -416,7 +416,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 ext: 'xls'
             };
             var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId;
+            window.location.href = encodeURI(web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId);
         });
 
         $('#export_xlsx').click(function () {
@@ -427,7 +427,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "datatables.responsi
                 ext: 'xlsx'
             };
             var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId;
+            window.location.href = encodeURI(web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId);
         });
 
         // 生成档案号

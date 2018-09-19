@@ -451,7 +451,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 ext: 'xls'
             };
             var internshipReleaseId = init_page_param.internshipReleaseId;
-            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
+            window.location.href = encodeURI(web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId);
         });
 
         $('#export_xlsx').click(function () {
@@ -462,7 +462,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "moment", "datatable
                 ext: 'xlsx'
             };
             var internshipReleaseId = init_page_param.internshipReleaseId;
-            window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId;
+            window.location.href = encodeURI(web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&internshipReleaseId=" + internshipReleaseId);
         });
 
         /*

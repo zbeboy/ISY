@@ -420,7 +420,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                     ext: 'xls'
                 };
                 var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-                window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId;
+                window.location.href = encodeURI(web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId);
             } else {
                 Messenger().post({
                     message: '请选择指导教师',
@@ -440,7 +440,7 @@ require(["jquery", "handlebars", "constants", "nav_active", "bootstrap-select-zh
                     ext: 'xlsx'
                 };
                 var graduationDesignReleaseId = init_page_param.graduationDesignReleaseId;
-                window.location.href = web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId;
+                window.location.href = encodeURI(web_path + getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile) + "&graduationDesignReleaseId=" + graduationDesignReleaseId + '&staffId=' + getParam().staffId);
             } else {
                 Messenger().post({
                     message: '请选择指导教师',
