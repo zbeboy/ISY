@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.internship
 import com.alibaba.fastjson.JSON
 import org.jooq.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.redis.core.ValueOperations
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -13,8 +14,10 @@ import top.zbeboy.isy.domain.tables.daos.InternshipReleaseDao
 import top.zbeboy.isy.domain.tables.pojos.InternshipRelease
 import top.zbeboy.isy.domain.tables.pojos.Science
 import top.zbeboy.isy.domain.tables.records.InternshipReleaseRecord
+import top.zbeboy.isy.service.cache.CacheBook
 import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.SQLQueryUtils
+import top.zbeboy.isy.web.bean.error.ErrorBean
 import top.zbeboy.isy.web.bean.internship.release.InternshipReleaseBean
 import top.zbeboy.isy.web.util.PaginationUtils
 import java.sql.Timestamp
@@ -29,6 +32,9 @@ import javax.annotation.Resource
 open class InternshipReleaseServiceImpl @Autowired constructor(dslContext: DSLContext) : InternshipReleaseService {
 
     private val create: DSLContext = dslContext
+
+    @Resource(name = "redisTemplate")
+    open lateinit var errorBeanValueOperations: ValueOperations<String, ErrorBean<InternshipRelease>>
 
     @Resource
     open lateinit var internshipReleaseDao: InternshipReleaseDao
@@ -78,6 +84,10 @@ open class InternshipReleaseServiceImpl @Autowired constructor(dslContext: DSLCo
     }
 
     override fun update(internshipRelease: InternshipRelease) {
+        val cacheKey = CacheBook.INTERNSHIP_BASE_CONDITION + internshipRelease.internshipReleaseId
+        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
+            errorBeanValueOperations.operations.delete(cacheKey)
+        }
         internshipReleaseDao.update(internshipRelease)
     }
 

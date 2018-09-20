@@ -21,7 +21,6 @@ open class InternshipReleaseScienceServiceImpl @Autowired constructor(dslContext
 
     private val create: DSLContext = dslContext
 
-
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     override fun save(internshipReleaseId: String, scienceId: Int) {
         create.insertInto(INTERNSHIP_RELEASE_SCIENCE)

@@ -3,6 +3,7 @@ package top.zbeboy.isy.service.graduate.design
 import com.alibaba.fastjson.JSON
 import org.jooq.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.redis.core.ValueOperations
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -12,8 +13,10 @@ import top.zbeboy.isy.domain.Tables.*
 import top.zbeboy.isy.domain.tables.daos.GraduationDesignReleaseDao
 import top.zbeboy.isy.domain.tables.pojos.GraduationDesignRelease
 import top.zbeboy.isy.domain.tables.records.GraduationDesignReleaseRecord
+import top.zbeboy.isy.service.cache.CacheBook
 import top.zbeboy.isy.service.util.DateTimeUtils
 import top.zbeboy.isy.service.util.SQLQueryUtils
+import top.zbeboy.isy.web.bean.error.ErrorBean
 import top.zbeboy.isy.web.bean.graduate.design.release.GraduationDesignReleaseBean
 import top.zbeboy.isy.web.util.PaginationUtils
 import java.util.*
@@ -31,6 +34,8 @@ open class GraduationDesignReleaseServiceImpl @Autowired constructor(dslContext:
     @Resource
     open lateinit var graduationDesignReleaseDao: GraduationDesignReleaseDao
 
+    @Resource(name = "redisTemplate")
+    open lateinit var errorBeanValueOperations: ValueOperations<String, ErrorBean<GraduationDesignRelease>>
 
     override fun findById(id: String): GraduationDesignRelease {
         return graduationDesignReleaseDao.findById(id)
@@ -105,6 +110,10 @@ open class GraduationDesignReleaseServiceImpl @Autowired constructor(dslContext:
     }
 
     override fun update(graduationDesignRelease: GraduationDesignRelease) {
+        val cacheKey = CacheBook.GRADUATION_DESIGN_BASE_CONDITION + graduationDesignRelease.graduationDesignReleaseId
+        if (errorBeanValueOperations.operations.hasKey(cacheKey)!!) {
+            errorBeanValueOperations.operations.delete(cacheKey)
+        }
         graduationDesignReleaseDao.update(graduationDesignRelease)
     }
 
