@@ -43,7 +43,7 @@
         <jcaptcha.version>2.0-alpha-1</jcaptcha.version>
         <jcaptcha-api.verison>1.0</jcaptcha-api.verison>
 
-        <commons-io.verson>2.6</commons-io.verson>
+        <commons-io.verson>2.7</commons-io.verson>
         <commons-collections.version>3.2.2</commons-collections.version>
 
         <!-- webjars properties -->
